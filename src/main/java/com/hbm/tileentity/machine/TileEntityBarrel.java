@@ -434,7 +434,7 @@ public class TileEntityBarrel extends TileEntityMachineBase implements
 
     @Override
     public int fill(FluidStack resource, boolean doFill) {
-        if (!tankNew.getTankTypeFF().getName().equals(resource.getFluid().getName()))
+        if (!(tankNew.getTankTypeFF() != null && tankNew.getTankTypeFF().getName().equals(resource.getFluid().getName())))
             return 0;
         int amount = resource.amount;
         return (int) transferFluid(tankNew.getTankType(), 0, amount); //I FUCKING LOVE CASTING
