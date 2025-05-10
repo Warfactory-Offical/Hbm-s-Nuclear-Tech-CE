@@ -18,10 +18,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.items.IItemHandler;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -39,6 +41,8 @@ public class FluidTankNTM {
 	}
 	
 	FluidType type;
+	@Nullable
+	Fluid typeForgeFluid;
 	int fluid;
 	int maxFluid;
 	@Deprecated public int index = 0;
@@ -46,7 +50,9 @@ public class FluidTankNTM {
 	
 	public FluidTankNTM(FluidType type, int maxFluid) {
 		this.type = type;
+		syncTankType();
 		this.maxFluid = maxFluid;
+
 	}
 	
 	public FluidTankNTM withPressure(int pressure) {
@@ -56,10 +62,12 @@ public class FluidTankNTM {
 		this.pressure = pressure;
 		return this;
 	}
+
 	
 	@Deprecated // indices are no longer needed
 	public FluidTankNTM(FluidType type, int maxFluid, int index) {
 		this.type = type;
+		syncTankType();
 		this.maxFluid = maxFluid;
 		this.index = index;
 	}
@@ -78,13 +86,25 @@ public class FluidTankNTM {
 			return;
 		
 		this.type = type;
+		syncTankType();
 		this.setFill(0);
+
+	}
+	private void syncTankType(){
+		if(type == null || type == Fluids.NONE)
+			typeForgeFluid = null;
+
+		typeForgeFluid = type.toFF();
 	}
 	
 	public FluidType getTankType() {
 		return type;
 	}
-	
+
+	public Fluid getTankTypeFF() {
+		return typeForgeFluid;
+	}
+
 	public int getFill() {
 		return fluid;
 	}
@@ -191,6 +211,7 @@ public class FluidTankNTM {
 				FluidType newType = id.getType(null, 0, 0, 0, slots.getStackInSlot(in));
 				if(type != newType) {
 					type = newType;
+					syncTankType();
 					slots.insertItem(out, slots.getStackInSlot(in).copy(), false);
 					slots.getStackInSlot(in).shrink(1);
 					fluid = 0;
@@ -306,6 +327,7 @@ public class FluidTankNTM {
 		type = Fluids.fromNameCompat(nbt.getString(s + "_type")); //compat
 		if(type == Fluids.NONE)
 			type = Fluids.fromID(nbt.getInteger(s + "_type"));
+		syncTankType();
 
 		this.pressure = nbt.getShort(s + "_p");
 	}
@@ -321,6 +343,7 @@ public class FluidTankNTM {
 		fluid = buf.readInt();
 		maxFluid = buf.readInt();
 		type = Fluids.fromID(buf.readInt());
+		syncTankType();
 		pressure = buf.readShort();
 	}
 }

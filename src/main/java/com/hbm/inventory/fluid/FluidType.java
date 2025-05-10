@@ -13,6 +13,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
@@ -176,6 +178,11 @@ public class FluidType {
 	public boolean isDispersable() {
 		return !(this.traits.containsKey(FluidTraitSimple.FT_Amat.class) || this.traits.containsKey(FluidTraitSimple.FT_NoContainer.class) || this.traits.containsKey(FluidTraitSimple.FT_Viscous.class));
 	}
+
+	public Fluid toFF(){
+		return FluidRegistry.getFluid(stringId.toLowerCase());
+	}
+
 
 	/**
 	 * Called when the tile entity is broken, effectively voiding the fluids.
