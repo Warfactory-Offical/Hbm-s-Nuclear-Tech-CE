@@ -29,9 +29,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
@@ -76,6 +78,12 @@ public class TileEntityBarrel extends TileEntityMachineBase implements
         super(6);
         tank = new FluidTank(cap);
         tankNew = new FluidTankNTM(Fluids.NONE, cap, 0);
+    }
+
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(this);
+        return super.getCapability(capability, facing);
     }
 
     protected static int transmitFluidFairly(World world, FluidTankNTM tank, IFluidConnector that, int fill, boolean connect, boolean send, DirPos[] connections) {
@@ -426,7 +434,7 @@ public class TileEntityBarrel extends TileEntityMachineBase implements
 
     @Override
     public int fill(FluidStack resource, boolean doFill) {
-        if (tankNew.getTankTypeFF() == resource.getFluid())
+        if (!tankNew.getTankTypeFF().getName().equals(resource.getFluid().getName()))
             return 0;
         int amount = resource.amount;
         return (int) transferFluid(tankNew.getTankType(), 0, amount); //I FUCKING LOVE CASTING
