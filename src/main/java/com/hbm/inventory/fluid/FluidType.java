@@ -56,7 +56,8 @@ public class FluidType {
 	//public List<EnumFluidTrait> enumTraits = new ArrayList();
 	
 	private ResourceLocation texture;
-	
+	private String ffNameOverride;
+
 	public FluidType(String name, int color, int p, int f, int r, EnumSymbol symbol) {
 		this.stringId = name;
 		this.color = color;
@@ -111,6 +112,10 @@ public class FluidType {
 	
 	public FluidType addTraits(FluidTrait... traits) {
 		for(FluidTrait trait : traits) this.traits.put(trait.getClass(), trait);
+		return this;
+	}
+	public FluidType setFFNameOverride(String override){
+		this.ffNameOverride = override;
 		return this;
 	}
 	
@@ -180,7 +185,7 @@ public class FluidType {
 	}
 
 	public Fluid toFF(){
-		return FluidRegistry.getFluid(stringId.toLowerCase());
+		return  FluidRegistry.getFluid(ffNameOverride == null ? stringId.toLowerCase() : ffNameOverride);
 	}
 
 
