@@ -44,7 +44,8 @@ public class FluidType {
 	public int reactivity;
 	public EnumSymbol symbol;
 	public boolean customFluid = false;
-	
+	public boolean ffBan = false;
+
 	public static final int ROOM_TEMPERATURE = 20;
 	
 	// v v v this entire system is a pain in the ass to work with. i'd much rather define state transitions and heat values manually.
@@ -100,7 +101,12 @@ public class FluidType {
 		this.temperature = temperature;
 		return this;
 	}
-	
+
+	public FluidType noFF(boolean bool) {
+		this.ffBan = bool;
+		return this;
+	}
+
 	public FluidType addContainers(Object... containers) {
 		for(Object container : containers) this.containers.put(container.getClass(), container);
 		return this;

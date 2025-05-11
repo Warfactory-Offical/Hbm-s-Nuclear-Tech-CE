@@ -64,6 +64,7 @@ dependencies {
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:ctm-267602:2915363")
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:gregtech-ce-unofficial-557242:5519022")
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:the-one-probe-245211:2667280")
+    runtimeOnlyNonPublishable rfg.deobf("curse.maven:gregic-probe-ceu-1109784:6393352")
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:codechicken-lib-1-8-242818:2779848")
 
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:universal-tweaks-705000:6388731")

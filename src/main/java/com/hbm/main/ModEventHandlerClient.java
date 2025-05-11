@@ -27,6 +27,7 @@ import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.RecipesCommon.NbtComparableStack;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
+import com.hbm.inventory.fluid.trait.FluidTraitSimple;
 import com.hbm.inventory.gui.GUIArmorTable;
 import com.hbm.items.*;
 import com.hbm.items.armor.ItemArmorMod;
@@ -979,6 +980,10 @@ public class ModEventHandlerClient {
         map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/forgefluid/wastefluid_flowing"));
         map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/forgefluid/wastegas_still"));
         map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/forgefluid/wastegas_flowing"));
+        //More shit to the pile
+        map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/forgefluid/gas_default"));
+        map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/forgefluid/fluid_default_still"));
+        map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/forgefluid/fluid_viscous_default_still"));
 
         contrail = map.registerSprite(new ResourceLocation(RefStrings.MODID + ":particle/contrail"));
         particle_base = map.registerSprite(new ResourceLocation(RefStrings.MODID, "particle/particle_base"));
