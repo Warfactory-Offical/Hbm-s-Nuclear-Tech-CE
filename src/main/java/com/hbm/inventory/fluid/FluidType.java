@@ -188,6 +188,9 @@ public class FluidType {
 		return  FluidRegistry.getFluid(ffNameOverride == null ? stringId.toLowerCase() : ffNameOverride);
 	}
 
+	public String getFFName(){
+		return  ffNameOverride == null ? stringId.toLowerCase() : ffNameOverride;
+	}
 
 	/**
 	 * Called when the tile entity is broken, effectively voiding the fluids.

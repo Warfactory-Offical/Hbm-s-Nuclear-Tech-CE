@@ -14,11 +14,15 @@ import com.hbm.inventory.fluid.trait.FT_Toxin.ToxinDirectDamage;
 import com.hbm.inventory.fluid.trait.FT_Toxin.ToxinEffects;
 import com.hbm.inventory.fluid.trait.FluidTraitSimple.*;
 import com.hbm.lib.ModDamageSource;
+import com.hbm.main.MainRegistry;
 import com.hbm.potion.HbmPotion;
 import com.hbm.render.misc.EnumSymbol;
 import com.hbm.util.ArmorRegistry.HazardClass;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 
 import java.io.File;
 import java.io.FileReader;
@@ -294,6 +298,15 @@ public class Fluids {
          * You may screw with metaOrder as much as you like, as long as you keep all fluids in the list exactly once.
          */
 
+        /*
+        * For porters: Fluids now create a ForgeFluid equivalent, if there is not one registered already
+        * this may sometimes happen unintentionally, due the way we get names from the NTM fluid system, in such
+        * cases use FluidType#setFFNameOverride(String override)
+        *
+        * Made by: MrNorwood
+        * */
+
+
         NONE =					new FluidType("NONE",				0x888888, 0, 0, 0, EnumSymbol.NONE);
         WATER =					new FluidType("WATER",				0x3333FF, 0, 0, 0, EnumSymbol.NONE).addTraits(LIQUID, UNSIPHONABLE);
         STEAM =					new FluidType("STEAM",				0xe5e5e5, 3, 0, 0, EnumSymbol.NONE).setTemp(100).addTraits(GASEOUS, UNSIPHONABLE);
@@ -385,7 +398,7 @@ public class Fluids {
         AIR =					new FluidType("AIR",				0xD1CEBE, 0, 0, 0, EnumSymbol.NONE).addTraits(GASEOUS);
         BLOOD_HOT =				new FluidType("BLOOD_HOT",			0xF22419, 3, 0, 0, EnumSymbol.NONE).addTraits(LIQUID, VISCOUS).setTemp(666); //it's funny because it's the satan number
         SOLVENT =				new FluidType("SOLVENT",			0xE4E3EF, 2, 3, 0, EnumSymbol.NONE).addContainers(new CD_Canister(0xE4E3EF)).addTraits(LIQUID, new FT_Corrosive(30));
-        HCL =					new FluidType("HCL",				0x00D452, 3, 0, 3, EnumSymbol.ACID).addTraits(new FT_Corrosive(30), LIQUID);
+        HCL =					new FluidType("HCL",				0x00D452, 3, 0, 3, EnumSymbol.ACID).setFFNameOverride("hydrochloric_acid").addTraits(new FT_Corrosive(30), LIQUID);
         MINSOL =				new FluidType("MINSOL",				0xFADF6A, 3, 0, 3, EnumSymbol.ACID).addTraits(new FT_Corrosive(10), LIQUID);
         SYNGAS =				new FluidType("SYNGAS",				0x131313, 1, 4, 2, EnumSymbol.NONE).addContainers(new CD_Gastank(0xFFFFFF, 0x131313)).addTraits(GASEOUS);
         OXYHYDROGEN =			new FluidType("OXYHYDROGEN",		0x483FC1, 0, 4, 2, EnumSymbol.NONE).addTraits(GASEOUS);
@@ -409,7 +422,7 @@ public class Fluids {
         REFORMGAS =				new FluidType("REFORMGAS",			0x6362AE, 1, 4, 1, EnumSymbol.NONE).addContainers(new CD_Gastank(0x9392FF, 0xFFB992)).addTraits(GASEOUS, P_GAS);
         MILK =					new FluidType("MILK",				0xCFCFCF, 0, 0, 0, EnumSymbol.NONE).addTraits(DELICIOUS, LIQUID);//F5DEE4
         SMILK =					new FluidType("SMILK",				0xF5DEE4, 0, 0, 0, EnumSymbol.NONE).addTraits(DELICIOUS, LIQUID);
-        OLIVEOIL =				new FluidType("OLIVEOIL",			0xA9B98E, 0, 0, 0, EnumSymbol.NONE).addTraits(DELICIOUS, LIQUID);
+        OLIVEOIL =				new FluidType("OLIVEOIL",			0xA9B990, 0, 0, 0, EnumSymbol.NONE).setFFNameOverride("olive_oil").addTraits(DELICIOUS, LIQUID);
         COLLOID =				new FluidType("COLLOID",			0x787878, 0, 0, 0, EnumSymbol.NONE).addTraits(LIQUID, VISCOUS);
         EVEAIR =				new FluidType("EVEAIR",				0xDCABF8, 4, 0, 0, EnumSymbol.OXIDIZER).addTraits(GASEOUS, new FT_Corrosive(25), new FT_Poison(true, 1));
         KMnO4 =					new FluidType("KMnO4",				0x560046, 4, 0, 0, EnumSymbol.ACID).addTraits(LIQUID, new FT_Corrosive(15), new FT_Poison(true, 1));
@@ -434,10 +447,10 @@ public class Fluids {
         EGG =					new FluidType("EGG",				0xD2C273, 0, 0, 0, EnumSymbol.NONE).addTraits(LIQUID);
         CHOLESTEROL =			new FluidType("CHOLESTEROL",		0xD6D2BD, 0, 0, 0, EnumSymbol.NONE).addTraits(LIQUID);
         ESTRADIOL =				new FluidType("ESTRADIOL",			0xCDD5D8, 0, 0, 0, EnumSymbol.NONE).addTraits(LIQUID);
-        FISHOIL =				new FluidType("FISHOIL",			0x4B4A45, 0, 1, 0, EnumSymbol.NONE).addTraits(LIQUID, P_FUEL);
+        FISHOIL =				new FluidType("FISHOIL",			0x4B4A45, 0, 1, 0, EnumSymbol.NONE).setFFNameOverride("fish_oil").addTraits(LIQUID, P_FUEL);
         SUNFLOWEROIL =			new FluidType("SUNFLOWEROIL",		0xCBAD45, 0, 1, 0, EnumSymbol.NONE).addTraits(LIQUID, P_FUEL);
         NITROGLYCERIN =			new FluidType("NITROGLYCERIN",		0x92ACA6, 0, 4, 0, EnumSymbol.NONE).addTraits(LIQUID);
-        REDMUD =				new FluidType("REDMUD",				0xD85638, 3, 0, 4, EnumSymbol.NONE).addTraits(LIQUID, VISCOUS, LEADCON, new FT_Corrosive(60), new FT_Flammable(1_000), new FT_Polluting().release(PollutionHandler.PollutionType.POISON, POISON_EXTREME));
+        REDMUD =				new FluidType("REDMUD",				0xD85638, 3, 0, 4, EnumSymbol.NONE).setFFNameOverride("red_mud").addTraits(LIQUID, VISCOUS, LEADCON, new FT_Corrosive(60), new FT_Flammable(1_000), new FT_Polluting().release(PollutionHandler.PollutionType.POISON, POISON_EXTREME));
         CHLOROCALCITE_SOLUTION = new FluidType("CHLOROCALCITE_SOLUTION", 0x808080, 0, 0, 0, EnumSymbol.NONE).addTraits(LIQUID, NOCON, new FT_Corrosive(60));
         CHLOROCALCITE_MIX =		new FluidType("CHLOROCALCITE_MIX",	0x808080, 0, 0, 0, EnumSymbol.NONE).addTraits(LIQUID, NOCON, new FT_Corrosive(60));
         CHLOROCALCITE_CLEANED =	new FluidType("CHLOROCALCITE_CLEANED", 0x808080, 0, 0, 0, EnumSymbol.NONE).addTraits(LIQUID, NOCON, new FT_Corrosive(60));
@@ -923,6 +936,10 @@ public class Fluids {
         } else {
             readTraits(config);
         }
+
+
+
+
     }
 
     private static void initDefaultFluids(File file) {
@@ -1143,6 +1160,21 @@ public class Fluids {
         }
 
         return all;
+    }
+
+    public static void initForgeFluidCompat() {
+        for(FluidType fluid : metaOrder ){
+            Fluid existsingFluid = FluidRegistry.getFluid(fluid.getFFName());
+            if(existsingFluid != null){
+                MainRegistry.logger.info("[NTM Fluid<=>ForgeFluid Compat] Found ForgeFluid for: " + fluid.getName() + ". Skipping registration...");
+                continue;
+            }
+            MainRegistry.logger.info("[NTM Fluid<=>ForgeFluid Compat] Forge Fluid not found for: " + fluid.getName() + ". Registering under: " + fluid.getFFName());
+            //TODO:
+
+
+        }
+
     }
 
     public static class CD_Canister {
