@@ -445,7 +445,7 @@ public class Fluids {
         CHOLESTEROL = new FluidType("CHOLESTEROL", 0xD6D2BD, 0, 0, 0, EnumSymbol.NONE).addTraits(LIQUID);
         ESTRADIOL = new FluidType("ESTRADIOL", 0xCDD5D8, 0, 0, 0, EnumSymbol.NONE).addTraits(LIQUID);
         FISHOIL = new FluidType("FISHOIL", 0x4B4A45, 0, 1, 0, EnumSymbol.NONE).setFFNameOverride("fish_oil").addTraits(LIQUID, P_FUEL);
-        SUNFLOWEROIL = new FluidType("SUNFLOWEROIL", 0xCBAD45, 0, 1, 0, EnumSymbol.NONE).addTraits(LIQUID, P_FUEL);
+        SUNFLOWEROIL = new FluidType("SUNFLOWEROIL", 0xCBAD45, 0, 1, 0, EnumSymbol.NONE).setFFNameOverride("seed_oil").addTraits(LIQUID, P_FUEL);
         NITROGLYCERIN = new FluidType("NITROGLYCERIN", 0x92ACA6, 0, 4, 0, EnumSymbol.NONE).addTraits(LIQUID);
         REDMUD = new FluidType("REDMUD", 0xD85638, 3, 0, 4, EnumSymbol.NONE).setFFNameOverride("red_mud").addTraits(LIQUID, VISCOUS, LEADCON, new FT_Corrosive(60), new FT_Flammable(1_000), new FT_Polluting().release(PollutionHandler.PollutionType.POISON, POISON_EXTREME));
         CHLOROCALCITE_SOLUTION = new FluidType("CHLOROCALCITE_SOLUTION", 0x808080, 0, 0, 0, EnumSymbol.NONE).addTraits(LIQUID, NOCON, new FT_Corrosive(60));
@@ -851,13 +851,13 @@ public class Fluids {
         double flammabilityHigh = 2.0D; //satan's asshole
 
         /// the almighty excel spreadsheet has spoken! ///
-        registerCalculatedFuel(OIL, (baseline / 1D * flammabilityLow * demandLow), 0, null);
-        registerCalculatedFuel(OIL_DS, (baseline / 1D * flammabilityLow * demandLow * complexityHydro), 0, null);
-        registerCalculatedFuel(CRACKOIL, (baseline / 1D * flammabilityLow * demandLow * complexityCracking), 0, null);
-        registerCalculatedFuel(CRACKOIL_DS, (baseline / 1D * flammabilityLow * demandLow * complexityCracking * complexityHydro), 0, null);
-        registerCalculatedFuel(OIL_COKER, (baseline / 1D * flammabilityLow * demandLow * complexityCoker), 0, null);
-        registerCalculatedFuel(GAS, (baseline / 1D * flammabilityNormal * demandVeryLow), 1.5, FuelGrade.GAS);
-        registerCalculatedFuel(GAS_COKER, (baseline / 1D * flammabilityNormal * demandVeryLow * complexityCoker), 1.5, FuelGrade.GAS);
+        registerCalculatedFuel(OIL, (baseline * flammabilityLow * demandLow), 0, null);
+        registerCalculatedFuel(OIL_DS, (baseline * flammabilityLow * demandLow * complexityHydro), 0, null);
+        registerCalculatedFuel(CRACKOIL, (baseline * flammabilityLow * demandLow * complexityCracking), 0, null);
+        registerCalculatedFuel(CRACKOIL_DS, (baseline * flammabilityLow * demandLow * complexityCracking * complexityHydro), 0, null);
+        registerCalculatedFuel(OIL_COKER, (baseline * flammabilityLow * demandLow * complexityCoker), 0, null);
+        registerCalculatedFuel(GAS, (baseline * flammabilityNormal * demandVeryLow), 1.5, FuelGrade.GAS);
+        registerCalculatedFuel(GAS_COKER, (baseline * flammabilityNormal * demandVeryLow * complexityCoker), 1.5, FuelGrade.GAS);
         registerCalculatedFuel(HEAVYOIL, (baseline / 0.5 * flammabilityLow * demandLow * complexityRefinery), 1.25D, FuelGrade.LOW);
         registerCalculatedFuel(SMEAR, (baseline / 0.35 * flammabilityLow * demandLow * complexityRefinery * complexityFraction), 1.25D, FuelGrade.LOW);
         registerCalculatedFuel(RECLAIMED, (baseline / 0.28 * flammabilityLow * demandLow * complexityRefinery * complexityFraction * complexityChemplant), 1.25D, FuelGrade.LOW);
@@ -1186,9 +1186,9 @@ public class Fluids {
 
             // Default texture if custom one is not found
             ResourceLocation defaultTexture = fluid.hasTrait(FT_Gaseous.class) ? new ResourceLocation(RefStrings.MODID, "blocks/forgefluid/gas_default") :
-                    new ResourceLocation(RefStrings.MODID, "blocks/forgefluid/fluid_default_still") ;
-            if(fluid.hasTrait(FT_Viscous.class))
-                defaultTexture =new ResourceLocation(RefStrings.MODID, "blocks/forgefluid/fluid_viscous_default_still");
+                    new ResourceLocation(RefStrings.MODID, "blocks/forgefluid/fluid_default_still");
+            if (fluid.hasTrait(FT_Viscous.class))
+                defaultTexture = new ResourceLocation(RefStrings.MODID, "blocks/forgefluid/fluid_viscous_default_still");
 
             // Try loading the custom texture
             IResourceManager resourceManager = Minecraft.getMinecraft().getResourceManager();
@@ -1208,11 +1208,11 @@ public class Fluids {
             }
             int color = textureStill == defaultTexture ? 0xFFFFFFFF : fluid.getColor();
 
-            // Create fluid with correct texture
             Fluid compatFluid = new Fluid(fluid.getFFName(),
                     textureStill, textureFlowing, color)
                     .setTemperature(fluid.temperature)
                     .setColor(fluid.getColor())
+                    .setDensity(1000)
                     .setViscosity(fluid.hasTrait(FT_Viscous.class) ? 6000 : 1000);
 
             if (fluid.hasTrait(FT_Gaseous.class)) {
@@ -1230,7 +1230,10 @@ public class Fluids {
 
     public static class CD_Canister {
         public int color;
-        public CD_Canister(int color) { this.color = color; }
+
+        public CD_Canister(int color) {
+            this.color = color;
+        }
     }
 
     public static class CD_Gastank {
