@@ -10,6 +10,7 @@ import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.fluid.trait.FT_Corrosive;
+import com.hbm.items.machine.ItemForgeFluidIdentifier;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.IFluidCopiable;
@@ -81,12 +82,6 @@ public class TileEntityBarrel extends TileEntityMachineBase implements
         tankNew = new FluidTankNTM(Fluids.NONE, cap, 0);
     }
 
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(this);
-        return super.getCapability(capability, facing);
-    }
-
     protected static int transmitFluidFairly(World world, FluidTankNTM tank, IFluidConnector that, int fill, boolean connect, boolean send, DirPos[] connections) {
 
         Set<IPipeNet> nets = new HashSet<>();
@@ -138,6 +133,12 @@ public class TileEntityBarrel extends TileEntityMachineBase implements
         }
 
         return fill;
+    }
+
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(this);
+        return super.getCapability(capability, facing);
     }
 
     @Override
@@ -340,7 +341,7 @@ public class TileEntityBarrel extends TileEntityMachineBase implements
 
     @Override
     public boolean isItemValidForSlot(int i, ItemStack stack) {
-        if (i == 0) {
+        if (i == 0 && stack.getItem() instanceof ItemForgeFluidIdentifier) {
             return true;
         }
 
@@ -353,7 +354,7 @@ public class TileEntityBarrel extends TileEntityMachineBase implements
 
     @Override
     public boolean canInsertItem(int slot, ItemStack itemStack, int amount) {
-        return isItemValidForSlot(slot, itemStack);
+        return this.isItemValidForSlot(slot, itemStack);
     }
 
     @Override
@@ -446,7 +447,13 @@ public class TileEntityBarrel extends TileEntityMachineBase implements
         if (!(tankNew.getTankTypeFF() != null && tankNew.getTankTypeFF().getName().equals(resource.getFluid().getName())))
             return 0;
         int amount = resource.amount;
-        return (int) transferFluid(tankNew.getTankType(), 0, amount); //I FUCKING LOVE CASTING
+        long demand = getDemand(tankNew.getTankType(), 0);
+        int toTransfer = (int) Math.min(demand, amount);
+        if (doFill) {
+            tankNew.setFill(tankNew.getFill() + toTransfer);
+            this.markDirty();
+        }
+        return toTransfer;
     }
 
     @Override
