@@ -427,8 +427,16 @@ public class TileEntityBarrel extends TileEntityMachineBase implements
 
     @Override
     public IFluidTankProperties[] getTankProperties() {
+        Fluid fluid = tankNew.getTankTypeFF();
+        int amount = tankNew.getFill();
+        int capacity = tankNew.getMaxFill();
+
+        FluidStack stack = (fluid != null && amount > 0)
+                ? new FluidStack(fluid, amount)
+                : null;
+
         return new IFluidTankProperties[]{
-                new FluidTankProperties(new FluidStack(tankNew.getTankTypeFF(), tankNew.getFill()), tankNew.getMaxFill())
+                new FluidTankProperties(stack, capacity)
         };
     }
 

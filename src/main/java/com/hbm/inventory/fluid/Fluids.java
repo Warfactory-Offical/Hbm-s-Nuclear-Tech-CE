@@ -361,10 +361,10 @@ public class Fluids {
         PLASMA_BF = new FluidType("PLASMA_BF", 0xA7F1A3, 4, 5, 4, EnumSymbol.ANTIMATTER).setTemp(8500).addTraits(NOCON, NOID, PLASMA, new FT_Rocket(50000, 700_000));
         CARBONDIOXIDE = new FluidType("CARBONDIOXIDE", 0x404040, 3, 0, 0, EnumSymbol.ASPHYXIANT).setFFNameOverride("carbon_dioxide").addTraits(GASEOUS, new FT_Polluting().release(PollutionHandler.PollutionType.POISON, POISON_MINOR));
         PLASMA_DH3 = new FluidType("PLASMA_DH3", 0xFF83AA, 0, 4, 0, EnumSymbol.RADIATION).setTemp(3480).addTraits(NOCON, NOID, PLASMA, new FT_Rocket(20000, 700_000));
-        HELIUM3 = new FluidType("HELIUM3", 0xFCF0C4, 0, 0, 0, EnumSymbol.ASPHYXIANT).addTraits(GASEOUS);
+        HELIUM3 = new FluidType("HELIUM3", 0xFCF0C4, 0, 0, 0, EnumSymbol.ASPHYXIANT).setFFNameOverride("helium_3").addTraits(GASEOUS);
         DEATH = new FluidType("DEATH", 0x717A88, 2, 0, 1, EnumSymbol.ACID).setTemp(300).addTraits(new FT_Corrosive(80), new FT_Poison(true, 4), LEADCON, LIQUID, VISCOUS);
         ETHANOL = new FluidType("ETHANOL", 0xe0ffff, 2, 3, 0, EnumSymbol.NONE).addContainers(new CD_Canister(0xEAFFF3)).addTraits(new FT_Flammable(75_000), new FT_Combustible(FuelGrade.HIGH, 200_000), LIQUID, P_FUEL);
-        HEAVYWATER = new FluidType("HEAVYWATER", 0x00a0b0, 1, 0, 0, EnumSymbol.NONE).addTraits(LIQUID);
+        HEAVYWATER = new FluidType("HEAVYWATER", 0x00a0b0, 1, 0, 0, EnumSymbol.NONE).setFFNameOverride("heavy_water").addTraits(LIQUID);
         CRACKOIL = new FluidType("CRACKOIL", 0x020202, 2, 1, 0, EnumSymbol.NONE).addContainers(new CD_Canister(0x424242)).addTraits(new FT_Flammable(10_000), LIQUID, VISCOUS, P_OIL);
         COALOIL = new FluidType("COALOIL", 0x020202, 2, 1, 0, EnumSymbol.NONE).addContainers(new CD_Canister(0x424242)).addTraits(new FT_Flammable(10_000), LIQUID, VISCOUS, P_OIL);
         HOTCRACKOIL = new FluidType("HOTCRACKOIL", 0x300900, 2, 3, 0, EnumSymbol.NONE).setTemp(350).addTraits(LIQUID, VISCOUS, P_OIL);
@@ -1208,12 +1208,13 @@ public class Fluids {
             }
             int color = textureStill == defaultTexture ? 0xFFFFFFFF : fluid.getColor();
 
-            Fluid compatFluid = new Fluid(fluid.getFFName(),
+            Fluid compatFluid = new ForgeFluidNTM(fluid.getFFName(),
                     textureStill, textureFlowing, color)
                     .setTemperature(fluid.temperature)
                     .setColor(fluid.getColor())
                     .setDensity(1000)
                     .setViscosity(fluid.hasTrait(FT_Viscous.class) ? 6000 : 1000);
+
 
             if (fluid.hasTrait(FT_Gaseous.class)) {
                 compatFluid.setDensity(-1000);
