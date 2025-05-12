@@ -2,6 +2,7 @@ package com.hbm.tileentity.machine;
 
 import api.hbm.fluid.*;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.handler.CompatHandler;
 import com.hbm.interfaces.IFFtoNTMF;
@@ -35,12 +36,8 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.FluidTankProperties;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.items.ItemStackHandler;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -51,7 +48,7 @@ import java.util.Set;
 public class TileEntityBarrel extends TileEntityMachineBase implements
         ITickable, IPersistentNBT, IFluidCopiable,
         IFluidStandardTransceiver, SimpleComponent,
-        CompatHandler.OCComponent, IFFtoNTMF, IFluidHandler {
+        CompatHandler.OCComponent, IFFtoNTMF {
 
     public static final short modes = 4;
     private static final int[] slots_top = new int[]{2};
@@ -136,8 +133,85 @@ public class TileEntityBarrel extends TileEntityMachineBase implements
     }
 
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(this);
+        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+            if (facing == EnumFacing.UP) {
+                return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new NTMFluidHandlerWrapper(tankNew) {
+                                                                                @Override
+                                                                                public int fill(FluidStack resource, boolean doFill) {
+                                                                                    if (mode == 0 || mode == 1)
+                                                                                        return delegate.fill(resource, doFill);
+                                                                                    return 0;
+                                                                                }
+
+                                                                                @Override
+                                                                                public FluidStack drain(FluidStack resource, boolean doDrain) {
+                                                                                    return null;
+                                                                                }
+
+                                                                                @Override
+                                                                                public FluidStack drain(int maxDrain, boolean doDrain) {
+                                                                                    return null;
+                                                                                }
+                                                                            }
+                );
+
+            } else if (facing == EnumFacing.DOWN) {
+
+                return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new NTMFluidHandlerWrapper(tankNew) {
+                                                                                @Override
+                                                                                public int fill(FluidStack resource, boolean doFill) {
+                                                                                    return 0;
+                                                                                }
+
+                                                                                @Override
+                                                                                public FluidStack drain(FluidStack resource, boolean doDrain) {
+
+                                                                                    if (mode == 2 || mode == 1)
+                                                                                        return delegate.drain(resource, doDrain);
+                                                                                    return null;
+                                                                                }
+
+                                                                                @Override
+                                                                                public FluidStack drain(int maxDrain, boolean doDrain) {
+                                                                                    if (mode == 2 || mode == 1)
+                                                                                        return delegate.drain(maxDrain, doDrain);
+                                                                                    return null;
+                                                                                }
+                                                                            }
+                );
+
+            } else {
+
+                return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new NTMFluidHandlerWrapper(tankNew) {
+                                                                                @Override
+                                                                                public int fill(FluidStack resource, boolean doFill) {
+                                                                                    if (mode == 0 || mode == 1)
+                                                                                        return delegate.fill(resource, doFill);
+                                                                                    return 0;
+                                                                                }
+
+                                                                                @Override
+                                                                                public FluidStack drain(FluidStack resource, boolean doDrain) {
+
+                                                                                    if (mode == 2 || mode == 1)
+                                                                                        return delegate.drain(resource, doDrain);
+                                                                                    return null;
+                                                                                }
+
+                                                                                @Override
+                                                                                public FluidStack drain(int maxDrain, boolean doDrain) {
+                                                                                    if (mode == 2 || mode == 1)
+                                                                                        return delegate.drain(maxDrain, doDrain);
+                                                                                    return null;
+                                                                                }
+                                                                            }
+                );
+
+            }
+
+        }
+
+
         return super.getCapability(capability, facing);
     }
 
@@ -427,65 +501,4 @@ public class TileEntityBarrel extends TileEntityMachineBase implements
         throw new NoSuchMethodException();
     }
 
-    @Override
-    public IFluidTankProperties[] getTankProperties() {
-        Fluid fluid = tankNew.getTankTypeFF();
-        int amount = tankNew.getFill();
-        int capacity = tankNew.getMaxFill();
-
-        FluidStack stack = (fluid != null && amount > 0)
-                ? new FluidStack(fluid, amount)
-                : null;
-
-        return new IFluidTankProperties[]{
-                new FluidTankProperties(stack, capacity)
-        };
-    }
-
-    @Override
-    public int fill(FluidStack resource, boolean doFill) {
-        if (!(tankNew.getTankTypeFF() != null && tankNew.getTankTypeFF().getName().equals(resource.getFluid().getName())))
-            return 0;
-        int amount = resource.amount;
-        long demand = getDemand(tankNew.getTankType(), 0);
-        int toTransfer = (int) Math.min(demand, amount);
-        if (doFill) {
-            tankNew.setFill(tankNew.getFill() + toTransfer);
-            this.markDirty();
-        }
-        return toTransfer;
-    }
-
-    @Override
-    public @Nullable FluidStack drain(FluidStack resource, boolean doDrain) {
-        Fluid currentType = tankNew.getTankTypeFF();
-        if (resource == null || !resource.getFluid().equals(currentType)) return null;
-        sendingBrake = true; //Poor man's mutex o algo
-        int toDrain = Math.min(resource.amount, tankNew.getFill());
-        FluidStack drained = new FluidStack(currentType, toDrain);
-        if (doDrain) {
-            tankNew.setFill(tankNew.getFill() - toDrain);
-            markDirty();
-        }
-        sendingBrake = false;
-        return drained;
-    }
-
-    @Override
-    public @Nullable FluidStack drain(int maxDrain, boolean doDrain) {
-        if (tankNew.getTankType() == Fluids.NONE || tankNew.getTankTypeFF() == null || tankNew.getFill() == 0)
-            return null;
-        sendingBrake = true;
-        int toDrain = Math.min(maxDrain, tankNew.getFill());
-        FluidStack drained = new FluidStack(tankNew.getTankTypeFF(), toDrain);
-
-
-        if (doDrain) {
-            tankNew.setFill(tankNew.getFill() - toDrain);
-            markDirty();
-        }
-
-        sendingBrake = false;
-        return drained;
-    }
 }
