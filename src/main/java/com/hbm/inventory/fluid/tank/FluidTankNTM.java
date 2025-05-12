@@ -35,7 +35,7 @@ public class FluidTankNTM {
 	public static final Set<Item> noDualUnload = new HashSet<Item>();
 	
 	static {
-		loadingHandlers.add(new FluidLoaderStandard());
+		loadingHandlers.add(new FluidLoaderStandard()); //Don't get fooled, this is responsible for fluid containers
 		loadingHandlers.add(new FluidLoaderFillableItem());
 		loadingHandlers.add(new FluidLoaderInfinite());
 	}

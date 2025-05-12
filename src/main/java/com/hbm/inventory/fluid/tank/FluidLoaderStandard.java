@@ -29,15 +29,18 @@ public class FluidLoaderStandard extends FluidLoadingHandler {
 					slots.insertItem(in, ItemStack.EMPTY, false);
 				}
 				
-			} else if(slots.getStackInSlot(out) != ItemStack.EMPTY && slots.getStackInSlot(out).getItem() == full.getItem() && slots.getStackInSlot(out).getItemDamage() == full.getItemDamage() && slots.getStackInSlot(out).getCount() < slots.getStackInSlot(out).getMaxStackSize()) {
+			} else if(slots.getStackInSlot(out) != ItemStack.EMPTY &&
+					slots.getStackInSlot(out).getItem() == full.getItem() &&
+					slots.getStackInSlot(out).getItemDamage() == full.getItemDamage() &&
+					slots.getStackInSlot(out).getCount() < slots.getStackInSlot(out).getMaxStackSize()) {
 				
 				tank.setFill(tank.getFill() - FluidContainerRegistry.getFluidContent(full, type));
-				slots.getStackInSlot(in).setCount(slots.getStackInSlot(in).getCount() - 1);
+				slots.getStackInSlot(in).shrink(1);
 				
 				if(slots.getStackInSlot(in).getCount() <= 0) {
 					slots.insertItem(in, ItemStack.EMPTY, false);
 				}
-				slots.getStackInSlot(in).setCount(slots.getStackInSlot(out).getCount() + 1);
+				slots.getStackInSlot(out).grow(1);
 			}
 		}
 		

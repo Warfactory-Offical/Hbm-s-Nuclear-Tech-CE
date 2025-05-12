@@ -60,6 +60,7 @@ public class TileEntityBarrel extends TileEntityMachineBase implements
     public FluidTank tank;
     public FluidTankNTM tankNew;
     //Drillgon200: I think this would be much easier to read as an enum.
+    //Norwood: This could have been a byte
     public short mode = 0;
     public List<IFluidAcceptor> list = new ArrayList();
     protected boolean sendingBrake = false;
