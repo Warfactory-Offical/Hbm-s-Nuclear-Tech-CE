@@ -2,7 +2,9 @@ package com.hbm.inventory.fluid.tank;
 
 import com.hbm.inventory.FluidContainerRegistry;
 import com.hbm.inventory.fluid.FluidType;
+import com.hbm.inventory.fluid.Fluids;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.items.IItemHandler;
 
 public class FluidLoaderStandard extends FluidLoadingHandler {
@@ -52,10 +54,14 @@ public class FluidLoaderStandard extends FluidLoadingHandler {
 		
 		if(slots.getStackInSlot(in) == ItemStack.EMPTY)
 			return true;
-		
-		FluidType type = tank.getTankType();
-		int amount = FluidContainerRegistry.getFluidContent(slots.getStackInSlot(in), type);
-		
+
+		FluidType tankType = tank.getTankType();
+		FluidType itemTankType = FluidContainerRegistry.getFluidType(slots.getStackInSlot(in));
+		if(tankType == Fluids.NONE && itemTankType != Fluids.NONE)
+			tank.setTankType(itemTankType);
+
+		int amount = FluidContainerRegistry.getFluidContent(slots.getStackInSlot(in), tankType);
+
 		if(amount > 0 && tank.getFill() + amount <= tank.maxFluid) {
 			
 			ItemStack emptyContainer = FluidContainerRegistry.getEmptyContainer(slots.getStackInSlot(in));
