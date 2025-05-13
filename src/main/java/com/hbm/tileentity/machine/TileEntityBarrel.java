@@ -135,77 +135,83 @@ public class TileEntityBarrel extends TileEntityMachineBase implements
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
             if (facing == EnumFacing.UP) {
-                return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new NTMFluidHandlerWrapper(tankNew) {
-                                                                                @Override
-                                                                                public int fill(FluidStack resource, boolean doFill) {
-                                                                                    if (mode == 0 || mode == 1)
-                                                                                        return delegate.fill(resource, doFill);
-                                                                                    return 0;
-                                                                                }
+                return CapabilityFluidHandler.
+                        FLUID_HANDLER_CAPABILITY.
+                        cast(new NTMFluidHandlerWrapper(tankNew) {
+                                 @Override
+                                 public int fill(FluidStack resource, boolean doFill) {
+                                     if (mode == 0 || mode == 1)
+                                         return super.fill(resource, doFill);
+                                     return 0;
+                                 }
 
-                                                                                @Override
-                                                                                public FluidStack drain(FluidStack resource, boolean doDrain) {
-                                                                                    return null;
-                                                                                }
+                                 @Override
+                                 public FluidStack drain(FluidStack resource, boolean doDrain) {
+                                     return null;
+                                 }
 
-                                                                                @Override
-                                                                                public FluidStack drain(int maxDrain, boolean doDrain) {
-                                                                                    return null;
-                                                                                }
-                                                                            }
-                );
+                                 @Override
+                                 public FluidStack drain(int maxDrain, boolean doDrain) {
+                                     return null;
+                                 }
+                             }
+                        );
 
             } else if (facing == EnumFacing.DOWN) {
 
-                return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new NTMFluidHandlerWrapper(tankNew) {
-                                                                                @Override
-                                                                                public int fill(FluidStack resource, boolean doFill) {
-                                                                                    return 0;
-                                                                                }
+                return CapabilityFluidHandler.
+                        FLUID_HANDLER_CAPABILITY.
+                        cast(new NTMFluidHandlerWrapper(tankNew) {
+                                 @Override
+                                 public int fill(FluidStack resource, boolean doFill) {
+                                     return 0;
+                                 }
 
-                                                                                @Override
-                                                                                public FluidStack drain(FluidStack resource, boolean doDrain) {
+                                 @Override
+                                 public FluidStack drain(FluidStack resource, boolean doDrain) {
 
-                                                                                    if (mode == 2 || mode == 1)
-                                                                                        return delegate.drain(resource, doDrain);
-                                                                                    return null;
-                                                                                }
+                                     if (mode == 2 || mode == 1)
+                                         return super.drain(resource, doDrain);
+                                     return null;
+                                 }
 
-                                                                                @Override
-                                                                                public FluidStack drain(int maxDrain, boolean doDrain) {
-                                                                                    if (mode == 2 || mode == 1)
-                                                                                        return delegate.drain(maxDrain, doDrain);
-                                                                                    return null;
-                                                                                }
-                                                                            }
-                );
+                                 @Override
+                                 public FluidStack drain(int maxDrain, boolean doDrain) {
+                                     if (mode == 2 || mode == 1)
+                                         return super.drain(maxDrain, doDrain);
+                                     return null;
+                                 }
+                             }
+                        );
 
             } else {
 
-                return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new NTMFluidHandlerWrapper(tankNew) {
-                                                                                @Override
-                                                                                public int fill(FluidStack resource, boolean doFill) {
-                                                                                    if (mode == 0 || mode == 1)
-                                                                                        return delegate.fill(resource, doFill);
-                                                                                    return 0;
-                                                                                }
+                return CapabilityFluidHandler.
+                        FLUID_HANDLER_CAPABILITY.
+                        cast(new NTMFluidHandlerWrapper(tankNew) {
+                                 @Override
+                                 public int fill(FluidStack resource, boolean doFill) {
+                                     if (mode == 0 || mode == 1)
+                                         return super.fill(resource, doFill);
+                                     return 0;
+                                 }
 
-                                                                                @Override
-                                                                                public FluidStack drain(FluidStack resource, boolean doDrain) {
+                                 @Override
+                                 public FluidStack drain(FluidStack resource, boolean doDrain) {
 
-                                                                                    if (mode == 2 || mode == 1)
-                                                                                        return delegate.drain(resource, doDrain);
-                                                                                    return null;
-                                                                                }
+                                     if (mode == 2 || mode == 1)
+                                         return super.drain(resource, doDrain);
+                                     return null;
+                                 }
 
-                                                                                @Override
-                                                                                public FluidStack drain(int maxDrain, boolean doDrain) {
-                                                                                    if (mode == 2 || mode == 1)
-                                                                                        return delegate.drain(maxDrain, doDrain);
-                                                                                    return null;
-                                                                                }
-                                                                            }
-                );
+                                 @Override
+                                 public FluidStack drain(int maxDrain, boolean doDrain) {
+                                     if (mode == 2 || mode == 1)
+                                         return super.drain(maxDrain, doDrain);
+                                     return null;
+                                 }
+                             }
+                        );
 
             }
 
