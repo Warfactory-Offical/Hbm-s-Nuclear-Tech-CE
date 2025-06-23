@@ -23,10 +23,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
 
 import static com.hbm.inventory.OreDictManager.*;
@@ -196,23 +193,25 @@ public class CrystallizerRecipes extends SerializableRecipe {
 		for(Entry<Tuple.Pair<Object, FluidType>, CrystallizerRecipe> entry : CrystallizerRecipes.recipes.entrySet()) {
 			List<ItemStack> ingredients;
 			CrystallizerRecipe recipe = entry.getValue();
-			if(entry.getKey().getKey() instanceof String) {
-				String oreKey = (String)entry.getKey().getKey();
-				ingredients = OreDictionary.getOres(oreKey);
-			}else{
-				ItemStack stack = ((ComparableStack)entry.getKey().getKey()).toStack();
-				ingredients = new ArrayList<ItemStack>();
+			Object key = entry.getKey().getKey();
+			if (key instanceof String oreKey) {
+                ingredients = OreDictionary.getOres(oreKey);
+				if (ingredients.isEmpty()) continue;
+			} else {
+				ItemStack stack = ((ComparableStack) key).toStack();
+				ingredients = new ArrayList<>();
 				ingredients.add(stack);
 			}
+			for(ItemStack stack : ingredients) stack.setCount(recipe.itemAmount);
 			ItemStack inputFluid = ItemFluidIcon.make(new FluidStack(entry.getKey().getValue(), recipe.acidAmount));
 			ItemStack outputItem = recipe.output;
-			List<List<ItemStack>> totalInput = new ArrayList<List<ItemStack>>();
-			totalInput.add(ingredients);
-			totalInput.add(Arrays.asList(inputFluid));
 
+			CrystallizerRecipe jeiRecipe = new CrystallizerRecipe(outputItem, recipe.duration);
 
-			jeiCrystalRecipes.add(new CrystallizerRecipe(outputItem, recipe.duration));
+			jeiRecipe.jeiItemInputs = ingredients;
+			jeiRecipe.jeiFluidInput = inputFluid;
 
+			jeiCrystalRecipes.add(jeiRecipe);
 		}
 
 		return jeiCrystalRecipes;
@@ -233,8 +232,8 @@ public class CrystallizerRecipes extends SerializableRecipe {
 		public int itemAmount = 1;
 		public int duration;
 		public ItemStack output;
-		public ItemStack input;
-		public ItemStack acid;
+		private List<ItemStack> jeiItemInputs;
+		private ItemStack jeiFluidInput;
 
 		public CrystallizerRecipe(Block output, int duration) { this(new ItemStack(output), duration); }
 		public CrystallizerRecipe(Item output, int duration) { this(new ItemStack(output), duration); }
@@ -252,8 +251,11 @@ public class CrystallizerRecipes extends SerializableRecipe {
 
 		@Override
 		public void getIngredients(IIngredients ingredients) {
-			ingredients.setInput(VanillaTypes.ITEM, input);
-			ingredients.setOutput(VanillaTypes.ITEM, output);
+			List<List<ItemStack>> allInputs = new ArrayList<>();
+			allInputs.add(this.jeiItemInputs);
+			allInputs.add(Collections.singletonList(this.jeiFluidInput));
+			ingredients.setInputLists(VanillaTypes.ITEM, allInputs);
+			ingredients.setOutput(VanillaTypes.ITEM, this.output);
 		}
 	}
 
