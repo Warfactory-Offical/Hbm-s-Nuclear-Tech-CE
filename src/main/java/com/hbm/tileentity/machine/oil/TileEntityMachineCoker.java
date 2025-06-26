@@ -2,6 +2,7 @@ package com.hbm.tileentity.machine.oil;
 
 import api.hbm.fluid.IFluidStandardTransceiver;
 import api.hbm.tile.IHeatSource;
+import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.inventory.CokerRecipes;
 import com.hbm.inventory.container.ContainerMachineCoker;
 import com.hbm.inventory.fluid.FluidStack;
@@ -25,8 +26,12 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
 
 public class TileEntityMachineCoker extends TileEntityMachineBase implements IFluidStandardTransceiver, IGUIProvider, IFluidCopiable, ITickable {
 
@@ -286,5 +291,23 @@ public class TileEntityMachineCoker extends TileEntityMachineBase implements IFl
     @SideOnly(Side.CLIENT)
     public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
         return new GUIMachineCoker(player.inventory, this);
+    }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+            return true;
+        }
+        return super.hasCapability(capability, facing);
+    }
+
+    @Override
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(
+                    new NTMFluidHandlerWrapper(this.getReceivingTanks(), this.getSendingTanks())
+            );
+        }
+        return super.getCapability(capability, facing);
     }
 }

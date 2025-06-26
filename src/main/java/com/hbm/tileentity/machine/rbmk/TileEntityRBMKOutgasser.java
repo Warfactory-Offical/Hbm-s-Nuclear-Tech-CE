@@ -2,6 +2,7 @@ package com.hbm.tileentity.machine.rbmk;
 
 import api.hbm.fluid.IFluidStandardSender;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.entity.projectile.EntityRBMKDebris.DebrisType;
 import com.hbm.inventory.RBMKOutgasserRecipes;
 import com.hbm.inventory.control_panel.DataValue;
@@ -16,7 +17,11 @@ import com.hbm.util.ContaminationUtil;
 import com.hbm.util.Tuple;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
+import javax.annotation.Nullable;
 import java.util.Map;
 
 public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implements IRBMKFluxReceiver, IFluidStandardSender, IRBMKLoadable {
@@ -260,5 +265,23 @@ public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implement
 		data.put("maxProgress", new DataValueFloat((float) this.duration));
 
 		return data;
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			return true;
+		}
+		return super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(
+					new NTMFluidHandlerWrapper(this.getSendingTanks(), null)
+			);
+		}
+		return super.getCapability(capability, facing);
 	}
 }

@@ -4,6 +4,7 @@ import api.hbm.fluid.IFluidStandardTransceiver;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.HbmCapability;
+import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.explosion.vanillant.ExplosionVNT;
 import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.handler.MultiblockHandlerXR;
@@ -39,12 +40,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 public class TileEntityMachineFluidTank extends TileEntityMachineBase implements ITickable, IFluidStandardTransceiver, IPersistentNBT, IControllable, IGUIProvider, IOverpressurable, IRepairable, IFFtoNTMF, IFluidCopiable {
@@ -52,7 +57,7 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 	public FluidTankNTM tankNew;
 	public FluidTank tank;
 	public Fluid oldFluid;
-
+	/** 0 = receive-only, 1 = both, 2 = send-only, 3 = disabled */
 	public short mode = 0;
 	public static final short modes = 4;
 	public boolean hasExploded = false;
@@ -64,7 +69,7 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 	public Explosion lastExplosion = null;
 
 	private static boolean converted = false;
-	
+
 	public TileEntityMachineFluidTank() {
 		super(6);
 		tank = new FluidTank(256000);
@@ -72,11 +77,11 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 
 		converted = true;
 	}
-	
+
 	public String getName() {
 		return "container.fluidtank";
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		if(!converted) {
@@ -86,17 +91,57 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 		mode = compound.getShort("mode");
 		super.readFromNBT(compound);
 	}
-	
+
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		if(!converted) tank.writeToNBT(compound); else tankNew.writeToNBT(compound, "tank");
 		compound.setShort("mode", mode);
 		return super.writeToNBT(compound);
 	}
-	
+
 	@Override
 	public int[] getAccessibleSlotsFromSide(EnumFacing e){
 		return slots;
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			return true;
+		}
+		return super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new NTMFluidHandlerWrapper(tankNew) {
+				@Override
+				public int fill(FluidStack resource, boolean doFill) {
+					if (mode == 0 || mode == 1) {
+						return super.fill(resource, doFill);
+					}
+					return 0;
+				}
+
+				@Override
+				public FluidStack drain(FluidStack resource, boolean doDrain) {
+					if (mode == 2 || mode == 1) {
+						return super.drain(resource, doDrain);
+					}
+					return null;
+				}
+
+				@Override
+				public FluidStack drain(int maxDrain, boolean doDrain) {
+					if (mode == 2 || mode == 1) {
+						return super.drain(maxDrain, doDrain);
+					}
+					return null;
+				}
+			});
+		}
+		return super.getCapability(capability, facing);
 	}
 
 	public byte getComparatorPower() {
@@ -104,7 +149,7 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 		double frac = (double) tankNew.getFill() / (double) tankNew.getMaxFill() * 15D;
 		return (byte) (MathHelper.clamp((int) frac + 1, 0, 15));
 	}
-	
+
 	@Override
 	public void update() {
 		if (!world.isRemote) {
@@ -304,7 +349,7 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 				new DirPos(pos.getX() + 1, pos.getY(), pos.getZ() - 2, Library.NEG_Z)
 		};
 	}
-	
+
 	@Override
 	public void handleButtonPacket(int value, int meta) {
 		mode = (short) ((mode + 1) % modes);

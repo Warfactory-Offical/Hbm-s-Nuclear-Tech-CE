@@ -2,6 +2,7 @@ package com.hbm.tileentity.machine;
 
 import api.hbm.fluid.IFluidStandardReceiver;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
@@ -26,9 +27,13 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
 
 public class TileEntityMachineDrain extends TileEntityLoadedBase implements IFluidStandardReceiver, IBufPacketReceiver, IFluidCopiable, ITickable {
 
@@ -162,5 +167,24 @@ public class TileEntityMachineDrain extends TileEntityLoadedBase implements IFlu
     @Override
     public FluidTankNTM getTankToPaste() {
         return tank;
+    }
+
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+            return true;
+        }
+        return super.hasCapability(capability, facing);
+    }
+
+    @Override
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(
+                    new NTMFluidHandlerWrapper(this.getReceivingTanks(), null)
+            );
+        }
+        return super.getCapability(capability, facing);
     }
 }

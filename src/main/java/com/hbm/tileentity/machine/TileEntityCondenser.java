@@ -3,6 +3,7 @@ package com.hbm.tileentity.machine;
 import api.hbm.fluid.IFluidStandardTransceiver;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
+import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.trait.CBT_Atmosphere;
 import com.hbm.forgefluid.ModForgeFluids;
@@ -15,11 +16,16 @@ import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.INBTPacketReceiver;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.world.EnumSkyBlock;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+
+import javax.annotation.Nullable;
 import java.io.IOException;
 
 public class TileEntityCondenser extends TileEntityLoadedBase implements ITickable, IFluidStandardTransceiver, INBTPacketReceiver, IConfigurableMachine, IFluidCopiable, IFFtoNTMF {
@@ -180,5 +186,23 @@ public class TileEntityCondenser extends TileEntityLoadedBase implements ITickab
 	@Override
 	public FluidTankNTM getTankToPaste() {
 		return null;
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			return true;
+		}
+		return super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(
+					new NTMFluidHandlerWrapper(this.getReceivingTanks(), this.getSendingTanks())
+			);
+		}
+		return super.getCapability(capability, facing);
 	}
 }
