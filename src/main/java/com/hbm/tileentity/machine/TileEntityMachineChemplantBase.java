@@ -3,6 +3,7 @@ package com.hbm.tileentity.machine;
 import api.hbm.energymk2.IEnergyReceiverMK2;
 import api.hbm.fluid.IFluidUser;
 import com.hbm.blocks.BlockDummyable;
+import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.ChemplantRecipes;
@@ -25,9 +26,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.oredict.OreDictionary;
@@ -122,7 +125,7 @@ public abstract class TileEntityMachineChemplantBase extends TileEntityMachineBa
 		Fluid[] fluid = new Fluid[tanks.length];
 		for(int i = 0; i < tanks.length; i++){
 			if (tanks[i].getType() != null) fluid[i] = tanks[i].getType();
-					else fluid[i] = ModForgeFluids.none;
+			else fluid[i] = ModForgeFluids.none;
 		}
 		return fluid;
 	}
@@ -328,7 +331,7 @@ public abstract class TileEntityMachineChemplantBase extends TileEntityMachineBa
 			return false;
 
 		for(int i = 0; i < chest.getSlots(); i++) {
-			
+
 			ItemStack outputStack = inventory.getStackInSlot(slot).copy();
 			if(outputStack.isEmpty())
 				return false;
@@ -498,7 +501,7 @@ public abstract class TileEntityMachineChemplantBase extends TileEntityMachineBa
 		return maxFill;
 	}
 
-	protected List<FluidTankNTM> inTanks() {
+	public List<FluidTankNTM> inTanks() {
 
 		List<FluidTankNTM> inTanks = new ArrayList();
 
@@ -581,7 +584,7 @@ public abstract class TileEntityMachineChemplantBase extends TileEntityMachineBa
 		}
 	}
 
-	protected List<FluidTankNTM> outTanks() {
+	public List<FluidTankNTM> outTanks() {
 
 		List<FluidTankNTM> outTanks = new ArrayList();
 
@@ -715,6 +718,24 @@ public abstract class TileEntityMachineChemplantBase extends TileEntityMachineBa
 			}
 		}
 		return nbt;
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			return true;
+		}
+		return super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(
+					new NTMFluidHandlerWrapper(this.inTanks(), this.outTanks())
+			);
+		}
+		return super.getCapability(capability, facing);
 	}
 
 	public abstract int getRecipeCount();

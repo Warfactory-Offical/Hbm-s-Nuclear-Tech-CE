@@ -130,7 +130,7 @@ public class FluidContainerRegistry {
     }
 
     public static ItemStack getFullContainer(ItemStack stack, FluidType type) {
-        if(stack == null)
+        if(stack.isEmpty())
             return null;
 
         ItemStack sta = stack.copy();

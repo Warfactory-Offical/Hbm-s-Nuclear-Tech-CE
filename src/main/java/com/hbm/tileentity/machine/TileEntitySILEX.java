@@ -1,6 +1,7 @@
 package com.hbm.tileentity.machine;
 
 import api.hbm.fluid.IFluidStandardReceiver;
+import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.SILEXRecipes;
@@ -22,12 +23,15 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 
 public class TileEntitySILEX extends TileEntityMachineBase implements ITickable, IFluidStandardReceiver, IFFtoNTMF{
@@ -354,5 +358,24 @@ public class TileEntitySILEX extends TileEntityMachineBase implements ITickable,
 	public double getMaxRenderDistanceSquared()
 	{
 		return 65536.0D;
+	}
+
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			return true;
+		}
+		return super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(
+					new NTMFluidHandlerWrapper(this.getReceivingTanks(), null)
+			);
+		}
+		return super.getCapability(capability, facing);
 	}
 }

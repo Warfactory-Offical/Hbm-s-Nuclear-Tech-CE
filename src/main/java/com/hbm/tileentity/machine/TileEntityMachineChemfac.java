@@ -341,7 +341,7 @@ public class TileEntityMachineChemfac extends TileEntityMachineChemplantBase imp
 	}
 
 	@Override
-	protected List<FluidTankNTM> inTanks() {
+	public List<FluidTankNTM> inTanks() {
 
 		List<FluidTankNTM> inTanks = super.inTanks();
 		inTanks.add(waterNew);
@@ -350,7 +350,7 @@ public class TileEntityMachineChemfac extends TileEntityMachineChemplantBase imp
 	}
 
 	@Override
-	protected List<FluidTankNTM> outTanks() {
+	public List<FluidTankNTM> outTanks() {
 
 		List<FluidTankNTM> outTanks = super.outTanks();
 		outTanks.add(steamNew);
