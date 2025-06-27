@@ -583,10 +583,14 @@ public class ModEventHandlerClient {
             if (o instanceof IBakedModel)
                 e.putRenderModel((IBakedModel) o);
         }
-        for (EnumCell e : EnumCell.values()) {
-            Object o = evt.getModelRegistry().getObject(e.getResourceLocation());
-            if (o instanceof IBakedModel)
-                e.putRenderModel((IBakedModel) o);
+        for (EnumCell cellType : EnumCell.values()) {
+            FluidType fluid = cellType.getFluid();
+            int meta = (fluid == null) ? 0 : fluid.getID();
+            ModelLoader.setCustomModelResourceLocation(
+                    ModItems.cell,
+                    meta,
+                    cellType.getResourceLocation()
+            );
         }
         for (EnumGasCanister e : EnumGasCanister.values()) {
             Object o = evt.getModelRegistry().getObject(e.getResourceLocation());

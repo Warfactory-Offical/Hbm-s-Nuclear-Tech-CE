@@ -9,7 +9,11 @@ import com.hbm.lib.RefStrings;
 
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraftforge.fluids.Fluid;
+
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class SpecialContainerFillLists {
 	
@@ -84,7 +88,7 @@ public class SpecialContainerFillLists {
 			return f;
 		}
 	}
-	
+
 	public enum EnumCell {
 		EMPTY(null, new ModelResourceLocation(RefStrings.MODID + ":cell_empty", "inventory")),
 		UF6(Fluids.UF6, new ModelResourceLocation(RefStrings.MODID + ":cell_uf6", "inventory")),
@@ -94,56 +98,61 @@ public class SpecialContainerFillLists {
 		TRITIUM(Fluids.TRITIUM, new ModelResourceLocation(RefStrings.MODID + ":cell_tritium", "inventory")),
 		SAS3(Fluids.SAS3, new ModelResourceLocation(RefStrings.MODID + ":cell_sas3", "inventory")),
 		ANTISCHRABIDIUM(Fluids.ASCHRAB, new ModelResourceLocation(RefStrings.MODID + ":cell_anti_schrabidium", "inventory"));
-		
-		private FluidType fluid;
-		private Pair<ModelResourceLocation, IBakedModel> renderPair;
-		private String translateKey;
-		
-		private EnumCell(FluidType f, ModelResourceLocation r){
+
+		private static final Map<FluidType, EnumCell> FLUID_TO_CELL_MAP;
+		private static final Set<FluidType> VALID_FLUIDS;
+		private static final FluidType[] FLUID_ARRAY;
+
+		static {
+			FLUID_TO_CELL_MAP = Arrays.stream(values()).filter(e -> e.fluid != null)
+					.collect(Collectors.toMap(EnumCell::getFluid, e -> e));
+
+			VALID_FLUIDS = FLUID_TO_CELL_MAP.keySet();
+			FLUID_ARRAY = Arrays.stream(values()).map(EnumCell::getFluid).toArray(FluidType[]::new);
+		}
+		private final FluidType fluid;
+		private final Pair<ModelResourceLocation, IBakedModel> renderPair;
+		private final String translateKey;
+
+		EnumCell(FluidType f, ModelResourceLocation r) {
 			this.fluid = f;
 			this.renderPair = MutablePair.of(r, null);
 			this.translateKey = "item." + r.getPath() + ".name";
 		}
-		public FluidType getFluid(){
+
+		public FluidType getFluid() {
 			return fluid;
 		}
-		public String getTranslateKey(){
+
+		public String getTranslateKey() {
 			return translateKey;
 		}
-		public IBakedModel getRenderModel(){
+
+		public IBakedModel getRenderModel() {
 			return renderPair.getRight();
 		}
-		public void putRenderModel(IBakedModel model){
+
+		public void putRenderModel(IBakedModel model) {
 			renderPair.setValue(model);
 		}
-		public ModelResourceLocation getResourceLocation(){
+
+		public ModelResourceLocation getResourceLocation() {
 			return renderPair.getLeft();
 		}
-		public static boolean contains(FluidType f){
-			if(f == null)
-				return false;
-			for(EnumCell e : EnumCell.values()){
-				if(e.getFluid() == f)
-					return true;
-			}
-			return false;
+
+		public static boolean contains(FluidType f) {
+			return f != null && VALID_FLUIDS.contains(f);
 		}
-		public static EnumCell getEnumFromFluid(FluidType f){
-			if(f == null)
-				return EnumCell.EMPTY;
-			for(EnumCell e : EnumCell.values()){
-				if(e.getFluid() == f){
-					return e;
-				}
+
+		public static EnumCell getEnumFromFluid(FluidType f) {
+			if (f == null) {
+				return EMPTY;
 			}
-			return null;
+			return FLUID_TO_CELL_MAP.getOrDefault(f, EMPTY); // Return EMPTY as a safe default
 		}
+
 		public static FluidType[] getFluids() {
-			FluidType[] f = new FluidType[EnumCell.values().length];
-			for(int i = 0; i < EnumCell.values().length; i ++){
-				f[i] = EnumCell.values()[i].getFluid();
-			}
-			return f;
+			return FLUID_ARRAY;
 		}
 	}
 

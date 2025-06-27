@@ -660,7 +660,7 @@ public class CraftingManager {
 		addShapelessAuto(new ItemStack(ModItems.missile_micro, 1), new Object[] { ModItems.missile_assembly, ModItems.ducttape, ModItems.ammo_nuke });
 		addShapelessAuto(new ItemStack(ModItems.missile_bhole, 1), new Object[] { ModItems.missile_assembly, ModItems.ducttape, ModItems.grenade_black_hole });
 		addShapelessAuto(new ItemStack(ModItems.missile_schrabidium, 1), new Object[] { ModItems.missile_assembly, ModItems.ducttape, ModItems.grenade_aschrab });
-		addShapelessAuto(new ItemStack(ModItems.missile_schrabidium, 1), new Object[] { ModItems.missile_assembly, ModItems.ducttape, new IngredientContainsTag(ItemCell.getFullCell(Fluids.SAS3)), ModItems.circuit_targeting_tier4 });
+		addShapelessAuto(new ItemStack(ModItems.missile_schrabidium, 1), new Object[] { ModItems.missile_assembly, ModItems.ducttape, ItemCell.getFullCell(Fluids.SAS3), ModItems.circuit_targeting_tier4 });
 		addShapelessAuto(new ItemStack(ModItems.missile_emp, 1), new Object[] { ModItems.missile_assembly, ModItems.ducttape, ModBlocks.emp_bomb, ModItems.circuit_targeting_tier3 });
 		addShapelessAuto(new ItemStack(ModItems.missile_anti_ballistic, 1), new Object[] { ModItems.missile_generic, ModItems.circuit_targeting_tier3 });
 
@@ -1155,7 +1155,7 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModItems.grenade_frag, 2), new Object[] { " G ", "WGW", " K ", 'G', ModItems.grenade_generic, 'W', Item.getItemFromBlock(Blocks.PLANKS), 'K', Item.getItemFromBlock(Blocks.GRAVEL) });
 		addRecipeAuto(new ItemStack(ModItems.grenade_poison, 2), new Object[] { " G ", "PGP", " P ", 'G', ModItems.grenade_generic, 'P', ModItems.powder_poison });
 		addRecipeAuto(new ItemStack(ModItems.grenade_gas, 2), new Object[] { " G ", "CGC", " C ", 'G', ModItems.grenade_generic, 'C', ModItems.pellet_gas });
-		addRecipeAuto(new ItemStack(ModItems.grenade_aschrab, 1), new Object[] { "RS ", "ITI", " S ", 'I', "paneGlassColorless", 'R', MINGRADE.wireFine(), 'S', STEEL.plate(), 'T', new IngredientContainsTag(ItemCell.getFullCell(Fluids.ASCHRAB)) });
+		addRecipeAuto(new ItemStack(ModItems.grenade_aschrab, 1), new Object[] { "RS ", "ITI", " S ", 'I', "paneGlassColorless", 'R', MINGRADE.wireFine(), 'S', STEEL.plate(), 'T', ItemCell.getFullCell(Fluids.ASCHRAB) });
 		addRecipeAuto(new ItemStack(ModItems.grenade_mk2, 2), new Object[] { " G ", "SGS", " S ", 'G', ModItems.grenade_strong, 'S', Items.GUNPOWDER });
 		addShapelessAuto(new ItemStack(ModItems.grenade_gascan, 1), new Object[] { new ItemStack(ModItems.canister_generic, 1, Fluids.DIESEL.getID()), Items.FLINT });
 		addShapelessAuto(new ItemStack(ModItems.grenade_gascan, 1), new Object[] { new ItemStack(ModItems.canister_generic, 1, Fluids.BIOFUEL.getID()), Items.FLINT });
@@ -1293,8 +1293,8 @@ public class CraftingManager {
 
 		addRecipeAuto(new ItemStack(ModItems.custom_tnt, 1), new Object[] { " C ", "TIT", "TIT", 'C', CU.plate(), 'I', IRON.plate(), 'T', ANY_HIGHEXPLOSIVE.ingot() });
 		addRecipeAuto(new ItemStack(ModItems.custom_nuke, 1), new Object[] { " C ", "LUL", "LUL", 'C', CU.plate(), 'L', PB.plate(), 'U', U235.ingot() });
-		addRecipeAuto(new ItemStack(ModItems.custom_hydro, 1), new Object[] { " C ", "LTL", "LIL", 'C', CU.plate(), 'L', PB.plate(), 'I', IRON.plate(), 'T', new IngredientContainsTag(ItemCell.getFullCell(Fluids.TRITIUM)) });
-		addRecipeAuto(new ItemStack(ModItems.custom_amat, 1), new Object[] { " C ", "MMM", "AAA", 'C', CU.plate(), 'A', AL.plate(), 'M', new IngredientContainsTag(ItemCell.getFullCell(Fluids.AMAT)) });
+		addRecipeAuto(new ItemStack(ModItems.custom_hydro, 1), new Object[] { " C ", "LTL", "LIL", 'C', CU.plate(), 'L', PB.plate(), 'I', IRON.plate(), 'T', ItemCell.getFullCell(Fluids.TRITIUM) });
+		addRecipeAuto(new ItemStack(ModItems.custom_amat, 1), new Object[] { " C ", "MMM", "AAA", 'C', CU.plate(), 'A', AL.plate(), 'M', ItemCell.getFullCell(Fluids.AMAT) });
 		addRecipeAuto(new ItemStack(ModItems.custom_dirty, 1), new Object[] { " C ", "WLW", "WLW", 'C', CU.plate(), 'L', PB.plate(), 'W', ModItems.nuclear_waste });
 		addRecipeAuto(new ItemStack(ModItems.custom_schrab, 1), new Object[] { " C ", "LUL", "LUL", 'C', CU.plate(), 'L', PB.plate(), 'U', SA326.ingot() });
 		addRecipeAuto(new ItemStack(ModItems.custom_sol, 1), new Object[] { " C ", "LUL", "LUL", 'C', CU.plate(), 'L', PB.plate(), 'U', SA327.ingot() });
@@ -1309,8 +1309,8 @@ public class CraftingManager {
 		addRecipeAuto(ItemBattery.getEmptyBattery(ModItems.battery_schrabidium), new Object[] { " A ", "PSP", "PNP", 'A', SA326.wireFine(), 'P', SA326.plate(), 'S', SA326.dust(), 'N', NP237.dust() });
 		addRecipeAuto(ItemBattery.getEmptyBattery(ModItems.battery_trixite), new Object[] { " A ", "PSP", "PTP", 'A', AL.wireFine(), 'P', AL.plate(), 'S', ModItems.powder_power, 'T', ModItems.crystal_trixite });
 		addRecipeAuto(ItemBattery.getEmptyBattery(ModItems.battery_trixite), new Object[] { " A ", "PTP", "PSP", 'A', AL.wireFine(), 'P', AL.plate(), 'S', ModItems.powder_power, 'T', ModItems.crystal_trixite });
-		addRecipeAuto(ItemBattery.getFullBattery(ModItems.energy_core), new Object[] { "PCW", "TRD", "PCW", 'P', ALLOY.plate(), 'C', ModItems.coil_advanced_alloy, 'W', ALLOY.wireFine(), 'R', new IngredientContainsTag(ItemCell.getFullCell(Fluids.TRITIUM)), 'D', new IngredientContainsTag(ItemCell.getFullCell(Fluids.DEUTERIUM)), 'T', W.ingot() });
-		addRecipeAuto(ItemBattery.getFullBattery(ModItems.energy_core), new Object[] { "PCW", "TDR", "PCW", 'P', ALLOY.plate(), 'C', ModItems.coil_advanced_alloy, 'W', ALLOY.wireFine(), 'R', new IngredientContainsTag(ItemCell.getFullCell(Fluids.TRITIUM)), 'D', new IngredientContainsTag(ItemCell.getFullCell(Fluids.DEUTERIUM)), 'T', W.ingot() });
+		addRecipeAuto(ItemBattery.getFullBattery(ModItems.energy_core), new Object[] { "PCW", "TRD", "PCW", 'P', ALLOY.plate(), 'C', ModItems.coil_advanced_alloy, 'W', ALLOY.wireFine(), 'R', ItemCell.getFullCell(Fluids.TRITIUM), 'D', ItemCell.getFullCell(Fluids.DEUTERIUM), 'T', W.ingot() });
+		addRecipeAuto(ItemBattery.getFullBattery(ModItems.energy_core), new Object[] { "PCW", "TDR", "PCW", 'P', ALLOY.plate(), 'C', ModItems.coil_advanced_alloy, 'W', ALLOY.wireFine(), 'R', ItemCell.getFullCell(Fluids.TRITIUM), 'D', ItemCell.getFullCell(Fluids.DEUTERIUM), 'T', W.ingot() });
 
 		addRecipeAuto(ItemBattery.getEmptyBattery(ModItems.battery_red_cell), new Object[] { "WBW", "PBP", "WBW", 'W', AL.wireFine(), 'P', AL.plate(), 'B', ItemBattery.getEmptyBattery(ModItems.battery_generic) });
 		addRecipeAuto(ItemBattery.getEmptyBattery(ModItems.battery_advanced_cell), new Object[] { "WBW", "PBP", "WBW", 'W', MINGRADE.wireFine(), 'P', CU.plate(), 'B', ItemBattery.getEmptyBattery(ModItems.battery_advanced) });
@@ -1564,7 +1564,7 @@ public class CraftingManager {
 		addShapelessAuto(new ItemStack(ModItems.crystal_horn, 1), new Object[] { NP237.dust(), I.dust(), TH232.dust(), AT.dust(), ND.dust(), CS.dust(), ModBlocks.block_meteor, ModBlocks.gravel_obsidian, Items.WATER_BUCKET });
 		addShapelessAuto(new ItemStack(ModItems.crystal_charred, 1), new Object[] { ST.dust(), CO.dust(), BR.dust(), NB.dust(), TS.dust(), CE.dust(), ModBlocks.block_meteor, AL.block(), Items.WATER_BUCKET });
 		addRecipeAuto(new ItemStack(ModBlocks.crystal_virus, 1), new Object[] { "STS", "THT", "STS", 'S', ModItems.particle_strange, 'T', W.dust(), 'H', ModItems.crystal_horn });
-		addRecipeAuto(new ItemStack(ModBlocks.crystal_pulsar, 32), new Object[] { "STS", "THT", "STS", 'S', new IngredientContainsTag(ItemCell.getFullCell(Fluids.UF6)), 'T', AL.dust(), 'H', ModItems.crystal_charred });
+		addRecipeAuto(new ItemStack(ModBlocks.crystal_pulsar, 32), new Object[] { "STS", "THT", "STS", 'S', ItemCell.getFullCell(Fluids.UF6), 'T', AL.dust(), 'H', ModItems.crystal_charred });
 
 		addRecipeAuto(new ItemStack(ModBlocks.fluid_duct_mk2, 8), new Object[] { "SAS", "   ", "SAS", 'S', STEEL.plate(), 'A', AL.plate() });
 		addRecipeAuto(new ItemStack(ModBlocks.fluid_duct_solid, 8), new Object[] { "SAS", "ADA", "SAS", 'S', STEEL.ingot(), 'A', AL.plate(), 'D', ModItems.ducttape });
@@ -1572,7 +1572,7 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModBlocks.machine_assembler, 1), new Object[] { "WWW", "MCM", "ISI", 'W', KEY_ANYPANE, 'M', ModItems.motor, 'C', ModItems.circuit_aluminium, 'I', CU.block(), 'S', STEEL.block() });
 		addRecipeAuto(new ItemStack(ModItems.template_folder, 1), new Object[] { "LPL", "BPB", "LPL", 'P', Items.PAPER, 'L', "dyeBlue", 'B', "dyeWhite" });
 		addRecipeAuto(new ItemStack(ModItems.turret_control, 1), new Object[] { "R12", "PPI", "  I", 'R', Items.REDSTONE, '1', ModItems.circuit_aluminium, '2', ModItems.circuit_red_copper, 'P', STEEL.plate(), 'I', STEEL.ingot() });
-		addRecipeAuto(new ItemStack(ModItems.pellet_antimatter, 1), new Object[] { "###", "###", "###", '#', new IngredientContainsTag(ItemCell.getFullCell(Fluids.AMAT)) });
+		addRecipeAuto(new ItemStack(ModItems.pellet_antimatter, 1), new Object[] { "###", "###", "###", '#', ItemCell.getFullCell(Fluids.AMAT) });
 		addRecipeAuto(new ItemStack(ModItems.fluid_tank_full, 8), new Object[] { "121", "1 1", "121", '1', AL.plate(), '2', IRON.plate() });
 		addRecipeAuto(new ItemStack(ModItems.fluid_barrel_full, 2), new Object[] { "121", "1 1", "121", '1', STEEL.plate(), '2', AL.plate() });
 		addRecipeAuto(new ItemStack(ModItems.inf_water, 1), new Object[] { "222", "131", "222", '1', Items.WATER_BUCKET, '2', AL.plate(), '3', Items.DIAMOND });
@@ -1590,7 +1590,7 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModItems.plate_desh, 4), new Object[] { "PIP", "IDI", "PIP", 'P', ANY_PLASTIC.dust(), 'I', DESH.ingot(), 'D', DURA.ingot() });
 		addRecipeAuto(new ItemStack(ModItems.piston_selenium, 1), new Object[] { "SSS", "STS", " D ", 'S', STEEL.plate(), 'T', W.ingot(), 'D', ModItems.bolt_dura_steel });
 		addShapelessAuto(new ItemStack(ModItems.catalyst_clay), new Object[] { IRON.dust(), Items.CLAY_BALL });
-		addRecipeAuto(new ItemStack(ModItems.ams_core_sing, 1), new Object[] { "EAE", "ASA", "EAE", 'E', ModItems.plate_euphemium, 'A', new IngredientContainsTag(ItemCell.getFullCell(Fluids.ASCHRAB)), 'S', ModItems.singularity });
+		addRecipeAuto(new ItemStack(ModItems.ams_core_sing, 1), new Object[] { "EAE", "ASA", "EAE", 'E', ModItems.plate_euphemium, 'A', ItemCell.getFullCell(Fluids.ASCHRAB), 'S', ModItems.singularity });
 		addRecipeAuto(new ItemStack(ModItems.ams_core_wormhole, 1), new Object[] { "DPD", "PSP", "DPD", 'D', ModItems.plate_dineutronium, 'P', ModItems.powder_spark_mix, 'S', ModItems.singularity });
 		addRecipeAuto(new ItemStack(ModItems.ams_core_eyeofharmony, 1), new Object[] { "ALA", "LSL", "ALA", 'A', ModItems.plate_dalekanium, 'L', new IngredientContainsTag(ItemFluidTank.getFullBarrel(Fluids.LAVA)), 'S', ModItems.black_hole });
 		addRecipeAuto(new ItemStack(ModItems.ams_core_thingy), new Object[] { "GGG", "N N", " S ", 'N', GOLD.nugget(), 'G', GOLD.ingot(), 'S', ModItems.battery_spark_cell_10000 });
@@ -2334,8 +2334,8 @@ public class CraftingManager {
 		addShapelessAuto(ItemCell.getFullCell(Fluids.AMAT), new Object[] { ModItems.particle_aproton, ModItems.particle_aelectron, new IngredientNBT2(new ItemStack(ModItems.cell)) });
 		addShapelessAuto(new ItemStack(ModItems.particle_amat, 1), new Object[] { ModItems.particle_aproton, ModItems.particle_aelectron, ModItems.particle_empty });
 		addShapelessAuto(ItemCell.getFullCell(Fluids.ASCHRAB), new Object[] { ModItems.particle_aschrab, new IngredientNBT2(new ItemStack(ModItems.cell)) });
-		addShapelessAuto(new ItemStack(ModItems.particle_aschrab), new Object[] { new IngredientContainsTag(ItemCell.getFullCell(Fluids.ASCHRAB)), ModItems.particle_empty });
-		addShapelessAuto(new ItemStack(ModItems.particle_amat), new Object[] { new IngredientContainsTag(ItemCell.getFullCell(Fluids.AMAT)), ModItems.particle_empty });
+		addShapelessAuto(new ItemStack(ModItems.particle_aschrab), new Object[] { ItemCell.getFullCell(Fluids.ASCHRAB), ModItems.particle_empty });
+		addShapelessAuto(new ItemStack(ModItems.particle_amat), new Object[] { ItemCell.getFullCell(Fluids.AMAT), ModItems.particle_empty });
 		addRecipeAuto(new ItemStack(ModItems.capsule_empty, 1), new Object[] { "STS", "GXG", "STS", 'S', ModItems.plate_armor_lunar, 'T', ModItems.coil_advanced_torus, 'G', GH336.ingot(), 'X', ModItems.particle_empty });
 		addShapelessAuto(new ItemStack(ModItems.capsule_xen), new Object[] { ModItems.capsule_empty, ModItems.crystal_xen });
 
@@ -2391,7 +2391,7 @@ public class CraftingManager {
 		add1To9Pair(ModItems.powder_paleogenite, ModItems.powder_paleogenite_tiny);
 		add1To9Pair(ModBlocks.block_lanthanium, ModItems.ingot_lanthanium);
 		add1To9Pair(ModBlocks.block_actinium, ModItems.ingot_actinium);
-		addShapelessAuto(new ItemStack(ModBlocks.block_tritium), new Object[] {new IngredientContainsTag(ItemCell.getFullCell(Fluids.TRITIUM)), new IngredientContainsTag(ItemCell.getFullCell(Fluids.TRITIUM)), new IngredientContainsTag(ItemCell.getFullCell(Fluids.TRITIUM)), new IngredientContainsTag(ItemCell.getFullCell(Fluids.TRITIUM)), new IngredientContainsTag(ItemCell.getFullCell(Fluids.TRITIUM)), new IngredientContainsTag(ItemCell.getFullCell(Fluids.TRITIUM)), new IngredientContainsTag(ItemCell.getFullCell(Fluids.TRITIUM)), new IngredientContainsTag(ItemCell.getFullCell(Fluids.TRITIUM)), new IngredientContainsTag(ItemCell.getFullCell(Fluids.TRITIUM))});
+		addShapelessAuto(new ItemStack(ModBlocks.block_tritium), new Object[] {ItemCell.getFullCell(Fluids.TRITIUM), ItemCell.getFullCell(Fluids.TRITIUM), ItemCell.getFullCell(Fluids.TRITIUM), ItemCell.getFullCell(Fluids.TRITIUM), ItemCell.getFullCell(Fluids.TRITIUM), ItemCell.getFullCell(Fluids.TRITIUM), ItemCell.getFullCell(Fluids.TRITIUM), ItemCell.getFullCell(Fluids.TRITIUM), ItemCell.getFullCell(Fluids.TRITIUM)});
 		addShapelessAuto(ItemCell.getFullCell(Fluids.TRITIUM, 9), new Object[] {ModBlocks.block_tritium});
 		add1To9Pair(ModBlocks.block_schrabidate, ModItems.ingot_schrabidate);
 
@@ -2649,9 +2649,9 @@ public class CraftingManager {
 		addShapelessAuto(new ItemStack(ModItems.ingot_schrabidium_fuel, 2), new Object[] {ModItems.billet_schrabidium_fuel,ModItems.billet_schrabidium_fuel,ModItems.billet_schrabidium_fuel });
 		addShapelessAuto(new ItemStack(ModItems.ingot_hes, 2), new Object[] { ModItems.billet_hes, ModItems.billet_hes, ModItems.billet_hes });
 
-		addShapelessAuto(new ItemStack(ModItems.billet_balefire_gold, 1), new Object[] { AU198.billet(), new IngredientContainsTag(ItemCell.getFullCell(Fluids.AMAT)), ModItems.pellet_charged });
-		addShapelessAuto(new ItemStack(ModItems.billet_flashlead, 2), new Object[] { ModItems.billet_balefire_gold, PB209.billet(), new IngredientContainsTag(ItemCell.getFullCell(Fluids.AMAT)) });
-		addShapelessAuto(new ItemStack(ModItems.billet_flashlead, 2), new Object[] { AU198.billet(), PB209.billet(), new IngredientContainsTag(ItemCell.getFullCell(Fluids.AMAT)), new IngredientContainsTag(ItemCell.getFullCell(Fluids.AMAT)), ModItems.pellet_charged });
+		addShapelessAuto(new ItemStack(ModItems.billet_balefire_gold, 1), new Object[] { AU198.billet(), ItemCell.getFullCell(Fluids.AMAT), ModItems.pellet_charged });
+		addShapelessAuto(new ItemStack(ModItems.billet_flashlead, 2), new Object[] { ModItems.billet_balefire_gold, PB209.billet(), ItemCell.getFullCell(Fluids.AMAT) });
+		addShapelessAuto(new ItemStack(ModItems.billet_flashlead, 2), new Object[] { AU198.billet(), PB209.billet(), ItemCell.getFullCell(Fluids.AMAT), ItemCell.getFullCell(Fluids.AMAT), ModItems.pellet_charged });
 
 		addRecipeAuto(new ItemStack(ModItems.ammo_dgk, 1), new Object[] { "LLL", "GGG", "CCC", 'L', PB.plate(), 'G', ANY_SMOKELESS.dust(), 'C', CU.ingot() });
 

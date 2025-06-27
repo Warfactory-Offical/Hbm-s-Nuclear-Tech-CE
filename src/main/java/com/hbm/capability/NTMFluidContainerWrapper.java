@@ -1,8 +1,10 @@
 package com.hbm.capability;
 
+import com.hbm.forgefluid.SpecialContainerFillLists;
 import com.hbm.inventory.FluidContainer;
 import com.hbm.inventory.FluidContainerRegistry;
 import com.hbm.inventory.fluid.FluidType;
+import com.hbm.items.special.ItemCell;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -70,7 +72,11 @@ public class NTMFluidContainerWrapper implements IFluidHandlerItem {
             public boolean canFillFluidType(FluidStack fluidStack) {
                 if (fluidStack == null || !canFill()) return false;
                 FluidType hbmType = NTMFluidCapabilityHandler.getHbmFluidType(fluidStack.getFluid());
-                return hbmType != null && FluidContainerRegistry.getContainer(hbmType, container) != null;
+                if (hbmType == null) return false;
+                if (container.getItem() instanceof ItemCell) {
+                    return SpecialContainerFillLists.EnumCell.contains(hbmType);
+                }
+                return FluidContainerRegistry.getContainer(hbmType, container) != null;
             }
 
             @Override

@@ -121,8 +121,8 @@ public class TileEntityNukeCustom extends TileEntity implements ITickable {
 		
 
 		//SUPER
-		entries.put(new NbtComparableStack(ItemCell.getFullCell(Fluids.DEUTERIUM)), new CustomNukeEntry(EnumBombType.HYDRO, 20F));
-		entries.put(new NbtComparableStack(ItemCell.getFullCell(Fluids.TRITIUM)), new CustomNukeEntry(EnumBombType.HYDRO, 30F));
+		entries.put(new ComparableStack(ItemCell.getFullCell(Fluids.DEUTERIUM)), new CustomNukeEntry(EnumBombType.HYDRO, 20F));
+		entries.put(new ComparableStack(ItemCell.getFullCell(Fluids.TRITIUM)), new CustomNukeEntry(EnumBombType.HYDRO, 30F));
 		entries.put(new ComparableStack(ModItems.powder_lithium_tiny), new CustomNukeEntry(EnumBombType.HYDRO, 2F));
 		entries.put(new ComparableStack(ModItems.powder_lithium), new CustomNukeEntry(EnumBombType.HYDRO, 20F));
 		entries.put(new ComparableStack(ModItems.lithium), new CustomNukeEntry(EnumBombType.HYDRO, 20F));
@@ -132,7 +132,7 @@ public class TileEntityNukeCustom extends TileEntity implements ITickable {
 
 
 		//ANTIMATTER
-		entries.put(new NbtComparableStack(ItemCell.getFullCell(Fluids.AMAT)), new CustomNukeEntry(EnumBombType.BALE, 1.05F, EnumEntryType.MULT));
+		entries.put(new ComparableStack(ItemCell.getFullCell(Fluids.AMAT)), new CustomNukeEntry(EnumBombType.BALE, 1.05F, EnumEntryType.MULT));
 		entries.put(new ComparableStack(ModItems.particle_amat), new CustomNukeEntry(EnumBombType.BALE, 1.05F, EnumEntryType.MULT));
 		entries.put(new ComparableStack(ModItems.pellet_antimatter), new CustomNukeEntry(EnumBombType.BALE, 1.5F, EnumEntryType.MULT));
 		entries.put(new ComparableStack(ModItems.egg_balefire_shard), new CustomNukeEntry(EnumBombType.BALE, 15F));
@@ -196,8 +196,8 @@ public class TileEntityNukeCustom extends TileEntity implements ITickable {
 		entries.put(new ComparableStack(ModItems.billet_schrabidium), new CustomNukeEntry(EnumBombType.SCHRAB, 3F));
 		entries.put(new ComparableStack(ModItems.nugget_schrabidium), new CustomNukeEntry(EnumBombType.SCHRAB, 0.5F));
 		entries.put(new ComparableStack(ModItems.powder_schrabidium), new CustomNukeEntry(EnumBombType.SCHRAB, 5F));
-		entries.put(new NbtComparableStack(ItemCell.getFullCell(Fluids.SAS3)), new CustomNukeEntry(EnumBombType.SCHRAB, 7.5F));
-		entries.put(new NbtComparableStack(ItemCell.getFullCell(Fluids.ASCHRAB)), new CustomNukeEntry(EnumBombType.SCHRAB, 15F));
+		entries.put(new ComparableStack(ItemCell.getFullCell(Fluids.SAS3)), new CustomNukeEntry(EnumBombType.SCHRAB, 7.5F));
+		entries.put(new ComparableStack(ItemCell.getFullCell(Fluids.ASCHRAB)), new CustomNukeEntry(EnumBombType.SCHRAB, 15F));
 		entries.put(new ComparableStack(ModItems.custom_schrab), new CustomNukeEntry(EnumBombType.SCHRAB, 15F));
 
 		//SOLINIUM

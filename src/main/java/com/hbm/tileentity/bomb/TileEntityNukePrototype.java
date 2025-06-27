@@ -1,6 +1,6 @@
 package com.hbm.tileentity.bomb;
 
-import com.hbm.forgefluid.ModForgeFluids;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemBreedingRod;
 import com.hbm.items.special.ItemCell;
@@ -67,8 +67,8 @@ public class TileEntityNukePrototype extends TileEntity {
 	
 	public boolean isReady() {
 		
-			if(ItemCell.isFullCell(inventory.getStackInSlot(0), ModForgeFluids.sas3) && 
-			ItemCell.isFullCell(inventory.getStackInSlot(1), ModForgeFluids.sas3) &&
+			if(ItemCell.isFullCell(inventory.getStackInSlot(0), Fluids.SAS3) &&
+			ItemCell.isFullCell(inventory.getStackInSlot(1), Fluids.SAS3) &&
 			inventory.getStackInSlot(2).isItemEqual(new ItemStack(ModItems.rod_quad, 1, ItemBreedingRod.BreedingRodType.URANIUM.ordinal())) &&
 			inventory.getStackInSlot(3).isItemEqual(new ItemStack(ModItems.rod_quad, 1, ItemBreedingRod.BreedingRodType.URANIUM.ordinal())) &&
 			inventory.getStackInSlot(4).isItemEqual(new ItemStack(ModItems.rod_quad, 1, ItemBreedingRod.BreedingRodType.LEAD.ordinal())) &&
@@ -79,8 +79,8 @@ public class TileEntityNukePrototype extends TileEntity {
 			inventory.getStackInSlot(9).isItemEqual(new ItemStack(ModItems.rod_quad, 1, ItemBreedingRod.BreedingRodType.LEAD.ordinal())) &&
 			inventory.getStackInSlot(10).isItemEqual(new ItemStack(ModItems.rod_quad, 1, ItemBreedingRod.BreedingRodType.URANIUM.ordinal())) &&
 			inventory.getStackInSlot(11).isItemEqual(new ItemStack(ModItems.rod_quad, 1, ItemBreedingRod.BreedingRodType.URANIUM.ordinal())) &&
-			ItemCell.isFullCell(inventory.getStackInSlot(12), ModForgeFluids.sas3) && 
-			ItemCell.isFullCell(inventory.getStackInSlot(13), ModForgeFluids.sas3))
+			ItemCell.isFullCell(inventory.getStackInSlot(12), Fluids.SAS3) &&
+			ItemCell.isFullCell(inventory.getStackInSlot(13), Fluids.SAS3))
 			{
 				return true;
 			}

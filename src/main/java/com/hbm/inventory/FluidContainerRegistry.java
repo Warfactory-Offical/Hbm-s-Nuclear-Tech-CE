@@ -10,6 +10,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +19,7 @@ public class FluidContainerRegistry {
 
     //TODO: continue incorporating hashmaps into this
     public static List<FluidContainer> allContainers = new ArrayList<FluidContainer>();
-    private static HashMap<FluidType, List<FluidContainer>> containerMap = new HashMap<FluidType, List<FluidContainer>>();
+    private static final HashMap<FluidType, List<FluidContainer>> containerMap = new HashMap<FluidType, List<FluidContainer>>();
 
     public static void register() {
         FluidContainerRegistry.registerContainer(new FluidContainer(new ItemStack(Items.WATER_BUCKET), new ItemStack(Items.BUCKET), Fluids.WATER, 1000));
@@ -58,6 +59,12 @@ public class FluidContainerRegistry {
             FluidContainerRegistry.registerContainer(new FluidContainer(new ItemStack(ModItems.fluid_tank_full, 1, id), new ItemStack(ModItems.fluid_tank_empty), type, 1000));
             FluidContainerRegistry.registerContainer(new FluidContainer(new ItemStack(ModItems.fluid_barrel_full, 1, id), new ItemStack(ModItems.fluid_barrel_empty), type, 16000));
         }
+        for(FluidType type : com.hbm.forgefluid.SpecialContainerFillLists.EnumCell.getFluids()) {
+            if(type != null) {
+                FluidContainer cell = new FluidContainer(new ItemStack(ModItems.cell, 1, type.getID()), new ItemStack(ModItems.cell, 1, 0), type, 1000);
+                FluidContainerRegistry.registerContainer(cell);
+            }
+        }
         NTMFluidCapabilityHandler.setContainerRegistryReady();
     }
 
@@ -76,6 +83,7 @@ public class FluidContainerRegistry {
         return containerMap.get(type);
     }
 
+    @Nullable
     public static FluidContainer getContainer(FluidType type, ItemStack stack) {
         if(stack == null)
             return null;
@@ -130,6 +138,7 @@ public class FluidContainerRegistry {
         return Fluids.NONE;
     }
 
+    @Nullable
     public static ItemStack getFullContainer(ItemStack stack, FluidType type) {
         if(stack.isEmpty())
             return null;
@@ -141,6 +150,7 @@ public class FluidContainerRegistry {
             return null;
 
         for(FluidContainer container : containerMap.get(type)) {
+            if (container.emptyContainer == null) continue;
             if(ItemStack.areItemStacksEqual(container.emptyContainer, sta) &&  ItemStack.areItemStackTagsEqual(container.emptyContainer, sta))
                 return container.fullContainer.copy();
         }
@@ -148,6 +158,7 @@ public class FluidContainerRegistry {
         return null;
     }
 
+    @Nullable
     public static ItemStack getEmptyContainer(ItemStack stack) {
         if(stack == null)
             return null;

@@ -3,11 +3,14 @@ package com.hbm.inventory;
 import com.hbm.inventory.fluid.FluidType;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nullable;
+
 public class FluidContainer {
 
     //The full container (e.g. deuterium cell)
     public ItemStack fullContainer;
     //Them empty container (e.g. empty cell)
+    @Nullable
     public ItemStack emptyContainer;
     //The type of the contained liquid (e.g. deuterium)
     public FluidType type;

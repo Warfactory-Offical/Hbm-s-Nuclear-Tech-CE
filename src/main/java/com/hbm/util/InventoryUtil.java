@@ -372,7 +372,7 @@ public class InventoryUtil {
 		ItemStack[] copy = ItemStackUtil.carefulCopyArrayTruncate(inv, start, end);
 
 		for (ItemStack item : items) {
-			if (item.isEmpty()) {
+			if (item == null || item.isEmpty()) {
 				continue;
 			}
 

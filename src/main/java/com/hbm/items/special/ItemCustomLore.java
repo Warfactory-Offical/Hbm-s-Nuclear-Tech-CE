@@ -1,8 +1,8 @@
 package com.hbm.items.special;
 
 import com.hbm.config.GeneralConfig;
-import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.handler.ArmorUtil;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.material.Mats;
 import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
@@ -478,7 +478,7 @@ public class ItemCustomLore extends Item {
 			this == ModItems.crystal_schrabidium ||
     		this == ModItems.crystal_schraranium ||
     		this == ModItems.crystal_trixite ||
-    		ItemCell.hasFluid(stack, ModForgeFluids.sas3) || 
+    		ItemCell.hasFluid(stack, Fluids.SAS3) ||
     		this == ModItems.rod_unobtainium) {
 			return EnumRarity.RARE;
 		}
