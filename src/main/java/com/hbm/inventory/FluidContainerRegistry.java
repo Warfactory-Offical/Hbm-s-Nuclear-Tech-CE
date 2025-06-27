@@ -1,6 +1,7 @@
 package com.hbm.inventory;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.capability.NTMFluidCapabilityHandler;
 import com.hbm.config.GeneralConfig;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
@@ -57,7 +58,7 @@ public class FluidContainerRegistry {
             FluidContainerRegistry.registerContainer(new FluidContainer(new ItemStack(ModItems.fluid_tank_full, 1, id), new ItemStack(ModItems.fluid_tank_empty), type, 1000));
             FluidContainerRegistry.registerContainer(new FluidContainer(new ItemStack(ModItems.fluid_barrel_full, 1, id), new ItemStack(ModItems.fluid_barrel_empty), type, 16000));
         }
-
+        NTMFluidCapabilityHandler.setContainerRegistryReady();
     }
 
     public static void registerContainer(FluidContainer con) {

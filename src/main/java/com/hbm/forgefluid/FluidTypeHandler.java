@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.hbm.capability.NTMFluidCapabilityHandler;
 import com.hbm.render.misc.EnumSymbol;
 
 import net.minecraftforge.fluids.Fluid;
@@ -171,7 +172,7 @@ public class FluidTypeHandler {
 		fluidProperties.put(ModForgeFluids.mud_fluid.getName(), new FluidProperties(4, 0, 1, EnumSymbol.ACID, FluidTrait.CORROSIVE_2));
 		fluidProperties.put(ModForgeFluids.corium_fluid.getName(), new FluidProperties(4, 0, 2, EnumSymbol.RADIATION, FluidTrait.CORROSIVE_2));
 		fluidProperties.put(ModForgeFluids.volcanic_lava_fluid.getName(), new FluidProperties(4, 1, 1, EnumSymbol.NOWATER));
-	
+		NTMFluidCapabilityHandler.setTypeHandlerReady();
 	}
 	
 	public static class FluidProperties {

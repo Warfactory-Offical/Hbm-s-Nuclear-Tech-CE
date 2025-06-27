@@ -37,13 +37,14 @@ import java.util.Set;
 
 public class FluidTankNTM implements IFluidHandler, IFluidTank {
 
-    public static final List<FluidLoadingHandler> loadingHandlers = new ArrayList<FluidLoadingHandler>();
-    public static final Set<Item> noDualUnload = new HashSet<Item>();
+    public static final List<FluidLoadingHandler> loadingHandlers = new ArrayList<>();
+    public static final Set<Item> noDualUnload = new HashSet<>();
 
     static {
         loadingHandlers.add(new FluidLoaderStandard()); //Don't get fooled, this is responsible for fluid containers
         loadingHandlers.add(new FluidLoaderFillableItem());
         loadingHandlers.add(new FluidLoaderInfinite());
+        loadingHandlers.add(new FluidLoaderForge());
     }
 
     @Deprecated

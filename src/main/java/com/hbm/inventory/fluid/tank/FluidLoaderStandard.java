@@ -1,48 +1,44 @@
 package com.hbm.inventory.fluid.tank;
 
+import com.hbm.capability.NTMFluidCapabilityHandler;
 import com.hbm.inventory.FluidContainerRegistry;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.items.IItemHandler;
 
 public class FluidLoaderStandard extends FluidLoadingHandler {
 
 	@Override
 	public boolean fillItem(IItemHandler slots, int in, int out, FluidTankNTM tank) {
-		
 		if(tank.pressure != 0) return false;
-		
-		if(slots.getStackInSlot(in) == ItemStack.EMPTY)
-			return true;
-		
+		ItemStack inputStack = slots.getStackInSlot(in);
+		ItemStack outputStack = slots.getStackInSlot(out);
+		if(inputStack == ItemStack.EMPTY) return true;
+		if (!NTMFluidCapabilityHandler.isHbmFluidContainer(inputStack.getItem())) return false;
 		FluidType type = tank.getTankType();
-		ItemStack full = FluidContainerRegistry.getFullContainer(slots.getStackInSlot(in), type);
+		ItemStack full = FluidContainerRegistry.getFullContainer(inputStack, type);
 		
-		if(full != null && slots.getStackInSlot(in) != ItemStack.EMPTY && tank.getFill() - FluidContainerRegistry.getFluidContent(full, type) >= 0) {
+		if(full != null && tank.getFill() - FluidContainerRegistry.getFluidContent(full, type) >= 0) {
 			
-			if(slots.getStackInSlot(out) == ItemStack.EMPTY) {
+			if(outputStack == ItemStack.EMPTY) {
 				
 				tank.setFill(tank.getFill() - FluidContainerRegistry.getFluidContent(full, type));
 				slots.insertItem(out, full.copy(), false);
-				slots.getStackInSlot(in).setCount(slots.getStackInSlot(in).getCount() - 1);
-				if(slots.getStackInSlot(in).getCount() <= 0) {
+				inputStack.setCount(inputStack.getCount() - 1);
+				if(inputStack.getCount() <= 0) {
 					slots.insertItem(in, ItemStack.EMPTY, false);
 				}
 				
-			} else if(slots.getStackInSlot(out) != ItemStack.EMPTY &&
-					slots.getStackInSlot(out).getItem() == full.getItem() &&
-					slots.getStackInSlot(out).getItemDamage() == full.getItemDamage() &&
-					slots.getStackInSlot(out).getCount() < slots.getStackInSlot(out).getMaxStackSize()) {
+			} else if(outputStack.getItem() == full.getItem() && outputStack.getItemDamage() == full.getItemDamage() && outputStack.getCount() < outputStack.getMaxStackSize()) {
 				
 				tank.setFill(tank.getFill() - FluidContainerRegistry.getFluidContent(full, type));
-				slots.getStackInSlot(in).shrink(1);
+				inputStack.shrink(1);
 				
-				if(slots.getStackInSlot(in).getCount() <= 0) {
+				if(inputStack.getCount() <= 0) {
 					slots.insertItem(in, ItemStack.EMPTY, false);
 				}
-				slots.getStackInSlot(out).grow(1);
+				outputStack.grow(1);
 			}
 		}
 		
