@@ -27,13 +27,13 @@ import java.util.Locale;
 public class FluidType {
 
 	//The numeric ID of the fluid
-	private int id;
+	private final int id;
 	//The internal name
-	private String stringId;
+	private final String stringId;
 	//Approximate HEX Color of the fluid, used for pipe rendering
-	private int color;
+	private final int color;
 	//Unlocalized string ID of the fluid
-	private String unlocalized;
+	private final String unlocalized;
 	//localization override for custom fluids
 	private String localizedOverride;
 	public NBTTagCompound tag;
@@ -52,11 +52,11 @@ public class FluidType {
 	/** How hot this fluid is. Simple enough. */
 	public int temperature = ROOM_TEMPERATURE;
 	
-	public HashMap<Class, Object> containers = new HashMap();
-	public HashMap<Class<? extends FluidTrait>, FluidTrait> traits = new HashMap();
+	public HashMap<Class, Object> containers = new HashMap<>();
+	public HashMap<Class<? extends FluidTrait>, FluidTrait> traits = new HashMap<>();
 	//public List<EnumFluidTrait> enumTraits = new ArrayList();
 	
-	private ResourceLocation texture;
+	private final ResourceLocation texture;
 	private String ffNameOverride;
 
 	public FluidType(String name, int color, int p, int f, int r, EnumSymbol symbol) {
@@ -136,7 +136,7 @@ public class FluidType {
 	public int getID() {
 		return this.id;
 	}
-	/** The unique mapping name for this fluid, usually matches the unlocalied name, minus the prefix */
+	/** The unique mapping name for this fluid, usually matches the unlocalized name, minus the prefix */
 	public String getName() {
 		return this.stringId;
 	}
@@ -191,11 +191,11 @@ public class FluidType {
 	}
 
 	public Fluid toFF(){
-		return  FluidRegistry.getFluid(ffNameOverride == null ? stringId.toLowerCase() : ffNameOverride);
+		return FluidRegistry.getFluid(ffNameOverride == null ? stringId.toLowerCase(Locale.US) : ffNameOverride);
 	}
 
 	public String getFFName(){
-		return  ffNameOverride == null ? stringId.toLowerCase() : ffNameOverride;
+		return ffNameOverride == null ? stringId.toLowerCase(Locale.US) : ffNameOverride;
 	}
 
 	/**
@@ -233,7 +233,7 @@ public class FluidType {
 		
 		boolean shiftHeld = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
 		
-		List<String> hidden = new ArrayList();
+		List<String> hidden = new ArrayList<>();
 		
 		for(Class<? extends FluidTrait> clazz : FluidTrait.traitList) {
 			FluidTrait trait = this.getTrait(clazz);
@@ -254,7 +254,7 @@ public class FluidType {
 
 		boolean shiftHeld = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT);
 
-		List<String> hidden = new ArrayList();
+		List<String> hidden = new ArrayList<>();
 
 		for(Class<? extends FluidTrait> clazz : FluidTrait.traitList) {
 			FluidTrait trait = this.getTrait(clazz);
