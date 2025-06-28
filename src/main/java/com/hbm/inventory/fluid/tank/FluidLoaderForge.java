@@ -10,7 +10,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.items.IItemHandler;
 
-public class FluidLoaderForge extends FluidLoadingHandler {
+public class FluidLoaderForge implements IFluidLoadingHandler {
 
     @Override
     public boolean fillItem(IItemHandler slots, int in, int out, FluidTankNTM tank) {

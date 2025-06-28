@@ -7,7 +7,7 @@ import net.minecraftforge.items.IItemHandler;
 
 import java.util.Random;
 
-public class FluidLoaderInfinite extends FluidLoadingHandler {
+public class FluidLoaderInfinite implements IFluidLoadingHandler {
 	
 	private static Random rand = new Random();
 

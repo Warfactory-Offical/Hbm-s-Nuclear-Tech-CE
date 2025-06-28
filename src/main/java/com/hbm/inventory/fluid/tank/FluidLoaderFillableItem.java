@@ -7,7 +7,7 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
-public class FluidLoaderFillableItem extends FluidLoadingHandler {
+public class FluidLoaderFillableItem implements IFluidLoadingHandler {
 
 	@Override
 	public boolean fillItem(IItemHandler slots, int in, int out, FluidTankNTM tank) {

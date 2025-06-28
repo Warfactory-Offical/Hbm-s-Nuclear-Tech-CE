@@ -38,7 +38,7 @@ import java.util.Set;
 
 public class FluidTankNTM implements IFluidHandler, IFluidTank {
 
-    public static final List<FluidLoadingHandler> loadingHandlers = new ArrayList<>();
+    public static final List<IFluidLoadingHandler> loadingHandlers = new ArrayList<>();
     public static final Set<Item> noDualUnload = new HashSet<>();
 
     static {
@@ -151,7 +151,7 @@ public class FluidTankNTM implements IFluidHandler, IFluidTank {
 
         int prev = this.getFill();
 
-        for (FluidLoadingHandler handler : loadingHandlers) {
+        for (IFluidLoadingHandler handler : loadingHandlers) {
             if (handler.emptyItem(slots, in, out, this)) {
                 break;
             }
@@ -167,7 +167,7 @@ public class FluidTankNTM implements IFluidHandler, IFluidTank {
 
         int prev = this.getFill();
 
-        for (FluidLoadingHandler handler : loadingHandlers) {
+        for (IFluidLoadingHandler handler : loadingHandlers) {
             if (handler.fillItem(slots, in, out, this)) {
                 break;
             }
