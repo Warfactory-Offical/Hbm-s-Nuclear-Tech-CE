@@ -1,5 +1,6 @@
 package com.hbm.inventory.fluid.tank;
 
+import com.hbm.capability.NTMFluidCapabilityHandler;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.gui.GuiInfoContainer;
@@ -27,9 +28,9 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.items.IItemHandler;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -50,40 +51,26 @@ public class FluidTankNTM implements IFluidHandler, IFluidTank {
     @Deprecated
     public int index = 0;
     FluidType type;
-    @Nullable
-    Fluid typeForgeFluid;
     int fluid;
     int maxFluid;
     int pressure = 0;
 
     public FluidTankNTM(FluidType type, int maxFluid) {
         this.type = type;
-        syncTankType();
         this.maxFluid = maxFluid;
-
     }
 
     @Deprecated // indices are no longer needed
     public FluidTankNTM(FluidType type, int maxFluid, int index) {
         this.type = type;
-        syncTankType();
         this.maxFluid = maxFluid;
         this.index = index;
     }
 
     public FluidTankNTM withPressure(int pressure) {
-
         if (this.pressure != pressure) this.setFill(0);
-
         this.pressure = pressure;
         return this;
-    }
-
-    private void syncTankType() {
-        if (type == null || type == Fluids.NONE)
-            typeForgeFluid = null;
-
-        typeForgeFluid = type.toFF();
     }
 
     public FluidType getTankType() {
@@ -91,22 +78,17 @@ public class FluidTankNTM implements IFluidHandler, IFluidTank {
     }
 
     public void setTankType(FluidType type) {
-
         if (type == null) {
             type = Fluids.NONE;
         }
-
-        if (this.type == type)
-            return;
+        if (this.type == type) return;
 
         this.type = type;
-        syncTankType();
         this.setFill(0);
-
     }
 
     public Fluid getTankTypeFF() {
-        return typeForgeFluid;
+        return NTMFluidCapabilityHandler.getForgeFluid(this.type);
     }
 
     public int getFill() {
@@ -161,13 +143,11 @@ public class FluidTankNTM implements IFluidHandler, IFluidTank {
     //Fills tank from canisters
     public boolean loadTank(int in, int out, IItemHandler slots) {
 
-        if (slots.getStackInSlot(in) == ItemStack.EMPTY)
-            return false;
+        if (slots.getStackInSlot(in) == ItemStack.EMPTY) return false;
 
         boolean isInfiniteBarrel = slots.getStackInSlot(in).getItem() == ModItems.fluid_barrel_infinite;
 
-        if (!isInfiniteBarrel && pressure != 0)
-            return false;
+        if (!isInfiniteBarrel && pressure != 0) return false;
 
         int prev = this.getFill();
 
@@ -183,8 +163,7 @@ public class FluidTankNTM implements IFluidHandler, IFluidTank {
     //Fills canisters from tank
     public boolean unloadTank(int in, int out, IItemHandler slots) {
 
-        if (slots.getStackInSlot(in) == ItemStack.EMPTY)
-            return false;
+        if (slots.getStackInSlot(in) == ItemStack.EMPTY) return false;
 
         int prev = this.getFill();
 
@@ -211,8 +190,7 @@ public class FluidTankNTM implements IFluidHandler, IFluidTank {
      */
     public boolean setType(int in, int out, IItemHandler slots) {
 
-        if (!slots.getStackInSlot(in).isEmpty() && slots.getStackInSlot(in).getItem() instanceof IItemFluidIdentifier) {
-            IItemFluidIdentifier id = (IItemFluidIdentifier) slots.getStackInSlot(in).getItem();
+        if (!slots.getStackInSlot(in).isEmpty() && slots.getStackInSlot(in).getItem() instanceof IItemFluidIdentifier id) {
 
             if (in == out) {
                 FluidType newType = id.getType(null, 0, 0, 0, slots.getStackInSlot(in));
@@ -227,7 +205,6 @@ public class FluidTankNTM implements IFluidHandler, IFluidTank {
                 FluidType newType = id.getType(null, 0, 0, 0, slots.getStackInSlot(in));
                 if (type != newType) {
                     type = newType;
-                    syncTankType();
                     slots.insertItem(out, slots.getStackInSlot(in).copy(), false);
                     slots.getStackInSlot(in).shrink(1);
                     fluid = 0;
@@ -336,15 +313,12 @@ public class FluidTankNTM implements IFluidHandler, IFluidTank {
     public void readFromNBT(NBTTagCompound nbt, String s) {
         fluid = nbt.getInteger(s);
         int max = nbt.getInteger(s + "_max");
-        if (max > 0)
-            maxFluid = max;
+        if (max > 0) maxFluid = max;
 
         fluid = MathHelper.clamp(fluid, 0, max);
 
         type = Fluids.fromNameCompat(nbt.getString(s + "_type")); //compat
-        if (type == Fluids.NONE)
-            type = Fluids.fromID(nbt.getInteger(s + "_type"));
-        syncTankType();
+        if (type == Fluids.NONE) type = Fluids.fromID(nbt.getInteger(s + "_type"));
 
         this.pressure = nbt.getShort(s + "_p");
     }
@@ -360,7 +334,6 @@ public class FluidTankNTM implements IFluidHandler, IFluidTank {
         fluid = buf.readInt();
         maxFluid = buf.readInt();
         type = Fluids.fromID(buf.readInt());
-        syncTankType();
         pressure = buf.readShort();
     }
 
@@ -370,24 +343,18 @@ public class FluidTankNTM implements IFluidHandler, IFluidTank {
         int amount = getFill();
         int capacity = getMaxFill();
 
-        FluidStack stack = (fluid != null && amount > 0)
-                ? new FluidStack(fluid, amount)
-                : null;
+        FluidStack stack = (fluid != null && amount > 0) ? new FluidStack(fluid, amount) : null;
 
-        return new IFluidTankProperties[]{
-                new FluidTankProperties(stack, capacity)
-        };
+        return new IFluidTankProperties[]{new FluidTankProperties(stack, capacity)};
     }
 
+    @Nullable
     @Override
-    public @org.jetbrains.annotations.Nullable FluidStack getFluid() {
+    public FluidStack getFluid() {
         Fluid fluid = getTankTypeFF();
         int amount = getFill();
-        FluidStack stack = (fluid != null && amount > 0)
-                ? new FluidStack(fluid, amount)
-                : null;
 
-        return stack;
+        return (fluid != null && amount > 0) ? new FluidStack(fluid, amount) : null;
     }
 
     @Override
@@ -408,19 +375,35 @@ public class FluidTankNTM implements IFluidHandler, IFluidTank {
 
     @Override
     public int fill(FluidStack resource, boolean doFill) {
-        if (!(getTankTypeFF() != null && getTankTypeFF().getName().equals(resource.getFluid().getName())))
+        if (resource == null || resource.amount <= 0) {
             return 0;
-        int amount = resource.amount;
-        int demand = getMaxFill() - getFill();
-        int toTransfer = Math.min(demand, amount);
-        if (doFill) {
-            setFill(getFill() + toTransfer);
         }
-        return toTransfer;
+        if (this.type == Fluids.NONE) {
+            FluidType incomingType = NTMFluidCapabilityHandler.getHbmFluidType(resource.getFluid());
+            if (incomingType == null || incomingType == Fluids.NONE) return 0;
+            int toTransfer = Math.min(getMaxFill(), resource.amount);
+            if (doFill) {
+                this.type = incomingType;
+                this.setFill(toTransfer);
+            }
+            return toTransfer;
+        } else {
+            Fluid currentForgeFluid = getTankTypeFF();
+            if (currentForgeFluid == null || !currentForgeFluid.equals(resource.getFluid())) {
+                return 0;
+            }
+            int demand = getMaxFill() - getFill();
+            int toTransfer = Math.min(demand, resource.amount);
+            if (doFill && toTransfer > 0) {
+                setFill(getFill() + toTransfer);
+            }
+            return toTransfer;
+        }
     }
 
+    @Nullable
     @Override
-    public @org.jetbrains.annotations.Nullable FluidStack drain(FluidStack resource, boolean doDrain) {
+    public FluidStack drain(FluidStack resource, boolean doDrain) {
         Fluid currentType = getTankTypeFF();
         if (resource == null || !resource.getFluid().equals(currentType)) return null;
         int toDrain = Math.min(resource.amount, getFill());
@@ -431,10 +414,10 @@ public class FluidTankNTM implements IFluidHandler, IFluidTank {
         return drained;
     }
 
+    @Nullable
     @Override
-    public @org.jetbrains.annotations.Nullable FluidStack drain(int maxDrain, boolean doDrain) {
-        if (getTankType() == Fluids.NONE || getTankTypeFF() == null || getFill() == 0)
-            return null;
+    public FluidStack drain(int maxDrain, boolean doDrain) {
+        if (getTankType() == Fluids.NONE || getTankTypeFF() == null || getFill() == 0) return null;
         int toDrain = Math.min(maxDrain, getFill());
         FluidStack drained = new FluidStack(getTankTypeFF(), toDrain);
 
