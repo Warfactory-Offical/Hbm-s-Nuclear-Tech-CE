@@ -1,5 +1,6 @@
 package com.hbm.inventory;
 
+import com.github.bsideup.jabel.Desugar;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.NTMFluidCapabilityHandler;
 import com.hbm.config.GeneralConfig;
@@ -7,19 +8,22 @@ import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ModItems;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class FluidContainerRegistry {
 
-    //TODO: continue incorporating hashmaps into this
-    public static List<FluidContainer> allContainers = new ArrayList<FluidContainer>();
-    private static final HashMap<FluidType, List<FluidContainer>> containerMap = new HashMap<FluidType, List<FluidContainer>>();
+    public static final List<FluidContainer> allContainers = new ArrayList<>();
+    private static final HashMap<FluidType, List<FluidContainer>> containerMap = new HashMap<>();
+    private static final HashMap<Item, HashMap<Integer, FluidContainer>> fullContainerMapByItem = new HashMap<>();
+    private static final HashMap<Item, HashMap<Integer, List<FluidContainer>>> emptyContainerMapByItem = new HashMap<>();
 
     public static void register() {
         FluidContainerRegistry.registerContainer(new FluidContainer(new ItemStack(Items.WATER_BUCKET), new ItemStack(Items.BUCKET), Fluids.WATER, 1000));
@@ -70,108 +74,129 @@ public class FluidContainerRegistry {
 
     public static void registerContainer(FluidContainer con) {
         allContainers.add(con);
-        OreDictionary.registerOre(con.type.getDict(con.content), con.fullContainer);
+        OreDictionary.registerOre(con.type().getDict(con.content()), con.fullContainer());
 
-        if(!containerMap.containsKey(con.type))
-            containerMap.put(con.type, new ArrayList<FluidContainer>());
+        containerMap.computeIfAbsent(con.type(), k -> new ArrayList<>()).add(con);
 
-        List<FluidContainer> items = containerMap.get(con.type);
-        items.add(con);
-    }
+        fullContainerMapByItem.computeIfAbsent(con.fullContainer().getItem(), k -> new HashMap<>()).put(con.fullContainer().getMetadata(), con);
 
-    public static List<FluidContainer> getContainers(FluidType type) {
-        return containerMap.get(type);
-    }
-
-    @Nullable
-    public static FluidContainer getContainer(FluidType type, ItemStack stack) {
-        if(stack == null)
-            return null;
-
-        ItemStack sta = stack.copy();
-        sta.setCount(1);
-
-        if (!containerMap.containsKey(type))
-            return null;
-
-        for (FluidContainer container : getContainers(type)) {
-            if (ItemStack.areItemStacksEqual(container.emptyContainer, sta) && ItemStack.areItemStackTagsEqual(container.emptyContainer, sta)) {
-                return container;
+        if (con.emptyContainer() != null && !con.emptyContainer().isEmpty()) {
+            List<FluidContainer> candidates = emptyContainerMapByItem
+                    .computeIfAbsent(con.emptyContainer().getItem(), k -> new HashMap<>())
+                    .computeIfAbsent(con.emptyContainer().getMetadata(), k -> new ArrayList<>());
+            if (!candidates.isEmpty()) {
+                int existingCapacity = candidates.get(0).content();
+                if (existingCapacity != con.content()) {
+                    throw new IllegalStateException(String.format(
+                            "Inconsistent fluid container registration for empty item '%s' (meta: %d). " +
+                                    "Existing recipes have capacity %d, but new recipe for fluid '%s' ('%s') has capacity %d. " +
+                                    "All recipes for a single empty container must have the same capacity.",
+                            con.emptyContainer().getTranslationKey() + ".name",
+                            con.emptyContainer().getMetadata(),
+                            existingCapacity,
+                            con.type().getName(),
+                            con.fullContainer().getTranslationKey() + ".name",
+                            con.content()
+                    ));
+                }
             }
+            candidates.add(con);
         }
-
-        return null;
     }
 
+    /**
+     * Gets the amount of a specific fluid in a given full container stack.
+     */
     public static int getFluidContent(ItemStack stack, FluidType type) {
-
-        if(stack == null)
-            return 0;
-
-        ItemStack sta = stack.copy();
-        sta.setCount(1);
-
-        if (!containerMap.containsKey(type))
-            return 0;
-
-        for(FluidContainer container : containerMap.get(type)) {
-            if(ItemStack.areItemStacksEqual(container.fullContainer, sta) && ItemStack.areItemStackTagsEqual(container.fullContainer, sta))
-                return container.content;
-        }
-
+        if (stack == null || stack.isEmpty()) return 0;
+        FluidContainer recipe = getDrainRecipe(stack);
+        if (recipe != null && recipe.type() == type) return recipe.content();
         return 0;
     }
 
+    /**
+     * Gets the FluidType contained in a full container stack.
+     */
     public static FluidType getFluidType(ItemStack stack) {
-
-        if(stack == null)
-            return Fluids.NONE;
-
-        ItemStack sta = stack.copy();
-        sta.setCount(1);
-
-        for(FluidContainer container : allContainers) {
-            if(ItemStack.areItemStacksEqual(container.fullContainer, sta) && ItemStack.areItemStackTagsEqual(container.fullContainer, sta))
-                return container.type;
-        }
-
-        return Fluids.NONE;
+        if (stack == null || stack.isEmpty()) return Fluids.NONE;
+        FluidContainer recipe = getDrainRecipe(stack);
+        return recipe != null ? recipe.type() : Fluids.NONE;
     }
 
+    /**
+     * Gets the full container item for a given empty container and fluid type.
+     */
     @Nullable
     public static ItemStack getFullContainer(ItemStack stack, FluidType type) {
-        if(stack.isEmpty())
-            return null;
-
-        ItemStack sta = stack.copy();
-        sta.setCount(1);
-
-        if (!containerMap.containsKey(type))
-            return null;
-
-        for(FluidContainer container : containerMap.get(type)) {
-            if (container.emptyContainer == null) continue;
-            if(ItemStack.areItemStacksEqual(container.emptyContainer, sta) &&  ItemStack.areItemStackTagsEqual(container.emptyContainer, sta))
-                return container.fullContainer.copy();
-        }
-
-        return null;
+        if (stack == null || stack.isEmpty()) return null;
+        FluidContainer recipe = getFillRecipe(stack, type);
+        return recipe != null ? recipe.fullContainer().copy() : null;
     }
 
+    /**
+     * Gets the empty container item for a given full container stack.
+     */
     @Nullable
     public static ItemStack getEmptyContainer(ItemStack stack) {
-        if(stack == null)
-            return null;
-
-        ItemStack sta = stack.copy();
-        sta.setCount(1);
-
-        for(FluidContainer container : allContainers) {
-            if(ItemStack.areItemStacksEqual(container.fullContainer, sta) && ItemStack.areItemStackTagsEqual(container.fullContainer, sta))
-                return container.emptyContainer == null ? null : container.emptyContainer.copy();
+        if (stack == null || stack.isEmpty()) return null;
+        FluidContainer recipe = getDrainRecipe(stack);
+        if (recipe != null && recipe.emptyContainer() != null) {
+            return recipe.emptyContainer().copy();
         }
-
         return null;
     }
 
+    /**
+     * Gets the recipe for draining a full item stack.
+     */
+    @Nullable
+    public static FluidContainer getDrainRecipe(@NotNull ItemStack fullStack) {
+        if (fullStack.isEmpty()) return null;
+        HashMap<Integer, FluidContainer> metaMap = fullContainerMapByItem.get(fullStack.getItem());
+        if (metaMap == null) return null;
+        return metaMap.get(fullStack.getMetadata());
+    }
+
+    /**
+     * Gets the recipe for filling an empty item stack with a specific fluid.
+     */
+    @Nullable
+    public static FluidContainer getFillRecipe(@NotNull ItemStack emptyStack, FluidType type) {
+        if (emptyStack.isEmpty()) return null;
+        HashMap<Integer, List<FluidContainer>> metaMap = emptyContainerMapByItem.get(emptyStack.getItem());
+        if (metaMap == null) return null;
+        List<FluidContainer> candidates = metaMap.get(emptyStack.getMetadata());
+        if (candidates == null) return null;
+        for (FluidContainer fc : candidates) {
+            if (fc.type() == type) return fc;
+        }
+        return null;
+    }
+
+    /**
+     * Gets any recipe associated with an item stack, preferring a drain recipe if the item is full.
+     * Used for getting generic container properties like capacity.
+     */
+    @Nullable
+    public static FluidContainer getContainerData(@NotNull ItemStack stack) {
+        if (stack.isEmpty()) return null;
+        FluidContainer drainRecipe = getDrainRecipe(stack);
+        if (drainRecipe != null) return drainRecipe;
+        HashMap<Integer, List<FluidContainer>> metaMap = emptyContainerMapByItem.get(stack.getItem());
+        if (metaMap == null) return null;
+        List<FluidContainer> candidates = metaMap.get(stack.getMetadata());
+        if (candidates != null && !candidates.isEmpty()) {
+            // Assumes all recipes for an empty container have the same capacity, would break otherwise.
+            return candidates.get(0);
+        }
+        return null;
+    }
+
+    @Desugar
+    public record FluidContainer(
+            @NotNull ItemStack fullContainer,
+            @Nullable ItemStack emptyContainer,
+            @NotNull FluidType type,
+            int content
+    ){}
 }

@@ -1,6 +1,5 @@
 package com.hbm.capability;
 
-import com.hbm.inventory.FluidContainer;
 import com.hbm.inventory.FluidContainerRegistry;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
@@ -18,8 +17,8 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -67,12 +66,10 @@ public class NTMFluidCapabilityHandler {
             }
         }
 
-        for (FluidContainer container : FluidContainerRegistry.allContainers) {
-            if (container.fullContainer != null && !container.fullContainer.isEmpty()) {
-                HBM_FLUID_ITEMS.add(container.fullContainer.getItem());
-            }
-            if (container.emptyContainer != null && !container.emptyContainer.isEmpty()) {
-                HBM_FLUID_ITEMS.add(container.emptyContainer.getItem());
+        for (FluidContainerRegistry.FluidContainer container : FluidContainerRegistry.allContainers) {
+            HBM_FLUID_ITEMS.add(container.fullContainer().getItem());
+            if (container.emptyContainer() != null && !container.emptyContainer().isEmpty()) {
+                HBM_FLUID_ITEMS.add(container.emptyContainer().getItem());
             }
         }
 
