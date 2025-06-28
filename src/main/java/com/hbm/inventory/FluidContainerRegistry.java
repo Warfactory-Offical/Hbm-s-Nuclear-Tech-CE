@@ -86,7 +86,7 @@ public class FluidContainerRegistry {
                     .computeIfAbsent(con.emptyContainer().getMetadata(), k -> new ArrayList<>());
             if (!candidates.isEmpty()) {
                 int existingCapacity = candidates.get(0).content();
-                if (existingCapacity != con.content()) {
+                if (existingCapacity != con.content() && con.emptyContainer().getItem() != Items.GLASS_BOTTLE) {
                     throw new IllegalStateException(String.format(
                             "Inconsistent fluid container registration for empty item '%s' (meta: %d). " +
                                     "Existing recipes have capacity %d, but new recipe for fluid '%s' ('%s') has capacity %d. " +
