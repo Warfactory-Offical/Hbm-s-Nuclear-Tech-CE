@@ -93,6 +93,17 @@ public class NTMFluidContainerWrapper implements IFluidHandlerItem {
 
     @Desugar
     private record TankProperties(@Nullable FluidStack contents, int capacity) implements IFluidTankProperties {
+        @Nullable
+        @Override
+        public FluidStack getContents() {
+            return contents;
+        }
+
+        @Override
+        public int getCapacity() {
+            return capacity;
+        }
+
         @Override
         public boolean canFill() {
             return contents == null;
