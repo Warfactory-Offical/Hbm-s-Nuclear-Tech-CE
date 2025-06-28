@@ -1,5 +1,6 @@
 package com.hbm.capability;
 
+import com.github.bsideup.jabel.Desugar;
 import com.hbm.inventory.FluidContainerRegistry;
 import com.hbm.inventory.fluid.FluidType;
 import net.minecraft.item.ItemStack;
@@ -9,6 +10,9 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.OptionalInt;
 
 /**
  * Wrapper for NTM canisters
@@ -27,47 +31,16 @@ public class NTMFluidContainerWrapper implements IFluidHandlerItem {
     @Override
     public IFluidTankProperties[] getTankProperties() {
         FluidStack contents = getContentsInternal();
-        FluidContainerRegistry.FluidContainer containerData = FluidContainerRegistry.getContainerData(this.container);
-
-        if (containerData == null) {
-            return new IFluidTankProperties[0];
+        FluidContainerRegistry.FluidContainer drainRecipe = FluidContainerRegistry.getDrainRecipe(this.container);
+        if (drainRecipe != null) {
+            return new IFluidTankProperties[]{new TankProperties(contents, drainRecipe.content())};
         }
-
-        return new IFluidTankProperties[]{new IFluidTankProperties() {
-            @Nullable
-            @Override
-            public FluidStack getContents() {
-                return contents;
-            }
-
-            @Override
-            public int getCapacity() {
-                return containerData.content();
-            }
-
-            @Override
-            public boolean canFill() {
-                return contents == null;
-            }
-
-            @Override
-            public boolean canDrain() {
-                return contents != null;
-            }
-
-            @Override
-            public boolean canFillFluidType(FluidStack fluidStack) {
-                if (fluidStack == null || !canFill()) return false;
-                FluidType hbmType = NTMFluidCapabilityHandler.getHbmFluidType(fluidStack.getFluid());
-                return hbmType != null && FluidContainerRegistry.getFillRecipe(container, hbmType) != null;
-            }
-
-            @Override
-            public boolean canDrainFluidType(FluidStack fluidStack) {
-                if (fluidStack == null || !canDrain()) return false;
-                return contents != null && contents.isFluidEqual(fluidStack);
-            }
-        }};
+        List<FluidContainerRegistry.FluidContainer> fillRecipes = FluidContainerRegistry.getFillRecipes(this.container);
+        if (!fillRecipes.isEmpty()) {
+            OptionalInt maxCapacity = fillRecipes.stream().mapToInt(FluidContainerRegistry.FluidContainer::content).max();
+            return new IFluidTankProperties[]{new TankProperties(null, maxCapacity.orElse(0))};
+        }
+        return new IFluidTankProperties[0];
     }
 
     @Override
@@ -116,5 +89,28 @@ public class NTMFluidContainerWrapper implements IFluidHandlerItem {
         if (fc == null) return null;
         Fluid forgeFluid = NTMFluidCapabilityHandler.getForgeFluid(fc.type());
         return forgeFluid != null ? new FluidStack(forgeFluid, fc.content()) : null;
+    }
+
+    @Desugar
+    private record TankProperties(@Nullable FluidStack contents, int capacity) implements IFluidTankProperties {
+        @Override
+        public boolean canFill() {
+            return contents == null;
+        }
+
+        @Override
+        public boolean canDrain() {
+            return contents != null;
+        }
+
+        @Override
+        public boolean canFillFluidType(FluidStack fluidStack) {
+            return canFill();
+        }
+
+        @Override
+        public boolean canDrainFluidType(FluidStack fluidStack) {
+            return canDrain() && contents.isFluidEqual(fluidStack);
+        }
     }
 }
