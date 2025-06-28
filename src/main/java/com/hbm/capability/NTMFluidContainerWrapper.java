@@ -1,6 +1,5 @@
 package com.hbm.capability;
 
-import com.github.bsideup.jabel.Desugar;
 import com.hbm.inventory.FluidContainerRegistry;
 import com.hbm.inventory.fluid.FluidType;
 import net.minecraft.item.ItemStack;
@@ -31,7 +30,7 @@ public class NTMFluidContainerWrapper implements IFluidHandlerItem {
     @Override
     public IFluidTankProperties[] getTankProperties() {
         FluidStack contents = getContentsInternal();
-        FluidContainerRegistry.FluidContainer drainRecipe = FluidContainerRegistry.getDrainRecipe(this.container);
+        FluidContainerRegistry.FluidContainer drainRecipe = FluidContainerRegistry.getFluidContainer(this.container);
         if (drainRecipe != null) {
             return new IFluidTankProperties[]{new TankProperties(contents, drainRecipe.content())};
         }
@@ -46,9 +45,7 @@ public class NTMFluidContainerWrapper implements IFluidHandlerItem {
     @Override
     public int fill(FluidStack resource, boolean doFill) {
         if (resource == null || getContentsInternal() != null) return 0;
-        FluidType hbmType = NTMFluidCapabilityHandler.getHbmFluidType(resource.getFluid());
-        if (hbmType == null) return 0;
-        FluidContainerRegistry.FluidContainer fillRecipe = FluidContainerRegistry.getFillRecipe(this.container, hbmType);
+        FluidContainerRegistry.FluidContainer fillRecipe = FluidContainerRegistry.getFillRecipe(this.container, resource);
         if (fillRecipe == null) return 0;
         if (resource.amount < fillRecipe.content()) return 0;
         if (doFill) this.container = fillRecipe.fullContainer().copy();
@@ -62,7 +59,7 @@ public class NTMFluidContainerWrapper implements IFluidHandlerItem {
         FluidStack contents = getContentsInternal();
         if (contents == null || !contents.isFluidEqual(resource) || resource.amount < contents.amount) return null;
         if (doDrain) {
-            FluidContainerRegistry.FluidContainer fc = FluidContainerRegistry.getDrainRecipe(this.container);
+            FluidContainerRegistry.FluidContainer fc = FluidContainerRegistry.getFluidContainer(this.container);
             if (fc != null && fc.emptyContainer() != null) this.container = fc.emptyContainer().copy();
             else return null;
         }
@@ -85,18 +82,26 @@ public class NTMFluidContainerWrapper implements IFluidHandlerItem {
 
     @Nullable
     private FluidStack getContentsInternal() {
-        FluidContainerRegistry.FluidContainer fc = FluidContainerRegistry.getDrainRecipe(this.container);
+        FluidContainerRegistry.FluidContainer fc = FluidContainerRegistry.getFluidContainer(this.container);
         if (fc == null) return null;
         Fluid forgeFluid = NTMFluidCapabilityHandler.getForgeFluid(fc.type());
-        return forgeFluid != null ? new FluidStack(forgeFluid, fc.content()) : null;
+        return forgeFluid == null ? null : new FluidStack(forgeFluid, fc.content());
     }
 
-    @Desugar
-    private record TankProperties(@Nullable FluidStack contents, int capacity) implements IFluidTankProperties {
+    private class TankProperties implements IFluidTankProperties {
+        @Nullable
+        FluidStack contents;
+        int capacity;
+
+        public TankProperties(@Nullable FluidStack contents, int capacity) {
+            this.contents = contents;
+            this.capacity = capacity;
+        }
+
         @Nullable
         @Override
         public FluidStack getContents() {
-            return contents;
+            return contents == null ? null : contents.copy();
         }
 
         @Override
@@ -116,7 +121,7 @@ public class NTMFluidContainerWrapper implements IFluidHandlerItem {
 
         @Override
         public boolean canFillFluidType(FluidStack fluidStack) {
-            return canFill();
+            return canFill() && FluidContainerRegistry.getFillRecipe(container, fluidStack) != null;
         }
 
         @Override

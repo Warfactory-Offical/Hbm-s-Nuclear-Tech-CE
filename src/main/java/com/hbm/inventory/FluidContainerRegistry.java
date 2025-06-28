@@ -10,6 +10,7 @@ import com.hbm.items.ModItems;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -85,11 +86,11 @@ public class FluidContainerRegistry {
     }
 
     /**
-     * Gets the amount of a specific fluid in a given full container stack.
+     * @return  the amount of a specific fluid in a given full container stack.
      */
     public static int getFluidContent(ItemStack stack, FluidType type) {
         if (stack == null || stack.isEmpty()) return 0;
-        FluidContainer recipe = getDrainRecipe(stack);
+        FluidContainer recipe = getFluidContainer(stack);
         if (recipe != null && recipe.type() == type) return recipe.content();
         return 0;
     }
@@ -97,9 +98,10 @@ public class FluidContainerRegistry {
     /**
      * Gets the FluidType contained in a full container stack.
      */
-    public static FluidType getFluidType(ItemStack stack) {
+    @NotNull
+    public static FluidType getFluidType(@Nullable ItemStack stack) {
         if (stack == null || stack.isEmpty()) return Fluids.NONE;
-        FluidContainer recipe = getDrainRecipe(stack);
+        FluidContainer recipe = getFluidContainer(stack);
         return recipe != null ? recipe.type() : Fluids.NONE;
     }
 
@@ -119,7 +121,7 @@ public class FluidContainerRegistry {
     @Nullable
     public static ItemStack getEmptyContainer(ItemStack stack) {
         if (stack == null || stack.isEmpty()) return null;
-        FluidContainer recipe = getDrainRecipe(stack);
+        FluidContainer recipe = getFluidContainer(stack);
         if (recipe != null && recipe.emptyContainer() != null) {
             return recipe.emptyContainer().copy();
         }
@@ -127,10 +129,10 @@ public class FluidContainerRegistry {
     }
 
     /**
-     * Gets the recipe for draining a full item stack.
+     * @return the {@link FluidContainer} of the given full container stack, or null if none is found.
      */
     @Nullable
-    public static FluidContainer getDrainRecipe(@NotNull ItemStack fullStack) {
+    public static FluidContainer getFluidContainer(@NotNull ItemStack fullStack) {
         if (fullStack.isEmpty()) return null;
         HashMap<Integer, FluidContainer> metaMap = fullContainerMapByItem.get(fullStack.getItem());
         if (metaMap == null) return null;
@@ -138,11 +140,11 @@ public class FluidContainerRegistry {
     }
 
     /**
-     * Gets the recipe for filling an empty item stack with a specific fluid.
+     * @return the {@link FluidContainer} of the given empty container and {@link FluidType}, or null if none is found.
      */
     @Nullable
-    public static FluidContainer getFillRecipe(@NotNull ItemStack emptyStack, FluidType type) {
-        if (emptyStack.isEmpty()) return null;
+    public static FluidContainer getFillRecipe(@NotNull ItemStack emptyStack, @Nullable FluidType type) {
+        if (emptyStack.isEmpty() || type == null) return null;
         HashMap<Integer, List<FluidContainer>> metaMap = emptyContainerMapByItem.get(emptyStack.getItem());
         if (metaMap == null) return null;
         List<FluidContainer> candidates = metaMap.get(emptyStack.getMetadata());
@@ -153,10 +155,15 @@ public class FluidContainerRegistry {
         return null;
     }
 
+    @Nullable
+    public static FluidContainer getFillRecipe(@NotNull ItemStack emptyStack, @NotNull FluidStack fluid) {
+        return getFillRecipe(emptyStack, NTMFluidCapabilityHandler.getHbmFluidType(fluid.getFluid()));
+    }
+
     /**
      * Gets all possible fill recipes for a given empty item stack.
      *
-     * @return A list of possible recipes, or an empty list if none are found.
+     * @return A list of possible {@link FluidContainer} recipes, or an empty list if none are found.
      */
     @NotNull
     public static List<FluidContainer> getFillRecipes(@NotNull ItemStack emptyStack) {
