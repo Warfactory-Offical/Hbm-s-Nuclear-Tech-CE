@@ -63,7 +63,9 @@ public class TileEntityCoreStabilizer extends TileEntityMachineBase implements I
 
             beam = 0;
 
-            if (power >= demand && !getLensSlot().isEmpty() && getLensSlot().getItem() == ModItems.ams_lens && ItemLens.getLensDamage(getLensSlot()) < ((ItemLens) ModItems.ams_lens).maxDamage) {
+            Item lens = getLensSlot().getItem();
+
+            if (power >= demand && !getLensSlot().isEmpty() && lens instanceof ItemLens && ItemLens.getLensDamage(getLensSlot()) < ((ItemLens) lens).maxDamage) {
 
                 ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata());
                 for (int i = 1; i <= range; i++) {
