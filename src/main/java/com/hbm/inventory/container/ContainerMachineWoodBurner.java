@@ -46,7 +46,7 @@ public class ContainerMachineWoodBurner extends Container {
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int index) {
-		ItemStack stack = null;
+		ItemStack stack = ItemStack.EMPTY;
 		Slot slot = (Slot) this.inventorySlots.get(index);
 
 		if(slot != null && slot.getHasStack()) {
@@ -55,7 +55,7 @@ public class ContainerMachineWoodBurner extends Container {
 
 			if(index <= 5) {
 				if(!this.mergeItemStack(originalStack, 6, this.inventorySlots.size(), true)) {
-					return null;
+					return ItemStack.EMPTY;
 				}
 				
 				slot.onSlotChange(originalStack, stack);
@@ -64,19 +64,19 @@ public class ContainerMachineWoodBurner extends Container {
 				
 				if(stack.getItem() instanceof IBatteryItem) {
 					if(!this.mergeItemStack(originalStack, 5, 6, false)) {
-						return null;
+						return ItemStack.EMPTY;
 					}
 				} else if(stack.getItem() instanceof IItemFluidIdentifier) {
 					if(!this.mergeItemStack(originalStack, 2, 3, false)) {
-						return null;
+						return ItemStack.EMPTY;
 					}
 				} else if(TileEntityFurnace.isItemFuel(stack)) {
 					if(!this.mergeItemStack(originalStack, 0, 1, false)) {
-						return null;
+						return ItemStack.EMPTY;
 					}
 				} else {
 					if(!this.mergeItemStack(originalStack, 3, 4, false)) {
-						return null;
+						return ItemStack.EMPTY;
 					}
 				}
 			}

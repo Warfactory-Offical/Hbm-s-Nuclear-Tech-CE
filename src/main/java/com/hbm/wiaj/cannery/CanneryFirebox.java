@@ -4,6 +4,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.items.ModItems;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.tileentity.RenderStirling;
+import com.hbm.tileentity.machine.TileEntityStirling;
 import com.hbm.util.I18nUtil;
 import com.hbm.wiaj.JarScene;
 import com.hbm.wiaj.JarScript;
@@ -15,6 +16,7 @@ import com.hbm.wiaj.actors.ActorTileEntity;
 import com.hbm.wiaj.actors.ITileActorRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -118,7 +120,8 @@ public class CanneryFirebox extends CanneryBase {
         stirling.setDouble("z", 2);
         stirling.setInteger("rotation", 2);
         stirling.setBoolean("hasCog", true);
-        scene1.add(new ActionCreateActor(1, new ActorTileEntity(new RenderStirling(), stirling)));
+        ITileActorRenderer stirlingRenderer = (ITileActorRenderer) TileEntityRendererDispatcher.instance.getRenderer(TileEntityStirling.class);
+        scene1.add(new ActionCreateActor(1, new ActorTileEntity(stirlingRenderer, stirling)));
         scene1.add(new ActionUpdateActor(1, "speed", 0F));
 
         scene1.add(new ActionWait(10));

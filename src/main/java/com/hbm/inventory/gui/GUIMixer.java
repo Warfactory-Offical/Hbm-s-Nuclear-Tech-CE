@@ -36,7 +36,7 @@ public class GUIMixer extends GuiInfoContainer {
 		MixerRecipes.MixerRecipe[] recipes = MixerRecipes.getOutput(mixer.tanksNew[2].getTankType());
 
 		if(recipes != null && recipes.length > 1) {
-			List<String> label = new ArrayList();
+			List<String> label = new ArrayList<>();
 			label.add(ChatFormatting.YELLOW + "Current recipe (" + (mixer.recipeIndex + 1) + "/" + recipes.length + "):");
 			MixerRecipes.MixerRecipe recipe = recipes[mixer.recipeIndex % recipes.length];
 			if(recipe.input1 != null) label.add("-" + recipe.input1.type.getLocalizedName());
@@ -75,5 +75,8 @@ public class GUIMixer extends GuiInfoContainer {
 			int j = mixer.progress * 53 / mixer.processTime;
 			drawTexturedModalRect(guiLeft + 62, guiTop + 36, 192, 0, j, 44);
 		}
+		mixer.tanksNew[0].renderTank(guiLeft + 43, guiTop + 23 + 52, this.zLevel, 7, 52);
+		mixer.tanksNew[1].renderTank( guiLeft + 52, guiTop + 23 + 52, this.zLevel, 7, 52);
+		mixer.tanksNew[2].renderTank(guiLeft + 117, guiTop + 23 + 52, this.zLevel, 16, 52);
 	}
 }

@@ -1,6 +1,7 @@
 package com.hbm.wiaj;
 
 import com.hbm.lib.RefStrings;
+import com.hbm.main.MainRegistry;
 import com.hbm.util.I18nUtil;
 import com.hbm.wiaj.actors.ActorFancyPanel;
 import com.hbm.wiaj.actors.ActorFancyPanel.Orientation;
@@ -76,11 +77,7 @@ public class GuiWorldInAJar extends GuiScreen {
             this.drawGuiContainerForegroundLayer(mouseX, mouseY);
             GlStateManager.enableLighting();
         } catch (Exception ex) {
-
-            for (StackTraceElement line : ex.getStackTrace()) {
-                this.mc.player.sendChatMessage(new TextComponentString(ChatFormatting.RED + line.toString()).toString());
-            }
-
+            MainRegistry.logger.error("Client-side WIAJ encountered an expected error", ex);
             this.mc.displayGuiScreen((GuiScreen) null);
             this.mc.setIngameFocus();
         }

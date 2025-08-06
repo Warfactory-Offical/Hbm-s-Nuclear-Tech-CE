@@ -112,7 +112,7 @@ public class TileEntityMachineWoodBurner extends TileEntityMachinePolluting impl
 								this.maxBurnTime = this.burnTime = burn;
 								ItemStack container = inventory.getStackInSlot(0).getItem().getContainerItem(inventory.getStackInSlot(0));
 								inventory.getStackInSlot(0).shrink(1);
-								if (inventory.getStackInSlot(0).isEmpty() && container != null)
+								if (inventory.getStackInSlot(0).isEmpty() && !container.isEmpty())
 									inventory.setStackInSlot(0, container.getItem().getContainerItem(container));
 								this.markDirty();
 							}
