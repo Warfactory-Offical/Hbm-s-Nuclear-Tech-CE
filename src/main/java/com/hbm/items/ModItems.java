@@ -7,7 +7,6 @@ import com.hbm.blocks.generic.BlockModDoor;
 import com.hbm.blocks.machine.ItemSelfcharger;
 import com.hbm.config.BombConfig;
 import com.hbm.handler.ToolAbility;
-import com.hbm.handler.ToolAbility.LuckAbility;
 import com.hbm.handler.WeaponAbility;
 import com.hbm.handler.guncfg.Gun12GaugeFactory;
 import com.hbm.handler.guncfg.GunDartFactory;
@@ -1450,52 +1449,52 @@ public class ModItems {
             .addBreakAbility(new ToolAbility.HammerAbility(2))
             .addBreakAbility(new ToolAbility.RecursionAbility(5))
             .addBreakAbility(new ToolAbility.SilkAbility())
-            .addBreakAbility(new LuckAbility(2));
+            .addBreakAbility(new ToolAbility.LuckAbility(2));
     public static final Item elec_axe = new ItemToolAbilityPower(12.5F, -2.8F, 0, MainRegistry.enumToolMaterialElec, EnumToolType.AXE, 500000, 1000, 100, "elec_axe")
             .addBreakAbility(new ToolAbility.HammerAbility(2))
             .addBreakAbility(new ToolAbility.RecursionAbility(5))
             .addBreakAbility(new ToolAbility.SilkAbility())
-            .addBreakAbility(new LuckAbility(2))
+            .addBreakAbility(new ToolAbility.LuckAbility(2))
             .addHitAbility(new WeaponAbility.ChainsawAbility(6))
             .addHitAbility(new WeaponAbility.BeheaderAbility());
     public static final Item elec_shovel = new ItemToolAbilityPower(7.5F, -2.8F, 0, MainRegistry.enumToolMaterialElec, EnumToolType.SHOVEL, 500000, 1000, 100, "elec_shovel")
             .addBreakAbility(new ToolAbility.HammerAbility(2))
             .addBreakAbility(new ToolAbility.RecursionAbility(5))
             .addBreakAbility(new ToolAbility.SilkAbility())
-            .addBreakAbility(new LuckAbility(2));
+            .addBreakAbility(new ToolAbility.LuckAbility(2));
     public static final Item desh_sword = new ItemSwordAbility(15F, 0, MainRegistry.enumToolMaterialDesh, "desh_sword")
             .addHitAbility(new WeaponAbility.StunAbility(2));
     public static final Item desh_pickaxe = new ItemToolAbility(5F, -2.8F, -0.05, MainRegistry.enumToolMaterialDesh, EnumToolType.PICKAXE, "desh_pickaxe")
             .addBreakAbility(new ToolAbility.HammerAbility(1))
             .addBreakAbility(new ToolAbility.RecursionAbility(3))
             .addBreakAbility(new ToolAbility.SilkAbility())
-            .addBreakAbility(new LuckAbility(2));
+            .addBreakAbility(new ToolAbility.LuckAbility(2));
     public static final Item desh_axe = new ItemToolAbility(6.5F, -2.8F, -0.05, MainRegistry.enumToolMaterialDesh, EnumToolType.AXE, "desh_axe")
             .addBreakAbility(new ToolAbility.HammerAbility(1))
             .addBreakAbility(new ToolAbility.RecursionAbility(3))
             .addBreakAbility(new ToolAbility.SilkAbility())
-            .addBreakAbility(new LuckAbility(2))
+            .addBreakAbility(new ToolAbility.LuckAbility(2))
             .addHitAbility(new WeaponAbility.BeheaderAbility());
     public static final Item desh_shovel = new ItemToolAbility(4F, -2.8F, -0.05, MainRegistry.enumToolMaterialDesh, EnumToolType.SHOVEL, "desh_shovel")
             .addBreakAbility(new ToolAbility.HammerAbility(1))
             .addBreakAbility(new ToolAbility.RecursionAbility(3))
             .addBreakAbility(new ToolAbility.SilkAbility())
-            .addBreakAbility(new LuckAbility(2));
+            .addBreakAbility(new ToolAbility.LuckAbility(2));
     public static final Item desh_hoe = new ModHoe(MainRegistry.enumToolMaterialDesh, "desh_hoe").setCreativeTab(CreativeTabs.TOOLS);
     public static final Item cobalt_sword = new ItemSwordAbility(12F, 0, MainRegistry.enumToolMaterialCobalt, "cobalt_sword");
     public static final Item cobalt_pickaxe = new ItemToolAbility(4F, -2.8F, 0, MainRegistry.enumToolMaterialCobalt, EnumToolType.PICKAXE, "cobalt_pickaxe")
             .addBreakAbility(new ToolAbility.RecursionAbility(4))
             .addBreakAbility(new ToolAbility.SilkAbility())
-            .addBreakAbility(new LuckAbility(1));
+            .addBreakAbility(new ToolAbility.LuckAbility(1));
     public static final Item cobalt_axe = new ItemToolAbility(6F, -2.8F, 0, MainRegistry.enumToolMaterialCobalt, EnumToolType.AXE, "cobalt_axe")
             .addBreakAbility(new ToolAbility.RecursionAbility(4))
             .addBreakAbility(new ToolAbility.SilkAbility())
-            .addBreakAbility(new LuckAbility(1))
+            .addBreakAbility(new ToolAbility.LuckAbility(1))
             .addHitAbility(new WeaponAbility.BeheaderAbility());
     public static final Item cobalt_shovel = new ItemToolAbility(3.5F, -2.8F, 0, MainRegistry.enumToolMaterialCobalt, EnumToolType.SHOVEL, "cobalt_shovel")
             .addBreakAbility(new ToolAbility.RecursionAbility(4))
             .addBreakAbility(new ToolAbility.SilkAbility())
-            .addBreakAbility(new LuckAbility(1));
+            .addBreakAbility(new ToolAbility.LuckAbility(1));
     public static final Item cobalt_hoe = new ModHoe(MainRegistry.enumToolMaterialCobalt, "cobalt_hoe").setCreativeTab(CreativeTabs.TOOLS);
     public static final Item centri_stick = new ItemToolAbility(3F, -2.8F, 0, MainRegistry.enumToolMaterialElec, EnumToolType.MINER, "centri_stick")
             .addBreakAbility(new ToolAbility.CentrifugeAbility()).setMaxDamage(50);
@@ -1507,18 +1506,18 @@ public class ModItems {
             .addBreakAbility(new ToolAbility.RecursionAbility(4))
             .addBreakAbility(new ToolAbility.HammerAbility(1))
             .addBreakAbility(new ToolAbility.SilkAbility())
-            .addBreakAbility(new LuckAbility(3));
+            .addBreakAbility(new ToolAbility.LuckAbility(3));
     public static final Item cobalt_decorated_axe = new ItemToolAbility(8F, -2.8F, 0, matDecCobalt, EnumToolType.AXE, "cobalt_decorated_axe")
             .addBreakAbility(new ToolAbility.RecursionAbility(4))
             .addBreakAbility(new ToolAbility.HammerAbility(1))
             .addBreakAbility(new ToolAbility.SilkAbility())
-            .addBreakAbility(new LuckAbility(3))
+            .addBreakAbility(new ToolAbility.LuckAbility(3))
             .addHitAbility(new WeaponAbility.BeheaderAbility());
     public static final Item cobalt_decorated_shovel = new ItemToolAbility(5F, -2.8F, 0, matDecCobalt, EnumToolType.SHOVEL, "cobalt_decorated_shovel")
             .addBreakAbility(new ToolAbility.RecursionAbility(4))
             .addBreakAbility(new ToolAbility.HammerAbility(1))
             .addBreakAbility(new ToolAbility.SilkAbility())
-            .addBreakAbility(new LuckAbility(3));
+            .addBreakAbility(new ToolAbility.LuckAbility(3));
     public static final Item cobalt_decorated_hoe = new ModHoe(matDecCobalt, "cobalt_decorated_hoe").setCreativeTab(CreativeTabs.TOOLS);
     public static final ToolMaterial matStarmetal = EnumHelper.addToolMaterial("HBM_STARMETAL", 3, 1000, 20.0F, 2.5F, 30).setRepairItem(new ItemStack(ModItems.ingot_starmetal));
     public static final Item starmetal_sword = new ItemSwordAbility(25F, 0, matStarmetal, "starmetal_sword")
@@ -1528,20 +1527,20 @@ public class ModItems {
             .addBreakAbility(new ToolAbility.RecursionAbility(6))
             .addBreakAbility(new ToolAbility.HammerAbility(2))
             .addBreakAbility(new ToolAbility.SilkAbility())
-            .addBreakAbility(new LuckAbility(5))
+            .addBreakAbility(new ToolAbility.LuckAbility(5))
             .addHitAbility(new WeaponAbility.StunAbility(3));
     public static final Item starmetal_axe = new ItemToolAbility(12F, -2.8F, 0, matStarmetal, EnumToolType.AXE, "starmetal_axe")
             .addBreakAbility(new ToolAbility.RecursionAbility(6))
             .addBreakAbility(new ToolAbility.HammerAbility(2))
             .addBreakAbility(new ToolAbility.SilkAbility())
-            .addBreakAbility(new LuckAbility(5))
+            .addBreakAbility(new ToolAbility.LuckAbility(5))
             .addHitAbility(new WeaponAbility.BeheaderAbility())
             .addHitAbility(new WeaponAbility.StunAbility(3));
     public static final Item starmetal_shovel = new ItemToolAbility(7F, -2.8F, 0, matStarmetal, EnumToolType.SHOVEL, "starmetal_shovel")
             .addBreakAbility(new ToolAbility.RecursionAbility(6))
             .addBreakAbility(new ToolAbility.HammerAbility(2))
             .addBreakAbility(new ToolAbility.SilkAbility())
-            .addBreakAbility(new LuckAbility(5))
+            .addBreakAbility(new ToolAbility.LuckAbility(5))
             .addHitAbility(new WeaponAbility.StunAbility(3));
     public static final Item starmetal_hoe = new ModHoe(matStarmetal, "starmetal_hoe").setCreativeTab(CreativeTabs.TOOLS);
     public static final Item cmb_sword = new ItemSwordAbility(50F, 0, MainRegistry.enumToolMaterialCmb, "cmb_sword")
@@ -1551,18 +1550,18 @@ public class ModItems {
             .addBreakAbility(new ToolAbility.RecursionAbility(5))
             .addBreakAbility(new ToolAbility.SmelterAbility())
             .addBreakAbility(new ToolAbility.SilkAbility())
-            .addBreakAbility(new LuckAbility(3));
+            .addBreakAbility(new ToolAbility.LuckAbility(3));
     public static final Item cmb_axe = new ItemToolAbility(12.5F, -2.8F, 0, MainRegistry.enumToolMaterialCmb, EnumToolType.AXE, "cmb_axe")
             .addBreakAbility(new ToolAbility.RecursionAbility(5))
             .addBreakAbility(new ToolAbility.SmelterAbility())
             .addBreakAbility(new ToolAbility.SilkAbility())
-            .addBreakAbility(new LuckAbility(3))
+            .addBreakAbility(new ToolAbility.LuckAbility(3))
             .addHitAbility(new WeaponAbility.BeheaderAbility());
     public static final Item cmb_shovel = new ItemToolAbility(8, -2.8F, 0, MainRegistry.enumToolMaterialCmb, EnumToolType.SHOVEL, "cmb_shovel")
             .addBreakAbility(new ToolAbility.RecursionAbility(5))
             .addBreakAbility(new ToolAbility.SmelterAbility())
             .addBreakAbility(new ToolAbility.SilkAbility())
-            .addBreakAbility(new LuckAbility(3));
+            .addBreakAbility(new ToolAbility.LuckAbility(3));
     public static final Item cmb_hoe = new ModHoe(MainRegistry.enumToolMaterialCmb, "cmb_hoe").setMaxStackSize(1).setCreativeTab(CreativeTabs.TOOLS);
     public static final ToolMaterial matBismuth = EnumHelper.addToolMaterial("HBM_BISMUTH", 4, 0, 50F, 0.0F, 200).setRepairItem(new ItemStack(ModItems.ingot_bismuth));
     public static final Item bismuth_pickaxe = new ItemToolAbility(15F, -2.8F, 0, matBismuth, EnumToolType.MINER, "bismuth_pickaxe")
@@ -1605,7 +1604,7 @@ public class ModItems {
             .addBreakAbility(new ToolAbility.HammerAbility(2))
             .addBreakAbility(new ToolAbility.RecursionAbility(10))
             .addBreakAbility(new ToolAbility.SilkAbility())
-            .addBreakAbility(new LuckAbility(5))
+            .addBreakAbility(new ToolAbility.LuckAbility(5))
             .addBreakAbility(new ToolAbility.SmelterAbility())
             .addBreakAbility(new ToolAbility.ShredderAbility())
             .setRarity(EnumRarity.RARE);
@@ -1613,7 +1612,7 @@ public class ModItems {
             .addBreakAbility(new ToolAbility.HammerAbility(2))
             .addBreakAbility(new ToolAbility.RecursionAbility(10))
             .addBreakAbility(new ToolAbility.SilkAbility())
-            .addBreakAbility(new LuckAbility(5))
+            .addBreakAbility(new ToolAbility.LuckAbility(5))
             .addBreakAbility(new ToolAbility.SmelterAbility())
             .addBreakAbility(new ToolAbility.ShredderAbility())
             .addHitAbility(new WeaponAbility.BeheaderAbility())
@@ -1622,7 +1621,7 @@ public class ModItems {
             .addBreakAbility(new ToolAbility.HammerAbility(2))
             .addBreakAbility(new ToolAbility.RecursionAbility(10))
             .addBreakAbility(new ToolAbility.SilkAbility())
-            .addBreakAbility(new LuckAbility(5))
+            .addBreakAbility(new ToolAbility.LuckAbility(5))
             .addBreakAbility(new ToolAbility.SmelterAbility())
             .addBreakAbility(new ToolAbility.ShredderAbility())
             .setRarity(EnumRarity.RARE);

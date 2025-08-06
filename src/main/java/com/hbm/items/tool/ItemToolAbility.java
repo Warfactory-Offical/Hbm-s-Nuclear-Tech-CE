@@ -192,7 +192,8 @@ public class ItemToolAbility extends ItemTool implements IItemAbility, IDepthRoc
 		Multimap<String, AttributeModifier> map = HashMultimap.<String, AttributeModifier>create();
 		if(slot == EntityEquipmentSlot.MAINHAND){
 			map.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(UUID.fromString("91AEAA56-376B-4498-935B-2F7F68070635"), "Tool modifier", movement, 1));
-			map.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Tool modifier", (double)this.damage, 0));
+			map.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Tool modifier", this.damage, 0));
+			map.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Tool modifier", this.attackSpeed, 0));
 		}
         return map;
 	}
