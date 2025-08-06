@@ -20,9 +20,9 @@ public class HbmKeybinds {
 	public static KeyBinding reloadKey = new KeyBinding(category + ".reload", Keyboard.KEY_R, category);
 	public static KeyBinding dashKey = new KeyBinding(category + ".dash", Keyboard.KEY_LSHIFT, category);
 
-	public static KeyBinding gunPrimaryKey = new KeyBinding(category + ".gunPrimary", -100, category);
+	//public static KeyBinding gunPrimaryKey = new KeyBinding(category + ".gunPrimary", -100, category);
 	public static KeyBinding gunSecondaryKey = new KeyBinding(category + ".gunSecondary", -99, category);
-	public static KeyBinding gunTertiaryKey = new KeyBinding(category + ".gunTertitary", -98, category);
+	public static KeyBinding gunTertiaryKey = new KeyBinding(category + ".gunTertiary", -98, category);
 
 	public static KeyBinding craneUpKey = new KeyBinding(category + ".craneMoveUp", Keyboard.KEY_UP, category);
 	public static KeyBinding craneDownKey = new KeyBinding(category + ".craneMoveDown", Keyboard.KEY_DOWN, category);
@@ -36,7 +36,7 @@ public class HbmKeybinds {
 		ClientRegistry.registerKeyBinding(reloadKey);
 		ClientRegistry.registerKeyBinding(dashKey);
 
-		ClientRegistry.registerKeyBinding(gunPrimaryKey);
+		//ClientRegistry.registerKeyBinding(gunPrimaryKey);
 		ClientRegistry.registerKeyBinding(gunSecondaryKey);
 		ClientRegistry.registerKeyBinding(gunTertiaryKey);
 
@@ -78,7 +78,7 @@ public class HbmKeybinds {
 		}
 	}
 	
-	public static enum EnumKeybind {
+	public enum EnumKeybind {
 		JETPACK,
 		TOGGLE_JETPACK,
 		TOGGLE_HEAD,

@@ -138,11 +138,7 @@ public class ClientProxy extends ServerProxy {
     public static KeyBinding jetpackHover;
     public static KeyBinding jetpackHud;
     public static KeyBinding fsbFlashlight;
-    public static KeyBinding craneUpKey;
-    public static KeyBinding craneDownKey;
-    public static KeyBinding craneLeftKey;
-    public static KeyBinding craneRightKey;
-    public static KeyBinding craneLoadKey;
+    public static KeyBinding gunPrimaryKey;
     //Drillgon200: This is stupid, but I'm lazy
     public static boolean renderingConstant = false;
     public static int boxcarCalllist;
@@ -185,14 +181,16 @@ public class ClientProxy extends ServerProxy {
 
         HbmShaderManager.loadShaders();
 
-        jetpackActivate = new KeyBinding("key.jetpack_activate", KeyConflictContext.IN_GAME, Keyboard.KEY_J, "key.categories.hbm");
+        jetpackActivate = new KeyBinding("key.jetpack_activate", KeyConflictContext.IN_GAME, Keyboard.KEY_J, HbmKeybinds.category);
         ClientRegistry.registerKeyBinding(jetpackActivate);
-        jetpackHover = new KeyBinding("key.jetpack_hover", KeyConflictContext.IN_GAME, Keyboard.KEY_H, "key.categories.hbm");
+        jetpackHover = new KeyBinding("key.jetpack_hover", KeyConflictContext.IN_GAME, Keyboard.KEY_H, HbmKeybinds.category);
         ClientRegistry.registerKeyBinding(jetpackHover);
-        jetpackHud = new KeyBinding("key.jetpack_hud", KeyConflictContext.IN_GAME, Keyboard.KEY_U, "key.categories.hbm");
+        jetpackHud = new KeyBinding("key.jetpack_hud", KeyConflictContext.IN_GAME, Keyboard.KEY_U, HbmKeybinds.category);
         ClientRegistry.registerKeyBinding(jetpackHud);
-        fsbFlashlight = new KeyBinding("key.fsb_flashlight", KeyConflictContext.IN_GAME, Keyboard.KEY_NUMPAD6, "key.categories.hbm");
+        fsbFlashlight = new KeyBinding("key.fsb_flashlight", KeyConflictContext.IN_GAME, Keyboard.KEY_NUMPAD6, HbmKeybinds.category);
         ClientRegistry.registerKeyBinding(fsbFlashlight);
+        gunPrimaryKey = new KeyBinding("key.gunPrimary", KeyConflictContext.IN_GAME, -100, HbmKeybinds.category);
+        ClientRegistry.registerKeyBinding(gunPrimaryKey);
 
         HbmKeybinds.register();
         Jars.initJars();
@@ -1493,7 +1491,7 @@ public class ClientProxy extends ServerProxy {
                 return HbmKeybinds.craneRightKey.isKeyDown();
             case CRANE_LOAD:
                 return HbmKeybinds.craneLoadKey.isKeyDown();
-            case GUN_PRIMARY:		return HbmKeybinds.gunPrimaryKey.isKeyDown();
+            case GUN_PRIMARY:		return gunPrimaryKey.isKeyDown();
             case GUN_SECONDARY:		return HbmKeybinds.gunSecondaryKey.isKeyDown();
             case GUN_TERTIARY:		return HbmKeybinds.gunTertiaryKey.isKeyDown();
         }
