@@ -286,62 +286,53 @@ public class CommandHbm extends CommandBase {
 			if(args.length > 2 && "f".equals(args[2]))
 				force = true;
 
-			if("antenna".equals(args[1])) {
-				new Antenna().generate(world, rand, genPos, force);
-			} else if("relay".equals(args[1])) {
-				new Relay().generate(world, rand, genPos, force);
-			} else if("dud".equals(args[1])){
-				new Dud().generate(world, rand, genPos, force);
-			} else if("silo".equals(args[1])){
-				new Silo().generate(world, rand, genPos, force);
-			} else if("factory".equals(args[1])){
-				new Factory().generate(world, rand, genPos, force);
-			} else if("barrel".equals(args[1])){
-				new Barrel().generate(world, rand, genPos, force);
-			} else if("vertibird".equals(args[1])){
-				new Vertibird().generate(world, rand, genPos, force);
-			} else if("vertibird_crashed".equals(args[1])){
-				new CrashedVertibird().generate(world, rand, genPos, force);
-			} else if("satellite".equals(args[1])){
-				new Satellite().generate(world, rand, genPos, force);
-			} else if("spaceship".equals(args[1])){
-				new Spaceship().generate(world, rand, genPos, force);
-			} else if("sellafield".equals(args[1])){
-				double r = rand.nextInt(15) + 10;
-				if (rand.nextInt(50) == 0)
-					r = 50;
+            switch (args[1]) {
+                case "antenna" -> Antenna.INSTANCE.generate(world, rand, genPos, force);
+                case "relay" -> Relay.INSTANCE.generate(world, rand, genPos, force);
+                case "dud" -> new Dud().generate(world, rand, genPos, force);
+                case "silo" -> Silo.INSTANCE.generate(world, rand, genPos, force);
+                case "factory" -> Factory.INSTANCE.generate(world, rand, genPos, force);
+                case "barrel" -> Barrel.INSTANCE.generate(world, rand, genPos, force);
+                case "vertibird" -> Vertibird.INSTANCE.generate(world, rand, genPos, force);
+                case "vertibird_crashed" -> CrashedVertibird.INSTANCE.generate(world, rand, genPos, force);
+                case "satellite" -> Satellite.INSTANCE.generate(world, rand, genPos, force);
+                case "spaceship" -> Spaceship.INSTANCE.generate(world, rand, genPos, force);
+                case "sellafield" -> {
+                    double r = rand.nextInt(15) + 10;
+                    if (rand.nextInt(50) == 0)
+                        r = 50;
 
-				new Sellafield().generate(world, (int)senderPos.x, (int)senderPos.z, r, r * 0.35D);
-			} else if("radio".equals(args[1])){
-				new Radio01().generate(world, rand, genPos, force);
-			} else if("bunker".equals(args[1])){
-				new Bunker().generate(world, rand, genPos, force);
-			} else if("desert_atom".equals(args[1])){
-				new DesertAtom001().generate(world, rand, genPos, force);
-			} else if("library".equals(args[1])){
-				new LibraryDungeon().generate(world, rand, genPos, force);
-			} else if("geysir_water".equals(args[1])){
-				if(force){
-					new GeyserLarge().generate(world, rand, genPos);
-				} else {
-					if (world.getBlockState(genPos.down()).getBlock() == Blocks.SAND)
-						new GeyserLarge().generate(world, rand, genPos);
-				}
-			} else if("geysir_vapor".equals(args[1])){
-				if(force){
-					world.setBlockState(genPos.down(), ModBlocks.geysir_vapor.getDefaultState());
-				} else {
-					if (world.getBlockState(genPos.down()).getBlock() == Blocks.STONE)
-						world.setBlockState(genPos.down(), ModBlocks.geysir_vapor.getDefaultState());
-				}
-			} else if("geysir_chlorine".equals(args[1])){
-				if(force){
-					new Geyser().generate(world, rand, genPos);
-				} else {
-					if (world.getBlockState(genPos.down()).getBlock() == Blocks.GRASS)
-						new Geyser().generate(world, rand, genPos);
-				}
-			}
+					new Sellafield(r, r * 0.35D).generate(world, rand, genPos, true);
+                }
+                case "radio" -> Radio01.INSTANCE.generate(world, rand, genPos, force);
+                case "bunker" -> Bunker.INSTANCE.generate(world, rand, genPos, force);
+                case "desert_atom" -> DesertAtom001.INSTANCE.generate(world, rand, genPos, force);
+                case "library" -> LibraryDungeon.INSTANCE.generate(world, rand, genPos, force);
+                case "geysir_water" -> {
+                    if (force) {
+                        GeyserLarge.INSTANCE.generate(world, rand, genPos);
+                    } else {
+                        if (world.getBlockState(genPos.down()).getBlock() == Blocks.SAND)
+                            GeyserLarge.INSTANCE.generate(world, rand, genPos);
+                    }
+                }
+                case "geysir_vapor" -> {
+                    if (force) {
+                        world.setBlockState(genPos.down(), ModBlocks.geysir_vapor.getDefaultState());
+                    } else {
+                        if (world.getBlockState(genPos.down()).getBlock() == Blocks.STONE)
+                            world.setBlockState(genPos.down(), ModBlocks.geysir_vapor.getDefaultState());
+                    }
+                }
+                case "geysir_chlorine" -> {
+                    if (force) {
+                        Geyser.INSTANCE.generate(world, rand, genPos);
+                    } else {
+                        if (world.getBlockState(genPos.down()).getBlock() == Blocks.GRASS)
+                            Geyser.INSTANCE.generate(world, rand, genPos);
+                    }
+                }
+            }
 		}
 	}
 

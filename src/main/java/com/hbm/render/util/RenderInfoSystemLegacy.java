@@ -12,12 +12,9 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class RenderInfoSystemLegacy {
 
@@ -27,19 +24,20 @@ public class RenderInfoSystemLegacy {
 
     @SubscribeEvent
     public void clentTick(TickEvent.ClientTickEvent event) {
-        messages.putAll(inbox);
-        inbox.clear();
+        synchronized (inbox) {
+            messages.putAll(inbox);
+            inbox.clear();
+        }
 
-        List<Integer> keys = new ArrayList(messages.keySet());
+        Iterator<Map.Entry<Integer, InfoEntry>> iterator = new HashMap<>(messages).entrySet().iterator();
 
-        for(int i = 0; i < keys.size(); i++) {
-            Integer key = keys.get(i);
-            InfoEntry entry = messages.get(key);
+        long currentTime = System.currentTimeMillis();
+        while (iterator.hasNext()) {
+            Map.Entry<Integer, InfoEntry> entry = iterator.next();
+            InfoEntry info = entry.getValue();
 
-            if(entry.start + entry.millis < System.currentTimeMillis()) {
-                messages.remove(key);
-                keys = new ArrayList(messages.keySet());
-                i--;
+            if (info.start + info.millis < currentTime) {
+                messages.remove(entry.getKey());
             }
         }
     }

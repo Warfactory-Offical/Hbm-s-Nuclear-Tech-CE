@@ -4,22 +4,26 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.config.GeneralConfig;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
 import com.hbm.lib.HbmChestContents;
+import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.*;
 import net.minecraft.block.BlockStoneBrick.EnumType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.WorldGenerator;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
-public class Factory extends WorldGenerator
-{
+@SuppressWarnings({"UnnecessaryUnaryMinus", "PointlessArithmeticExpression"})
+public class Factory extends AbstractPhasedStructure {
+	public static final Factory INSTANCE = new Factory();
+	private Factory() {}
 	Block Block1 = ModBlocks.steel_scaffold;
 	Block Block2 = ModBlocks.machine_difurnace_off;
 	Block Block4 = ModBlocks.steel_wall;
@@ -68,31 +72,21 @@ public class Factory extends WorldGenerator
 	}
 
 	@Override
-	public boolean generate(World world, Random rand, BlockPos pos)
-	{
-		return generate(world, rand, pos, false);
-
-	}
-	
-	public boolean generate(World world, Random rand, BlockPos pos, boolean force)
-	{
-		int i = rand.nextInt(1);
-
-		if(i == 0)
-		{
-		    generate_r0(world, rand, pos.getX(), pos.getY(), pos.getZ(), force);
-		}
-
-       return true;
-
+	public void buildStructure(@NotNull LegacyBuilder builder, @NotNull Random rand) {
+		generate_r0(builder, rand, 0, 0, 0);
 	}
 
-	public boolean generate_r0(World world, Random rand, int x, int y, int z, boolean force)
-	{
-		if(!force && !LocationIsValidSpawn(world, new BlockPos(x + 7, y, z + 15)))
-		{
-			return false;
-		}
+	@Override
+	public boolean checkSpawningConditions(@NotNull World world, @NotNull BlockPos pos) {
+		return LocationIsValidSpawn(world, pos.add(7, 0, 15));
+	}
+
+	@Override
+	public @NotNull List<BlockPos> getValidationPoints(@NotNull BlockPos origin) {
+		return Collections.singletonList(origin.add(7, 0, 15));
+	}
+
+	public boolean generate_r0(LegacyBuilder world, Random rand, int x, int y, int z) {
 		MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
 		for(int i = 0; i < 15; i++)
@@ -605,11 +599,9 @@ public class Factory extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 6, y + 0, z + 4), ModBlocks.deco_steel.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + 0, z + 4), ModBlocks.deco_steel.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 8, y + 0, z + 4), ModBlocks.deco_steel.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 9, y + 0, z + 4), Blocks.CHEST.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.values()[5]), 3);
-		if(world.getBlockState(pos.setPos(x + 9, y + 0, z + 4)).getBlock() == Blocks.CHEST)
-		{
-			WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(1), (TileEntityChest)world.getTileEntity(pos.setPos(x + 9, y + 0, z + 4)), rand.nextInt(2)+ 8);
-		}
+		world.setBlockState(pos.setPos(x + 9, y + 0, z + 4), Blocks.CHEST.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.values()[5]),
+				(worldIn, random, blockPos, chest) ->
+						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(1), chest, random.nextInt(2) + 8));
         world.setBlockState(pos.setPos(x + 13, y + 0, z + 4), Blocks.HOPPER.getDefaultState().withProperty(BlockHopper.ENABLED, true).withProperty(BlockHopper.FACING, EnumFacing.SOUTH), 3);
 		world.setBlockState(pos.setPos(x + 14, y + 0, z + 4), Blocks.STONEBRICK.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 0, z + 5), Blocks.STONEBRICK.getDefaultState(), 3);
@@ -640,11 +632,9 @@ public class Factory extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 6, y + 0, z + 10), ModBlocks.deco_steel.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + 0, z + 10), ModBlocks.deco_steel.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 8, y + 0, z + 10), ModBlocks.deco_steel.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 9, y + 0, z + 10), Blocks.CHEST.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.values()[5]), 3);
-		if(world.getBlockState(pos.setPos(x + 9, y + 0, z + 10)).getBlock() == Blocks.CHEST)
-		{
-			WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(1), (TileEntityChest)world.getTileEntity(pos.setPos(x + 9, y + 0, z + 10)), rand.nextInt(2)+ 8);
-		}
+		world.setBlockState(pos.setPos(x + 9, y + 0, z + 10), Blocks.CHEST.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.values()[5]),
+				(worldIn, random, blockPos, chest) ->
+						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(1), chest, random.nextInt(2) + 8));
         world.setBlockState(pos.setPos(x + 13, y + 0, z + 10), Blocks.HOPPER.getDefaultState().withProperty(BlockHopper.ENABLED, true).withProperty(BlockHopper.FACING, EnumFacing.SOUTH), 3);
 		world.setBlockState(pos.setPos(x + 14, y + 0, z + 10), Blocks.STONEBRICK.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 0, z + 11), Blocks.STONEBRICK.getDefaultState(), 3);
@@ -675,11 +665,9 @@ public class Factory extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 6, y + 0, z + 16), ModBlocks.deco_steel.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + 0, z + 16), ModBlocks.deco_steel.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 8, y + 0, z + 16), ModBlocks.deco_steel.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 9, y + 0, z + 16), Blocks.CHEST.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.values()[5]), 3);
-		if(world.getBlockState(pos.setPos(x + 9, y + 0, z + 16)).getBlock() == Blocks.CHEST)
-		{
-			WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(1), (TileEntityChest)world.getTileEntity(pos.setPos(x + 9, y + 0, z + 16)), rand.nextInt(2)+ 8);
-		}
+		world.setBlockState(pos.setPos(x + 9, y + 0, z + 16), Blocks.CHEST.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.values()[5]),
+				(worldIn, random, blockPos, chest) ->
+						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(1), chest, random.nextInt(2) + 8));
         world.setBlockState(pos.setPos(x + 13, y + 0, z + 16), Blocks.HOPPER.getDefaultState().withProperty(BlockHopper.ENABLED, true).withProperty(BlockHopper.FACING, EnumFacing.SOUTH), 3);
 		world.setBlockState(pos.setPos(x + 14, y + 0, z + 16), Blocks.STONEBRICK.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 0, z + 17), Blocks.STONEBRICK.getDefaultState(), 3);
@@ -737,11 +725,9 @@ public class Factory extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 0, y + 0, z + 25), Blocks.STONEBRICK.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 2, y + 0, z + 25), Blocks.STONEBRICK.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 3, y + 0, z + 25), Blocks.LAVA.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 4, y + 0, z + 25), Blocks.CHEST.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.values()[3]), 3);
-		if(world.getBlockState(pos.setPos(x + 4, y + 0, z + 25)).getBlock() == Blocks.CHEST)
-		{
-			WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(3), (TileEntityChest)world.getTileEntity(pos.setPos(x + 4, y + 0, z + 25)), rand.nextInt(2)+ 6);
-		}
+		world.setBlockState(pos.setPos(x + 4, y + 0, z + 25), Blocks.CHEST.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.values()[3]),
+				(worldIn, random, blockPos, chest) ->
+						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(3), chest, random.nextInt(2) + 6));
         world.setBlockState(pos.setPos(x + 5, y + 0, z + 25), Blocks.LAVA.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 6, y + 0, z + 25), Blocks.STONEBRICK.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + 0, z + 25), Blocks.STONE_BRICK_STAIRS.getDefaultState().withProperty(BlockStairs.HALF, BlockStairs.EnumHalf.TOP).withProperty(BlockStairs.FACING, EnumFacing.WEST), 3);
@@ -1638,7 +1624,7 @@ public class Factory extends WorldGenerator
 		return true;
 
 	}
-	public boolean generate_r02(World world, Random rand, int x, int y, int z, MutableBlockPos pos)
+	public boolean generate_r02(LegacyBuilder world, Random rand, int x, int y, int z, MutableBlockPos pos)
 	{
 
 		world.setBlockState(pos.setPos(x + 0, y + 5, z + 11), Blocks.BRICK_BLOCK.getDefaultState(), 3);

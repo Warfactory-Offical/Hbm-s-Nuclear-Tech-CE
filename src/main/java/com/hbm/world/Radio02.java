@@ -4,17 +4,18 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.DecoPoleSatelliteReceiver;
 import com.hbm.blocks.generic.DecoSteelPoles;
 import com.hbm.config.GeneralConfig;
+import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
-import net.minecraft.world.World;
 
 import java.util.Random;
 
+@SuppressWarnings("PointlessArithmeticExpression")
 public class Radio02
 {
-	public boolean generate_r00(World world, Random rand, int x, int y, int z)
+	public void generate_r00(AbstractPhasedStructure.LegacyBuilder world, Random rand, int x, int y, int z)
     {
 		MutableBlockPos pos = new BlockPos.MutableBlockPos();
 		world.setBlockState(pos.setPos(x + 6, y + 16, z + 12), Blocks.AIR.getDefaultState(), 3);
@@ -1519,10 +1520,8 @@ public class Radio02
 		world.setBlockState(pos.setPos(x + 9, y + 21, z + 18), Blocks.AIR.getDefaultState(), 3);
 
 		generate_r01(world, rand, x, y, z, pos);
-		return true;
-
 	}
-	public boolean generate_r01(World world, Random rand, int x, int y, int z, MutableBlockPos pos)
+	public void generate_r01(AbstractPhasedStructure.LegacyBuilder world, Random rand, int x, int y, int z, MutableBlockPos pos)
 	{
 
 		world.setBlockState(pos.setPos(x + 10, y + 21, z + 18), Blocks.AIR.getDefaultState(), 3);
@@ -2177,8 +2176,6 @@ public class Radio02
 		world.setBlockState(pos.setPos(x + 10, y + 23, z + 25), Blocks.AIR.getDefaultState(), 3);
 		if(GeneralConfig.enableDebugMode)
 			System.out.print("[Debug] Successfully spawned abandoned Radio station at " + x + " " + y +" " + z + "\n");
-		return true;
-
 	}
 
 }

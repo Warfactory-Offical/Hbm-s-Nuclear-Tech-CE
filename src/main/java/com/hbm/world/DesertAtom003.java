@@ -10,17 +10,16 @@ import com.hbm.config.GeneralConfig;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
 import com.hbm.lib.HbmChestContents;
 import com.hbm.lib.Library;
+import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.*;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemDoor;
-import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
-import net.minecraft.world.World;
 
 import java.util.Random;
 
+@SuppressWarnings({"UnnecessaryUnaryMinus", "PointlessArithmeticExpression"})
 public class DesertAtom003
 {
 	Block Block2 = ModBlocks.yellow_barrel;
@@ -52,7 +51,7 @@ public class DesertAtom003
 	Block Block28 = ModBlocks.machine_battery;
 	Block Block29 = ModBlocks.machine_electric_furnace_off;
 	
-	public boolean generate_r00(World world, Random rand, int x, int y, int z)
+	public boolean generate_r00(AbstractPhasedStructure.LegacyBuilder world, Random rand, int x, int y, int z)
     {
 		MutableBlockPos pos = new BlockPos.MutableBlockPos();
 		world.setBlockState(pos.setPos(x + 21, y + 3, z + 12), Block6.getDefaultState(), 3);
@@ -385,7 +384,7 @@ public class DesertAtom003
 		world.setBlockState(pos.setPos(x + 6, y + 4, z + 8), Block5.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + 4, z + 8), Block5.getDefaultState(), 3);
 		//world.setBlock(x + 8, y + 4, z + 8, Blocks.iron_door, 1, 3);
-        ItemDoor.placeDoor(world, pos.setPos(x + 8, y + 4, z + 8), EnumFacing.SOUTH, Blocks.IRON_DOOR, false);
+        world.placeDoorWithoutCheck(pos.setPos(x + 8, y + 4, z + 8), EnumFacing.SOUTH, Blocks.IRON_DOOR, false);
 		world.setBlockState(pos.setPos(x + 9, y + 4, z + 8), Block5.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 10, y + 4, z + 8), Block5.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 16, y + 4, z + 8), Library.getRandomConcrete().getDefaultState(), 3);
@@ -423,11 +422,9 @@ public class DesertAtom003
 		world.setBlockState(pos.setPos(x + 34, y + 4, z + 9), Blocks.REDSTONE_WIRE.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 35, y + 4, z + 9), Block12.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 35, y + 5, z + 9), ModBlocks.geiger.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.SOUTH), 3);
-		world.setBlockState(pos.setPos(x + 36, y + 4, z + 9), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.NORTH), 3);
-		if(world.getBlockState(pos.setPos(x + 36, y + 4, z + 9)).getBlock() == Blocks.CHEST)
-		{
-			WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(5), (TileEntityChest)world.getTileEntity(pos.setPos(x + 36, y + 4, z + 9)), 12);
-		}
+		world.setBlockState(pos.setPos(x + 36, y + 4, z + 9), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.NORTH),
+				(worldIn, random, blockPos, chest) ->
+						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(5), chest, 12));
         world.setBlockState(pos.setPos(x + 37, y + 4, z + 9), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 40, y + 4, z + 9), Block5.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 4, y + 4, z + 10), Block5.getDefaultState(), 3);
@@ -519,7 +516,7 @@ public class DesertAtom003
 		world.setBlockState(pos.setPos(x + 16, y + 4, z + 15), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 19, y + 4, z + 15), ModBlocks.fence_metal.getDefaultState(), 3);
 		//world.setBlockState(pos.setPos(x + 23, y + 4, z + 15), Blocks.iron_door.getDefaultState(), 3);
-        ItemDoor.placeDoor(world, pos.setPos(x + 23, y + 4, z + 15), EnumFacing.EAST, Blocks.IRON_DOOR, false);
+        world.placeDoorWithoutCheck(pos.setPos(x + 23, y + 4, z + 15), EnumFacing.EAST, Blocks.IRON_DOOR, false);
 		world.setBlockState(pos.setPos(x + 24, y + 4, z + 15), Blocks.VINE.getDefaultState().withProperty(BlockVine.WEST, true), 3);
 		world.setBlockState(pos.setPos(x + 27, y + 4, z + 15), Blocks.REDSTONE_WIRE.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 30, y + 4, z + 15), Blocks.REDSTONE_WIRE.getDefaultState(), 3);
@@ -533,7 +530,7 @@ public class DesertAtom003
 		world.setBlockState(pos.setPos(x + 16, y + 4, z + 16), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 22, y + 4, z + 16), Blocks.VINE.getDefaultState().withProperty(BlockVine.EAST, true), 3);
 		//world.setBlock(x + 23, y + 4, z + 16, Blocks.iron_door, 3, 3);
-        ItemDoor.placeDoor(world, pos.setPos(x + 23, y + 4, z + 16), EnumFacing.NORTH, Blocks.IRON_DOOR, false);
+        world.placeDoorWithoutCheck(pos.setPos(x + 23, y + 4, z + 16), EnumFacing.NORTH, Blocks.IRON_DOOR, false);
 		world.setBlockState(pos.setPos(x + 26, y + 4, z + 16), Blocks.REDSTONE_WIRE.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 29, y + 4, z + 16), Blocks.UNPOWERED_REPEATER.getDefaultState().withProperty(BlockRedstoneRepeater.FACING, EnumFacing.NORTH), 3);
 		world.setBlockState(pos.setPos(x + 37, y + 4, z + 16), Blocks.GRAVEL.getDefaultState(), 3);
@@ -1518,7 +1515,7 @@ public class DesertAtom003
 		world.setBlockState(pos.setPos(x + 6, y + 8, z + 22), Block15.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + 8, z + 22), Block15.getDefaultState(), 3);
 		//world.setBlock(x + 8, y + 8, z + 22, Blocks.iron_door, 1, 3);
-        ItemDoor.placeDoor(world, pos.setPos(x + 8, y + 8, z + 22), EnumFacing.SOUTH, Blocks.IRON_DOOR, false);
+        world.placeDoorWithoutCheck(pos.setPos(x + 8, y + 8, z + 22), EnumFacing.SOUTH, Blocks.IRON_DOOR, false);
 		world.setBlockState(pos.setPos(x + 9, y + 8, z + 22), Block15.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 10, y + 8, z + 22), Block15.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 5, y + 8, z + 23), Block15.getDefaultState(), 3);
@@ -1565,7 +1562,7 @@ public class DesertAtom003
 		return true;
 
 	}
-	public boolean generate_r01(World world, Random rand, int x, int y, int z, MutableBlockPos pos)
+	public boolean generate_r01(AbstractPhasedStructure.LegacyBuilder world, Random rand, int x, int y, int z, MutableBlockPos pos)
 	{
 
 		world.setBlockState(pos.setPos(x + 8, y + 9, z + 14), Block5.getDefaultState(), 3);
@@ -1739,7 +1736,7 @@ public class DesertAtom003
 		return true;
 
 	}
-	public boolean generate_r02_last(World world, Random rand, int x, int y, int z, MutableBlockPos pos)
+	public boolean generate_r02_last(AbstractPhasedStructure.LegacyBuilder world, Random rand, int x, int y, int z, MutableBlockPos pos)
 	{
 
 		world.setBlockState(pos.setPos(x + 8, y + 1, z + 7), Blocks.LADDER.getDefaultState().withProperty(BlockLadder.FACING, EnumFacing.NORTH), 3);

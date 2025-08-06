@@ -2,6 +2,7 @@ package com.hbm.world.generator;
 
 import com.hbm.blocks.generic.BlockPlantEnumMeta;
 import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.state.IBlockState;
@@ -16,7 +17,7 @@ import java.util.Random;
 
 public class DungeonToolbox {
 
-	public static void generateBox(World world, int x, int y, int z, int sx, int sy, int sz, List<IBlockState> blocks) {
+	public static void generateBox(AbstractPhasedStructure.LegacyBuilder world, int x, int y, int z, int sx, int sy, int sz, List<IBlockState> blocks) {
 		
 		if(blocks.isEmpty())
 			return;
@@ -36,8 +37,28 @@ public class DungeonToolbox {
 		}
 	}
 
+	public static void generateBox(World world, int x, int y, int z, int sx, int sy, int sz, List<IBlockState> blocks) {
+
+		if(blocks.isEmpty())
+			return;
+
+		for(int i = x; i < x + sx; i++) {
+
+			for(int j = y; j < y + sy; j++) {
+
+				for(int k = z; k < z + sz; k++) {
+
+					IBlockState b = getRandom(blocks, world.rand);
+					if(b == null)
+						b = Blocks.AIR.getDefaultState();
+					world.setBlockState(new BlockPos(i, j, k), b, 2 | 16);
+				}
+			}
+		}
+	}
+
 	//i know it's copy paste, but it's a better strat than using a wrapper and generating single-entry lists for no good reason
-	public static void generateBox(World world, int x, int y, int z, int sx, int sy, int sz, IBlockState block) {
+	public static void generateBox(AbstractPhasedStructure.LegacyBuilder world, int x, int y, int z, int sx, int sy, int sz, IBlockState block) {
 		
 		for(int i = x; i < x + sx; i++) {
 			
@@ -50,9 +71,23 @@ public class DungeonToolbox {
 			}
 		}
 	}
+
+	public static void generateBox(World world, int x, int y, int z, int sx, int sy, int sz, IBlockState block) {
+
+		for(int i = x; i < x + sx; i++) {
+
+			for(int j = y; j < y + sy; j++) {
+
+				for(int k = z; k < z + sz; k++) {
+
+					world.setBlockState(new BlockPos(i, j, k), block, 2 | 16);
+				}
+			}
+		}
+	}
 	
 	//now with vectors to provide handy rotations
-	public static void generateBox(World world, int x, int y, int z, Vec3 size, List<IBlockState> blocks) {
+	public static void generateBox(AbstractPhasedStructure.LegacyBuilder world, int x, int y, int z, Vec3 size, List<IBlockState> blocks) {
 		generateBox(world, x, y, z, (int)size.xCoord, (int)size.yCoord, (int)size.zCoord, blocks);
 	}
 	

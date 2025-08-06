@@ -24,6 +24,7 @@ public class WorldConfig {
 	public static int gasbubbleSpawn = 4;
 	public static int explosivebubbleSpawn = 0;
 	public static int cobaltSpawn = 2;
+	public static boolean newBedrockOres = true;
 	public static int dunaOilSpawn = 100;
 	public static int eveGasSpawn = 100;
 	public static int laytheOilSpawn = 100;
@@ -79,6 +80,7 @@ public class WorldConfig {
 	}
 
 	public static void loadFromConfig(Configuration config) {
+		final String CATEGORY_OREGEN = CommonConfig.CATEGORY_ORES;
 
 		uraniumSpawn = convertToInt(CompatibilityConfig.uraniumSpawn.get(0));
 		titaniumSpawn = convertToInt(CompatibilityConfig.titaniumSpawn.get(0));
@@ -101,6 +103,8 @@ public class WorldConfig {
 		gasbubbleSpawn = convertToInt(CompatibilityConfig.gasbubbleSpawn.get(0));
 		cinnabarSpawn = convertToInt(CompatibilityConfig.cinnabarSpawn.get(0));
 		cobaltSpawn = convertToInt(CompatibilityConfig.cobaltSpawn.get(0));
+
+		newBedrockOres = CommonConfig.createConfigBool(config, CATEGORY_OREGEN, "2.NB_newBedrockOres", "Enables the generation of bedrock ores", true);
 
 		ironClusterSpawn = convertToInt(CompatibilityConfig.ironClusterSpawn.get(0));
 		titaniumClusterSpawn = convertToInt(CompatibilityConfig.titaniumClusterSpawn.get(0));

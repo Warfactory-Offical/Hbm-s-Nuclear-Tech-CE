@@ -17,7 +17,9 @@ public class GeneralConfig {
 	public static int packetThreadingCoreCount = 1;
 	public static int packetThreadingMaxCount = 2;
 	public static boolean packetThreadingErrorBypass = false;
+	public static boolean enableTickBasedWorldGenerator = false;
 	public static boolean enableDebugMode = false;
+	public static boolean enableDebugWorldGen = false;
 	public static boolean enableSkybox = true;
 	public static boolean enableWelcomeMessage = true;
 	public static boolean enableFluidContainerCompat = true;
@@ -107,7 +109,9 @@ public class GeneralConfig {
 		packetThreadingMaxCount = config.get(CATEGORY_GENERAL, "0.03_packetThreadingMaxCount", 2, "Maximum number of threads to create for packet threading. Must be greater than or equal to 0.02_packetThreadingCoreCount.").getInt(2);
 		packetThreadingErrorBypass = config.get(CATEGORY_GENERAL, "0.04_packetThreadingErrorBypass", false, "Forces the bypassing of most packet threading errors, only enable this if directed to or if you know what you're doing.").getBoolean(false);
 		enableServerRecipeSync = config.get(CATEGORY_GENERAL, "0.05_enableServerRecipeSync", true, "Syncs any recipes customised via JSON to clients connecting to the server.").getBoolean(true);
+		enableTickBasedWorldGenerator = config.get(CATEGORY_GENERAL, "0.06_enableTickBasedWorldGenerator", false, "Use tick-based phased world generator. This eliminates cascading worldgen, but is incompatible with most chunk pre-generators.\n Do not set to true unless you know what you are doing.").getBoolean(false);
 		enableDebugMode = config.get(CATEGORY_GENERAL, "1.00_enableDebugMode", false).getBoolean(false);
+		enableDebugWorldGen = config.get(CATEGORY_GENERAL, "1.00_enableDebugWorldGen", false).getBoolean(false);
 		enableSkybox = config.get(CATEGORY_GENERAL, "1.00_enableSkybox", true, "Do not set it to false unless you know what you are doing.").getBoolean(true);
 		enableMycelium = config.get(CATEGORY_GENERAL, "1.01_enableMyceliumSpread", false).getBoolean(false);
 		enablePlutoniumOre = config.get(CATEGORY_GENERAL, "1.02_enablePlutoniumNetherOre", false).getBoolean(false);

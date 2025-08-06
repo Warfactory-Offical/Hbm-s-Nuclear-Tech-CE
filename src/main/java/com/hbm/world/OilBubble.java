@@ -1,15 +1,50 @@
 package com.hbm.world;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
-public class OilBubble {
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
-	public static void spawnOil(World world, int x, int y, int z, int radius) {
+public class OilBubble extends AbstractPhasedStructure {
+	public final int radius;
+
+	public OilBubble( int radius) {
+		this.radius = radius;
+	}
+
+	@Override
+	public boolean isCacheable() {
+		return false;
+	}
+
+	@Override
+	protected void buildStructure(@NotNull LegacyBuilder builder, @NotNull Random rand) {
+	}
+
+	@Override
+	public List<@NotNull BlockPos> getValidationPoints(@NotNull BlockPos origin) {
+		return Arrays.asList(
+				origin.add(-radius, 0, -radius),
+				origin.add(radius, 0, -radius),
+				origin.add(-radius, 0, radius),
+				origin.add(radius, 0, radius)
+		);
+	}
+
+	@Override
+	public void postGenerate(@NotNull World world, @NotNull Random rand, @NotNull BlockPos finalOrigin) {
+		OilBubble.spawnOil(world, finalOrigin.getX(), finalOrigin.getY(), finalOrigin.getZ(), this.radius);
+	}
+
+	private static void spawnOil(World world, int x, int y, int z, int radius) {
 		int r = radius;
 		int r2 = r * r;
 		int r22 = r2 / 2;

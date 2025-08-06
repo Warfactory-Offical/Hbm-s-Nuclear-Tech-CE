@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+// mlbv: this is unlikely to cause cascading worldgen
 public class Meteorite {
 	
 	public void generate(World world, Random rand, int x, int y, int z) {

@@ -6,22 +6,24 @@ import com.hbm.config.GeneralConfig;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
 import com.hbm.lib.HbmChestContents;
 import com.hbm.lib.Library;
+import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemDoor;
-import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.WorldGenerator;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
-public class Bunker extends WorldGenerator
-{
+public class Bunker extends AbstractPhasedStructure {
+	public static final Bunker INSTANCE = new Bunker();
+	private Bunker() {}
 	Block Block1 = ModBlocks.reinforced_brick;
 	Block Block3 = ModBlocks.reinforced_light;
 	Block Block4 = ModBlocks.deco_steel;
@@ -69,34 +71,30 @@ public class Bunker extends WorldGenerator
 	}
 
 	@Override
-	public boolean generate(World world, Random rand, BlockPos pos)
-	{
-		return generate(world, rand, pos, false);
-
-	}
-	
-	public boolean generate(World world, Random rand, BlockPos pos, boolean force)
-	{
-		int i = rand.nextInt(1);
-
-		if(i == 0)
-		{
-		    generate_r0(world, rand, pos.getX(), pos.getY(), pos.getZ(), force);
-		}
-
-       return true;
-
+	public boolean checkSpawningConditions(@NotNull World world, @NotNull BlockPos pos) {
+		return LocationIsValidSpawn(world, pos) && LocationIsValidSpawn(world, pos.add(3, 0, 0)) &&
+				LocationIsValidSpawn(world, pos.add(3, 0, 5)) && LocationIsValidSpawn(world, pos.add(0, 0, 5));
 	}
 
-	public boolean generate_r0(World world, Random rand, int x, int y, int z, boolean force)
+	@Override
+	public @NotNull List<BlockPos> getValidationPoints(@NotNull BlockPos origin) {
+		return Arrays.asList(
+				origin,
+				origin.add(3, 0, 0),
+				origin.add(3, 0, 5),
+				origin.add(0, 0, 5)
+		);
+	}
+
+	@Override
+	public void buildStructure(@NotNull LegacyBuilder builder, @NotNull Random rand) {
+		generate_r0(builder, rand, 0, 0, 0);
+	}
+
+	public boolean generate_r0(LegacyBuilder world, Random rand, int x, int y, int z)
 	{
 		y += 1;
-		if(!force && (!LocationIsValidSpawn(world, new BlockPos(x, y, z)) || !LocationIsValidSpawn(world, new BlockPos(x + 3, y, z)) || !LocationIsValidSpawn(world, new BlockPos(x + 3, y, z + 5)) || !LocationIsValidSpawn(world, new BlockPos(x, y, z + 5))))
-		{
-			return false;
-		}
 		MutableBlockPos pos = new BlockPos.MutableBlockPos();
-		
 		for(int i = 0; i < 11; i++)
 		{
 			for(int j = 0; j < 9; j++)
@@ -302,46 +300,34 @@ public class Bunker extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 11, y + -24, z + 0), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + -24, z + 1), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 1, y + -24, z + 1), Library.getRandomConcrete().getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 2, y + -24, z + 1), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.SOUTH), 3);
-		if(world.getBlockState(pos.setPos(x + 2, y + -24, z + 1)).getBlock() == Blocks.CHEST)
-		{
-			WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(3), (TileEntityChest)world.getTileEntity(pos.setPos(x + 2, y + -24, z + 1)), rand.nextInt(2)+ 6);
-		}
+		world.setBlockState(pos.setPos(x + 2, y + -24, z + 1), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.SOUTH),
+				((worldIn, random, blockPos, chest) ->
+						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(3), chest, random.nextInt(2) + 6)));
 		world.setBlockState(pos.setPos(x + 2, y + -23, z + 1), ModBlocks.geiger.getDefaultState().withProperty(GeigerCounter.FACING, EnumFacing.SOUTH), 3);
         world.setBlockState(pos.setPos(x + 3, y + -24, z + 1), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 4, y + -24, z + 1), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 11, y + -24, z + 1), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + -24, z + 2), Block1.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 1, y + -24, z + 2), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST), 3);
-		if(world.getBlockState(pos.setPos(x + 2, y + -24, z + 1)).getBlock() == Blocks.CHEST)
-		{
-			WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(1), (TileEntityChest)world.getTileEntity(pos.setPos(x + 1, y + -24, z + 2)), 8);
-		}
-        world.setBlockState(pos.setPos(x + 3, y + -24, z + 2), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.WEST), 3);
-		if(world.getBlockState(pos.setPos(x + 3, y + -24, z + 2)).getBlock() == Blocks.CHEST)
-		{
-			WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(1), (TileEntityChest)world.getTileEntity(pos.setPos(x + 3, y + -24, z + 2)), 8);
-		}
+		world.setBlockState(pos.setPos(x + 1, y + -24, z + 2), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST),
+				(worldIn, random, blockPos, chest) ->
+						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(1), chest, 8));
+        world.setBlockState(pos.setPos(x + 3, y + -24, z + 2), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.WEST),
+				(worldIn, random, blockPos, chest) ->
+						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(1), chest, 8));
         world.setBlockState(pos.setPos(x + 4, y + -24, z + 2), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 11, y + -24, z + 2), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + -24, z + 3), Block1.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 1, y + -24, z + 3), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST), 3);
-		if(world.getBlockState(pos.setPos(x + 1, y + -24, z + 3)).getBlock() == Blocks.CHEST)
-		{
-			WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(1), (TileEntityChest)world.getTileEntity(pos.setPos(x + 1, y + -24, z + 3)), 8);
-		}
-        world.setBlockState(pos.setPos(x + 3, y + -24, z + 3), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST), 3);
-		if(world.getBlockState(pos.setPos(x + 3, y + -24, z + 3)).getBlock() == Blocks.CHEST)
-		{
-			WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(1), (TileEntityChest)world.getTileEntity(pos.setPos(x + 3, y + -24, z + 3)), 8);
-		}
+		world.setBlockState(pos.setPos(x + 1, y + -24, z + 3), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST),
+				(worldIn, random, blockPos, chest) ->
+						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(1),chest, 8));
+        world.setBlockState(pos.setPos(x + 3, y + -24, z + 3), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST),
+				(worldIn, random, blockPos, chest) ->
+						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(1), chest, 8));
         world.setBlockState(pos.setPos(x + 4, y + -24, z + 3), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + -24, z + 3), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 8, y + -24, z + 3), Block1.getDefaultState(), 3);
 		//world.setBlock(x + 9, y + -24, z + 3, Blocks.IRON_DOOR, 5, 3);
-        ItemDoor.placeDoor(world, pos.setPos(x + 9, y + -24, z + 3), EnumFacing.SOUTH, Blocks.IRON_DOOR, false);
-        world.setBlockState(pos.setPos(x + 9, y + -24, z + 3), world.getBlockState(pos.setPos(x + 9, y + -24, z + 3)).withProperty(BlockDoor.OPEN, true));
-        world.setBlockState(pos.setPos(x + 9, y + -24, z + 3), world.getBlockState(pos.setPos(x + 9, y + -23, z + 3)).withProperty(BlockDoor.OPEN, true));
+        world.placeDoorWithoutCheck(pos.setPos(x + 9, y + -24, z + 3), EnumFacing.SOUTH, Blocks.IRON_DOOR, false, true);
 		world.setBlockState(pos.setPos(x + 10, y + -24, z + 3), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 11, y + -24, z + 3), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + -24, z + 4), Block1.getDefaultState(), 3);
@@ -354,7 +340,7 @@ public class Bunker extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 0, y + -24, z + 5), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 1, y + -24, z + 5), Block1.getDefaultState(), 3);
 		//world.setBlock(x + 2, y + -24, z + 5, Blocks.IRON_DOOR, 3, 3);
-        ItemDoor.placeDoor(world, pos.setPos(x + 2, y + -24, z + 5), EnumFacing.NORTH, Blocks.IRON_DOOR, false);
+        world.placeDoorWithoutCheck(pos.setPos(x + 2, y + -24, z + 5), EnumFacing.NORTH, Blocks.IRON_DOOR, false);
 		world.setBlockState(pos.setPos(x + 3, y + -24, z + 5), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 4, y + -24, z + 5), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + -24, z + 5), Block1.getDefaultState(), 3);
@@ -379,7 +365,7 @@ public class Bunker extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 0, y + -24, z + 9), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 3, y + -24, z + 9), Block1.getDefaultState(), 3);
 		//world.setBlock(x + 7, y + -24, z + 9, Blocks.IRON_DOOR, 1, 3);
-        ItemDoor.placeDoor(world, pos.setPos(x + 7, y + -24, z + 9), EnumFacing.WEST, Blocks.IRON_DOOR, false);
+        world.placeDoorWithoutCheck(pos.setPos(x + 7, y + -24, z + 9), EnumFacing.WEST, Blocks.IRON_DOOR, false);
 		world.setBlockState(pos.setPos(x + 10, y + -24, z + 9), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 11, y + -24, z + 9), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + -24, z + 10), Block1.getDefaultState(), 3);
@@ -819,11 +805,9 @@ public class Bunker extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 11, y + -20, z + 0), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + -20, z + 1), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 3, y + -20, z + 1), Block1.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 4, y + -20, z + 1), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST), 3);
-		if(world.getBlockState(pos.setPos(x + 4, y + -20, z + 1)).getBlock() == Blocks.CHEST)
-		{
-			WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(2), (TileEntityChest)world.getTileEntity(pos.setPos(x + 4, y + -20, z + 1)), 12);
-		}
+		world.setBlockState(pos.setPos(x + 4, y + -20, z + 1), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST),
+				(worldIn, random, blockPos, chest) ->
+						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(2), chest, 12));
         world.setBlockState(pos.setPos(x + 8, y + -20, z + 1), Block4.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 9, y + -20, z + 1), Block4.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 10, y + -20, z + 1), Block4.getDefaultState(), 3);
@@ -844,7 +828,7 @@ public class Bunker extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 3, y + -20, z + 4), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 4, y + -20, z + 4), Block1.getDefaultState(), 3);
 		//world.setBlock(x + 5, y + -20, z + 4, Blocks.IRON_DOOR, 3, 3);
-        ItemDoor.placeDoor(world, pos.setPos(x + 5, y + -20, z + 4), EnumFacing.NORTH, Blocks.IRON_DOOR, false);
+        world.placeDoorWithoutCheck(pos.setPos(x + 5, y + -20, z + 4), EnumFacing.NORTH, Blocks.IRON_DOOR, false);
 		world.setBlockState(pos.setPos(x + 6, y + -20, z + 4), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + -20, z + 4), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 8, y + -20, z + 4), Block1.getDefaultState(), 3);
@@ -856,25 +840,25 @@ public class Bunker extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 11, y + -20, z + 5), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + -20, z + 6), Block1.getDefaultState(), 3);
 		//world.setBlockState(pos.setPos(x + 3, y + -20, z + 6), Blocks.IRON_DOOR.getDefaultState(), 3);
-        ItemDoor.placeDoor(world, pos.setPos(x + 3, y + -20, z + 6), EnumFacing.EAST, Blocks.IRON_DOOR, false);
+        world.placeDoorWithoutCheck(pos.setPos(x + 3, y + -20, z + 6), EnumFacing.EAST, Blocks.IRON_DOOR, false);
 		world.setBlockState(pos.setPos(x + 11, y + -20, z + 6), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + -20, z + 7), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 3, y + -20, z + 7), Block1.getDefaultState(), 3);
 		//world.setBlock(x + 8, y + -20, z + 7, Blocks.IRON_DOOR, 1, 3);
-        ItemDoor.placeDoor(world, pos.setPos(x + 8, y + -20, z + 7), EnumFacing.SOUTH, Blocks.IRON_DOOR, false);
+        world.placeDoorWithoutCheck(pos.setPos(x + 8, y + -20, z + 7), EnumFacing.SOUTH, Blocks.IRON_DOOR, false);
 		//world.setBlock(x + 10, y + -20, z + 7, Blocks.IRON_DOOR, 1, 3);
-        ItemDoor.placeDoor(world, pos.setPos(x + 10, y + -20, z + 7), EnumFacing.SOUTH, Blocks.IRON_DOOR, false);
+        world.placeDoorWithoutCheck(pos.setPos(x + 10, y + -20, z + 7), EnumFacing.SOUTH, Blocks.IRON_DOOR, false);
 		world.setBlockState(pos.setPos(x + 11, y + -20, z + 7), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + -20, z + 8), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 3, y + -20, z + 8), Block1.getDefaultState(), 3);
 		//world.setBlock(x + 4, y + -20, z + 8, Blocks.IRON_DOOR, 3, 3);
-        ItemDoor.placeDoor(world, pos.setPos(x + 4, y + -20, z + 8), EnumFacing.NORTH, Blocks.IRON_DOOR, false);
+        world.placeDoorWithoutCheck(pos.setPos(x + 4, y + -20, z + 8), EnumFacing.NORTH, Blocks.IRON_DOOR, false);
 		//world.setBlock(x + 6, y + -20, z + 8, Blocks.IRON_DOOR, 3, 3);
-        ItemDoor.placeDoor(world, pos.setPos(x + 6, y + -20, z + 8), EnumFacing.NORTH, Blocks.IRON_DOOR, false);
+        world.placeDoorWithoutCheck(pos.setPos(x + 6, y + -20, z + 8), EnumFacing.NORTH, Blocks.IRON_DOOR, false);
 		//world.setBlock(x + 8, y + -20, z + 8, Blocks.IRON_DOOR, EnumFacing.EAST, 3);
-        ItemDoor.placeDoor(world, pos.setPos(x + 8, y + -20, z + 8), EnumFacing.NORTH, Blocks.IRON_DOOR, false);
+        world.placeDoorWithoutCheck(pos.setPos(x + 8, y + -20, z + 8), EnumFacing.NORTH, Blocks.IRON_DOOR, false);
 		//world.setBlock(x + 10, y + -20, z + 8, Blocks.IRON_DOOR, 3, 3);
-        ItemDoor.placeDoor(world, pos.setPos(x + 10, y + -20, z + 8), EnumFacing.NORTH, Blocks.IRON_DOOR, false);
+        world.placeDoorWithoutCheck(pos.setPos(x + 10, y + -20, z + 8), EnumFacing.NORTH, Blocks.IRON_DOOR, false);
 		world.setBlockState(pos.setPos(x + 11, y + -20, z + 8), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + -20, z + 9), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 3, y + -20, z + 9), Block1.getDefaultState(), 3);
@@ -1535,7 +1519,7 @@ public class Bunker extends WorldGenerator
 		return true;
 
 	}
-	public boolean generate_r02_last(World world, Random rand, int x, int y, int z, MutableBlockPos pos)
+	public boolean generate_r02_last(LegacyBuilder world, Random rand, int x, int y, int z, MutableBlockPos pos)
 	{
 
 		world.setBlockState(pos.setPos(x + 10, y + -24, z + 12), Blocks.LADDER.getDefaultState().withProperty(BlockLadder.FACING, EnumFacing.WEST), 3);

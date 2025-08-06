@@ -7,6 +7,7 @@ import com.hbm.items.ModItems;
 import com.hbm.lib.HbmChestContents;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.machine.TileEntityCrateIron;
+import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.BlockTorch;
@@ -14,18 +15,21 @@ import net.minecraft.block.BlockWallSign;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemDoor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.WorldGenerator;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
-public class Relay extends WorldGenerator
-{
+@SuppressWarnings({"UnnecessaryUnaryMinus", "PointlessArithmeticExpression"})
+public class Relay extends AbstractPhasedStructure {
+	public static final Relay INSTANCE = new Relay();
+	private Relay() {}
 	Block Block1 = ModBlocks.reinforced_brick;
 	Block Block2 = ModBlocks.deco_steel;
 	Block Block4 = ModBlocks.steel_scaffold;
@@ -78,31 +82,23 @@ public class Relay extends WorldGenerator
 	}
 
 	@Override
-	public boolean generate(World world, Random rand, BlockPos pos)
-	{
-		return generate(world, rand, pos, false);
-
-	}
-	
-	public boolean generate(World world, Random rand, BlockPos pos, boolean force)
-	{
-		int i = rand.nextInt(1);
-
-		if(i == 0)
-		{
-		    generate_r0(world, rand, pos.getX(), pos.getY(), pos.getZ(), force);
-		}
-
-       return true;
-
+	public void buildStructure(@NotNull LegacyBuilder builder, @NotNull Random rand) {
+		generate_r0(builder, rand, 0, 0, 0);
 	}
 
-	public boolean generate_r0(World world, Random rand, int x, int y, int z, boolean force)
+	@Override
+	public boolean checkSpawningConditions(@NotNull World world, @NotNull BlockPos pos) {
+		BlockPos p = pos.add(5, 0, 8);
+		return LocationIsValidSpawn(world, p.getX(), p.getY(), p.getZ());
+	}
+
+	@Override
+	public @NotNull List<BlockPos> getValidationPoints(@NotNull BlockPos origin) {
+		return Collections.singletonList(origin.add(5, 0, 8));
+	}
+
+	public boolean generate_r0(LegacyBuilder world, Random rand, int x, int y, int z)
 	{
-		if(!force && !LocationIsValidSpawn(world, x + 5, y, z + 8))
-		{
-			return false;
-		}
 		MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
 		world.setBlockState(pos.setPos(x + 2, y + -3, z + 0), Block1.getDefaultState(), 3);
@@ -660,13 +656,13 @@ public class Relay extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 10, y + 0, z + 9), ModBlocks.fence_metal.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 0, z + 10), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 4, y + 0, z + 10), Blocks.BRICK_BLOCK.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 6, y + 0, z + 10), ModBlocks.crate_iron.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.SOUTH), 3);
-        WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(1), (TileEntityCrateIron)world.getTileEntity(pos.setPos(x + 6, y + 0, z + 10)), 8);
-		
-        if(world.rand.nextInt(5) == 0) {
-			((TileEntityCrateIron)world.getTileEntity(pos.setPos(x + 6, y + 0, z + 10))).inventory.setStackInSlot(11, new ItemStack(ModItems.morning_glory));
-		}
-        
+		world.setBlockState(pos.setPos(x + 6, y + 0, z + 10), ModBlocks.crate_iron.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.SOUTH),
+				(worldIn, random, blockPos, chest) -> {
+					WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(1), chest, 8);
+					if(worldIn.rand.nextInt(5) == 0) {
+						((TileEntityCrateIron)chest).inventory.setStackInSlot(11, new ItemStack(ModItems.morning_glory));
+					}
+				});
         world.setBlockState(pos.setPos(x + 7, y + 0, z + 10), Blocks.BRICK_BLOCK.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 8, y + 0, z + 10), Blocks.BRICK_BLOCK.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 10, y + 0, z + 10), ModBlocks.fence_metal.getDefaultState(), 3);
@@ -676,7 +672,7 @@ public class Relay extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 10, y + 0, z + 11), ModBlocks.fence_metal.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 0, z + 12), Library.getRandomConcrete().getDefaultState(), 3);
 		//world.setBlockState(pos.setPos(x + 4, y + 0, z + 12), Blocks.iron_door.getDefaultState(), 3);
-        ItemDoor.placeDoor(world, pos.setPos(x + 4, y + 0, z + 12), EnumFacing.EAST, Blocks.IRON_DOOR, false);
+        world.placeDoorWithoutCheck(pos.setPos(x + 4, y + 0, z + 12), EnumFacing.EAST, Blocks.IRON_DOOR, false);
 		world.setBlockState(pos.setPos(x + 7, y + 0, z + 12), Blocks.BRICK_BLOCK.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 8, y + 0, z + 12), Blocks.BRICK_BLOCK.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 10, y + 0, z + 12), ModBlocks.fence_metal.getDefaultState(), 3);
@@ -1283,8 +1279,9 @@ public class Relay extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 5, y + 14, z + 6), Block4.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.values()[2]), 3);
 		world.setBlockState(pos.setPos(x + 6, y + 14, z + 6), Block2.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + 14, z + 6), Block4.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.values()[2]), 3);
-		world.setBlockState(pos.setPos(x + 8, y + 14, z + 6), ModBlocks.crate_iron.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.SOUTH), 3);
-        WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(2), (TileEntityCrateIron)world.getTileEntity(pos.setPos(x + 8, y + 14, z + 6)), 8);
+		world.setBlockState(pos.setPos(x + 8, y + 14, z + 6), ModBlocks.crate_iron.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.SOUTH),
+				(worldIn, random, blockPos, chest) ->
+						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(2), chest, 8));
 		world.setBlockState(pos.setPos(x + 9, y + 14, z + 6), ModBlocks.fence_metal.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 10, y + 14, z + 6), Block6.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 9, y + 14, z + 7), ModBlocks.fence_metal.getDefaultState(), 3);
@@ -1502,8 +1499,9 @@ public class Relay extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 6, y + 32, z + 1), Block7.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 8, y + 32, z + 1), Block6.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 5, y + 32, z + 2), Block6.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 6, y + 32, z + 2), ModBlocks.crate_iron.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.NORTH), 3);
-        WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(3), (TileEntityCrateIron)world.getTileEntity(pos.setPos(x + 6, y + 32, z + 2)), 8);
+		world.setBlockState(pos.setPos(x + 6, y + 32, z + 2), ModBlocks.crate_iron.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.NORTH),
+				(worldIn, random, blockPos, chest) ->
+						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(3), chest, 8));
 		world.setBlockState(pos.setPos(x + 7, y + 32, z + 2), Block6.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 5, y + 32, z + 3), Block4.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.values()[3]), 3);
 		world.setBlockState(pos.setPos(x + 6, y + 32, z + 3), Block2.getDefaultState(), 3);
@@ -1618,7 +1616,7 @@ public class Relay extends WorldGenerator
 		return true;
 
 	}
-	public boolean generate_r02(World world, Random rand, int x, int y, int z, MutableBlockPos pos)
+	public boolean generate_r02(LegacyBuilder world, Random rand, int x, int y, int z, MutableBlockPos pos)
 	{
 
 		world.setBlockState(pos.setPos(x + 6, y + 45, z + 4), ModBlocks.red_wire_coated.getDefaultState(), 3);
@@ -1669,7 +1667,7 @@ public class Relay extends WorldGenerator
 		return true;
 
 	}
-	public boolean generate_r03_last(World world, Random rand, int x, int y, int z, MutableBlockPos pos)
+	public boolean generate_r03_last(LegacyBuilder world, Random rand, int x, int y, int z, MutableBlockPos pos)
 	{
 
 		world.setBlockState(pos.setPos(x + 5, y + 1, z + 11), Blocks.TORCH.getDefaultState().withProperty(BlockTorch.FACING, EnumFacing.UP), 3);

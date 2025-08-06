@@ -5,6 +5,7 @@ import com.hbm.blocks.machine.MachineBattery;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
 import com.hbm.items.ModItems;
 import com.hbm.lib.HbmChestContents;
+import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockStairs;
@@ -12,19 +13,23 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
-public class Spaceship extends WorldGenerator
-{
+@SuppressWarnings({"UnnecessaryUnaryMinus", "PointlessArithmeticExpression"})
+public class Spaceship extends AbstractPhasedStructure {
+	public static final Spaceship INSTANCE = new Spaceship();
+	private static final Spaceship2 part2 = new Spaceship2();
+	private Spaceship() {}
 	Block Block1 = ModBlocks.deco_tungsten;
 	Block Block2 = ModBlocks.deco_red_copper;
 	Block Block3 = ModBlocks.deco_steel;
@@ -72,30 +77,28 @@ public class Spaceship extends WorldGenerator
 	}
 
 	@Override
-	public boolean generate(World world, Random rand, BlockPos pos)
-	{
-		return generate(world, rand, pos, false);
-	}
-	
-	public boolean generate(World world, Random rand, BlockPos pos, boolean force)
-	{
-		int i = rand.nextInt(1);
-
-		if(i == 0)
-		{
-		    generate_r0(world, rand, pos.getX(), pos.getY(), pos.getZ(), force);
-		}
-
-       return true;
-
+	public void buildStructure(@NotNull LegacyBuilder builder, @NotNull Random rand) {
+		generate_r0(builder, rand, 0, 0, 0);
 	}
 
-	public boolean generate_r0(World world, Random rand, int x, int y, int z, boolean force)
+	@Override
+	public boolean checkSpawningConditions(@NotNull World world, @NotNull BlockPos pos) {
+		return LocationIsValidSpawn(world, pos) && LocationIsValidSpawn(world, pos.add(12, 0, 0)) &&
+				LocationIsValidSpawn(world, pos.add(0, 0, 23)) && LocationIsValidSpawn(world, pos.add(12, 0, 23));
+	}
+
+	@Override
+	public @NotNull List<BlockPos> getValidationPoints(@NotNull BlockPos origin) {
+		return Arrays.asList(
+				origin,
+				origin.add(12, 0, 0),
+				origin.add(0, 0, 23),
+				origin.add(12, 0, 23)
+		);
+	}
+
+	public boolean generate_r0(LegacyBuilder world, Random rand, int x, int y, int z)
 	{
-		if(!force && (!LocationIsValidSpawn(world, new BlockPos(x, y, z)) || !LocationIsValidSpawn(world, new BlockPos(x + 12, y, z)) || !LocationIsValidSpawn(world, new BlockPos(x, y, z + 23)) || !LocationIsValidSpawn(world, new BlockPos(x + 12, y, z + 23))))
-		{
-			return false;
-		}
 		MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
 		y += 1;
@@ -463,18 +466,14 @@ public class Spaceship extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 2, y + -2, z + 25), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 3, y + -2, z + 25), Block2.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 4, y + -2, z + 25), Block3.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 5, y + -2, z + 25), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST), 3);
-		if(world.getBlockState(pos.setPos(x + 5, y + -2, z + 25)).getBlock() == Blocks.CHEST)
-		{
-			WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(8), (TileEntityChest)world.getTileEntity(pos.setPos(x + 5, y + -2, z + 25)), 12);
-		}
+		world.setBlockState(pos.setPos(x + 5, y + -2, z + 25), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST),
+				(worldIn, random, blockPos, chest) ->
+						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(8), chest, 12));
 		world.setBlockState(pos.setPos(x + 6, y + -2, z + 25), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + -2, z + 25), Blocks.AIR.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 8, y + -2, z + 25), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.WEST), 3);
-		if(world.getBlockState(pos.setPos(x + 8, y + -2, z + 25)).getBlock() == Blocks.CHEST)
-		{
-			WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(8), (TileEntityChest)world.getTileEntity(pos.setPos(x + 8, y + -2, z + 25)), 12);
-		}
+		world.setBlockState(pos.setPos(x + 8, y + -2, z + 25), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.WEST),
+				(worldIn, random, blockPos, chest) ->
+						WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(8), chest, 12));
 		world.setBlockState(pos.setPos(x + 9, y + -2, z + 25), Block3.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 10, y + -2, z + 25), Block2.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 11, y + -2, z + 25), Blocks.AIR.getDefaultState(), 3);
@@ -483,18 +482,14 @@ public class Spaceship extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 2, y + -2, z + 26), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 3, y + -2, z + 26), Block3.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 4, y + -2, z + 26), Block3.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 5, y + -2, z + 26), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST), 3);
-		if(world.getBlockState(pos.setPos(x + 5, y + -2, z + 26)).getBlock() == Blocks.CHEST)
-		{
-			WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(8), (TileEntityChest)world.getTileEntity(pos.setPos(x + 5, y + -2, z + 26)), 12);
-		}
+		world.setBlockState(pos.setPos(x + 5, y + -2, z + 26), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST),
+				(worldIn, random, blockPos, chest) ->
+						WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(8), chest, 12));
 		world.setBlockState(pos.setPos(x + 6, y + -2, z + 26), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + -2, z + 26), Blocks.AIR.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 8, y + -2, z + 26), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.WEST), 3);
-		if(world.getBlockState(pos.setPos(x + 8, y + -2, z + 26)).getBlock() == Blocks.CHEST)
-		{
-			WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(8), (TileEntityChest)world.getTileEntity(pos.setPos(x + 8, y + -2, z + 26)), 12);
-		}
+		world.setBlockState(pos.setPos(x + 8, y + -2, z + 26), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.WEST),
+				(worldIn, random, blockPos, chest) ->
+						WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(8), chest, 12));
 		world.setBlockState(pos.setPos(x + 9, y + -2, z + 26), Block3.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 10, y + -2, z + 26), Block3.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 11, y + -2, z + 26), Blocks.AIR.getDefaultState(), 3);
@@ -623,15 +618,14 @@ public class Spaceship extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 5, y + -2, z + 38), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 6, y + -2, z + 38), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + -2, z + 38), Blocks.AIR.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 8, y + -2, z + 38), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.NORTH), 3);
-		if(world.getBlockState(pos.setPos(x + 8, y + -2, z + 38)).getBlock() == Blocks.CHEST)
-		{
-			WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(3), (TileEntityChest)world.getTileEntity(pos.setPos(x + 8, y + -2, z + 38)), 12);
-			if(rand.nextInt(10) == 0){
-				IItemHandlerModifiable handle = (IItemHandlerModifiable)((TileEntityChest)world.getTileEntity(pos.setPos(x + 8, y + -2, z + 38))).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-				handle.setStackInSlot(rand.nextInt(handle.getSlots()), new ItemStack(ModItems.gun_vortex));
-			}
-		}
+		world.setBlockState(pos.setPos(x + 8, y + -2, z + 38), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.NORTH),
+				(worldIn, random, blockPos, chest) -> {
+					WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(3), chest, 12);
+					if(worldIn.rand.nextInt(10) == 0){
+						IItemHandlerModifiable handle = (IItemHandlerModifiable)chest.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+						handle.setStackInSlot(random.nextInt(handle.getSlots()), new ItemStack(ModItems.gun_vortex));
+					}
+		});
 		world.setBlockState(pos.setPos(x + 9, y + -2, z + 38), Block3.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 4, y + -2, z + 39), Block3.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 5, y + -2, z + 39), Block3.getDefaultState(), 3);
@@ -1121,7 +1115,7 @@ public class Spaceship extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 7, y + 0, z + 17), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 8, y + 0, z + 17), Blocks.AIR.getDefaultState(), 3);
 
-		new Spaceship2().generate_r00(world, rand, x, y, z);
+		part2.generate_r00(world, rand, x, y, z);
 		return true;
 
 	}

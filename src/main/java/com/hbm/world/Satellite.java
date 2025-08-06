@@ -5,21 +5,25 @@ import com.hbm.config.GeneralConfig;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
 import com.hbm.lib.HbmChestContents;
 import com.hbm.lib.Library;
+import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.WorldGenerator;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
-public class Satellite extends WorldGenerator
-{
+@SuppressWarnings({"UnnecessaryUnaryMinus", "PointlessArithmeticExpression"})
+public class Satellite extends AbstractPhasedStructure {
+	public static final Satellite INSTANCE = new Satellite();
+	private Satellite() {}
 	Block Block2 = ModBlocks.deco_steel;
 	Block Block3 = ModBlocks.steel_scaffold;
 	Block Block4 = ModBlocks.deco_beryllium;
@@ -70,31 +74,27 @@ public class Satellite extends WorldGenerator
 	}
 
 	@Override
-	public boolean generate(World world, Random rand, BlockPos pos)
-	{
-		return generate(world, rand, pos, false);
-
-	}
-	
-	public boolean generate(World world, Random rand, BlockPos pos, boolean force)
-	{
-		int i = rand.nextInt(1);
-
-		if(i == 0)
-		{
-		    generate_r0(world, rand, pos.getX(), pos.getY(), pos.getZ(), force);
-		}
-
-       return true;
-
+	public void buildStructure(@NotNull LegacyBuilder builder, @NotNull Random rand) {
+		generate_r0(builder, rand, 0, 0, 0);
 	}
 
-	public boolean generate_r0(World world, Random rand, int x, int y, int z, boolean force)
-	{
-		if(!force && (!LocationIsValidSpawn(world, new BlockPos(x, y, z)) || !LocationIsValidSpawn(world, new BlockPos(x + 24, y, z)) || !LocationIsValidSpawn(world, new BlockPos(x + 24, y, z + 30)) || !LocationIsValidSpawn(world, new BlockPos(x, y, z + 30))))
-		{
-			return false;
-		}
+	@Override
+	public boolean checkSpawningConditions(@NotNull World world, @NotNull BlockPos pos) {
+		return LocationIsValidSpawn(world, pos) && LocationIsValidSpawn(world, pos.add(24, 0, 0)) &&
+				LocationIsValidSpawn(world, pos.add(24, 0, 30)) && LocationIsValidSpawn(world, pos.add(0, 0, 30));
+	}
+
+	@Override
+	public @NotNull List<BlockPos> getValidationPoints(@NotNull BlockPos origin) {
+		return Arrays.asList(
+				origin,
+				origin.add(24, 0, 0),
+				origin.add(24, 0, 30),
+				origin.add(0, 0, 30)
+		);
+	}
+
+	public boolean generate_r0(LegacyBuilder world, Random rand, int x, int y, int z) {
 		MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
 		world.setBlockState(pos.setPos(x + 18, y + -3, z + 9), Library.getRandomConcrete().getDefaultState(), 3);
@@ -997,8 +997,9 @@ public class Satellite extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 18, y + 14, z + 18), Block2.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 19, y + 14, z + 18), Block2.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + 14, z + 19), Block2.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 10, y + 14, z + 19), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.SOUTH), 3);
-        WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(1), (TileEntityChest)world.getTileEntity(pos.setPos(x + 10, y + 14, z + 19)), 8);
+		world.setBlockState(pos.setPos(x + 10, y + 14, z + 19), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.SOUTH),
+				(worldIn, random, blockPos, chest) ->
+						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(1), chest, 8));
 		world.setBlockState(pos.setPos(x + 19, y + 14, z + 19), Block2.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 20, y + 14, z + 19), Block2.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 21, y + 14, z + 19), Block2.getDefaultState(), 3);
@@ -1025,8 +1026,9 @@ public class Satellite extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 19, y + 14, z + 26), Block2.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 5, y + 14, z + 27), ModBlocks.fence_metal.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + 14, z + 27), Block2.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 16, y + 14, z + 27), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.SOUTH), 3);
-        WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(2), (TileEntityChest)world.getTileEntity(pos.setPos(x + 16, y + 14, z + 27)), 8);
+		world.setBlockState(pos.setPos(x + 16, y + 14, z + 27), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.SOUTH),
+				(worldIn, random, blockPos, chest) ->
+						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(2), chest, 8));
 		world.setBlockState(pos.setPos(x + 19, y + 14, z + 27), Block2.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 5, y + 14, z + 28), ModBlocks.fence_metal.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 6, y + 14, z + 28), ModBlocks.fence_metal.getDefaultState(), 3);
@@ -1442,8 +1444,9 @@ public class Satellite extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 21, y + 19, z + 11), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 17, y + 19, z + 12), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 18, y + 19, z + 12), Library.getRandomConcrete().getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 19, y + 19, z + 12), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.WEST), 3);
-        WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(3), (TileEntityChest)world.getTileEntity(pos.setPos(x + 19, y + 19, z + 12)), 12);
+		world.setBlockState(pos.setPos(x + 19, y + 19, z + 12), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.WEST),
+				(worldIn, random, blockPos, chest) ->
+						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(3), chest, 12));
 		world.setBlockState(pos.setPos(x + 20, y + 19, z + 12), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 21, y + 19, z + 12), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 17, y + 19, z + 13), Library.getRandomConcrete().getDefaultState(), 3);
@@ -1594,7 +1597,7 @@ public class Satellite extends WorldGenerator
 		return true;
 
 	}
-	public boolean generate_r02(World world, Random rand, int x, int y, int z, MutableBlockPos pos)
+	public boolean generate_r02(LegacyBuilder world, Random rand, int x, int y, int z, MutableBlockPos pos)
 	{
 
 		world.setBlockState(pos.setPos(x + 7, y + 24, z + 13), Block5.getDefaultState(), 3);
@@ -2458,8 +2461,9 @@ public class Satellite extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 20, y + 39, z + 11), Block5.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 4, y + 39, z + 12), Block7.getDefaultState(), 3);
 		//world.setBlockState(pos.setPos(x + 5, y + 39, z + 12), Block7.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 5, y + 39, z + 12), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.WEST), 3);
-        WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(3), (TileEntityChest)world.getTileEntity(pos.setPos(x + 5, y + 39, z + 12)), 12);
+		world.setBlockState(pos.setPos(x + 5, y + 39, z + 12), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.WEST),
+				(worldIn, random, blockPos, chest) ->
+						WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(3), chest, 12));
 		world.setBlockState(pos.setPos(x + 6, y + 39, z + 12), Block7.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + 39, z + 12), Block4.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 8, y + 39, z + 12), Block4.getDefaultState(), 3);
@@ -2577,7 +2581,7 @@ public class Satellite extends WorldGenerator
 		return true;
 
 	}
-	public boolean generate_r03_last(World world, Random rand, int x, int y, int z, MutableBlockPos pos)
+	public boolean generate_r03_last(LegacyBuilder world, Random rand, int x, int y, int z, MutableBlockPos pos)
 	{
 
 		world.setBlockState(pos.setPos(x + 19, y + 3, z + 9), Blocks.TORCH.getDefaultState().withProperty(BlockTorch.FACING, EnumFacing.NORTH), 3);

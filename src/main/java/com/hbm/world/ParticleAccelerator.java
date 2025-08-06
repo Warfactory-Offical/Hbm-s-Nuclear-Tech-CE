@@ -8,9 +8,13 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Random;
 
+// mlbv: not naturally generated, schedule for removal
+@Deprecated
+@ApiStatus.ScheduledForRemoval(inVersion = "1.0")
 public class ParticleAccelerator {
 
 	public static String[][] array = new String[][] {

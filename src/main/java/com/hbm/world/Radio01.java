@@ -4,23 +4,27 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
 import com.hbm.lib.HbmChestContents;
 import com.hbm.lib.Library;
-import com.hbm.tileentity.machine.TileEntityCrateSteel;
+import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemDoor;
-import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.WorldGenerator;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
-public class Radio01 extends WorldGenerator
+@SuppressWarnings({"UnnecessaryUnaryMinus", "PointlessArithmeticExpression"})
+public class Radio01 extends AbstractPhasedStructure
 {
+	public static final Radio01 INSTANCE = new Radio01();
+	private final Radio02 part2 = new Radio02();
+	private Radio01() {}
 	protected Block[] GetValidSpawnBlocks()
 	{
 		return new Block[]
@@ -32,7 +36,17 @@ public class Radio01 extends WorldGenerator
 		};
 	}
 
-	public boolean LocationIsValidSpawn(World world, BlockPos pos)
+	@Override
+	public boolean checkSpawningConditions(@NotNull World world, @NotNull BlockPos pos) {
+		return locationIsValidSpawn(world, pos.add(5, 0, 15));
+	}
+
+	@Override
+	public @NotNull List<BlockPos> getValidationPoints(@NotNull BlockPos origin) {
+		return Collections.singletonList(origin.add(5, 0, 15));
+	}
+
+	private boolean locationIsValidSpawn(World world, BlockPos pos)
 	{
 		IBlockState checkBlockState = world.getBlockState(pos.down());
 		Block checkBlock = checkBlockState.getBlock();
@@ -63,30 +77,12 @@ public class Radio01 extends WorldGenerator
 	}
 
 	@Override
-	public boolean generate(World world, Random rand, BlockPos pos)
-	{
-		return generate(world, rand, pos, false);
-	}
-	
-	public boolean generate(World world, Random rand, BlockPos pos, boolean force)
-	{
-		int i = rand.nextInt(1);
-
-		if(i == 0)
-		{
-		    generate_r0(world, rand, pos.getX(), pos.getY(), pos.getZ(), force);
-		}
-
-       return true;
-
+	public void buildStructure(@NotNull LegacyBuilder builder, @NotNull Random rand) {
+		generate_r0(builder, rand, 0, 0, 0);
 	}
 
-	public boolean generate_r0(World world, Random rand, int x, int y, int z, boolean force)
+	public void generate_r0(LegacyBuilder world, Random rand, int x, int y, int z)
 	{
-		if(!force && !LocationIsValidSpawn(world, new BlockPos(x + 5, y, z + 15)))
-		{
-			return false;
-		}
 		MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
 		world.setBlockState(pos.setPos(x + 0, y + -1, z + 0), Library.getRandomConcrete().getDefaultState(), 3);
@@ -428,7 +424,7 @@ public class Radio01 extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 6, y + 0, z + 4), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + 0, z + 4), Library.getRandomConcrete().getDefaultState(), 3);
 		//world.setBlock(x + 8, y + 0, z + 4, ModBlocks.door_office, 3, 3);
-        ItemDoor.placeDoor(world, pos.setPos(x + 8, y + 0, z + 4), EnumFacing.NORTH, ModBlocks.door_office, false);
+        world.placeDoorWithoutCheck(pos.setPos(x + 8, y + 0, z + 4), EnumFacing.NORTH, ModBlocks.door_office, false);
 		world.setBlockState(pos.setPos(x + 9, y + 0, z + 4), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 10, y + 0, z + 4), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 0, z + 5), Library.getRandomConcrete().getDefaultState(), 3);
@@ -472,7 +468,7 @@ public class Radio01 extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 5, y + 0, z + 8), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 6, y + 0, z + 8), Blocks.AIR.getDefaultState(), 3);
 		//world.setBlock(x + 7, y + 0, z + 8, ModBlocks.door_office, 2, 3);
-        ItemDoor.placeDoor(world, pos.setPos(x + 7, y + 0, z + 8), EnumFacing.WEST, ModBlocks.door_office, false);
+		world.placeDoorWithoutCheck(pos.setPos(x + 7, y + 0, z + 8), EnumFacing.WEST, ModBlocks.door_office, false);
 		world.setBlockState(pos.setPos(x + 8, y + 0, z + 8), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 9, y + 0, z + 8), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 10, y + 0, z + 8), Library.getRandomConcrete().getDefaultState(), 3);
@@ -504,8 +500,8 @@ public class Radio01 extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 3, y + 0, z + 11), ModBlocks.steel_poles.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.EAST), 3);
 		world.setBlockState(pos.setPos(x + 4, y + 0, z + 11), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 5, y + 0, z + 11), Blocks.FLOWER_POT.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 6, y + 0, z + 11), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST), 3);
-        WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(1), (TileEntityChest)world.getTileEntity(pos.setPos(x + 6, y + 0, z + 11)), 8);
+		world.setBlockState(pos.setPos(x + 6, y + 0, z + 11), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST),
+				(worldIn, random, blockPos, chest) -> WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(1), chest, 8));
 		world.setBlockState(pos.setPos(x + 7, y + 0, z + 11), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 8, y + 0, z + 11), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 9, y + 0, z + 11), Blocks.AIR.getDefaultState(), 3);
@@ -529,7 +525,7 @@ public class Radio01 extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 5, y + 0, z + 13), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 6, y + 0, z + 13), Blocks.AIR.getDefaultState(), 3);
 		//world.setBlock(x + 7, y + 0, z + 13, ModBlocks.door_metal, 2, 3);
-        ItemDoor.placeDoor(world, pos.setPos(x + 7, y + 0, z + 13), EnumFacing.WEST, ModBlocks.door_office, false);
+        world.placeDoorWithoutCheck(pos.setPos(x + 7, y + 0, z + 13), EnumFacing.WEST, ModBlocks.door_office, false);
 		world.setBlockState(pos.setPos(x + 8, y + 0, z + 13), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 9, y + 0, z + 13), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 10, y + 0, z + 13), Library.getRandomConcrete().getDefaultState(), 3);
@@ -567,7 +563,7 @@ public class Radio01 extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 9, y + 0, z + 16), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 10, y + 0, z + 16), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 0, z + 17), ModBlocks.door_metal.getDefaultState(), 3);
-        ItemDoor.placeDoor(world, pos.setPos(x + 0, y + 0, z + 17), EnumFacing.EAST, ModBlocks.door_metal, true);
+        world.placeDoorWithoutCheck(pos.setPos(x + 0, y + 0, z + 17), EnumFacing.EAST, ModBlocks.door_metal, false);
 		world.setBlockState(pos.setPos(x - 1, y + 1, z + 17), Blocks.WALL_SIGN.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.WEST), 3);
 		world.setBlockState(pos.setPos(x + 1, y + 0, z + 17), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 2, y + 0, z + 17), Blocks.AIR.getDefaultState(), 3);
@@ -580,7 +576,7 @@ public class Radio01 extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 9, y + 0, z + 17), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 10, y + 0, z + 17), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 0, z + 18), ModBlocks.door_metal.getDefaultState(), 3);
-        ItemDoor.placeDoor(world, pos.setPos(x + 0, y + 0, z + 18), EnumFacing.EAST, ModBlocks.door_metal, false);
+        world.placeDoorWithoutCheck(pos.setPos(x + 0, y + 0, z + 18), EnumFacing.EAST, ModBlocks.door_metal, false);
 		world.setBlockState(pos.setPos(x - 1, y + 1, z + 18), Blocks.WALL_SIGN.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.WEST), 3);
 		world.setBlockState(pos.setPos(x + 1, y + 0, z + 18), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 2, y + 0, z + 18), Blocks.AIR.getDefaultState(), 3);
@@ -639,7 +635,7 @@ public class Radio01 extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 0, y + 0, z + 23), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 1, y + 0, z + 23), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 2, y + 0, z + 23), ModBlocks.door_metal.getDefaultState(), 3);
-        ItemDoor.placeDoor(world, pos.setPos(x + 2, y + 0, z + 23), EnumFacing.EAST, ModBlocks.door_metal, false);
+        world.placeDoorWithoutCheck(pos.setPos(x + 2, y + 0, z + 23), EnumFacing.EAST, ModBlocks.door_metal, false);
 		world.setBlockState(pos.setPos(x + 3, y + 0, z + 23), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 4, y + 0, z + 23), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 5, y + 0, z + 23), ModBlocks.deco_steel.getDefaultState(), 3);
@@ -655,8 +651,8 @@ public class Radio01 extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 4, y + 0, z + 24), ModBlocks.pole_top.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 5, y + 0, z + 24), ModBlocks.deco_steel.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 6, y + 0, z + 24), ModBlocks.deco_steel.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 7, y + 0, z + 24), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST), 3);
-        WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(2), (TileEntityChest)world.getTileEntity(pos.setPos(x + 7, y + 0, z + 24)), 8);
+		world.setBlockState(pos.setPos(x + 7, y + 0, z + 24), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST),
+				(worldIn, random, blockPos, chest) -> WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(2), chest, 8));
 		world.setBlockState(pos.setPos(x + 8, y + 0, z + 24), ModBlocks.deco_steel.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 9, y + 0, z + 24), ModBlocks.deco_steel.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 10, y + 0, z + 24), Library.getRandomConcrete().getDefaultState(), 3);
@@ -1601,17 +1597,15 @@ public class Radio01 extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 3, y + 4, z + 6), Library.getRandomConcrete().getDefaultState(), 3);
 
 		generate_r02(world, rand, x, y, z, pos);
-		return true;
-
 	}
-	public boolean generate_r02(World world, Random rand, int x, int y, int z, MutableBlockPos pos)
+	public void generate_r02(LegacyBuilder world, Random rand, int x, int y, int z, MutableBlockPos pos)
 	{
 
 		world.setBlockState(pos.setPos(x + 4, y + 4, z + 6), Blocks.WEB.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 5, y + 4, z + 6), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 6, y + 4, z + 6), Blocks.AIR.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 7, y + 4, z + 6), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST), 3);
-        WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(1), (TileEntityChest)world.getTileEntity(pos.setPos(x + 7, y + 4, z + 6)), 8);
+		world.setBlockState(pos.setPos(x + 7, y + 4, z + 6), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST),
+				(worldIn, random, blockPos, chest) -> WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(1), chest, 8));
 		world.setBlockState(pos.setPos(x + 8, y + 4, z + 6), ModBlocks.deco_steel.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 9, y + 4, z + 6), ModBlocks.deco_steel.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 10, y + 4, z + 6), Library.getRandomConcrete().getDefaultState(), 3);
@@ -1619,7 +1613,7 @@ public class Radio01 extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 1, y + 4, z + 7), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 2, y + 4, z + 7), Blocks.AIR.getDefaultState(), 3);
 		//world.setBlockState(pos.setPos(x + 3, y + 4, z + 7), ModBlocks.door_metal.getDefaultState(), 3);
-        ItemDoor.placeDoor(world, pos.setPos(x + 3, y + 4, z + 7), EnumFacing.EAST, ModBlocks.door_office, false);
+        world.placeDoorWithoutCheck(pos.setPos(x + 3, y + 4, z + 7), EnumFacing.EAST, ModBlocks.door_office, false);
 		world.setBlockState(pos.setPos(x + 4, y + 4, z + 7), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 5, y + 4, z + 7), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 6, y + 4, z + 7), Blocks.AIR.getDefaultState(), 3);
@@ -1675,7 +1669,7 @@ public class Radio01 extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 1, y + 4, z + 12), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 2, y + 4, z + 12), Blocks.AIR.getDefaultState(), 3);
 		//world.setBlockState(pos.setPos(x + 3, y + 4, z + 12), Blocks.AIR.getDefaultState(), 3);
-        ItemDoor.placeDoor(world, pos.setPos(x + 3, y + 4, z + 12), EnumFacing.EAST, ModBlocks.door_office, false);
+        world.placeDoorWithoutCheck(pos.setPos(x + 3, y + 4, z + 12), EnumFacing.EAST, ModBlocks.door_office, false);
 		world.setBlockState(pos.setPos(x + 4, y + 4, z + 12), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 5, y + 4, z + 12), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 6, y + 4, z + 12), Blocks.AIR.getDefaultState(), 3);
@@ -1699,8 +1693,9 @@ public class Radio01 extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 1, y + 4, z + 14), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 2, y + 4, z + 14), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 3, y + 4, z + 14), Library.getRandomConcrete().getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 4, y + 4, z + 14), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST), 3);
-        WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(1), (TileEntityChest)world.getTileEntity(pos.setPos(x + 4, y + 4, z + 14)), 8);
+		world.setBlockState(pos.setPos(x + 4, y + 4, z + 14), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST),
+				(worldIn, random, blockPos, chest) ->
+						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(1), chest, 8));
 		world.setBlockState(pos.setPos(x + 5, y + 4, z + 14), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 6, y + 4, z + 14), ModBlocks.tape_recorder.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.SOUTH), 3);
 		world.setBlockState(pos.setPos(x + 7, y + 4, z + 14), Blocks.OAK_STAIRS.getDefaultState().withProperty(BlockStairs.HALF, BlockStairs.EnumHalf.TOP).withProperty(BlockStairs.FACING, EnumFacing.WEST), 3);
@@ -1721,7 +1716,7 @@ public class Radio01 extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 0, y + 4, z + 16), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 1, y + 4, z + 16), Library.getRandomConcrete().getDefaultState(), 3);
 		//world.setBlock(x + 2, y + 4, z + 16, ModBlocks.door_office, 5, 3);
-        Library.placeDoorWithoutCheck(world, pos.setPos(x + 2, y + 4, z + 16), EnumFacing.SOUTH, ModBlocks.door_office, false);
+        world.placeDoorWithoutCheck(pos.setPos(x + 2, y + 4, z + 16), EnumFacing.SOUTH, ModBlocks.door_office, false);
 		world.setBlockState(pos.setPos(x + 3, y + 4, z + 16), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 4, y + 4, z + 16), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 5, y + 4, z + 16), Blocks.AIR.getDefaultState(), 3);
@@ -1769,7 +1764,7 @@ public class Radio01 extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 3, y + 4, z + 20), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 4, y + 4, z + 20), Library.getRandomConcrete().getDefaultState(), 3);
 		//world.setBlock(x + 5, y + 4, z + 20, ModBlocks.door_metal, 3, 3);
-        ItemDoor.placeDoor(world, pos.setPos(x + 5, y + 4, z + 20), EnumFacing.NORTH, ModBlocks.door_metal, false);
+		world.placeDoorWithoutCheck(pos.setPos(x + 5, y + 4, z + 20), EnumFacing.NORTH, ModBlocks.door_metal, false);
 		world.setBlockState(pos.setPos(x + 6, y + 4, z + 20), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + 4, z + 20), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 8, y + 4, z + 20), Library.getRandomConcrete().getDefaultState(), 3);
@@ -2819,9 +2814,8 @@ public class Radio01 extends WorldGenerator
 		world.setBlockMetadataWithNotify(x + 5, y + 8, z + 11, 5, 3);
         WeightedRandomChestContent.generateChestContents(rand, HbmChestContents.getLoot(3), (TileEntityChest)world.getTileEntity(x + 5, y + 8, z + 11), 16);*/
 		
-		world.setBlockState(pos.setPos(x + 5, y + 8, z + 11), ModBlocks.crate_steel.getDefaultState(), 3);
-        WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(3), (TileEntityCrateSteel)world.getTileEntity(pos.setPos(x + 5, y + 8, z + 11)), 16);
-        
+		world.setBlockState(pos.setPos(x + 5, y + 8, z + 11), ModBlocks.crate_steel.getDefaultState(),
+				(worldIn, random, blockPos, chest) -> WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(3), chest, 16));
 		world.setBlockState(pos.setPos(x + 6, y + 8, z + 11), ModBlocks.deco_steel.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + 8, z + 11), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 8, y + 8, z + 11), Blocks.AIR.getDefaultState(), 3);
@@ -3123,10 +3117,8 @@ public class Radio01 extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 7, y + 9, z + 12), Blocks.AIR.getDefaultState(), 3);
 
 		generate_r03(world, rand, x, y, z, pos);
-		return true;
-
 	}
-	public boolean generate_r03(World world, Random rand, int x, int y, int z, MutableBlockPos pos)
+	public void generate_r03(LegacyBuilder world, Random rand, int x, int y, int z, MutableBlockPos pos)
 	{
 
 		world.setBlockState(pos.setPos(x + 8, y + 9, z + 12), Blocks.AIR.getDefaultState(), 3);
@@ -4631,10 +4623,8 @@ public class Radio01 extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 0, y + 14, z + 19), Blocks.AIR.getDefaultState(), 3);
 
 		generate_r04(world, rand, x, y, z, pos);
-		return true;
-
 	}
-	public boolean generate_r04(World world, Random rand, int x, int y, int z, MutableBlockPos pos)
+	public void generate_r04(LegacyBuilder world, Random rand, int x, int y, int z, MutableBlockPos pos)
 	{
 
 		world.setBlockState(pos.setPos(x + 1, y + 14, z + 19), Blocks.AIR.getDefaultState(), 3);
@@ -5138,8 +5128,6 @@ public class Radio01 extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 4, y + 16, z + 12), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 5, y + 16, z + 12), Blocks.AIR.getDefaultState(), 3);
 
-		new Radio02().generate_r00(world, rand, x, y, z);
-		return true;
-
+		part2.generate_r00(world, rand, x, y, z);
 	}
 }

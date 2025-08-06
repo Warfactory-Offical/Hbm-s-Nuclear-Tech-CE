@@ -8,7 +8,6 @@ import com.hbm.crafting.handlers.MKUCraftingHandler;
 import com.hbm.crafting.handlers.RBMKFuelCraftingHandler;
 import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.interfaces.Spaghetti;
-import com.hbm.inventory.BedrockOreRegistry;
 import com.hbm.inventory.OreDictManager;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
@@ -21,7 +20,10 @@ import com.hbm.items.ItemEnums.EnumPartType;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.*;
 import com.hbm.items.machine.ItemZirnoxRod.EnumZirnoxType;
-import com.hbm.items.special.*;
+import com.hbm.items.special.ItemCell;
+import com.hbm.items.special.ItemHot;
+import com.hbm.items.special.ItemWasteLong;
+import com.hbm.items.special.ItemWasteShort;
 import com.hbm.items.tool.ItemBombCaller;
 import com.hbm.items.tool.ItemBombCaller.EnumCallerType;
 import com.hbm.items.tool.ItemGuideBook;
@@ -2553,7 +2555,6 @@ public class CraftingManager {
 			if(mat.autogen.contains(MaterialShapes.BOLT)) for(String name : mat.names) addRecipeAuto(new ItemStack(ModItems.bolt, 16, mat.id), new Object[] { "#", "#", '#', MaterialShapes.INGOT.prefixes[0] + name });
 		}
 
-		addShapelessAuto(new ItemStack(ModItems.drillbit_dnt_diamond, 1), new Object[] { ModItems.drillbit_dnt, new ItemStack(ModItems.ore_bedrock, 1, 3) });
 	}
 
 	public static void addSmelting(){
@@ -2748,18 +2749,6 @@ public class CraftingManager {
 		GameRegistry.addSmelting(ModItems.meteorite_sword, ItemHot.heatUp(new ItemStack(ModItems.meteorite_sword_seared)), 1.0F);
 
 		GameRegistry.addSmelting(ModItems.ball_fireclay, new ItemStack(ModItems.ingot_firebrick, 1), 0.1F);
-	}
-
-	public static void addBedrockOreSmelting(){
-		for(Integer oreMeta : BedrockOreRegistry.oreIndexes.keySet()) {
-			GameRegistry.addSmelting(new ItemStack(ModItems.ore_bedrock, 1, oreMeta), new ItemStack(ModItems.ore_bedrock_enriched, 1, oreMeta), 2F);
-			GameRegistry.addSmelting(new ItemStack(ModItems.ore_bedrock_cleaned, 1, oreMeta), new ItemStack(ModItems.ore_bedrock_enriched, 1, oreMeta), 2F);
-			GameRegistry.addSmelting(new ItemStack(ModItems.ore_bedrock_deepcleaned, 1, oreMeta), new ItemStack(ModItems.ore_bedrock_enriched, 1, oreMeta), 2F);
-			GameRegistry.addSmelting(new ItemStack(ModItems.ore_bedrock_nitrated, 1, oreMeta), new ItemStack(ModItems.ore_bedrock_enriched, 1, oreMeta), 2F);
-			GameRegistry.addSmelting(new ItemStack(ModItems.ore_bedrock_seared, 1, oreMeta), new ItemStack(ModItems.ore_bedrock_enriched, 1, oreMeta), 2F);
-			GameRegistry.addSmelting(new ItemStack(ModItems.ore_bedrock_perfect, 1, oreMeta), new ItemStack(ModItems.ore_bedrock_enriched, 1, oreMeta), 2F);
-			GameRegistry.addSmelting(new ItemStack(ModItems.ore_bedrock_enriched, 1, oreMeta), ItemBedrockOre.getOut(oreMeta, ItemBedrockOre.getOutType(oreMeta) == 2 ? 2 : 1), 2F);
-		}
 	}
 
 	public static void addUpgradeContainers(IForgeRegistry<IRecipe> registry){

@@ -117,12 +117,8 @@ public class ItemCanister extends Item implements IDynamicModels {
 
     @SideOnly(Side.CLIENT)
     public IItemColor getColorHandler() {
-        return new CanColorHandler();
-    }
-
-    private static class CanColorHandler implements IItemColor {
-        @Override
-        public int colorMultiplier(ItemStack stack, int tintIndex) {
+        return (stack, tintIndex) ->
+        {
             if (tintIndex == 0) {
                 return 16777215;
             } else {
@@ -137,7 +133,7 @@ public class ItemCanister extends Item implements IDynamicModels {
                 return j;
             }
 
-        }
 
+        };
     }
 }

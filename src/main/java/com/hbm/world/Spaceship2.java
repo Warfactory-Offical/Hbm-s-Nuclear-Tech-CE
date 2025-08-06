@@ -2,6 +2,7 @@ package com.hbm.world;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.GeneralConfig;
+import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
@@ -10,8 +11,8 @@ import net.minecraft.world.World;
 
 import java.util.Random;
 
-public class Spaceship2
-{
+@SuppressWarnings("PointlessArithmeticExpression")
+public class Spaceship2 {
 	Block Block1 = ModBlocks.deco_tungsten;
 	Block Block2 = ModBlocks.fusion_conductor;
 	Block Block3 = ModBlocks.deco_steel;
@@ -22,7 +23,7 @@ public class Spaceship2
 	Block Block9 = ModBlocks.reinforced_light;
 	Block Block10 = ModBlocks.reinforced_glass;
 	
-	public boolean generate_r00(World world, Random rand, int x, int y, int z)
+	public boolean generate_r00(AbstractPhasedStructure.LegacyBuilder world, Random rand, int x, int y, int z)
     {
 		MutableBlockPos pos = new BlockPos.MutableBlockPos();
 		world.setBlockState(pos.setPos(x + 9, y + 0, z + 17), Blocks.AIR.getDefaultState(), 3);

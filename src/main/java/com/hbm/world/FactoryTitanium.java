@@ -11,6 +11,7 @@ import net.minecraft.world.gen.feature.WorldGenerator;
 
 import java.util.Random;
 
+// not naturally generated
 public class FactoryTitanium extends WorldGenerator {
 
 	public static String[][] array = new String[][] {

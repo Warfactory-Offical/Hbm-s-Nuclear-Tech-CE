@@ -9,6 +9,7 @@ import net.minecraft.world.gen.feature.WorldGenerator;
 
 import java.util.Random;
 
+// non-natural worldgen
 public class HugeMush extends WorldGenerator {
 
 	Block Block0 = ModBlocks.mush_block;

@@ -12,6 +12,7 @@ import org.lwjgl.opengl.GL11;
 
 public abstract class ModelArmorBase extends ModelBiped {
 
+    private static final float DEG_TO_RAD = (float) Math.PI / 180F;
     int type;
 
     ModelRendererObj head;
@@ -64,50 +65,31 @@ public abstract class ModelArmorBase extends ModelBiped {
         GlStateManager.popMatrix();
     }
 
+
     @Override
     public void setRotationAngles(float walkCycle, float walkAmplitude, float idleCycle, float headYaw, float headPitch, float scale, Entity entity) {
-        if (entity instanceof EntityArmorStand entityarmorstand) {
-            this.bipedHead.rotateAngleX = 0.017453292F * entityarmorstand.getHeadRotation().getX();
-            this.bipedHead.rotateAngleY = 0.017453292F * entityarmorstand.getHeadRotation().getY();
-            this.bipedHead.rotateAngleZ = 0.017453292F * entityarmorstand.getHeadRotation().getZ();
-            this.bipedHead.setRotationPoint(0.0F, 1.0F, 0.0F);
-            this.bipedBody.rotateAngleX = 0.017453292F * entityarmorstand.getBodyRotation().getX();
-            this.bipedBody.rotateAngleY = 0.017453292F * entityarmorstand.getBodyRotation().getY();
-            this.bipedBody.rotateAngleZ = 0.017453292F * entityarmorstand.getBodyRotation().getZ();
-            this.bipedLeftArm.rotateAngleX = 0.017453292F * entityarmorstand.getLeftArmRotation().getX();
-            this.bipedLeftArm.rotateAngleY = 0.017453292F * entityarmorstand.getLeftArmRotation().getY();
-            this.bipedLeftArm.rotateAngleZ = 0.017453292F * entityarmorstand.getLeftArmRotation().getZ();
-            this.bipedRightArm.rotateAngleX = 0.017453292F * entityarmorstand.getRightArmRotation().getX();
-            this.bipedRightArm.rotateAngleY = 0.017453292F * entityarmorstand.getRightArmRotation().getY();
-            this.bipedRightArm.rotateAngleZ = 0.017453292F * entityarmorstand.getRightArmRotation().getZ();
-            this.bipedLeftLeg.rotateAngleX = 0.017453292F * entityarmorstand.getLeftLegRotation().getX();
-            this.bipedLeftLeg.rotateAngleY = 0.017453292F * entityarmorstand.getLeftLegRotation().getY();
-            this.bipedLeftLeg.rotateAngleZ = 0.017453292F * entityarmorstand.getLeftLegRotation().getZ();
-            this.bipedLeftLeg.setRotationPoint(1.9F, 11.0F, 0.0F);
-            this.bipedRightLeg.rotateAngleX = 0.017453292F * entityarmorstand.getRightLegRotation().getX();
-            this.bipedRightLeg.rotateAngleY = 0.017453292F * entityarmorstand.getRightLegRotation().getY();
-            this.bipedRightLeg.rotateAngleZ = 0.017453292F * entityarmorstand.getRightLegRotation().getZ();
-            this.bipedRightLeg.setRotationPoint(-1.9F, 11.0F, 0.0F);
-            this.isSneak = false;
+        if (entity instanceof EntityArmorStand armorStand) {
+            applyArmorStand(armorStand);
         } else {
             super.setRotationAngles(walkCycle, walkAmplitude, idleCycle, headYaw, headPitch, scale, entity);
-            if (entity instanceof EntityPlayer) {
-                this.isSneak = entity.isSneaking();
-            } else {
-                this.isSneak = false;
-            }
 
-            if (entity instanceof EntityZombie) {
-                boolean armsRaised = ((EntityZombie) entity).isArmsRaised();
-                this.bipedLeftArm.rotateAngleY = (float) (8 * Math.PI / 180D);
-                this.bipedRightArm.rotateAngleY = -(float) (8 * Math.PI / 180D);
+            this.isSneak = entity instanceof EntityPlayer && entity.isSneaking();
+
+            if (entity instanceof EntityZombie zombie) {
+                boolean armsRaised = zombie.isArmsRaised();
+                float armYaw = 8F * DEG_TO_RAD;
+                this.bipedLeftArm.rotateAngleY = armYaw;
+                this.bipedRightArm.rotateAngleY = -armYaw;
+
                 if (armsRaised) {
-                    this.bipedLeftArm.rotateAngleX = -(float) (120 * Math.PI / 180D);
-                    this.bipedRightArm.rotateAngleX = -(float) (120 * Math.PI / 180D);
+                    float raisedAngle = -120F * DEG_TO_RAD;
+                    this.bipedLeftArm.rotateAngleX = raisedAngle;
+                    this.bipedRightArm.rotateAngleX = raisedAngle;
                 }
             }
         }
 
+        // Copy angles to actual renderable parts
         copyModelAngles(this.bipedHead, this.head);
         copyModelAngles(this.bipedBody, this.body);
         copyModelAngles(this.bipedLeftArm, this.leftArm);
@@ -118,33 +100,70 @@ public abstract class ModelArmorBase extends ModelBiped {
         copyModelAngles(this.bipedRightLeg, this.rightFoot);
 
         if (this.isSneak) {
-            this.head.offsetY = 4.24F;
-            this.head.rotationPointY -= 1.045F;
-            this.body.offsetY = 3.45F;
-            this.rightArm.offsetY = 3.45F;
-            this.leftArm.offsetY = 3.45F;
-            this.rightFoot.offsetZ = this.rightLeg.offsetZ = 4F;
-            this.leftFoot.offsetZ = this.leftLeg.offsetZ = 4F;
-
-            this.rightFoot.rotationPointY = 12F;
-            this.rightLeg.rotationPointY = 12F;
-            this.leftFoot.rotationPointY = 12F;
-            this.leftLeg.rotationPointY = 12F;
-
-            this.rightFoot.rotationPointZ = -1F;
-            this.rightLeg.rotationPointZ = -1F;
-            this.leftFoot.rotationPointZ = -1F;
-            this.leftLeg.rotationPointZ = -1F;
-
+            applySneakOffset();
         } else {
-            this.head.offsetY = 0F;
-            this.body.offsetY = 0F;
-            this.rightArm.offsetY = 0F;
-            this.leftArm.offsetY = 0F;
-            this.rightFoot.offsetZ = this.rightLeg.offsetZ = 0F;
-            this.leftFoot.offsetZ = this.leftLeg.offsetZ = 0F;
+            resetOffsets();
         }
     }
+
+    private void applySneakOffset() {
+        this.head.offsetY = 4.24F;
+        this.head.rotationPointY -= 1.045F;
+        this.body.offsetY = 3.425F;
+        this.rightArm.offsetY = 3.425F;
+        this.leftArm.offsetY = 3.25F;
+
+        this.rightFoot.offsetZ = this.rightLeg.offsetZ = 4F;
+        this.leftFoot.offsetZ = this.leftLeg.offsetZ = 4F;
+
+        this.rightFoot.rotationPointY = this.rightLeg.rotationPointY = 12F;
+        this.leftFoot.rotationPointY = this.leftLeg.rotationPointY = 12F;
+
+        this.rightFoot.rotationPointZ = this.rightLeg.rotationPointZ = -1F;
+        this.leftFoot.rotationPointZ = this.leftLeg.rotationPointZ = -1F;
+    }
+
+    private void resetOffsets() {
+        this.head.offsetY = 0F;
+        this.body.offsetY = 0F;
+        this.rightArm.offsetY = 0F;
+        this.leftArm.offsetY = 0F;
+
+        this.rightFoot.offsetZ = this.rightLeg.offsetZ = 0F;
+        this.leftFoot.offsetZ = this.leftLeg.offsetZ = 0F;
+    }
+
+    private void applyArmorStand(EntityArmorStand armorStand) {
+        this.bipedHead.rotateAngleX = armorStand.getHeadRotation().getX() * DEG_TO_RAD;
+        this.bipedHead.rotateAngleY = armorStand.getHeadRotation().getY() * DEG_TO_RAD;
+        this.bipedHead.rotateAngleZ = armorStand.getHeadRotation().getZ() * DEG_TO_RAD;
+        this.bipedHead.setRotationPoint(0.0F, 1.0F, 0.0F);
+
+        this.bipedBody.rotateAngleX = armorStand.getBodyRotation().getX() * DEG_TO_RAD;
+        this.bipedBody.rotateAngleY = armorStand.getBodyRotation().getY() * DEG_TO_RAD;
+        this.bipedBody.rotateAngleZ = armorStand.getBodyRotation().getZ() * DEG_TO_RAD;
+
+        this.bipedLeftArm.rotateAngleX = armorStand.getLeftArmRotation().getX() * DEG_TO_RAD;
+        this.bipedLeftArm.rotateAngleY = armorStand.getLeftArmRotation().getY() * DEG_TO_RAD;
+        this.bipedLeftArm.rotateAngleZ = armorStand.getLeftArmRotation().getZ() * DEG_TO_RAD;
+
+        this.bipedRightArm.rotateAngleX = armorStand.getRightArmRotation().getX() * DEG_TO_RAD;
+        this.bipedRightArm.rotateAngleY = armorStand.getRightArmRotation().getY() * DEG_TO_RAD;
+        this.bipedRightArm.rotateAngleZ = armorStand.getRightArmRotation().getZ() * DEG_TO_RAD;
+
+        this.bipedLeftLeg.rotateAngleX = armorStand.getLeftLegRotation().getX() * DEG_TO_RAD;
+        this.bipedLeftLeg.rotateAngleY = armorStand.getLeftLegRotation().getY() * DEG_TO_RAD;
+        this.bipedLeftLeg.rotateAngleZ = armorStand.getLeftLegRotation().getZ() * DEG_TO_RAD;
+        this.bipedLeftLeg.setRotationPoint(1.9F, 11.0F, 0.0F);
+
+        this.bipedRightLeg.rotateAngleX = armorStand.getRightLegRotation().getX() * DEG_TO_RAD;
+        this.bipedRightLeg.rotateAngleY = armorStand.getRightLegRotation().getY() * DEG_TO_RAD;
+        this.bipedRightLeg.rotateAngleZ = armorStand.getRightLegRotation().getZ() * DEG_TO_RAD;
+        this.bipedRightLeg.setRotationPoint(-1.9F, 11.0F, 0.0F);
+
+        this.isSneak = false;
+    }
+
 
     protected abstract void renderArmor(Entity entity, float scale);
 }

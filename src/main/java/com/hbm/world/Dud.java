@@ -14,6 +14,7 @@ import net.minecraft.world.gen.feature.WorldGenerator;
 
 import java.util.Random;
 
+// mlbv: this can't cause cascading worldgen..
 public class Dud extends WorldGenerator
 {
 	Block Block1 = ModBlocks.steel_scaffold;

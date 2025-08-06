@@ -1,27 +1,28 @@
 package com.hbm.lib;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.blocks.generic.BlockBedrockOreTE.TileEntityBedrockOre;
 import com.hbm.blocks.generic.BlockStorageCrate;
 import com.hbm.blocks.machine.PinkCloudBroadcaster;
 import com.hbm.blocks.machine.SoyuzCapsule;
-import com.hbm.config.BedrockOreJsonConfig;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.config.GeneralConfig;
+import com.hbm.config.WorldConfig;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
-import com.hbm.inventory.BedrockOreRegistry;
 import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
 import com.hbm.saveddata.TomSaveData;
 import com.hbm.tileentity.machine.TileEntitySafe;
 import com.hbm.tileentity.machine.TileEntitySoyuzCapsule;
 import com.hbm.world.*;
-import com.hbm.world.dungeon.AncientTomb;
+import com.hbm.world.dungeon.AncientTombStructure;
 import com.hbm.world.dungeon.ArcticVault;
+import com.hbm.world.feature.BedrockOre;
 import com.hbm.world.feature.DepthDeposit;
 import com.hbm.world.feature.OilSpot;
-import com.hbm.world.generator.CellularDungeonFactory;
 import com.hbm.world.generator.DungeonToolbox;
+import com.hbm.world.generator.JungleDungeonStructure;
+import com.hbm.world.generator.MeteorDungeonStructure;
+import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.BlockOldLog;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.BlockRotatedPillar;
@@ -182,6 +183,17 @@ public class HbmWorldGen implements IWorldGenerator {
 		DungeonToolbox.generateOre(world, rand, i, j, parseInt(CompatibilityConfig.titaniumClusterSpawn.get(dimID)), 6, 15, 30, ModBlocks.cluster_titanium);
 		DungeonToolbox.generateOre(world, rand, i, j, parseInt(CompatibilityConfig.aluminiumClusterSpawn.get(dimID)), 6, 15, 35, ModBlocks.cluster_aluminium);
 		DungeonToolbox.generateOre(world, rand, i, j, parseInt(CompatibilityConfig.copperClusterSpawn.get(dimID)), 6, 15, 20, ModBlocks.cluster_copper);
+
+		if(WorldConfig.newBedrockOres) {
+
+			if(rand.nextInt(10) == 0) {
+				int randPosX = i + rand.nextInt(2) + 8;
+				int randPosZ = j + rand.nextInt(2) + 8;
+
+				BedrockOre.generate(world, randPosX, randPosZ, new ItemStack(ModItems.bedrock_ore_base), null, 0xD78A16, 1);
+			}
+
+		}
 		
 		//Stone ores
 		//DungeonToolbox.generateOre(world, rand, i, j, parseInt(CompatibilityConfig.malachiteSpawn.get(dimID)), 16, 6, 40, ModBlocks.ore_malachite);
@@ -231,7 +243,6 @@ public class HbmWorldGen implements IWorldGenerator {
 		}
 		
 		generateBedrockOil(world, rand, i, j, dimID);
-		generateBedrockOre(world, rand, i, j, dimID);
 	}
 	
 	/**
@@ -267,35 +278,15 @@ public class HbmWorldGen implements IWorldGenerator {
 		if (chance > 0 && rand.nextInt(chance) == 0) {
 			int x = i + rand.nextInt(16);
 			int z = j + rand.nextInt(16);
-			int y = world.getHeight(x, z);
-
-			structure.generate(world, rand, new BlockPos(x, y, z));
-		}
-	}
-
-	private void generateBedrockOre(World world, Random rand, int i, int j, int dimID){
-		int dimBedrockOreFreq = parseInt(BedrockOreJsonConfig.dimOreRarity.get(dimID));
-		if (dimBedrockOreFreq > 0 && rand.nextInt(dimBedrockOreFreq) == 0) {
-			
-			String oreName = BedrockOreRegistry.rollOreName(dimID, rand);
-			if(oreName == null) return;
-			int sqrsize = 2;
-			for(int v = sqrsize; v >= -sqrsize; v--) {
-				for(int w = sqrsize; w >= -sqrsize; w--) {
-					for(int y = 6; y >= 0; y--) {
-						if(rand.nextInt(4) == 0) continue;
-						placeBedrockOre(world, new BlockPos(i+8+w, y, j+8+v), oreName);
-					}
+			if (structure instanceof AbstractPhasedStructure phased) {
+				phased.generate(world, rand, new BlockPos(x, 0, z));
+			} else {
+				int y = world.getHeight(x, z);
+				if (y > 0 && y < world.getHeight()) {
+					structure.generate(world, rand, new BlockPos(x, y, z));
 				}
 			}
 		}
-	}
-	
-	private void placeBedrockOre(World world, BlockPos orePos, String oreName){
-		if(!isBedrock(world, orePos)) return;
-		world.setBlockState(orePos, ModBlocks.ore_bedrock_block.getDefaultState());
-		TileEntityBedrockOre bedrockOre = (TileEntityBedrockOre)world.getTileEntity(orePos);
-//		bedrockOre.setOre(oreName);
 	}
 
 	private boolean isBedrock(World world, BlockPos bPos){
@@ -334,7 +325,7 @@ public class HbmWorldGen implements IWorldGenerator {
 			if (rand.nextInt(50) == 0)
 				r = 50;
 
-			new Sellafield().generate(world, x, z, r, r * 0.35D);
+			new Sellafield(r, r * 0.35D).generate(world, rand, new BlockPos(x, 0, z));
 
 			if (GeneralConfig.enableDebugMode)
 				MainRegistry.logger.info("[Debug] Successfully spawned raditation hotspot at x=" + x + " z=" + z);
@@ -351,35 +342,35 @@ public class HbmWorldGen implements IWorldGenerator {
 			Biome biome = world.getBiome(new BlockPos(i, 0, j));
 			
 			if (biome.getDefaultTemperature() >= 0.8F && biome.getRainfall() > 0.7F) {
-				generateAStructure(world, rand, i, j, new Radio01(), parseInt(CompatibilityConfig.radioStructure.get(dimID)));
+				generateAStructure(world, rand, i, j, Radio01.INSTANCE, parseInt(CompatibilityConfig.radioStructure.get(dimID)));
 			}
 			if (biome.getDefaultTemperature() <= 0.5F) {
-				generateAStructure(world, rand, i, j, new Antenna(), parseInt(CompatibilityConfig.antennaStructure.get(dimID)));
+				generateAStructure(world, rand, i, j, Antenna.INSTANCE, parseInt(CompatibilityConfig.antennaStructure.get(dimID)));
 			}
 			if (!biome.canRain() && biome.getDefaultTemperature() >= 2F) {
-				generateAStructure(world, rand, i, j, new DesertAtom001(), parseInt(CompatibilityConfig.atomStructure.get(dimID)));
+				generateAStructure(world, rand, i, j, DesertAtom001.INSTANCE, parseInt(CompatibilityConfig.atomStructure.get(dimID)));
 			}
 
 			if (biome.getDefaultTemperature() < 2F || biome.getDefaultTemperature() > 1.0F) {
-				generateAStructure(world, rand, i, j, new Relay(), parseInt(CompatibilityConfig.relayStructure.get(dimID)));
+				generateAStructure(world, rand, i, j, Relay.INSTANCE, parseInt(CompatibilityConfig.relayStructure.get(dimID)));
 			}
 			if (biome.getDefaultTemperature() > 1.8F) {
-				generateAStructure(world, rand, i, j, new Barrel(), parseInt(CompatibilityConfig.barrelStructure.get(dimID)));
+				generateAStructure(world, rand, i, j, Barrel.INSTANCE, parseInt(CompatibilityConfig.barrelStructure.get(dimID)));
 			}
 			if (!biome.canRain() && biome.getDefaultTemperature() >= 2F) {
 				if (rand.nextInt(2) == 0) {
-					generateAStructure(world, rand, i, j, new Vertibird(), parseInt(CompatibilityConfig.vertibirdStructure.get(dimID)));
+					generateAStructure(world, rand, i, j, Vertibird.INSTANCE, parseInt(CompatibilityConfig.vertibirdStructure.get(dimID)));
 				} else {
-					generateAStructure(world, rand, i, j, new CrashedVertibird(), parseInt(CompatibilityConfig.vertibirdStructure.get(dimID)));
+					generateAStructure(world, rand, i, j, CrashedVertibird.INSTANCE, parseInt(CompatibilityConfig.vertibirdStructure.get(dimID)));
 				}
 			}
 			if (biome.getDefaultTemperature() < 1F || biome.getDefaultTemperature() > 1.8F) {
-				generateAStructure(world, rand, i, j, new Satellite(), parseInt(CompatibilityConfig.satelliteStructure.get(dimID)));
+				generateAStructure(world, rand, i, j, Satellite.INSTANCE, parseInt(CompatibilityConfig.satelliteStructure.get(dimID)));
 			}
-			generateAStructure(world, rand, i, j, new Spaceship(), parseInt(CompatibilityConfig.spaceshipStructure.get(dimID)));
-			generateAStructure(world, rand, i, j, new Bunker(), parseInt(CompatibilityConfig.bunkerStructure.get(dimID)));
-			generateAStructure(world, rand, i, j, new Silo(), parseInt(CompatibilityConfig.siloStructure.get(dimID)));
-			generateAStructure(world, rand, i, j, new Factory(), parseInt(CompatibilityConfig.factoryStructure.get(dimID)));
+			generateAStructure(world, rand, i, j, Spaceship.INSTANCE, parseInt(CompatibilityConfig.spaceshipStructure.get(dimID)));
+			generateAStructure(world, rand, i, j, Bunker.INSTANCE, parseInt(CompatibilityConfig.bunkerStructure.get(dimID)));
+			generateAStructure(world, rand, i, j, Silo.INSTANCE, parseInt(CompatibilityConfig.siloStructure.get(dimID)));
+			generateAStructure(world, rand, i, j, Factory.INSTANCE, parseInt(CompatibilityConfig.factoryStructure.get(dimID)));
 			generateAStructure(world, rand, i, j, new Dud(), parseInt(CompatibilityConfig.dudStructure.get(dimID)));
 			if(biome.getTempCategory() == Biome.TempCategory.WARM && biome.getTempCategory() != Biome.TempCategory.OCEAN)
 				generateSellafieldPool(world, rand, i, j, dimID);
@@ -419,7 +410,7 @@ public class HbmWorldGen implements IWorldGenerator {
 				int x = i + rand.nextInt(16);
 				int y = rand.nextInt(256);
 				int z = j + rand.nextInt(16);
-				new LibraryDungeon().generate(world, rand, new BlockPos(x, y, z));
+				LibraryDungeon.INSTANCE.generate(world, rand, new BlockPos(x, y, z));
 			}
 
 			if(biome.getRainfall() > 2F){
@@ -430,7 +421,7 @@ public class HbmWorldGen implements IWorldGenerator {
 					int y = world.getHeight(x, z);
 
 					if (world.getBlockState(new BlockPos(x, y - 1, z)).getBlock() == Blocks.GRASS)
-						new Geyser().generate(world, rand, new BlockPos(x, y, z));
+						Geyser.INSTANCE.generate(world, rand, new BlockPos(x, y, z));
 				}
 			}
 
@@ -442,7 +433,7 @@ public class HbmWorldGen implements IWorldGenerator {
 					int y = world.getHeight(x, z);
 
 					if (world.getBlockState(new BlockPos(x, y - 1, z)).getBlock() == Blocks.SAND)
-						new GeyserLarge().generate(world, rand, new BlockPos(x, y, z));
+						GeyserLarge.INSTANCE.generate(world, rand, new BlockPos(x, y, z));
 				}
 			}
 
@@ -562,7 +553,7 @@ public class HbmWorldGen implements IWorldGenerator {
 				int x = i + rand.nextInt(16);
 				int z = j + rand.nextInt(16);
 				
-				CellularDungeonFactory.meteor.generate(world, x, 12, z, rand);
+				MeteorDungeonStructure.INSTANCE.generate(world, rand, new BlockPos(x, 12, z));
 				
 				if(GeneralConfig.enableDebugMode)
 					MainRegistry.logger.info("[Debug] Successfully spawned meteor dungeon at x=" + x + " y=10 z=" + z);
@@ -603,9 +594,9 @@ public class HbmWorldGen implements IWorldGenerator {
 					int x = i + rand.nextInt(16);
 					int z = j + rand.nextInt(16);
 
-					CellularDungeonFactory.jungle.generate(world, x, 20, z, world.rand);
-					CellularDungeonFactory.jungle.generate(world, x, 24, z, world.rand);
-					CellularDungeonFactory.jungle.generate(world, x, 28, z, world.rand);
+					JungleDungeonStructure.INSTANCE.generate(world, world.rand, new BlockPos(x, 20, z));
+					JungleDungeonStructure.INSTANCE.generate(world, world.rand, new BlockPos(x, 24, z));
+					JungleDungeonStructure.INSTANCE.generate(world, world.rand, new BlockPos(x, 28, z));
 
 					if(GeneralConfig.enableDebugMode)
 						MainRegistry.logger.info("[Debug] Successfully spawned jungle dungeon at x=" + x + " y=10 z=" + z);
@@ -630,7 +621,7 @@ public class HbmWorldGen implements IWorldGenerator {
 					int x = i + rand.nextInt(16);
 					int z = j + rand.nextInt(16);
 					int y = 16 + rand.nextInt(32);
-					new ArcticVault().trySpawn(world, x, y, z);
+					ArcticVault.INSTANCE.generate(world, rand, new BlockPos(x, y, z));
 				}
 			}
 			if(biome.getDefaultTemperature() >= 1.8F){
@@ -640,7 +631,7 @@ public class HbmWorldGen implements IWorldGenerator {
 					int z = j + rand.nextInt(16);
 					int y = world.getHeight(x, z);
 					
-					new AncientTomb().build(world, rand, x, y, z);
+					AncientTombStructure.INSTANCE.generate(world, rand, new BlockPos(x, y, z));
 				}
 			}
 			
@@ -651,7 +642,7 @@ public class HbmWorldGen implements IWorldGenerator {
 						int z = j + rand.nextInt(16);
 						int y = world.getHeight(x, z);
 
-						OilSandBubble.spawnOil(world, x, y, z, 15 + rand.nextInt(31));
+						new OilSandBubble(15 + rand.nextInt(31)).generate(world, rand, new BlockPos(x, y, z));
 					}
 				}
 			}
@@ -662,7 +653,7 @@ public class HbmWorldGen implements IWorldGenerator {
 			int randPosY = rand.nextInt(25);
 			int randPosZ = j + rand.nextInt(16);
 
-			OilBubble.spawnOil(world, randPosX, randPosY, randPosZ, 7 + rand.nextInt(9));
+			new OilBubble(7 + rand.nextInt(9)).generate(world, rand, new BlockPos(randPosX, randPosY, randPosZ));
 		}
 
 		if (GeneralConfig.enableNITAN) {

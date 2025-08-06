@@ -9,6 +9,7 @@ import com.hbm.main.MainRegistry;
 import com.hbm.world.feature.DepthDeposit;
 import com.hbm.world.generator.CellularDungeonFactory;
 import com.hbm.world.generator.DungeonToolbox;
+import com.hbm.world.generator.MeteorDungeonStructure;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.block.state.pattern.BlockMatcher;
@@ -58,7 +59,7 @@ public class WorldGeneratorCelestial implements IWorldGenerator {
 			int px = x + rand.nextInt(16) + 8;
 			int pz = z + rand.nextInt(16) + 8;
 			
-			CellularDungeonFactory.meteor.generate(world, px, 10, pz, rand);
+			MeteorDungeonStructure.INSTANCE.generate(world, rand, new BlockPos(px, 10, pz));
 			
 			if(GeneralConfig.enableDebugMode)
 				MainRegistry.logger.info("[Debug] Successfully spawned meteor dungeon at " + px + " 10 " + pz);

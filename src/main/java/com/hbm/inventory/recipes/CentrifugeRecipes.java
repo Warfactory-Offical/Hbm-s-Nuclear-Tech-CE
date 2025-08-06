@@ -1,11 +1,9 @@
 package com.hbm.inventory.recipes;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.inventory.BedrockOreRegistry;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.items.ModItems;
-import com.hbm.items.special.ItemBedrockOre;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
@@ -314,46 +312,6 @@ public class CentrifugeRecipes {
 		recipes.put(STAR.crystal(), new ItemStack[] { new ItemStack(ModItems.powder_dura_steel, 3), new ItemStack(ModItems.powder_cobalt, 3), new ItemStack(ModItems.powder_astatine, 2), new ItemStack(ModItems.nugget_mercury, 5) });
 		recipes.put(CO.crystal(), new ItemStack[] { new ItemStack(ModItems.powder_cobalt, 2), new ItemStack(ModItems.powder_iron, 3), new ItemStack(ModItems.powder_copper, 3), new ItemStack(ModItems.powder_lithium_tiny, 1) });
 		recipes.put(ASBESTOS.crystal(), new ItemStack[] { new ItemStack(ModItems.powder_asbestos, 2), new ItemStack(ModItems.powder_asbestos, 2), new ItemStack(ModItems.powder_boron_tiny, 1), new ItemStack(Blocks.GRAVEL, 1) });
-
-		for(Entry<Integer, String> entry : BedrockOreRegistry.oreIndexes.entrySet()) {
-			int oreMeta = entry.getKey();
-			String oreName = entry.getValue();
- 			recipes.put(new ComparableStack(ModItems.ore_bedrock, 1, oreMeta), new ItemStack[] { 
-				new ItemStack(ModItems.ore_bedrock_centrifuged, 1, oreMeta), 
-				new ItemStack(ModItems.ore_bedrock_centrifuged, 1, oreMeta), 
-				new ItemStack(Blocks.GRAVEL, 1),
-				new ItemStack(Blocks.GRAVEL, 1) });
-			recipes.put(new ComparableStack(ModItems.ore_bedrock_cleaned, 1, oreMeta), new ItemStack[] { 
-				new ItemStack(ModItems.ore_bedrock_separated, 1, oreMeta), 
-				new ItemStack(ModItems.ore_bedrock_separated, 1, oreMeta), 
-				new ItemStack(Blocks.GRAVEL, 1),
-				new ItemStack(Blocks.GRAVEL, 1) });
-			recipes.put(new ComparableStack(ModItems.ore_bedrock_deepcleaned, 1, oreMeta), new ItemStack[] { 
-				new ItemStack(ModItems.ore_bedrock_purified, 1, oreMeta), 
-				new ItemStack(ModItems.ore_bedrock_purified, 1, oreMeta), 
-				new ItemStack(Blocks.GRAVEL, 1),
-				new ItemStack(Blocks.GRAVEL, 1) });
-			recipes.put(new ComparableStack(ModItems.ore_bedrock_nitrated, 1, oreMeta), new ItemStack[] { 
-				new ItemStack(ModItems.ore_bedrock_nitrocrystalline, 1, oreMeta), 
-				new ItemStack(ModItems.ore_bedrock_nitrocrystalline, 1, oreMeta), 
-				getNugget(oreName), 
-				new ItemStack(Blocks.GRAVEL, 1) });
-			recipes.put(new ComparableStack(ModItems.ore_bedrock_seared, 1, oreMeta), new ItemStack[] { 
-				new ItemStack(ModItems.ore_bedrock_exquisite, 1, oreMeta), 
-				new ItemStack(ModItems.ore_bedrock_exquisite, 1, oreMeta), 
-				getNugget(oreName),
-				new ItemStack(Blocks.GRAVEL, 1) });
-			recipes.put(new ComparableStack(ModItems.ore_bedrock_perfect, 1, oreMeta), new ItemStack[] { 
-				new ItemStack(ModItems.ore_bedrock_enriched, 1, oreMeta), 
-				new ItemStack(ModItems.ore_bedrock_enriched, 1, oreMeta), 
-				new ItemStack(Blocks.GRAVEL, 1),
-				new ItemStack(Blocks.GRAVEL, 1) });
-			recipes.put(new ComparableStack(ModItems.ore_bedrock_enriched, 1, oreMeta), new ItemStack[] { 
-				ItemBedrockOre.getOut(oreMeta, 1), 
-				ItemBedrockOre.getOut(oreMeta, 1), 
-				ItemBedrockOre.getOut(oreMeta, 1), 
-				ItemBedrockOre.getOut(oreMeta, 1) });
-		}
 	}
 
 	public static ItemStack getNugget(String oreName){

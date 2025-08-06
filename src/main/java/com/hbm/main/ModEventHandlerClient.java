@@ -188,25 +188,6 @@ public class ModEventHandlerClient {
         }
     }
 
-    public static void registerBedrockOreModels() {
-        ResourceLocation[] list = new ResourceLocation[300];
-        for (int i = 0; i < list.length; i++) {
-            ModelLoader.setCustomModelResourceLocation(ModItems.ore_bedrock, i, new ModelResourceLocation(ModItems.ore_bedrock.getRegistryName(), "inventory"));
-            ModelLoader.setCustomModelResourceLocation(ModItems.ore_bedrock_centrifuged, i, new ModelResourceLocation(ModItems.ore_bedrock_centrifuged.getRegistryName(), "inventory"));
-            ModelLoader.setCustomModelResourceLocation(ModItems.ore_bedrock_cleaned, i, new ModelResourceLocation(ModItems.ore_bedrock_cleaned.getRegistryName(), "inventory"));
-            ModelLoader.setCustomModelResourceLocation(ModItems.ore_bedrock_separated, i, new ModelResourceLocation(ModItems.ore_bedrock_separated.getRegistryName(), "inventory"));
-            ModelLoader.setCustomModelResourceLocation(ModItems.ore_bedrock_purified, i, new ModelResourceLocation(ModItems.ore_bedrock_purified.getRegistryName(), "inventory"));
-            ModelLoader.setCustomModelResourceLocation(ModItems.ore_bedrock_nitrated, i, new ModelResourceLocation(ModItems.ore_bedrock_nitrated.getRegistryName(), "inventory"));
-            ModelLoader.setCustomModelResourceLocation(ModItems.ore_bedrock_nitrocrystalline, i, new ModelResourceLocation(ModItems.ore_bedrock_nitrocrystalline.getRegistryName(), "inventory"));
-            ModelLoader.setCustomModelResourceLocation(ModItems.ore_bedrock_deepcleaned, i, new ModelResourceLocation(ModItems.ore_bedrock_deepcleaned.getRegistryName(), "inventory"));
-            ModelLoader.setCustomModelResourceLocation(ModItems.ore_bedrock_seared, i, new ModelResourceLocation(ModItems.ore_bedrock_seared.getRegistryName(), "inventory"));
-            ModelLoader.setCustomModelResourceLocation(ModItems.ore_bedrock_enriched, i, new ModelResourceLocation(ModItems.ore_bedrock_enriched.getRegistryName(), "inventory"));
-            ModelLoader.setCustomModelResourceLocation(ModItems.ore_bedrock_exquisite, i, new ModelResourceLocation(ModItems.ore_bedrock_exquisite.getRegistryName(), "inventory"));
-            ModelLoader.setCustomModelResourceLocation(ModItems.ore_bedrock_perfect, i, new ModelResourceLocation(ModItems.ore_bedrock_perfect.getRegistryName(), "inventory"));
-        }
-
-    }
-
     public static void swapModels(Item item, IRegistry<ModelResourceLocation, IBakedModel> reg) {
         ModelResourceLocation loc = new ModelResourceLocation(item.getRegistryName(), "inventory");
         IBakedModel model = reg.getObject(loc);
@@ -318,7 +299,6 @@ public class ModEventHandlerClient {
         for (ItemAutogen item : ItemAutogen.INSTANCES) {
             item.registerModels();
         }
-        registerBedrockOreModels();
     }
 
     private void registerBlockModel(Block block, int meta) {
@@ -522,18 +502,6 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         swapModels(ModItems.meteorite_sword_warped, reg);
         swapModels(ModItems.meteorite_sword_demonic, reg);
 
-        swapModels(ModItems.ore_bedrock, reg);
-        swapModels(ModItems.ore_bedrock_centrifuged, reg);
-        swapModels(ModItems.ore_bedrock_cleaned, reg);
-        swapModels(ModItems.ore_bedrock_separated, reg);
-        swapModels(ModItems.ore_bedrock_purified, reg);
-        swapModels(ModItems.ore_bedrock_nitrated, reg);
-        swapModels(ModItems.ore_bedrock_nitrocrystalline, reg);
-        swapModels(ModItems.ore_bedrock_deepcleaned, reg);
-        swapModels(ModItems.ore_bedrock_seared, reg);
-        swapModels(ModItems.ore_bedrock_enriched, reg);
-        swapModels(ModItems.ore_bedrock_exquisite, reg);
-        swapModels(ModItems.ore_bedrock_perfect, reg);
         swapModelsNoGui(ModItems.bedrock_ore, reg);
         swapModels(ModItems.detonator_laser, reg);
         swapModels(ModItems.boltgun, reg);

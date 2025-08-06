@@ -5,23 +5,29 @@ import com.hbm.blocks.bomb.NukeMan;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
 import com.hbm.lib.HbmChestContents;
 import com.hbm.lib.Library;
+import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.WorldGenerator;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
-public class DesertAtom001 extends WorldGenerator
-{
+@SuppressWarnings({"UnnecessaryUnaryMinus", "PointlessArithmeticExpression"})
+public class DesertAtom001 extends AbstractPhasedStructure {
+	public static final DesertAtom001 INSTANCE = new DesertAtom001();
+	private final DesertAtom002 part2 = new DesertAtom002();
+	private final DesertAtom003 part3 = new DesertAtom003();
+	private DesertAtom001() {}
 	Block Block2 = ModBlocks.yellow_barrel;
 	Block Block3 = ModBlocks.reinforced_sand;
 	Block Block4 = ModBlocks.nuke_man;
@@ -95,29 +101,22 @@ public class DesertAtom001 extends WorldGenerator
 	}
 
 	@Override
-	public boolean generate(World world, Random rand, BlockPos pos)
-	{
-		return generate(world, rand, pos, false);
-	}
-	
-	public boolean generate(World world, Random rand, BlockPos pos, boolean force)
-	{
-		int i = rand.nextInt(1);
-
-		if(i == 0)
-		{
-		    generate_r0(world, rand, pos.getX(), pos.getY(), pos.getZ(), force);
-		}
-
-       return true;
+	public void buildStructure(@NotNull LegacyBuilder builder, @NotNull Random rand) {
+		generate_r0(builder, rand, 0, 0, 0);
 	}
 
-	public boolean generate_r0(World world, Random rand, int x, int y, int z, boolean force)
+	@Override
+	public boolean checkSpawningConditions(@NotNull World world, @NotNull BlockPos pos) {
+		return LocationIsValidSpawn(world, pos.add(20, 0, 16));
+	}
+
+	@Override
+	public @NotNull List<BlockPos> getValidationPoints(@NotNull BlockPos origin){
+		return Collections.singletonList(origin.add(20, 0, 16));
+	}
+
+	public boolean generate_r0(LegacyBuilder world, Random rand, int x, int y, int z)
 	{
-		if(!force && !LocationIsValidSpawn(world, new BlockPos(x + 20, y, z + 16)))
-		{
-			return false;
-		}
 		MutableBlockPos pos = new BlockPos.MutableBlockPos();
 		
 		world.setBlockState(pos.setPos(x + 6, y + -5, z + 9), Library.getRandomConcrete().getDefaultState(), 3);
@@ -220,11 +219,9 @@ public class DesertAtom001 extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 6, y + -4, z + 14), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + -4, z + 14), Block2.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 8, y + -4, z + 14), Blocks.WATER.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 9, y + -4, z + 14), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.NORTH), 3);
-		if(world.getBlockState(pos.setPos(x + 9, y + -4, z + 14)).getBlock() == Blocks.CHEST)
-		{
-			WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(5), (TileEntityChest)world.getTileEntity(pos.setPos(x + 9, y + -4, z + 14)), 10);
-		}
+		world.setBlockState(pos.setPos(x + 9, y + -4, z + 14), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.NORTH),
+				(worldIn, random, blockPos, chest) ->
+						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(5), chest, 10));
         world.setBlockState(pos.setPos(x + 10, y + -4, z + 14), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 11, y + -4, z + 14), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 6, y + -4, z + 15), Library.getRandomConcrete().getDefaultState(), 3);
@@ -1125,7 +1122,8 @@ public class DesertAtom001 extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 5, y + -1, z + 0), Block3.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 6, y + -1, z + 0), Block3.getDefaultState(), 3);
 
-		new DesertAtom002().generate_r00(world, rand, x, y, z);
+		part2.generate_r00(world, rand, x, y, z);
+		part3.generate_r00(world, rand, x, y, z);
 		return true;
 
 	}

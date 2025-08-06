@@ -1,5 +1,6 @@
 package com.hbm.world.generator;
 
+import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
@@ -59,10 +60,7 @@ public class CellularDungeon {
 		this.wall.add(wall.getDefaultState());
 	}
 
-	public void generate(World world, int x, int y, int z, Random rand) {
-		if(world.isRemote)
-			return;
-		
+	public void generate(AbstractPhasedStructure.LegacyBuilder world, int x, int y, int z, Random rand) {
 		x -= dimX * width / 2;
 		z -= dimZ * width / 2;
 

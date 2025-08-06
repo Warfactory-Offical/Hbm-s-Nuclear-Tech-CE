@@ -4,6 +4,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.world.generator.CellularDungeon;
 import com.hbm.world.generator.CellularDungeonRoom;
 import com.hbm.world.generator.DungeonToolbox;
+import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -13,7 +14,7 @@ public class TestDungeonRoom7 extends CellularDungeonRoom {
 		super(parent);
 	}
 
-	public void generateMain(World world, int x, int y, int z) {
+	public void generateMain(AbstractPhasedStructure.LegacyBuilder world, int x, int y, int z) {
 		
 		super.generateMain(world, x, y, z);
 

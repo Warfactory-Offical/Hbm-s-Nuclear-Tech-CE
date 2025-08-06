@@ -5,23 +5,25 @@ import com.hbm.config.GeneralConfig;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
 import com.hbm.lib.HbmChestContents;
 import com.hbm.lib.Library;
-import com.hbm.tileentity.machine.TileEntityCrateSteel;
+import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLadder;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemDoor;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.WorldGenerator;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
-public class Barrel extends WorldGenerator {
-	
+public class Barrel extends AbstractPhasedStructure {
+	public static final Barrel INSTANCE = new Barrel();
+	private Barrel() {}
 	protected Block[] GetValidSpawnBlocks() {
 		
 		return new Block[] {
@@ -33,7 +35,7 @@ public class Barrel extends WorldGenerator {
 			};
 	}
 
-	public boolean LocationIsValidSpawn(World world, BlockPos pos) {
+	public boolean locationIsValidSpawn(World world, BlockPos pos) {
 
 		IBlockState checkBlockState = world.getBlockState(pos.down());
 		Block checkBlock = checkBlockState.getBlock();
@@ -56,20 +58,24 @@ public class Barrel extends WorldGenerator {
 	}
 
 	@Override
-	public boolean generate(World world, Random rand, BlockPos pos) {
-		return generate(world, rand, pos, false);
-
+	public boolean checkSpawningConditions(@NotNull World world, @NotNull BlockPos pos) {
+		return locationIsValidSpawn(world, pos) && locationIsValidSpawn(world, pos.add(4, 0, 0)) &&
+				locationIsValidSpawn(world, pos.add(4, 0, 6)) && locationIsValidSpawn(world, pos.add(0, 0, 6));
 	}
-	
-	public boolean generate(World world, Random rand, BlockPos pos, boolean force) {
-		int i = rand.nextInt(1);
 
-		if (i == 0) {
-			generate_r0(world, rand, pos.getX(), pos.getY(), pos.getZ(), force);
-		}
+	@Override
+	public @NotNull List<BlockPos> getValidationPoints(@NotNull BlockPos origin) {
+		return Arrays.asList(
+				origin,
+				origin.add(4, 0, 0),
+				origin.add(4, 0, 6),
+				origin.add(0, 0, 6)
+		);
+	}
 
-		return true;
-
+	@Override
+	public void buildStructure(@NotNull LegacyBuilder builder, @NotNull Random rand) {
+		generate_r0(builder, rand, 0, 0, 0);
 	}
 	
 	Block Block1 = ModBlocks.reinforced_brick;
@@ -85,11 +91,7 @@ public class Barrel extends WorldGenerator {
 	Block Block11 = ModBlocks.reinforced_glass;
 	Block Block12 = ModBlocks.toxic_block;
 
-	public boolean generate_r0(World world, Random rand, int x, int y, int z, boolean force) {
-		if (!force && (!LocationIsValidSpawn(world, new BlockPos(x, y, z)) || !LocationIsValidSpawn(world, new BlockPos(x + 4, y, z))
-				|| !LocationIsValidSpawn(world, new BlockPos(x + 4, y, z + 6)) || !LocationIsValidSpawn(world, new BlockPos(x, y, z + 6)))) {
-			return false;
-		}
+	public boolean generate_r0(LegacyBuilder world, Random rand, int x, int y, int z) {
 		MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
 		world.setBlockState(pos.setPos(x + 1, y + -1, z + 0), Block1.getDefaultState(), 3);
@@ -164,13 +166,9 @@ public class Barrel extends WorldGenerator {
 			WeightedRandomChestContent.generateChestContents(rand, HbmChestContents.getLoot(3), (TileEntityChest)world.getTileEntity(x + 2, y + 1, z + 2), 16);
 		}*/
 
-		world.setBlockState(pos.setPos(x + 2, y + 1, z + 2), ModBlocks.crate_steel.getDefaultState(), 3);
-
-		if(world.getBlockState(pos.setPos(x + 2, y + 1, z + 2)).getBlock() == ModBlocks.crate_steel)
-		{
-			WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(3), (TileEntityCrateSteel)world.getTileEntity(pos.setPos(x + 2, y + 1, z + 2)), 16);
-		}
-		
+		world.setBlockState(pos.setPos(x + 2, y + 1, z + 2), ModBlocks.crate_steel.getDefaultState(),
+				((worldIn, random, blockPos, chest) ->
+						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(3), chest, 16)));
 		world.setBlockState(pos.setPos(x + 3, y + 1, z + 2), Block4.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 4, y + 1, z + 2), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 1, z + 3), Library.getRandomConcrete().getDefaultState(), 3);
@@ -362,7 +360,7 @@ public class Barrel extends WorldGenerator {
 		world.setBlockState(pos.setPos(x + 4, y + 11, z + 3), Block11.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 1, y + 11, z + 4), Library.getRandomConcrete().getDefaultState(), 3);
 		//world.setBlock(x + 2, y + 11, z + 4, Blocks.iron_door, 8, 3);
-        ItemDoor.placeDoor(world, pos.setPos(x + 2, y + 10, z + 4), EnumFacing.WEST, Blocks.IRON_DOOR, false);
+        world.placeDoorWithoutCheck(pos.setPos(x + 2, y + 10, z + 4), EnumFacing.WEST, Blocks.IRON_DOOR, false);
 		world.setBlockState(pos.setPos(x + 3, y + 11, z + 4), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 1, y + 12, z + 0), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 2, y + 12, z + 0), Library.getRandomConcrete().getDefaultState(), 3);
@@ -400,7 +398,7 @@ public class Barrel extends WorldGenerator {
 
 	}
 
-	public boolean generate_r02_last(World world, Random rand, int x, int y, int z, MutableBlockPos pos) {
+	public boolean generate_r02_last(LegacyBuilder world, Random rand, int x, int y, int z, MutableBlockPos pos) {
 
 		world.setBlockState(pos.setPos(x + 2, y + 0, z + 5), Blocks.LADDER.getDefaultState().withProperty(BlockLadder.FACING, EnumFacing.SOUTH), 3);
 		world.setBlockState(pos.setPos(x + 2, y + 1, z + 5), Blocks.LADDER.getDefaultState().withProperty(BlockLadder.FACING, EnumFacing.SOUTH), 3);

@@ -53,12 +53,11 @@ import com.hbm.tileentity.bomb.TileEntityNukeCustom;
 import com.hbm.tileentity.machine.rbmk.RBMKDials;
 import com.hbm.util.CrashHelper;
 import com.hbm.util.DamageResistanceHandler;
-import com.hbm.util.I18nUtil;
 import com.hbm.world.ModBiomes;
 import com.hbm.world.PlanetGen;
 import com.hbm.world.feature.SchistStratum;
 import com.hbm.world.generator.CellularDungeonFactory;
-import net.minecraft.client.resources.I18n;
+import com.hbm.world.phased.PhasedStructureGenerator;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
@@ -69,7 +68,6 @@ import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatBase;
 import net.minecraft.stats.StatBasic;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
@@ -392,7 +390,6 @@ public class MainRegistry {
         DamageResistanceHandler.init();
         BlockCrate.setDrops();
         BedrockOreRegistry.registerBedrockOres();
-        CraftingManager.addBedrockOreSmelting();
         ShredderRecipes.registerShredder();
         ShredderRecipes.registerOverrides();
         CentrifugeRecipes.register();
@@ -423,7 +420,7 @@ public class MainRegistry {
         FluidCombustionRecipes.registerFluidCombustionRecipes();
         HbmDetox.init();
         NTMBatteryCapabilityHandler.initialize();
-
+        MinecraftForge.EVENT_BUS.register(PhasedStructureGenerator.INSTANCE);
 
         //Drillgon200: expand the max entity radius for the hunter chopper
         if (World.MAX_ENTITY_RADIUS < 5)

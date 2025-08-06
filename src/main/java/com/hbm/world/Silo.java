@@ -5,6 +5,7 @@ import com.hbm.config.GeneralConfig;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
 import com.hbm.lib.HbmChestContents;
 import com.hbm.lib.Library;
+import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.*;
 import net.minecraft.block.BlockSlab.EnumBlockHalf;
 import net.minecraft.block.BlockStairs.EnumHalf;
@@ -12,17 +13,20 @@ import net.minecraft.block.BlockStoneSlab.EnumType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.WorldGenerator;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
-public class Silo extends WorldGenerator
-{
+@SuppressWarnings({"UnnecessaryUnaryMinus", "PointlessArithmeticExpression"})
+public class Silo extends AbstractPhasedStructure {
+	public static final Silo INSTANCE = new Silo();
+	private Silo() {}
 	Block Block2 = ModBlocks.launch_pad;
 	Block Block3 = ModBlocks.reinforced_light;
 	Block Block4 = ModBlocks.tape_recorder;
@@ -71,32 +75,23 @@ public class Silo extends WorldGenerator
 	}
 
 	@Override
-	public boolean generate(World world, Random rand, BlockPos pos)
-	{
-		return generate(world, rand, pos, false);
-
-	}
-	
-	public boolean generate(World world, Random rand, BlockPos pos, boolean force)
-	{
-		int i = rand.nextInt(1);
-
-		if(i == 0)
-		{
-		    generate_r0(world, rand, pos.getX(), pos.getY(), pos.getZ(), force);
-		}
-
-       return true;
-
+	public void buildStructure(@NotNull LegacyBuilder builder, @NotNull Random rand) {
+		generate_r0(builder, rand, 0, 0, 0);
 	}
 
-	public boolean generate_r0(World world, Random rand, int x, int y, int z, boolean force)
+	@Override
+	public boolean checkSpawningConditions(@NotNull World world, @NotNull BlockPos pos) {
+		BlockPos p = pos.add(10, 0, 10);
+		return LocationIsValidSpawn(world, p.getX(), p.getY(), p.getZ());
+	}
+
+	@Override
+	public @NotNull List<BlockPos> getValidationPoints(@NotNull BlockPos origin) {
+		return Collections.singletonList(origin.add(10, 0, 10));
+	}
+
+	public boolean generate_r0(LegacyBuilder world, Random rand, int x, int y, int z)
 	{
-		if(!force && !LocationIsValidSpawn(world, x + 10, y, z + 10))
-		{
-			return false;
-		}
-		
 		MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
 		world.setBlockState(pos.setPos(x + 7, y + -21, z + 1), Library.getRandomConcrete().getDefaultState(), 3);
@@ -397,11 +392,9 @@ public class Silo extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 16, y + -20, z + 10), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 17, y + -20, z + 10), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 18, y + -20, z + 10), Library.getRandomConcrete().getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 19, y + -20, z + 10), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST), 3);
-		if(world.getBlockState(pos.setPos(x + 19, y + -20, z + 10)).getBlock() == Blocks.CHEST)
-		{
-			WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(3), (TileEntityChest)world.getTileEntity(pos.setPos(x + 19, y + -20, z + 10)), rand.nextInt(2)+ 6);
-		}
+		world.setBlockState(pos.setPos(x + 19, y + -20, z + 10), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST),
+				(worldIn, random, blockPos, chest) ->
+						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(3), chest, random.nextInt(2) + 6));
         world.setBlockState(pos.setPos(x + 20, y + -20, z + 10), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 0, y + -20, z + 11), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 1, y + -20, z + 11), Blocks.AIR.getDefaultState(), 3);
@@ -864,11 +857,9 @@ public class Silo extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 10, y + -17, z + 1), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 11, y + -17, z + 1), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + -17, z + 2), Library.getRandomConcrete().getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 8, y + -17, z + 2), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.SOUTH), 3);
-		if(world.getBlockState(pos.setPos(x + 8, y + -17, z + 2)).getBlock() == Blocks.CHEST)
-		{
-			WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(7), (TileEntityChest)world.getTileEntity(pos.setPos(x + 8, y + -17, z + 2)), rand.nextInt(2)+ 6);
-		}
+		world.setBlockState(pos.setPos(x + 8, y + -17, z + 2), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.SOUTH),
+				(worldIn, random, blockPos, chest) ->
+						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(7), chest, random.nextInt(2) + 6));
         world.setBlockState(pos.setPos(x + 10, y + -17, z + 2), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 11, y + -17, z + 2), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + -17, z + 3), Library.getRandomConcrete().getDefaultState(), 3);
@@ -1588,7 +1579,7 @@ public class Silo extends WorldGenerator
 		return true;
 
 	}
-	public boolean generate_r02(World world, Random rand, int x, int y, int z, MutableBlockPos pos)
+	public boolean generate_r02(LegacyBuilder world, Random rand, int x, int y, int z, MutableBlockPos pos)
 	{
 
 		world.setBlockState(pos.setPos(x + 11, y + -10, z + 9), Blocks.AIR.getDefaultState(), 3);
@@ -1647,11 +1638,9 @@ public class Silo extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 10, y + -9, z + 4), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 11, y + -9, z + 4), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + -9, z + 5), Library.getRandomConcrete().getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 8, y + -9, z + 5), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.SOUTH), 3);
-		if(world.getBlockState(pos.setPos(x + 8, y + -9, z + 5)).getBlock() == Blocks.CHEST)
-		{
-			WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(1), (TileEntityChest)world.getTileEntity(pos.setPos(x + 8, y + -9, z + 5)), rand.nextInt(2)+ 8);
-		}
+		world.setBlockState(pos.setPos(x + 8, y + -9, z + 5), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.SOUTH),
+				(worldIn, random, blockPos, chest) ->
+						WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(1), chest, random.nextInt(2) + 8));
         world.setBlockState(pos.setPos(x + 8, y + -10, z + 5), Blocks.STONE_SLAB.getDefaultState().withProperty(BlockHalfStoneSlab.HALF, EnumBlockHalf.TOP).withProperty(BlockHalfStoneSlab.VARIANT, EnumType.STONE), 3);
 		world.setBlockState(pos.setPos(x + 9, y + -9, z + 5), Blocks.PLANKS.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 10, y + -9, z + 5), Block4.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.WEST), 3);
@@ -2489,7 +2478,7 @@ public class Silo extends WorldGenerator
 		return true;
 
 	}
-	public boolean generate_r03_last(World world, Random rand, int x, int y, int z, MutableBlockPos pos)
+	public boolean generate_r03_last(LegacyBuilder world, Random rand, int x, int y, int z, MutableBlockPos pos)
 	{
 
 		world.setBlockState(pos.setPos(x + 13, y + -20, z + 5), Blocks.UNLIT_REDSTONE_TORCH.getDefaultState().withProperty(BlockRedstoneTorch.FACING, EnumFacing.WEST), 3);

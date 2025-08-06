@@ -1,8 +1,8 @@
 package com.hbm.world.generator;
 
+import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
 
 public class CellularDungeonRoom {
 	
@@ -16,7 +16,7 @@ public class CellularDungeonRoom {
 	
 	//per generation, only one door can be made. rooms having multiple doors will be the consequence of daisychaining.
 	//the initial room will use an invalid type to not spawn any doors.
-	public void generate(World world, int x, int y, int z, EnumFacing door) {
+	public void generate(AbstractPhasedStructure.LegacyBuilder world, int x, int y, int z, EnumFacing door) {
 		generateMain(world, x, y, z);
 		for(int i = 2; i < 6; i++) {
 			EnumFacing dir = EnumFacing.byIndex(i);
@@ -24,14 +24,14 @@ public class CellularDungeonRoom {
 		}
 	}
 	
-	public void generateMain(World world, int x, int y, int z) {
+	public void generateMain(AbstractPhasedStructure.LegacyBuilder world, int x, int y, int z) {
 		
 		DungeonToolbox.generateBox(world, x, y, z, parent.width, 1, parent.width, parent.floor);
 		DungeonToolbox.generateBox(world, x, y + 1, z, parent.width, parent.height - 1, parent.width, Blocks.AIR.getDefaultState());
 		DungeonToolbox.generateBox(world, x, y + parent.height - 1, z, parent.width, 1, parent.width, parent.ceiling);
 	}
 	
-	public void generateWall(World world, int x, int y, int z, EnumFacing wall, boolean door) {
+	public void generateWall(AbstractPhasedStructure.LegacyBuilder world, int x, int y, int z, EnumFacing wall, boolean door) {
 		
 		if(wall == EnumFacing.NORTH) {
 			DungeonToolbox.generateBox(world, x, y + 1, z, parent.width, parent.height - 2, 1, parent.wall);

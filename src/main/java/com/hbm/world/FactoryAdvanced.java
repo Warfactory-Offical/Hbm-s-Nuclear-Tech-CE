@@ -10,6 +10,7 @@ import net.minecraft.world.gen.feature.WorldGenerator;
 
 import java.util.Random;
 
+// not naturally generated
 public class FactoryAdvanced extends WorldGenerator {
 
 	Block Block1 = ModBlocks.factory_advanced_hull;

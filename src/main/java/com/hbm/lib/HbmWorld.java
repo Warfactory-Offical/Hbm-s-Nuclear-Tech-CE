@@ -1,5 +1,6 @@
 package com.hbm.lib;
 
+import com.hbm.world.phased.PhasedStructureGenerator;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class HbmWorld {
@@ -16,6 +17,7 @@ public class HbmWorld {
 	
 	public static void registerWorldGen(HbmWorldGen nukerWorldGen, int weightedProbability)
 	{
-		GameRegistry.registerWorldGenerator(nukerWorldGen, weightedProbability);
+		 GameRegistry.registerWorldGenerator(nukerWorldGen, weightedProbability);
+		 GameRegistry.registerWorldGenerator(PhasedStructureGenerator.INSTANCE, weightedProbability);
 	}
 }

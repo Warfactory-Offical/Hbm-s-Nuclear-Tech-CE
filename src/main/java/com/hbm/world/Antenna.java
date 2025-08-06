@@ -4,23 +4,26 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.config.GeneralConfig;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
 import com.hbm.lib.HbmChestContents;
+import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.WorldGenerator;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
-public class Antenna extends WorldGenerator
-{
+public class Antenna extends AbstractPhasedStructure {
+	public static final Antenna INSTANCE = new Antenna();
+	private Antenna() {}
 	protected Block[] GetValidSpawnBlocks()
 	{
 		return new Block[]
@@ -32,8 +35,17 @@ public class Antenna extends WorldGenerator
 		};
 	}
 
-	public boolean LocationIsValidSpawn(World world, BlockPos pos)
- {
+	@Override
+	public boolean checkSpawningConditions(@NotNull World world, @NotNull BlockPos pos) {
+		return locationIsValidSpawn(world, pos.add(1, 0, 1));
+	}
+
+	@Override
+	public @NotNull List<BlockPos> getValidationPoints(@NotNull BlockPos origin) {
+		return Collections.singletonList(origin.add(1, 0, 1));
+	}
+
+	public boolean locationIsValidSpawn(World world, BlockPos pos) {
 
 		IBlockState checkBlockState = world.getBlockState(pos.down());
 		Block checkBlock = checkBlockState.getBlock();
@@ -62,33 +74,14 @@ public class Antenna extends WorldGenerator
 		return false;
 	}
 
+
 	@Override
-	public boolean generate(World world, Random rand, BlockPos pos)
-	{
-		return generate(world, rand, pos, false);
-	}
-	
-	public boolean generate(World world, Random rand, BlockPos pos, boolean force)
-	{
-		int i = rand.nextInt(1);
-
-		if(i == 0)
-		{
-		    generate_r0(world, rand, pos.getX(), pos.getY(), pos.getZ(), force);
-		}
-
-       return true;
-
+	public void buildStructure(@NotNull LegacyBuilder builder, @NotNull Random rand) {
+		generate_r0(builder, rand, 0, 0, 0);
 	}
 
-	public boolean generate_r0(World world, Random rand, int x, int y, int z, boolean force)
-	{
+	public boolean generate_r0(LegacyBuilder world, Random rand, int x, int y, int z) {
 		MutableBlockPos pos = new BlockPos.MutableBlockPos();
-		if(!force && !LocationIsValidSpawn(world, pos.setPos(x + 1, y, z + 1)))
-		{
-			return false;
-		}
-
 		world.setBlockState(pos.setPos(x + 0, y + 0, z + 0), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 1, y + 0, z + 0), ModBlocks.steel_poles.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.values()[2]), 3);
 		world.setBlockState(pos.setPos(x + 2, y + 0, z + 0), Blocks.AIR.getDefaultState(), 3);
@@ -97,8 +90,8 @@ public class Antenna extends WorldGenerator
 		world.setBlockState(pos.setPos(x + 2, y + 0, z + 1), ModBlocks.tape_recorder.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.values()[5]), 3);
 		world.setBlockState(pos.setPos(x + 0, y + 0, z + 2), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 1, y + 0, z + 2), ModBlocks.steel_poles.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.values()[3]), 3);
-		world.setBlockState(pos.setPos(x + 2, y + 0, z + 2), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST), 3);
-        WeightedRandomChestContentFrom1710.generateChestContents(rand, HbmChestContents.getLoot(2), (TileEntityChest)world.getTileEntity(pos.setPos(x + 2, y, z + 2)), 8);
+		world.setBlockState(pos.setPos(x + 2, y + 0, z + 2), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.EAST),
+				(worldIn, random, blockPos, chest) -> WeightedRandomChestContentFrom1710.generateChestContents(random, HbmChestContents.getLoot(2), chest, 8));
 		world.setBlockState(pos.setPos(x + 0, y + 1, z + 0), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 1, y + 1, z + 0), ModBlocks.steel_poles.getDefaultState().withProperty(BlockHorizontal.FACING, EnumFacing.values()[2]), 3);
 		world.setBlockState(pos.setPos(x + 2, y + 1, z + 0), Blocks.AIR.getDefaultState(), 3);

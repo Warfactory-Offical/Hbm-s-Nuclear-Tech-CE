@@ -60,6 +60,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.hbm.items.ItemEnums.*;
@@ -1191,19 +1192,7 @@ public class ModItems {
     public static final Item ball_tatb = new ItemBase("ball_tatb").setCreativeTab(MainRegistry.partsTab);
     public static final Item ball_fireclay = new ItemBase("ball_fireclay").setCreativeTab(MainRegistry.partsTab);
     public static final Item plant_item = new ItemEnumMulti("plant_item", EnumPlantType.class, true, true).setCreativeTab(MainRegistry.partsTab);
-    //BedrockOres
-    public static final Item ore_bedrock = new ItemBedrockOre("ore_bedrock").setCreativeTab(MainRegistry.partsTab);
-    public static final Item ore_bedrock_centrifuged = new ItemBedrockOre("ore_bedrock_centrifuged").setCreativeTab(MainRegistry.partsTab); //Centri
-    public static final Item ore_bedrock_cleaned = new ItemBedrockOre("ore_bedrock_cleaned").setCreativeTab(MainRegistry.partsTab); //Acid Peroxide
-    public static final Item ore_bedrock_separated = new ItemBedrockOre("ore_bedrock_separated").setCreativeTab(MainRegistry.partsTab); //Centri
-    public static final Item ore_bedrock_deepcleaned = new ItemBedrockOre("ore_bedrock_deepcleaned").setCreativeTab(MainRegistry.partsTab); //Acid Sulfuric
-    public static final Item ore_bedrock_purified = new ItemBedrockOre("ore_bedrock_purified").setCreativeTab(MainRegistry.partsTab); //Centri
-    public static final Item ore_bedrock_nitrated = new ItemBedrockOre("ore_bedrock_nitrated").setCreativeTab(MainRegistry.partsTab); //Acid Nitric
-    public static final Item ore_bedrock_nitrocrystalline = new ItemBedrockOre("ore_bedrock_nitrocrystalline").setCreativeTab(MainRegistry.partsTab); //Centri
-    public static final Item ore_bedrock_seared = new ItemBedrockOre("ore_bedrock_seared").setCreativeTab(MainRegistry.partsTab); //Acid Solvent
-    public static final Item ore_bedrock_exquisite = new ItemBedrockOre("ore_bedrock_exquisite").setCreativeTab(MainRegistry.partsTab); //Centri
-    public static final Item ore_bedrock_perfect = new ItemBedrockOre("ore_bedrock_perfect").setCreativeTab(MainRegistry.partsTab); //Acid High Solvent
-    public static final Item ore_bedrock_enriched = new ItemBedrockOre("ore_bedrock_enriched").setCreativeTab(MainRegistry.partsTab); //Final Product
+
     //Autogen
     public static final Item mold_base = new ItemBase("mold_base").setCreativeTab(MainRegistry.controlTab);
     public static final Item mold = new ItemMold("mold");

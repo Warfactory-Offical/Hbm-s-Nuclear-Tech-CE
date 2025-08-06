@@ -7,6 +7,7 @@ import com.hbm.tileentity.machine.TileEntitySafe;
 import com.hbm.world.generator.CellularDungeon;
 import com.hbm.world.generator.CellularDungeonRoom;
 import com.hbm.world.generator.DungeonToolbox;
+import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.BlockRotatedPillar;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -26,7 +27,7 @@ public class TestDungeonRoom8 extends CellularDungeonRoom {
 		super(parent);
 	}
 
-	public void generateMain(World world, int x, int y, int z) {
+	public void generateMain(AbstractPhasedStructure.LegacyBuilder world, int x, int y, int z) {
 		
 		super.generateMain(world, x, y, z);
 		DungeonToolbox.generateBox(world, x + parent.width / 2 - 3, y + 1, z + parent.width / 2 - 3, 1, parent.height - 2, 1, ModBlocks.meteor_pillar.getDefaultState().withProperty(BlockRotatedPillar.AXIS, EnumFacing.Axis.Y));
@@ -53,18 +54,17 @@ public class TestDungeonRoom8 extends CellularDungeonRoom {
 		case 5: world.setBlockState(new BlockPos(x + parent.width / 2, y + 2, z + parent.width / 2), ModBlocks.block_schrabidium_cluster.getStateFromMeta(0), 3); break;
 		case 6: world.setBlockState(new BlockPos(x + parent.width / 2, y + 2, z + parent.width / 2), ModBlocks.block_meteor.getDefaultState(), 3); break;
 		case 7:
-			world.setBlockState(new BlockPos(x + parent.width / 2, y + 2, z + parent.width / 2), ModBlocks.safe.getDefaultState(), 3);
-			if(world.getTileEntity(new BlockPos(x + parent.width / 2, y + 2, z + parent.width / 2)) instanceof TileEntitySafe) {
-
-				int r = world.rand.nextInt(10);
-				
-				if(r == 0)
-					((TileEntitySafe)world.getTileEntity(new BlockPos(x + parent.width / 2, y + 2, z + parent.width / 2))).inventory.setStackInSlot(7, new ItemStack(ModItems.book_of_));
-				else if(r < 4)
-					((TileEntitySafe)world.getTileEntity(new BlockPos(x + parent.width / 2, y + 2, z + parent.width / 2))).inventory.setStackInSlot(7, genetateMKU(world));
-				else
-					((TileEntitySafe)world.getTileEntity(new BlockPos(x + parent.width / 2, y + 2, z + parent.width / 2))).inventory.setStackInSlot(7, new ItemStack(Items.BOOK));
-			}
+			world.setBlockState(new BlockPos(x + parent.width / 2, y + 2, z + parent.width / 2), ModBlocks.safe.getDefaultState(),
+					(worldIn, random, blockPos, chest) -> {
+						TileEntitySafe safe = (TileEntitySafe) chest;
+						int r = worldIn.rand.nextInt(10);
+						if(r == 0)
+							safe.inventory.setStackInSlot(7, new ItemStack(ModItems.book_of_));
+						else if(r < 4)
+							safe.inventory.setStackInSlot(7, genetateMKU(worldIn));
+						else
+							safe.inventory.setStackInSlot(7, new ItemStack(Items.BOOK));
+					});
 			break;
 		}
 	}

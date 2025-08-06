@@ -56,7 +56,6 @@ import com.hbm.util.ArmorRegistry.HazardClass;
 import com.hbm.util.EnchantmentUtil;
 import com.hbm.util.EntityDamageUtil;
 import com.hbm.util.ParticleUtil;
-import com.hbm.world.generator.TimedGenerator;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -558,7 +557,6 @@ public class ModEventHandler {
 
         if (event.phase == Phase.START) {
             BossSpawnHandler.rollTheDice(event.world);
-            TimedGenerator.automaton(event.world, 100);
             updateWaterOpacity(event.world);
         }
 

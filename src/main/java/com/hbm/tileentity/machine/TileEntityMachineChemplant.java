@@ -28,6 +28,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -403,7 +404,7 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
         this.progress++;
 
         if (!inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(0).getItem() == ModItems.meteorite_sword_machined)
-            inventory.setStackInSlot(0, ModItems.meteorite_sword_treated.getDefaultInstance()); //fisfndmoivndlmgindgifgjfdnblfm
+            inventory.setStackInSlot(0, new ItemStack(ModItems.meteorite_sword_treated)); //fisfndmoivndlmgindgifgjfdnblfm
 
         ChemplantRecipes.ChemRecipe recipe = ChemplantRecipes.indexMapping.get(inventory.getStackInSlot(4).getItemDamage());
 
