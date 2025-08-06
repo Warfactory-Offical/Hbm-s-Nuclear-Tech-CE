@@ -227,5 +227,12 @@ public class ContainerArmorTable extends Container {
 			}
 			return super.onTake(thePlayer, stack);
 		}
+
+		@Override
+		public void onSlotChange(@NotNull ItemStack current, @NotNull ItemStack original) {
+			if (current.isEmpty() && !original.isEmpty()) {
+				ArmorModHandler.removeMod(armor.getStackInSlot(0), this.getSlotIndex());
+			}
+		}
 	}
 }
