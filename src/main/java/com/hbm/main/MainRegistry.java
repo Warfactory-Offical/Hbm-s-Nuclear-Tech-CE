@@ -53,6 +53,7 @@ import com.hbm.tileentity.bomb.TileEntityNukeCustom;
 import com.hbm.tileentity.machine.rbmk.RBMKDials;
 import com.hbm.util.CrashHelper;
 import com.hbm.util.DamageResistanceHandler;
+import com.hbm.util.I18nUtil;
 import com.hbm.world.ModBiomes;
 import com.hbm.world.PlanetGen;
 import com.hbm.world.feature.SchistStratum;
@@ -69,6 +70,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatBase;
 import net.minecraft.stats.StatBasic;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.LoadingCallback;
@@ -367,8 +369,8 @@ public class MainRegistry {
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
-        statMines = new StatBasic("stat.ntmMines", new TextComponentString(I18n.format("stat.ntmMines"))).registerStat();
-        statBullets = new StatBasic("stat.ntmBullets", new TextComponentString(I18n.format("stat.ntmBullets"))).registerStat();
+        statMines = new StatBasic("stat.ntmMines", new TextComponentTranslation("stat.ntmMines")).registerStat();
+        statBullets = new StatBasic("stat.ntmBullets", new TextComponentTranslation("stat.ntmBullets")).registerStat();
         ModItems.init();
         proxy.init(event);
         ModBlocks.init();
