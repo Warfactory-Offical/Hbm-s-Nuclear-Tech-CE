@@ -212,7 +212,8 @@ public abstract class ToolAbility {
 			
 			if(result != null && !result.isEmpty()) {
 				world.setBlockToAir(new BlockPos(x, y, z));
-				world.spawnEntity(new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, result.copy()));
+				if (!player.isCreative())
+					world.spawnEntity(new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, result.copy()));
 			}
 		}
 
@@ -252,7 +253,8 @@ public abstract class ToolAbility {
 			
 			if(result != null && result.getItem() != ModItems.scrap) {
 				world.setBlockToAir(new BlockPos(x, y, z));
-				world.spawnEntity(new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, result.copy()));
+				if (!player.isCreative())
+					world.spawnEntity(new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, result.copy()));
 			}
 		}
 
@@ -294,7 +296,7 @@ public abstract class ToolAbility {
 				world.setBlockToAir(new BlockPos(x, y, z));
 				
 				for(ItemStack st : result) {
-					if(st != null)
+					if(st != null && !player.isCreative())
 						world.spawnEntity(new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, st.copy()));
 				}
 			}
@@ -427,8 +429,10 @@ public abstract class ToolAbility {
 
 			if(result != null) {
 				world.setBlockToAir(new BlockPos(x, y, z));
-				world.spawnEntity(new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, result.output.copy()));
-				player.getHeldItem(hand).damageItem(1, player);
+				if (!player.isCreative()) {
+					world.spawnEntity(new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, result.output.copy()));
+					player.getHeldItem(hand).damageItem(1, player);
+				}
 			}
 		}
 
@@ -471,7 +475,8 @@ public abstract class ToolAbility {
 
 			if(mercury > 0) {
 				world.setBlockToAir(new BlockPos(x, y, z));
-				world.spawnEntity(new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, new ItemStack(ModItems.nugget_mercury, mercury)));
+				if (!player.isCreative())
+					world.spawnEntity(new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, new ItemStack(ModItems.nugget_mercury, mercury)));
 			}
 		}
 
