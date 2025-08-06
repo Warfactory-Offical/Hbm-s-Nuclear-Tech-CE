@@ -587,6 +587,31 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
             }
             return 0xFFFFFF;
         }, ModItems.icf_pellet);
+        evt.getItemColors().registerItemColorHandler((stack, tintIndex) -> {
+            if (tintIndex == 1) {
+                return Fluids.fromID(stack.getMetadata()).getColor();
+            }
+            return 0xFFFFFF;
+        }, ModItems.fluid_tank_full);
+        evt.getItemColors().registerItemColorHandler((stack, tintIndex) -> {
+            if (tintIndex == 1) {
+                return Fluids.fromID(stack.getMetadata()).getColor();
+            }
+            return 0xFFFFFF;
+        }, ModItems.fluid_tank_lead_full);
+        evt.getItemColors().registerItemColorHandler((stack, tintIndex) -> {
+            if (tintIndex == 1) {
+                return Fluids.fromID(stack.getMetadata()).getColor();
+            }
+            return 0xFFFFFF;
+        }, ModItems.fluid_barrel_full);
+        evt.getItemColors().registerItemColorHandler((stack, tintIndex) -> {
+            if (tintIndex == 1) {
+                return Fluids.fromID(stack.getMetadata()).getColor();
+            }
+            return 0xFFFFFF;
+        }, ModItems.forge_fluid_identifier);
+        // mlbv: this is far easier than writing TEISR for each item. replace all color related rendering with this if applicable.
     }
 
     @SubscribeEvent

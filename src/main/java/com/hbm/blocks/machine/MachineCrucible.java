@@ -42,6 +42,11 @@ public class MachineCrucible extends BlockDummyable implements ICrucibleAcceptor
     }
 
     @Override
+    public boolean isFullCube(IBlockState state) {
+        return false;
+    }
+
+    @Override
     public TileEntity createNewTileEntity(@NotNull World world, int meta) {
 
         if(meta >= 12) return new TileEntityCrucible();
