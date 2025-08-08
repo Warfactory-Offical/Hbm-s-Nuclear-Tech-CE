@@ -52,7 +52,9 @@ public class GUISolidifier extends GuiInfoContainer {
         int i = (int)(solidifier.getPower() * 52 / solidifier.getMaxPower());
         drawTexturedModalRect(guiLeft + 134, guiTop + 70 - i, 176, 52 - i, 16, i);
 
-        int j = solidifier.progress * 42 / solidifier.processTime;
+        int j;
+        if (solidifier.processTime == 0) j = 0;
+        else j = solidifier.progress * 42 / solidifier.processTime;
         drawTexturedModalRect(guiLeft + 42, guiTop + 17, 192, 0, j, 35);
 
         if(i > 0)
