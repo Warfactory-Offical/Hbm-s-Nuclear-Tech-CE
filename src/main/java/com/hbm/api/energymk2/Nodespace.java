@@ -19,7 +19,7 @@ public class Nodespace {
     public static final PowerNetProvider THE_POWER_PROVIDER = new PowerNetProvider();
 
     @Deprecated public static PowerNode getNode(World world, BlockPos pos) {
-        return (PowerNode) UniNodespace.getNode(world, pos.getX(), pos.getY(), pos.getZ(), THE_POWER_PROVIDER);
+        return (PowerNode) UniNodespace.getNode(world, pos, THE_POWER_PROVIDER);
     }
 
     @Deprecated public static void createNode(World world, PowerNode node) {
@@ -27,7 +27,7 @@ public class Nodespace {
     }
 
     @Deprecated public static void destroyNode(World world, BlockPos pos) {
-        UniNodespace.destroyNode(world, pos.getX(), pos.getY(), pos.getZ(), THE_POWER_PROVIDER);
+        UniNodespace.destroyNode(world, pos, THE_POWER_PROVIDER);
     }
 
     public static class PowerNode extends GenNode<PowerNetMK2> {

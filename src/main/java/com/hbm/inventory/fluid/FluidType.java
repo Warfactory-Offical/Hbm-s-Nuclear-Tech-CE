@@ -1,5 +1,6 @@
 package com.hbm.inventory.fluid;
 
+import com.hbm.api.fluidmk2.FluidNetMK2;
 import com.hbm.capability.NTMFluidCapabilityHandler;
 import com.hbm.config.GeneralConfig;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
@@ -8,6 +9,8 @@ import com.hbm.inventory.fluid.trait.FluidTrait;
 import com.hbm.inventory.fluid.trait.FluidTraitSimple;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.misc.EnumSymbol;
+import com.hbm.uninos.INetworkProvider;
+import com.hbm.uninos.networkproviders.FluidNetProvider;
 import com.hbm.util.I18nUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.nbt.NBTTagCompound;
@@ -174,6 +177,12 @@ public class FluidType {
 	public String getDict(int quantity) {
 		String prefix = GeneralConfig.enableFluidContainerCompat ? "container" : "ntmcontainer";
 		return prefix + quantity + this.stringId.replace("_", "").toLowerCase(Locale.US);
+	}
+
+	protected INetworkProvider<FluidNetMK2> NETWORK_PROVIDER = new FluidNetProvider(this);
+
+	public INetworkProvider<FluidNetMK2> getNetworkProvider() {
+		return NETWORK_PROVIDER;
 	}
 	
 	public boolean isHot() {

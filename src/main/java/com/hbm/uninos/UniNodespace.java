@@ -27,9 +27,9 @@ public class UniNodespace {
     public static HashMap<World, UniNodeWorld> worlds = new HashMap<>();
     public static Set<NodeNet> activeNodeNets = new HashSet<>();
 
-    public static GenNode getNode(World world, int x, int y, int z, INetworkProvider type) {
+    public static GenNode getNode(World world, BlockPos pos, INetworkProvider type) {
         UniNodeWorld nodeWorld = worlds.get(world);
-        if(nodeWorld != null) return nodeWorld.nodes.get(new Pair<>(new BlockPos(x, y, z), type));
+        if(nodeWorld != null) return nodeWorld.nodes.get(new Pair<>(pos, type));
         return null;
     }
 
@@ -42,8 +42,8 @@ public class UniNodespace {
         nodeWorld.pushNode(node);
     }
 
-    public static void destroyNode(World world, int x, int y, int z, INetworkProvider type) {
-        GenNode node = getNode(world, x, y, z, type);
+    public static void destroyNode(World world, BlockPos pos, INetworkProvider type) {
+        GenNode node = getNode(world, pos, type);
         if(node != null) {
             worlds.get(world).popNode(node);
         }
@@ -78,7 +78,7 @@ public class UniNodespace {
     private static void checkNodeConnection(World world, GenNode node, INetworkProvider provider) {
 
         for(DirPos con : node.connections) {
-            GenNode conNode = getNode(world, con.getPos().getX(), con.getPos().getY(), con.getPos().getZ(), provider); // get whatever neighbor node intersects with that connection
+            GenNode conNode = getNode(world, con.getPos(), provider); // get whatever neighbor node intersects with that connection
             if(conNode != null) { // if there is a node at that place
                 if(conNode.hasValidNet() && conNode.net == node.net) continue; // if the net is valid and both nodes have the same net, skip
                 if(checkConnection(conNode, con, false)) {
