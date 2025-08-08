@@ -76,4 +76,9 @@ public class TileEntityMachineDetector extends TileEntityLoadedBase implements I
 		}
 		return super.getCapability(capability, facing);
 	}
+
+	@Override
+	public ConnectionPriority getPriority() {
+		return ConnectionPriority.HIGH;
+	}
 }

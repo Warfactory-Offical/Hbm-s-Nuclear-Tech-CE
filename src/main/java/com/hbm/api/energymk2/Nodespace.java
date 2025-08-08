@@ -1,158 +1,37 @@
 package com.hbm.api.energymk2;
 
 import com.hbm.lib.DirPos;
+import com.hbm.uninos.GenNode;
+import com.hbm.uninos.UniNodespace;
+import com.hbm.uninos.networkproviders.PowerNetProvider;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 /**
- * The "Nodespace" is an intermediate, "ethereal" layer of abstraction that tracks nodes (i.e. cables) even when they are no longer loaded, allowing continued operation even when unloaded
- * @author hbm
+ * The dead fucking corpse of nodespace MK1.
+ * A fantastic proof of concept, but ultimately it was killed for being just not that versatile.
+ * This class is mostly just a compatibility husk that should allow uninodespace to slide into the mod with as much lubrication as it deserves.
  *
+ * @author hbm
  */
 public class Nodespace {
 
-    /** Contains all "NodeWorld" instances, i.e. lists of nodes existing per world */
-    public static HashMap<World, NodeWorld> worlds = new HashMap<>();
-    public static Set<PowerNetMK2> activePowerNets = new HashSet<>();
+    public static final PowerNetProvider THE_POWER_PROVIDER = new PowerNetProvider();
 
-    public static PowerNode getNode(World world, BlockPos pos) {
-        NodeWorld nodeWorld = worlds.get(world);
-        if(nodeWorld != null) return nodeWorld.nodes.get(pos);
-        return null;
+    @Deprecated public static PowerNode getNode(World world, BlockPos pos) {
+        return (PowerNode) UniNodespace.getNode(world, pos.getX(), pos.getY(), pos.getZ(), THE_POWER_PROVIDER);
     }
 
-    public static void createNode(World world, PowerNode node) {
-        NodeWorld nodeWorld = worlds.get(world);
-        if(nodeWorld == null) {
-            nodeWorld = new NodeWorld();
-            worlds.put(world, nodeWorld);
-        }
-        nodeWorld.pushNode(node);
+    @Deprecated public static void createNode(World world, PowerNode node) {
+        UniNodespace.createNode(world, node);
     }
 
-    public static void destroyNode(World world, BlockPos pos) {
-        PowerNode node = getNode(world, pos);
-        if(node != null) {
-            worlds.get(world).popNode(node);
-        }
+    @Deprecated public static void destroyNode(World world, BlockPos pos) {
+        UniNodespace.destroyNode(world, pos.getX(), pos.getY(), pos.getZ(), THE_POWER_PROVIDER);
     }
 
-    /** Goes over each node and manages connections */
-    public static void updateNodespace() {
+    public static class PowerNode extends GenNode<PowerNetMK2> {
 
-        for(World world : FMLCommonHandler.instance().getMinecraftServerInstance().worlds) {
-            NodeWorld nodes = worlds.get(world);
-
-            if(nodes == null)
-                continue;
-
-            for(Map.Entry<BlockPos, PowerNode> entry : nodes.nodes.entrySet()) {
-                PowerNode node = entry.getValue();
-                if(!node.hasValidNet() || node.recentlyChanged) {
-                    checkNodeConnection(world, node);
-                    node.recentlyChanged = false;
-                }
-            }
-        }
-
-        updatePowerNets();
-    }
-
-    private static void updatePowerNets() {
-
-        for(PowerNetMK2 net : activePowerNets) net.resetEnergyTracker(); //reset has to be done before everything else
-        for(PowerNetMK2 net : activePowerNets) net.transferPower();
-    }
-
-    /** Goes over each connection point of the given node, tries to find neighbor nodes and to join networks with them */
-    private static void checkNodeConnection(World world, PowerNode node) {
-
-        for(DirPos con : node.connections) {
-
-            PowerNode conNode = getNode(world, con.getPos()); // get whatever neighbor node intersects with that connection
-
-            if(conNode != null) { // if there is a node at that place
-
-                if(conNode.hasValidNet() && conNode.net == node.net) continue; // if the net is valid and both nodes have the same net, skip
-
-                if(checkConnection(conNode, con, false)) {
-                    connectToNode(node, conNode);
-                }
-            }
-        }
-
-        if(node.net == null || !node.net.isValid()) new PowerNetMK2().joinLink(node);
-    }
-
-    public static boolean checkConnection(PowerNode connectsTo, DirPos connectFrom, boolean skipSideCheck) {
-
-        for(DirPos revCon : connectsTo.connections) {
-
-            if(revCon.getPos().getX() - revCon.getDir().offsetX == connectFrom.getPos().getX() && revCon.getPos().getY() - revCon.getDir().offsetY == connectFrom.getPos().getY() && revCon.getPos().getZ() - revCon.getDir().offsetZ == connectFrom.getPos().getZ() && (revCon.getDir() == connectFrom.getDir().getOpposite() || skipSideCheck)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /** Links two nodes with different or potentially no networks */
-    private static void connectToNode(PowerNode origin, PowerNode connection) {
-
-        if(origin.hasValidNet() && connection.hasValidNet()) { // both nodes have nets, but the nets are different (previous assumption), join networks
-            if(origin.net.links.size() > connection.net.links.size()) {
-                origin.net.joinNetworks(connection.net);
-            } else {
-                connection.net.joinNetworks(origin.net);
-            }
-        } else if(!origin.hasValidNet() && connection.hasValidNet()) { // origin has no net, connection does, have origin join connection's net
-            connection.net.joinLink(origin);
-        } else if(origin.hasValidNet() && !connection.hasValidNet()) { // ...and vice versa
-            origin.net.joinLink(connection);
-        }
-    }
-
-    public static class NodeWorld {
-
-        /** Contains a map showing where each node is, a node is every spot that a cable exists at.
-         * Instead of the old proxy system, things like substation now create multiple nodes at their connection points */
-        public HashMap<BlockPos, PowerNode> nodes = new HashMap<>();
-
-        /** Adds a node at all its positions to the nodespace */
-        public void pushNode(PowerNode node) {
-            for(BlockPos pos : node.positions) {
-                nodes.put(pos, node);
-            }
-        }
-
-        /** Removes the specified node from all positions from nodespace */
-        public void popNode(PowerNode node) {
-            if(node.net != null) node.net.destroy();
-            for(BlockPos pos : node.positions) {
-                nodes.remove(pos);
-                node.expired = true;
-            }
-        }
-
-        /** Grabs the node at one position, then removes it from all positions it occupies */
-        public void popNode(BlockPos pos) {
-            PowerNode node = nodes.get(pos);
-            if(node != null) popNode(node);
-        }
-    }
-
-    public static class PowerNode {
-
-        public BlockPos[] positions;
-        public DirPos[] connections;
-        public PowerNetMK2 net;
-        public boolean expired = false;
         /**
          * Okay so here's the deal: The code has shit idiot brain fungus. I don't know why. I re-tested every part involved several times.
          * I don't know why. But for some reason, during neighbor checks, on certain arbitrary fucking places, the joining operation just fails.
@@ -164,32 +43,16 @@ public class Nodespace {
          * breaking, but it seems to allow those parts to connect back to their neighbor nets as they are supposed to. I am not proud of this solution,
          * this issue shouldn't exist to begin with and I am going fucking insane but it is what it is.
          */
-        public boolean recentlyChanged = true;
 
         public PowerNode(BlockPos... positions) {
+            super(THE_POWER_PROVIDER, positions);
             this.positions = positions;
         }
 
+        @Override
         public PowerNode setConnections(DirPos... connections) {
-            this.connections = connections;
+            super.setConnections(connections);
             return this;
-        }
-
-        public PowerNode addConnection(DirPos connection) {
-            DirPos[] newCons = new DirPos[this.connections.length + 1];
-            for(int i = 0; i < this.connections.length; i++) newCons[i] = this.connections[i];
-            newCons[newCons.length - 1] = connection;
-            this.connections = newCons;
-            return this;
-        }
-
-        public boolean hasValidNet() {
-            return this.net != null && this.net.isValid();
-        }
-
-        public void setNet(PowerNetMK2 net) {
-            this.net = net;
-            this.recentlyChanged = true;
         }
     }
 }

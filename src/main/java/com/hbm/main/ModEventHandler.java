@@ -51,6 +51,7 @@ import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.machine.TileEntityMachineRadarNT;
 import com.hbm.tileentity.machine.rbmk.RBMKDials;
 import com.hbm.tileentity.network.RTTYSystem;
+import com.hbm.uninos.UniNodespace;
 import com.hbm.util.ArmorRegistry;
 import com.hbm.util.ArmorRegistry.HazardClass;
 import com.hbm.util.EnchantmentUtil;
@@ -592,7 +593,7 @@ public class ModEventHandler {
             JetpackHandler.serverTick();
             RTTYSystem.updateBroadcastQueue();
             TileEntityMachineRadarNT.updateSystem();
-            Nodespace.updateNodespace();
+            UniNodespace.updateNodespace();
             HazardSystem.onServerTick(e);
         } else {
             EntityHitDataHandler.updateSystem();

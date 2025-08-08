@@ -21,7 +21,7 @@ import net.minecraft.world.World;
 public class CableSwitch extends BlockContainer {
 
 	public static final PropertyBool STATE = PropertyBool.create("state");
-	
+
 	public CableSwitch(Material materialIn, String s) {
 		super(materialIn);
 		this.setTranslationKey(s);
@@ -50,6 +50,9 @@ public class CableSwitch extends BlockContainer {
 				world.setBlockState(pos, state.withProperty(STATE, false), 2);
 				world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.reactorStart, SoundCategory.BLOCKS, 1.0F, 0.85F);
 			}
+
+			TileEntity te = world.getTileEntity(pos);
+			((TileEntityCableSwitch) te).updateState();
 			
 			return true;
 		} else {

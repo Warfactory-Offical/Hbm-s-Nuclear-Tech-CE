@@ -6,18 +6,16 @@ import com.hbm.api.energymk2.IEnergyConnectorMK2;
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.api.energymk2.IEnergyReceiverMK2.ConnectionPriority;
 import com.hbm.api.energymk2.Nodespace;
+import com.hbm.api.energymk2.Nodespace.PowerNode;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ITooltipProvider;
 import com.hbm.blocks.ModBlocks;
-import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.Library;
-import com.hbm.tileentity.IBufPacketReceiver;
 import com.hbm.tileentity.TileEntityLoadedBase;
+import com.hbm.util.BobMathUtil;
 import com.hbm.util.Compat;
 import com.hbm.util.I18nUtil;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.material.Material;
@@ -34,18 +32,17 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.energy.CapabilityEnergy;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CableDiode extends BlockContainer implements IEnergyConnectorBlock, ILookOverlay, IToolable, ITooltipProvider {
-
 	public static final PropertyDirection FACING = BlockDirectional.FACING;
 
 	public CableDiode(Material materialIn, String s) {
@@ -94,18 +91,20 @@ public class CableDiode extends BlockContainer implements IEnergyConnectorBlock,
 	}
 
 	@Override
-	public boolean onScrew(World world, EntityPlayer player, int x, int y, int z, EnumFacing side, float fX, float fY, float fZ, EnumHand hand, ToolType tool){
+	public boolean onScrew(World world, EntityPlayer player, int x, int y, int z, EnumFacing side, float fX, float fY, float fZ, EnumHand hand, ToolType tool) {
+		BlockPos pos = new BlockPos(x, y, z);
+		IBlockState state = world.getBlockState(pos);
+		TileEntityDiode te = (TileEntityDiode) world.getTileEntity(pos);
+		assert te != null;
 
-		TileEntityDiode te = (TileEntityDiode)world.getTileEntity(new BlockPos(x, y, z));
-
-		if(world.isRemote || te == null)
+		if(world.isRemote)
 			return true;
 
 		if(tool == ToolType.SCREWDRIVER) {
-			if(te.level < 17)
+			if(te.level < 11)
 				te.level++;
 			te.markDirty();
-			te.networkPackNT(20);
+			world.notifyBlockUpdate(pos, state, state, 3);
 			return true;
 		}
 
@@ -113,16 +112,16 @@ public class CableDiode extends BlockContainer implements IEnergyConnectorBlock,
 			if(te.level > 1)
 				te.level--;
 			te.markDirty();
-			te.networkPackNT(20);
+			world.notifyBlockUpdate(pos, state, state, 3);
 			return true;
 		}
 
 		if(tool == ToolType.DEFUSER) {
 			int p = te.priority.ordinal() + 1;
-			if(p >= ConnectionPriority.values().length) p = 0;
+			if(p > 4) p = 0;
 			te.priority = ConnectionPriority.values()[p];
 			te.markDirty();
-			te.networkPackNT(20);
+			world.notifyBlockUpdate(pos, state, state, 3);
 			return true;
 		}
 
@@ -130,9 +129,16 @@ public class CableDiode extends BlockContainer implements IEnergyConnectorBlock,
 	}
 
 	@Override
-	public void addInformation(@NotNull ItemStack stack, World worldIn, @NotNull List<String> list, @NotNull ITooltipFlag flagIn) {
-		this.addStandardInfo(list);
-		super.addInformation(stack, worldIn, list, flagIn);
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn) {
+		list.add(TextFormatting.GOLD + "Limits throughput and restricts flow direction");
+		list.add(TextFormatting.YELLOW + "Use screwdriver to increase throughput");
+		list.add(TextFormatting.YELLOW + "Use hand drill to decrease throughput");
+		list.add(TextFormatting.YELLOW + "Use defuser to change network priority");
+	}
+
+	@Override
+	public EnumBlockRenderType getRenderType(IBlockState state) {
+		return EnumBlockRenderType.MODEL;
 	}
 
 	@Override
@@ -140,40 +146,25 @@ public class CableDiode extends BlockContainer implements IEnergyConnectorBlock,
 
 		TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
 
-		if(!(te instanceof TileEntityDiode diode))
+		if(!(te instanceof TileEntityDiode))
 			return;
 
-        List<String> text = new ArrayList<>();
-		text.add("Max.: " + Library.getShortNumber(diode.getMaxPower()*20) + "HE/s");
+		TileEntityDiode diode = (TileEntityDiode) te;
+
+		List<String> text = new ArrayList<>();
+		text.add("Max.: " + BobMathUtil.getShortNumber(diode.getMaxPower()) + "HE/t");
 		text.add("Priority: " + diode.priority.name());
 
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getTranslationKey() + ".name"), 0xffff00, 0x404000, text);
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(@NotNull World world, int meta) {
+	public TileEntity createNewTileEntity(World world, int meta) {
 		return new TileEntityDiode();
 	}
 
-	@Override
-	public @NotNull EnumBlockRenderType getRenderType(@NotNull IBlockState state) {
-		return EnumBlockRenderType.MODEL;
-	}
-
 	@AutoRegister
-	public static class TileEntityDiode extends TileEntityLoadedBase implements IBufPacketReceiver, ITickable, IEnergyReceiverMK2 {
-
-		@Override
-		public void serialize(ByteBuf buf) {
-			buf.writeInt(level);
-			buf.writeByte(this.priority.ordinal());
-		}
-
-		@Override
-		public void deserialize(ByteBuf buf){
-			level = buf.readInt();
-			priority = ConnectionPriority.values()[buf.readByte()];
-		}
+	public static class TileEntityDiode extends TileEntityLoadedBase implements IEnergyReceiverMK2, ITickable {
 
 		@Override
 		public void readFromNBT(NBTTagCompound nbt) {
@@ -191,40 +182,37 @@ public class CableDiode extends BlockContainer implements IEnergyConnectorBlock,
 		}
 
 		@Override
-		public SPacketUpdateTileEntity getUpdatePacket(){
-			return new SPacketUpdateTileEntity(this.getPos(), 0, this.writeToNBT(new NBTTagCompound()));
+		public @Nullable SPacketUpdateTileEntity getUpdatePacket() {
+			NBTTagCompound nbt = new NBTTagCompound();
+			this.writeToNBT(nbt);
+			return new SPacketUpdateTileEntity(this.pos, 0, nbt);
 		}
 
 		@Override
-		public @NotNull NBTTagCompound getUpdateTag() {
-			return this.writeToNBT(new NBTTagCompound());
-		}
-
-		@Override
-		public void onDataPacket(@NotNull NetworkManager net, SPacketUpdateTileEntity pkt) {
+		public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
 			this.readFromNBT(pkt.getNbtCompound());
 		}
 
 		int level = 1;
 
 		private ForgeDirection getDir() {
-			IBlockState state = world.getBlockState(pos);
-			if(state.getBlock() instanceof CableDiode) {
-				return ForgeDirection.getOrientation(state.getBlock().getMetaFromState(state)).getOpposite();
-			}
-			return ForgeDirection.UNKNOWN;
+			return ForgeDirection.getOrientation(this.getBlockMetadata()).getOpposite();
 		}
 
 		@Override
 		public void update() {
-			if (!world.isRemote) {
-				for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
 
-					if (dir == getDir())
+			if(!world.isRemote) {
+				for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+
+					if(dir == getDir())
 						continue;
 
 					this.trySubscribe(world, pos.getX() + dir.offsetX, pos.getY() + dir.offsetY, pos.getZ() + dir.offsetZ, dir);
 				}
+
+				pulses = 0;
+				this.setPower(0); //tick is over, reset our allowed transfer
 			}
 		}
 
@@ -241,53 +229,49 @@ public class CableDiode extends BlockContainer implements IEnergyConnectorBlock,
 
 		@Override
 		public long transferPower(long power, boolean simulate) {
-			if(recursionBrake || power <= 0)
+
+			if(recursionBrake)
 				return power;
-			if(this.getPower() >= this.getMaxPower())
-				return power;
-			if (!simulate) {
-				pulses++;
-				if(pulses > 10) return power;
-			}
+
+			pulses++;
+			if(this.getPower() >= this.getMaxPower() || pulses > 10) return power; //if we have already maxed out transfer or max pulses, abort
 
 			recursionBrake = true;
 
-			long transferredInThisCall = 0;
 			ForgeDirection dir = getDir();
+			PowerNode node = Nodespace.getNode(world, new BlockPos(pos.getX() + dir.offsetX, pos.getY() + dir.offsetY, pos.getZ() + dir.offsetZ));
 			TileEntity te = Compat.getTileStandard(world, pos.getX() + dir.offsetX, pos.getY() + dir.offsetY, pos.getZ() + dir.offsetZ);
-			long remainingTickCapacity = this.getMaxPower() - this.getPower();
-			Nodespace.PowerNode node = Nodespace.getNode(world, pos);
+
 			if(node != null && !node.expired && node.hasValidNet() && te instanceof IEnergyConnectorMK2 && ((IEnergyConnectorMK2) te).canConnect(dir.getOpposite())) {
 				long toTransfer = Math.min(power, this.getReceiverSpeed());
-				toTransfer = Math.min(toTransfer, remainingTickCapacity);
+				long remainder = node.net.sendPowerDiode(toTransfer, simulate);
+				long transferred = (toTransfer - remainder);
+				if (simulate) this.power += transferred;
+				power -= transferred;
 
-				if (toTransfer > 0) {
-					long remainder = node.net.sendPowerDiode(toTransfer, simulate);
-					transferredInThisCall = toTransfer - remainder;
-				}
-
-			} else if(te instanceof IEnergyReceiverMK2 rec && te != this) {
-                if(rec.canConnect(dir.getOpposite())) {
+			} else if(te instanceof IEnergyReceiverMK2 && te != this) {
+				IEnergyReceiverMK2 rec = (IEnergyReceiverMK2) te;
+				if(rec.canConnect(dir.getOpposite())) {
 					long toTransfer = Math.min(power, rec.getReceiverSpeed());
-					toTransfer = Math.min(toTransfer, remainingTickCapacity);
-
-					if (toTransfer > 0) {
-						long remainder = rec.transferPower(toTransfer, simulate);
-						transferredInThisCall = toTransfer - remainder;
-					}
+					long remainder = rec.transferPower(toTransfer, simulate);
+					power -= (toTransfer - remainder);
+					recursionBrake = false;
+					return power;
 				}
 			}
-			if (!simulate && transferredInThisCall > 0) {
-				this.power += transferredInThisCall;
-			}
+
 			recursionBrake = false;
-			return power - transferredInThisCall;
+			return power;
 		}
 
+		@Override
+		public long getReceiverSpeed() {
+			return this.getMaxPower() - this.getPower();
+		}
 
 		@Override
 		public long getMaxPower() {
-			return (long) Math.pow(10, level) >> 1;
+			return (long) Math.pow(10, level);
 		}
 
 		@Override
@@ -298,32 +282,11 @@ public class CableDiode extends BlockContainer implements IEnergyConnectorBlock,
 		@Override
 		public void setPower(long power) {
 			this.power = power;
-			if(this.power == 0) {
-				this.pulses = 0;
-			}
 		}
 
 		@Override
 		public ConnectionPriority getPriority() {
 			return this.priority;
-		}
-
-		@Override
-		public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-			if (capability == CapabilityEnergy.ENERGY) {
-				return true;
-			}
-			return super.hasCapability(capability, facing);
-		}
-
-		@Override
-		public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-			if (capability == CapabilityEnergy.ENERGY) {
-				return CapabilityEnergy.ENERGY.cast(
-						new NTMEnergyCapabilityWrapper(this)
-				);
-			}
-			return super.getCapability(capability, facing);
 		}
 	}
 }
