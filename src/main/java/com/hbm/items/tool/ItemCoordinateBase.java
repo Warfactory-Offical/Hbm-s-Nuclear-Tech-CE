@@ -33,7 +33,6 @@ public abstract class ItemCoordinateBase extends Item {
                 ItemStack stack = player.getHeldItem(hand);
 
                 if(!stack.hasTagCompound()) stack.setTagCompound(new NBTTagCompound());
-
                 stack.getTagCompound().setInteger("posX", pos1.getX());
                 if(includeY()) stack.getTagCompound().setInteger("posY", pos1.getY());
                 stack.getTagCompound().setInteger("posZ", pos1.getZ());
