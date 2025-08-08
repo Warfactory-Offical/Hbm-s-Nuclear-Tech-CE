@@ -27,23 +27,22 @@ public abstract class ItemCoordinateBase extends Item {
     @Override
     public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 
-        if(this.canGrabCoordinateHere(worldIn, pos)) {
-
-            if(!worldIn.isRemote) {
+        if(!worldIn.isRemote) {
+            if(this.canGrabCoordinateHere(worldIn, pos)) {
                 BlockPos pos1 = this.getCoordinates(worldIn, pos);
+                ItemStack stack = player.getHeldItem(hand);
 
-                if(!getDefaultInstance().hasTagCompound()) getDefaultInstance().setTagCompound(new NBTTagCompound());
+                if(!stack.hasTagCompound()) stack.setTagCompound(new NBTTagCompound());
 
-                getDefaultInstance().getTagCompound().setInteger("posX", pos1.getX());
-                if(includeY()) getDefaultInstance().getTagCompound().setInteger("posY", pos1.getY());
-                getDefaultInstance().getTagCompound().setInteger("posZ", pos1.getZ());
+                stack.getTagCompound().setInteger("posX", pos1.getX());
+                if(includeY()) stack.getTagCompound().setInteger("posY", pos1.getY());
+                stack.getTagCompound().setInteger("posZ", pos1.getZ());
 
                 this.onTargetSet(worldIn, pos1, player);
             }
-
-            return EnumActionResult.SUCCESS;
         }
 
+        if (this.canGrabCoordinateHere(worldIn, pos)) return EnumActionResult.SUCCESS;
         return EnumActionResult.FAIL;
     }
 
