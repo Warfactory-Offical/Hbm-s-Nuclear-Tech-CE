@@ -1,7 +1,7 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
-import com.hbm.api.fluid.IFluidUser;
+import com.hbm.api.fluidmk2.IFluidStandardTransceiverMK2;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
@@ -43,7 +43,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class TileEntityMachineChemplantBase extends TileEntityMachineBase implements IEnergyReceiverMK2, ITickable, IFluidUser, IGUIProvider, IFFtoNTMF {
+public abstract class TileEntityMachineChemplantBase extends TileEntityMachineBase implements IEnergyReceiverMK2, ITickable, IFluidStandardTransceiverMK2, IGUIProvider, IFFtoNTMF {
 	public long power;
 	public int[] progress;
 	public int[] maxProgress;
@@ -651,16 +651,6 @@ public abstract class TileEntityMachineChemplantBase extends TileEntityMachineBa
 	@Override
 	public long getDemand(FluidType type, int pressure) {
 		return getMaxFluidFill(type) - getFluidFillForTransfer(type, pressure);
-	}
-
-	@Override
-	public long getTotalFluidForSend(FluidType type, int pressure) {
-		return getFluidFillForTransfer(type, pressure);
-	}
-
-	@Override
-	public void removeFluidForTransfer(FluidType type, int pressure, long amount) {
-		this.transferFluid((int) amount, type, pressure);
 	}
 
 	protected NBTTagList serializeTanks() {

@@ -2,7 +2,7 @@ package com.hbm.util;
 
 import com.hbm.api.energymk2.IEnergyHandlerMK2;
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
-import com.hbm.api.fluid.IFluidUser;
+import com.hbm.api.fluidmk2.IFluidUserMK2;
 import com.hbm.api.recipe.IRecipeRegisterListener;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.inventory.fluid.FluidType;
@@ -113,13 +113,13 @@ public class CompatExternal {
      * [4]: INT - the capacity of this tank in millibuckets
      */
     public static ArrayList<Object[]> getFluidInfoFromTile(TileEntity tile) {
-        ArrayList<Object[]> list = new ArrayList();
+        ArrayList<Object[]> list = new ArrayList<>();
 
-        if(!(tile instanceof IFluidUser)) {
+        if(!(tile instanceof IFluidUserMK2)) {
             return list;
         }
 
-        IFluidUser container = (IFluidUser) tile;
+        IFluidUserMK2 container = (IFluidUserMK2) tile;
 
         for(FluidTankNTM tank : container.getAllTanks()) {
             FluidType type = tank.getTankType();

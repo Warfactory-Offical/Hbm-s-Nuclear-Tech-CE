@@ -1,6 +1,6 @@
 package com.hbm.inventory.fluid.tank;
 
-import com.hbm.api.fluid.IFillableItem;
+import com.hbm.api.fluidmk2.IFillableItem;
 import com.hbm.handler.ArmorModHandler;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;

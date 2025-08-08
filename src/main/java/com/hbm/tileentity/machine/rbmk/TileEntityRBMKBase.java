@@ -1,8 +1,6 @@
 package com.hbm.tileentity.machine.rbmk;
 
-import com.hbm.api.fluid.IFluidConductor;
-import com.hbm.api.fluid.IFluidConnector;
-import com.hbm.api.fluid.IPipeNet;
+import com.hbm.api.fluidmk2.FluidNetMK2;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.rbmk.RBMKBase;
 import com.hbm.config.MachineConfig;
@@ -45,7 +43,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -445,11 +442,10 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
 	}
 	
 	public static HashSet<TileEntityRBMKBase> columns = new HashSet<>();
-	public static HashSet<IPipeNet> pipes = new HashSet<>();
+	public static HashSet<FluidNetMK2> pipes = new HashSet<>();
 	
 	//assumes that !world.isRemote
 	public void meltdown() {
-
 		RBMKBase.dropLids = false;
 
 		columns.clear();
@@ -513,22 +509,22 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
 
 		/* Hanlde overpressure event */
 		if(RBMKDials.getOverpressure(world) && !pipes.isEmpty()) {
-			HashSet<IFluidConductor> pipeBlocks = new HashSet<>();
-			HashSet<IFluidConnector> pipeReceivers = new HashSet<>();
+			HashSet<Object> pipeBlocks = new HashSet<>();
+			HashSet<Object> pipeReceivers = new HashSet<>();
 
 			//unify all parts into single sets to prevent redundancy
 			pipes.forEach(x -> {
-				pipeBlocks.addAll(x.getLinks());
-				pipeReceivers.addAll(x.getSubscribers());
+				pipeBlocks.addAll(x.links);
+				pipeReceivers.addAll(x.receiverEntries.entrySet());
 			});
 
 			int count = 0;
 			int max = Math.min(pipeBlocks.size() / 5, 100);
-			Iterator<IFluidConductor>  itPipes = pipeBlocks.iterator();
-			Iterator<IFluidConnector>  itReceivers = pipeReceivers.iterator();
+			Iterator<Object> itPipes = pipeBlocks.iterator();
+			Iterator<Object> itReceivers = pipeReceivers.iterator();
 
 			while(itPipes.hasNext() && count < max) {
-				IFluidConductor pipe = itPipes.next();
+				Object pipe = itPipes.next();
 				if(pipe instanceof TileEntity tile) {
                     world.setBlockToAir(tile.getPos());
 				}
@@ -536,7 +532,7 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
 			}
 
 			while(itReceivers.hasNext()) {
-				IFluidConnector con = itReceivers.next();
+				Object con = itReceivers.next();
 				if(con instanceof TileEntity tile) {
                     if(con instanceof IOverpressurable) {
 						((IOverpressurable) con).explode(world, tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ());

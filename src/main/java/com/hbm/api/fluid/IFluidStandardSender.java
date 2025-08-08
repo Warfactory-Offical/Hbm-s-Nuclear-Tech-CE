@@ -1,42 +1,28 @@
 package com.hbm.api.fluid;
 
-import com.hbm.inventory.fluid.FluidType;
+import com.hbm.api.fluidmk2.IFluidStandardSenderMK2;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
+import com.hbm.lib.ForgeDirection;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
-public interface IFluidStandardSender extends IFluidUser {
+@Deprecated
+public interface IFluidStandardSender extends IFluidStandardSenderMK2 {
 
-    public FluidTankNTM[] getSendingTanks();
+    FluidTankNTM[] getSendingTanks();
 
-    @Override
-    public default long getTotalFluidForSend(FluidType type, int pressure) {
+    default void sendFluid(FluidTankNTM tank, World world, int x, int y, int z, ForgeDirection dir) {
+        tryProvide(tank, world, x, y, z, dir);
+    }
 
-        for(FluidTankNTM tank : getSendingTanks()) {
-            if(tank.getTankType() == type && tank.getPressure() == pressure) {
-                return tank.getFill();
-            }
+    default void sendFluid(FluidTankNTM tank, World world, BlockPos pos, ForgeDirection dir) {
+        sendFluid(tank, world, pos.getX(), pos.getY(), pos.getZ(), dir);
+    }
+
+    default void sendFluidToAll(FluidTankNTM tank, TileEntity tile) {
+        for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+            tryProvide(tank, tile.getWorld(), tile.getPos().getX() + dir.offsetX, tile.getPos().getY() + dir.offsetY, tile.getPos().getZ() + dir.offsetZ, dir);
         }
-
-        return 0;
-    }
-
-    @Override
-    public default void removeFluidForTransfer(FluidType type, int pressure, long amount) {
-
-        for(FluidTankNTM tank : getSendingTanks()) {
-            if(tank.getTankType() == type && tank.getPressure() == pressure) {
-                tank.setFill(tank.getFill() - (int) amount);
-                return;
-            }
-        }
-    }
-
-    @Override
-    public default long transferFluid(FluidType type, int pressure, long fluid) {
-        return fluid;
-    }
-
-    @Override
-    public default long getDemand(FluidType type, int pressure) {
-        return 0;
     }
 }

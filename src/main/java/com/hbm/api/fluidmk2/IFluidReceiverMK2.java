@@ -25,7 +25,7 @@ public interface IFluidReceiverMK2 extends IFluidUserMK2 {
     default int[] getReceivingPressureRange(FluidType type) { return DEFAULT_PRESSURE_RANGE; }
 
     default void trySubscribe(FluidType type, World world, DirPos pos) { trySubscribe(type, world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir()); }
-
+    default void trySubscribe(FluidType type, World world, BlockPos pos, ForgeDirection dir) { trySubscribe(type, world, pos.getX(), pos.getY(), pos.getZ(), dir); }
     default void trySubscribe(FluidType type, World world, int x, int y, int z, ForgeDirection dir) {
 
         TileEntity te = Compat.getTileStandard(world, x, y, z);

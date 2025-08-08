@@ -1,6 +1,6 @@
 package com.hbm.tileentity.machine;
 
-import com.hbm.api.fluid.IFluidUser;
+import com.hbm.api.fluidmk2.IFluidStandardSenderMK2;
 import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class TileEntityMachinePolluting extends TileEntityMachineBase implements IFluidUser {
+public abstract class TileEntityMachinePolluting extends TileEntityMachineBase implements IFluidStandardSenderMK2 {
 
     public FluidTankNTM smoke;
     public FluidTankNTM smoke_leaded;
@@ -77,9 +77,9 @@ public abstract class TileEntityMachinePolluting extends TileEntityMachineBase i
 
     public void sendSmoke(BlockPos pos, ForgeDirection dir) {sendSmoke(pos.getX(), pos.getY(), pos.getZ(), dir);}
     public void sendSmoke(int x, int y, int z, ForgeDirection dir) {
-        if(this.smoke.getFill() > 0) this.sendFluid(smoke, world, x, y, z, dir);
-        if(this.smoke_leaded.getFill() > 0) this.sendFluid(smoke_leaded, world, x, y, z, dir);
-        if(this.smoke_poison.getFill() > 0) this.sendFluid(smoke_poison, world, x, y, z, dir);
+        if(this.smoke.getFill() > 0) this.tryProvide(smoke, world, x, y, z, dir);
+        if(this.smoke_leaded.getFill() > 0) this.tryProvide(smoke_leaded, world, x, y, z, dir);
+        if(this.smoke_poison.getFill() > 0) this.tryProvide(smoke_poison, world, x, y, z, dir);
     }
 
     public FluidTankNTM[] getSmokeTanks() {

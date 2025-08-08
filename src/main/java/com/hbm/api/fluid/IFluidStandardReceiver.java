@@ -1,41 +1,35 @@
 package com.hbm.api.fluid;
 
+import com.hbm.api.fluidmk2.IFluidStandardReceiverMK2;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
+import com.hbm.lib.ForgeDirection;
+import com.hbm.uninos.GenNode;
+import com.hbm.uninos.UniNodespace;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
-public interface IFluidStandardReceiver extends IFluidUser {
-
-    @Override
-    public default long transferFluid(FluidType type, int pressure, long amount) {
-
-        for(FluidTankNTM tank : getReceivingTanks()) {
-            if(tank.getTankType() == type && tank.getPressure() == pressure) {
-                tank.setFill(tank.getFill() + (int) amount);
-
-                if(tank.getFill() > tank.getMaxFill()) {
-                    long overshoot = tank.getFill() - tank.getMaxFill();
-                    tank.setFill(tank.getMaxFill());
-                    return overshoot;
-                }
-
-                return 0;
-            }
-        }
-
-        return amount;
+@Deprecated
+public interface IFluidStandardReceiver extends IFluidStandardReceiverMK2 {
+    default void subscribeToAllAround(FluidType type, TileEntity tile) {
+        subscribeToAllAround(type, tile.getWorld(), tile.getPos().getX(), tile.getPos().getY(), tile.getPos().getZ());
     }
 
-    public FluidTankNTM[] getReceivingTanks();
-
-    @Override
-    public default long getDemand(FluidType type, int pressure) {
-
-        for(FluidTankNTM tank : getReceivingTanks()) {
-            if(tank.getTankType() == type && tank.getPressure() == pressure) {
-                return tank.getMaxFill() - tank.getFill();
-            }
+    default void subscribeToAllAround(FluidType type, World world, int x, int y, int z) {
+        for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+            trySubscribe(type, world, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ, dir);
         }
+    }
 
-        return 0;
+    default void tryUnsubscribe(FluidType type, World world, int x, int y, int z) {
+        GenNode node = UniNodespace.getNode(world, new BlockPos(x, y, z), type.getNetworkProvider());
+        if(node != null && node.net != null) node.net.removeReceiver(this);
+    }
+
+    default void unsubscribeToAllAround(FluidType type, TileEntity tile) {
+        for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+            tryUnsubscribe(type, tile.getWorld(), tile.getPos().getX() + dir.offsetX, tile.getPos().getY() + dir.offsetY, tile.getPos().getZ() + dir.offsetZ);
+        }
     }
 }

@@ -1,6 +1,6 @@
 package com.hbm.items.weapon.sedna.impl;
 
-import com.hbm.api.fluid.IFillableItem;
+import com.hbm.api.fluidmk2.IFillableItem;
 import com.hbm.entity.projectile.EntityChemical;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;

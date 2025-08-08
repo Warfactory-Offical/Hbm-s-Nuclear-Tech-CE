@@ -1,12 +1,10 @@
 package com.hbm.items.armor;
 
-import com.hbm.api.fluid.IFillableItem;
+import com.hbm.api.fluidmk2.IFillableItem;
 import com.hbm.handler.ArmorModHandler;
 import com.hbm.inventory.fluid.FluidType;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 

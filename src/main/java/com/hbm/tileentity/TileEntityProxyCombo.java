@@ -1,10 +1,12 @@
 package com.hbm.tileentity;
 
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
-import com.hbm.api.fluid.IFluidConnector;
+import com.hbm.api.fluidmk2.IFluidConnectorMK2;
+import com.hbm.api.fluidmk2.IFluidReceiverMK2;
 import com.hbm.api.tile.IHeatSource;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.fluid.FluidType;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.lib.CapabilityContextProvider;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.main.MainRegistry;
@@ -23,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @AutoRegister
-public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergyReceiverMK2, IHeatSource, IFluidConnector, IFluidHandler {
+public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergyReceiverMK2, IHeatSource, IFluidReceiverMK2, IFluidHandler {
 
 	TileEntity tile;
 	boolean inventory;
@@ -167,6 +169,32 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
 	}
 
 	@Override
+	public long transferPower(long power, boolean simulate) {
+
+		if(!this.power)
+			return power;
+
+		if(getTile() instanceof IEnergyReceiverMK2) {
+			return ((IEnergyReceiverMK2)getTile()).transferPower(power, simulate);
+		}
+
+		return power;
+	}
+
+	@Override
+	public boolean canConnect(ForgeDirection dir) {
+
+		if(!power)
+			return false;
+
+		if(getTile() instanceof IEnergyReceiverMK2) {
+			return ((IEnergyReceiverMK2)getTile()).canConnect(dir);
+		}
+
+		return true;
+	}
+
+	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		inventory = compound.getBoolean("inv");
 		fluid = compound.getBoolean("flu");
@@ -185,27 +213,38 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
 		return super.writeToNBT(compound);
 	}
 
+	public static final FluidTankNTM[] EMPTY_TANKS = new FluidTankNTM[0];
+
 	@Override
-	public long transferFluid(FluidType type, int pressure, long fluid) {
+	public FluidTankNTM[] getAllTanks() {
+		if(!fluid) return EMPTY_TANKS;
 
-		if(!this.fluid)
-			return fluid;
-
-		if(getTile() instanceof IFluidConnector) {
-			return ((IFluidConnector)getTile()).transferFluid(type, pressure, fluid);
+		if(getTile() instanceof IFluidReceiverMK2) {
+			return ((IFluidReceiverMK2)getTile()).getAllTanks();
 		}
-		return fluid;
+
+		return EMPTY_TANKS;
+	}
+
+	@Override
+	public long transferFluid(FluidType type, int pressure, long amount) {
+		if(!fluid) return amount;
+
+		if(getTile() instanceof IFluidReceiverMK2) {
+			return ((IFluidReceiverMK2)getTile()).transferFluid(type, pressure, amount);
+		}
+
+		return amount;
 	}
 
 	@Override
 	public long getDemand(FluidType type, int pressure) {
+		if(!fluid) return 0;
 
-		if(!this.fluid)
-			return 0;
-
-		if(getTile() instanceof IFluidConnector) {
-			return ((IFluidConnector)getTile()).getDemand(type, pressure);
+		if(getTile() instanceof IFluidReceiverMK2) {
+			return ((IFluidReceiverMK2)getTile()).getDemand(type, pressure);
 		}
+
 		return 0;
 	}
 
@@ -215,8 +254,8 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
 		if(!this.fluid)
 			return false;
 
-		if(getTile() instanceof IFluidConnector) {
-			return ((IFluidConnector)getTile()).canConnect(type, dir);
+		if(getTile() instanceof IFluidConnectorMK2) {
+			return ((IFluidConnectorMK2) getTile()).canConnect(type, dir);
 		}
 		return true;
 	}

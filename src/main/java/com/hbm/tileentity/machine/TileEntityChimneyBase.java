@@ -1,15 +1,13 @@
 package com.hbm.tileentity.machine;
 
-import com.hbm.api.fluid.IFluidUser;
+import com.hbm.api.fluidmk2.IFluidReceiverMK2;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.handler.pollution.PollutionHandler;
-import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
-import com.hbm.packet.toclient.BufPacket;
 import com.hbm.tileentity.IBufPacketReceiver;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import io.netty.buffer.ByteBuf;
@@ -18,11 +16,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import javax.annotation.Nullable;
 
-public abstract class TileEntityChimneyBase extends TileEntityLoadedBase implements IBufPacketReceiver, ITickable, IFluidUser {
+public abstract class TileEntityChimneyBase extends TileEntityLoadedBase implements IBufPacketReceiver, ITickable, IFluidReceiverMK2 {
 
     public long ashTick = 0;
     public long sootTick = 0;

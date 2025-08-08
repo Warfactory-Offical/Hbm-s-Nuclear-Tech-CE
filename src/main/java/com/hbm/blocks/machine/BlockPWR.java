@@ -1,10 +1,11 @@
 package com.hbm.blocks.machine;
 
-import com.hbm.api.fluid.IFluidConnector;
+import com.hbm.api.fluidmk2.IFluidReceiverMK2;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.fluid.FluidType;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.machine.TileEntityPWRController;
 import com.hbm.util.I18nUtil;
@@ -125,7 +126,7 @@ public class BlockPWR extends BlockContainer implements ILookOverlay {
     }
 
     @AutoRegister
-    public static class TileEntityBlockPWR extends TileEntity implements ITickable, IFluidHandler, IFluidConnector {
+    public static class TileEntityBlockPWR extends TileEntity implements ITickable, IFluidHandler, IFluidReceiverMK2 {
 
         public IBlockState originalBlockState;
         public BlockPos corePos;
@@ -303,6 +304,15 @@ public class BlockPWR extends BlockContainer implements ILookOverlay {
                 return getCore().canConnect(type, dir);
             }
             return true;
+        }
+
+        @Override
+        public FluidTankNTM[] getAllTanks() {
+            if(!world.getBlockState(pos).getValue(IO_ENABLED)) return new FluidTankNTM[0];
+            if(getCore() != null) {
+                return getCore().getAllTanks();
+            }
+            return new FluidTankNTM[0];
         }
     }
 }

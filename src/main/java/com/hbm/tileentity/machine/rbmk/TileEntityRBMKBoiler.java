@@ -1,8 +1,7 @@
 package com.hbm.tileentity.machine.rbmk;
 
 import com.hbm.api.fluid.IFluidStandardTransceiver;
-import com.hbm.api.fluid.IFluidUser;
-import com.hbm.api.fluid.IPipeNet;
+import com.hbm.api.fluidmk2.FluidNode;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.entity.projectile.EntityRBMKDebris.DebrisType;
@@ -21,6 +20,7 @@ import com.hbm.lib.Library;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKConsole.ColumnType;
+import com.hbm.uninos.UniNodespace;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -224,9 +224,9 @@ public class TileEntityRBMKBoiler extends TileEntityRBMKSlottedBase implements I
 
         if (RBMKDials.getOverpressure(world)) {
             for (DirPos pos : getOutputPos()) {
-                IPipeNet net = IFluidUser.getPipeNet(world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), steam.getTankType());
-                if (net != null) {
-                    pipes.add(net);
+                FluidNode node = (FluidNode) UniNodespace.getNode(world, pos.getPos(), steam.getTankType().getNetworkProvider());
+                if (node.net != null) {
+                    this.pipes.add(node.net);
                 }
             }
         }

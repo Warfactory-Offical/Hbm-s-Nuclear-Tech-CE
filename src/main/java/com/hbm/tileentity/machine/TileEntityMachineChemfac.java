@@ -98,7 +98,7 @@ public class TileEntityMachineChemfac extends TileEntityMachineChemplantBase imp
 
 			for(DirPos pos : getConPos()) for(FluidTankNTM tank : outTanks()) {
 				if(tank.getTankType() != Fluids.NONE && tank.getFill() > 0) {
-					this.sendFluid(tank, world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
+					this.tryProvide(tank, world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
 				}
 			}
 
@@ -386,5 +386,15 @@ public class TileEntityMachineChemfac extends TileEntityMachineChemplantBase imp
 	@SideOnly(Side.CLIENT)
 	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		return new GUIChemfac(player.inventory, this);
+	}
+
+	@Override
+	public FluidTankNTM[] getReceivingTanks() {
+		return inTanks().toArray(new FluidTankNTM[0]);
+	}
+
+	@Override
+	public FluidTankNTM[] getSendingTanks() {
+		return outTanks().toArray(new FluidTankNTM[0]);
 	}
 }

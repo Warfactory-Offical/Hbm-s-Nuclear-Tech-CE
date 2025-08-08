@@ -1,6 +1,6 @@
 package com.hbm.items.gear;
 
-import com.hbm.api.fluid.IFillableItem;
+import com.hbm.api.fluidmk2.IFillableItem;
 import com.hbm.handler.ArmorModHandler;
 import com.hbm.handler.JetpackHandler;
 import com.hbm.inventory.fluid.FluidType;

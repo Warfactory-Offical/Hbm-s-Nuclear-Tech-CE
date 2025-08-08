@@ -5,7 +5,7 @@ import java.util.List;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.items.gear.ArmorFSB;
 import com.hbm.util.BobMathUtil;
-import com.hbm.api.fluid.IFillableItem;
+import com.hbm.api.fluidmk2.IFillableItem;
 
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.inventory.EntityEquipmentSlot;

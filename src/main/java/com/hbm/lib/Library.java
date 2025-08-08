@@ -7,8 +7,8 @@ import com.hbm.api.conveyor.IConveyorBelt;
 import com.hbm.api.energymk2.IBatteryItem;
 import com.hbm.api.energymk2.IEnergyConnectorBlock;
 import com.hbm.api.energymk2.IEnergyConnectorMK2;
-import com.hbm.api.fluid.IFluidConnector;
-import com.hbm.api.fluid.IFluidConnectorBlock;
+import com.hbm.api.fluidmk2.IFluidConnectorMK2;
+import com.hbm.api.fluidmk2.IFluidConnectorBlockMK2;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.HbmLivingCapability.EntityHbmPropsProvider;
 import com.hbm.capability.HbmLivingCapability.IEntityHbmProps;
@@ -805,8 +805,8 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 
 		Block b = world.getBlockState(new BlockPos(x, y, z)).getBlock();
 
-		if(b instanceof IFluidConnectorBlock) {
-			IFluidConnectorBlock con = (IFluidConnectorBlock) b;
+		if(b instanceof IFluidConnectorBlockMK2) {
+			IFluidConnectorBlockMK2 con = (IFluidConnectorBlockMK2) b;
 
 			if(con.canConnect(type, world, x, y, z, dir.getOpposite() /* machine's connecting side */))
 				return true;
@@ -814,8 +814,8 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 
 		TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
 
-		if(te instanceof IFluidConnector) {
-			IFluidConnector con = (IFluidConnector) te;
+		if(te instanceof IFluidConnectorMK2) {
+			IFluidConnectorMK2 con = (IFluidConnectorMK2) te;
 
 			if(con.canConnect(type, dir.getOpposite() /* machine's connecting side */))
 				return true;

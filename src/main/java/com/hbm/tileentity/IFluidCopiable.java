@@ -1,7 +1,7 @@
 package com.hbm.tileentity;
 
-import com.hbm.api.fluid.IFluidStandardTransceiver;
-import com.hbm.api.fluid.IFluidUser;
+import com.hbm.api.fluidmk2.IFluidStandardTransceiverMK2;
+import com.hbm.api.fluidmk2.IFluidUserMK2;
 import com.hbm.interfaces.ICopiable;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
@@ -20,7 +20,7 @@ public interface IFluidCopiable extends ICopiable {
      *         none if there is no alt paste support
      */
     default int[] getFluidIDToCopy() {
-        IFluidUser tile = (IFluidUser) this;
+        IFluidUserMK2 tile = (IFluidUserMK2) this;
         ArrayList<Integer> types = new ArrayList<>();
 
         for(FluidTankNTM tank : tile.getAllTanks()) {
@@ -33,8 +33,8 @@ public interface IFluidCopiable extends ICopiable {
 
     default FluidTankNTM getTankToPaste() {
         TileEntity te = (TileEntity) this;
-        if(te instanceof IFluidStandardTransceiver) {
-            IFluidStandardTransceiver tile = (IFluidStandardTransceiver) this;
+        if(te instanceof IFluidStandardTransceiverMK2) {
+            IFluidStandardTransceiverMK2 tile = (IFluidStandardTransceiverMK2) this;
             return tile.getReceivingTanks() != null ? tile.getReceivingTanks()[0] : null;
         }
         return null;

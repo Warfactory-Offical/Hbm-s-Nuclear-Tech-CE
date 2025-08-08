@@ -1,6 +1,7 @@
 package com.hbm.tileentity.machine;
 
-import com.hbm.api.fluid.IFluidStandardTransceiver;
+import com.hbm.api.fluidmk2.FluidNode;
+import com.hbm.api.fluidmk2.IFluidStandardTransceiverMK2;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.HbmCapability;
@@ -25,6 +26,7 @@ import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.tileentity.*;
+import com.hbm.uninos.UniNodespace;
 import com.hbm.util.ParticleUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
@@ -54,8 +56,9 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 @AutoRegister
-public class TileEntityMachineFluidTank extends TileEntityMachineBase implements ITickable, IFluidStandardTransceiver, IPersistentNBT, IControllable, IGUIProvider, IOverpressurable, IRepairable, IFFtoNTMF, IFluidCopiable {
-
+public class TileEntityMachineFluidTank extends TileEntityMachineBase implements ITickable, IFluidStandardTransceiverMK2, IPersistentNBT, IControllable, IGUIProvider, IOverpressurable, IRepairable, IFFtoNTMF, IFluidCopiable {
+	protected FluidNode node;
+	protected FluidType lastType;
 	public FluidTankNTM tankNew;
 	public FluidTank tank;
 	public Fluid oldFluid;
@@ -185,14 +188,52 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 					this.markDirty();
 				}
 
-				this.sendingBrake = true;
-				tankNew.setFill(TileEntityBarrel.transmitFluidFairly(world, tankNew, this, tankNew.getFill(), this.mode == 0 || this.mode == 1, this.mode == 1 || this.mode == 2, getConPos()));
-				this.sendingBrake = false;
+				// In buffer mode, acts like a pipe block, providing fluid to its own node
+				// otherwise, it is a regular providing/receiving machine, blocking further propagation
+				if(mode == 1) {
+					if(this.node == null || this.node.expired || tankNew.getTankType() != lastType) {
+
+						this.node = (FluidNode) UniNodespace.getNode(world, pos, tankNew.getTankType().getNetworkProvider());
+
+						if(this.node == null || this.node.expired || tankNew.getTankType() != lastType) {
+							this.node = this.createNode(tankNew.getTankType());
+							UniNodespace.createNode(world, this.node);
+							lastType = tankNew.getTankType();
+						}
+					}
+
+					if(node != null && node.hasValidNet()) {
+						node.net.addProvider(this);
+						node.net.addReceiver(this);
+					}
+				} else {
+					if(this.node != null) {
+						UniNodespace.destroyNode(world, pos, tankNew.getTankType().getNetworkProvider());
+						this.node = null;
+					}
+
+					for(DirPos pos : getConPos()) {
+						FluidNode dirNode = (FluidNode) UniNodespace.getNode(world, pos.getPos(), tankNew.getTankType().getNetworkProvider());
+
+						if(mode == 2) {
+							tryProvide(tankNew, world, pos.getPos(), pos.getDir());
+						} else {
+							if(dirNode != null && dirNode.hasValidNet()) dirNode.net.removeProvider(this);
+						}
+
+						if(mode == 0) {
+							if(dirNode != null && dirNode.hasValidNet()) dirNode.net.addReceiver(this);
+						} else {
+							if(dirNode != null && dirNode.hasValidNet()) dirNode.net.removeReceiver(this);
+						}
+					}
+				}
 
 				tankNew.loadTank(2, 3, inventory);
 				tankNew.setType(0, 1, inventory);
-			} else {
-				for(DirPos pos : getConPos()) this.tryUnsubscribe(tankNew.getTankType(), world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ());
+			} else if (this.node != null) {
+				UniNodespace.destroyNode(world, pos, tankNew.getTankType().getNetworkProvider());
+				this.node = null;
 			}
 
 			byte comp = this.getComparatorPower(); //comparator shit
@@ -215,7 +256,7 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 
 				if(this.hasExploded) {
 
-					int leaking = 0;
+					int leaking;
 					if(tankNew.getTankType().isAntimatter()) {
 						leaking = tankNew.getFill();
 					} else if(tankNew.getTankType().hasTrait(FluidTraitSimple.FT_Gaseous.class) || tankNew.getTankType().hasTrait(FluidTraitSimple.FT_Gaseous_ART.class)) {
@@ -261,6 +302,19 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 		tankNew.deserialize(buf);
 	}
 
+	protected FluidNode createNode(FluidType type) {
+		DirPos[] conPos = getConPos();
+
+		HashSet<BlockPos> posSet = new HashSet<>();
+		posSet.add(pos);
+		for(DirPos pos : conPos) {
+			ForgeDirection dir = pos.getDir();
+			posSet.add(new BlockPos(pos.getPos().getX() - dir.offsetX, pos.getPos().getY() - dir.offsetY, pos.getPos().getZ() - dir.offsetZ));
+		}
+
+		return new FluidNode(type.getNetworkProvider(), posSet.toArray(new BlockPos[posSet.size()])).setConnections(conPos);
+	}
+
 	/** called when the tank breaks due to hazardous materials or external force, can be used to quickly void part of the tank or spawn a mushroom cloud */
 	public void explode() {
 		this.hasExploded = true;
@@ -270,7 +324,6 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 
 	@Override
 	public void explode(World world, int x, int y, int z) {
-
 		if(this.hasExploded) return;
 		this.onFire = tankNew.getTankType().hasTrait(FT_Flammable.class);
 		this.hasExploded = true;
@@ -484,6 +537,12 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 	public void invalidate() {
 		super.invalidate();
 		ControlEventSystem.get(world).removeControllable(this);
+
+		if (!world.isRemote) {
+			if (this.node != null) {
+				UniNodespace.destroyNode(world, pos, tankNew.getTankType().getNetworkProvider());
+			}
+		}
 	}
 
 	@Override
