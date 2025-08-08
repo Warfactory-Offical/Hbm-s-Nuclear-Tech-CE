@@ -30,7 +30,6 @@ import net.minecraftforge.client.resource.IResourceType;
 import net.minecraftforge.client.resource.ISelectiveResourceReloadListener;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 @Spaghetti("everything here is a fucking mess")
 public class QMAWLoader implements ISelectiveResourceReloadListener {
@@ -77,13 +76,10 @@ public class QMAWLoader implements ISelectiveResourceReloadListener {
     public static void agonyEngine() {
 
         // I should stop accepting random PRs when in gym man...
+        // Turns out ObfuscationReflectionHelper wasnt even needed. Thanks AccessTransformer!!
         for (FileResourcePack modResourcePack : modResourcePacks) {
             try {
-                File file = ObfuscationReflectionHelper.getPrivateValue(
-                        AbstractResourcePack.class,
-                        modResourcePack,
-                        "field_110597_b" // Obfuscated name for 'resourcePackFile'
-                );
+                File file = ((AbstractResourcePack) modResourcePack).resourcePackFile;
                 if (file != null) {
                     dissectZip(file);
                 } else {
@@ -95,11 +91,7 @@ public class QMAWLoader implements ISelectiveResourceReloadListener {
         }
         for (FolderResourcePack modResourcePack : folderResourcePacks) {
             try {
-                File file = ObfuscationReflectionHelper.getPrivateValue(
-                        AbstractResourcePack.class,
-                        modResourcePack,
-                        "field_110597_b"
-                );
+                File file = ((AbstractResourcePack) modResourcePack).resourcePackFile;
                 if (file != null) {
                     dissectFolder(file);
                 } else {
@@ -129,11 +121,7 @@ public class QMAWLoader implements ISelectiveResourceReloadListener {
 
                 if (pack instanceof FileResourcePack) {
                     try {
-                        File file = ObfuscationReflectionHelper.getPrivateValue(
-                                AbstractResourcePack.class,
-                                (FileResourcePack) pack,
-                                "field_110597_b"
-                        );
+                        File file = ((AbstractResourcePack) pack).resourcePackFile;
                         if (file != null) {
                             dissectZip(file);
                         } else {
@@ -146,11 +134,7 @@ public class QMAWLoader implements ISelectiveResourceReloadListener {
 
                 if (pack instanceof FolderResourcePack) {
                     try {
-                        File file = ObfuscationReflectionHelper.getPrivateValue(
-                                AbstractResourcePack.class,
-                                (FolderResourcePack) pack,
-                                "field_110597_b"
-                        );
+                        File file = ((AbstractResourcePack) pack).resourcePackFile;
                         if (file != null) {
                             dissectFolder(file);
                         } else {
