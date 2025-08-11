@@ -60,7 +60,6 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import static com.hbm.items.ItemEnums.*;
@@ -84,6 +83,8 @@ public class ModItems {
     public static final Item hand_drill = new ItemTooling(ToolType.HAND_DRILL, 100, "hand_drill");
     public static final Item hand_drill_desh = new ItemTooling(ToolType.HAND_DRILL, -1, "hand_drill_desh");
     public static final Item boltgun = new ItemBoltgun("boltgun");
+    public static final Item blowtorch = new ItemBlowtorch("blowtorch");
+    public static final Item acetylene_torch = new ItemBlowtorch("acetylene_torch");
     public static final Item chemistry_set = new ItemCraftingDegradation("chemistry_set", 100).setCreativeTab(MainRegistry.controlTab);
     public static final Item chemistry_set_boron = new ItemCraftingDegradation("chemistry_set_boron", 0).setCreativeTab(MainRegistry.controlTab);
     public static final Item reacher = new ItemCustomLore("reacher").setMaxStackSize(1).setFull3D().setCreativeTab(MainRegistry.consumableTab);
