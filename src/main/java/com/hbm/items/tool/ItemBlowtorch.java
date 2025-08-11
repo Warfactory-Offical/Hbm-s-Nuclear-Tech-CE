@@ -80,7 +80,6 @@ public class ItemBlowtorch extends Item implements IFillableItem {
         if(!stack.hasTagCompound()) {
             initNBT(stack);
         }
-        assert stack.getTagCompound() != null;
         stack.getTagCompound().setInteger(type.getName(), fill);
     }
 
