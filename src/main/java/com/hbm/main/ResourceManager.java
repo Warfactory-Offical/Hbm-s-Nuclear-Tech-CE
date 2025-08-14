@@ -1398,7 +1398,10 @@ public class ResourceManager {
 	public static final ResourceLocation lut = new ResourceLocation(RefStrings.MODID, "textures/misc/neutrallut.png");
 	
 	public static final ResourceLocation spinny_light_tex = new ResourceLocation(RefStrings.MODID, "textures/blocks/spinnylight.png");
-	
+
+	//Drones
+	public static final IModelCustom delivery_drone = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/drone.obj"));
+
 	//Blast
 	public static final ResourceLocation tomblast = new ResourceLocation(RefStrings.MODID, "textures/models/explosion/tomblast.png");
 	public static final ResourceLocation dust = new ResourceLocation(RefStrings.MODID, "textures/models/explosion/dust.png");
@@ -1702,7 +1705,12 @@ public class ResourceManager {
 	public static final ResourceLocation mp_w_15_volcano_tex = new ResourceLocation(RefStrings.MODID, "textures/models/missile_parts/warheads/mp_w_15_volcano.png");
 	public static final ResourceLocation mp_w_15_mirv_tex = new ResourceLocation(RefStrings.MODID, "textures/models/missile_parts/warheads/mp_w_15_mirv.png");
 	public static final ResourceLocation mp_w_fairing_tex = new ResourceLocation(RefStrings.MODID, "textures/models/missile_parts/warheads/mp_w_fairing.png");
-	
+
+	//Drone
+	public static final ResourceLocation delivery_drone_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/drone.png");
+	public static final ResourceLocation delivery_drone_express_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/drone_express.png");
+	public static final ResourceLocation delivery_drone_request_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/drone_request.png");
+
 	//Keypad
 	public static final ResourceLocation keypad_tex = new ResourceLocation(RefStrings.MODID, "textures/models/doors/slidingblast/keypad.png");
 	public static final ResourceLocation keypad_error_tex = new ResourceLocation(RefStrings.MODID, "textures/models/doors/slidingblast/keypad_error.png");

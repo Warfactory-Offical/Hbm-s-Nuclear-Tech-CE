@@ -1,0 +1,8 @@
+{
+  "parent": "block/cube_bottom_top",
+  "textures": {
+    "bottom": "hbm:blocks/drone_dock_bottom",
+    "top": "hbm:blocks/drone_dock_top",
+    "side": "hbm:blocks/drone_dock_side"
+  }
+}

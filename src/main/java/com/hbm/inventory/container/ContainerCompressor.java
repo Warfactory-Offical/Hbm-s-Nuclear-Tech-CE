@@ -73,7 +73,7 @@ public class ContainerCompressor extends Container {
                 }
             }
 
-            if(var5.getMaxStackSize() == 0) {
+            if(var5.getCount() == 0) {
                 var4.putStack(ItemStack.EMPTY);
             } else {
                 var4.onSlotChanged();

@@ -687,6 +687,25 @@ public class ClientProxy extends ServerProxy {
                     }
                 }
             }
+            case "debugdrone" -> {
+                Item held = player.getHeldItem(EnumHand.MAIN_HAND) == ItemStack.EMPTY ? null : player.getHeldItem(EnumHand.MAIN_HAND).getItem();
+
+                if(held == ModItems.drone ||
+                        held == Item.getItemFromBlock(ModBlocks.drone_crate_provider) ||
+                        held == Item.getItemFromBlock(ModBlocks.drone_crate_requester) ||
+                        held == Item.getItemFromBlock(ModBlocks.drone_dock) ||
+                        held == Item.getItemFromBlock(ModBlocks.drone_waypoint_request) ||
+                        held == Item.getItemFromBlock(ModBlocks.drone_waypoint) ||
+                        held == Item.getItemFromBlock(ModBlocks.drone_crate) ||
+                        held == ModItems.drone_linker) {
+                    double mX = data.getDouble("mX");
+                    double mY = data.getDouble("mY");
+                    double mZ = data.getDouble("mZ");
+                    int color = data.getInteger("color");
+                    ParticleDebugLine text = new ParticleDebugLine(world, x, y, z, mX, mY, mZ, color);
+                    Minecraft.getMinecraft().effectRenderer.addEffect(text);
+                }
+            }
             case "network" -> {
                 ParticleDebug debug = null;
                 double mX = data.getDouble("mX");

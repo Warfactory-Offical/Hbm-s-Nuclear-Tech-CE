@@ -6,6 +6,7 @@ import io.netty.buffer.ByteBuf;
 import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 public class ModulePatternMatcher {
@@ -135,17 +136,16 @@ public class ModulePatternMatcher {
         }
     }
 
-    public void deserialize(ByteBuf buf) {
-        for(int i = 0; i < modes.length; i++) {
-            modes[i] = BufferUtil.readString(buf);
+    public void serialize(ByteBuf buf) {
+        for (String mode : modes) {
+            BufferUtil.writeString(buf, mode == null ? "" : mode);
         }
     }
 
-    public void serialize(ByteBuf buf) {
-        for (String mode : modes) {
-            if (mode != null) {
-                BufferUtil.writeString(buf, mode);
-            }
+    public void deserialize(ByteBuf buf) {
+        for (int i = 0; i < modes.length; i++) {
+            String s = BufferUtil.readString(buf);
+            modes[i] = s.isEmpty() ? null : s;
         }
     }
 
@@ -164,6 +164,14 @@ public class ModulePatternMatcher {
             if(modes[i] != null) {
                 nbt.setString("mode" + i, modes[i]);
             }
+        }
+    }
+
+    public static String getLabel(String mode) {
+        switch(mode) {
+            case MODE_EXACT: return TextFormatting.YELLOW + "Item and meta match";
+            case MODE_WILDCARD: return TextFormatting.YELLOW + "Item matches";
+            default: return TextFormatting.YELLOW + "Ore dict key matches: " + mode;
         }
     }
 }

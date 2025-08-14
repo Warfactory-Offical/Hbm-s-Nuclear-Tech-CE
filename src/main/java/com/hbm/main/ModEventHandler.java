@@ -51,6 +51,7 @@ import com.hbm.render.item.weapon.sedna.ItemRenderWeaponBase;
 import com.hbm.tileentity.machine.TileEntityMachineRadarNT;
 import com.hbm.tileentity.machine.rbmk.RBMKDials;
 import com.hbm.tileentity.network.RTTYSystem;
+import com.hbm.tileentity.network.RequestNetwork;
 import com.hbm.uninos.UniNodespace;
 import com.hbm.util.ArmorRegistry;
 import com.hbm.util.ArmorRegistry.HazardClass;
@@ -592,6 +593,7 @@ public class ModEventHandler {
     public void serverTick(ServerTickEvent e) {
         if (e.phase == Phase.START) {
             JetpackHandler.serverTick();
+            RequestNetwork.updateEntries();
             RTTYSystem.updateBroadcastQueue();
             TileEntityMachineRadarNT.updateSystem();
             UniNodespace.updateNodespace();

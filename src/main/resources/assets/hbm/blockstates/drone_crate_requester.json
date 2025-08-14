@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "normal": { "model": "hbm:drone_crate_requester" }
+  }
+}
