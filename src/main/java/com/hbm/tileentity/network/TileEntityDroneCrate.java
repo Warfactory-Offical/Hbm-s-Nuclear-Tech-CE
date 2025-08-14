@@ -118,19 +118,19 @@ public class TileEntityDroneCrate extends TileEntityMachineBase implements IGUIP
 
     protected void loadItems(EntityDeliveryDrone drone) {
 
-        if(drone.getAppearance() != 0) return;
+        if (drone.getAppearance() != 0) return;
 
         boolean loaded = false;
 
-        for(int i = 0; i < 18; i++) {
-            if(this.inventory.getStackInSlot(i) != ItemStack.EMPTY) {
+        for (int i = 0; i < 18; i++) {
+            if (!this.inventory.getStackInSlot(i).isEmpty()) {
                 loaded = true;
                 drone.setInventorySlotContents(i, this.inventory.getStackInSlot(i).copy());
                 this.inventory.setStackInSlot(i, ItemStack.EMPTY);
             }
         }
 
-        if(loaded) {
+        if (loaded) {
             this.markDirty();
             drone.setAppearance(1);
             world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundHandler.itemUnpack, SoundCategory.BLOCKS, 0.5F, 0.75F);
@@ -138,27 +138,50 @@ public class TileEntityDroneCrate extends TileEntityMachineBase implements IGUIP
     }
 
     protected void unloadItems(EntityDeliveryDrone drone) {
+        if (drone.getAppearance() != 1) return;
 
-        if(drone.getAppearance() != 1) return;
+        for (int d = 0; d < 18; d++) {
+            ItemStack droneStack = drone.getStackInSlot(d);
+            if (droneStack.isEmpty()) continue;
 
-        boolean emptied = true;
+            for (int c = 0; c < 18 && !droneStack.isEmpty(); c++) {
+                ItemStack crateStack = this.inventory.getStackInSlot(c);
+                if (crateStack.isEmpty()) continue;
+                if (ItemStack.areItemsEqual(crateStack, droneStack) &&
+                        ItemStack.areItemStackTagsEqual(crateStack, droneStack) &&
+                        crateStack.getCount() < crateStack.getMaxStackSize()) {
 
-        for(int i = 0; i < 18; i++) {
-            ItemStack droneSlot = drone.getStackInSlot(i);
+                    int can = Math.min(crateStack.getMaxStackSize() - crateStack.getCount(), droneStack.getCount());
+                    if (can > 0) {
+                        crateStack.grow(can);
+                        droneStack.shrink(can);
+                        drone.setInventorySlotContents(d, droneStack.isEmpty() ? ItemStack.EMPTY : droneStack);
+                    }
+                }
+            }
 
-            if(this.inventory.getStackInSlot(i) == ItemStack.EMPTY && droneSlot != ItemStack.EMPTY) {
-                this.inventory.setStackInSlot(i, droneSlot.copy());
-                drone.setInventorySlotContents(i, ItemStack.EMPTY);
-            } else if(this.inventory.getStackInSlot(i) != ItemStack.EMPTY && droneSlot != ItemStack.EMPTY) {
-                emptied = false;
+            if (!droneStack.isEmpty()) {
+                for (int c = 0; c < 18; c++) {
+                    if (this.inventory.getStackInSlot(c).isEmpty()) {
+                        this.inventory.setStackInSlot(c, droneStack.copy());
+                        drone.setInventorySlotContents(d, ItemStack.EMPTY);
+                        break;
+                    }
+                }
             }
         }
 
         this.markDirty();
 
-        if(emptied) {
+        boolean emptied = true;
+        for (int i = 0; i < 18; i++) {
+            if (!drone.getStackInSlot(i).isEmpty()) { emptied = false; break; }
+        }
+
+        if (emptied) {
             drone.setAppearance(0);
-            world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundHandler.itemUnpack, SoundCategory.BLOCKS, 0.5F, 0.75F);
+            world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
+                    HBMSoundHandler.itemUnpack, SoundCategory.BLOCKS, 0.5F, 0.75F);
         }
     }
 

@@ -142,13 +142,13 @@ public class EntityDeliveryDrone extends EntityDroneBase implements IInventory, 
         if(this.inventory.getStackInSlot(slot) != ItemStack.EMPTY) {
             ItemStack itemstack;
 
-            if (this.inventory.getStackInSlot(slot).getMaxStackSize() <= amount) {
+            if (this.inventory.getStackInSlot(slot).getCount() <= amount) {
                 itemstack = this.inventory.getStackInSlot(slot);
                 this.inventory.setStackInSlot(slot, ItemStack.EMPTY);
             } else {
                 itemstack = this.inventory.getStackInSlot(slot).splitStack(amount);
 
-                if(this.inventory.getStackInSlot(slot).getMaxStackSize() == 0) {
+                if(this.inventory.getStackInSlot(slot).getCount() == 0) {
                     this.inventory.setStackInSlot(slot, ItemStack.EMPTY);
                 }
 
@@ -176,12 +176,11 @@ public class EntityDeliveryDrone extends EntityDroneBase implements IInventory, 
 
     @Override
     public void setInventorySlotContents(int slot, ItemStack stack) {
-
-        if (stack != ItemStack.EMPTY && stack.getMaxStackSize() > this.getInventoryStackLimit()) {
-            this.inventory.setStackInSlot(slot, stack.splitStack(this.getInventoryStackLimit()));
-        } else {
-            this.inventory.setStackInSlot(slot, stack);
+        if (stack != ItemStack.EMPTY && stack.getCount() > this.getInventoryStackLimit()) {
+            stack.setCount(this.getInventoryStackLimit());
         }
+
+        this.inventory.setStackInSlot(slot, stack);
     }
 
     @Override public int getSizeInventory() { return 18; }
