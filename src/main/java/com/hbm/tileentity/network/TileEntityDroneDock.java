@@ -125,7 +125,7 @@ public class TileEntityDroneDock extends TileEntityRequestNetworkContainer imple
         drone.program.add(DroneProgram.DOCK);
 
         world.spawnEntity(drone);
-        this.world.playSound(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundHandler.storageOpen, SoundCategory.BLOCKS, 2.0F, 1.0F, true);
+        this.world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundHandler.storageOpen, SoundCategory.BLOCKS, 2.0F, 1.0F);
 
         return true;
     }

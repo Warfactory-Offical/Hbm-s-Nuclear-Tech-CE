@@ -133,7 +133,7 @@ public class TileEntityDroneCrate extends TileEntityMachineBase implements IGUIP
         if(loaded) {
             this.markDirty();
             drone.setAppearance(1);
-            world.playSound(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundHandler.itemUnpack, SoundCategory.BLOCKS, 0.5F, 0.75F, true);
+            world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundHandler.itemUnpack, SoundCategory.BLOCKS, 0.5F, 0.75F);
         }
     }
 
@@ -158,7 +158,7 @@ public class TileEntityDroneCrate extends TileEntityMachineBase implements IGUIP
 
         if(emptied) {
             drone.setAppearance(0);
-            world.playSound(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundHandler.itemUnpack, SoundCategory.BLOCKS, 0.5F, 0.75F, true);
+            world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundHandler.itemUnpack, SoundCategory.BLOCKS, 0.5F, 0.75F);
         }
     }
 
@@ -170,7 +170,7 @@ public class TileEntityDroneCrate extends TileEntityMachineBase implements IGUIP
             drone.fluid = new FluidStack(tank.getTankType(), tank.getFill());
             this.tank.setFill(0);
             drone.setAppearance(2);
-            world.playSound(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundHandler.itemUnpack, SoundCategory.BLOCKS, 0.5F, 0.75F, true);
+            world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundHandler.itemUnpack, SoundCategory.BLOCKS, 0.5F, 0.75F);
 
             this.markDirty();
         }
@@ -191,7 +191,7 @@ public class TileEntityDroneCrate extends TileEntityMachineBase implements IGUIP
                 tank.setFill(tank.getMaxFill());
                 drone.fluid.fill = overshoot;
             }
-            world.playSound(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundHandler.itemUnpack, SoundCategory.BLOCKS, 0.5F, 0.75F, true);
+            world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundHandler.itemUnpack, SoundCategory.BLOCKS, 0.5F, 0.75F);
 
             this.markDirty();
         }
