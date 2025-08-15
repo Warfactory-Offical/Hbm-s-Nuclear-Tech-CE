@@ -55,7 +55,7 @@ public class EntityRequestDrone extends EntityDroneBase {
 
         if(attacker instanceof EntityPlayer && !world.isRemote) {
             this.setDead();
-            if(heldItem != ItemStack.EMPTY)
+            if(!heldItem.isEmpty())
                 this.entityDropItem(heldItem, 1F);
             this.entityDropItem(new ItemStack(ModItems.drone, 1, EnumDroneType.REQUEST.ordinal()), 1F);
         }
@@ -65,8 +65,6 @@ public class EntityRequestDrone extends EntityDroneBase {
 
     @Override
     public void onUpdate() {
-        super.onUpdate();
-
         if (!world.isRemote) {
             if (Vec3.createVectorHelper(motionX, motionY, motionZ).length() < 0.01) {
                 if (nextActionTimer > 0) {
@@ -83,7 +81,7 @@ public class EntityRequestDrone extends EntityDroneBase {
 
                     if (next instanceof BlockPos pos) {
                         this.setTarget(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
-                    } else if (next instanceof AStack aStack && heldItem == ItemStack.EMPTY) {
+                    } else if (next instanceof AStack aStack && heldItem.isEmpty()) {
                         //to make DAMN sure this fuckin idiot doesnt miss the dock
                         Vec3 pos = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
                         Vec3 nextPos = Vec3.createVectorHelper(this.posX, this.posY - 4, this.posZ);
@@ -96,7 +94,7 @@ public class EntityRequestDrone extends EntityDroneBase {
                                 for (int i = 0; i < provider.inventory.getSlots(); i++) {
                                     ItemStack stack = provider.inventory.getStackInSlot(i);
 
-                                    if (stack != ItemStack.EMPTY && aStack.matchesRecipe(stack, true)) {
+                                    if (!stack.isEmpty() && aStack.matchesRecipe(stack, true)) {
                                         this.heldItem = stack.copy();
                                         this.setAppearance(1);
                                         world.playSound(null, posX, posY, posZ, HBMSoundHandler.itemUnpack, SoundCategory.BLOCKS, 0.5F, 0.75F);
@@ -108,7 +106,7 @@ public class EntityRequestDrone extends EntityDroneBase {
                             }
                         }
                         nextActionTimer = 5;
-                    } else if (next == DroneProgram.UNLOAD && this.heldItem != ItemStack.EMPTY) {
+                    } else if (next == DroneProgram.UNLOAD && !this.heldItem.isEmpty()) {
                         Vec3 pos = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
                         Vec3 nextPos = Vec3.createVectorHelper(this.posX, this.posY - 4, this.posZ);
                         RayTraceResult result = this.world.rayTraceBlocks(pos.toVec3d(), nextPos.toVec3d());
@@ -120,7 +118,7 @@ public class EntityRequestDrone extends EntityDroneBase {
 
                                 for (int i = 9; i < 18; i++) {
                                     ItemStack stack = requester.getStackInSlot(i);
-                                    if (stack != ItemStack.EMPTY && stack.getItem() == heldItem.getItem() && stack.getItemDamage() == heldItem.getItemDamage()) {
+                                    if (!stack.isEmpty() && stack.getItem() == heldItem.getItem() && stack.getItemDamage() == heldItem.getItemDamage()) {
                                         int toTransfer = Math.min(stack.getMaxStackSize() - stack.getCount(), heldItem.getCount());
                                         requester.getStackInSlot(i).grow(toTransfer);
                                         this.heldItem.shrink(toTransfer);
@@ -129,15 +127,15 @@ public class EntityRequestDrone extends EntityDroneBase {
 
                                 if (this.heldItem.getCount() <= 0) this.heldItem = ItemStack.EMPTY;
 
-                                if (this.heldItem != ItemStack.EMPTY) for (int i = 9; i < 18; i++) {
-                                    if (requester.getStackInSlot(i) == ItemStack.EMPTY) {
+                                if (!this.heldItem.isEmpty()) for (int i = 9; i < 18; i++) {
+                                    if (requester.getStackInSlot(i).isEmpty()) {
                                         requester.inventory.setStackInSlot(i, this.heldItem.copy());
                                         this.heldItem = ItemStack.EMPTY;
                                         break;
                                     }
                                 }
 
-                                if (this.heldItem == ItemStack.EMPTY) {
+                                if (this.heldItem.isEmpty()) {
                                     this.setAppearance(0);
                                     world.playSound(null, posX, posY, posZ, HBMSoundHandler.itemUnpack, SoundCategory.BLOCKS, 0.5F, 0.75F);
                                 }
@@ -157,10 +155,10 @@ public class EntityRequestDrone extends EntityDroneBase {
                             if (tile instanceof TileEntityDroneDock dock) {
                                 ItemStack drone = new ItemStack(ModItems.drone, 1, EnumDroneType.REQUEST.ordinal());
                                 for (int i = 0; i < dock.inventory.getSlots(); i++) {
-                                    if (dock.inventory.getStackInSlot(i) == ItemStack.EMPTY) {
+                                    if (dock.inventory.getStackInSlot(i).isEmpty()) {
                                         this.setDead();
-                                        if (heldItem != ItemStack.EMPTY) {
-                                            if (i != 9 && dock.inventory.getStackInSlot(i + 1) == ItemStack.EMPTY) {
+                                        if (!heldItem.isEmpty()) {
+                                            if (i != 9 && dock.inventory.getStackInSlot(i + 1).isEmpty()) {
                                                 dock.inventory.setStackInSlot(i + 1, heldItem.copy());
                                             }
                                         }
@@ -169,8 +167,8 @@ public class EntityRequestDrone extends EntityDroneBase {
                                         break;
                                     } else if (dock.getStackInSlot(i).isItemEqual(drone) && dock.getStackInSlot(i).getCount() < 64) {
                                         this.setDead();
-                                        if (heldItem != ItemStack.EMPTY) {
-                                            if (i != 9 && dock.getStackInSlot(i + 1) == ItemStack.EMPTY) {
+                                        if (!heldItem.isEmpty()) {
+                                            if (i != 9 && dock.getStackInSlot(i + 1).isEmpty()) {
                                                 dock.inventory.setStackInSlot(i + 1, this.heldItem.copy());
                                             }
                                         }
@@ -183,7 +181,7 @@ public class EntityRequestDrone extends EntityDroneBase {
                         }
                         if (!this.isDead) {
                             this.setDead();
-                            if (heldItem != ItemStack.EMPTY)
+                            if (!heldItem.isEmpty())
                                 this.entityDropItem(heldItem, 1F);
                             this.entityDropItem(new ItemStack(ModItems.drone, 1, EnumDroneType.REQUEST.ordinal()), 1F);
                         }
@@ -191,6 +189,7 @@ public class EntityRequestDrone extends EntityDroneBase {
                 }
             }
         }
+        super.onUpdate();
     }
 
     @Override
@@ -240,7 +239,7 @@ public class EntityRequestDrone extends EntityDroneBase {
     protected void writeEntityToNBT(NBTTagCompound nbt) {
         super.writeEntityToNBT(nbt);
 
-        if(heldItem != ItemStack.EMPTY) {
+        if(!heldItem.isEmpty()) {
             NBTTagCompound stack = new NBTTagCompound();
             this.heldItem.writeToNBT(stack);
             nbt.setTag("held", stack);

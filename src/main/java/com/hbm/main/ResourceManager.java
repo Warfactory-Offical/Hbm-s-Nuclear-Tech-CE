@@ -424,6 +424,9 @@ public class ResourceManager {
 	// Fracking Tower
 	public static final IModelCustom fracking_tower = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/fracking_tower.obj")).asVBO();
 
+	//TELEX
+	public static final IModelCustom telex = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/telex.obj"));
+
 	//Refinery
 	public static final IModelCustom refinery = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/refinery.obj")).asVBO();
 	public static final IModelCustom vacuum_distill = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/vacuum_distill.obj")).asVBO();
@@ -864,6 +867,9 @@ public class ResourceManager {
 	//Pumpjack
 	public static final ResourceLocation pumpjack_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/pumpjack.png");
 	public static final ResourceLocation fracking_tower_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/fracking_tower.png");
+
+	//TELEX
+	public static final ResourceLocation telex_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/telex.png");
 
 	//Refinery
 	public static final ResourceLocation refinery_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/refinery.png");
