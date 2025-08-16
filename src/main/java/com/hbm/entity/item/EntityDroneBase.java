@@ -16,13 +16,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class EntityDroneBase extends Entity {
     public static final DataParameter<Byte> APPEARANCE = EntityDataManager.createKey(EntityDroneBase.class, DataSerializers.BYTE);
     public static final DataParameter<Boolean> IS_EXPRESS = EntityDataManager.createKey(EntityDroneBase.class, DataSerializers.BOOLEAN);
-    protected int turnProgress;
-    protected double syncPosX;
-    protected double syncPosY;
-    protected double syncPosZ;
-    @SideOnly(Side.CLIENT) protected double velocityX;
-    @SideOnly(Side.CLIENT) protected double velocityY;
-    @SideOnly(Side.CLIENT) protected double velocityZ;
+    protected static final int theNumberThree = 3; //Actually controls how precise the interpolation should be, but 'theNumberThree' is such a funny name so I won't rename it.
+    protected int interpolationTicks;
+    @SideOnly(Side.CLIENT) protected double syncPosX, syncPosY, syncPosZ, lastSyncPosX, lastSyncPosY, lastSyncPosZ, velocityX, velocityY, velocityZ;
 
     public double targetX = -1;
     public double targetY = -1;
@@ -79,23 +75,16 @@ public class EntityDroneBase extends Entity {
 
     @Override
     public void onUpdate() {
+        super.onUpdate();
+
         if(world.isRemote) {
-            if(this.turnProgress > 0) {
-                double interpX = this.posX + (this.syncPosX - this.posX) / (double) this.turnProgress;
-                double interpY = this.posY + (this.syncPosY - this.posY) / (double) this.turnProgress;
-                double interpZ = this.posZ + (this.syncPosZ - this.posZ) / (double) this.turnProgress;
-                --this.turnProgress;
-                this.setPosition(interpX, interpY, interpZ);
-            } else {
-                this.setPosition(this.posX, this.posY, this.posZ);
-            }
+            this.interpolateMovement();
 
             world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, posX + 1.125, posY + 0.75, posZ, 0, -0.2, 0);
             world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, posX - 1.125, posY + 0.75, posZ, 0, -0.2, 0);
             world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, posX, posY + 0.75, posZ + 1.125, 0, -0.2, 0);
             world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, posX, posY + 0.75, posZ - 1.125, 0, -0.2, 0);
         } else {
-
             this.motionX = 0;
             this.motionY = 0;
             this.motionZ = 0;
@@ -116,8 +105,18 @@ public class EntityDroneBase extends Entity {
             this.loadNeighboringChunks();
             this.move(MoverType.SELF, motionX, motionY, motionZ);
         }
+    }
 
-        super.onUpdate();
+    private void interpolateMovement()
+    {
+        if (this.interpolationTicks > 0)
+        {
+            double interpX = this.lastSyncPosX + (this.syncPosX - this.lastSyncPosX) / (double) this.interpolationTicks;
+            double interpY = this.lastSyncPosY + (this.syncPosY - this.lastSyncPosY) / (double) this.interpolationTicks;
+            double interpZ = this.lastSyncPosZ + (this.syncPosZ - this.lastSyncPosZ) / (double) this.interpolationTicks;
+            --this.interpolationTicks;
+            this.setPosition(interpX, interpY, interpZ);
+        }
     }
 
     protected void loadNeighboringChunks() {}
@@ -133,15 +132,16 @@ public class EntityDroneBase extends Entity {
         this.velocityZ = this.motionZ = motionZ;
     }
 
+    @Override
     @SideOnly(Side.CLIENT)
-    public void setPositionAndRotation2(double x, double y, double z, float yaw, float pitch, int theNumberThree) {
+    public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport) {
+        this.lastSyncPosX = this.posX;
+        this.lastSyncPosY = this.posY;
+        this.lastSyncPosZ = this.posZ;
         this.syncPosX = x;
         this.syncPosY = y;
         this.syncPosZ = z;
-        this.turnProgress = theNumberThree;
-        this.motionX = this.velocityX;
-        this.motionY = this.velocityY;
-        this.motionZ = this.velocityZ;
+        this.interpolationTicks = theNumberThree;
     }
 
     @Override

@@ -159,17 +159,17 @@ public class EntityRequestDrone extends EntityDroneBase {
                                         this.setDead();
                                         if (!heldItem.isEmpty()) {
                                             if (i != 9 && dock.inventory.getStackInSlot(i + 1).isEmpty()) {
-                                                dock.inventory.setStackInSlot(i + 1, heldItem.copy());
+                                                dock.dockDrone(i + 1, heldItem.copy());
                                             }
                                         }
-                                        dock.inventory.setStackInSlot(i, drone.copy());
+                                        dock.dockDrone(i, drone.copy());
                                         this.world.playSound(null, dock.getPos().getX() + 0.5, dock.getPos().getY() + 0.5, dock.getPos().getZ() + 0.5, HBMSoundHandler.storageClose, SoundCategory.BLOCKS, 2.0F, 1.0F);
                                         break;
                                     } else if (dock.getStackInSlot(i).isItemEqual(drone) && dock.getStackInSlot(i).getCount() < 64) {
                                         this.setDead();
                                         if (!heldItem.isEmpty()) {
                                             if (i != 9 && dock.getStackInSlot(i + 1).isEmpty()) {
-                                                dock.inventory.setStackInSlot(i + 1, this.heldItem.copy());
+                                                dock.dockDrone(i + 1, this.heldItem.copy());
                                             }
                                         }
                                         dock.getStackInSlot(i).grow(1);

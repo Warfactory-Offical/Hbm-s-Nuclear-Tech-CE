@@ -252,10 +252,9 @@ public class TileEntityDroneCrate extends TileEntityMachineBase implements IGUIP
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
 
-        int[] nextPos = nbt.getIntArray("position");
-        this.nextX = nextPos[0];
-        this.nextY = nextPos[1];
-        this.nextZ = nextPos[2];
+        this.nextX = nbt.getInteger("posX");
+        this.nextY = nbt.getInteger("posY");;
+        this.nextZ = nbt.getInteger("posZ");;
         this.sendingMode = nbt.getBoolean("mode");
         this.itemType = nbt.getBoolean("type");
         tank.readFromNBT(nbt, "t");
@@ -269,7 +268,9 @@ public class TileEntityDroneCrate extends TileEntityMachineBase implements IGUIP
     public @NotNull NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
 
-        nbt.setIntArray("position", new int[] {nextX, nextY, nextZ});
+        nbt.setInteger("posX", nextX);
+        nbt.setInteger("posY", nextY);
+        nbt.setInteger("posZ", nextZ);
         nbt.setBoolean("mode", sendingMode);
         nbt.setBoolean("type", itemType);
         tank.writeToNBT(nbt, "t");

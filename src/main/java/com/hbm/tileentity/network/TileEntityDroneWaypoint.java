@@ -92,10 +92,9 @@ public class TileEntityDroneWaypoint extends TileEntityLoadedBase implements IDr
         super.readFromNBT(nbt);
 
         this.height = nbt.getInteger("height");
-        int[] nextPos = nbt.getIntArray("position");
-        this.nextX = nextPos[0];
-        this.nextY = nextPos[1];
-        this.nextZ = nextPos[2];
+        this.nextX = nbt.getInteger("posX");
+        this.nextY = nbt.getInteger("posY");;
+        this.nextZ = nbt.getInteger("posZ");;
     }
 
     @Override
@@ -103,7 +102,9 @@ public class TileEntityDroneWaypoint extends TileEntityLoadedBase implements IDr
         super.writeToNBT(nbt);
 
         nbt.setInteger("height", height);
-        nbt.setIntArray("position", new int[] {nextX, nextY, nextZ});
+        nbt.setInteger("posX", nextX);
+        nbt.setInteger("posY", nextY);
+        nbt.setInteger("posZ", nextZ);
         return nbt;
     }
 

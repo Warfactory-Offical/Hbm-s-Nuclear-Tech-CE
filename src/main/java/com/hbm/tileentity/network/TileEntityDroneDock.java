@@ -32,6 +32,7 @@ import java.util.List;
 public class TileEntityDroneDock extends TileEntityRequestNetworkContainer implements IGUIProvider {
 
     public static final int pathingDepth = 10;
+    private int deployCooldown = 0;
 
     public TileEntityDroneDock() {
         super(9);
@@ -46,7 +47,9 @@ public class TileEntityDroneDock extends TileEntityRequestNetworkContainer imple
     public void update() {
         super.update();
 
-        if(!world.isRemote && world.getTotalWorldTime() % 20 == 0 && this.hasDrone()) {
+        if (deployCooldown > 0) deployCooldown--;
+
+        if(deployCooldown <= 0 && !world.isRemote && world.getTotalWorldTime() % 20 == 0 && this.hasDrone()) {
 
             // grab all nodes in a 5 chunk radius
             SwappedHashSet<PathNode> localNodes = getAllLocalNodes(world, pos.getX(), pos.getZ(), 5);
@@ -90,6 +93,16 @@ public class TileEntityDroneDock extends TileEntityRequestNetworkContainer imple
                 }
             }
         }
+    }
+
+    public void dockDrone(int slot, ItemStack drone) {
+        boolean empty = true;
+        for (int i = 0; i < this.inventory.getSlots(); i++) {
+            ItemStack stack = this.inventory.getStackInSlot(i);
+            if (!stack.isEmpty()) { empty = false; break; }
+        }
+        if (empty) this.deployCooldown = 100;
+        this.inventory.setStackInSlot(slot, drone);
     }
 
     public boolean tryEmbark(PathNode dock, RequestNode request, OfferNode offer, AStack item, SwappedHashSet<PathNode> localNodes) {
