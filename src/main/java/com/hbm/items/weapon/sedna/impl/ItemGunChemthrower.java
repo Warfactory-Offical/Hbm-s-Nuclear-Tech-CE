@@ -28,7 +28,7 @@ public class ItemGunChemthrower extends ItemGunBaseNT implements IFillableItem {
 
     @Override
     public boolean acceptsFluid(FluidType type, ItemStack stack) {
-        return getFluidType(stack) == type || this.getMagCount(stack) == 0;
+        return getFluidType(stack) == type || getMagCount(stack) == 0;
     }
 
     public static final int transferSpeed = 50;
@@ -37,19 +37,19 @@ public class ItemGunChemthrower extends ItemGunBaseNT implements IFillableItem {
     public int tryFill(FluidType type, int amount, ItemStack stack) {
 
         if(!acceptsFluid(type, stack)) return amount;
-        if(this.getMagCount(stack) == 0) this.setMagType(stack, type.getID());
+        if(getMagCount(stack) == 0) setMagType(stack, type.getID());
 
-        int fill = this.getMagCount(stack);
+        int fill = getMagCount(stack);
         int req = this.getConfig(stack, 0).getReceivers(stack)[0].getMagazine(stack).getCapacity(stack) - fill;
         int toFill = Math.min(amount, req);
         toFill = Math.min(toFill, transferSpeed);
-        this.setMagCount(stack, fill + toFill);
+        setMagCount(stack, fill + toFill);
 
         return amount - toFill;
     }
 
     public FluidType getFluidType(ItemStack stack) {
-        return Fluids.fromID(this.getMagType(stack));
+        return Fluids.fromID(getMagType(stack));
     }
 
     @Override
@@ -59,15 +59,15 @@ public class ItemGunChemthrower extends ItemGunBaseNT implements IFillableItem {
 
     @Override
     public int tryEmpty(FluidType type, int amount, ItemStack stack) {
-        int fill = this.getMagCount(stack);
+        int fill = getMagCount(stack);
         int toUnload = Math.min(fill, amount);
         toUnload = Math.min(toUnload, transferSpeed);
-        this.setMagCount(stack, fill - toUnload);
+        setMagCount(stack, fill - toUnload);
         return toUnload;
     }
 
-    @Override public FluidType getFirstFluidType(ItemStack stack) { return Fluids.fromID(this.getMagType(stack)); }
-    @Override public int getFill(ItemStack stack) { return this.getMagCount(stack); }
+    @Override public FluidType getFirstFluidType(ItemStack stack) { return Fluids.fromID(getMagType(stack)); }
+    @Override public int getFill(ItemStack stack) { return getMagCount(stack); }
 
     public static int getMagType(ItemStack stack) { return ItemGunBaseNT.getValueInt(stack, MagazineFluid.KEY_MAG_TYPE + 0); }
     public static void setMagType(ItemStack stack, int value) { ItemGunBaseNT.setValueInt(stack, MagazineFluid.KEY_MAG_TYPE + 0, value); }

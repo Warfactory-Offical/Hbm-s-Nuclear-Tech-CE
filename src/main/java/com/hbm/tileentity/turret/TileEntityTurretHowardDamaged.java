@@ -1,6 +1,7 @@
 package com.hbm.tileentity.turret;
 
 import com.hbm.config.WeaponConfig;
+import com.hbm.handler.guncfg.GunDGKFactory;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.HBMSoundHandler;
@@ -71,7 +72,10 @@ public class TileEntityTurretHowardDamaged extends TileEntityTurretHoward {
 			if(timer % 4 == 0) {
 				
 				this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.howard_fire, SoundCategory.BLOCKS, 4.0F, 0.7F + world.rand.nextFloat() * 0.3F);
-				
+
+				this.cachedCasingConfig = GunDGKFactory.CASINGDGK;
+				this.spawnCasing();
+
 				if(world.rand.nextInt(100) + 1 <= WeaponConfig.ciwsHitrate * 0.5)
 					EntityDamageUtil.attackEntityFromIgnoreIFrame(this.target, ModDamageSource.shrapnel, 2F + world.rand.nextInt(2));
 					

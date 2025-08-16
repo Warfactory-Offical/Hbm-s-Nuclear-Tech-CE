@@ -1,12 +1,12 @@
 package com.hbm.tileentity.turret;
 
-import com.hbm.handler.BulletConfigSyncingUtil;
-import com.hbm.handler.BulletConfiguration;
 import com.hbm.handler.CasingEjector;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerTurretBase;
 import com.hbm.inventory.gui.GUITurretJeremy;
+import com.hbm.items.weapon.sedna.BulletConfig;
+import com.hbm.items.weapon.sedna.factory.XFactoryTurret;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.render.amlfrom1710.Vec3;
@@ -32,11 +32,11 @@ public class TileEntityTurretJeremy extends TileEntityTurretBaseNT implements IG
 	private static List<Integer> configs = new ArrayList<>();
 
 	static {
-		configs.add(BulletConfigSyncingUtil.SHELL_NORMAL);
-		configs.add(BulletConfigSyncingUtil.SHELL_EXPLOSIVE);
-		configs.add(BulletConfigSyncingUtil.SHELL_AP);
-		configs.add(BulletConfigSyncingUtil.SHELL_DU);
-		configs.add(BulletConfigSyncingUtil.SHELL_W9);
+		configs.add(XFactoryTurret.shell_normal.id);
+		configs.add(XFactoryTurret.shell_explosive.id);
+		configs.add(XFactoryTurret.shell_ap.id);
+		configs.add(XFactoryTurret.shell_du.id);
+		configs.add(XFactoryTurret.shell_w9.id);
 	}
 
 	@Override
@@ -94,11 +94,12 @@ public class TileEntityTurretJeremy extends TileEntityTurretBaseNT implements IG
 
 		if(timer % 40 == 0) {
 
-			BulletConfiguration conf = this.getFirstConfigLoaded();
+			BulletConfig conf = this.getFirstConfigLoaded();
 
 			if(conf != null) {
-				this.spawnBullet(conf);
-				this.consumeAmmo(conf.ammo.item);
+				this.cachedCasingConfig = conf.casing;
+				this.spawnBullet(conf, 50F);
+				this.consumeAmmo(conf.ammo);
 				this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.jeremy_fire, SoundCategory.BLOCKS, 4.0F, 1.0F);
 				
 				Vec3 pos = new Vec3(this.getTurretPos());

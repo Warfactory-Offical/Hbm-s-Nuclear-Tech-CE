@@ -33,11 +33,13 @@ import java.util.Objects;
 @JEIPlugin
 public class JEIConfig implements IModPlugin {
 
+    public static final String AMMO_PRESS = "hbm.ammo_press";
     public static final String ALLOY = "hbm.alloy";
     public static final String ANVIL = "hbm.anvil";
     public static final String ARC_FURNACE_FLUID = "hbm.arc_furnace_fluid";
     public static final String ARC_FURNACE_SOLID = "hbm.arc_furnace_solid";
     public static final String ARC_WELDER = "hbm.arc_welder";
+    public static final String ASHPIT = "hbm.ashpit";
     public static final String ASSEMBLY = "hbm.assembly";
     public static final String BOILER = "hbm.boiler";
     public static final String BOOK = "hbm.book_of";
@@ -46,6 +48,7 @@ public class JEIConfig implements IModPlugin {
     public static final String CHEMPLANT = "hbm.chemplant";
     public static final String CMB = "hbm.cmb_furnace";
     public static final String COKER = "hbm.coker";
+    public static final String CONSTRUCTION = "hbm.construction";
     public static final String COMPRESSING = "hbm.compressor";
     public static final String CRACKING = "hbm.cracking";
     public static final String CRUCIBLE_ALLOY = "hbm.crucible_alloy";
@@ -53,6 +56,7 @@ public class JEIConfig implements IModPlugin {
     public static final String CRUCIBLE_SMELT = "hbm.crucible_smelt";
     public static final String CRYSTALLIZER = "hbm.crystallizer";
     public static final String CYCLOTRON = "hbm.cyclotron";
+    public static final String DEUTERIUM = "hbm.deuterium";
     public static final String DFC = "hbm.dfc";
     public static final String ELECTROLYSIS_FLUID = "hbm.electrolysis_fluid";
     public static final String ELECTROLYSIS_METAL = "hbm.electrolysis_metal";
@@ -71,6 +75,7 @@ public class JEIConfig implements IModPlugin {
     public static final String REFINERY = "hbm.refinery";
     public static final String REFORMING = "hbm.reforming";
     public static final String ROTARY_FURNACE = "hbm.rotary_furnace";
+    public static final String SAWMILL = "hbm.sawmill";
     public static final String SHREDDER = "hbm.shredder";
     public static final String SILEX = "hbm.silex";
     public static final String SILEX_DIGAMMA = "hbm.silexdigamma";
@@ -92,20 +97,29 @@ public class JEIConfig implements IModPlugin {
     public static final String EXPOSURE = "hbm.exposure_chamber";
     public static final String RADIOLYSIS = "hbm.radiolysis";
     public static final String COMBINATION = "hbm.combination";
+    public static final String RTG = "hbm.rtg";
+    public static final String VACUUM = "hbm.vacuum";
+    public static final String ZIRNOX = "hbm.zirnox";
+    private AmmoPressHandler ammoPressHandler;
     private ArcFurnaceFluidHandler arcFurnaceFluidHandler;
     private ArcFurnaceSolidHandler arcFurnaceSolidHandler;
     private ArcWelderRecipeHandler arcWelderRecipeHandler;
+    private AshpitHandler ashpitHandler;
+    private BoilingHandler boilingHandler;
     private CentrifugeRecipeHandler centrifugeRecipeHandler;
     private CokingRecipeHandler cokingHandler;
     private CompressingRecipeHandler compressingHandler;
+    private ConstructionHandler constructionHandler;
     private CrackingHandler crackingHandler;
     private CrucibleAlloyingHandler crucibleAlloyingHandler;
     private CrucibleCastingHandler crucibleCastingHandler;
     private CrucibleSmeltingHandler crucibleSmeltingHandler;
     private CrystallizerRecipeHandler crystallizerHandler;
+    private DeuteriumHandler deuteriumHandler;
     private ElectrolyserFluidHandler electrolyserFluidHandler;
     private ElectrolyserMetalHandler electrolyserMetalHandler;
     private FractioningRecipeHandler fractioningHandler;
+    private FuelPoolHandler fuelPoolHandler;
     private HydrotreatingHandler hydrotreatHandler;
     private LiquefactionHandler liquefactHandler;
     private MixerRecipeHandler mixerHandler;
@@ -113,12 +127,16 @@ public class JEIConfig implements IModPlugin {
     private RBMKOutgasserRecipeHandler outgasserHandler;
     private ReformingHandler reformingHandler;
     private RotaryFurnaceRecipeHandler rotaryFurnaceRecipeHandler;
+    private RTGRecipeHandler rtgRecipeHandler;
     private SolderingStationRecipeHandler solderingStationHandler;
     private SolidificationHandler solidificationHandler;
     private OreSlopperHandler oreSlopperHandler;
     private ParticleAcceleratorHandler particleAcceleratorHandler;
     private ExposureChamberHandler exposureChamberHandler;
     private CombinationHandler combinationHandler;
+    private SawmillHandler sawmillHandler;
+    private VacuumRecipeHandler vacuumHandler;
+    private ZirnoxRecipeHandler zirnoxHandler;
 
     @Override
     public void register(@NotNull IModRegistry registry) {
@@ -135,14 +153,20 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_rtg_furnace_off), VanillaRecipeCategoryUid.SMELTING);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.crate_tungsten), VanillaRecipeCategoryUid.SMELTING);
 
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_ammo_press), AMMO_PRESS);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_ashpit), ASHPIT);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_coker), COKER);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_compressor), COMPRESSING);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_deuterium_extractor), DEUTERIUM);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_assembler), ASSEMBLY);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_assemfac), ASSEMBLY);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_arc_furnace), ARC_FURNACE_FLUID);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_arc_furnace), ARC_FURNACE_SOLID);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_chemplant), CHEMPLANT);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_chemfac), CHEMPLANT);
+        registry.addRecipeCatalyst(new ItemStack(ModItems.boltgun), CONSTRUCTION);
+        registry.addRecipeCatalyst(new ItemStack(ModItems.blowtorch), CONSTRUCTION);
+        registry.addRecipeCatalyst(new ItemStack(ModItems.acetylene_torch), CONSTRUCTION);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_crucible), CRUCIBLE_ALLOY);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.foundry_basin), CRUCIBLE_CAST);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.foundry_mold), CRUCIBLE_CAST);
@@ -152,9 +176,12 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_schrabidium_transmutator), TRANSMUTATION);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_press), PRESS);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_epress), PRESS);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_conveyor_press), PRESS);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_difurnace_off), ALLOY);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_difurnace_rtg_off), ALLOY);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_sawmill), SAWMILL);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_solar_boiler), BOILER);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_industrial_boiler), BOILER);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.heat_boiler), BOILER);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.rbmk_heater), BOILER);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_reactor_breeding), BREEDER);
@@ -184,6 +211,8 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.iter), FUSION_BYPRODUCT);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.hadron_core), HADRON);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_silex), SILEX);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_rtg_grey), RTG);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_difurnace_rtg_off), RTG);
         registry.addRecipeCatalyst(new ItemStack(ModItems.laser_crystal_nano), SILEX_RADIO);
         registry.addRecipeCatalyst(new ItemStack(ModItems.laser_crystal_pentacene), SILEX_MICRO);
         registry.addRecipeCatalyst(new ItemStack(ModItems.laser_crystal_co2), SILEX_IR);
@@ -193,6 +222,8 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(ModItems.laser_crystal_bale), SILEX_GAMMA);
         registry.addRecipeCatalyst(new ItemStack(ModItems.laser_crystal_digamma), SILEX_DIGAMMA);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.anvil_iron), SMITHING);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_vacuum_distill), VACUUM);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.reactor_zirnox), ZIRNOX);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.anvil_steel), ANVIL);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.rbmk_outgasser), RBMKOUTGASSER);
         registry.addRecipeCatalyst(new ItemStack(Objects.requireNonNull(Blocks.CRAFTING_TABLE)), RBMKFUEL);
@@ -208,21 +239,26 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipes(JeiRecipes.getChemistryRecipes(), CHEMPLANT);
         registry.addRecipes(JeiRecipes.getCyclotronRecipes(), CYCLOTRON);
         registry.addRecipes(JeiRecipes.getTransmutationRecipes(), TRANSMUTATION);
-        registry.addRecipes(JeiRecipes.getPressRecipes(), PRESS);
+        registry.addRecipes(PressRecipeHandler.getRecipes(), PRESS);
         registry.addRecipes(JeiRecipes.getAlloyRecipes(), ALLOY);
-        registry.addRecipes(centrifugeRecipeHandler.getRecipes(), CENTRIFUGE);
         registry.addRecipes(JeiRecipes.getCMBRecipes(), CMB);
         registry.addRecipes(JeiRecipes.getGasCentrifugeRecipes(), GAS_CENT);
-        registry.addRecipes(JeiRecipes.getWasteDrumRecipes(), WASTEDRUM);
+        registry.addRecipes(fuelPoolHandler.getRecipes(), WASTEDRUM);
         registry.addRecipes(JeiRecipes.getStorageDrumRecipes(), STORAGEDRUM);
         registry.addRecipes(JeiRecipes.getRefineryRecipe(), REFINERY);
+        registry.addRecipes(centrifugeRecipeHandler.getRecipes(), CENTRIFUGE);
+        registry.addRecipes(ammoPressHandler.getRecipes(), AMMO_PRESS);
+        registry.addRecipes(ashpitHandler.getRecipes(), ASHPIT);
         registry.addRecipes(arcFurnaceFluidHandler.getRecipes(), ARC_FURNACE_FLUID);
         registry.addRecipes(arcFurnaceSolidHandler.getRecipes(), ARC_FURNACE_SOLID);
+        registry.addRecipes(boilingHandler.getRecipes(), BOILER);
         registry.addRecipes(crackingHandler.getRecipes(), CRACKING);
         registry.addRecipes(compressingHandler.getRecipes(), COMPRESSING);
+        registry.addRecipes(constructionHandler.getRecipes(), CONSTRUCTION);
         registry.addRecipes(crucibleAlloyingHandler.getRecipes(), CRUCIBLE_ALLOY);
         registry.addRecipes(crucibleCastingHandler.getRecipes(), CRUCIBLE_CAST);
         registry.addRecipes(crucibleSmeltingHandler.getRecipes(), CRUCIBLE_SMELT);
+        registry.addRecipes(deuteriumHandler.getRecipes(), DEUTERIUM);
         registry.addRecipes(fractioningHandler.getRecipes(), FRACTIONING);
         registry.addRecipes(hydrotreatHandler.getRecipes(), HYDROTREATING);
         registry.addRecipes(liquefactHandler.getRecipes(), LIQUEFACTION);
@@ -235,13 +271,17 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipes(rotaryFurnaceRecipeHandler.getRecipes(), ROTARY_FURNACE);
         registry.addRecipes(electrolyserFluidHandler.getRecipes(), ELECTROLYSIS_FLUID);
         registry.addRecipes(electrolyserMetalHandler.getRecipes(), ELECTROLYSIS_METAL);
+        registry.addRecipes(rtgRecipeHandler.getRecipes(), RTG);
         registry.addRecipes(pyroHandler.getRecipes(), PYROLYSIS);
+        registry.addRecipes(crystallizerHandler.getRecipes(), CRYSTALLIZER);
+        registry.addRecipes(cokingHandler.getRecipes(), COKER);
+        registry.addRecipes(sawmillHandler.getRecipes(), SAWMILL);
+        registry.addRecipes(vacuumHandler.getRecipes(), VACUUM);
+        registry.addRecipes(zirnoxHandler.getRecipes(), ZIRNOX);
         registry.addRecipes(ShredderRecipes.getShredderRecipes(), SHREDDER);
         registry.addRecipes(JeiRecipes.getFluidEquivalences(), FLUIDS);
-        registry.addRecipes(crystallizerHandler.getRecipes(), CRYSTALLIZER);
         registry.addRecipes(JeiRecipes.getBookRecipes(), BOOK);
         registry.addRecipes(JeiRecipes.getBreederRecipes(), BREEDER);
-        registry.addRecipes(cokingHandler.getRecipes(), COKER);
         registry.addRecipes(JeiRecipes.getFusionByproducts(), FUSION_BYPRODUCT);
         registry.addRecipes(JeiRecipes.getHadronRecipes(), HADRON);
         registry.addRecipes(JeiRecipes.getSILEXRecipes(), SILEX);
@@ -332,6 +372,7 @@ public class JEIConfig implements IModPlugin {
         // blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rod_quad_euphemium));
         // blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rod_euphemium));
         blacklist.addIngredientToBlacklist(new ItemStack(ModItems.bobmazon_hidden));
+        blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.zirnox_destroyed));
         if (MainRegistry.polaroidID != 11) {
             blacklist.addIngredientToBlacklist(new ItemStack(ModItems.book_secret));
             // blacklist.addIngredientToBlacklist(new ItemStack(ModItems.book_of_));
@@ -363,20 +404,26 @@ public class JEIConfig implements IModPlugin {
                 new ChemplantRecipeHandler(help),
                 new RefineryRecipeHandler(help),
                 new RadiolysisRecipeHandler(help),
+                ammoPressHandler = new AmmoPressHandler(help),
                 arcFurnaceFluidHandler = new ArcFurnaceFluidHandler(help),
                 arcFurnaceSolidHandler = new ArcFurnaceSolidHandler(help),
                 arcWelderRecipeHandler = new ArcWelderRecipeHandler(help),
+                ashpitHandler = new AshpitHandler(help),
+                boilingHandler = new BoilingHandler(help),
                 centrifugeRecipeHandler = new CentrifugeRecipeHandler(help),
                 cokingHandler = new CokingRecipeHandler(help),
+                constructionHandler = new ConstructionHandler(help),
                 compressingHandler = new CompressingRecipeHandler(help),
                 crackingHandler = new CrackingHandler(help),
                 crucibleAlloyingHandler = new CrucibleAlloyingHandler(help),
                 crucibleCastingHandler = new CrucibleCastingHandler(help),
                 crucibleSmeltingHandler = new CrucibleSmeltingHandler(help),
                 crystallizerHandler = new CrystallizerRecipeHandler(help),
+                deuteriumHandler = new DeuteriumHandler(help),
                 electrolyserFluidHandler = new ElectrolyserFluidHandler(help),
                 electrolyserMetalHandler = new ElectrolyserMetalHandler(help),
                 fractioningHandler = new FractioningRecipeHandler(help),
+                fuelPoolHandler = new FuelPoolHandler(help),
                 hydrotreatHandler = new HydrotreatingHandler(help),
                 liquefactHandler = new LiquefactionHandler(help),
                 mixerHandler = new MixerRecipeHandler(help),
@@ -390,12 +437,15 @@ public class JEIConfig implements IModPlugin {
                 particleAcceleratorHandler = new ParticleAcceleratorHandler(help),
                 exposureChamberHandler = new ExposureChamberHandler(help),
                 combinationHandler = new CombinationHandler(help),
+                rtgRecipeHandler = new RTGRecipeHandler(help),
+                sawmillHandler = new SawmillHandler(help),
+                vacuumHandler = new VacuumRecipeHandler(help),
+                zirnoxHandler = new ZirnoxRecipeHandler(help),
                 new GasCentrifugeRecipeHandler(help),
                 new BreederRecipeHandler(help),
                 new CyclotronRecipeHandler(help),
                 new TransmutationRecipeHandler(help),
                 new CMBFurnaceRecipeHandler(help),
-                new WasteDrumRecipeHandler(help),
                 new StorageDrumRecipeHandler(help),
                 new FluidRecipeHandler(help),
                 new SILEXRecipeHandler(help),

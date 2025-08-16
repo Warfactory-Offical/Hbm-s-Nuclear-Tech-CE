@@ -2,8 +2,12 @@ package com.hbm.tileentity.turret;
 
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.lib.ForgeDirection;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.fml.common.Optional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,5 +74,23 @@ public abstract class TileEntityTurretBaseArtillery extends TileEntityTurretBase
                 this.trySubscribe(world, pos.getX() + dir.offsetX * 3 + rot.offsetX * (1 - j), pos.getY() + i, pos.getZ() + dir.offsetZ * 3 + rot.offsetZ * (1 - j), ForgeDirection.WEST);
             }
         }
+    }
+
+    @Override
+    @Optional.Method(modid = "OpenComputers")
+    public String getComponentName() {
+        return "ntm_artillery";
+    }
+
+    @Callback(direct = true)
+    @Optional.Method(modid = "OpenComputers")
+    public Object[] getCurrentTarget(Context context, Arguments args) {
+        return new Object[] {targetQueue.get(0).x, targetQueue.get(0).y, targetQueue.get(0).z};
+    }
+
+    @Callback(direct = true)
+    @Optional.Method(modid = "OpenComputers")
+    public Object[] getTargetDistance(Context context, Arguments args) {
+        return new Object[] {Math.sqrt(Math.pow(pos.getX() - args.checkDouble(0), 2)+Math.pow(pos.getY() - args.checkDouble(1), 2)+Math.pow(pos.getZ() - args.checkDouble(2), 2))};
     }
 }

@@ -1,7 +1,5 @@
 package com.hbm.tileentity.machine;
 
-import java.util.List;
-
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.entity.item.EntityMovingItem;
 import com.hbm.interfaces.AutoRegister;
@@ -13,7 +11,6 @@ import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.BufferUtil;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -23,6 +20,8 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.List;
 
 @AutoRegister
 public class TileEntityConveyorPress extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2 {
@@ -131,7 +130,7 @@ public class TileEntityConveyorPress extends TileEntityMachineBase implements IT
 
         for(EntityMovingItem item : items) {
             ItemStack stack = item.getItemStack();
-            if(!PressRecipes.getPressResult(stack, inventory.getStackInSlot(0)).isEmpty() && stack.getCount() == 1) {
+            if(!PressRecipes.getOutput(stack, inventory.getStackInSlot(0)).isEmpty() && stack.getCount() == 1) {
 
                 double d0 = 0.35;
                 double d1 = 0.65;
@@ -152,7 +151,7 @@ public class TileEntityConveyorPress extends TileEntityMachineBase implements IT
 
         for(EntityMovingItem item : items) {
             ItemStack stack = item.getItemStack();
-            ItemStack output = PressRecipes.getPressResult(stack, inventory.getStackInSlot(0));
+            ItemStack output = PressRecipes.getOutput(stack, inventory.getStackInSlot(0));
 
             if(!output.isEmpty() && stack.getCount() == 1) {
                 item.setDead();

@@ -93,7 +93,7 @@ public class TileEntityMachinePress extends TileEntityMachineBase implements ITi
 					if (this.progress >= maxProgress) {
 						this.progress = maxProgress;
 						this.world.playSound(null, this.pos, HBMSoundHandler.pressOperate, SoundCategory.BLOCKS, 1.5F, 1.0F);
-						ItemStack output = PressRecipes.getPressResult(inventory.getStackInSlot(2), inventory.getStackInSlot(1));
+						ItemStack output = PressRecipes.getOutput(inventory.getStackInSlot(2), inventory.getStackInSlot(1));
 						if (inventory.getStackInSlot(3).isEmpty()) {
 							inventory.setStackInSlot(3, output.copy());
 						} else {
@@ -163,7 +163,7 @@ public class TileEntityMachinePress extends TileEntityMachineBase implements ITi
 		ItemStack inputSlot = inventory.getStackInSlot(2);
 		if (stampSlot.isEmpty() || inputSlot.isEmpty()) return false;
 
-		ItemStack output = PressRecipes.getPressResult(inputSlot, stampSlot);
+		ItemStack output = PressRecipes.getOutput(inputSlot, stampSlot);
 
 		if (output.isEmpty()) return false;
 

@@ -74,8 +74,8 @@ public class GUIChemfac extends GuiInfoContainer {
 			drawTexturedModalRect(guiLeft + 238, guiTop + 11, 0, 219, 9, 12);
 
 		for (int i = 0; i < 8; i++) {
-			int offX = 110 * (i % 2);
-			int offY = 38 * (i / 2);
+			int offX = guiLeft + 110 * (i % 2);
+			int offY = guiTop + 38 * (i / 2);
 
 			int prog = chemfac.progress[i];
 			int j = prog * 17 / Math.max(chemfac.maxProgress[i], 1);

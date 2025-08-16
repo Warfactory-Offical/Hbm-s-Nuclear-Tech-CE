@@ -5,10 +5,10 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.recipes.AssemblerRecipes;
 import com.hbm.inventory.recipes.ChemplantRecipes;
 import com.hbm.inventory.recipes.CrucibleRecipes;
-import com.hbm.inventory.recipes.PressRecipes;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemAssemblyTemplate;
 import com.hbm.items.machine.ItemCassette;
+import com.hbm.items.machine.ItemStamp;
 import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.ItemFolderPacket;
@@ -62,12 +62,9 @@ public class GUIScreenTemplateFolder extends GuiScreen {
 
 		if (!this.isJournal) {
 			// Stamps
-			for (Item i : PressRecipes.stamps_plate)
-				allStacks.add(new ItemStack(i));
-			for (Item i : PressRecipes.stamps_wire)
-				allStacks.add(new ItemStack(i));
-			for (Item i : PressRecipes.stamps_circuit)
-				allStacks.add(new ItemStack(i));
+			for(ItemStack i : ItemStamp.stamps.get(ItemStamp.StampType.PLATE)) allStacks.add(i.copy());
+			for(ItemStack i : ItemStamp.stamps.get(ItemStamp.StampType.WIRE)) allStacks.add(i.copy());
+			for(ItemStack i : ItemStamp.stamps.get(ItemStamp.StampType.CIRCUIT)) allStacks.add(i.copy());
 			// Tracks
 			for (int i = 1; i < ItemCassette.TrackType.values().length; i++) {
 				allStacks.add(new ItemStack(ModItems.siren_track, 1, i));

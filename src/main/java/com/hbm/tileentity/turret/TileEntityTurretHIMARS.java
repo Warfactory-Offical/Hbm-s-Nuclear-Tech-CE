@@ -2,6 +2,7 @@ package com.hbm.tileentity.turret;
 
 import com.hbm.entity.projectile.EntityArtilleryRocket;
 import com.hbm.interfaces.AutoRegister;
+import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.container.ContainerTurretBase;
 import com.hbm.inventory.gui.GUITurretHIMARS;
 import com.hbm.items.ModItems;
@@ -207,7 +208,7 @@ public class TileEntityTurretHIMARS extends TileEntityTurretBaseArtillery implem
                       ItemAmmoHIMARS.itemTypes[available.getItemDamage()];
                   this.typeLoaded = available.getItemDamage();
                   this.ammo = type.amount;
-                  this.consumeAmmo(ModItems.ammo_himars);
+                  this.consumeAmmo(new RecipesCommon.ComparableStack(ModItems.ammo_himars, 1, available.getItemDamage()));
                 }
               }
             }

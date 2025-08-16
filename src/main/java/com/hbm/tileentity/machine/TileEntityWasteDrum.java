@@ -2,9 +2,9 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.RecipesCommon;
-import com.hbm.inventory.recipes.WasteDrumRecipes;
 import com.hbm.inventory.container.ContainerWasteDrum;
 import com.hbm.inventory.gui.GUIWasteDrum;
+import com.hbm.inventory.recipes.WasteDrumRecipes;
 import com.hbm.items.machine.ItemRBMKRod;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
@@ -14,7 +14,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.Container;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -67,13 +66,11 @@ public class TileEntityWasteDrum extends TileEntityMachineBase implements ITicka
 	
 	@Override
 	public boolean canExtractItem(int slot, ItemStack itemStack, int amount) {
-		Item item = itemStack.getItem();
-
-		if(item instanceof ItemRBMKRod) {
+		if(itemStack.getItem() instanceof ItemRBMKRod) {
 			return ItemRBMKRod.getCoreHeat(itemStack) < 50 && ItemRBMKRod.getHullHeat(itemStack) < 50;
+		} else {
+			return !WasteDrumRecipes.recipes.containsKey(new RecipesCommon.ComparableStack(itemStack));
 		}
-		
-		return WasteDrumRecipes.isCold(itemStack);
 	}
 	
 	@Override

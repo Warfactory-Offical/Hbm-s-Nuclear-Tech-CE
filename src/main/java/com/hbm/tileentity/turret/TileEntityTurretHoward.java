@@ -1,14 +1,14 @@
 package com.hbm.tileentity.turret;
 
 import com.hbm.config.WeaponConfig;
-import com.hbm.handler.BulletConfigSyncingUtil;
-import com.hbm.handler.BulletConfiguration;
 import com.hbm.handler.CasingEjector;
 import com.hbm.handler.guncfg.GunDGKFactory;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerTurretBase;
 import com.hbm.inventory.gui.GUITurretHoward;
+import com.hbm.items.weapon.sedna.BulletConfig;
+import com.hbm.items.weapon.sedna.factory.XFactoryTurret;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
@@ -36,7 +36,7 @@ public class TileEntityTurretHoward extends TileEntityTurretBaseNT implements IG
 	static List<Integer> configs = new ArrayList<>();
 
 	static {
-		configs.add(BulletConfigSyncingUtil.DGK_NORMAL);
+		configs.add(XFactoryTurret.dgk_normal.id);
 	}
 
 	@Override
@@ -123,10 +123,10 @@ public class TileEntityTurretHoward extends TileEntityTurretBaseNT implements IG
 		} else {
 
 			if(loaded <= 0) {
-				BulletConfiguration conf = this.getFirstConfigLoaded();
+				BulletConfig conf = this.getFirstConfigLoaded();
 
 				if(conf != null) {
-					this.consumeAmmo(conf.ammo.item);
+					this.consumeAmmo(conf.ammo);
 					this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.howard_reload, SoundCategory.BLOCKS, 4.0F, 1F);
 					loaded = 200;
 				}
@@ -140,8 +140,8 @@ public class TileEntityTurretHoward extends TileEntityTurretBaseNT implements IG
 		timer++;
 
 		if(loaded > 0 && this.target != null) {
-			SpentCasing cfg = GunDGKFactory.CASINGDGK;
 
+			SpentCasing cfg = GunDGKFactory.CASINGDGK;
 
 			this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.howard_fire, SoundCategory.BLOCKS, 4.0F, 0.9F + world.rand.nextFloat() * 0.3F);
 			this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.howard_fire, SoundCategory.BLOCKS, 4.0F, 1F + world.rand.nextFloat() * 0.3F);

@@ -9,24 +9,26 @@ import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import java.util.function.BiConsumer;
 
 import static com.hbm.items.weapon.sedna.factory.GunFactory.ammo_debug;
-import static com.hbm.items.weapon.sedna.factory.XFactory9mm.*;
 import static com.hbm.items.weapon.sedna.factory.XFactory10ga.*;
 import static com.hbm.items.weapon.sedna.factory.XFactory12ga.*;
 import static com.hbm.items.weapon.sedna.factory.XFactory22lr.*;
+import static com.hbm.items.weapon.sedna.factory.XFactory357.*;
+import static com.hbm.items.weapon.sedna.factory.XFactory35800.p35800;
 import static com.hbm.items.weapon.sedna.factory.XFactory40mm.*;
 import static com.hbm.items.weapon.sedna.factory.XFactory44.*;
 import static com.hbm.items.weapon.sedna.factory.XFactory50.*;
-import static com.hbm.items.weapon.sedna.factory.XFactory75Bolt.*;
-import static com.hbm.items.weapon.sedna.factory.XFactory357.*;
 import static com.hbm.items.weapon.sedna.factory.XFactory556mm.*;
+import static com.hbm.items.weapon.sedna.factory.XFactory75Bolt.*;
 import static com.hbm.items.weapon.sedna.factory.XFactory762mm.*;
-import static com.hbm.items.weapon.sedna.factory.XFactory35800.*;
+import static com.hbm.items.weapon.sedna.factory.XFactory9mm.*;
 import static com.hbm.items.weapon.sedna.factory.XFactoryAccelerator.*;
 import static com.hbm.items.weapon.sedna.factory.XFactoryBlackPowder.*;
 import static com.hbm.items.weapon.sedna.factory.XFactoryCatapult.*;
 import static com.hbm.items.weapon.sedna.factory.XFactoryEnergy.*;
+import static com.hbm.items.weapon.sedna.factory.XFactoryFolly.folly_nuke;
+import static com.hbm.items.weapon.sedna.factory.XFactoryFolly.folly_sm;
+import static com.hbm.items.weapon.sedna.factory.XFactoryTurret.*;
 import static com.hbm.items.weapon.sedna.factory.XFactoryRocket.*;
-import static com.hbm.items.weapon.sedna.factory.XFactoryFolly.*;
 
 public class GunFactoryClient {
 
@@ -139,7 +141,7 @@ public class GunFactoryClient {
 
         p35800.setRendererBeam(LegoClient.RENDER_CRACKLE);
 
-        // setRendererBulk(LegoClient.RENDER_GRENADE, shell_normal, shell_explosive, shell_ap, shell_du, shell_w9); //TODO: change the sabots
+        setRendererBulk(LegoClient.RENDER_GRENADE, shell_normal, shell_explosive, shell_ap, shell_du, shell_w9); //TODO: change the sabots
 
         //HUDS
         ((ItemGunBaseNT) ModItems.gun_debug)						.getConfig(null, 0).hud(LegoClient.HUD_COMPONENT_DURABILITY, LegoClient.HUD_COMPONENT_AMMO);

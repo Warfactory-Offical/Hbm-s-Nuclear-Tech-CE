@@ -47,44 +47,68 @@ public abstract class JEIUniversalHandler implements IRecipeCategory<JeiRecipes.
         List<List<ItemStack>> allSlots = new ArrayList<>();
         if (o instanceof Object[]) {
             for (Object slotObject : (Object[]) o) {
-                if (slotObject instanceof RecipesCommon.AStack) {
-                    List<ItemStack> items = new ArrayList<>();
-                    for (ItemStack stack : ((RecipesCommon.AStack) slotObject).extractForJEI()) {
-                        items.add(stack.copy());
-                    }
-                    allSlots.add(items);
-                } else if (slotObject instanceof ItemStack) {
-                    allSlots.add(Collections.singletonList(((ItemStack) slotObject).copy()));
+                List<ItemStack> variants = toItemList(slotObject);
+                if (!variants.isEmpty()) {
+                    allSlots.add(variants);
                 }
             }
-            return allSlots;
-        }
-        if (o instanceof RecipesCommon.AStack) {
-            List<ItemStack> items = new ArrayList<>();
-            for (ItemStack stack : ((RecipesCommon.AStack) o).extractForJEI()) {
-                items.add(stack.copy());
+            if (!allSlots.isEmpty()) {
+                return allSlots;
             }
-            allSlots.add(items);
-            return allSlots;
+        } else {
+            List<ItemStack> single = toItemList(o);
+            if (!single.isEmpty()) {
+                allSlots.add(single);
+                return allSlots;
+            }
         }
-        if (o instanceof ItemStack) {
-            allSlots.add(Collections.singletonList(((ItemStack) o).copy()));
-            return allSlots;
-        }
+
         MainRegistry.logger.warn("JEIUniversalHandler: extractInputLists failed for type " + o.getClass());
         return Collections.emptyList();
     }
 
-    public List<JeiUniversalRecipe> getRecipes() {
-        return recipes;
+    private List<ItemStack> toItemList(Object slotObject) {
+        List<ItemStack> items = new ArrayList<>();
+        if (slotObject instanceof ItemStack s) {
+            if (!s.isEmpty()) items.add(s.copy());
+            return items;
+        }
+
+        if (slotObject instanceof ItemStack[]) {
+            for (ItemStack s : (ItemStack[]) slotObject) {
+                if (s != null && !s.isEmpty()) items.add(s.copy());
+            }
+            return items;
+        }
+
+        if (slotObject instanceof RecipesCommon.AStack) {
+            items.addAll(((RecipesCommon.AStack) slotObject).extractForJEI());
+            return items;
+        }
+
+        if (slotObject instanceof RecipesCommon.AStack[]) {
+            for (RecipesCommon.AStack a : (RecipesCommon.AStack[]) slotObject) {
+                items.addAll(a.extractForJEI());
+            }
+            return items;
+        }
+
+        if (slotObject instanceof Collection) {
+            for (Object obj : (Collection<?>) slotObject) {
+                if (obj instanceof ItemStack s) {
+                    if (!s.isEmpty()) items.add(s.copy());
+                } else if (obj instanceof RecipesCommon.AStack) {
+                    items.addAll(((RecipesCommon.AStack) obj).extractForJEI());
+                }
+            }
+            return items;
+        }
+
+        return items;
     }
 
-    /**
-     * @deprecated use {@link #extractInputLists(Object)}
-     */
-    @Deprecated
-    protected ItemStack[] extractInput(Object o) {
-        return extract(o);
+    public List<JeiUniversalRecipe> getRecipes() {
+        return recipes;
     }
 
     protected ItemStack[] extractOutput(Object o) {
@@ -298,8 +322,8 @@ public abstract class JEIUniversalHandler implements IRecipeCategory<JeiRecipes.
     protected static HashMap<Object, Object> wrapRecipes2(HashMap<Object, Object[]> map) {
         return new HashMap<>(map);
     }
-    protected static HashMap<Object, Object> wrapRecipes3(HashMap<Object, Object[]> map) { return new HashMap<>(map); }
-    protected static HashMap<Object, Object> wrapRecipes4(HashMap<Object, Object> map) { return new HashMap<>(map); }
+    protected static HashMap<Object, Object> wrapRecipes3(HashMap<Object[], Object> map) { return new HashMap<>(map); }
     protected static HashMap<Object, Object> wrapRecipes5(HashMap<Object, ItemStack> map) { return new HashMap<>(map); }
     protected static HashMap<Object, Object> wrapRecipes6(HashMap<ItemStack, ItemStack[]> map) { return new HashMap<>(map); }
+    protected static HashMap<Object, Object> wrapRecipes7(HashMap<RecipesCommon.ComparableStack, ItemStack> map) { return new HashMap<>(map); }
 }

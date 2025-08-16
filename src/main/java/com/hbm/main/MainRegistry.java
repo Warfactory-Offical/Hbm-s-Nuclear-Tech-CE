@@ -392,7 +392,6 @@ public class MainRegistry {
         BedrockOreRegistry.registerBedrockOres();
         ShredderRecipes.registerShredder();
         ShredderRecipes.registerOverrides();
-        PressRecipes.registerOverrides();
         ExplosionNukeGeneric.loadSoliniumFromFile();
         CyclotronRecipes.register();
         HadronRecipes.register();
@@ -404,8 +403,6 @@ public class MainRegistry {
         SerializableRecipe.initialize();
         AnvilRecipes.register();
         ClientConfig.initConfig();
-        WasteDrumRecipes.registerRecipes();
-        ItemDepletedFuel.registerPoolRecepies();
         RefineryRecipes.registerRefinery();
         FluidContainerRegistry.register();
         TileEntityNukeCustom.registerBombItems();

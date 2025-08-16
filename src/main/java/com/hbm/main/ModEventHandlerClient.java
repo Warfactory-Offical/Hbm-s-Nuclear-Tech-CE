@@ -39,7 +39,6 @@ import com.hbm.items.machine.ItemCassette.TrackType;
 import com.hbm.items.special.*;
 import com.hbm.items.special.weapon.GunB92;
 import com.hbm.items.tool.ItemCanister;
-import com.hbm.items.tool.ItemConveyorWand;
 import com.hbm.items.tool.ItemGasCanister;
 import com.hbm.items.tool.ItemGuideBook;
 import com.hbm.items.weapon.*;
@@ -284,8 +283,6 @@ public class ModEventHandlerClient {
                         ItemFluidTank.fluidTankModel);
                 ModelLoader.setCustomModelResourceLocation(ModItems.fluid_barrel_full, order[i].getID(),
                         ItemFluidTank.fluidBarrelModel);
-                ModelLoader.setCustomModelResourceLocation(ModItems.fluid_icon, order[i].getID(),
-                        ItemFluidIcon.fluidIconModel);
             }
         }
         ModelLoader.setCustomModelResourceLocation(ModItems.canister_empty, 0, ItemCanister.fluidCanisterModel);
@@ -498,7 +495,6 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         swapModelsNoGui(ModItems.shimmer_sledge, reg);
         swapModelsNoGui(ModItems.shimmer_axe, reg);
         swapModels(ModItems.ff_fluid_duct, reg);
-        swapModels(ModItems.fluid_icon, reg);
         swapModelsNoGui(ModItems.stopsign, reg);
         swapModelsNoGui(ModItems.sopsign, reg);
         swapModelsNoGui(ModItems.chernobylsign, reg);
@@ -814,7 +810,6 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         map.registerSprite(new ResourceLocation(RefStrings.MODID, "items/fluid_barrel_overlay"));
         map.registerSprite(new ResourceLocation(RefStrings.MODID, "items/fluid_tank_overlay"));
         map.registerSprite(new ResourceLocation(RefStrings.MODID, "items/fluid_tank_lead_overlay"));
-        map.registerSprite(new ResourceLocation(RefStrings.MODID, "items/fluid_icon"));
     }
 
     @SubscribeEvent

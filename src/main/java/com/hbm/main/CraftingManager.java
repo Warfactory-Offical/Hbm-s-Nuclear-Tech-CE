@@ -2393,6 +2393,10 @@ public class CraftingManager {
 		addShapelessAuto(new ItemStack(ModBlocks.railing_end_flipped_self), new Object[] { ModBlocks.railing_end_self });
 		addShapelessAuto(new ItemStack(ModBlocks.railing_end_flipped_floor), new Object[] { ModBlocks.railing_end_floor });
 
+		addShapelessAuto(new ItemStack(ModItems.bdcl), new Object[] { ANY_TAR.any(), Fluids.WATER.getDict(1_000), KEY_WHITE });
+
+		addShapelessAuto(new ItemStack(ModItems.book_of_), new Object[] { DictFrame.fromOne(ModItems.page_of_, ItemEnums.EnumPages.PAGE1), DictFrame.fromOne(ModItems.page_of_, ItemEnums.EnumPages.PAGE2), DictFrame.fromOne(ModItems.page_of_, ItemEnums.EnumPages.PAGE3), DictFrame.fromOne(ModItems.page_of_, ItemEnums.EnumPages.PAGE4), DictFrame.fromOne(ModItems.page_of_, ItemEnums.EnumPages.PAGE5), DictFrame.fromOne(ModItems.page_of_, ItemEnums.EnumPages.PAGE6), DictFrame.fromOne(ModItems.page_of_, ItemEnums.EnumPages.PAGE7), DictFrame.fromOne(ModItems.page_of_, ItemEnums.EnumPages.PAGE8), ModItems.egg_balefire });
+
 		//Mini Nuke
 
 		addShapelessAuto(new ItemStack(ModItems.ball_fireclay, 4), new Object[] { Items.CLAY_BALL, Items.CLAY_BALL, Items.CLAY_BALL, AL.dust()});
@@ -2445,7 +2449,6 @@ public class CraftingManager {
 				if(mat.autogen.contains(MaterialShapes.WIRE)) for(String name : mat.names) addRecipeAuto(new ItemStack(ModItems.wire_fine, 24, mat.id), new Object[] { "###", '#', MaterialShapes.INGOT.prefixes[0] + name });
 			}
 
-			addShapelessAuto(new ItemStack(ModItems.bdcl), new Object[] { ANY_TAR.any(), Fluids.WATER.getDict(1_000), KEY_WHITE });
 
 			addRecipeAuto(new ItemStack(ModItems.book_of_), new Object[] { "BGB", "GAG", "BGB", 'B', ModItems.egg_balefire_shard, 'G', GOLD.ingot(), 'A', Items.BOOK });
 		}

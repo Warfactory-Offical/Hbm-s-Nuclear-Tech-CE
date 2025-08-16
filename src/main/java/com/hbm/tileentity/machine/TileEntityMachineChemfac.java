@@ -15,10 +15,6 @@ import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.IGUIProvider;
 import io.netty.buffer.ByteBuf;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import javax.annotation.Nonnull;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -28,11 +24,15 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 @AutoRegister
 public class TileEntityMachineChemfac extends TileEntityMachineChemplantBase implements IGUIProvider {
@@ -42,10 +42,7 @@ public class TileEntityMachineChemfac extends TileEntityMachineChemplantBase imp
 
 	public FluidTankNTM waterNew;
 	public FluidTankNTM steamNew;
-	public TypedFluidTank water;
-	public TypedFluidTank steam;
 
-	private boolean converted;
 	private final UpgradeManager upgradeManager;
 
 	public TileEntityMachineChemfac() {
@@ -53,9 +50,6 @@ public class TileEntityMachineChemfac extends TileEntityMachineChemplantBase imp
 
 		waterNew = new FluidTankNTM(Fluids.WATER, 64_000, tanksNew.length);
 		steamNew = new FluidTankNTM(Fluids.SPENTSTEAM, 64_000, tanksNew.length + 1);
-
-		water = new TypedFluidTank(Fluids.COOLANT.getFF(), new FluidTank(6400));
-		steam = new TypedFluidTank(Fluids.COOLANT_HOT.getFF(), new FluidTank(6400));
 
 		inventory = new ItemStackHandler(77) {
 			@Override
@@ -78,11 +72,6 @@ public class TileEntityMachineChemfac extends TileEntityMachineChemplantBase imp
 	@Override
 	public void update() {
 		super.update();
-		if(!converted){
-			convertAndSetFluid(steam.getType(), steam.getTank(), steamNew);
-			convertAndSetFluid(water.getType(), water.getTank(), waterNew);
-			converted = true;
-		}
 		if(!world.isRemote) {
 			if(world.getTotalWorldTime() % 60 == 0) {
 				for(DirPos pos : getConPos()) {
@@ -312,32 +301,17 @@ public class TileEntityMachineChemfac extends TileEntityMachineChemplantBase imp
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		if(!converted){
-			water.tank.readFromNBT(nbt.getCompoundTag("water"));
-			steam.tank.readFromNBT(nbt.getCompoundTag("steam"));
-		} else {
-			waterNew.readFromNBT(nbt, "w");
-			steamNew.readFromNBT(nbt, "s");
-			if(nbt.hasKey("water")) nbt.removeTag("water");
-			if(nbt.hasKey("steam")) nbt.removeTag("steam");
-		}
+		waterNew.readFromNBT(nbt, "w");
+		steamNew.readFromNBT(nbt, "s");
+		if(nbt.hasKey("water")) nbt.removeTag("water");
+		if(nbt.hasKey("steam")) nbt.removeTag("steam");
 	}
 
 	@Override
 	public @NotNull NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		if(!converted) {
-			NBTTagCompound tankWater = new NBTTagCompound();
-			water.tank.writeToNBT(tankWater);
-			nbt.setTag("water", tankWater);
-
-			NBTTagCompound tankSteam = new NBTTagCompound();
-			steam.tank.writeToNBT(tankSteam);
-			nbt.setTag("steam", tankSteam);
-		} else {
-			waterNew.writeToNBT(nbt, "w");
-			steamNew.writeToNBT(nbt, "s");
-		}
+		waterNew.writeToNBT(nbt, "w");
+		steamNew.writeToNBT(nbt, "s");
 		return nbt;
 	}
 

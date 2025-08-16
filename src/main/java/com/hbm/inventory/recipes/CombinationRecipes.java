@@ -59,7 +59,7 @@ public class CombinationRecipes extends SerializableRecipe {
         return null;
     }
 
-    public static HashMap getRecipes() {
+    public static HashMap<Object, Object[]> getRecipes() {
 
         HashMap<Object, Object[]> recipes = new HashMap<>();
 

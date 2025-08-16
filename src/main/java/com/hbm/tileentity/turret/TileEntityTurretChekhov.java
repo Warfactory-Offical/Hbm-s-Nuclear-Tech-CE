@@ -1,11 +1,11 @@
 package com.hbm.tileentity.turret;
 
-import com.hbm.handler.BulletConfigSyncingUtil;
-import com.hbm.handler.BulletConfiguration;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerTurretBase;
 import com.hbm.inventory.gui.GUITurretChekhov;
+import com.hbm.items.weapon.sedna.BulletConfig;
+import com.hbm.items.weapon.sedna.factory.XFactory50;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.render.amlfrom1710.Vec3;
@@ -32,18 +32,11 @@ public class TileEntityTurretChekhov extends TileEntityTurretBaseNT implements I
 	//also having a floaty `static` like this looks fun
 	//idk if it's just me though
 	static {
-		configs.add(BulletConfigSyncingUtil.BMG50_NORMAL);
-		configs.add(BulletConfigSyncingUtil.BMG50_INCENDIARY);
-		configs.add(BulletConfigSyncingUtil.BMG50_EXPLOSIVE);
-		configs.add(BulletConfigSyncingUtil.BMG50_AP);
-		configs.add(BulletConfigSyncingUtil.BMG50_DU);
-		configs.add(BulletConfigSyncingUtil.BMG50_STAR);
-		configs.add(BulletConfigSyncingUtil.BMG50_PHOSPHORUS);
-		configs.add(BulletConfigSyncingUtil.BMG50_SLEEK);
-		configs.add(BulletConfigSyncingUtil.BMG50_FLECHETTE_NORMAL);
-		configs.add(BulletConfigSyncingUtil.BMG50_FLECHETTE_AM);
-		configs.add(BulletConfigSyncingUtil.BMG50_FLECHETTE_PO);
-		configs.add(BulletConfigSyncingUtil.CHL_BMG50);
+		configs.add(XFactory50.bmg50_sp.id);
+		configs.add(XFactory50.bmg50_fmj.id);
+		configs.add(XFactory50.bmg50_jhp.id);
+		configs.add(XFactory50.bmg50_ap.id);
+		configs.add(XFactory50.bmg50_du.id);
 	}
 
 	@Override
@@ -83,12 +76,13 @@ public class TileEntityTurretChekhov extends TileEntityTurretBaseNT implements I
 		timer++;
 		
 		if(timer > 20 && timer % getDelay() == 0) {
-			
-			BulletConfiguration conf = this.getFirstConfigLoaded();
-			
+
+			BulletConfig conf = this.getFirstConfigLoaded();
+
 			if(conf != null) {
-				this.spawnBullet(conf);
-				this.consumeAmmo(conf.ammo.item);
+				this.cachedCasingConfig = conf.casing;
+				this.spawnBullet(conf, 10F);
+				this.consumeAmmo(conf.ammo);
 				this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.chekhov_fire, SoundCategory.BLOCKS, 2.0F, 1.0F);
 				
 				Vec3 pos = new Vec3(this.getTurretPos());

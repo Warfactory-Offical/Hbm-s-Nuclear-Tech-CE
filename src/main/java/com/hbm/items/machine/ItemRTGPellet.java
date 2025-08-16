@@ -176,4 +176,16 @@ public class ItemRTGPellet extends ItemBase {
 	public String getData() {
 		return String.format("%s (%s HE/t) %s", I18nUtil.resolveKey(getTranslationKey().concat(".name")), getHeat()*5, (getDoesDecay() ? " (decays)" : ""));
 	}
+
+	public static HashMap<ItemStack, ItemStack> getRecipeMap() {
+		HashMap<ItemStack, ItemStack> map = new HashMap<ItemStack, ItemStack>();
+
+		for(ItemRTGPellet pellet : pelletMap.keySet()) {
+			if(pellet.decayItem != null) {
+				map.put(new ItemStack(pellet), new ItemStack(pellet.decayItem));
+			}
+		}
+
+		return map;
+	}
 }

@@ -238,9 +238,10 @@ public class EntityChemical extends EntityThrowableNT{
 
             if(living != null) {
                 EntityDamageUtil.attackEntityFromIgnoreIFrame(living, ModDamageSource.acid, trait.getRating() / 50F);
-                for(int i = 0; i < 4; i++) {
-                    ArmorUtil.damageSuit((EntityPlayer) living, i, trait.getRating() / 40);
-                }
+                if (living instanceof EntityPlayer player)
+                    for(int i = 0; i < 4; i++) {
+                        ArmorUtil.damageSuit(player, i, trait.getRating() / 40);
+                    }
             }
         }
 

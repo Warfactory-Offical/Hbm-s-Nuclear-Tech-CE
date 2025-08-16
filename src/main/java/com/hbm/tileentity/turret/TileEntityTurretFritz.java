@@ -3,19 +3,21 @@ package com.hbm.tileentity.turret;
 import com.hbm.api.fluid.IFluidStandardReceiver;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.capability.NTMFluidHandlerWrapper;
-import com.hbm.handler.BulletConfigSyncingUtil;
-import com.hbm.handler.BulletConfiguration;
+import com.hbm.entity.projectile.EntityBulletBaseMK4;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IFFtoNTMF;
-import com.hbm.inventory.recipes.FluidCombustionRecipes;
 import com.hbm.inventory.container.ContainerTurretBase;
+import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
+import com.hbm.inventory.fluid.trait.FT_Combustible;
 import com.hbm.inventory.fluid.trait.FT_Flammable;
 import com.hbm.inventory.fluid.trait.FluidTraitSimple;
 import com.hbm.inventory.gui.GUITurretFritz;
 import com.hbm.items.ModItems;
+import com.hbm.items.weapon.sedna.factory.GunFactory;
+import com.hbm.items.weapon.sedna.factory.XFactoryFlamer;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
@@ -26,14 +28,13 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
@@ -41,22 +42,19 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 @AutoRegister
 public class TileEntityTurretFritz extends TileEntityTurretBaseNT implements IFluidStandardReceiver, IFluidCopiable, IFFtoNTMF, IGUIProvider {
 
-	public FluidTank tankOld;
 	public FluidTankNTM tank;
 
 	public static int drain = 2;
-
-	private Fluid oldFluid =Fluids.NONE.getFF();;
 	private static boolean converted = false;
 	
 	public TileEntityTurretFritz() {
 		super();
-		this.tankOld = new FluidTank(16000);
 		this.tank = new FluidTankNTM(Fluids.DIESEL, 16000);
 	}
 	
@@ -69,6 +67,26 @@ public class TileEntityTurretFritz extends TileEntityTurretBaseNT implements IFl
 	protected List<Integer> getAmmoList() {
 		return null;
 	}
+
+	@SideOnly(Side.CLIENT)
+	public List<ItemStack> getAmmoTypesForDisplay() {
+
+		if(ammoStacks != null)
+			return ammoStacks;
+
+		ammoStacks = new ArrayList();
+
+		ammoStacks.add(new ItemStack(ModItems.ammo_standard, 1, GunFactory.EnumAmmo.FLAME_DIESEL.ordinal()));
+
+		for(FluidType type : Fluids.getInNiceOrder()) {
+			if(type.hasTrait(FT_Combustible.class) && type.hasTrait(FluidTraitSimple.FT_Liquid.class)) {
+				ammoStacks.add(new ItemStack(ModItems.fluid_icon, 1, type.getID()));
+			}
+		}
+
+		return ammoStacks;
+	}
+
 	
 	@Override
 	public double getDecetorRange() {
@@ -105,14 +123,17 @@ public class TileEntityTurretFritz extends TileEntityTurretBaseNT implements IFl
 
 		if(this.tank.getTankType().hasTrait(FT_Flammable.class) && this.tank.getTankType().hasTrait(FluidTraitSimple.FT_Liquid.class) && this.tank.getFill() >= 2) {
 
-			BulletConfiguration conf = BulletConfigSyncingUtil.pullConfig(BulletConfigSyncingUtil.FLA_NORMAL);
-			this.spawnBullet(conf, FluidCombustionRecipes.getFlameEnergy(tank.getTankType()) * 0.002F);
+			FT_Flammable trait = this.tank.getTankType().getTrait(FT_Flammable.class);
 			this.tank.setFill(this.tank.getFill() - 2);
 
 			Vec3d pos = this.getTurretPos();
 			Vec3 vec = Vec3.createVectorHelper(this.getBarrelLength(), 0, 0);
 			vec.rotateAroundZ((float) -this.rotationPitch);
 			vec.rotateAroundY((float) -(this.rotationYaw + Math.PI * 0.5));
+
+			EntityBulletBaseMK4 proj = new EntityBulletBaseMK4(world, XFactoryFlamer.flame_nograv, (float) (trait.getHeatEnergy() / 500_000F), 0.05F, (float) rotationYaw, (float) rotationPitch);
+			proj.setPositionAndRotation(pos.x + vec.xCoord, pos.y + vec.yCoord, pos.z + vec.zCoord, proj.rotationYaw, proj.rotationPitch);
+			world.spawnEntity(proj);
 			
 			world.playSound(null, this.pos.getX(), this.pos.getY(), this.pos.getZ(), HBMSoundHandler.flamethrowerShoot, SoundCategory.BLOCKS, 2F, 1F + world.rand.nextFloat() * 0.5F);
 			
@@ -132,17 +153,13 @@ public class TileEntityTurretFritz extends TileEntityTurretBaseNT implements IFl
 	@Override
 	public void update(){
 		super.update();
-		if(!converted && tank.getTankType() == Fluids.NONE) {
-			convertAndSetFluid(oldFluid, tankOld, tank);
-			converted = true;
-		}
 		if(!world.isRemote) {
 			tank.setType(9, 9, inventory);
 			tank.loadTank(0, 1, inventory);
 
 			for(int i = 1; i < 10; i++) {
 
-				if(!inventory.getStackInSlot(i).isEmpty() && inventory.getStackInSlot(i).getItem() == ModItems.nothing) { //ammo_fuel
+				if(!inventory.getStackInSlot(i).isEmpty() && inventory.getStackInSlot(i).getItem() == ModItems.ammo_standard && inventory.getStackInSlot(i).getItemDamage() == GunFactory.EnumAmmo.FLAME_DIESEL.ordinal()) { //ammo_fuel
 					if(this.tank.getTankType() == Fluids.DIESEL && this.tank.getFill() + 1000 <= this.tank.getMaxFill()) {
 						this.tank.setFill(this.tank.getFill() + 1000);
 						this.inventory.getStackInSlot(i).shrink(1);
@@ -187,31 +204,17 @@ public class TileEntityTurretFritz extends TileEntityTurretBaseNT implements IFl
 		this.trySubscribe(tank.getTankType(), world, pos.getX() + dir.offsetX * 2 + rot.offsetX * 0, pos.getY(), pos.getZ() + dir.offsetZ * 2 + rot.offsetZ * 0, dir);
 		this.trySubscribe(tank.getTankType(), world, pos.getX() + dir.offsetX * 2 + rot.offsetX * -1, pos.getY(), pos.getZ() + dir.offsetZ * 2 + rot.offsetZ * -1, dir);
 	}
-	
+
 	@Override
-	public @NotNull NBTTagCompound writeToNBT(NBTTagCompound nbt){
-		if(!converted && tank.getTankType() == Fluids.NONE){
-			nbt.setInteger("cap", tankOld.getCapacity());
-			tankOld.writeToNBT(nbt);
-			nbt.setBoolean("converted", true);
-		} else tank.writeToNBT(nbt, "tank");
-		return super.writeToNBT(nbt);
-	}
-	
-	@Override
-	public void readFromNBT(NBTTagCompound nbt){
-		tank.readFromNBT(nbt,"tank");
-		if (!converted && tank.getTankType() == Fluids.NONE){
-			if(tankOld == null || tankOld.getCapacity() <= 0)
-				tankOld = new FluidTank(nbt.getInteger("cap"));
-			tankOld.readFromNBT(nbt);
-			if(tankOld.getFluid() != null) {
-				oldFluid = tankOld.getFluid().getFluid();
-			}
-		} else {
-			if(nbt.hasKey("cap")) nbt.removeTag("cap");
-		}
+	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
+		this.tank.readFromNBT(nbt, "diesel");
+	}
+
+	@Override
+	public @NotNull NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+		this.tank.writeToNBT(nbt, "diesel");
+		return super.writeToNBT(nbt);
 	}
 	
 	@Override

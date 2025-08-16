@@ -1,8 +1,6 @@
 package com.hbm.items.special;
 
-import com.hbm.inventory.recipes.WasteDrumRecipes;
 import com.hbm.util.I18nUtil;
-import com.hbm.util.ItemStackUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
@@ -61,12 +59,6 @@ public class ItemDepletedFuel extends ItemNuclearWaste {
 
         for (ItemDepletedFuel item : INSTANCES) {
             itemColors.registerItemColorHandler(handler, item);
-        }
-    }
-
-    public static void registerPoolRecepies(){
-        for(ItemDepletedFuel waste : INSTANCES){
-            WasteDrumRecipes.addRecipe(ItemStackUtil.comparableStackFrom(waste, 1, 1), new ItemStack(waste, 1, 0));
         }
     }
 

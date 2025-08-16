@@ -137,7 +137,7 @@ public class TileEntityMachineEPress extends TileEntityMachineBase implements IT
 			return false;
 		}
 
-		ItemStack output = PressRecipes.getPressResult(inventory.getStackInSlot(2), inventory.getStackInSlot(1));
+		ItemStack output = PressRecipes.getOutput(inventory.getStackInSlot(2), inventory.getStackInSlot(1));
 		if (output.isEmpty()) {
 			return false;
 		}
@@ -155,7 +155,7 @@ public class TileEntityMachineEPress extends TileEntityMachineBase implements IT
 	private void craftItem() {
 		ItemStack input = inventory.getStackInSlot(2);
 		ItemStack stamp = inventory.getStackInSlot(1);
-		ItemStack output = PressRecipes.getPressResult(input, stamp);
+		ItemStack output = PressRecipes.getOutput(input, stamp);
 
 		if (output.isEmpty()) return;
 		inventory.insertItem(3, output.copy(), false);

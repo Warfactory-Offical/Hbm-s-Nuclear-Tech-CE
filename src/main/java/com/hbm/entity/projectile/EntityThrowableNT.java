@@ -113,13 +113,11 @@ public abstract class EntityThrowableNT extends Entity implements IProjectile {
         motionX /= (double) throwLen;
         motionY /= (double) throwLen;
         motionZ /= (double) throwLen;
-        //Doubles for Coords are gonna cause floating point errors, XYZ should be fine as ints motion is neccessary as a Double
 
 
-//        motionX += this.rand.nextGaussian() * headingForceMult() * (double) inaccuracy;
-//        motionY += this.rand.nextGaussian() * headingForceMult() * (double) inaccuracy;
-//        motionZ += this.rand.nextGaussian() * headingForceMult() * (double) inaccuracy;
-//        Fuck the guassian randomising
+        motionX += this.rand.nextGaussian() * headingForceMult() * (double) inaccuracy;
+        motionY += this.rand.nextGaussian() * headingForceMult() * (double) inaccuracy;
+        motionZ += this.rand.nextGaussian() * headingForceMult() * (double) inaccuracy;
 
 
         motionX *= (double) velocity;

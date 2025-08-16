@@ -2,10 +2,8 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.api.fluidmk2.IFluidStandardTransceiverMK2;
-import com.hbm.blocks.BlockDummyable;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
-import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
@@ -18,89 +16,33 @@ import com.hbm.lib.Library;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.InventoryUtil;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.oredict.OreDictionary;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public abstract class TileEntityMachineChemplantBase extends TileEntityMachineBase implements IEnergyReceiverMK2, ITickable, IFluidStandardTransceiverMK2, IGUIProvider, IFFtoNTMF {
+public abstract class TileEntityMachineChemplantBase extends TileEntityMachineBase implements IEnergyReceiverMK2, ITickable, IFluidStandardTransceiverMK2, IGUIProvider {
 	public long power;
 	public int[] progress;
 	public int[] maxProgress;
 	public boolean isProgressing;
 
 	public FluidTankNTM[] tanksNew;
-	public TypedFluidTank[] tanks;
-
-	public static class TypedFluidTank {
-		protected Fluid type;
-		protected final FluidTank tank;
-
-		protected TypedFluidTank(Fluid type, FluidTank tank) {
-			this.type = type;
-			this.tank = tank;
-		}
-
-		public void setType(@Nullable Fluid type) {
-			if(type == null) {
-				this.tank.setFluid(null);
-			}
-
-			if(this.type == type) {
-				return;
-			}
-
-			this.type = type;
-			this.tank.setFluid(null);
-		}
-
-		public void writeToNBT(NBTTagCompound nbt) {
-			if(this.type != null) {
-				nbt.setString("type", this.type.getName());
-			}
-
-			this.tank.writeToNBT(nbt);
-		}
-
-		public void readFromNBT(NBTTagCompound nbt) {
-			if(nbt.hasKey("type")) {
-				this.type = FluidRegistry.getFluid(nbt.getString("type"));
-			}
-			this.tank.readFromNBT(nbt);
-		}
-
-		public FluidTank getTank() {
-			return tank;
-		}
-
-		public Fluid getType() {
-			return type;
-		}
-	}
 
 	int consumption = 100;
 	int speed = 100;
-	private static boolean converted = false;
 
 	public TileEntityMachineChemplantBase(int scount) {
 		super(scount);
@@ -114,39 +56,11 @@ public abstract class TileEntityMachineChemplantBase extends TileEntityMachineBa
 		for(int i = 0; i < 4 * count; i++) {
 			tanksNew[i] = new FluidTankNTM(Fluids.NONE, getTankCapacity(), i);
 		}
-		tanks = new TypedFluidTank[4 * count];
-		for(int idx = 0; idx < tanks.length; ++idx) {
-			tanks[idx] = new TypedFluidTank(null, new FluidTank(this.getTankCapacity()));
-		}
-
-		converted = true;
-	}
-
-	//Norwood: Why the fuck was the fluid array downsized by one? that causes out of bounds you know?
-	public Fluid[] getFluidsTyped(TypedFluidTank[] tanks){
-		Fluid[] fluid = new Fluid[tanks.length];
-		for(int i = 0; i < tanks.length; i++){
-			if (tanks[i].getType() != null) fluid[i] = tanks[i].getType();
-			else fluid[i] =Fluids.NONE.getFF();;
-		}
-		return fluid;
-	}
-
-	public FluidTank[] getTanks(TypedFluidTank[] tanksTyped){
-		FluidTank[] tanks = new FluidTank[tanksTyped.length];
-		for(int i = 0; i < tanksTyped.length; i++){
-			tanks[i] = tanksTyped[i].getTank();
-		}
-		return tanks;
 	}
 
 	@Override
 	public void update() {
 		if(!world.isRemote) {
-			if(!converted){
-				convertAndSetFluids(getFluidsTyped(tanks), getTanks(tanks), tanksNew);
-				converted = true;
-			}
 			int count = this.getRecipeCount();
 
 			this.isProgressing = false;
@@ -374,7 +288,7 @@ public abstract class TileEntityMachineChemplantBase extends TileEntityMachineBa
 
 	public List<FluidTankNTM> inTanks() {
 
-		List<FluidTankNTM> inTanks = new ArrayList();
+		List<FluidTankNTM> inTanks = new ArrayList<>();
 
 		for(int i = 0; i < tanksNew.length; i++) {
 			FluidTankNTM tank = tanksNew[i];
@@ -399,62 +313,6 @@ public abstract class TileEntityMachineChemplantBase extends TileEntityMachineBa
 		return fill;
 	}
 
-	public void transferFluid(int amount, FluidType type, int pressure) {
-
-		/*
-		 * this whole new fluid mumbo jumbo extra abstraction layer might just be a bandaid
-		 * on the gushing wound that is the current fluid systemm but i'll be damned if it
-		 * didn't at least do what it's supposed to. half a decade and we finally have multi
-		 * tank support for tanks with matching fluid types!!
-		 */
-		if(amount <= 0)
-			return;
-
-		List<FluidTankNTM> send = new ArrayList();
-
-		for(FluidTankNTM tank : outTanks()) {
-			if(tank.getTankType() == type && tank.getPressure() == pressure) {
-				send.add(tank);
-			}
-		}
-
-		if(send.size() == 0)
-			return;
-
-		int offer = 0;
-		List<Integer> weight = new ArrayList();
-
-		for(FluidTankNTM tank : send) {
-			int fillWeight = tank.getFill();
-			offer += fillWeight;
-			weight.add(fillWeight);
-		}
-
-		int tracker = amount;
-
-		for(int i = 0; i < send.size(); i++) {
-
-			FluidTankNTM tank = send.get(i);
-			int fillWeight = weight.get(i);
-			int part = amount * fillWeight / offer;
-
-			tank.setFill(tank.getFill() - part);
-			tracker -= part;
-		}
-
-		//making sure to properly deduct even the last mB lost by rounding errors
-		for(int i = 0; i < 100 && tracker > 0; i++) {
-
-			FluidTankNTM tank = send.get(i % send.size());
-
-			if(tank.getFill() > 0) {
-				int total = Math.min(tank.getFill(), tracker);
-				tracker -= total;
-				tank.setFill(tank.getFill() - total);
-			}
-		}
-	}
-
 	public List<FluidTankNTM> outTanks() {
 
 		List<FluidTankNTM> outTanks = new ArrayList();
@@ -475,76 +333,6 @@ public abstract class TileEntityMachineChemplantBase extends TileEntityMachineBa
 	}
 
 	@Override
-	public long transferFluid(FluidType type, int pressure, long fluid) {
-		int amount = (int) fluid;
-
-		if(amount <= 0)
-			return 0;
-
-		List<FluidTankNTM> rec = new ArrayList();
-
-		for(FluidTankNTM tank : inTanks()) {
-			if(tank.getTankType() == type && tank.getPressure() == pressure) {
-				rec.add(tank);
-			}
-		}
-
-		if(rec.size() == 0)
-			return fluid;
-
-		int demand = 0;
-		List<Integer> weight = new ArrayList();
-
-		for(FluidTankNTM tank : rec) {
-			int fillWeight = tank.getMaxFill() - tank.getFill();
-			demand += fillWeight;
-			weight.add(fillWeight);
-		}
-
-		for(int i = 0; i < rec.size(); i++) {
-
-			if(demand <= 0)
-				break;
-
-			FluidTankNTM tank = rec.get(i);
-			int fillWeight = weight.get(i);
-			int part = (int) (Math.min((long)amount, (long)demand) * (long)fillWeight / (long)demand);
-
-			tank.setFill(tank.getFill() + part);
-			fluid -= part;
-		}
-
-		return fluid;
-	}
-
-	@Override
-	public long getDemand(FluidType type, int pressure) {
-		return getMaxFluidFill(type) - getFluidFillForTransfer(type, pressure);
-	}
-
-	protected NBTTagList serializeTanks() {
-		NBTTagList tankList = new NBTTagList();
-		for(int i = 0; i < tanks.length; ++i) {
-			NBTTagCompound tank = new NBTTagCompound();
-			tanks[i].writeToNBT(tank);
-			tank.setByte("index", (byte) i);
-
-			tankList.appendTag(tank);
-		}
-
-		return tankList;
-	}
-
-	protected void deserializeTanks(NBTTagList tankList) {
-		for(int i = 0; i < tankList.tagCount(); ++i) {
-			NBTTagCompound tank = tankList.getCompoundTagAt(i);
-			int index = tank.getByte("index");
-
-			tanks[index].readFromNBT(tank);
-		}
-	}
-
-	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 
@@ -554,15 +342,10 @@ public abstract class TileEntityMachineChemplantBase extends TileEntityMachineBa
 		if(progress.length == 0)
 			progress = new int[this.getRecipeCount()];
 
-		if(!converted){
-			NBTTagList tankList = nbt.getTagList("tanks", 10);
-			deserializeTanks(tankList);
-		} else {
-			for (int i = 0; i < tanksNew.length; i++) {
-				tanksNew[i].readFromNBT(nbt, "t" + i);
-			}
-			if(nbt.hasKey("tanks")) nbt.removeTag("tanks");
+		for (int i = 0; i < tanksNew.length; i++) {
+			tanksNew[i].readFromNBT(nbt, "t" + i);
 		}
+		if(nbt.hasKey("tanks")) nbt.removeTag("tanks");
 	}
 
 	@Override
@@ -571,12 +354,8 @@ public abstract class TileEntityMachineChemplantBase extends TileEntityMachineBa
 
 		nbt.setLong("power", power);
 		nbt.setIntArray("progress", progress);
-		if(!converted){
-			nbt.setTag("tanks", serializeTanks());
-		} else {
-			for (int i = 0; i < tanksNew.length; i++) {
-				tanksNew[i].writeToNBT(nbt, "t" + i);
-			}
+		for (int i = 0; i < tanksNew.length; i++) {
+			tanksNew[i].writeToNBT(nbt, "t" + i);
 		}
 		return nbt;
 	}

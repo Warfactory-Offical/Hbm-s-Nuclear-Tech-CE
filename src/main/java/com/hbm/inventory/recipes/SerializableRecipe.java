@@ -59,6 +59,7 @@ public abstract class SerializableRecipe {
         recipeHandlers.add(new LiquefactionRecipes());
         recipeHandlers.add(new MatDistribution());
         recipeHandlers.add(new MixerRecipes());
+        recipeHandlers.add(new PressRecipes());
         recipeHandlers.add(new PyroOvenRecipes());
         recipeHandlers.add(new RBMKOutgasserRecipes());
         recipeHandlers.add(new ReformingRecipes());
@@ -68,6 +69,7 @@ public abstract class SerializableRecipe {
         recipeHandlers.add(new ParticleAcceleratorRecipes());
         recipeHandlers.add(new ExposureChamberRecipes());
         recipeHandlers.add(new CombinationRecipes());
+        recipeHandlers.add(new WasteDrumRecipes());
     }
 
     public static void initialize() {

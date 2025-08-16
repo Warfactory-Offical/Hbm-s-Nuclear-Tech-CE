@@ -64,7 +64,7 @@ public class RefineryRecipes {
 		return recipes;
 	}
 
-	public static HashMap getVacuumRecipe() {
+	public static HashMap<Object, Object[]> getVacuumRecipe() {
 
 		HashMap<Object, Object[]> recipes = new HashMap<Object, Object[]>();
 

@@ -1,11 +1,11 @@
 package com.hbm.tileentity.turret;
 
-import com.hbm.handler.BulletConfigSyncingUtil;
-import com.hbm.handler.BulletConfiguration;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerTurretBase;
 import com.hbm.inventory.gui.GUITurretTauon;
+import com.hbm.items.weapon.sedna.BulletConfig;
+import com.hbm.items.weapon.sedna.factory.XFactoryAccelerator;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
@@ -32,7 +32,7 @@ public class TileEntityTurretTauon extends TileEntityTurretBaseNT implements IGU
 	static List<Integer> configs = new ArrayList<>();
 
 	static {
-		configs.add(BulletConfigSyncingUtil.SPECIAL_GAUSS);
+		configs.add(XFactoryAccelerator.tau_uranium.id);
 	}
 
 	@Override
@@ -128,15 +128,16 @@ public class TileEntityTurretTauon extends TileEntityTurretBaseNT implements IGU
 		timer++;
 		this.shot = false;
 		if(timer % 5 == 0) {
-			
-			BulletConfiguration conf = this.getFirstConfigLoaded();
+
+			BulletConfig conf = this.getFirstConfigLoaded();
 			
 			if(conf != null && this.target != null) {
 				this.target.attackEntityFrom(ModDamageSource.electricity, 30F + world.rand.nextInt(11));
-				this.consumeAmmo(conf.ammo.item);
+				this.consumeAmmo(conf.ammo);
 				this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.tauShoot, SoundCategory.BLOCKS, 4.0F, 0.9F + world.rand.nextFloat() * 0.3F);
 				this.shot = true;
 				networkPackNT(250);
+				this.shot = false;
 				Vec3 pos = new Vec3(this.getTurretPos());
 				Vec3 vec = Vec3.createVectorHelper(this.getBarrelLength(), 0, 0);
 				vec.rotateAroundZ((float) -this.rotationPitch);

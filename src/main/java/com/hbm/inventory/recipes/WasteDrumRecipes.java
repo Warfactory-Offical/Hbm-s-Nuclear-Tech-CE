@@ -1,56 +1,79 @@
 package com.hbm.inventory.recipes;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonWriter;
 import com.hbm.items.ModItems;
-import net.minecraft.item.Item;
+import com.hbm.items.machine.ItemPWRFuel;
 import net.minecraft.item.ItemStack;
 
-import java.util.HashSet;
-import java.util.LinkedHashMap;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.hbm.inventory.RecipesCommon.ComparableStack;
 
-public class WasteDrumRecipes {
+public class WasteDrumRecipes extends SerializableRecipe {
 
-	public static LinkedHashMap<ComparableStack, ItemStack> recipes = new LinkedHashMap<>();
-	private static HashSet<ItemStack> outputs = new HashSet<>();
-	
-	public static void registerRecipes() {
+	public static final HashMap<ComparableStack, ItemStack> recipes = new HashMap<>();
+	public static final WasteDrumRecipes instance = new WasteDrumRecipes();
 
-		//input, output
-		addRecipe(ModItems.waste_uranium_hot, new ItemStack(ModItems.waste_uranium_legacy, 1));
-		addRecipe(ModItems.waste_thorium_hot, new ItemStack(ModItems.waste_thorium_legacy, 1));
-		addRecipe(ModItems.waste_plutonium_hot, new ItemStack(ModItems.waste_plutonium_legacy, 1));
-		addRecipe(ModItems.waste_mox_hot, new ItemStack(ModItems.waste_mox_legacy, 1));
-		addRecipe(ModItems.waste_schrabidium_hot, new ItemStack(ModItems.waste_schrabidium_legacy, 1));
+	@Override
+	public void registerDefaults() {
+		recipes.put(new ComparableStack(ModItems.waste_natural_uranium, 1, 1), new ItemStack(ModItems.waste_natural_uranium));
+		recipes.put(new ComparableStack(ModItems.waste_uranium, 1, 1), new ItemStack(ModItems.waste_uranium));
+		recipes.put(new ComparableStack(ModItems.waste_thorium, 1, 1), new ItemStack(ModItems.waste_thorium));
+		recipes.put(new ComparableStack(ModItems.waste_mox, 1, 1), new ItemStack(ModItems.waste_mox));
+		recipes.put(new ComparableStack(ModItems.waste_plutonium, 1, 1), new ItemStack(ModItems.waste_plutonium));
+		recipes.put(new ComparableStack(ModItems.waste_u233, 1, 1), new ItemStack(ModItems.waste_u233));
+		recipes.put(new ComparableStack(ModItems.waste_u235, 1, 1), new ItemStack(ModItems.waste_u235));
+		recipes.put(new ComparableStack(ModItems.waste_schrabidium, 1, 1), new ItemStack(ModItems.waste_schrabidium));
+		recipes.put(new ComparableStack(ModItems.waste_zfb_mox, 1, 1), new ItemStack(ModItems.waste_zfb_mox));
+		recipes.put(new ComparableStack(ModItems.waste_plate_u233, 1, 1), new ItemStack(ModItems.waste_plate_u233));
+		recipes.put(new ComparableStack(ModItems.waste_plate_u235, 1, 1), new ItemStack(ModItems.waste_plate_u235));
+		recipes.put(new ComparableStack(ModItems.waste_plate_mox, 1, 1), new ItemStack(ModItems.waste_plate_mox));
+		recipes.put(new ComparableStack(ModItems.waste_plate_pu239, 1, 1), new ItemStack(ModItems.waste_plate_pu239));
+		recipes.put(new ComparableStack(ModItems.waste_plate_sa326, 1, 1), new ItemStack(ModItems.waste_plate_sa326));
+		recipes.put(new ComparableStack(ModItems.waste_plate_ra226be, 1, 1), new ItemStack(ModItems.waste_plate_ra226be));
+		recipes.put(new ComparableStack(ModItems.waste_plate_pu238be, 1, 1), new ItemStack(ModItems.waste_plate_pu238be));
+
+		for(ItemPWRFuel.EnumPWRFuel pwr : ItemPWRFuel.EnumPWRFuel.values()) recipes.put(new ComparableStack(ModItems.pwr_fuel_hot, 1, pwr.ordinal()), new ItemStack(ModItems.pwr_fuel_depleted, 1, pwr.ordinal()));
 	}
 
-	public static void addRecipe(ComparableStack input, ItemStack output){ //Dude what fucking moron made everything work on Item oppose to ItemStack
-		recipes.put(input, output);
-		outputs.add(output);
+	@Override
+	public String getFileName() {
+		return "hbmFuelpool.json";
 	}
 
-	public static void addRecipe(Item input, ItemStack output){
-		recipes.put(new ComparableStack(input,1), output);
-		outputs.add(output);
-	}
-	
-	public static ItemStack getOutput(Item item) {
-		
-		if(item == null)
-			return null;
-		
-		return recipes.get(item);
+	@Override
+	public Object getRecipeObject() {
+		return recipes;
 	}
 
-	public static ItemStack getOutput(ItemStack item) {
-
-		if(item == null)
-			return null;
-
-		return recipes.get(item);
+	@Override
+	public void deleteRecipes() {
+		recipes.clear();
 	}
 
-	public static boolean isCold(ItemStack item){
-		return outputs.contains(item);
+	@Override
+	public void readRecipe(JsonElement recipe) {
+		JsonElement input = ((JsonObject)recipe).get("input");
+		JsonElement output = ((JsonObject)recipe).get("output");
+		ItemStack in = this.readItemStack((JsonArray) input);
+		ItemStack out = this.readItemStack((JsonArray) output);
+		recipes.put(new ComparableStack(in), out);
+	}
+
+	@Override
+	public void writeRecipe(Object recipe, JsonWriter writer) throws IOException {
+		Map.Entry<ComparableStack, ItemStack> entry = (Map.Entry<ComparableStack, ItemStack>) recipe;
+		ItemStack in = entry.getKey().toStack();
+		ItemStack out = entry.getValue();
+
+		writer.name("input");
+		this.writeItemStack(in, writer);
+		writer.name("output");
+		this.writeItemStack(out, writer);
 	}
 }

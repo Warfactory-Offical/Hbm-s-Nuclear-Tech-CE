@@ -20,7 +20,6 @@ import com.hbm.items.machine.ItemFluidIcon;
 import com.hbm.lib.Library;
 import com.hbm.lib.RefStrings;
 import com.hbm.util.I18nUtil;
-import com.hbm.util.Tuple.Pair;
 import com.hbm.util.WeightedRandomObject;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
@@ -33,7 +32,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -43,7 +41,6 @@ public class JeiRecipes {
 
 	private static List<ChemRecipe> chemRecipes = null;
 	private static List<CyclotronRecipe> cyclotronRecipes = null;
-	private static List<PressRecipe> pressRecipes = null;
 	private static List<AlloyFurnaceRecipe> alloyFurnaceRecipes = null;
 	private static List<BoilerRecipe> boilerRecipes = null;
 	private static List<CMBFurnaceRecipe> cmbRecipes = null;
@@ -105,33 +102,6 @@ public class JeiRecipes {
 		@Override
 		public void getIngredients(IIngredients ingredients) {
 			ingredients.setInputs(VanillaTypes.ITEM, inputs);
-			ingredients.setOutput(VanillaTypes.ITEM, output);
-		}
-		
-	}
-	
-	public static class PressRecipe implements IRecipeWrapper {
-
-		private final List<ItemStack> stamps;
-		private final List<ItemStack> input;
-		private final ItemStack output;
-		
-		public PressRecipe(List<ItemStack> stamps, List<ItemStack> input, ItemStack output) {
-			this.stamps = stamps;
-			this.input = input;
-			this.output = output; 
-		}
-		
-		public List<ItemStack> getStamps() {
-			return stamps;
-		}
-		
-		@Override
-		public void getIngredients(IIngredients ingredients) {
-			List<List<ItemStack>> allInputs = new ArrayList<>();
-			allInputs.add(input);
-			allInputs.add(stamps);
-			ingredients.setInputLists(VanillaTypes.ITEM, allInputs);
 			ingredients.setOutput(VanillaTypes.ITEM, output);
 		}
 		
@@ -704,20 +674,6 @@ public class JeiRecipes {
 		}
 		
 		return cyclotronRecipes;
-	}
-
-	public static List<PressRecipe> getPressRecipes() {
-		if(pressRecipes != null)
-			return pressRecipes;
-
-		pressRecipes = new ArrayList<>();
-		
-		for(Entry<Pair<PressRecipes.StampType, ? extends AStack>, ItemStack> entry : PressRecipes.pressRecipes.entrySet()){
-
-			pressRecipes.add(new PressRecipe(PressRecipes.getStampList(entry.getKey().getKey()), entry.getKey().getValue().getStackList(), entry.getValue()));
-		}
-		
-		return pressRecipes;
 	}
 	
 	

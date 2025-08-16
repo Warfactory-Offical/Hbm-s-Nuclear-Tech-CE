@@ -82,7 +82,6 @@ public class DFCRecipes {
 		DFCRecipes.setRecipe(420000000000L, U238.nugget(), new ItemStack(ModItems.nugget_u238m2));
 		
 		DFCRecipes.setRecipe(8000000000000L, ModItems.undefined, new ItemStack(ModItems.glitch));
-		DFCRecipes.setRecipe(69000000000000L, Items.WRITABLE_BOOK, new ItemStack(ModItems.book_of_));
 	}
 
 	public static void setRecipe(long requiredFlux, ItemStack in, ItemStack out) {

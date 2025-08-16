@@ -60,8 +60,7 @@ public class GunFactory {
         XFactoryCatapult.init();
         XFactory75Bolt.init();
         XFactoryFolly.init();
-        // maybe one day..
-        //XFactoryTurret.init();
+        XFactoryTurret.init();
         XFactory10ga.init();
         XFactory35800.init();
 

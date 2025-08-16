@@ -1,12 +1,13 @@
 package com.hbm.tileentity.turret;
 
-import com.hbm.handler.BulletConfiguration;
 import com.hbm.handler.CasingEjector;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerTurretBase;
 import com.hbm.inventory.gui.GUITurretSentry;
 import com.hbm.inventory.gui.GuiInfoContainer;
+import com.hbm.items.weapon.sedna.BulletConfig;
+import com.hbm.items.weapon.sedna.factory.XFactory9mm;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
@@ -41,12 +42,12 @@ public class TileEntityTurretSentry extends TileEntityTurretBaseNT implements IG
 
   static List<Integer> configs = new ArrayList<>();
 
-  //    static {
-  //        configs.add(XFactory9mm.p9_sp.id);
-  //        configs.add(XFactory9mm.p9_fmj.id);
-  //        configs.add(XFactory9mm.p9_jhp.id);
-  //        configs.add(XFactory9mm.p9_ap.id);
-  //    }
+  static {
+    configs.add(XFactory9mm.p9_sp.id);
+    configs.add(XFactory9mm.p9_fmj.id);
+    configs.add(XFactory9mm.p9_jhp.id);
+    configs.add(XFactory9mm.p9_ap.id);
+  }
 
   @Override
   protected List<Integer> getAmmoList() {
@@ -155,11 +156,12 @@ public class TileEntityTurretSentry extends TileEntityTurretBaseNT implements IG
 
     if (timer % 10 == 0) {
 
-      BulletConfiguration conf = this.getFirstConfigLoaded();
+      BulletConfig conf = this.getFirstConfigLoaded();
 
       if (conf != null) {
+        this.cachedCasingConfig = conf.casing;
         this.spawnBullet(conf, 5F);
-        this.consumeAmmo(conf.ammo.item);
+        this.consumeAmmo(conf.ammo);
         this.world.playSound(
             null, this.pos, HBMSoundHandler.sentryFire, SoundCategory.BLOCKS, 2.0F, 1.0F);
 

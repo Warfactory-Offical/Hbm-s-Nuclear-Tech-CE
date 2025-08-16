@@ -8,18 +8,18 @@ import com.hbm.entity.logic.EntityBomber;
 import com.hbm.entity.missile.EntityMissileBaseNT;
 import com.hbm.entity.missile.EntityMissileCustom;
 import com.hbm.entity.projectile.EntityArtilleryShell;
-import com.hbm.entity.projectile.EntityBulletBase;
-import com.hbm.handler.BulletConfigSyncingUtil;
-import com.hbm.handler.BulletConfiguration;
+import com.hbm.entity.projectile.EntityBulletBaseMK4;
 import com.hbm.handler.CasingEjector;
 import com.hbm.handler.CompatHandler;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.IControlReceiver;
+import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.control_panel.ControlEvent;
 import com.hbm.inventory.control_panel.ControlEventSystem;
 import com.hbm.inventory.control_panel.IControllable;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemTurretBiometry;
+import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
@@ -41,7 +41,6 @@ import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.IAnimals;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -326,7 +325,7 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 	
 	public abstract void updateFiringTick();
 	
-	public BulletConfiguration getFirstConfigLoaded() {
+	public BulletConfig getFirstConfigLoaded() {
 		
 		List<Integer> list = getAmmoList();
 		
@@ -340,35 +339,25 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 			if(!inventory.getStackInSlot(i).isEmpty()) {
 				
 				for(Integer c : list) { //we can afford all this extra iteration trash on the count that a turret has at most like 4 bullet configs
-					
-					BulletConfiguration conf = BulletConfigSyncingUtil.pullConfig(c);
-					
-					if(conf.ammo.item == inventory.getStackInSlot(i).getItem())
-						return conf;
+
+					BulletConfig conf = BulletConfig.configs.get(c);
+					if(conf.ammo != null && conf.ammo.matchesRecipe(inventory.getStackInSlot(i), true)) return conf;
 				}
 			}
 		}
 		
 		return null;
 	}
-
-	public void spawnBullet(BulletConfiguration bullet) {
-		spawnBullet(bullet, 0);
-	}
 	
-	public void spawnBullet(BulletConfiguration bullet, float overrideDamage) {
+	public void spawnBullet(BulletConfig bullet, float baseDamage) {
 		
 		Vec3 pos = new Vec3(this.getTurretPos());
 		Vec3 vec = Vec3.createVectorHelper(this.getBarrelLength(), 0, 0);
 		vec.rotateAroundZ((float) -this.rotationPitch);
 		vec.rotateAroundY((float) -(this.rotationYaw + Math.PI * 0.5));
-		
-		EntityBulletBase proj = new EntityBulletBase(world, BulletConfigSyncingUtil.getKey(bullet));
-		proj.setPositionAndRotation(pos.xCoord + vec.xCoord, pos.yCoord + vec.yCoord, pos.zCoord + vec.zCoord, 0.0F, 0.0F);
-		if(overrideDamage > 0)
-			proj.overrideDamage = overrideDamage;
-		
-		proj.shoot(vec.xCoord, vec.yCoord, vec.zCoord, bullet.velocity, bullet.spread);
+
+		EntityBulletBaseMK4 proj = new EntityBulletBaseMK4(world, bullet, baseDamage, bullet.spread, (float) rotationYaw, (float) rotationPitch);
+		proj.setPositionAndRotation(pos.xCoord + vec.xCoord, pos.yCoord + vec.yCoord, pos.zCoord + vec.zCoord, proj.rotationYaw, proj.rotationPitch);
 		world.spawnEntity(proj);
 
 		if(usesCasings()) {
@@ -379,22 +368,21 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 			}
 		}
 	}
-	
-	public void consumeAmmo(Item ammo) {
-		
+
+	public void consumeAmmo(RecipesCommon.ComparableStack ammo) {
+
 		for(int i = 1; i < 10; i++) {
-			
-			if(inventory.getStackInSlot(i).getItem() == ammo) {
+
+			if(!inventory.getStackInSlot(i).isEmpty() && ammo.matchesRecipe(inventory.getStackInSlot(i), true)) {
+
 				inventory.getStackInSlot(i).shrink(1);
-				if(inventory.getStackInSlot(i).isEmpty()){
-					inventory.setStackInSlot(i, ItemStack.EMPTY);
-				}
 				return;
 			}
 		}
-		
+
 		this.markDirty();
 	}
+
 	
 	/**
 	 * Reads the namelist from the AI chip in slot 0
@@ -824,7 +812,7 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 		ammoStacks = new ArrayList();
 		
 		for(Integer i : getAmmoList()) {
-			BulletConfiguration config = BulletConfigSyncingUtil.pullConfig(i);
+			BulletConfig config = BulletConfig.configs.get(i);
 			
 			if(config != null && !config.ammo.getStack().isEmpty()) {
 				ammoStacks.add(config.ammo.getStack());
