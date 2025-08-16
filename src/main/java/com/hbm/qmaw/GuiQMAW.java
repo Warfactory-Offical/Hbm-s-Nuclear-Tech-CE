@@ -4,9 +4,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
 
 import com.hbm.lib.RefStrings;
 import com.hbm.qmaw.components.*;
@@ -19,11 +23,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiQMAW extends GuiScreen {
-    protected static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/gui_wiki.png");
+
+    protected static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID, "textures/gui/gui_wiki.png");
 
     public String title;
+    public String qmawID;
     public ItemStack icon;
     public List<List<ManualElement>> lines = new ArrayList<>();
+    /** History for returning via button */
+    public List<String> back = new ArrayList<>();
+    public List<String> forward = new ArrayList<>();
 
     protected int xSize = 340;
     protected int ySize = 224;
@@ -38,6 +47,7 @@ public class GuiQMAW extends GuiScreen {
     public static final String EN_US = "en_us";
 
     public GuiQMAW(QuickManualAndWiki qmaw) {
+        qmawID = qmaw.name;
         parseQMAW(qmaw);
     }
 
@@ -86,10 +96,12 @@ public class GuiQMAW extends GuiScreen {
                     int pipe = link.indexOf("|");
                     QComponentLink linkComponent;
 
+                    String suffix = toParse.startsWith(" ") ? " " : "";
+
                     if(pipe == -1) {
-                        linkComponent = new QComponentLink(link, link);
+                        linkComponent = new QComponentLink(link, link + suffix);
                     } else {
-                        linkComponent = new QComponentLink(link.substring(pipe + 1, link.length()), link.substring(0, pipe));
+                        linkComponent = new QComponentLink(link.substring(pipe + 1, link.length()), link.substring(0, pipe) + suffix);
                     }
 
                     // append to current line
@@ -99,7 +111,7 @@ public class GuiQMAW extends GuiScreen {
                         currentLineWidth += width;
                         // new line
                     } else {
-                        currentLine = new ArrayList<>();
+                        currentLine = new ArrayList();
                         this.lines.add(currentLine);
                         currentLine.add(linkComponent);
                         currentLineWidth = width;
@@ -161,6 +173,43 @@ public class GuiQMAW extends GuiScreen {
             this.lastClickX = x;
             this.lastClickY = y;
         }
+
+        if(guiLeft + 3 <= x && guiLeft + 3 + 18 > x && guiTop + 3 < y && guiTop + 3 + 18 >= y) back();
+        if(guiLeft + 21 <= x && guiLeft + 21 + 18 > x && guiTop + 3 < y && guiTop + 3 + 18 >= y) forward();
+    }
+
+    public void back() {
+        if(this.back.isEmpty()) return;
+
+        String prev = back.get(back.size() - 1);
+
+        QuickManualAndWiki qmaw = QMAWLoader.qmaw.get(prev);
+        if(qmaw != null) {
+            Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F, 1.0F));
+            GuiQMAW screen = new GuiQMAW(qmaw);
+            screen.back.addAll(back);
+            screen.back.remove(screen.back.size() - 1);
+            screen.forward.addAll(forward);
+            screen.forward.add(qmawID);
+            FMLCommonHandler.instance().showGuiScreen(screen);
+        }
+    }
+
+    public void forward() {
+        if(this.forward.isEmpty()) return;
+
+        String next = forward.get(forward.size() - 1);
+
+        QuickManualAndWiki qmaw = QMAWLoader.qmaw.get(next);
+        if(qmaw != null) {
+            Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F, 1.0F));
+            GuiQMAW screen = new GuiQMAW(qmaw);
+            screen.back.addAll(back);
+            screen.back.add(qmawID);
+            screen.forward.addAll(forward);
+            screen.forward.remove(screen.forward.size() - 1);
+            FMLCommonHandler.instance().showGuiScreen(screen);
+        }
     }
 
     public int getSliderPosition() {
@@ -189,12 +238,12 @@ public class GuiQMAW extends GuiScreen {
         handleScroll();
 
         //this.drawRect(0, 0, this.width, this.height, 0x80919191);
-        this.drawRect(0, 0, this.width, this.height, 0xe0000000);
+        drawRect(0, 0, this.width, this.height, 0xe0000000);
 
         this.drawGuiContainerBackgroundLayer(f, mouseX, mouseY);
-        GL11.glDisable(GL11.GL_LIGHTING);
+        GlStateManager.disableLighting();
         this.drawGuiContainerForegroundLayer(mouseX, mouseY);
-        GL11.glEnable(GL11.GL_LIGHTING);
+        GlStateManager.enableLighting();
 
         this.lastClickX = 0;
         this.lastClickY = 0;
@@ -211,23 +260,23 @@ public class GuiQMAW extends GuiScreen {
 
     private void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 
-        int x = 4;
+        int x = 43;
         int y = 4;
 
         if(this.icon != null) {
-            GL11.glPushMatrix();
-            GL11.glEnable(GL11.GL_DEPTH_TEST);
+            GlStateManager.pushMatrix();
+            GlStateManager.enableDepth();
             Minecraft mc = Minecraft.getMinecraft();
-            GL11.glRotated(180, 1, 0, 0);
+            GlStateManager.rotate(180, 1, 0, 0);
             RenderHelper.enableStandardItemLighting();
-            GL11.glRotated(-180, 1, 0, 0);
+            GlStateManager.rotate(-180, 1, 0, 0);
             itemRender.renderItemAndEffectIntoGUI(this.icon, guiLeft + x, guiTop + y);
             itemRender.renderItemOverlayIntoGUI(this.fontRenderer, this.icon, guiLeft + x, guiTop + y, null);
             RenderHelper.disableStandardItemLighting();
-            GL11.glDisable(GL11.GL_DEPTH_TEST);
-            GL11.glPopMatrix();
+            GlStateManager.disableDepth();
+            GlStateManager.popMatrix();
 
-            x += 20;
+            x += 18;
             y += (16 - this.fontRenderer.FONT_HEIGHT) / 2;
         }
 
@@ -237,10 +286,14 @@ public class GuiQMAW extends GuiScreen {
     }
 
     private void drawGuiContainerBackgroundLayer(float f, int mouseX, int mouseY) {
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, 170, ySize);
-        drawTexturedModalRect(guiLeft + 170, guiTop, 22, 0, 170, ySize);
+        drawTexturedModalRect(guiLeft + 170, guiTop, 52, 0, 30, ySize);
+        drawTexturedModalRect(guiLeft + 200, guiTop, 52, 0, 140, ySize);
+
+        if(!back.isEmpty()) drawTexturedModalRect(guiLeft + 3, guiTop + 3, 204, 0, 18, 18);
+        if(!forward.isEmpty()) drawTexturedModalRect(guiLeft + 21, guiTop + 3, 222, 0, 18, 18);
 
         // scroll bar
         drawTexturedModalRect(guiLeft +  xSize - 15, guiTop + getSliderPosition(), 192, 0, 12, 16);
@@ -271,7 +324,7 @@ public class GuiQMAW extends GuiScreen {
                 boolean mouseOver = (elementX <= mouseX && elementX + element.getWidth() > mouseX && elementY < mouseY && elementY + element.getHeight() >= mouseY);
                 element.render(mouseOver, elementX, elementY, mouseX, mouseY);
                 if(elementX <= lastClickX && elementX + element.getWidth() > lastClickX && elementY < lastClickY && elementY + element.getHeight() >= lastClickY)
-                    element.onClick();
+                    element.onClick(this);
                 inset += element.getWidth();
             }
 
@@ -282,8 +335,11 @@ public class GuiQMAW extends GuiScreen {
     @Override
     protected void keyTyped(char typedChar, int keyCode) {
 
+        if(keyCode == Keyboard.KEY_LEFT) back();
+        if(keyCode == Keyboard.KEY_RIGHT) forward();
+
         if(keyCode == 1 || keyCode == this.mc.gameSettings.keyBindInventory.getKeyCode()) {
-            this.mc.displayGuiScreen((GuiScreen) null);
+            this.mc.displayGuiScreen(null);
             this.mc.setIngameFocus();
         }
     }

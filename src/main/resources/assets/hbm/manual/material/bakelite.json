@@ -1,0 +1,11 @@
+{
+	"name": "Bakelite",
+	"icon": ["hbm:ingot_bakelite", 1, 0],
+    "trigger": [["hbm:ingot_bakelite"], ["hbm:powder_bakelite"]],
+    "title": {
+        "en_us": "Bakelite"
+    },
+	"content": {
+		"en_us": "Alternative to [[polymer|Polymer]] made from [[aromatic hydrocarbons|Aromatic Hydrocarbons]] derived from [[cracked oil products|Catalytic Cracking Tower]]. Completely interchangeable in all recipes."
+	}
+}

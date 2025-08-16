@@ -1,0 +1,11 @@
+{
+	"name": "Bismuth",
+	"icon": ["hbm:ingot_bismuth", 1, 0],
+    "trigger": [["hbm:ingot_bismuth"], ["hbm:billet_bismuth"], ["hbm:nugget_bismuth"], ["hbm:powder_bismuth"]],
+    "title": {
+        "en_us": "Bismuth"
+    },
+	"content": {
+		"en_us": "Heavy metal, intially derived from reprocessing spent [[RBMK]] fuel in the [[SILEX]], can also be made from later stage bedrock ore processing using [[high-performance solvent|High-Performance Solvent]]. Primarily used as [[bismuth bronze|Bismuth Bronze]]."
+	}
+}

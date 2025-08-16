@@ -216,6 +216,8 @@ public class QMAWLoader implements ISelectiveResourceReloadListener {
                 } catch(Exception ex) {
                     MainRegistry.logger.info("[QMAW] Error reading manual " + name + ": " + ex);
                 }
+            } else if(file.isDirectory()) {
+                dissectManualFolder(file); // scrape subfolders too lmao
             }
         }
     }
