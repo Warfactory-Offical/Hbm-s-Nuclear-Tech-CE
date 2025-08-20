@@ -279,4 +279,7 @@ public class ItemStackUtil {
 		return new ItemStack(compoundTag);
 	}
 
+	public static boolean areStacksCompatible(ItemStack sta1, ItemStack sta2) {
+		return sta1.getItem() == sta2.getItem() && sta1.getItemDamage() == sta2.getItemDamage() && ItemStack.areItemStackTagsEqual(sta1, sta2) && sta1.areCapsCompatible(sta2);
+	}
 }

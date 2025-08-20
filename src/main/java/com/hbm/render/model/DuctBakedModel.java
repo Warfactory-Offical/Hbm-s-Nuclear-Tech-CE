@@ -60,10 +60,10 @@ public class DuctBakedModel implements IBakedModel {
             if (pY && pX) return side == 3 ? curveTR[m] : curveTL[m];
             if (pY && nX) return side == 2 ? curveTR[m] : curveTL[m];
 
-            if (pX && nZ) return side == 0 ? curveTR[m] : curveTR[m];
-            if (pX && pZ) return side == 0 ? curveBR[m] : curveBR[m];
-            if (nX && nZ) return side == 0 ? curveTL[m] : curveTL[m];
-            if (nX && pZ) return side == 0 ? curveBL[m] : curveBL[m];
+            if (pX && nZ) return curveTR[m];
+            if (pX && pZ) return curveBR[m];
+            if (nX && nZ) return curveTL[m];
+            if (nX && pZ) return curveBL[m];
 
             return straight[m];
         }
