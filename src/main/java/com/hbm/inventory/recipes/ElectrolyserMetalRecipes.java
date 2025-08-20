@@ -38,7 +38,7 @@ public class ElectrolyserMetalRecipes extends SerializableRecipe {
                 new Mats.MaterialStack(Mats.MAT_GOLD, MaterialShapes.INGOT.q(6)),
                 new Mats.MaterialStack(Mats.MAT_LEAD, MaterialShapes.INGOT.q(2)),
                 new ItemStack(ModItems.powder_lithium_tiny, 3),
-                new ItemStack(ModItems.nugget_mercury, 2)));
+                new ItemStack(ModItems.ingot_mercury, 2)));
 
         recipes.put(new RecipesCommon.ComparableStack(ModItems.crystal_uranium), new ElectrolysisMetalRecipe(
                 new Mats.MaterialStack(Mats.MAT_URANIUM, MaterialShapes.INGOT.q(6)),
@@ -120,7 +120,7 @@ public class ElectrolyserMetalRecipes extends SerializableRecipe {
                 new Mats.MaterialStack(Mats.MAT_DURA, MaterialShapes.INGOT.q(4)),
                 new Mats.MaterialStack(Mats.MAT_COBALT, MaterialShapes.INGOT.q(4)),
                 new ItemStack(ModItems.powder_astatine, 3),
-                new ItemStack(ModItems.nugget_mercury, 8)));
+                new ItemStack(ModItems.ingot_mercury, 8)));
 
         recipes.put(new RecipesCommon.ComparableStack(ModItems.crystal_cobalt), new ElectrolysisMetalRecipe(
                 new Mats.MaterialStack(Mats.MAT_COBALT, MaterialShapes.INGOT.q(3)),

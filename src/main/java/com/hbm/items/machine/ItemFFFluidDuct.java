@@ -7,7 +7,6 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ModItems;
 import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.network.TileEntityPipeBaseNT;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
@@ -109,7 +108,7 @@ public class ItemFFFluidDuct extends Item {
         }
         else
         {
-            world.setBlockState(pos, ModBlocks.fluid_duct_mk2.getDefaultState());
+            world.setBlockState(pos, ModBlocks.fluid_duct_neo.getDefaultState());
             if(world.getTileEntity(pos) instanceof TileEntityPipeBaseNT) {
             	((TileEntityPipeBaseNT)world.getTileEntity(pos)).setType(Fluids.fromID(stack.getItemDamage()));;
             }

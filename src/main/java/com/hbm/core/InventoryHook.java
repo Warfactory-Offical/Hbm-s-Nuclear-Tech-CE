@@ -13,6 +13,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 import static com.hbm.core.HbmCorePlugin.coreLogger;
 
+@SuppressWarnings("unused")
 public class InventoryHook {
 
     public static void onClientSlotChange(InventoryPlayer inventory, int slotIndex, ItemStack newStack) {

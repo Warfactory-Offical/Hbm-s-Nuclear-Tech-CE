@@ -1,7 +1,5 @@
 package com.hbm.events;
 
-import com.hbm.core.InventoryHook;
-import com.hbm.core.InventoryPlayerTransformer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -11,20 +9,20 @@ import org.jetbrains.annotations.NotNull;
 /**
  * An event fired whenever a player's inventory changes.
  * <p>
- * This event is triggered through the {@link InventoryPlayerTransformer}, which is invoked by the {@link InventoryHook}.
+ * This event is triggered through the {@link com.hbm.core.InventoryPlayerTransformer InventoryPlayerTransformer}, which is invoked by the {@link com.hbm.core.InventoryHook InventoryHook}.
  * </p>
  * <p>
  * The {@link #getType()} indicates the nature of the inventory change.
  * <br>
  * The {@link #getPlayer()} references the player whose inventory was modified.
  * <br>
- * For {@link EventType#DELTA} events:
+ * For {@link EventType#DELTA DELTA} events:
  * <ul>
  *   <li>{@link #getOldStack()} holds the {@link ItemStack} present in the slot prior to the change.</li>
  *   <li>{@link #getNewStack()} holds the {@link ItemStack} present in the slot after the change.</li>
  *   <li>{@link #getSlotIndex()} specifies the index of the modified slot.</li>
  * </ul>
- * For {@link EventType#COMPLEX} events:
+ * For {@link EventType#COMPLEX COMPLEX} events:
  * <ul>
  *   <li>{@link #getOldStack()} and {@link #getNewStack()} return {@link ItemStack#EMPTY}</li>
  *   <li>{@link #getSlotIndex()} returns -1</li>

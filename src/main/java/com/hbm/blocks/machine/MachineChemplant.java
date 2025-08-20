@@ -15,7 +15,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-// Five fucking years, yeah finally reworking the shit that should've been done 3 years ago
+@Deprecated
+// Th3_Sl1ze: question to mlbv and Norwood - should we just remove it?
 public class MachineChemplant extends BlockDummyable {
 	
 	public MachineChemplant(Material materialIn, String s) {

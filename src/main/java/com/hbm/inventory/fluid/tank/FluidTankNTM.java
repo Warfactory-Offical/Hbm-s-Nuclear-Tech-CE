@@ -93,6 +93,19 @@ public class FluidTankNTM implements IFluidHandler, IFluidTank, Cloneable {
         this.setFill(0);
     }
 
+    public void resetTank() {
+        this.type = Fluids.NONE;
+        this.fluid = 0;
+        this.pressure = 0;
+    }
+
+    /** Changes type and pressure based on a fluid stack, useful for changing tank types based on recipes */
+    public FluidTankNTM conform(com.hbm.inventory.fluid.FluidStack stack) {
+        this.setTankType(stack.type);
+        this.withPressure(stack.pressure);
+        return this;
+    }
+
     public Fluid getTankTypeFF() {
         return this.type.getFF();
     }

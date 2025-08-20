@@ -14,7 +14,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-
+@Deprecated
+// Th3_Sl1ze: question to mlbv and Norwood - should we just remove it?
 public class MachineChemfac extends BlockDummyable {
 	public MachineChemfac(Material materialIn, String s) {
 		super(Material.IRON, s);

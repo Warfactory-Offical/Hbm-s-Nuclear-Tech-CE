@@ -18,6 +18,7 @@
     "block.fel": {"category": "block", "sounds": [{"name": "hbm:block/fel", "stream": false}]},
     "block.hephaestusRunning": {"category": "block", "sounds": [{"name": "hbm:block/hephaestusRunning", "stream": false}]},
 	"block.pyroOperate": {"category": "block", "sounds": [{"name": "hbm:block/pyroOperate", "stream": false}]},
+	"block.chemicalPlant": {"category": "block", "sounds": [{"name": "hbm:block/chemicalPlant", "stream": false}]},
     "block.chemplantOperate": {"category": "block", "sounds": [{"name": "hbm:block/chemplantOperate", "stream": false}]},
     "block.dieselOperate": {"category": "block", "sounds": [{"name": "hbm:block/dieselOperate", "stream": false}]},
     "block.igeneratorOperate": {"category": "block", "sounds": [{"name": "hbm:block/igeneratorOperate", "stream": false}]},

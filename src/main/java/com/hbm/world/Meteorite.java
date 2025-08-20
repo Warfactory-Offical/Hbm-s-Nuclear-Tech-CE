@@ -1,5 +1,6 @@
 package com.hbm.world;
 
+import com.hbm.blocks.BlockEnums;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.bomb.BlockTaint;
 import com.hbm.config.BombConfig;
@@ -7,6 +8,7 @@ import com.hbm.config.GeneralConfig;
 import com.hbm.entity.effect.EntityNukeTorex;
 import com.hbm.entity.logic.EntityNukeExplosionMK5;
 import com.hbm.explosion.ExplosionLarge;
+import com.hbm.inventory.OreDictManager;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.main.MainRegistry;
@@ -29,122 +31,126 @@ public class Meteorite {
 	
 	public void generate(World world, Random rand, int x, int y, int z) {
 		
-		List<Entity> list = (List<Entity>)world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(x - 7.5, y - 7.5, z - 7.5, x + 7.5, y + 7.5, z + 7.5));
+		List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(x - 7.5, y - 7.5, z - 7.5, x + 7.5, y + 7.5, z + 7.5));
 		
 		for(Entity e : list) {
 			e.attackEntityFrom(ModDamageSource.meteorite, 1000);
 		}
 		
 		if(GeneralConfig.enableSpecialMeteors)
-			switch(rand.nextInt(300)) {
-			case 0:
-				//Meteor-only tiny meteorite
-				List<ItemStack> list0 = new ArrayList<ItemStack>();
-				list0.add(new ItemStack(ModBlocks.block_meteor));
-				generateBox(world, rand, x, y, z, list0);
-				return;
-			case 1:
-				//Large ore-only meteorite
-				List<ItemStack> list1 = new ArrayList<ItemStack>();
-				list1.addAll(this.getRandomOre(rand));
-				int i = list1.size();
-				for(int j = 0; j < i; j++)
-					list1.add(new ItemStack(Blocks.STONE));
-				generateSphere7x7(world, rand, x, y, z, list1);
-				return;
-			case 2:
-				//Medium ore-only meteorite
-				List<ItemStack> list2 = new ArrayList<ItemStack>();
-				list2.addAll(this.getRandomOre(rand));
-				int k = list2.size() / 2;
-				for(int j = 0; j < k; j++)
-					list2.add(new ItemStack(Blocks.STONE));
-				generateSphere5x5(world, rand, x, y, z, list2);
-				return;
-			case 3:
-				//Small pure ore meteorite
-				List<ItemStack> list3 = new ArrayList<ItemStack>();
-				list3.addAll(this.getRandomOre(rand));
-				generateBox(world, rand, x, y, z, list3);
-				return;
-			case 4:
-				//Bamboozle
-				world.createExplosion(null, x + 0.5, y + 0.5, z + 0.5, 15F, true);
-				ExplosionLarge.spawnRubble(world, x, y, z, 25);
-				return;
-			case 5:
-				//Large treasure-only meteorite
-				List<ItemStack> list4 = new ArrayList<ItemStack>();
-				list4.add(new ItemStack(ModBlocks.block_meteor_treasure));
-				list4.add(new ItemStack(ModBlocks.block_meteor_broken));
-				generateSphere7x7(world, rand, x, y, z, list4);
-				return;
-			case 6:
-				//Medium treasure-only meteorite
-				List<ItemStack> list5 = new ArrayList<ItemStack>();
-				list5.add(new ItemStack(ModBlocks.block_meteor_treasure));
-				list5.add(new ItemStack(ModBlocks.block_meteor_treasure));
-				list5.add(new ItemStack(ModBlocks.block_meteor_broken));
-				generateSphere5x5(world, rand, x, y, z, list5);
-				return;
-			case 7:
-				//Small pure treasure meteorite
-				List<ItemStack> list6 = new ArrayList<ItemStack>();
-				list6.add(new ItemStack(ModBlocks.block_meteor_treasure));
-				generateBox(world, rand, x, y, z, list6);
-				return;
-			case 8:
-				//Large nuclear meteorite
-				List<ItemStack> list7 = new ArrayList<ItemStack>();
-				list7.add(new ItemStack(ModBlocks.block_meteor_treasure));
-				List<ItemStack> list8 = new ArrayList<ItemStack>();
-				list8.add(new ItemStack(ModBlocks.toxic_block));
-				generateSphere7x7(world, rand, x, y, z, list7);
-				generateSphere5x5(world, rand, x, y, z, list8);
-				return;
-			case 9:
-				//Giant ore meteorite
-				List<ItemStack> list9 = new ArrayList<ItemStack>();
-				list9.add(new ItemStack(ModBlocks.block_meteor_broken));
-				generateSphere9x9(world, rand, x, y, z, list9);
-				generateSphere7x7(world, rand, x, y, z, this.getRandomOre(rand));
-				return;
-			case 10:
-				//Tainted Meteorite
-				List<ItemStack> list10 = new ArrayList<ItemStack>();
-				list10.add(new ItemStack(ModBlocks.block_meteor_broken));
-				generateSphere5x5(world, rand, x, y, z, list10);
-				world.setBlockState(new BlockPos(x, y, z), ModBlocks.taint.getDefaultState().withProperty(BlockTaint.TEXTURE, 9), 2);
-				return;
-			case 11:
-				//Atomic meteorite
-				world.spawnEntity(EntityNukeExplosionMK5.statFac(world, BombConfig.fatmanRadius, x + 0.5, y + 0.5, z + 0.5));
-	            if(rand.nextInt(100) == 0 || MainRegistry.polaroidID == 11){
-	                EntityNukeTorex.statFacBale(world, x + 0.5, y + 0.5, z + 0.5, BombConfig.fatmanRadius);
-	            } else {
-	                EntityNukeTorex.statFac(world, x + 0.5, y + 0.5, z + 0.5, BombConfig.fatmanRadius);
-	            }
-				return;
-			case 12:
-				//Star Blaster
-				world.createExplosion(null, x + 0.5, y + 0.5, z + 0.5, 10F, true);
-				ItemStack stack = new ItemStack(ModItems.gun_b92);
-				stack.setStackDisplayName("§9Star Blaster§r");
-				EntityItem blaster = new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, stack);
-				world.spawnEntity(blaster);
-				return;
+			switch (rand.nextInt(300)) {
+				case 0 -> {
+					//Meteor-only tiny meteorite
+					List<ItemStack> list0 = new ArrayList<>();
+					list0.add(new ItemStack(ModBlocks.block_meteor));
+					generateBox(world, rand, x, y, z, list0);
+					return;
+				}
+				case 1 -> {
+					//Large ore-only meteorite
+					List<ItemStack> list1 = new ArrayList<>(this.getRandomOre(rand));
+					int i = list1.size();
+					for (int j = 0; j < i; j++)
+						list1.add(new ItemStack(Blocks.STONE));
+					generateSphere7x7(world, rand, x, y, z, list1);
+					return;
+				}
+				case 2 -> {
+					//Medium ore-only meteorite
+					List<ItemStack> list2 = new ArrayList<>(this.getRandomOre(rand));
+					int k = list2.size() / 2;
+					for (int j = 0; j < k; j++)
+						list2.add(new ItemStack(Blocks.STONE));
+					generateSphere5x5(world, rand, x, y, z, list2);
+					return;
+				}
+				case 3 -> {
+					//Small pure ore meteorite
+					List<ItemStack> list3 = new ArrayList<>(this.getRandomOre(rand));
+					generateBox(world, rand, x, y, z, list3);
+					return;
+				}
+				case 4 -> {
+					//Bamboozle
+					world.createExplosion(null, x + 0.5, y + 0.5, z + 0.5, 15F, true);
+					ExplosionLarge.spawnRubble(world, x, y, z, 25);
+					return;
+				}
+				case 5 -> {
+					//Large treasure-only meteorite
+					List<ItemStack> list4 = new ArrayList<>();
+					list4.add(new ItemStack(ModBlocks.block_meteor_treasure));
+					list4.add(new ItemStack(ModBlocks.block_meteor_broken));
+					generateSphere7x7(world, rand, x, y, z, list4);
+					return;
+				}
+				case 6 -> {
+					//Medium treasure-only meteorite
+					List<ItemStack> list5 = new ArrayList<>();
+					list5.add(new ItemStack(ModBlocks.block_meteor_treasure));
+					list5.add(new ItemStack(ModBlocks.block_meteor_treasure));
+					list5.add(new ItemStack(ModBlocks.block_meteor_broken));
+					generateSphere5x5(world, rand, x, y, z, list5);
+					return;
+				}
+				case 7 -> {
+					//Small pure treasure meteorite
+					List<ItemStack> list6 = new ArrayList<>();
+					list6.add(new ItemStack(ModBlocks.block_meteor_treasure));
+					generateBox(world, rand, x, y, z, list6);
+					return;
+				}
+				case 8 -> {
+					//Large nuclear meteorite
+					List<ItemStack> list7 = new ArrayList<>();
+					list7.add(new ItemStack(ModBlocks.block_meteor_treasure));
+					List<ItemStack> list8 = new ArrayList<>();
+					list8.add(new ItemStack(ModBlocks.toxic_block));
+					generateSphere7x7(world, rand, x, y, z, list7);
+					generateSphere5x5(world, rand, x, y, z, list8);
+					return;
+				}
+				case 9 -> {
+					//Giant ore meteorite
+					List<ItemStack> list9 = new ArrayList<>();
+					list9.add(new ItemStack(ModBlocks.block_meteor_broken));
+					generateSphere9x9(world, rand, x, y, z, list9);
+					generateSphere7x7(world, rand, x, y, z, this.getRandomOre(rand));
+					return;
+				}
+				case 10 -> {
+					//Tainted Meteorite
+					List<ItemStack> list10 = new ArrayList<>();
+					list10.add(new ItemStack(ModBlocks.block_meteor_broken));
+					generateSphere5x5(world, rand, x, y, z, list10);
+					world.setBlockState(new BlockPos(x, y, z), ModBlocks.taint.getDefaultState().withProperty(BlockTaint.TEXTURE, 9), 2);
+					return;
+				}
+				case 11 -> {
+					//Atomic meteorite
+					world.spawnEntity(EntityNukeExplosionMK5.statFac(world, BombConfig.fatmanRadius, x + 0.5, y + 0.5, z + 0.5));
+					if (rand.nextInt(100) == 0 || MainRegistry.polaroidID == 11) {
+						EntityNukeTorex.statFacBale(world, x + 0.5, y + 0.5, z + 0.5, BombConfig.fatmanRadius);
+					} else {
+						EntityNukeTorex.statFac(world, x + 0.5, y + 0.5, z + 0.5, BombConfig.fatmanRadius);
+					}
+					return;
+				}
+				case 12 -> {
+					//Star Blaster
+					world.createExplosion(null, x + 0.5, y + 0.5, z + 0.5, 10F, true);
+					ItemStack stack = new ItemStack(ModItems.gun_b92);
+					stack.setStackDisplayName("§9Star Blaster§r");
+					EntityItem blaster = new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, stack);
+					world.spawnEntity(blaster);
+					return;
+				}
 			}
-		
-		switch(rand.nextInt(3)) {
-		case 0:
-			generateLarge(world, rand, x, y, z);
-			break;
-		case 1:
-			generateMedium(world, rand, x, y, z);
-			break;
-		case 2:
-			generateSmall(world, rand, x, y, z);
-			break;
+
+		switch (rand.nextInt(3)) {
+			case 0 -> generateLarge(world, rand, x, y, z);
+			case 1 -> generateMedium(world, rand, x, y, z);
+			case 2 -> generateSmall(world, rand, x, y, z);
 		}
 	}
 	
@@ -177,85 +183,59 @@ public class Meteorite {
 		if(innerPadding > 0)
 			core = 2;
 		
-		List<ItemStack> hullL = new ArrayList<ItemStack>();
-		switch(hull) {
-		case 0:
-			hullL.add(new ItemStack(ModBlocks.block_meteor_molten));
-			break;
-		case 1:
-			hullL.add(new ItemStack(ModBlocks.block_meteor_cobble));
-			break;
-		case 2:
-			for(int i = 0; i < 99; i++)
+		List<ItemStack> hullL = new ArrayList<>();
+		switch (hull) {
+			case 0 -> hullL.add(new ItemStack(ModBlocks.block_meteor_molten));
+			case 1 -> hullL.add(new ItemStack(ModBlocks.block_meteor_cobble));
+			case 2 -> {
+				for (int i = 0; i < 99; i++)
+					hullL.add(new ItemStack(ModBlocks.block_meteor_broken));
+				hullL.add(new ItemStack(ModBlocks.block_meteor_treasure));
+			}
+			case 3 -> {
+				hullL.add(new ItemStack(ModBlocks.block_meteor_molten));
 				hullL.add(new ItemStack(ModBlocks.block_meteor_broken));
-			hullL.add(new ItemStack(ModBlocks.block_meteor_treasure));
-			break;
-		case 3:
-			hullL.add(new ItemStack(ModBlocks.block_meteor_molten));
-			hullL.add(new ItemStack(ModBlocks.block_meteor_broken));
-			break;
+			}
 		}
 		
-		List<ItemStack> opL = new ArrayList<ItemStack>();
-		switch(outerPadding) {
-		case 0:
-			opL.add(new ItemStack(ModBlocks.block_meteor_cobble));
-			break;
-		case 1:
-			for(int i = 0; i < 99; i++)
+		List<ItemStack> opL = new ArrayList<>();
+		switch (outerPadding) {
+			case 0 -> opL.add(new ItemStack(ModBlocks.block_meteor_cobble));
+			case 1 -> {
+				for (int i = 0; i < 99; i++)
+					opL.add(new ItemStack(ModBlocks.block_meteor_broken));
+				opL.add(new ItemStack(ModBlocks.block_meteor_treasure));
+			}
+			case 2 -> {
+				opL.add(new ItemStack(ModBlocks.block_meteor_cobble));
 				opL.add(new ItemStack(ModBlocks.block_meteor_broken));
-			opL.add(new ItemStack(ModBlocks.block_meteor_treasure));
-			break;
-		case 2:
-			opL.add(new ItemStack(ModBlocks.block_meteor_cobble));
-			opL.add(new ItemStack(ModBlocks.block_meteor_broken));
-			break;
+			}
 		}
 		
-		List<ItemStack> ipL = new ArrayList<ItemStack>();
-		switch(innerPadding) {
-		case 0:
-			for(int i = 0; i < 99; i++)
-				ipL.add(new ItemStack(ModBlocks.block_meteor_broken));
-			ipL.add(new ItemStack(ModBlocks.block_meteor_treasure));
-			break;
-		case 1:
-			ipL.add(new ItemStack(ModBlocks.block_meteor_broken));
-			break;
-		case 2:
-			ipL.add(new ItemStack(ModBlocks.block_meteor_cobble));
-			break;
+		List<ItemStack> ipL = new ArrayList<>();
+		switch (innerPadding) {
+			case 0 -> {
+				for (int i = 0; i < 99; i++)
+					ipL.add(new ItemStack(ModBlocks.block_meteor_broken));
+				ipL.add(new ItemStack(ModBlocks.block_meteor_treasure));
+			}
+			case 1 -> ipL.add(new ItemStack(ModBlocks.block_meteor_broken));
+			case 2 -> ipL.add(new ItemStack(ModBlocks.block_meteor_cobble));
 		}
 		
-		List<ItemStack> coreL = new ArrayList<ItemStack>();
-		switch(core) {
-		case 0:
-			coreL.add(new ItemStack(ModBlocks.block_meteor));
-			break;
-		case 1:
-			coreL.add(new ItemStack(ModBlocks.block_meteor_treasure));
-			break;
-		case 2:
-			coreL.addAll(this.getRandomOre(rand));
-			break;
+		List<ItemStack> coreL = new ArrayList<>();
+		switch (core) {
+			case 0 -> coreL.add(new ItemStack(ModBlocks.block_meteor));
+			case 1 -> coreL.add(new ItemStack(ModBlocks.block_meteor_treasure));
+			case 2 -> coreL.addAll(this.getRandomOre(rand));
 		}
-		
-		switch(rand.nextInt(5)) {
-		case 0:
-			genL1(world, rand, x, y, z, hullL, opL, ipL, coreL);
-			break;
-		case 1:
-			genL2(world, rand, x, y, z, hullL, opL, ipL, coreL);
-			break;
-		case 2:
-			genL3(world, rand, x, y, z, hullL, opL, ipL, coreL);
-			break;
-		case 3:
-			genL4(world, rand, x, y, z, hullL, opL, ipL, coreL);
-			break;
-		case 4:
-			genL5(world, rand, x, y, z, hullL, opL, ipL, coreL);
-			break;
+
+		switch (rand.nextInt(5)) {
+			case 0 -> genL1(world, rand, x, y, z, hullL, opL, ipL, coreL);
+			case 1 -> genL2(world, rand, x, y, z, hullL, opL, ipL, coreL);
+			case 2 -> genL3(world, rand, x, y, z, hullL, opL, ipL, coreL);
+			case 3 -> genL4(world, rand, x, y, z, hullL, opL, ipL, coreL);
+			case 4 -> genL5(world, rand, x, y, z, hullL, opL, ipL, coreL);
 		}
 	}
 	
@@ -288,102 +268,70 @@ public class Meteorite {
 		if(innerPadding > 0)
 			core = 2;
 		
-		List<ItemStack> hullL = new ArrayList<ItemStack>();
-		switch(hull) {
-		case 0:
-			hullL.add(new ItemStack(ModBlocks.block_meteor_molten));
-			break;
-		case 1:
-			hullL.add(new ItemStack(ModBlocks.block_meteor_cobble));
-			break;
-		case 2:
-			for(int i = 0; i < 99; i++)
+		List<ItemStack> hullL = new ArrayList<>();
+		switch (hull) {
+			case 0 -> hullL.add(new ItemStack(ModBlocks.block_meteor_molten));
+			case 1 -> hullL.add(new ItemStack(ModBlocks.block_meteor_cobble));
+			case 2 -> {
+				for (int i = 0; i < 99; i++)
+					hullL.add(new ItemStack(ModBlocks.block_meteor_broken));
+				hullL.add(new ItemStack(ModBlocks.block_meteor_treasure));
+			}
+			case 3 -> {
+				hullL.add(new ItemStack(ModBlocks.block_meteor_molten));
 				hullL.add(new ItemStack(ModBlocks.block_meteor_broken));
-			hullL.add(new ItemStack(ModBlocks.block_meteor_treasure));
-			break;
-		case 3:
-			hullL.add(new ItemStack(ModBlocks.block_meteor_molten));
-			hullL.add(new ItemStack(ModBlocks.block_meteor_broken));
-			break;
+			}
 		}
 		
-		List<ItemStack> opL = new ArrayList<ItemStack>();
-		switch(outerPadding) {
-		case 0:
-			opL.add(new ItemStack(ModBlocks.block_meteor_cobble));
-			break;
-		case 1:
-			for(int i = 0; i < 99; i++)
+		List<ItemStack> opL = new ArrayList<>();
+		switch (outerPadding) {
+			case 0 -> opL.add(new ItemStack(ModBlocks.block_meteor_cobble));
+			case 1 -> {
+				for (int i = 0; i < 99; i++)
+					opL.add(new ItemStack(ModBlocks.block_meteor_broken));
+				opL.add(new ItemStack(ModBlocks.block_meteor_treasure));
+			}
+			case 2 -> {
+				opL.add(new ItemStack(ModBlocks.block_meteor_cobble));
 				opL.add(new ItemStack(ModBlocks.block_meteor_broken));
-			opL.add(new ItemStack(ModBlocks.block_meteor_treasure));
-			break;
-		case 2:
-			opL.add(new ItemStack(ModBlocks.block_meteor_cobble));
-			opL.add(new ItemStack(ModBlocks.block_meteor_broken));
-			break;
+			}
 		}
 		
-		List<ItemStack> ipL = new ArrayList<ItemStack>();
-		switch(innerPadding) {
-		case 0:
-			for(int i = 0; i < 99; i++)
-				ipL.add(new ItemStack(ModBlocks.block_meteor_broken));
-			ipL.add(new ItemStack(ModBlocks.block_meteor_treasure));
-			break;
-		case 1:
-			ipL.add(new ItemStack(ModBlocks.block_meteor_broken));
-			break;
-		case 2:
-			ipL.add(new ItemStack(ModBlocks.block_meteor_cobble));
-			break;
+		List<ItemStack> ipL = new ArrayList<>();
+		switch (innerPadding) {
+			case 0 -> {
+				for (int i = 0; i < 99; i++)
+					ipL.add(new ItemStack(ModBlocks.block_meteor_broken));
+				ipL.add(new ItemStack(ModBlocks.block_meteor_treasure));
+			}
+			case 1 -> ipL.add(new ItemStack(ModBlocks.block_meteor_broken));
+			case 2 -> ipL.add(new ItemStack(ModBlocks.block_meteor_cobble));
 		}
 		
-		List<ItemStack> coreL = new ArrayList<ItemStack>();
-		switch(core) {
-		case 0:
-			coreL.add(new ItemStack(ModBlocks.block_meteor));
-			break;
-		case 1:
-			coreL.add(new ItemStack(ModBlocks.block_meteor_treasure));
-			break;
-		case 2:
-			coreL.addAll(this.getRandomOre(rand));
-			break;
+		List<ItemStack> coreL = new ArrayList<>();
+		switch (core) {
+			case 0 -> coreL.add(new ItemStack(ModBlocks.block_meteor));
+			case 1 -> coreL.add(new ItemStack(ModBlocks.block_meteor_treasure));
+			case 2 -> coreL.addAll(this.getRandomOre(rand));
 		}
 		
-		List<ItemStack> sCore = new ArrayList<ItemStack>();
-		switch(core) {
-		case 0:
-			sCore.add(new ItemStack(ModBlocks.block_meteor));
-			break;
-		case 1:
-			sCore.add(new ItemStack(ModBlocks.block_meteor_treasure));
-			break;
-		case 2:
-			sCore.add(new ItemStack(ModBlocks.block_meteor_treasure));
-			sCore.add(new ItemStack(ModBlocks.block_meteor));
-			break;
+		List<ItemStack> sCore = new ArrayList<>();
+		switch (core) {
+			case 0 -> sCore.add(new ItemStack(ModBlocks.block_meteor));
+			case 1 -> sCore.add(new ItemStack(ModBlocks.block_meteor_treasure));
+			case 2 -> {
+				sCore.add(new ItemStack(ModBlocks.block_meteor_treasure));
+				sCore.add(new ItemStack(ModBlocks.block_meteor));
+			}
 		}
-		
-		switch(rand.nextInt(6)) {
-		case 0:
-			genM1(world, rand, x, y, z, hullL, opL, ipL, sCore);
-			break;
-		case 1:
-			genM2(world, rand, x, y, z, hullL, opL, ipL, coreL);
-			break;
-		case 2:
-			genM3(world, rand, x, y, z, hullL, opL, ipL, coreL);
-			break;
-		case 3:
-			genM4(world, rand, x, y, z, hullL, opL, ipL, coreL);
-			break;
-		case 4:
-			genM5(world, rand, x, y, z, hullL, opL, ipL, coreL);
-			break;
-		case 5:
-			genM6(world, rand, x, y, z, hullL, opL, ipL, coreL);
-			break;
+
+		switch (rand.nextInt(6)) {
+			case 0 -> genM1(world, rand, x, y, z, hullL, opL, ipL, sCore);
+			case 1 -> genM2(world, rand, x, y, z, hullL, opL, ipL, coreL);
+			case 2 -> genM3(world, rand, x, y, z, hullL, opL, ipL, coreL);
+			case 3 -> genM4(world, rand, x, y, z, hullL, opL, ipL, coreL);
+			case 4 -> genM5(world, rand, x, y, z, hullL, opL, ipL, coreL);
+			case 5 -> genM6(world, rand, x, y, z, hullL, opL, ipL, coreL);
 		}
 	}
 	
@@ -399,37 +347,29 @@ public class Meteorite {
 		//2 - Ore
 		int core = rand.nextInt(3);
 		
-		List<ItemStack> hullL = new ArrayList<ItemStack>();
-		switch(hull) {
-		case 0:
-			hullL.add(new ItemStack(ModBlocks.block_meteor_molten));
-			break;
-		case 1:
-			hullL.add(new ItemStack(ModBlocks.block_meteor_cobble));
-			break;
-		case 2:
-			for(int i = 0; i < 99; i++)
+		List<ItemStack> hullL = new ArrayList<>();
+		switch (hull) {
+			case 0 -> hullL.add(new ItemStack(ModBlocks.block_meteor_molten));
+			case 1 -> hullL.add(new ItemStack(ModBlocks.block_meteor_cobble));
+			case 2 -> {
+				for (int i = 0; i < 99; i++)
+					hullL.add(new ItemStack(ModBlocks.block_meteor_broken));
+				hullL.add(new ItemStack(ModBlocks.block_meteor_treasure));
+			}
+			case 3 -> {
+				hullL.add(new ItemStack(ModBlocks.block_meteor_molten));
 				hullL.add(new ItemStack(ModBlocks.block_meteor_broken));
-			hullL.add(new ItemStack(ModBlocks.block_meteor_treasure));
-			break;
-		case 3:
-			hullL.add(new ItemStack(ModBlocks.block_meteor_molten));
-			hullL.add(new ItemStack(ModBlocks.block_meteor_broken));
-			break;
+			}
 		}
 		
-		List<ItemStack> sCore = new ArrayList<ItemStack>();
-		switch(core) {
-		case 0:
-			sCore.add(new ItemStack(ModBlocks.block_meteor));
-			break;
-		case 1:
-			sCore.add(new ItemStack(ModBlocks.block_meteor_treasure));
-			break;
-		case 2:
-			sCore.add(new ItemStack(ModBlocks.block_meteor_treasure));
-			sCore.add(new ItemStack(ModBlocks.block_meteor));
-			break;
+		List<ItemStack> sCore = new ArrayList<>();
+		switch (core) {
+			case 0 -> sCore.add(new ItemStack(ModBlocks.block_meteor));
+			case 1 -> sCore.add(new ItemStack(ModBlocks.block_meteor_treasure));
+			case 2 -> {
+				sCore.add(new ItemStack(ModBlocks.block_meteor_treasure));
+				sCore.add(new ItemStack(ModBlocks.block_meteor));
+			}
 		}
 		
 		generateBox(world, rand, x, y, z, hullL);
@@ -661,32 +601,10 @@ public class Meteorite {
 		setRandomBlock(world, mPos.setPos(x, y, z + 1), rand, setSize, set);
 		setRandomBlock(world, mPos.setPos(x, y, z - 1), rand, setSize, set);
 	}
-	
-	public List<ItemStack> getRandomOre(Random rand) {
-		
-		List<ItemStack> ores = new ArrayList<ItemStack>();
 
-		for(int i = 0; i < 3; i++)
-			ores.add(new ItemStack(ModBlocks.ore_meteor_uranium));
-		for(int i = 0; i < 5; i++)
-			ores.add(new ItemStack(ModBlocks.ore_meteor_thorium));
-		for(int i = 0; i < 6; i++)
-			ores.add(new ItemStack(ModBlocks.ore_meteor_titanium));
-		for(int i = 0; i < 7; i++)
-			ores.add(new ItemStack(ModBlocks.ore_meteor_sulfur));
-		for(int i = 0; i < 8; i++)
-			ores.add(new ItemStack(ModBlocks.ore_meteor_copper));
-		for(int i = 0; i < 5; i++)
-			ores.add(new ItemStack(ModBlocks.ore_meteor_tungsten));
-		for(int i = 0; i < 7; i++)
-			ores.add(new ItemStack(ModBlocks.ore_meteor_aluminium));
-		for(int i = 0; i < 6; i++)
-			ores.add(new ItemStack(ModBlocks.ore_meteor_lead));
-		for(int i = 0; i < 4; i++)
-			ores.add(new ItemStack(ModBlocks.ore_meteor_lithium));
-		for(int i = 0; i < 1; i++)
-			ores.add(new ItemStack(ModBlocks.ore_meteor_starmetal));
-		
+	public List<ItemStack> getRandomOre(Random rand) {
+		List<ItemStack> ores = new ArrayList<>();
+		for(BlockEnums.EnumMeteorType num : BlockEnums.EnumMeteorType.values()) ores.add(OreDictManager.DictFrame.fromOne(ModBlocks.ore_meteor, num));
 		return ores;
 	}
 }

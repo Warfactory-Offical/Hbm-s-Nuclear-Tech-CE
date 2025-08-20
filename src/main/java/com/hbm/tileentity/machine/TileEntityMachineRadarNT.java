@@ -1,15 +1,14 @@
 package com.hbm.tileentity.machine;
 
+import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonWriter;
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.api.entity.IRadarDetectable;
 import com.hbm.api.entity.IRadarDetectableNT;
 import com.hbm.api.entity.RadarEntry;
-import com.google.gson.JsonObject;
-import com.google.gson.stream.JsonWriter;
 import com.hbm.capability.HbmLivingProps;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.handler.CompatHandler;
-import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.container.ContainerMachineRadarNT;
@@ -22,7 +21,6 @@ import com.hbm.lib.DirPos;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
-import com.hbm.packet.toclient.BufPacket;
 import com.hbm.saveddata.satellites.*;
 import com.hbm.tileentity.IConfigurableMachine;
 import com.hbm.tileentity.IGUIProvider;
@@ -56,7 +54,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -100,7 +97,7 @@ public class TileEntityMachineRadarNT extends TileEntityMachineBase implements I
 	public byte[] map = new byte[40_000];
 	public boolean clearFlag = false;
 
-	public List<RadarEntry> entries = new ArrayList();
+	public List<RadarEntry> entries = new ArrayList<>();
 
 	@Override
 	public String getConfigName() {
@@ -208,16 +205,15 @@ public class TileEntityMachineRadarNT extends TileEntityMachineBase implements I
 				BlockPos pos = ItemCoordinateBase.getPosition(inventory.getStackInSlot(8));
 				if(pos != null) {
 					TileEntity tile = world.getTileEntity(pos);
-					if(tile instanceof TileEntityMachineRadarScreen) {
-						TileEntityMachineRadarScreen screen = (TileEntityMachineRadarScreen) tile;
+					if(tile instanceof TileEntityMachineRadarScreen screen) {
 						screen.entries.clear();
 						screen.entries.addAll(this.entries);
-						screen.refX = pos.getX();
-						screen.refY = pos.getY();
-						screen.refZ = pos.getZ();
+						screen.refX = this.pos.getX();
+						screen.refY = this.pos.getY();
+						screen.refZ = this.pos.getZ();
 						screen.range = this.getRange();
 						screen.linked = true;
-						PacketThreading.createAllAroundThreadedPacket(new BufPacket(pos.getX(), pos.getY(), pos.getZ(), this), new TargetPoint(this.world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 25));
+						screen.networkPackNT(25);
 					}
 				}
 			}

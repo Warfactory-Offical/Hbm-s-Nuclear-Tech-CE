@@ -12,16 +12,20 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class AudioDynamic extends MovingSound {
 
+	public float maxVolume = 1;
+	public float range;
 	public float intendedVolume;
 	public int keepAlive;
-	public int timeSinceKA;;
-	public boolean shouldExpire = false;;
+	public int timeSinceKA;
+	public boolean shouldExpire = false;
+	private final boolean nonLegacy;
 
-	protected AudioDynamic(SoundEvent loc, SoundCategory cat) {
+	protected AudioDynamic(SoundEvent loc, SoundCategory cat, boolean useNewSystem) {
 		super(loc, cat);
 		this.repeat = true;
 		this.attenuationType = ISound.AttenuationType.NONE;
 		this.intendedVolume = 10;
+		this.nonLegacy = useNewSystem;
 	}
 	
 	public void setPosition(float x, float y, float z) {
@@ -38,25 +42,33 @@ public class AudioDynamic extends MovingSound {
 	@Override
 	public void update() {
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
-		float f = 0;
-		if(player != null) {
-			if(attenuationType == ISound.AttenuationType.LINEAR){
-				/*float f3 = intendedVolume;
-                float f2 = 16.0F;
-
-                if (f3 > 1.0F)
-                {
-                    f2 *= f3;
-                }
-                f = (float)Math.sqrt(Math.pow(xPosF - player.posX, 2) + Math.pow(yPosF - player.posY, 2) + Math.pow(zPosF - player.posZ, 2));
-                volume = 1-f2/f;
-                System.out.println(volume);*/
-			} else {
+		float f;
+		if(nonLegacy) {
+			if(player != null) {
 				f = (float)Math.sqrt(Math.pow(xPosF - player.posX, 2) + Math.pow(yPosF - player.posY, 2) + Math.pow(zPosF - player.posZ, 2));
-				volume = func(f, intendedVolume);
+				volume = func(f);
+			} else {
+				volume = maxVolume;
+			}
+
+			if(this.shouldExpire) {
+
+				if(this.timeSinceKA > this.keepAlive) {
+					this.stop();
+				}
+
+				this.timeSinceKA++;
 			}
 		} else {
-			volume = intendedVolume;
+			if(player != null) {
+				if(attenuationType == ISound.AttenuationType.LINEAR){
+				} else {
+					f = (float)Math.sqrt(Math.pow(xPosF - player.posX, 2) + Math.pow(yPosF - player.posY, 2) + Math.pow(zPosF - player.posZ, 2));
+					volume = func(f, intendedVolume);
+				}
+			} else {
+				volume = intendedVolume;
+			}
 		}
 	}
 	
@@ -70,6 +82,10 @@ public class AudioDynamic extends MovingSound {
 	
 	public void setVolume(float volume) {
 		this.intendedVolume = volume;
+	}
+
+	public void setRange(float range) {
+		this.range = range;
 	}
 	
 	public void setPitch(float pitch) {
@@ -86,6 +102,10 @@ public class AudioDynamic extends MovingSound {
 	
 	public float func(float f, float v) {
 		return (f / v) * -2 + 2;
+	}
+
+	public float func(float dist) {
+		return (dist / range) * -maxVolume + maxVolume;
 	}
 
 	public boolean isPlaying() {

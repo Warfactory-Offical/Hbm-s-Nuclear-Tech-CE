@@ -9,39 +9,16 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class AudioWrapperClient extends AudioWrapper {
 
 	AudioDynamic sound;
-	
-	public AudioWrapperClient(SoundEvent source, SoundCategory cat) {
+	// Th3_Sl1ze: this boolean is a temporary solution, should just move all sounds to PROPER getLoopedSound immediately
+	public AudioWrapperClient(SoundEvent source, SoundCategory cat, boolean useNewSystem) {
 		if(source != null)
-			sound = new AudioDynamic(source, cat);
+			sound = new AudioDynamic(source, cat, useNewSystem);
 	}
-	
-	public void updatePosition(float x, float y, float z) {
+
+	@Override
+	public void setKeepAlive(int keepAlive) {
 		if(sound != null)
-			sound.setPosition(x, y, z);
-	}
-	
-	public void updateVolume(float volume) {
-		if(sound != null)
-			sound.setVolume(volume);
-	}
-	
-	public void updatePitch(float pitch) {
-		if(sound != null)
-			sound.setPitch(pitch);
-	}
-	
-	public float getVolume() {
-		if(sound != null)
-			return sound.getVolume();
-		else
-			return 1;
-	}
-	
-	public float getPitch() {
-		if(sound != null)
-			return sound.getPitch();
-		else
-			return 1;
+			sound.setKeepAlive(keepAlive);
 	}
 
 	@Override
@@ -49,15 +26,51 @@ public class AudioWrapperClient extends AudioWrapper {
 		if(sound != null)
 			sound.keepAlive();
 	}
-	
+
+	@Override
+	public void updatePosition(float x, float y, float z) {
+		if(sound != null)
+			sound.setPosition(x, y, z);
+	}
+
+	@Override
+	public void updateVolume(float volume) {
+		if(sound != null)
+			sound.setVolume(volume);
+	}
+
+	@Override
+	public void updateRange(float range) {
+		if(sound != null)
+			sound.setRange(range);
+	}
+
+	@Override
+	public float getVolume() {
+		if(sound != null)
+			return sound.getVolume();
+		return 1;
+	}
+
+	@Override
+	public float getPitch() {
+		if(sound != null)
+			return sound.getPitch();
+		return 1;
+	}
+
+	@Override
 	public void startSound() {
 		if(sound != null)
 			sound.start();
 	}
-	
+
+	@Override
 	public void stopSound() {
-		if(sound != null)
+		if(sound != null) {
 			sound.stop();
+			sound.setKeepAlive(0);
+		}
 	}
 
 	@Override

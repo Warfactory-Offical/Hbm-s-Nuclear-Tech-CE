@@ -1,13 +1,17 @@
 package com.hbm.tileentity.network.energy;
 
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
+import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.network.energy.PowerDetector;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.TileEntityLoadedBase;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import org.jetbrains.annotations.NotNull;
@@ -80,5 +84,11 @@ public class TileEntityMachineDetector extends TileEntityLoadedBase implements I
 	@Override
 	public ConnectionPriority getPriority() {
 		return ConnectionPriority.HIGH;
+	}
+
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
+		if (oldState.getBlock() == newState.getBlock()) return false;
+		return super.shouldRefresh(world, pos, oldState, newState);
 	}
 }

@@ -1,17 +1,11 @@
 package com.hbm.items.special;
 
-import com.hbm.config.GeneralConfig;
-import com.hbm.handler.ArmorUtil;
-import com.hbm.interfaces.Spaghetti;
-import com.hbm.inventory.fluid.Fluids;
-import com.hbm.inventory.material.Mats;
-import com.hbm.items.ItemEnums;
+import com.hbm.items.ItemBakedBase;
 import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.I18nUtil;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,441 +14,77 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-@Spaghetti("WHAT THE ABSOLUTE SHIT IS THIS")
-public class ItemCustomLore extends Item {
+public class ItemCustomLore extends ItemBakedBase {
 
 	EnumRarity rarity;
-	
 	public ItemCustomLore(String s) {
-		this.setTranslationKey(s);
-		this.setRegistryName(s);
+		super(s);
 		this.setCreativeTab(MainRegistry.controlTab);
-		ModItems.ALL_ITEMS.add(this);
+	}
+
+	public ItemCustomLore(String s, String texture) {
+		super(s, texture);
+		this.setCreativeTab(MainRegistry.controlTab);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, World world, List<String> list, ITooltipFlag flagIn) {
-		String unloc = this.getTranslationKey() + ".desc";
-		String loc = I18nUtil.resolveKey(unloc);
+		boolean p11 = !I18nUtil.resolveKey(this.getTranslationKey() + ".desc.P11").equals(this.getTranslationKey() + ".desc.P11");
 
-		if(!unloc.equals(loc)) {
+		if(MainRegistry.polaroidID == 11 && p11) {
+			String unlocP11 = this.getTranslationKey() + ".desc.P11";
+			String locP11 = I18nUtil.resolveKey(unlocP11);
 
-			String[] locs = loc.split("\\$");
+			if(!unlocP11.equals(locP11)) {
+				String[] locsP11 = locP11.split("\\$");
 
-			for(String s : locs) {
-				list.add(s);
+				list.addAll(Arrays.asList(locsP11));
+			}
+		} else {
+			String unloc = this.getTranslationKey() + ".desc";
+			String loc = I18nUtil.resolveKey(unloc);
+
+			if(!unloc.equals(loc)) {
+				String[] locs = loc.split("\\$");
+
+				list.addAll(Arrays.asList(locs));
 			}
 		}
-		if(this == ModItems.powder_asbestos)
-		{
-			list.add(TextFormatting.ITALIC + "\"Sniffffffff- MHHHHHHMHHHHHHHHH\"");
-		}
-		if(this == ModItems.bismuth_tool){
-			list.add("§eRight-click a Dud while having empty cells in inventory gives you antimatter cells.");
-			list.add("§8§oMight set off the Dud tho");
-		}
-		if(this == ModItems.iv_empty) {
-			list.add(I18nUtil.resolveKey("desc.ivempty"));
-		}
-		if(this == ModItems.radaway) {
-			list.add(I18nUtil.resolveKey("desc.radamount", -250));
-			list.add(I18nUtil.resolveKey("desc.radspeed", -25));
-			list.add(I18nUtil.resolveKey("desc.duration", 10));
-		}
-		if(this == ModItems.radaway_strong) {
-			list.add(I18nUtil.resolveKey("desc.radamount", -500));
-			list.add(I18nUtil.resolveKey("desc.radspeed", -100));
-			list.add(I18nUtil.resolveKey("desc.duration", 5));
-		}
-		if(this == ModItems.radaway_flush) {
-			list.add(I18nUtil.resolveKey("desc.radamount", -1000));
-			list.add(I18nUtil.resolveKey("desc.radspeed", -400));
-			list.add(I18nUtil.resolveKey("desc.duration", 2.5));
-		}
-		if(this == ModItems.ingot_schraranium)
-		{
-			if(GeneralConfig.enableBabyMode)
-				list.add("Peer can go die, I'm not putting any retarded niko stuff in the mod.");
-			else
-				list.add("Made from uranium in a nuclear transmutator");
-		}
-		if(this == ModItems.ingot_fiberglass)
-		{
-			list.add("High in fiber, high in glass. Everything the body needs.");
-		}
-		if(this == ModItems.missile_soyuz_lander)
-		{
-			list.add("Doubles as a crappy lander!");
-		}
-		if(this == ModItems.book_of_)
-		{
-			list.add("Denn wer den Walzer richtig tritt,");
-			list.add("der ist auch für den Abgang fit.");
-		}
-		if(this == ModItems.watch)
-		{
-			list.add("A small blue pocket watch.");
-			list.add("It's glass has a few cracks in it,");
-			list.add("and some shards are missing.");
-			list.add("It stopped ticking at 2:34.");
-		}
-		if(this == ModItems.reacher)
-		{
-			list.add("Holding this in main hand or off hand reduces radiation coming from items to its square-root.");
-			list.add("It also is useful to handle very hot or cold items.");
-		}
-		if(this == ModItems.crystal_horn)
-		{
-			if(MainRegistry.polaroidID == 11)
-				list.add("An actual horn.");
-			else
-				list.add("Not an actual horn.");
-		}
-		
-		if(this == ModItems.crystal_charred)
-		{
-			if(MainRegistry.polaroidID == 11)
-				list.add("Also a real horn. Weird, right?");
-			else
-				list.add("High quality silicate, slightly burned.");
-		}
-		if(this == ModItems.ingot_asbestos)
-		{
-			list.add(TextFormatting.ITALIC + "\"Filled with life, self-doubt and asbestos. That comes with the air.\"");
-		}
-		if(this == ModItems.entanglement_kit)
-		{
-			list.add("Teleporter crafting item.");
-			list.add("Enables dimension-shifting via");
-			list.add("beryllium-enhanced resource scanner.");
-		}
-		if(this == ModItems.ams_focus_limiter)
-		{
-			list.add("Maximum performance for restriction field:");
-			list.add("Standard cooling, no energy bonus.");
-		}
-		
-		if(this == ModItems.ams_focus_booster)
-		{
-			list.add("Weaker restriction field and core energy injection:");
-			list.add("More heat generation, extra energy.");
-		}
-		
-		if(this == ModItems.ams_muzzle)
-		{
-			list.add("...it emits an energy-beam thingy.");
-		}
-		if(this == ModItems.powder_poison)
-		{
-			list.add("Used in multi purpose bombs:");
-			list.add("Warning: Poisonous!");
-		}
-		if(this == ModItems.pellet_cluster)
-		{
-			list.add("Used in multi purpose bombs:");
-			list.add("Adds some extra boom!");
-		}
 
-		if(this == ModItems.powder_fire)
-		{
-			list.add("Used in multi purpose bombs:");
-			list.add("Incendiary bombs are fun!");
-		}
-		if(this == ModItems.pellet_gas)
-		{
-			list.add("Used in multi purpose bombs:");
-			list.add("*cough cough* Halp pls!");
-		}
-		if(this == ModItems.powder_tektite)
-		{
-			list.add("Collected via Geralds Miningfleet from §3outer space");
-		}
-		if(this == ModItems.igniter)
-		{
-			list.add("(Used by right-clicking the Prototype)");
-			list.add("It's a green metal handle with a");
-			list.add("bright red button and a small lid.");
-			list.add("At the bottom, the initials N.E. are");
-			list.add("engraved. Whoever N.E. was, he had");
-			list.add("a great taste in shades of green.");
-		}
-		if(this == ModItems.overfuse)
-		{
-			list.add("Say what?");
-		}
-		if(this == ModItems.tritium_deuterium_cake)
-		{
-			list.add("Not actual cake, but great");
-			list.add("universal fusion fuel!");
-		}
-		if(this == ModItems.pin) {
-			list.add("Can be used with a screwdriver to pick locks.");
-			if(Minecraft.getMinecraft().player != null) {
-				EntityPlayer player = Minecraft.getMinecraft().player;
-				if(ArmorUtil.checkArmorPiece(player, ModItems.jackt, 2) || ArmorUtil.checkArmorPiece(player, ModItems.jackt2, 2))
-					list.add("Success rate of picking standard lock is 100%!");
-				else
-					list.add("Success rate of picking standard lock is ~10%");
-			}
-		}
-		if(this == ModItems.key_red) {
-			if(MainRegistry.polaroidID == 11) {
-				list.add(TextFormatting.DARK_RED + "" + TextFormatting.BOLD + "e");
-			} else {
-				list.add("Explore the other side.");
-			}
-		}
-		if(this == ModItems.crystal_energy) {
-			list.add("Densely packed energy powder.");
-			list.add("Not edible.");
-		}
-		if(this == ModItems.pellet_coolant) {
-			list.add("Required for cyclotron operation.");
-			list.add("Do NOT operate cyclotron without it!");
-		}
-		if(this == ModItems.fuse) {
-			list.add("This item is needed for every large");
-			list.add("nuclear reactor, as it allows the");
-			list.add("reactor to generate electricity and");
-			list.add("use up it's fuel. Removing the fuse");
-			list.add("from a reactor will instantly shut");
-			list.add("it down.");
-		}
+		if(this == ModItems.undefined) {
 
-
-		if(this == ModItems.burnt_bark) {
-			list.add("A piece of bark from an exploded golden oak tree.");
-		}
-
-		if(this == ModItems.flame_pony) {
-			// list.add("Blue horse beats yellow horse, look it up!");
-			list.add(I18nUtil.resolveKey("desc.flamepony"));
-		}
-		
-		if(this == ModItems.flame_conspiracy)
-		{
-			list.add(I18nUtil.resolveKey("desc.flameconspiracy"));
-		}
-		if(this == ModItems.flame_politics)
-		{
-			list.add(I18nUtil.resolveKey("desc.flamepolitics"));
-		}
-		if(this == ModItems.flame_opinion)
-		{
-			list.add(I18nUtil.resolveKey("desc.flameopinion"));
-		}
-
-		if(this == ModItems.ingot_neptunium) {
-			if(MainRegistry.polaroidID == 11) {
-				list.add("Woo, scary!");
-			} else
-				list.add("That one's my favourite!");
-		}
-
-		if(this == ModItems.pellet_rtg) {
-			if(MainRegistry.polaroidID == 11)
-				list.add("Contains ~100% Pu238 oxide.");
-			else
-				list.add("RTG fuel pellet for infinite energy! (almost)");
-		}
-//		if(this == ModItems.rod_quad_euphemium) {
-//			list.add("A quad fuel rod which contains a");
-//			list.add("very small ammount of a strange new element.");
-//		}
-		if(this == ModItems.pellet_rtg_polonium)
-		{
-			if(MainRegistry.polaroidID == 11)
-				list.add("Polonium 4 U and me.");
-			else
-				list.add("Tastes nice in Tea");
-		}
-		if(this == ModItems.nugget_mox_fuel) {
-			list.add("Moxie says: " + TextFormatting.BOLD + "TAX EVASION.");
-		}
-		if(this == ModItems.billet_mox_fuel) {
-			list.add(TextFormatting.ITALIC + "Pocket-Moxie!");
-		}
-		if(this == ModItems.undefined && world != null) {
-			
-			if(world.rand.nextInt(10) == 0) {
-				list.add(TextFormatting.DARK_RED + "UNDEFINED");
-			} else {
-				Random rand = new Random(System.currentTimeMillis() / 500);
-				
-				if(setSize == 0)
-					setSize = Item.REGISTRY.getKeys().size();
-				
-				int r = rand.nextInt(setSize);
-
-				Item item = Item.getItemById(r);
-				
-				if(item != null) {
-					list.add(new ItemStack(item).getDisplayName());
+			try {
+				if(world.rand.nextInt(10) == 0) {
+					list.add(TextFormatting.DARK_RED + "UNDEFINED");
 				} else {
-					list.add(TextFormatting.RED + "ERROR #" + r);
+					Random rand = new Random(System.currentTimeMillis() / 500);
+
+					if(setSize == 0)
+						setSize = Item.REGISTRY.getKeys().size();
+
+					int r = rand.nextInt(setSize);
+
+					Item item = Item.getItemById(r);
+
+					list.add(new ItemStack(item).getDisplayName());
 				}
+			} catch(Exception ex) {
+				list.add(TextFormatting.DARK_RED + "UNDEFINED");
 			}
 		}
 	}
 	
 	static int setSize = 0;
 
-	// mlbv: this is retarded, refactor asap
 	@Override
 	public EnumRarity getRarity(ItemStack stack) {
-		if(this == ModItems.plate_euphemium || 
-			this == ModItems.ingot_euphemium || 
-			this == ModItems.ingot_osmiridium || 
-			this == ModItems.ingot_astatine || 
-			this == ModItems.ingot_iodine || 
-			this == ModItems.ingot_i131 || 
-			this == ModItems.ingot_strontium || 
-			this == ModItems.ingot_sr90 || 
-			this == ModItems.ingot_cobalt || 
-			this == ModItems.ingot_co60 || 
-			this == ModItems.ingot_bromine || 
-			this == ModItems.ingot_tennessine || 
-			this == ModItems.ingot_cerium || 
-			this == ModItems.ingot_caesium || 
-			this == ModItems.ingot_niobium || 
-			this == ModItems.ingot_neodymium || 
-			this == ModItems.ingot_gh336 || 
-			this == ModItems.euphemium_capacitor ||
-
-			this == ModItems.nugget_euphemium || 
-			this == ModItems.nugget_osmiridium || 
-			this == ModItems.nugget_strontium || 
-			this == ModItems.nugget_sr90 || 
-			this == ModItems.nugget_cobalt || 
-			this == ModItems.nugget_co60 || 
-			this == ModItems.nugget_gh336 || 
-
-			this == ModItems.billet_gh336 || 
-			this == ModItems.billet_co60 || 
-			this == ModItems.billet_sr90 || 
-			
-			this == ModItems.powder_neptunium ||
-			this == ModItems.powder_euphemium || 
-			this == ModItems.powder_osmiridium || 
-			this == ModItems.powder_iodine || 
-			this == ModItems.powder_i131 || 
-			this == ModItems.powder_strontium || 
-			this == ModItems.powder_sr90 || 
-			this == ModItems.powder_astatine || 
-			this == ModItems.powder_at209 || 
-			this == ModItems.powder_cobalt || 
-			this == ModItems.powder_co60 || 
-			this == ModItems.powder_bromine || 
-			this == ModItems.powder_niobium || 
-			this == ModItems.powder_cerium || 
-			this == ModItems.powder_neodymium || 
-			this == ModItems.powder_tennessine || 
-			this == ModItems.powder_xe135 || 
-			this == ModItems.powder_caesium || 
-			this == ModItems.powder_cs137 || 
-			this == ModItems.powder_cs137 || 
-			this == ModItems.powder_nitan_mix || 
-			this == ModItems.powder_spark_mix || 
-			this == ModItems.powder_magic || 
-
-
-			this == ModItems.powder_sr90_tiny || 
-			this == ModItems.powder_iodine_tiny || 
-			this == ModItems.powder_i131_tiny || 
-			this == ModItems.powder_co60_tiny || 
-			this == ModItems.powder_cobalt_tiny || 
-			this == ModItems.powder_niobium_tiny || 
-			this == ModItems.powder_cerium_tiny || 
-			this == ModItems.powder_neodymium_tiny || 
-			this == ModItems.powder_xe135_tiny || 
-			this == ModItems.powder_cs137_tiny || 
-			this == ModItems.nugget_daffergon || 
-			this == ModItems.powder_daffergon || 
-			this == ModItems.ingot_daffergon || 
-			
-			this == ModItems.bathwater_mk3 || 
-			this == ModItems.plate_euphemium ||  
-//			this == ModItems.rod_euphemium ||
-//			this == ModItems.rod_quad_euphemium ||
-//			this == ModItems.rod_daffergon ||
-			this == ModItems.watch || 
-			this == ModItems.undefined) {
-			return EnumRarity.EPIC;
-		}
-
-		if(this == ModItems.ingot_schrabidium ||
-			this == ModItems.ingot_schraranium || 
-			this == ModItems.ingot_schrabidate || 
-			this == ModItems.ingot_saturnite ||  
-			this == ModItems.ingot_solinium || 
-			this == ModItems.nugget_schrabidium || 
-			this == ModItems.nugget_solinium || 
-			this == ModItems.ingot_electronium || 
-			this == ModItems.billet_solinium || 
-			this == ModItems.billet_schrabidium || 
-			
-			this == ModItems.powder_schrabidate || 
-			this == ModItems.powder_schrabidium || 
-
-			this == new ItemStack(ModItems.wire_fine, 1, Mats.MAT_SCHRABIDIUM.id).getItem() ||
-
-			this == ModItems.plate_schrabidium || 
-			this == ModItems.plate_saturnite || 
-			
-			this == new ItemStack(ModItems.circuit, 1, ItemEnums.EnumCircuitType.BISMOID.ordinal()).getItem() ||
-			this == ModItems.powder_unobtainium ||
-			this == ModItems.nugget_unobtainium || 
-			this == ModItems.ingot_unobtainium || 
-			this == ModItems.nugget_unobtainium_greater || 
-			this == ModItems.nugget_unobtainium_lesser || 
-			this == ModItems.billet_unobtainium ||
-			
-			this == ModItems.solinium_core ||
-			this == ModItems.powder_impure_osmiridium ||
-			this == ModItems.crystal_osmiridium ||
-			this == ModItems.crystal_schrabidium ||
-    		this == ModItems.crystal_schraranium ||
-    		this == ModItems.crystal_trixite ||
-    		ItemCell.hasFluid(stack, Fluids.SAS3)
-    		) {
-			return EnumRarity.RARE;
-		}
-
-		if(this == ModItems.bathwater_mk2 || 
-			this == ModItems.plate_paa || 
-			this == ModItems.cladding_paa || 
-			this == ModItems.powder_power ||
-			this == ModItems.powder_yellowcake || 
-			this == ModItems.billet_australium || 
-			this == ModItems.billet_australium_greater || 
-			this == ModItems.billet_australium_lesser || 
-
-			this == ModItems.ingot_australium || 
-			this == ModItems.ingot_weidanium || 
-			this == ModItems.ingot_reiium || 
-			this == ModItems.ingot_verticium || 
-			this == ModItems.powder_paleogenite || 
-			this == ModItems.powder_paleogenite_tiny || 
-
-			this == ModItems.nugget_australium || 
-			this == ModItems.nugget_australium_greater || 
-			this == ModItems.nugget_australium_lesser || 
-			this == ModItems.nugget_weidanium || 
-			this == ModItems.nugget_reiium || 
-			this == ModItems.nugget_verticium || 
-
-			this == ModItems.powder_australium || 
-			this == ModItems.powder_weidanium || 
-			this == ModItems.powder_reiium || 
-			this == ModItems.powder_verticium) {
-			return EnumRarity.UNCOMMON;
-		}
-
-		return this.rarity != null ? rarity : EnumRarity.COMMON;
+		return this.rarity != null ? rarity : super.getRarity(stack);
 	}
 
 	@Override
@@ -482,5 +112,120 @@ public class ItemCustomLore extends Item {
     	this.rarity = rarity;
 		return this;
     }
+
+	@Override
+	public String getItemStackDisplayName(ItemStack stack) {
+		if(stack.getItem() != ModItems.undefined || stack.getItemDamage() != 99) return ("" + I18n.format(this.getUnlocalizedNameInefficiently(stack) + ".name")).trim();
+
+		return name.getResult();
+	}
+
+	public static String[] names = new String[] {
+			"THE DEFAULT", "NEXT ONE", "ANOTHER ONE", "NON-STANDARD NAME", "AMBIGUOUS TITLE", "SHORT"
+	};
+
+	public static Random rand = new Random();
+	public static ScramblingName name = new ScramblingName(names[0]);
+
+	public static void updateSystem() {
+		name.updateTick(names);
+	}
+
+	/**
+	 * A surprise tool we need for later
+	 * @author hbm
+	 */
+	public static class ScramblingName {
+
+		public String previous;
+		public String next;
+		public String[] previousFrags;
+		public String[] nextFrags;
+		public String[] frags;
+		public int[] mask;
+		public int age = 0;
+
+		public ScramblingName(String init) {
+			previous = next = init;
+			frags = init.split("");
+			mask = new int[frags.length];
+			previousFrags = chop(previous, frags.length);
+			nextFrags = chop(next, frags.length);
+		}
+
+		public String getResult() {
+			return String.join("", frags);
+		}
+
+		public void updateTick(String[] nextNames) {
+			age++;
+			try {
+				//pick new name
+				if(age % 200 == 0) nextName(nextNames);
+				//run substitution
+				if(age % 5 == 0) scramble();
+			} catch(Exception ignored) { }
+		}
+
+		public void nextName(String[] nextNames) {
+			if(nextNames.length < 2) return;
+
+			this.previous = this.next;
+
+			String initial = next;
+			//keep choosing new names until it's different
+			while(initial.equals(next)) {
+				next = nextNames[rand.nextInt(nextNames.length)];
+			}
+
+			//frag setup
+			int length = Math.min(previous.length(), next.length());
+			this.previousFrags = chop(previous, length);
+			this.frags = chop(previous, length);
+			this.nextFrags = chop(next, length);
+			mask = new int[length];
+		}
+
+		public void scramble() {
+
+			//all fragments that haven't been substituted
+			List<Integer> indices = new ArrayList<>();
+
+			for(int i = 0; i < mask.length; i++) {
+				int m = mask[i];
+				//mask 0 means not yet processed
+				if(m == 0) indices.add(i);
+				//mask 1-5 means obfuscated
+				if(m > 0 && m <= 5) mask[i]++;
+				//mask >5 means replaced
+				if(m > 5) frags[i] = nextFrags[i];
+			}
+
+			//if there's at least one index listed, start processing
+			if(!indices.isEmpty()) {
+				int toSwitch = indices.get(rand.nextInt(indices.size()));
+				mask[toSwitch] = 1;
+				frags[toSwitch] = TextFormatting.OBFUSCATED + previousFrags[toSwitch] + TextFormatting.RESET;
+			}
+		}
+
+		public String[] chop(String name, int parts) {
+			if(parts == name.length()) return name.split("");
+
+			double index = 0;
+			double incrementPerStep = (double) name.length() / (double) parts;
+			List<String> slices = new ArrayList<>();
+
+			for(int i = 0; i < parts; i++) {
+				int end = (i == parts - 1) ? name.length() : (int) (index + incrementPerStep);
+				slices.add(name.substring((int) index, end));
+				index += incrementPerStep;
+			}
+
+			//System.out.println("Chopped " + name + " into " + parts + " pieces: " + chop);
+
+			return slices.toArray(new String[parts]);
+		}
+	}
 
 }

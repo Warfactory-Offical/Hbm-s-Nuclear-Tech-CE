@@ -11,13 +11,13 @@ import com.hbm.items.ModItems;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
-import com.hbm.packet.toclient.AuxElectricityPacket;
-import com.hbm.packet.toclient.AuxGaugePacket;
-import com.hbm.packet.PacketDispatcher;
-import com.hbm.packet.toclient.RailgunRotationPacket;
+import com.hbm.main.MainRegistry;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityLoadedBase;
+import com.hbm.util.Vec3dUtil;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -33,7 +33,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -71,6 +70,7 @@ public class TileEntityRailgun extends TileEntityLoadedBase implements ITickable
 	//countdown to firing
 	public int fireDelay;
 	
+	private boolean fired;
 	private String customName;
 	
 	public TileEntityRailgun() {
@@ -144,6 +144,7 @@ public class TileEntityRailgun extends TileEntityLoadedBase implements ITickable
 	public void update() {
 		
 		if(!world.isRemote) {
+			fired = false;
 			if(delay > 0) {
 				delay--;
 			}
@@ -156,9 +157,35 @@ public class TileEntityRailgun extends TileEntityLoadedBase implements ITickable
 			}
 			updateConnections();
 			power = Library.chargeTEFromItems(inventory, 0, power, RadiationConfig.railgunBuffer);
-			
-			PacketDispatcher.wrapper.sendToAllAround(new AuxElectricityPacket(pos.getX(), pos.getY(), pos.getZ(), power), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 100));
-			PacketDispatcher.wrapper.sendToAllAround(new RailgunRotationPacket(pos.getX(), pos.getY(), pos.getZ(), pitch, yaw), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 100));
+			networkPackNT(100);
+		}
+	}
+
+	@Override
+	public void serialize(ByteBuf buf) {
+		buf.writeLong(power);
+		buf.writeFloat(pitch);
+		buf.writeFloat(yaw);
+		buf.writeBoolean(fired);
+	}
+
+	@Override
+	public void deserialize(ByteBuf buf) {
+		power = buf.readLong();
+		pitch = buf.readFloat();
+		yaw = buf.readFloat();
+		if (buf.readBoolean()) {
+			Minecraft.getMinecraft().addScheduledTask(() -> {
+				Vec3d vec = new Vec3d(5.5, 0, 0);
+				vec = Vec3dUtil.rotateRoll(vec, (float) (pitch * Math.PI / 180D));
+				vec = vec.rotateYaw((float) (yaw * Math.PI / 180D));
+
+				double fX = pos.getX() + 0.5 + vec.x;
+				double fY = pos.getY() + 1 + vec.y;
+				double fZ = pos.getZ() + 0.5 + vec.z;
+
+				MainRegistry.proxy.spawnSFX(world, fX, fY, fZ, 0, vec.normalize());
+			});
 		}
 	}
 
@@ -238,7 +265,7 @@ public class TileEntityRailgun extends TileEntityLoadedBase implements ITickable
 			power -= RadiationConfig.railgunUse;
 			if(power < 0)
 				power = 0;
-			PacketDispatcher.wrapper.sendToAll(new AuxGaugePacket(pos.getX(), pos.getY(), pos.getZ(), 0, 0));
+			fired = true;
 		} else {
 			world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.buttonNo, SoundCategory.BLOCKS, 1.0F, 1.0F);
 		}

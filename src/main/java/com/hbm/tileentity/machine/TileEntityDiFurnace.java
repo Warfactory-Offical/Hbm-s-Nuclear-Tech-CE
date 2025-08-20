@@ -12,6 +12,7 @@ import com.hbm.inventory.recipes.BlastFurnaceRecipes;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.IGUIProvider;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -19,6 +20,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -275,5 +277,13 @@ public class TileEntityDiFurnace extends TileEntityMachinePolluting implements I
 
     private ItemStack getFuelStack() {
         return inventory.getStackInSlot(2);
+    }
+
+    @Override
+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
+        boolean isSwapBetweenVariants = (oldState.getBlock() == ModBlocks.machine_difurnace_off && newState.getBlock() == ModBlocks.machine_difurnace_on) ||
+                        (oldState.getBlock() == ModBlocks.machine_difurnace_on  && newState.getBlock() == ModBlocks.machine_difurnace_off);
+        if (isSwapBetweenVariants) return false;
+        return super.shouldRefresh(world, pos, oldState, newState);
     }
 }

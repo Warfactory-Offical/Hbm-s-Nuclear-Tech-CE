@@ -87,7 +87,7 @@ public class TileEntityMachineArcFurnaceLarge extends TileEntityMachineBase impl
     }
 
     public static final int maxLiquid = MaterialShapes.BLOCK.q(128);
-    public List<Mats.MaterialStack> liquids = new ArrayList();
+    public volatile List<Mats.MaterialStack> liquids = new ArrayList<>();
 
     public TileEntityMachineArcFurnaceLarge() {
         super(25);
@@ -475,10 +475,11 @@ public class TileEntityMachineArcFurnaceLarge extends TileEntityMachineBase impl
 
         int mats = buf.readShort();
 
-        this.liquids.clear();
+        List<Mats.MaterialStack> newLiquids = new ArrayList<>();
         for(int i = 0; i < mats; i++) {
-            liquids.add(new Mats.MaterialStack(Mats.matById.get(buf.readInt()), buf.readInt()));
+            newLiquids.add(new Mats.MaterialStack(Mats.matById.get(buf.readInt()), buf.readInt()));
         }
+        this.liquids = newLiquids;
 
         if(syncLid != 0 && syncLid != 1) this.approachNum = 2;
     }

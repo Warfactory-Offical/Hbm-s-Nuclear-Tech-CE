@@ -1,11 +1,12 @@
 package com.hbm.items.machine;
 
 import com.hbm.items.ItemBase;
+import com.hbm.items.ItemEnums;
+import com.hbm.items.ModItems;
 import com.hbm.util.BobMathUtil;
 import com.hbm.util.I18nUtil;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
@@ -22,9 +23,9 @@ import java.util.Map;
 
 public class ItemRTGPellet extends ItemBase {
 	
-	private short heat = 0;
+	private short heat;
 	private boolean doesDecay = false;
-	private Item decayItem = null;
+	private ItemStack decayItem = ItemStack.EMPTY;
 	private long halflife = 0;
 	private long lifespan = 0;
 
@@ -32,7 +33,7 @@ public class ItemRTGPellet extends ItemBase {
 	 * Are you looking for pelletList? Use this!
 	 * This is more elegant than 1.7's solution. Use keySet() and values().
 	 */
-	public static final Map<ItemRTGPellet, Item> pelletMap = new HashMap<>();
+	public static final Map<ItemRTGPellet, ItemStack> pelletMap = new HashMap<>();
 
 	public ItemRTGPellet(int heatIn, String s) {
 		super(s);
@@ -59,9 +60,9 @@ public class ItemRTGPellet extends ItemBase {
 			"The Manhattan Project referred to refined natural uranium as tuballoy, enriched uranium as oralloy, and depleted uranium as depletalloy."
 	};
 	
-	public ItemRTGPellet setDecays(Item depleted, long halflife, int halflifes) {
+	public ItemRTGPellet setDecays(ItemEnums.EnumDepletedRTGMaterial mat, long halflife, int halflifes) {
 		this.doesDecay = true;
-		this.decayItem = depleted;
+		this.decayItem = new ItemStack(ModItems.pellet_rtg_depleted, 1, mat.ordinal());
 		this.halflife = halflife;
 		this.lifespan = halflife * halflifes;
 		pelletMap.put(this, decayItem);
@@ -80,8 +81,8 @@ public class ItemRTGPellet extends ItemBase {
 	}
 
 	@CheckForNull
-	public Item getDecayItem() {
-		return this.decayItem == null ? null : this.decayItem;
+	public ItemStack getDecayItem() {
+		return decayItem == ItemStack.EMPTY ? ItemStack.EMPTY : decayItem;
 	}
 
 	public boolean getDoesDecay() {
@@ -91,7 +92,7 @@ public class ItemRTGPellet extends ItemBase {
 	public static ItemStack handleDecay(ItemStack stack, ItemRTGPellet instance) {
 		if (instance.getDoesDecay()) {
 			if (instance.getLifespan(stack) <= 0)
-				return new ItemStack(instance.getDecayItem());
+				return instance.getDecayItem();
 			else
 				instance.decay(stack);
 		}
@@ -129,7 +130,7 @@ public class ItemRTGPellet extends ItemBase {
 	}
 
 	public static double getDecay(ItemRTGPellet fuel, ItemStack stack) {
-		return (double) Math.pow(0.5, ((double)(fuel.getMaxLifespan()-fuel.getLifespan(stack)) / (double)fuel.getHalfLife()));
+		return Math.pow(0.5, ((double)(fuel.getMaxLifespan()-fuel.getLifespan(stack)) / (double)fuel.getHalfLife()));
 	}
 	
 	public static short getScaledPower(ItemRTGPellet fuel, ItemStack stack) {
@@ -152,7 +153,7 @@ public class ItemRTGPellet extends ItemBase {
 	@Override
 	public double getDurabilityForDisplay(ItemStack stack) {
 		final ItemRTGPellet instance = (ItemRTGPellet) stack.getItem();
-		return 1D-(double)getDecay(instance, stack);
+		return 1D- getDecay(instance, stack);
 	}
 	
 	@Override
@@ -161,7 +162,7 @@ public class ItemRTGPellet extends ItemBase {
 		list.add("§c" + I18nUtil.resolveKey("desc.item.rtgHeat", getScaledPower(instance, stack)) + "§r");
 		if (instance.getDoesDecay()) {
 			list.add("§aFuel left: "+((int)(instance.getDecay(instance, stack) * 100000000D))/1000000D + "%§r");
-			list.add(I18nUtil.resolveKey("desc.item.rtgDecay", new ItemStack(instance.getDecayItem()).getDisplayName()));
+			list.add(I18nUtil.resolveKey("desc.item.rtgDecay", instance.getDecayItem().getDisplayName()));
 			list.add("");
 			list.add(String.format("%s / %s ticks", instance.getLifespan(stack), instance.getMaxLifespan()));
 			final String[] halfLife = BobMathUtil.ticksToDate(instance.getHalfLife());
@@ -178,11 +179,11 @@ public class ItemRTGPellet extends ItemBase {
 	}
 
 	public static HashMap<ItemStack, ItemStack> getRecipeMap() {
-		HashMap<ItemStack, ItemStack> map = new HashMap<ItemStack, ItemStack>();
+		HashMap<ItemStack, ItemStack> map = new HashMap<>();
 
 		for(ItemRTGPellet pellet : pelletMap.keySet()) {
 			if(pellet.decayItem != null) {
-				map.put(new ItemStack(pellet), new ItemStack(pellet.decayItem));
+				map.put(new ItemStack(pellet), pellet.decayItem);
 			}
 		}
 

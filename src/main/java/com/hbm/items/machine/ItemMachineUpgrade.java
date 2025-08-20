@@ -2,6 +2,7 @@ package com.hbm.items.machine;
 
 import com.google.common.collect.Sets;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.items.ItemBakedBase;
 import com.hbm.items.ModItems;
 import com.hbm.util.I18nUtil;
 import net.minecraft.client.util.ITooltipFlag;
@@ -15,9 +16,9 @@ import net.minecraft.world.World;
 import java.util.List;
 import java.util.Set;
 
-public class ItemMachineUpgrade extends Item {
+public class ItemMachineUpgrade extends ItemBakedBase {
 	public UpgradeType type;
-	public int tier = 0;
+	public int tier;
 
 	public ItemMachineUpgrade(String s) {
 		this(s, UpgradeType.SPECIAL, 0);
@@ -28,13 +29,9 @@ public class ItemMachineUpgrade extends Item {
 	}
 
 	public ItemMachineUpgrade(String s, UpgradeType type, int tier) {
-		this.setTranslationKey(s);
-		this.setRegistryName(s);
-
+		super(s);
 		this.type = type;
 		this.tier = tier;
-
-		ModItems.ALL_ITEMS.add(this);
 	}
 
 	public int getSpeed(){
@@ -317,10 +314,15 @@ public class ItemMachineUpgrade extends Item {
 			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade22"));
 			list.add(" "+I18nUtil.resolveKey("desc.upgradeej6"));
 		}
+		// I'm not translating this shit for now
+		if(this == ModItems.upgrade_gc_speed) {
+			list.add(TextFormatting.RED + "Gas Centrifuge Upgrade");
+			list.add("Allows for total isotopic separation of HEUF6");
+			list.add(TextFormatting.YELLOW + "also your centrifuge goes sicko mode");
+		}
 	}
 
-	public static final Set<Item> scrapItems = Sets.newHashSet(new Item[] {
-			Item.getItemFromBlock(Blocks.GRASS),
+	public static final Set<Item> scrapItems = Sets.newHashSet(Item.getItemFromBlock(Blocks.GRASS),
 			Item.getItemFromBlock(Blocks.DIRT),
 			Item.getItemFromBlock(Blocks.STONE),
 			Item.getItemFromBlock(Blocks.COBBLESTONE),
@@ -333,8 +335,7 @@ public class ItemMachineUpgrade extends Item {
 			Items.FLINT,
 			Items.SNOWBALL,
 			Items.WHEAT_SEEDS,
-			Items.STICK
-			});
+			Items.STICK);
 
 	public enum UpgradeType {
 		SPEED,
@@ -345,14 +346,6 @@ public class ItemMachineUpgrade extends Item {
 		OVERDRIVE,
 		NULLIFIER,
 		SCREAM,
-		SPECIAL;
-
-		public boolean mutex = false;
-
-		UpgradeType() { }
-
-		UpgradeType(boolean mutex) {
-			this.mutex = mutex;
-		}
+		SPECIAL
 	}
 }

@@ -1,0 +1,7 @@
+{
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "hbm:items/chemical_dye",
+		"layer1": "hbm:items/chemical_dye_overlay"
+	}
+}

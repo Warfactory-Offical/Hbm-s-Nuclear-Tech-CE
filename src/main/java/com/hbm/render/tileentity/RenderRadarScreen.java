@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 @AutoRegister
 public class RenderRadarScreen extends TileEntitySpecialRenderer<TileEntityMachineRadarScreen>
     implements IItemRendererProvider {
@@ -38,18 +38,10 @@ public class RenderRadarScreen extends TileEntitySpecialRenderer<TileEntityMachi
     GlStateManager.disableCull();
 
     switch (screen.getBlockMetadata() - BlockDummyable.offset) {
-      case 2:
-        GlStateManager.rotate(90, 0F, 1F, 0F);
-        break;
-      case 4:
-        GlStateManager.rotate(180, 0F, 1F, 0F);
-        break;
-      case 3:
-        GlStateManager.rotate(270, 0F, 1F, 0F);
-        break;
-      case 5:
-        GlStateManager.rotate(0, 0F, 1F, 0F);
-        break;
+      case 2 -> GlStateManager.rotate(90, 0F, 1F, 0F);
+      case 4 -> GlStateManager.rotate(180, 0F, 1F, 0F);
+      case 3 -> GlStateManager.rotate(270, 0F, 1F, 0F);
+      case 5 -> GlStateManager.rotate(0, 0F, 1F, 0F);
     }
 
     this.bindTexture(ResourceManager.radar_screen_tex);
@@ -122,7 +114,7 @@ public class RenderRadarScreen extends TileEntitySpecialRenderer<TileEntityMachi
     } else {
       int offset = 118 + screen.getWorld().rand.nextInt(81);
       float u1 = 216F / 256F;
-      float u2 = 256F / 256F;
+      float u2 = 1.0f;
       float v1 = (offset + 40F) / 256F;
       float v2 = offset / 256F;
 

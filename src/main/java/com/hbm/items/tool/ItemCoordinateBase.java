@@ -27,8 +27,8 @@ public abstract class ItemCoordinateBase extends Item {
     @Override
     public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 
-        if(!worldIn.isRemote) {
-            if(this.canGrabCoordinateHere(worldIn, pos)) {
+        if(this.canGrabCoordinateHere(worldIn, pos)) {
+            if(!worldIn.isRemote) {
                 BlockPos pos1 = this.getCoordinates(worldIn, pos);
                 ItemStack stack = player.getHeldItem(hand);
 
@@ -39,9 +39,8 @@ public abstract class ItemCoordinateBase extends Item {
 
                 this.onTargetSet(worldIn, pos1, player);
             }
+            return EnumActionResult.SUCCESS;
         }
-
-        if (this.canGrabCoordinateHere(worldIn, pos)) return EnumActionResult.SUCCESS;
         return EnumActionResult.FAIL;
     }
 

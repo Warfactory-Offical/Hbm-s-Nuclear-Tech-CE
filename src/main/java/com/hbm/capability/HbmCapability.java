@@ -20,6 +20,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.Callable;
@@ -42,6 +43,8 @@ public class HbmCapability {
 		void setKeyPressed(EnumKeybind key, boolean pressed);
 		boolean getEnableBackpack();
 		boolean getEnableHUD();
+		@Deprecated
+		@ApiStatus.ScheduledForRemoval(inVersion = "0.4")
 		boolean getOnLadder();
 		float getShield();
 		float getMaxShield();
@@ -52,6 +55,8 @@ public class HbmCapability {
 		int getPlinkCooldown();
 		void setEnableBackpack(boolean b);
 		void setEnableHUD(boolean b);
+		@Deprecated
+		@ApiStatus.ScheduledForRemoval(inVersion = "0.4")
 		void setOnLadder(boolean b);
 		void setShield(float f);
 		void setMaxShield(float f);

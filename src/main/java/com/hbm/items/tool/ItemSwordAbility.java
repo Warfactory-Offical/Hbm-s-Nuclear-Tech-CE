@@ -1,49 +1,65 @@
 package com.hbm.items.tool;
 
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimap;
-import com.hbm.handler.WeaponAbility;
+import com.hbm.handler.ability.AvailableAbilities;
+import com.hbm.handler.ability.IWeaponAbility;
+import com.hbm.items.IDynamicModels;
 import com.hbm.items.ModItems;
 import com.hbm.lib.HBMSoundHandler;
-import com.hbm.util.I18nUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
+import com.hbm.lib.RefStrings;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
-import net.minecraft.network.play.client.CPacketPlayerDigging;
-import net.minecraft.network.play.server.SPacketBlockChange;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.model.IModel;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class ItemSwordAbility extends ItemSword implements IItemAbility {
+import static com.hbm.items.ItemEnumMulti.ROOT_PATH;
+
+public class ItemSwordAbility extends ItemSword implements IDynamicModels {
 
 	private EnumRarity rarity = EnumRarity.COMMON;
 	//was there a reason for this to be private?
 	protected float damage;
 	protected double attackSpeed;
 	protected double movement;
-	private List<WeaponAbility> hitAbility = new ArrayList<>();
+	private AvailableAbilities abilities = new AvailableAbilities();
+	String texturePath;
 
 	public ItemSwordAbility(float damage, double attackSpeed, double movement, ToolMaterial material, String s) {
+		super(material);
+		this.damage = damage;
+		this.movement = movement;
+		this.attackSpeed = attackSpeed;
+		this.setTranslationKey(s);
+		this.setRegistryName(s);
+		this.texturePath = s;
+		INSTANCES.add(this);
+
+		ModItems.ALL_ITEMS.add(this);
+	}
+	public ItemSwordAbility(float damage, double attackSpeed, double movement, ToolMaterial material, String s, boolean useBakedModel) {
 		super(material);
 		this.damage = damage;
 		this.movement = movement;
@@ -54,16 +70,56 @@ public class ItemSwordAbility extends ItemSword implements IItemAbility {
 		ModItems.ALL_ITEMS.add(this);
 	}
 
+	public ItemSwordAbility(float damage, double movement, ToolMaterial material, String s, boolean useBakedModel) {
+		this(damage, -2.4, movement, material, s, false);
+	}
+
 	public ItemSwordAbility(float damage, double movement, ToolMaterial material, String s) {
 		this(damage, -2.4, movement, material, s);
 	}
 
-	public ItemSwordAbility addHitAbility(WeaponAbility weaponAbility) {
-		this.hitAbility.add(weaponAbility);
+	@Override
+	public void bakeModel(ModelBakeEvent event) {
+		try {
+			ResourceLocation templateModel = new ResourceLocation(RefStrings.MODID, "item/sword_template");
+			IModel baseModel = ModelLoaderRegistry.getModel(templateModel);
+			ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, ROOT_PATH + texturePath);
+
+			IModel retexturedModel = baseModel.retexture(
+					ImmutableMap.of("layer0", spriteLoc.toString())
+			);
+
+			IBakedModel bakedModel = retexturedModel.bake(
+					net.minecraftforge.common.model.TRSRTransformation.identity(),
+					DefaultVertexFormats.ITEM,
+					ModelLoader.defaultTextureGetter()
+			);
+
+			ModelResourceLocation bakedModelLocation = new ModelResourceLocation(spriteLoc, "inventory");
+			event.getModelRegistry().putObject(bakedModelLocation, bakedModel);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+
+	@Override
+	public void registerModel() {
+		ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(new ResourceLocation(RefStrings.MODID, ROOT_PATH + texturePath), "inventory"));
+	}
+
+	@Override
+	public void registerSprite(TextureMap map) {
+		map.registerSprite(new ResourceLocation(RefStrings.MODID, ROOT_PATH + texturePath));
+	}
+
+	public ItemSwordAbility addAbility(IWeaponAbility weaponAbility, int level) {
+		this.abilities.addAbility(weaponAbility, level);
 		return this;
 	}
 
-	//<insert obvious Rarity joke here>
+	// <insert obvious Rarity joke here>
 	public ItemSwordAbility setRarity(EnumRarity rarity) {
 		this.rarity = rarity;
 		return this;
@@ -77,15 +133,15 @@ public class ItemSwordAbility extends ItemSword implements IItemAbility {
 
 	@Override
 	public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
-		if(!attacker.world.isRemote && !this.hitAbility.isEmpty() && attacker instanceof EntityPlayer && canOperate(stack)) {
+		if(!attacker.world.isRemote && attacker instanceof EntityPlayer && canOperate(stack)) {
 
 			//hacky hacky hack
 			if(this == ModItems.mese_gavel)
 				attacker.world.playSound(null, target.posX, target.posY, target.posZ, HBMSoundHandler.whack, SoundCategory.HOSTILE, 3.0F, 1.F);
 
-			for(WeaponAbility ability : this.hitAbility) {
-				ability.onHit(attacker.world, (EntityPlayer) attacker, target, this);
-			}
+			this.abilities.getWeaponAbilities().forEach((ability, level) -> {
+				ability.onHit(level, attacker.world, (EntityPlayer) attacker, target, this);
+			});
 		}
 		stack.damageItem(1, attacker);
 		return super.hitEntity(stack, target, attacker);
@@ -103,87 +159,9 @@ public class ItemSwordAbility extends ItemSword implements IItemAbility {
 	}
 
 	@Override
-	public void breakExtraBlock(World world, int x, int y, int z, EntityPlayer playerEntity, int refX, int refY, int refZ, EnumHand hand) {
-		BlockPos pos = new BlockPos(x, y, z);
-		if(world.isAirBlock(pos))
-			return;
-
-		if(!(playerEntity instanceof EntityPlayerMP))
-			return;
-
-		EntityPlayerMP player = (EntityPlayerMP) playerEntity;
-		ItemStack stack = player.getHeldItem(hand);
-
-		IBlockState block = world.getBlockState(pos);
-
-		if(!canHarvestBlock(block, stack))
-			return;
-
-		IBlockState refBlock = world.getBlockState(new BlockPos(refX, refY, refZ));
-		float refStrength = ForgeHooks.blockStrength(refBlock, player, world, new BlockPos(refX, refY, refZ));
-		float strength = ForgeHooks.blockStrength(block, player, world, pos);
-
-		if(!ForgeHooks.canHarvestBlock(block.getBlock(), player, world, pos) || refStrength / strength > 10f)
-			return;
-
-		int event = ForgeHooks.onBlockBreakEvent(world, player.interactionManager.getGameType(), player, pos);
-		if(event < 0)
-			return;
-
-		if(player.capabilities.isCreativeMode) {
-			block.getBlock().onBlockHarvested(world, pos, block, player);
-			if(block.getBlock().removedByPlayer(block, world, pos, player, false))
-				block.getBlock().onPlayerDestroy(world, pos, block);
-
-			if(!world.isRemote) {
-				player.connection.sendPacket(new SPacketBlockChange(world, pos));
-			}
-			return;
-		}
-
-		player.getHeldItem(hand).onBlockDestroyed(world, block, pos, player);
-
-		if(!world.isRemote) {
-
-			block.getBlock().onBlockHarvested(world, pos, block, player);
-
-			if(block.getBlock().removedByPlayer(block, world, pos, player, true)) {
-				block.getBlock().onPlayerDestroy(world, pos, block);
-				block.getBlock().harvestBlock(world, player, pos, block, world.getTileEntity(pos), stack);
-				block.getBlock().dropXpOnBlockBreak(world, pos, event);
-			}
-
-			player.connection.sendPacket(new SPacketBlockChange(world, pos));
-
-		} else {
-			world.playEvent(2001, pos, Block.getStateId(block));
-			if(block.getBlock().removedByPlayer(block, world, pos, player, true)) {
-				block.getBlock().onPlayerDestroy(world, pos, block);
-			}
-			ItemStack itemstack = player.getHeldItem(hand);
-			if(itemstack != null) {
-				itemstack.onBlockDestroyed(world, block, new BlockPos(x, y, z), player);
-
-				if(itemstack.isEmpty()) {
-					player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
-				}
-			}
-
-			Minecraft.getMinecraft().getConnection().sendPacket(new CPacketPlayerDigging(CPacketPlayerDigging.Action.STOP_DESTROY_BLOCK, new BlockPos(x, y, z), Minecraft.getMinecraft().objectMouseOver.sideHit));
-		}
-	}
-
-	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, World worldIn, List<String> list, ITooltipFlag flagIn) {
-		if(!this.hitAbility.isEmpty()) {
-
-			list.add(I18nUtil.resolveKey("tool.ability.weaponlist"));
-
-			for(WeaponAbility ability : this.hitAbility) {
-				list.add("  " + TextFormatting.RED + ability.getFullName());
-			}
-		}
+		abilities.addInformation(list);
 	}
 
 	protected boolean canOperate(ItemStack stack) {

@@ -1,25 +1,24 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.api.entity.RadarEntry;
-import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.packet.toclient.BufPacket;
 import com.hbm.tileentity.IBufPacketReceiver;
+import com.hbm.tileentity.TileEntityLoadedBase;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-
+// FIXME: sometimes causes CME just because
 @AutoRegister
-public class TileEntityMachineRadarScreen extends TileEntity implements ITickable, IBufPacketReceiver {
+public class TileEntityMachineRadarScreen extends TileEntityLoadedBase implements ITickable, IBufPacketReceiver {
 
-    public List<RadarEntry> entries = new ArrayList();
+    public List<RadarEntry> entries = new ArrayList<>();
     public int refX;
     public int refY;
     public int refZ;
@@ -31,13 +30,7 @@ public class TileEntityMachineRadarScreen extends TileEntity implements ITickabl
 
         if(!world.isRemote) {
             this.networkPackNT(100);
-            entries.clear();
-            this.linked = false;
         }
-    }
-
-    public void networkPackNT(int range) {
-        if(!world.isRemote) PacketThreading.createAllAroundThreadedPacket(new BufPacket(pos.getX(), pos.getY(), pos.getZ(), this), new NetworkRegistry.TargetPoint(this.world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), range));
     }
 
     @Override
@@ -65,6 +58,27 @@ public class TileEntityMachineRadarScreen extends TileEntity implements ITickabl
             entry.fromBytes(buf);
             this.entries.add(entry);
         }
+    }
+    // fuck it, I'll make sure the data is actually SENT even after reconnecting to the world
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
+        super.readFromNBT(nbt);
+        this.linked = nbt.getBoolean("linked");
+        this.refX = nbt.getInteger("refX");
+        this.refY = nbt.getInteger("refY");
+        this.refZ = nbt.getInteger("refZ");
+        this.range = nbt.getInteger("range");
+    }
+
+
+    @Override
+    public @NotNull NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+        nbt.setBoolean("linked", this.linked);
+        nbt.setInteger("refX", this.refX);
+        nbt.setInteger("refY", this.refY);
+        nbt.setInteger("refZ", this.refZ);
+        nbt.setInteger("range", this.range);
+        return super.writeToNBT(nbt);
     }
 
     AxisAlignedBB bb = null;

@@ -74,7 +74,7 @@ public class GUIScreenTemplateFolder extends GuiScreen {
 			FluidType[] fluids = Fluids.getInNiceOrder();
 			for (FluidType fluid : fluids) {
 				if (fluid != null && !fluid.hasNoID()) {
-					allStacks.add(new ItemStack(ModItems.forge_fluid_identifier, 1, fluid.getID()));
+					allStacks.add(new ItemStack(ModItems.fluid_identifier, 1, fluid.getID()));
 				}
 			}
 		}
@@ -119,7 +119,7 @@ public class GUIScreenTemplateFolder extends GuiScreen {
 					continue outer;
 				}
 			}
-			if (stack.getItem() == ModItems.forge_fluid_identifier) {
+			if (stack.getItem() == ModItems.fluid_identifier) {
 				FluidType fluid = Fluids.fromID(stack.getMetadata());
 				if (fluid != null && fluid.getLocalizedName().toLowerCase(Locale.US).contains(sub)) {
 					stacks.add(stack);

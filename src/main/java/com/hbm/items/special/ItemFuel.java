@@ -1,25 +1,22 @@
 package com.hbm.items.special;
 
+import com.hbm.items.ItemBakedBase;
 import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 import java.util.List;
 
-public class ItemFuel extends Item {
+public class ItemFuel extends ItemBakedBase {
 
 	private int burntime;
 	
 	public ItemFuel(String s, int burntime){
-		this.setTranslationKey(s);
-		this.setRegistryName(s);
+		super(s);
 		this.setCreativeTab(MainRegistry.controlTab);
 		this.burntime = burntime;
-		
-		ModItems.ALL_ITEMS.add(this);
 	}
 	
 	@Override

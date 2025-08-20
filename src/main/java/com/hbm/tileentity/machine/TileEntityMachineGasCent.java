@@ -59,11 +59,15 @@ public class TileEntityMachineGasCent extends TileEntityMachineBase implements I
 	public Fluid oldFluid;
 	public PseudoFluidTank inputTank;
 	public PseudoFluidTank outputTank;
-
+	private static final int[] slots_io = new int[] { 0, 1, 2, 3 };
 	private static boolean converted = false;
 
 	public TileEntityMachineGasCent() {
-		super(9);
+		// 0~3 = output,
+		// 4 = battery
+		// 5 = fluid ID
+		// 6 = upgrade
+		super(9, true, true);
 		tank = new FluidTank(8000);
 		tankNew = new FluidTankNTM(Fluids.UF6, 2000);
 		inputTank = new PseudoFluidTank(GasCentrifugeRecipes.PseudoFluidType.NUF6, 8000);
@@ -298,12 +302,12 @@ public class TileEntityMachineGasCent extends TileEntityMachineBase implements I
 
 	@Override
 	public boolean canExtractItem(int slot, ItemStack itemStack, int amount) {
-		return slot > 3;
+		return slot < 4;
 	}
 
 	@Override
 	public int[] getAccessibleSlotsFromSide(EnumFacing e){
-		return new int[]{0, 3, 4, 5, 6, 7, 8};
+		return slots_io;
 	}
 
 	@Override
@@ -341,30 +345,6 @@ public class TileEntityMachineGasCent extends TileEntityMachineBase implements I
 	@Override
 	public FluidTankNTM[] getAllTanks() {
 		return new FluidTankNTM[] {tankNew};
-	}
-
-
-	@Override
-	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || capability == CapabilityEnergy.ENERGY) {
-			return true;
-		}
-		return super.hasCapability(capability, facing);
-	}
-
-	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(
-					new NTMFluidHandlerWrapper(this.getReceivingTanks(), null)
-			);
-		}
-		if (capability == CapabilityEnergy.ENERGY) {
-			return CapabilityEnergy.ENERGY.cast(
-					new NTMEnergyCapabilityWrapper(this)
-			);
-		}
-		return super.getCapability(capability, facing);
 	}
 
 	public static class PseudoFluidTank {

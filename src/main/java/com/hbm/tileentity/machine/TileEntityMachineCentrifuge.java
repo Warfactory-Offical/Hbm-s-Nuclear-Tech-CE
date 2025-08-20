@@ -1,23 +1,27 @@
 package com.hbm.tileentity.machine;
 
-import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
-import com.hbm.capability.NTMEnergyCapabilityWrapper;
+import com.hbm.api.energymk2.IEnergyReceiverMK2;
+import com.hbm.blocks.ModBlocks;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.inventory.recipes.CentrifugeRecipes;
+import com.hbm.inventory.UpgradeManagerNT;
 import com.hbm.inventory.container.ContainerCentrifuge;
 import com.hbm.inventory.gui.GUIMachineCentrifuge;
-import com.hbm.items.ModItems;
+import com.hbm.inventory.recipes.CentrifugeRecipes;
+import com.hbm.items.machine.ItemMachineUpgrade.UpgradeType;
 import com.hbm.lib.ForgeDirection;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
-import com.hbm.packet.toclient.AuxElectricityPacket;
-import com.hbm.packet.toclient.AuxGaugePacket;
-import com.hbm.packet.toclient.LoopedSoundPacket;
-import com.hbm.packet.PacketDispatcher;
+import com.hbm.main.MainRegistry;
+import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.IConfigurableMachine;
 import com.hbm.tileentity.IGUIProvider;
+import com.hbm.tileentity.IUpgradeInfoProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.util.BobMathUtil;
+import com.hbm.util.I18nUtil;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -25,380 +29,331 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-// I'll keep most of the thing intact because I'm too fucking lazy to rework basically EVERYTHING
+import java.util.HashMap;
+import java.util.List;
+
 @AutoRegister
-public class TileEntityMachineCentrifuge extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IConfigurableMachine, IGUIProvider {
+public class TileEntityMachineCentrifuge extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IGUIProvider, IUpgradeInfoProvider
+		, IConfigurableMachine {
 
-	public int progress;
-	public long power;
-	public boolean isProgressing;
-	public static int maxPower = 100000;
-	public static int processingSpeed = 200;
-	public static int baseConsumption = 200;
+    /*
+     * So why do we do this now? You have a funny mekanism/thermal/whatever pipe and you want to output stuff from a side
+     * that isn't the bottom, what do? Answer: make all slots accessible from all sides and regulate in/output in the
+     * dedicated methods. Duh.
+     */
+    private static final int[] slot_io = new int[]{0, 2, 3, 4, 5};
+    //configurable values
+    public static int maxPower = 100000;
+    public static int processingSpeed = 200;
+    public static int baseConsumption = 200;
+    public final UpgradeManagerNT upgradeManager;
+    public int progress;
+    public long power;
+    public boolean isProgressing;
+    AxisAlignedBB bb = null;
+    private int audioDuration = 0;
+    private AudioWrapper audio;
 
-	public String getConfigName() {
-		return "centrifuge";
-	}
-	/* reads the JSON object and sets the machine's parameters, use defaults and ignore if a value is not yet present */
-	public void readIfPresent(JsonObject obj) {
-		maxPower = IConfigurableMachine.grab(obj, "I:powerCap", maxPower);
-		processingSpeed = IConfigurableMachine.grab(obj, "I:timeToProcess", processingSpeed);
-		baseConsumption = IConfigurableMachine.grab(obj, "I:consumption", baseConsumption);
-	}
-	/* writes the entire config for this machine using the relevant values */
-	public void writeConfig(JsonWriter writer) throws IOException {
-		writer.name("I:powerCap").value(maxPower);
-		writer.name("I:timeToProcess").value(processingSpeed);
-		writer.name("I:consumption").value(baseConsumption);
-	}
-	
-	public TileEntityMachineCentrifuge() {
-		super(8);
-	}
-	
-	@Override
-	public String getName() {
-		return "container.centrifuge";
-	}
-	
-	public boolean isUseableByPlayer(EntityPlayer player) {
-		if(world.getTileEntity(pos) != this)
-		{
-			return false;
-		}else{
-			return player.getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) <=64;
-		}
-	}
-	
-	public int getCentrifugeProgressScaled(int i) {
-		return (progress * i) / processingSpeed;
-	}
-	
-	public long getPowerRemainingScaled(int i) {
-		return (power * i) / maxPower;
-	}
-	
-	@Override
-	public boolean isItemValidForSlot(int i, ItemStack stack) {
-		if(i == 2 || i == 3 || i == 4 || i == 5) {
-			return false;
-		}
-		
-		if(i == 1) {
-			return Library.isItemBattery(stack);
-		}
-		
-		return !(Library.isItemBattery(stack));
-	}
-	
-	@Override
-	public int[] getAccessibleSlotsFromSide(EnumFacing e) {
-		return new int[]{ 0, 1, 2, 3, 4, 5, 6, 7};
-	}
-	
-	@Override
-	public boolean canInsertItem(int slot, ItemStack itemStack) {
-		return this.isItemValidForSlot(slot, itemStack);
-	}
-	
-	@Override
-	public boolean canExtractItem(int slot, ItemStack itemStack, int amount) {
-		return slot > 1 && slot < 6;
-	}
-	
-	@Override
-	public @NotNull NBTTagCompound writeToNBT(NBTTagCompound compound) {
-		compound.setLong("powerTime", power);
-		compound.setShort("progressTime", (short) progress);
-		return super.writeToNBT(compound);
-	}
-	
-	@Override
-	public void readFromNBT(NBTTagCompound compound) {
-		power = compound.getLong("powerTime");
-		progress = compound.getShort("progressTime");
-		super.readFromNBT(compound);
-	}
-	
-	public boolean canProcess() {
-		
-		if(inventory.getStackInSlot(0).isEmpty())
-		{
-			return false;
-		}
-		ItemStack[] itemStack = CentrifugeRecipes.getOutput(inventory.getStackInSlot(0));
-		if(itemStack == null)
-		{
-			return false;
-		}
-		
-		if(inventory.getStackInSlot(2).isEmpty() && inventory.getStackInSlot(3).isEmpty() && inventory.getStackInSlot(4).isEmpty() && inventory.getStackInSlot(5).isEmpty())
-		{
-			return true;
-		}
-		
-		if((inventory.getStackInSlot(2).isEmpty() || (itemStack.length > 0 && itemStack[0] != null && inventory.getStackInSlot(2).isItemEqual(itemStack[0]) && inventory.getStackInSlot(2).getCount() + itemStack[0].getCount() <= itemStack[0].getMaxStackSize())) && 
-				(inventory.getStackInSlot(3).isEmpty() || itemStack.length < 2 || (itemStack.length > 1 && itemStack[1] != null && inventory.getStackInSlot(3).isItemEqual(itemStack[1]) && inventory.getStackInSlot(3).getCount() + itemStack[1].getCount() <= itemStack[1].getMaxStackSize())) && 
-				(inventory.getStackInSlot(4).isEmpty() || itemStack.length < 3 || (itemStack.length > 2 && itemStack[2] != null && inventory.getStackInSlot(4).isItemEqual(itemStack[2]) && inventory.getStackInSlot(4).getCount() + itemStack[2].getCount() <= itemStack[2].getMaxStackSize())) && 
-				(inventory.getStackInSlot(5).isEmpty() || itemStack.length < 4 || (itemStack.length > 3 && itemStack[3] != null && inventory.getStackInSlot(5).isItemEqual(itemStack[3]) && inventory.getStackInSlot(5).getCount() + itemStack[3].getCount() <= itemStack[3].getMaxStackSize())))
-		{
-			return true;
-		}
-		
-		return false;
-	}
-	
-	private void processItem() {
-		if(canProcess()) {
-			ItemStack[] itemStack = CentrifugeRecipes.getOutput(inventory.getStackInSlot(0));
-			
-			if(inventory.getStackInSlot(2).isEmpty() && itemStack[0] != null)
-			{
-				inventory.setStackInSlot(2, itemStack[0].copy());
-			}else if(itemStack[0] != null && inventory.getStackInSlot(2).isItemEqual(itemStack[0]))
-			{
-				inventory.getStackInSlot(2).grow(itemStack[0].getCount());
-			}
-			if(itemStack.length > 1){
-				if(inventory.getStackInSlot(3).isEmpty() && itemStack[1] != null)
-				{
-					inventory.setStackInSlot(3, itemStack[1].copy());
-				}else if(itemStack[1] != null && inventory.getStackInSlot(3).isItemEqual(itemStack[1]))
-				{
-					inventory.getStackInSlot(3).grow(itemStack[1].getCount());
-				}
-			}
-			
-			if(itemStack.length > 2){
-				if(inventory.getStackInSlot(4).isEmpty() && itemStack[2] != null)
-				{
-					inventory.setStackInSlot(4, itemStack[2].copy());
-				}else if(itemStack[2] != null && inventory.getStackInSlot(4).isItemEqual(itemStack[2]))
-				{
-					inventory.getStackInSlot(4).grow(itemStack[2].getCount());
-				}
-			}
-			
-			if(itemStack.length > 3){
-				if(inventory.getStackInSlot(5).isEmpty() && itemStack[3] != null)
-				{
-					inventory.setStackInSlot(5, itemStack[3].copy());
-				}else if(itemStack[3] != null && inventory.getStackInSlot(5).isItemEqual(itemStack[3]))
-				{
-					inventory.getStackInSlot(5).grow(itemStack[3].getCount());
-				}
-			}
-			
-			//Drillgon200: What was the setFull3D about? And why is this in a for loop?
-			//Alcater: No idea - "for(int i = 0; i < 1; i++)" should be a illegal
-			if(inventory.getStackInSlot(0).isEmpty())
-			{
-				//inventory.setStackInSlot(0, new ItemStack(inventory.getStackInSlot(i).getItem().setFull3D()));
-				inventory.setStackInSlot(0, ItemStack.EMPTY);
-			}else{
-				inventory.getStackInSlot(0).shrink(1);
-			}
-		}
-	}
-	
-	public boolean hasPower() {
-		return power > 0;
-	}
-	
-	public boolean isProcessing() {
-		return this.progress > 0;
-	}
+    public TileEntityMachineCentrifuge() {
+        super(8, false, true);
+        upgradeManager = new UpgradeManagerNT(this);
+    }
 
-	public int getSpeedLvl() {
-		int level = 0;
-		for(int i = 6; i <= 7; i++) {
+    @Override
+    public String getConfigName() {
+        return "centrifuge";
+    }
 
-			if(inventory.getStackInSlot(i).getItem() == ModItems.upgrade_speed_1)
-				level += 1;
-			if(inventory.getStackInSlot(i).getItem() == ModItems.upgrade_speed_2)
-				level += 2;
-			if(inventory.getStackInSlot(i).getItem() == ModItems.upgrade_speed_3)
-				level +=3;
-			if(inventory.getStackInSlot(i).getItem() == ModItems.upgrade_screm)
-				level +=6;
-		}
-		return Math.min(level, 6);
-	}
+    /* reads the JSON object and sets the machine's parameters, use defaults and ignore if a value is not yet present */
+    @Override
+    public void readIfPresent(JsonObject obj) {
+        maxPower = IConfigurableMachine.grab(obj, "I:powerCap", maxPower);
+        processingSpeed = IConfigurableMachine.grab(obj, "I:timeToProcess", processingSpeed);
+        baseConsumption = IConfigurableMachine.grab(obj, "I:consumption", baseConsumption);
+    }
 
-	public int getPowerLvl() {
-		int level = 0;
-		for(int i = 6; i <= 7; i++) {
+    /* writes the entire config for this machine using the relevant values */
+    @Override
+    public void writeConfig(JsonWriter writer) throws IOException {
+        writer.name("I:powerCap").value(maxPower);
+        writer.name("I:timeToProcess").value(processingSpeed);
+        writer.name("I:consumption").value(baseConsumption);
+    }
 
-			if(inventory.getStackInSlot(i).getItem() == ModItems.upgrade_power_1)
-				level += 1;
-			if(inventory.getStackInSlot(i).getItem() == ModItems.upgrade_power_2)
-				level += 2;
-			if(inventory.getStackInSlot(i).getItem() == ModItems.upgrade_power_3)
-				level +=3;
-		}
-		return Math.min(level, 3);
-	}
+    public String getName() {
+        return "container.centrifuge";
+    }
 
-	public int getOverdriveLvl() {
-		int level = 0;
-		for(int i = 6; i <= 7; i++) {
+    @Override
+    public boolean isItemValidForSlot(int i, ItemStack itemStack) {
+        return i == 0;
+    }
 
-			if(inventory.getStackInSlot(i).getItem() == ModItems.upgrade_overdrive_1)
-				level += 1;
-			if(inventory.getStackInSlot(i).getItem() == ModItems.upgrade_overdrive_2)
-				level += 2;
-			if(inventory.getStackInSlot(i).getItem() == ModItems.upgrade_overdrive_3)
-				level +=3;
-		}
-		return Math.min(level, 3);
-	}
-	
-	@Override
-	public void update() {
-		
-		if(!world.isRemote) {
+    @Override
+    public int[] getAccessibleSlotsFromSide(EnumFacing side) {
+        return slot_io;
+    }
 
-			for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-				this.trySubscribe(world, pos.getX() + dir.offsetX, pos.getY() + dir.offsetY, pos.getZ() + dir.offsetZ, dir);
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
+        super.readFromNBT(nbt);
+        power = nbt.getLong("power");
+        progress = nbt.getShort("progress");
+    }
 
-			if(inventory.getSlots() < 7){
-				inventory = this.getNewInventory(8, 64);
-			}
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+        super.writeToNBT(nbt);
+        nbt.setLong("power", power);
+        nbt.setShort("progress", (short) progress);
+        return nbt;
+    }
 
-			power = Library.chargeTEFromItems(inventory, 1, power, maxPower);
+    @Override
+    public boolean canExtractItem(int i, ItemStack itemStack, int j) {
+        return i > 1;
+    }
 
-			int speed = 1;
-			int consumption = baseConsumption;
-			
-			int speedLvl = getSpeedLvl();
-			int powerLvl = getPowerLvl();
-			int overdriveLvl = getOverdriveLvl();
+    public int getCentrifugeProgressScaled(int i) {
+        return (progress * i) / processingSpeed;
+    }
 
-			speed += speedLvl;
-			consumption += speedLvl * baseConsumption;
-			
-			speed *= (1 + overdriveLvl * 2);
-			consumption += overdriveLvl * baseConsumption * 50;
-			
-			consumption /= (1 + powerLvl);
-			
-			if(hasPower() && isProcessing()){
-				this.power -= consumption;
-				
-				if(this.power < 0){
-					this.power = 0;
-				}
-			}
-			
-			if(hasPower() && canProcess()){
-				isProgressing = true;
-			} else {
-				isProgressing = false;
-			}
-			
-			if(isProgressing){
-				progress += speed;
-				
-				if(this.progress >= TileEntityMachineCentrifuge.processingSpeed){
-					this.progress = 0;
-					this.processItem();
-				}
-			} else {
-				this.progress = 0;
-			}
+    public long getPowerRemainingScaled(int i) {
+        return (power * i) / maxPower;
+    }
 
-			PacketDispatcher.wrapper.sendToAllAround(new LoopedSoundPacket(pos.getX(), pos.getY(), pos.getZ()), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 200));
-			detectAndSendChanges();
-		}
-	}
-	
-	private long detectPower;
-	private int detectCookTime;
-	private boolean detectIsProgressing;
-	
-	private void detectAndSendChanges(){
-		boolean mark = false;
-		if(detectPower != power){
-			mark = true;
-			detectPower = power;
-		}
-		if(detectCookTime != progress){
-			mark = true;
-			detectCookTime = progress;
-		}
-		if(detectIsProgressing != isProgressing){
-			mark = true;
-			detectIsProgressing = isProgressing;
-		}
-		PacketDispatcher.wrapper.sendToAllAround(new AuxElectricityPacket(pos.getX(), pos.getY(), pos.getZ(), power), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 10));
-		PacketDispatcher.wrapper.sendToAllAround(new AuxGaugePacket(pos.getX(), pos.getY(), pos.getZ(), progress, 0), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 10));
-		PacketDispatcher.wrapper.sendToAllAround(new AuxGaugePacket(pos.getX(), pos.getY(), pos.getZ(), isProgressing ? 1 : 0, 1), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 50));
-		if(mark)
-			markDirty();
-	}
-	
-	@Override
-	public AxisAlignedBB getRenderBoundingBox() {
-		return new AxisAlignedBB(pos, pos.add(1, 4, 1));
-	}
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-	public double getMaxRenderDistanceSquared() {
-		return 65536.0D;
-	}
+    public boolean canProcess() {
 
-	@Override
-	public long getPower() {
-		return power;
-	}
+        if (inventory.getStackInSlot(0).isEmpty()) {
+            return false;
+        }
+        ItemStack[] out = CentrifugeRecipes.getOutput(inventory.getStackInSlot(0));
 
-	@Override
-	public void setPower(long i) {
-		power = i;
-	}
+        if (out == null) return false;
 
-	@Override
-	public long getMaxPower() {
-		return maxPower;
-	}
+        for (int i = 0; i < Math.min(4, out.length); i++) {
+            if (out[i] == null || inventory.insertItem(i + 2, out[i], true).isEmpty()) continue;
+            return false;
+        }
+        return true;
+    }
 
-	@Override
-	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		return new ContainerCentrifuge(player.inventory, this);
-	}
+    private void processItem() {
+        ItemStack[] out = CentrifugeRecipes.getOutput(inventory.getStackInSlot(0));
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		return new GUIMachineCentrifuge(player.inventory, this);
-	}
+        for (int i = 0; i < Math.min(4, out.length); i++) {
+            if (out[i] != null) inventory.insertItem(i + 2, out[i], false);
+        }
 
-	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-		if (capability == CapabilityEnergy.ENERGY) {
-			return true;
-		}
-		return super.hasCapability(capability, facing);
-	}
+        inventory.extractItem(0, 1, false);
+        this.markDirty();
+    }
 
-	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-		if (capability == CapabilityEnergy.ENERGY) {
-			return CapabilityEnergy.ENERGY.cast(
-					new NTMEnergyCapabilityWrapper(this)
-			);
-		}
-		return super.getCapability(capability, facing);
-	}
+    public boolean hasPower() {
+        return power > 0;
+    }
+
+    public boolean isProcessing() {
+        return this.progress > 0;
+    }
+
+    @Override
+    public void update() {
+
+        if (!world.isRemote) {
+
+            for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+                this.trySubscribe(world, pos.getX() + dir.offsetX, pos.getY() + dir.offsetY, pos.getZ() + dir.offsetZ, dir);
+
+            power = Library.chargeTEFromItems(inventory, 1, power, maxPower);
+
+            int consumption = baseConsumption;
+            int speed = 1;
+
+            upgradeManager.checkSlots(6, 7);
+            speed += upgradeManager.getLevel(UpgradeType.SPEED);
+            consumption += upgradeManager.getLevel(UpgradeType.SPEED) * baseConsumption;
+
+            speed *= (1 + upgradeManager.getLevel(UpgradeType.OVERDRIVE) * 5);
+            consumption += upgradeManager.getLevel(UpgradeType.OVERDRIVE) * baseConsumption * 50;
+
+            consumption /= (1 + upgradeManager.getLevel(UpgradeType.POWER));
+
+            if (hasPower() && isProcessing()) {
+                this.power -= consumption;
+
+                if (this.power < 0) {
+                    this.power = 0;
+                }
+            }
+
+            isProgressing = hasPower() && canProcess();
+
+            if (isProgressing) {
+                progress += speed;
+
+                if (this.progress >= TileEntityMachineCentrifuge.processingSpeed) {
+                    this.progress = 0;
+                    this.processItem();
+                }
+            } else {
+                progress = 0;
+            }
+
+            this.networkPackNT(50);
+        } else {
+
+            if (isProgressing) {
+                audioDuration += 2;
+            } else {
+                audioDuration -= 3;
+            }
+
+            audioDuration = MathHelper.clamp(audioDuration, 0, 60);
+
+            if (audioDuration > 10 && MainRegistry.proxy.me().getDistance(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) < 25) {
+                if (audio == null) {
+                    audio = createAudioLoop();
+                    audio.startSound();
+                } else if (!audio.isPlaying()) {
+                    audio = rebootAudio(audio);
+                }
+
+                audio.updateVolume(getVolume(1F));
+                audio.updatePitch((audioDuration - 10) / 100F + 0.5F);
+                audio.keepAlive();
+
+            } else {
+
+                if (audio != null) {
+                    audio.stopSound();
+                    audio = null;
+                }
+            }
+        }
+    }
+
+    @Override
+    public void serialize(ByteBuf buf) {
+        super.serialize(buf);
+        buf.writeLong(power);
+        buf.writeInt(progress);
+        buf.writeBoolean(isProgressing);
+    }
+
+    @Override
+    public void deserialize(ByteBuf buf) {
+        super.deserialize(buf);
+        power = buf.readLong();
+        progress = buf.readInt();
+        isProgressing = buf.readBoolean();
+    }
+
+    @Override
+    public AudioWrapper createAudioLoop() {
+        return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.centrifugeOperate, SoundCategory.BLOCKS, pos.getX() + 0.5F, pos.getY() + 0.5F,
+                pos.getZ() + 0.5F, 10F, 1.0F);
+    }
+
+    @Override
+    public void onChunkUnload() {
+
+        if (audio != null) {
+            audio.stopSound();
+            audio = null;
+        }
+    }
+
+    @Override
+    public void invalidate() {
+
+        super.invalidate();
+
+        if (audio != null) {
+            audio.stopSound();
+            audio = null;
+        }
+    }
+
+    @Override
+    public AxisAlignedBB getRenderBoundingBox() {
+
+        if (bb == null) {
+            bb = new AxisAlignedBB(pos, pos.add(1, 4, 1));
+        }
+
+        return bb;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public double getMaxRenderDistanceSquared() {
+        return 65536.0D;
+    }
+
+    @Override
+    public long getPower() {
+        return power;
+
+    }
+
+    @Override
+    public void setPower(long i) {
+        power = i;
+    }
+
+    @Override
+    public long getMaxPower() {
+        return maxPower;
+    }
+
+    @Override
+    public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
+        return new ContainerCentrifuge(player.inventory, this);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
+        return new GUIMachineCentrifuge(player.inventory, this);
+    }
+
+    @Override
+    public boolean canProvideInfo(UpgradeType type, int level, boolean extendedInfo) {
+        return type == UpgradeType.SPEED || type == UpgradeType.POWER || type == UpgradeType.OVERDRIVE;
+    }
+
+    @Override
+    public void provideInfo(UpgradeType type, int level, List<String> info, boolean extendedInfo) {
+        info.add(IUpgradeInfoProvider.getStandardLabel(ModBlocks.machine_centrifuge));
+        if (type == UpgradeType.SPEED) {
+            info.add(TextFormatting.GREEN + I18nUtil.resolveKey(IUpgradeInfoProvider.KEY_DELAY, "-" + (100 - 100 / (level + 1)) + "%"));
+            info.add(TextFormatting.RED + I18nUtil.resolveKey(IUpgradeInfoProvider.KEY_CONSUMPTION, "+" + (level * 100) + "%"));
+        }
+        if (type == UpgradeType.POWER) {
+            info.add(TextFormatting.GREEN + I18nUtil.resolveKey(IUpgradeInfoProvider.KEY_CONSUMPTION, "-" + (100 - 100 / (level + 1)) + "%"));
+        }
+        if (type == UpgradeType.OVERDRIVE) {
+            info.add((BobMathUtil.getBlink() ? TextFormatting.RED : TextFormatting.DARK_GRAY) + "YES");
+        }
+    }
+
+    @Override
+    public HashMap<UpgradeType, Integer> getValidUpgrades() {
+        HashMap<UpgradeType, Integer> upgrades = new HashMap<>();
+        upgrades.put(UpgradeType.SPEED, 3);
+        upgrades.put(UpgradeType.POWER, 3);
+        upgrades.put(UpgradeType.OVERDRIVE, 3);
+        return upgrades;
+    }
+
 }

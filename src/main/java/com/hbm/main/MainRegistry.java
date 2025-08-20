@@ -37,6 +37,7 @@ import com.hbm.inventory.control_panel.ControlEvent;
 import com.hbm.inventory.control_panel.ControlRegistry;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.recipes.*;
+import com.hbm.inventory.recipes.SerializableRecipe;
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.GrenadeDispenserRegistry;
 import com.hbm.lib.HBMSoundHandler;
@@ -144,6 +145,7 @@ public class MainRegistry {
     public static ArmorMaterial aMatTaurun = EnumHelper.addArmorMaterial(RefStrings.MODID + ":Taurun", RefStrings.MODID + ":Taurun", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
     public static ArmorMaterial aMatBismuth = EnumHelper.addArmorMaterial(RefStrings.MODID + ":Bismuth", RefStrings.MODID + ":Bismuth", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
     public static ArmorMaterial aMatZirconium = EnumHelper.addArmorMaterial(RefStrings.MODID + ":Zirconium", RefStrings.MODID + ":Zirconium", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
+    public static ArmorMaterial aMatDNT = EnumHelper.addArmorMaterial(RefStrings.MODID + ":DNT", RefStrings.MODID + ":DNT", 3, new int[]{1, 1, 1, 1}, 0, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F);
     public static ArmorMaterial aMatEnvsuit = EnumHelper.addArmorMaterial(RefStrings.MODID + ":Envsuit", RefStrings.MODID + ":Envsuit", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
     public static ArmorMaterial aMatRPA = EnumHelper.addArmorMaterial(RefStrings.MODID + ":RPA", RefStrings.MODID + ":RPA", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
     public static ArmorMaterial aMatHEV = EnumHelper.addArmorMaterial(RefStrings.MODID + ":HEV", RefStrings.MODID + ":HEV", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
@@ -361,11 +363,13 @@ public class MainRegistry {
         });
 
         GrenadeDispenserRegistry.registerDispenserBehaviors();
+        GrenadeDispenserRegistry.registerDispenserBehaviorFertilizer();
         TileEntityLaunchPadBase.registerLaunchables();
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
+        //RodRecipes.registerInit();
         statMines = new StatBasic("stat.ntmMines", new TextComponentTranslation("stat.ntmMines")).registerStat();
         statBullets = new StatBasic("stat.ntmBullets", new TextComponentTranslation("stat.ntmBullets")).registerStat();
         ModItems.init();

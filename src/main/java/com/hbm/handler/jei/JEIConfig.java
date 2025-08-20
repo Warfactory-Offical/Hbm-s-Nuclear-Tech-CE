@@ -11,12 +11,14 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.gui.*;
 import com.hbm.inventory.recipes.*;
 import com.hbm.items.EffectItem;
+import com.hbm.items.ItemEnums;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemAssemblyTemplate;
 import com.hbm.items.machine.ItemFELCrystal.EnumWavelengths;
 import com.hbm.items.machine.ItemFluidIcon;
 import com.hbm.items.weapon.ItemCustomMissile;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
+import com.hbm.items.weapon.sedna.factory.GunFactory;
 import com.hbm.main.MainRegistry;
 import mezz.jei.api.*;
 import mezz.jei.api.ingredients.IIngredientBlacklist;
@@ -46,6 +48,7 @@ public class JEIConfig implements IModPlugin {
     public static final String BREEDER = "hbm.breeder";
     public static final String CENTRIFUGE = "hbm.centrifuge";
     public static final String CHEMPLANT = "hbm.chemplant";
+    public static final String CHEMICAL_PLANT = "hbm.chemical_plant";
     public static final String CMB = "hbm.cmb_furnace";
     public static final String COKER = "hbm.coker";
     public static final String CONSTRUCTION = "hbm.construction";
@@ -107,6 +110,7 @@ public class JEIConfig implements IModPlugin {
     private AshpitHandler ashpitHandler;
     private BoilingHandler boilingHandler;
     private CentrifugeRecipeHandler centrifugeRecipeHandler;
+    private ChemicalPlantRecipeHandler chemicalPlantRecipeHandler;
     private CokingRecipeHandler cokingHandler;
     private CompressingRecipeHandler compressingHandler;
     private ConstructionHandler constructionHandler;
@@ -162,6 +166,8 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_arc_furnace), ARC_FURNACE_SOLID);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_chemplant), CHEMPLANT);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_chemfac), CHEMPLANT);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_chemical_plant), CHEMICAL_PLANT);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_chemical_factory), CHEMICAL_PLANT);
         registry.addRecipeCatalyst(new ItemStack(ModItems.boltgun), CONSTRUCTION);
         registry.addRecipeCatalyst(new ItemStack(ModItems.blowtorch), CONSTRUCTION);
         registry.addRecipeCatalyst(new ItemStack(ModItems.acetylene_torch), CONSTRUCTION);
@@ -251,6 +257,7 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipes(arcFurnaceSolidHandler.getRecipes(), ARC_FURNACE_SOLID);
         registry.addRecipes(boilingHandler.getRecipes(), BOILER);
         registry.addRecipes(crackingHandler.getRecipes(), CRACKING);
+        registry.addRecipes(chemicalPlantRecipeHandler.getRecipes(), CHEMICAL_PLANT);
         registry.addRecipes(compressingHandler.getRecipes(), COMPRESSING);
         registry.addRecipes(constructionHandler.getRecipes(), CONSTRUCTION);
         registry.addRecipes(crucibleAlloyingHandler.getRecipes(), CRUCIBLE_ALLOY);
@@ -345,6 +352,8 @@ public class JEIConfig implements IModPlugin {
         }
         // Some things are even beyond my control...or are they?
         blacklist.addIngredientToBlacklist(new ItemStack(ModItems.memory));
+        for(int i = 0; i < GunFactory.EnumAmmoSecret.values().length; i++) blacklist.addIngredientToBlacklist(new ItemStack(ModItems.ammo_secret, 1, i));
+        for(int i = 0; i < ItemEnums.EnumSecretType.values().length; i++) blacklist.addIngredientToBlacklist(new ItemStack(ModItems.item_secret, 1, i));
 
         blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.machine_electric_furnace_on));
         blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.machine_difurnace_on));
@@ -409,6 +418,7 @@ public class JEIConfig implements IModPlugin {
                 ashpitHandler = new AshpitHandler(help),
                 boilingHandler = new BoilingHandler(help),
                 centrifugeRecipeHandler = new CentrifugeRecipeHandler(help),
+                chemicalPlantRecipeHandler = new ChemicalPlantRecipeHandler(help),
                 cokingHandler = new CokingRecipeHandler(help),
                 constructionHandler = new ConstructionHandler(help),
                 compressingHandler = new CompressingRecipeHandler(help),
@@ -488,7 +498,7 @@ public class JEIConfig implements IModPlugin {
         subtypeRegistry.registerSubtypeInterpreter(ModItems.fluid_tank_full, metadataFluidContainerInterpreter);
         subtypeRegistry.registerSubtypeInterpreter(ModItems.fluid_barrel_full, metadataFluidContainerInterpreter);
         subtypeRegistry.registerSubtypeInterpreter(ModItems.fluid_tank_lead_full, metadataFluidContainerInterpreter);
-        subtypeRegistry.registerSubtypeInterpreter(ModItems.canister_generic, metadataFluidContainerInterpreter);
+        subtypeRegistry.registerSubtypeInterpreter(ModItems.canister_full, metadataFluidContainerInterpreter);
 		subtypeRegistry.registerSubtypeInterpreter(ModItems.missile_custom, stack -> ModItems.missile_custom.getTranslationKey() + "w" +
                 ItemCustomMissile.readFromNBT(stack, "warhead") + "f" + ItemCustomMissile.readFromNBT(stack, "fuselage") + "s" +
                 ItemCustomMissile.readFromNBT(stack, "stability") + "t" + ItemCustomMissile.readFromNBT(stack, "thruster"));

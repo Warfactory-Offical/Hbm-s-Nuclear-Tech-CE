@@ -2,11 +2,15 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.api.block.IToolable.ToolType;
 import com.hbm.handler.ArmorUtil;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.items.ModItems;
 import com.hbm.items.tool.ItemKeyPin;
 import com.hbm.items.tool.ItemTooling;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
+import com.hbm.packet.toclient.BufPacket;
+import com.hbm.tileentity.IBufPacketReceiver;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,11 +18,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
-public class TileEntityLockableBase extends TileEntity {
+public class TileEntityLockableBase extends TileEntity implements IBufPacketReceiver {
 	protected int lock;
 	private boolean isLocked = false;
 	protected double lockMod = 0.1D;
+	private ByteBuf lastPackedBuf;
 
 	public boolean isLocked() {
 		return isLocked;
@@ -142,5 +148,22 @@ public class TileEntityLockableBase extends TileEntity {
 		}
 		
 		return false;
+	}
+
+	@Override
+	public void serialize(ByteBuf buf) {
+	}
+
+	@Override
+	public void deserialize(ByteBuf buf) {
+	}
+
+	public void networkPackNT(int range) {
+		if (world.isRemote) return;
+		BufPacket packet = new BufPacket(pos.getX(), pos.getY(), pos.getZ(), this);
+		ByteBuf preBuf = packet.getCompiledBuffer();
+		if(preBuf.equals(lastPackedBuf) && this.world.getTotalWorldTime() % 20 != 0) return;
+		this.lastPackedBuf = preBuf.copy();
+		PacketThreading.createAllAroundThreadedPacket(new BufPacket(pos.getX(), pos.getY(), pos.getZ(), this), new NetworkRegistry.TargetPoint(this.world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), range));
 	}
 }

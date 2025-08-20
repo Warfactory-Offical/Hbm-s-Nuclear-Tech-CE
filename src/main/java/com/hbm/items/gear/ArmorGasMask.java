@@ -79,7 +79,7 @@ public class ArmorGasMask extends ItemArmor implements IGasMask {
 				return this.modelGas;
 			}
 		}
-		if (this == ModItems.gas_mask_m65 || this == ModItems.hazmat_helmet_red || this == ModItems.hazmat_helmet_grey || this == ModItems.gas_mask_mono || this == ModItems.hazmat_paa_helmet) {
+		if (this == ModItems.gas_mask_m65 || this == ModItems.hazmat_helmet_red || this == ModItems.hazmat_helmet_grey || this == ModItems.gas_mask_mono || this == ModItems.hazmat_paa_helmet || this == ModItems.gas_mask_olde) {
 			if (armorSlot == EntityEquipmentSlot.HEAD) {
 				if (this.modelM65 == null) {
 					this.modelM65 = new ModelM65();
@@ -97,6 +97,9 @@ public class ArmorGasMask extends ItemArmor implements IGasMask {
 		}
 		if (stack.getItem() == ModItems.gas_mask_m65) {
 			return (RefStrings.MODID + ":textures/armor/ModelM65.png");
+		}
+		if(stack.getItem() == ModItems.gas_mask_olde) {
+			return "hbm:textures/armor/mask_olde.png";
 		}
 		if (stack.getItem() == ModItems.gas_mask_mono) {
 			return (RefStrings.MODID + ":textures/armor/ModelM65Mono.png");

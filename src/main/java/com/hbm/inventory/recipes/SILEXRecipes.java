@@ -469,7 +469,7 @@ public class SILEXRecipes {
 					.addOut(new WeightedRandomObject(new ItemStack(ModItems.nugget_au198), 44 - 10 * i))
 					.addOut(new WeightedRandomObject(new ItemStack(ModItems.nugget_pb209), 44 - 10 * i))
 					.addOut(new WeightedRandomObject(new ItemStack(ModItems.nugget_bismuth), 1 + 6 * i))
-					.addOut(new WeightedRandomObject(new ItemStack(ModItems.nugget_mercury), 1 + 6 * i))
+					.addOut(new WeightedRandomObject(new ItemStack(ModItems.ingot_mercury), 1 + 6 * i))
 					.addOut(new WeightedRandomObject(new ItemStack(ModItems.nugget_gh336), 10 + 8 * i)) ); //Reimumunch
 		}
 		for(int i = 0; i < 5; i++) {
@@ -789,7 +789,7 @@ public class SILEXRecipes {
 				);
 		recipes.put(new ComparableStack(ModItems.nuclear_waste_short_depleted, 1, ItemWasteShort.WasteClass.SCHRABIDIUM.ordinal()), new SILEXRecipe(900, 100, EnumWavelengths.VISIBLE)
 				.addOut(new WeightedRandomObject(new ItemStack(ModItems.nugget_bismuth), 7))
-				.addOut(new WeightedRandomObject(new ItemStack(ModItems.nugget_mercury), 12))
+				.addOut(new WeightedRandomObject(new ItemStack(ModItems.ingot_mercury), 12))
 				.addOut(new WeightedRandomObject(new ItemStack(ModItems.powder_cerium_tiny), 14))
 				.addOut(new WeightedRandomObject(new ItemStack(ModItems.powder_lanthanium_tiny), 15))
 				.addOut(new WeightedRandomObject(new ItemStack(ModItems.dust), 20))
@@ -875,7 +875,7 @@ public class SILEXRecipes {
 		recipes.put(GOLD.crystal(), new SILEXRecipe(900, 100, EnumWavelengths.RADIO)
 				.addOut(new WeightedRandomObject(new ItemStack(ModItems.powder_gold), 64))
 				.addOut(new WeightedRandomObject(new ItemStack(Blocks.GRAVEL), 24))
-				.addOut(new WeightedRandomObject(new ItemStack(ModItems.nugget_mercury), 12))
+				.addOut(new WeightedRandomObject(new ItemStack(ModItems.ingot_mercury), 12))
 				);
 		recipes.put(LAPIS.crystal(), new SILEXRecipe(900, 100, EnumWavelengths.RADIO)
 				.addOut(new WeightedRandomObject(new ItemStack(ModItems.powder_lapis), 64))
@@ -924,7 +924,7 @@ public class SILEXRecipes {
 		recipes.put(S.crystal(), new SILEXRecipe(900, 100, EnumWavelengths.IR)
 				.addOut(new WeightedRandomObject(new ItemStack(ModItems.sulfur), 64))
 				.addOut(new WeightedRandomObject(new ItemStack(Blocks.GRAVEL), 24))
-				.addOut(new WeightedRandomObject(new ItemStack(ModItems.nugget_mercury), 12))
+				.addOut(new WeightedRandomObject(new ItemStack(ModItems.ingot_mercury), 12))
 				);
 		recipes.put(F.crystal(), new SILEXRecipe(900, 100, EnumWavelengths.IR)
 				.addOut(new WeightedRandomObject(new ItemStack(ModItems.fluorite), 64))
@@ -1028,7 +1028,7 @@ public class SILEXRecipes {
 				.addOut(new WeightedRandomObject(new ItemStack(ModItems.powder_dura_steel), 24))
 				.addOut(new WeightedRandomObject(new ItemStack(ModItems.powder_cobalt), 12))
 				.addOut(new WeightedRandomObject(new ItemStack(Blocks.GRAVEL), 12))
-				.addOut(new WeightedRandomObject(new ItemStack(ModItems.nugget_mercury), 32))
+				.addOut(new WeightedRandomObject(new ItemStack(ModItems.ingot_mercury), 32))
 				);
 		recipes.put(OSMIRIDIUM.crystal(), new SILEXRecipe(900, 100, EnumWavelengths.GAMMA)
 				.addOut(new WeightedRandomObject(new ItemStack(ModItems.nugget_osmiridium), 90))

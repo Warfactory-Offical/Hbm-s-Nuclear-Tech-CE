@@ -9,10 +9,8 @@ import com.hbm.items.tool.ItemKeyPin;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
-import com.hbm.packet.PacketDispatcher;
-import com.hbm.packet.toclient.AuxGaugePacket;
-import com.hbm.packet.toclient.TEDoorAnimationPacket;
 import com.hbm.sound.AudioWrapper;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,7 +18,6 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -87,11 +84,24 @@ public class TileEntitySlidingBlastDoor extends TileEntityLockableBase implement
                     }
                 }
             }
-            PacketDispatcher.wrapper.sendToAllAround(new TEDoorAnimationPacket(pos, (byte) state.ordinal(), texture),
-					new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 200));
-            PacketDispatcher.wrapper.sendToAllAround(new AuxGaugePacket(pos, shouldUseBB ? 1 : 0, 0),
-					new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 200));
+            networkPackNT(100);
         }
+    }
+
+    @Override
+    public void serialize(ByteBuf buf){
+        buf.writeBoolean(shouldUseBB);
+        buf.writeByte(state.ordinal());
+        if(texture != -1)
+            buf.writeByte(texture);
+    }
+
+    @Override
+    public void deserialize(ByteBuf buf){
+        shouldUseBB = buf.readBoolean();
+        state = DoorState.values()[buf.readByte()];
+        if(buf.readableBytes() == 1)
+            texture = buf.readByte();
     }
 
     public boolean tryOpen(EntityPlayer player) {

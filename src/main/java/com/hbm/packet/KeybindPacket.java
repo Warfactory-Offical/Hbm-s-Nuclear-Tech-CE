@@ -1,17 +1,12 @@
 package com.hbm.packet;
 
-import com.hbm.capability.HbmCapability;
-import com.hbm.capability.HbmCapability.IHBMData;
 import com.hbm.handler.HbmKeybinds.EnumKeybind;
 import com.hbm.handler.HbmKeybindsServer;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class KeybindPacket implements IMessage {
 
@@ -49,23 +44,9 @@ public class KeybindPacket implements IMessage {
 
 		@Override
 		public IMessage onMessage(KeybindPacket m, MessageContext ctx) {
-			EntityPlayerMP p = ctx.getServerHandler().player;
-			if (p.getServer() == null) return null;
-			p.getServer().addScheduledTask(() -> HbmKeybindsServer.onPressedServer(p, EnumKeybind.values()[m.key], m.pressed));
+			EntityPlayer p = ctx.getServerHandler().player;
+			HbmKeybindsServer.onPressedServer(p, EnumKeybind.values()[m.key], m.pressed);
 			return null;
-		}
-		
-		@SideOnly(Side.CLIENT)
-		public void handleClient(MessageContext ctx, KeybindPacket m){
-			Minecraft.getMinecraft().addScheduledTask(() -> {
-				IHBMData props = HbmCapability.getData(Minecraft.getMinecraft().player);
-				if(EnumKeybind.values()[m.key] == EnumKeybind.TOGGLE_JETPACK) {
-					props.setEnableBackpack(m.pressed);
-				}
-				if(EnumKeybind.values()[m.key] == EnumKeybind.TOGGLE_HEAD) {
-					props.setEnableHUD(m.pressed);
-				}
-			});
 		}
 	}
 }

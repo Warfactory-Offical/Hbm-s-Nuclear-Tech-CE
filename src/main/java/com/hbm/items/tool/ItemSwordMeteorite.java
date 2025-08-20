@@ -11,7 +11,7 @@ import java.util.List;
 public class ItemSwordMeteorite extends ItemSwordAbility {
 
 	public ItemSwordMeteorite(float damage, double movement, ToolMaterial material, String s) {
-		super(damage, -2.0F, movement, material, s);
+		super(damage, -2, movement, material, s, false);
 		this.setMaxDamage(0);
 	}
 	

@@ -36,4 +36,8 @@ public class DirPos extends Object {
     public BlockPos getPos() {
         return this.pos;
     }
+
+    public boolean compare(int x, int y, int z) {
+        return this.pos.getX() == x && this.pos.getY() == y && this.pos.getZ() == z;
+    }
 }

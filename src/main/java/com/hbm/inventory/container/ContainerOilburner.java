@@ -55,7 +55,7 @@ public class ContainerOilburner extends Container {
                 }
             } else {
 
-                if (stack.getItem() == ModItems.forge_fluid_identifier) {
+                if (stack.getItem() == ModItems.fluid_identifier) {
                     if (!this.mergeItemStack(originalStack, 2, 3, false)) {
                         return ItemStack.EMPTY;
                     }

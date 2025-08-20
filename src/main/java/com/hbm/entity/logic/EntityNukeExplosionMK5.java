@@ -6,18 +6,21 @@ import com.hbm.config.GeneralConfig;
 import com.hbm.entity.effect.EntityFalloutRain;
 import com.hbm.entity.effect.EntityFalloutUnderGround;
 import com.hbm.entity.mob.EntityGlowingOne;
+import com.hbm.explosion.ExplosionNukeGeneric;
 import com.hbm.explosion.ExplosionNukeRayBatched;
 import com.hbm.explosion.ExplosionNukeRayParallelized;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IExplosionRay;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.ContaminationUtil;
+import com.hbm.util.ContaminationUtil.ContaminationType;
+import com.hbm.util.ContaminationUtil.HazardType;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Biomes;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.ForgeChunkManager;
@@ -120,7 +123,10 @@ public class EntityNukeExplosionMK5 extends Entity implements IChunkLoader {
         }
         //load own chunk
         loadMainChunk();
-
+        if (fallout && explosion != null && this.ticksExisted < 10 && strength >= 75) {
+            radiate(2_500_000F / (this.ticksExisted * 5 + 1), this.radius * 2.0D);
+        }
+        ExplosionNukeGeneric.dealDamage(world, this.posX, this.posY, this.posZ, this.radius * 2.0D);
         float rads, fire, blast;
         rads = fire = blast = 0;
 
@@ -129,12 +135,6 @@ public class EntityNukeExplosionMK5 extends Entity implements IChunkLoader {
             rads = (float) (Math.pow(radius, 4) * (float) Math.pow(0.5, this.ticksExisted * 0.125) + strength);
             if (ticksExisted == 42)
                 EntityGlowingOne.convertInRadiusToGlow(world, this.posX, this.posY, this.posZ, radius * 1.5);
-        }
-
-        if (ticksExisted < 2400 && ticksExisted % 10 == 0) {
-            fire = (fallout ? 10F : 2F) * (float) Math.pow(radius, 3) * (float) Math.pow(0.5, this.ticksExisted * 0.025);
-            blast = (float) Math.pow(radius, 3) * 0.2F;
-            ContaminationUtil.radiate(world, this.posX, this.posY, this.posZ, Math.min(1000, radius * 2), rads, 0F, fire, blast, this.ticksExisted * 1.5F);
         }
 
         //Create Explosion Rays
@@ -182,6 +182,33 @@ public class EntityNukeExplosionMK5 extends Entity implements IChunkLoader {
             this.clearLoadedChunks();
             unloadMainChunk();
             this.setDead();
+        }
+    }
+
+    private void radiate(float rads, double range) {
+        AxisAlignedBB aabb = new AxisAlignedBB(this.posX, this.posY, this.posZ, this.posX, this.posY, this.posZ).grow(range);
+        List<EntityLivingBase> entities = world.getEntitiesWithinAABB(EntityLivingBase.class, aabb);
+        for (EntityLivingBase e : entities) {
+            Vec3d vec = new Vec3d(e.posX - posX, (e.posY + e.getEyeHeight()) - posY, e.posZ - posZ);
+            double len = vec.length();
+            if (len <= 0.0001D) continue;
+            Vec3d dir = vec.scale(1.0D / len);
+
+            float res = 0F;
+            int steps = MathHelper.floor(len);
+            for (int i = 1; i < steps; i++) {
+                int ix = MathHelper.floor(posX + dir.x * i);
+                int iy = MathHelper.floor(posY + dir.y * i);
+                int iz = MathHelper.floor(posZ + dir.z * i);
+                float blockRes = world.getBlockState(new BlockPos(ix, iy, iz)).getBlock().getExplosionResistance(null);
+                res += blockRes;
+            }
+
+            if (res < 1F) res = 1F;
+            float eRads = rads;
+            eRads /= res;
+            eRads /= (float) (len * len);
+            ContaminationUtil.contaminate(e, HazardType.RADIATION, ContaminationType.RAD_BYPASS, eRads);
         }
     }
 
@@ -266,7 +293,7 @@ public class EntityNukeExplosionMK5 extends Entity implements IChunkLoader {
         spawnFire = nbt.getBoolean("spawnFire");
         algorithm = nbt.getInteger("algorithm");
         if (nbt.hasKey("detonator"))
-            nbt.getUniqueId("detonator");
+            detonator = nbt.getUniqueId("detonator");
         if (!initialized) {
             if (algorithm == 1 || algorithm == 2)
                 explosion = new ExplosionNukeRayParallelized(world, this.posX, this.posY, this.posZ, this.strength, this.radius);

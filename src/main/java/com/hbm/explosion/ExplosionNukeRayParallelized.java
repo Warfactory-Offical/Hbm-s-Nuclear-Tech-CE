@@ -314,12 +314,13 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
             boolean chunkModified = false;
 
             for (int subY = 0; subY < SUBCHUNK_PER_CHUNK; subY++) {
+                final int startBit = (WORLD_HEIGHT - 1 - ((subY << 4) + 15)) << 8;
+                final int endBit   = ((WORLD_HEIGHT - 1 - (subY << 4)) << 8) | 0xFF;
                 ExtendedBlockStorage storage = storages[subY];
-                if (storage == null || storage.isEmpty()) continue;
-
-                int startBit = (WORLD_HEIGHT - 1 - ((subY << 4) + 15)) << 8;
-                int endBit = ((WORLD_HEIGHT - 1 - (subY << 4)) << 8) | 0xFF;
-
+                if (storage == null || storage.isEmpty()) {
+                    bs.clear(startBit, endBit + 1);
+                    continue;
+                }
                 boolean hasSurvivor = false;
                 int clearBit = bs.nextClearBit(startBit);
                 while (clearBit >= 0 && clearBit <= endBit) {

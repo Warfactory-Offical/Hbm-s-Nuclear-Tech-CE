@@ -61,6 +61,16 @@ public class BusAnimationSedna {
     }
 
     /**
+     * Multiplies all keyframe durations by the supplied double. Numbers below 1 make the animation play faster.
+     * @param mult
+     */
+    public void setTimeMult(double mult) {
+        for(Map.Entry<String, BusAnimationSequenceSedna> sequence : animationBuses.entrySet()) {
+            sequence.getValue().multiplyTime(mult);
+        }
+    }
+
+    /**
      * Gets the state of a bus at a specified time
      * @param name the name of the bus in question
      * @param millis the elapsed time since the animation started in milliseconds

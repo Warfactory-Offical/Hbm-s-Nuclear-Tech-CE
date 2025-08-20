@@ -2,10 +2,10 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.api.fluid.IFluidStandardReceiver;
-import com.hbm.capability.HbmCapability;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.interfaces.AutoRegister;
+import com.hbm.interfaces.IClimbable;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.UpgradeManager;
 import com.hbm.inventory.container.ContainerCrystallizer;
@@ -18,11 +18,11 @@ import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
-import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
@@ -42,12 +42,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
-import java.util.List;
+import org.jetbrains.annotations.Nullable;
 
 @AutoRegister
-public class TileEntityMachineCrystallizer extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IFluidStandardReceiver, IGUIProvider, IFFtoNTMF {
+public class TileEntityMachineCrystallizer extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IFluidStandardReceiver, IGUIProvider, IFFtoNTMF, IClimbable {
 
 	public long power;
 	public static final long maxPower = 1000000;
@@ -162,17 +160,6 @@ public class TileEntityMachineCrystallizer extends TileEntityMachineBase impleme
 					angle -= 360;
 					prevAngle -= 360;
 				}
-			}
-		}
-
-		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
-		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
-		List<EntityPlayer> players = world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(pos.add(0.25, 1, 0.25), pos.add(0.75, 6, 0.75)).offset(rot.offsetX * 1.5, 0, rot.offsetZ * 1.5));
-
-		for(EntityPlayer player : players) {
-			HbmCapability.IHBMData props = HbmCapability.getData(player);
-			if(player == MainRegistry.proxy.me() && !props.getOnLadder()) {
-				props.setOnLadder(true);
 			}
 		}
 	}
@@ -408,5 +395,45 @@ public class TileEntityMachineCrystallizer extends TileEntityMachineBase impleme
 			);
 		}
 			return super.getCapability(capability, facing);
+	}
+
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		unregisterClimbable();
+	}
+
+	@Override
+	public void onLoad(){
+		super.onLoad();
+		registerClimbable();
+	}
+
+	@Override
+	public void onChunkUnload() {
+		unregisterClimbable();
+		super.onChunkUnload();
+	}
+
+	private AxisAlignedBB ladderAABB = null;
+
+	private AxisAlignedBB getLadderAABB(){
+		if (ladderAABB == null){
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
+			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+			ladderAABB = new AxisAlignedBB(pos.getX() + 0.25, pos.getY() + 1, pos.getZ() + 0.25, pos.getX() + 0.75, pos.getY() + 6, pos.getZ() + 0.75)
+					.offset(rot.offsetX * 1.5, 0, rot.offsetZ * 1.5);
+		}
+		return ladderAABB;
+	}
+
+	@Override
+	public boolean isEntityInClimbAABB(@NotNull EntityLivingBase entity) {
+		return entity.getEntityBoundingBox().intersects(getLadderAABB());
+	}
+
+	@Override
+	public @Nullable AxisAlignedBB getClimbAABBForIndexing() {
+		return getLadderAABB();
 	}
 }

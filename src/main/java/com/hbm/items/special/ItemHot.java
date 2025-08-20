@@ -1,22 +1,18 @@
 package com.hbm.items.special;
 
-import com.hbm.items.ModItems;
+import com.hbm.items.ItemBakedBase;
 import net.minecraft.entity.Entity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
-public class ItemHot extends Item {
+public class ItemHot extends ItemBakedBase {
 
 	public static int heat;
 	
 	public ItemHot(int heat, String s) {
+		super(s);
 		ItemHot.heat = heat;
-		this.setTranslationKey(s);
-		this.setRegistryName(s);
-		
-		ModItems.ALL_ITEMS.add(this);
 	}
 	
 	public static ItemStack heatUp(ItemStack stack) {

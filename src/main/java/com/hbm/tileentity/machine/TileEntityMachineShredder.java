@@ -10,10 +10,9 @@ import com.hbm.inventory.gui.GUIMachineShredder;
 import com.hbm.items.machine.ItemBlades;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
-import com.hbm.packet.toclient.AuxElectricityPacket;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -26,7 +25,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
@@ -168,8 +166,7 @@ public class TileEntityMachineShredder extends TileEntityMachineBase implements 
             }
 
 			power = Library.chargeTEFromItems(inventory, 29, power, maxPower);
-
-			PacketDispatcher.wrapper.sendToAllAround(new AuxElectricityPacket(pos.getX(), pos.getY(), pos.getZ(), power), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 15));
+			networkPackNT(15);
 		}
 
 		if(flag1)
@@ -252,6 +249,16 @@ public class TileEntityMachineShredder extends TileEntityMachineBase implements 
 		}
 
 		return false;
+	}
+
+	@Override
+	public void serialize(ByteBuf buf) {
+		buf.writeLong(power);
+	}
+
+	@Override
+	public void deserialize(ByteBuf buf) {
+		power = buf.readLong();
 	}
 
 	@Override

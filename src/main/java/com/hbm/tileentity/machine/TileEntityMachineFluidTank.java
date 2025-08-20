@@ -4,12 +4,12 @@ import com.hbm.api.fluidmk2.FluidNode;
 import com.hbm.api.fluidmk2.IFluidStandardTransceiverMK2;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
-import com.hbm.capability.HbmCapability;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.explosion.vanillant.ExplosionVNT;
 import com.hbm.handler.MultiblockHandlerXR;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegister;
+import com.hbm.interfaces.IClimbable;
 import com.hbm.interfaces.IFFtoNTMF;
 import com.hbm.inventory.OreDictManager;
 import com.hbm.inventory.RecipesCommon;
@@ -23,7 +23,6 @@ import com.hbm.inventory.gui.GUIMachineFluidTank;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
-import com.hbm.main.MainRegistry;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.tileentity.*;
 import com.hbm.uninos.UniNodespace;
@@ -31,6 +30,7 @@ import com.hbm.util.ParticleUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
@@ -51,12 +51,12 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.*;
 
 @AutoRegister
-public class TileEntityMachineFluidTank extends TileEntityMachineBase implements ITickable, IFluidStandardTransceiverMK2, IPersistentNBT, IControllable, IGUIProvider, IOverpressurable, IRepairable, IFFtoNTMF, IFluidCopiable {
+public class TileEntityMachineFluidTank extends TileEntityMachineBase implements ITickable, IFluidStandardTransceiverMK2, IPersistentNBT, IControllable, IGUIProvider, IOverpressurable, IRepairable, IFFtoNTMF, IFluidCopiable, IClimbable {
 	protected FluidNode node;
 	protected FluidType lastType;
 	public FluidTankNTM tankNew;
@@ -272,17 +272,6 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 			tankNew.unloadTank(4, 5, inventory);
 
 			this.networkPackNT(150);
-		}
-
-		ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
-		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
-		List<EntityPlayer> players = world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(pos, pos.add(1, 2.875, 1)).offset(dir.offsetX * 0.5 - rot.offsetX * 2.25, 0, dir.offsetZ * 0.5 - rot.offsetZ * 2.25));
-
-		for(EntityPlayer player : players) {
-			HbmCapability.IHBMData props = HbmCapability.getData(player);
-			if(player == MainRegistry.proxy.me() && !props.getOnLadder()) {
-				props.setOnLadder(true);
-			}
 		}
 	}
 
@@ -543,6 +532,7 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 				UniNodespace.destroyNode(world, pos, tankNew.getTankType().getNetworkProvider());
 			}
 		}
+		unregisterClimbable();
 	}
 
 	@Override
@@ -588,4 +578,37 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 		this.markDirty();
 	}
 
+	private AxisAlignedBB ladderAABB = null;
+
+	private AxisAlignedBB getLadderAABB(){
+		if (ladderAABB == null){
+			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - 10);
+			ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
+			ladderAABB = new AxisAlignedBB(pos, pos.add(1, 3, 1))
+					.offset(dir.offsetX * 0.5 - rot.offsetX * 2.25, 0, dir.offsetZ * 0.5 - rot.offsetZ * 2.25);
+		}
+		return ladderAABB;
+	}
+
+	@Override
+	public boolean isEntityInClimbAABB(EntityLivingBase entity) {
+		return entity.getEntityBoundingBox().intersects(getLadderAABB());
+	}
+
+	@Override
+	public @Nullable AxisAlignedBB getClimbAABBForIndexing() {
+		return getLadderAABB();
+	}
+
+	@Override
+	public void onLoad(){
+		super.onLoad();
+		registerClimbable();
+	}
+
+	@Override
+	public void onChunkUnload() {
+		unregisterClimbable();
+		super.onChunkUnload();
+	}
 }

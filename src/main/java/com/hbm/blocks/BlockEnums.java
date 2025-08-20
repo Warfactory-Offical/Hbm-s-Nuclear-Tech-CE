@@ -18,6 +18,14 @@ public class BlockEnums {
 		BAUXITE
 	}
 
+	public static enum EnumMeteorType {
+		IRON,
+		COPPER,
+		ALUMINIUM,
+		RAREEARTH,
+		COBALT
+	}
+
 	public static enum EnumStalagmiteType {
 		SULFUR,
 		ASBESTOS
@@ -29,6 +37,14 @@ public class BlockEnums {
 	public static enum TileType {
 		LARGE,
 		SMALL
+	}
+
+	public static enum LightstoneType {
+		UNREFINED,
+		TILE,
+		BRICKS,
+		BRICKS_CHISELED,
+		CHISELED
 	}
 	
 	public static enum DecoComputerEnum {

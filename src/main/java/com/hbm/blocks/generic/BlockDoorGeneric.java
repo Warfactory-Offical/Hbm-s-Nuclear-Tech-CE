@@ -39,7 +39,7 @@ public class BlockDoorGeneric extends BlockDummyable implements IRadResistantBlo
 	private boolean isRadResistant;
 
 	public BlockDoorGeneric(Material materialIn, DoorDecl type, boolean isRadResistant, String s){
-		super(materialIn, s);
+		super(materialIn, s, false);
 		this.type = type;
 		this.isRadResistant = isRadResistant;
 	}

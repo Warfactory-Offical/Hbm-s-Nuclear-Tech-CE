@@ -56,6 +56,10 @@ public class ResourceManager {
 	public static final IModelCustom chemplant_piston = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/chemplant_new_piston.obj")).asVBO();
 	public static final IModelCustom chemplant_fluid = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/chemplant_new_fluid.hmf")).asVBO();
 	public static final IModelCustom chemplant_fluidcap = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/chemplant_new_fluidcap.hmf")).asVBO();
+	public static final IModelCustom chemical_plant = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/chemical_plant.obj")).asVBO();
+
+	public static final IModelCustom chemical_factory = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/chemical_factory.obj")).asVBO();
+	public static final IModelCustom purex = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/purex.obj")).asVBO();
 	public static final IModelCustom chemfac = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/chemfac.obj")).asVBO();
 	
 	//Mixer
@@ -1007,7 +1011,10 @@ public class ResourceManager {
 	public static final ResourceLocation chemplant_spinner_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/chemplant_spinner_new.png");
     public static final ResourceLocation chemplant_piston_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/chemplant_piston_new.png");
     public static final ResourceLocation chemplant_fluid_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/lavabase_small.png");
+	public static final ResourceLocation chemical_plant_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/chemical_plant.png");
+	public static final ResourceLocation chemical_plant_fluid_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/chemical_plant_fluid.png");
 	public static final ResourceLocation chemfac_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/chemfac.png");
+	public static final ResourceLocation chemical_factory_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/chemical_factory.png");
 
 	//Arc Welder
 	public static final ResourceLocation arc_welder_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/arc_welder.png");

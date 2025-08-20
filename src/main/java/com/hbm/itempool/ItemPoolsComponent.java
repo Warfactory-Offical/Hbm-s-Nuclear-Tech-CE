@@ -138,7 +138,7 @@ public class ItemPoolsComponent {
                     weighted(ItemBlowtorch.getEmptyTool(ModItems.blowtorch), 1, 1, 4),
                     weighted(ModItems.chemistry_set, 0, 1, 1, 15),
                     weighted(ModItems.screwdriver, 0, 1, 1, 10),
-                    weighted(ModItems.nugget_mercury, 0, 1, 1, 3),
+                    weighted(ModItems.ingot_mercury, 0, 1, 1, 3),
                     weighted(ModItems.morning_glory, 0, 1, 1, 1),
                     weighted(ModItems.filter_coal, 0, 1, 1, 5),
                     weighted(ModItems.dust, 0, 1, 3, 25),

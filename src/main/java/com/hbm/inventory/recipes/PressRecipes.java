@@ -18,6 +18,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -30,13 +31,14 @@ public class PressRecipes extends SerializableRecipe {
 
 	public static HashMap<Pair<AStack, ItemStamp.StampType>, ItemStack> recipes = new HashMap();
 
+	@NotNull
 	public static ItemStack getOutput(ItemStack ingredient, ItemStack stamp) {
 
 		if(ingredient == null || stamp == null)
-			return null;
+			return ItemStack.EMPTY;
 
 		if(!(stamp.getItem() instanceof ItemStamp))
-			return null;
+			return ItemStack.EMPTY;
 
 		ItemStamp.StampType type = ((ItemStamp) stamp.getItem()).getStampType(stamp.getItem(), stamp.getItemDamage());
 
@@ -46,7 +48,7 @@ public class PressRecipes extends SerializableRecipe {
 				return recipe.getValue();
 		}
 
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	@Override

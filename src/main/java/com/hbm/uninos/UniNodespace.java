@@ -152,7 +152,7 @@ public final class UniNodespace {
                 }
             }
             if (node.net == null || !node.net.isValid()) {
-                N newNet = provider.provideNetwork();
+                N newNet = provider.get();
                 this.addActiveNet(newNet);
                 newNet.joinLink(node);
             }

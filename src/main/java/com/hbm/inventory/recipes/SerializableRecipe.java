@@ -41,6 +41,7 @@ public abstract class SerializableRecipe {
     public static void registerAllHandlers() {
         recipeHandlers.add(new AssemblerRecipes());
         recipeHandlers.add(new AmmoPressRecipes());
+        recipeHandlers.add(new AnvilRecipes());
         recipeHandlers.add(new ArcFurnaceRecipes());
         recipeHandlers.add(new ArcWelderRecipes());
         recipeHandlers.add(new BlastFurnaceRecipes());
@@ -70,6 +71,9 @@ public abstract class SerializableRecipe {
         recipeHandlers.add(new ExposureChamberRecipes());
         recipeHandlers.add(new CombinationRecipes());
         recipeHandlers.add(new WasteDrumRecipes());
+
+        //GENERIC
+        recipeHandlers.add(ChemicalPlantRecipes.INSTANCE);
     }
 
     public static void initialize() {
@@ -90,6 +94,8 @@ public abstract class SerializableRecipe {
         }
 
         MainRegistry.logger.info("Starting recipe init!");
+
+        GenericRecipes.clearPools();
 
         for (SerializableRecipe recipe : recipeHandlers) {
 

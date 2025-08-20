@@ -6,7 +6,6 @@ import com.hbm.animloader.AnimationWrapper.EndType;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
-import com.hbm.items.ModItems;
 import com.hbm.items.gear.JetpackGlider;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.ClientProxy;
@@ -53,7 +52,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector4f;
 
@@ -61,7 +60,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.Map.Entry;
-
+// TODO: completely delete it
 public class JetpackHandler {
 
 	public static final String JETPACK_NBT = "hbmJetpackAdvanced";
@@ -86,7 +85,7 @@ public class JetpackHandler {
 	public static boolean hasJetpack(EntityPlayer p){
 		ItemStack chest = p.inventory.armorInventory.get(2);
 		ItemStack stack = ArmorModHandler.pryMod(chest, 1);
-        return stack.getItem() == ModItems.jetpack_glider;
+        return false;
     }
 	
 	public static FluidTankNTM getTank(EntityPlayer p){

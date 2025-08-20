@@ -1,5 +1,6 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemMachineUpgrade.UpgradeType;
 import com.hbm.lib.Library;
 import com.hbm.lib.RefStrings;
@@ -10,14 +11,15 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -110,23 +112,13 @@ public abstract class GuiInfoContainer extends GuiContainer {
         if (provider.canProvideInfo(type, 0, false)) {
           int maxLevel = provider.getValidUpgrades().get(type);
           switch (type) {
-            case SPEED:
-              lines.add(I18nUtil.resolveKey("upgrade.gui.speed", maxLevel));
-              break;
-            case POWER:
-              lines.add(I18nUtil.resolveKey("upgrade.gui.power", maxLevel));
-              break;
-            case EFFECT:
-              lines.add(I18nUtil.resolveKey("upgrade.gui.effectiveness", maxLevel));
-              break;
-            case AFTERBURN:
-              lines.add(I18nUtil.resolveKey("upgrade.gui.afterburner", maxLevel));
-              break;
-            case OVERDRIVE:
-              lines.add(I18nUtil.resolveKey("upgrade.gui.overdrive", maxLevel));
-              break;
-            default:
-              break;
+            case SPEED -> lines.add(I18nUtil.resolveKey("upgrade.gui.speed", maxLevel));
+            case POWER -> lines.add(I18nUtil.resolveKey("upgrade.gui.power", maxLevel));
+            case EFFECT -> lines.add(I18nUtil.resolveKey("upgrade.gui.effectiveness", maxLevel));
+            case AFTERBURN -> lines.add(I18nUtil.resolveKey("upgrade.gui.afterburner", maxLevel));
+            case OVERDRIVE -> lines.add(I18nUtil.resolveKey("upgrade.gui.overdrive", maxLevel));
+            default -> {
+            }
           }
         }
       }
@@ -140,54 +132,42 @@ public abstract class GuiInfoContainer extends GuiContainer {
     Minecraft.getMinecraft().getTextureManager().bindTexture(guiUtil);
 
     switch (type) {
-      case 0:
+      case 0 ->
         // Small blue I
-        drawTexturedModalRect(x, y, 0, 0, 8, 8);
-        break;
-      case 1:
+              drawTexturedModalRect(x, y, 0, 0, 8, 8);
+      case 1 ->
         // Small green I
-        drawTexturedModalRect(x, y, 0, 8, 8, 8);
-        break;
-      case 2:
+              drawTexturedModalRect(x, y, 0, 8, 8, 8);
+      case 2 ->
         // Large blue I
-        drawTexturedModalRect(x, y, 8, 0, 16, 16);
-        break;
-      case 3:
+              drawTexturedModalRect(x, y, 8, 0, 16, 16);
+      case 3 ->
         // Large green I
-        drawTexturedModalRect(x, y, 24, 0, 16, 16);
-        break;
-      case 4:
+              drawTexturedModalRect(x, y, 24, 0, 16, 16);
+      case 4 ->
         // Small red !
-        drawTexturedModalRect(x, y, 0, 16, 8, 8);
-        break;
-      case 5:
+              drawTexturedModalRect(x, y, 0, 16, 8, 8);
+      case 5 ->
         // Small yellow !
-        drawTexturedModalRect(x, y, 0, 24, 8, 8);
-        break;
-      case 6:
+              drawTexturedModalRect(x, y, 0, 24, 8, 8);
+      case 6 ->
         // Large red !
-        drawTexturedModalRect(x, y, 8, 16, 16, 16);
-        break;
-      case 7:
+              drawTexturedModalRect(x, y, 8, 16, 16, 16);
+      case 7 ->
         // Large yellow !
-        drawTexturedModalRect(x, y, 24, 16, 16, 16);
-        break;
-      case 8:
+              drawTexturedModalRect(x, y, 24, 16, 16, 16);
+      case 8 ->
         // Small blue *
-        drawTexturedModalRect(x, y, 0, 32, 8, 8);
-        break;
-      case 9:
+              drawTexturedModalRect(x, y, 0, 32, 8, 8);
+      case 9 ->
         // Small grey *
-        drawTexturedModalRect(x, y, 0, 40, 8, 8);
-        break;
-      case 10:
+              drawTexturedModalRect(x, y, 0, 40, 8, 8);
+      case 10 ->
         // Large blue *
-        drawTexturedModalRect(x, y, 8, 32, 16, 16);
-        break;
-      case 11:
+              drawTexturedModalRect(x, y, 8, 32, 16, 16);
+      case 11 ->
         // Large grey *
-        drawTexturedModalRect(x, y, 24, 32, 16, 16);
-        break;
+              drawTexturedModalRect(x, y, 24, 32, 16, 16);
     }
   }
 
@@ -337,6 +317,41 @@ public abstract class GuiInfoContainer extends GuiContainer {
     GlStateManager.enableDepth();
     RenderHelper.enableStandardItemLighting();
     GlStateManager.enableRescaleNormal();
+  }
+
+  /** Draws item with label, excludes all the GL state setup */
+  protected void drawItemStack(ItemStack stack, int x, int y, String label) {
+    GL11.glTranslatef(0.0F, 0.0F, 32.0F);
+    this.zLevel = 200.0F;
+    itemRender.zLevel = 200.0F;
+    FontRenderer font;
+    if(stack != null) {
+      font = stack.getItem().getFontRenderer(stack);
+      if (font == null) font = fontRenderer;
+      itemRender.renderItemAndEffectIntoGUI(stack, x, y);
+    itemRender.renderItemOverlayIntoGUI(font, stack, x, y, label);
+    }
+    this.zLevel = 0.0F;
+    itemRender.zLevel = 0.0F;
+  }
+
+  public static final ItemStack TEMPLATE_FOLDER = new ItemStack(ModItems.template_folder);
+
+  /** Standardsized item rendering from GUIScreenRecipeSelector */
+  public void renderItem(ItemStack stack, int x, int y) {
+    renderItem(stack, x, y, 100F);
+  }
+
+  public void renderItem(ItemStack stack, int x, int y, float layer) {
+    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+    RenderHelper.enableGUIStandardItemLighting();
+    OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) 240, (float) 240);
+    GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+    itemRender.zLevel = layer;
+    itemRender.renderItemAndEffectIntoGUI(stack, guiLeft + x, guiTop + y);
+    itemRender.zLevel = 0.0F;
+    GL11.glEnable(GL11.GL_ALPHA_TEST);
+    GL11.glDisable(GL11.GL_LIGHTING);
   }
 
   protected boolean checkClick(int x, int y, int left, int top, int sizeX, int sizeY) {

@@ -2,8 +2,8 @@ package com.hbm.api.energymk2;
 
 import com.hbm.lib.DirPos;
 import com.hbm.uninos.GenNode;
+import com.hbm.uninos.INetworkProvider;
 import com.hbm.uninos.UniNodespace;
-import com.hbm.uninos.networkproviders.PowerNetProvider;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -16,7 +16,7 @@ import net.minecraft.world.World;
  */
 public class Nodespace {
 
-    public static final PowerNetProvider THE_POWER_PROVIDER = new PowerNetProvider();
+    public static final INetworkProvider<PowerNetMK2> THE_POWER_PROVIDER = PowerNetMK2::new;
 
     @Deprecated public static PowerNode getNode(World world, BlockPos pos) {
         return (PowerNode) UniNodespace.getNode(world, pos, THE_POWER_PROVIDER);

@@ -1,11 +1,13 @@
 package com.hbm.tileentity.machine;
 
+import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.MachineNukeFurnace;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.container.ContainerNukeFurnace;
 import com.hbm.inventory.gui.GUINukeFurnace;
 import com.hbm.tileentity.IGUIProvider;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -15,6 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
@@ -265,5 +268,13 @@ public class TileEntityNukeFurnace extends TileEntity implements ITickable, IGUI
 	@SideOnly(Side.CLIENT)
 	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		return new GUINukeFurnace(player.inventory, this);
+	}
+
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
+		boolean isSwapBetweenVariants = (oldState.getBlock() == ModBlocks.machine_nuke_furnace_off && newState.getBlock() == ModBlocks.machine_nuke_furnace_on) ||
+				(oldState.getBlock() == ModBlocks.machine_nuke_furnace_on  && newState.getBlock() == ModBlocks.machine_nuke_furnace_off);
+		if (isSwapBetweenVariants) return false;
+		return super.shouldRefresh(world, pos, oldState, newState);
 	}
 }

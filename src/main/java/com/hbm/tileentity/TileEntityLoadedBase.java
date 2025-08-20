@@ -52,11 +52,21 @@ public class TileEntityLoadedBase extends TileEntity implements ILoadedTile, IBu
 	}
 	private ByteBuf lastPackedBuf;
 
+	/**
+	 * {@inheritDoc}
+	 * only call super.serialize() on noisy machines. It has no effect on others.<br>
+	 */
 	@Override
 	public void serialize(ByteBuf buf) {
 		buf.writeBoolean(muffled);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * only call super.deserialize() on noisy machines. It has no effect on others.<br>
+	 * This happens on the <strong>network thread</strong>!
+	 * Direct List modification is guaranteed to produce a CME.<br>
+	 */
 	@Override
 	public void deserialize(ByteBuf buf) {
 		this.muffled = buf.readBoolean();

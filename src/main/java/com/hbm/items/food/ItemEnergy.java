@@ -1,5 +1,6 @@
 package com.hbm.items.food;
 
+import com.hbm.capability.HbmLivingProps;
 import com.hbm.config.VersatileConfig;
 import com.hbm.explosion.ExplosionLarge;
 import com.hbm.items.ModItems;
@@ -26,6 +27,10 @@ import java.util.List;
 
 public class ItemEnergy extends Item {
 
+	private Item container = null;
+	private Item cap = null;
+	private boolean requiresOpener = false;
+
 	public ItemEnergy(String s) {
 		this.setTranslationKey(s);
 		this.setRegistryName(s);
@@ -33,10 +38,26 @@ public class ItemEnergy extends Item {
 		ModItems.ALL_ITEMS.add(this);
 	}
 
+	public ItemEnergy makeCan() {
+		this.container = ModItems.can_empty;
+		this.cap = ModItems.ring_pull;
+		this.requiresOpener = false;
+		this.setContainerItem(this.container);
+		return this;
+	}
+
+	public ItemEnergy makeBottle(Item bottle, Item cap) {
+		this.container = bottle;
+		this.cap = cap;
+		this.requiresOpener = true;
+		this.setContainerItem(this.container);
+		this.setCreativeTab(MainRegistry.consumableTab);
+		return this;
+	}
+
 	@Override
 	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entity) {
-		if(!worldIn.isRemote && entity instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) entity;
+		if(!worldIn.isRemote && entity instanceof EntityPlayer player) {
 			if(player instanceof FakePlayer) {
         		worldIn.newExplosion(player, player.posX, player.posY, player.posZ, 5F, true, true);
         		return super.onItemUseFinish(stack, worldIn, entity);
@@ -164,6 +185,17 @@ public class ItemEnergy extends Item {
                 	Library.addToInventoryOrDrop(player, new ItemStack(ModItems.bottle_empty));
                 }
         	}
+
+			if(this == ModItems.coffee) {
+				player.heal(10);
+				player.addPotionEffect(new PotionEffect(MobEffects.SPEED, 60 * 20, 2));
+			}
+			if(this == ModItems.coffee_radium) {
+				player.heal(10);
+				player.addPotionEffect(new PotionEffect(MobEffects.SPEED, 60 * 20, 2));
+				HbmLivingProps.incrementRadiation(player, 500F);
+				//player.triggerAchievement(MainRegistry.achRadium);
+			}
 			
 			if(this == ModItems.bottle2_korl)
         	{
@@ -291,23 +323,17 @@ public class ItemEnergy extends Item {
 	public static boolean hasOpener(EntityPlayer player){
 		ItemStack stackR = player.getHeldItemMainhand();
 		ItemStack stackL = player.getHeldItemOffhand();
-		if(stackR == null || stackL == null) return false;
-		if(stackR.getItem() == ModItems.bottle_opener || stackL.getItem() == ModItems.bottle_opener){
-			return true;
-		}
-		return false;
+		if(stackR.isEmpty() || stackL.isEmpty()) return false;
+		return stackR.getItem() == ModItems.bottle_opener || stackL.getItem() == ModItems.bottle_opener;
 	}	
 
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer player, EnumHand hand) {
-		if(!(this == ModItems.can_creature || this == ModItems.can_mrsugar || this == ModItems.can_overcharge || this == ModItems.can_redbomb || this == ModItems.can_smart || this == ModItems.chocolate_milk || 
-				this == ModItems.can_luna || this == ModItems.can_bepis || this == ModItems.can_breen))
-			
-			if(!hasOpener(player))
-				return ActionResult.<ItemStack> newResult(EnumActionResult.PASS, player.getHeldItem(hand));
+		if(this.requiresOpener && !hasOpener(player))
+			return ActionResult.newResult(EnumActionResult.PASS, player.getHeldItem(hand));
 
 		player.setActiveHand(hand);
-		return ActionResult.<ItemStack> newResult(EnumActionResult.SUCCESS, player.getHeldItem(hand));
+		return ActionResult.newResult(EnumActionResult.SUCCESS, player.getHeldItem(hand));
 	}
 
 	@Override

@@ -108,32 +108,34 @@ public class ItemConveyorWand extends Item implements ILookOverlay {
         for (int loopDepth = 1; loopDepth <= max; loopDepth++) {
             if (!routeWorld.getBlockState(currentPos).getBlock().isReplaceable(routeWorld, currentPos)) return -1;
 
-            Block placeBlock = getConveyorForDirection(type, currentDir);
             BlockPos nextPos = currentPos.offset(currentDir);
             boolean notAtTarget = (shouldTurnToTarget ? taxiDistance(nextPos, pos2) : taxiDistance(currentPos, targetPos)) > 0;
             boolean willBeObstructed = notAtTarget && !routeWorld.getBlockState(nextPos).getBlock().isReplaceable(routeWorld, nextPos);
             boolean shouldTurn = (taxiDistance(nextPos, targetPos) >= taxiDistance(currentPos, targetPos) && notAtTarget) || willBeObstructed;
 
             EnumFacing nextDir = currentDir;
+            if (shouldTurn) {
+                nextDir = getTargetDirection(currentPos, shouldTurnToTarget ? pos2 : targetPos, targetPos, currentDir, willBeObstructed, hasVertical);
+            }
+            EnumFacing placeDir = currentDir;
+            if (hasVertical && currentDir.getAxis().isHorizontal() && nextDir.getAxis().isVertical()) {
+                placeDir = nextDir;
+            }
+
+            Block placeBlock = getConveyorForDirection(type, placeDir);
             IBlockState placeState;
 
             if (placeBlock instanceof BlockConveyorBendable) {
                 placeState = placeBlock.getDefaultState().withProperty(BlockConveyor.FACING, currentDir.getOpposite());
-                if (shouldTurn) {
-                    nextDir = getTargetDirection(currentPos, shouldTurnToTarget ? pos2 : targetPos, targetPos, currentDir, willBeObstructed,
-                            hasVertical);
-                    if (nextDir != currentDir) {
-                        if (currentDir.rotateY() == nextDir)
-                            placeState = placeState.withProperty(BlockConveyorBendable.CURVE, BlockConveyorBendable.CurveType.RIGHT);
-                        else if (currentDir.rotateYCCW() == nextDir)
-                            placeState = placeState.withProperty(BlockConveyorBendable.CURVE, BlockConveyorBendable.CurveType.LEFT);
-                    }
+                if (nextDir != currentDir) {
+                    if (currentDir.rotateY() == nextDir)
+                        placeState = placeState.withProperty(BlockConveyorBendable.CURVE, BlockConveyorBendable.CurveType.RIGHT);
+                    else if (currentDir.rotateYCCW() == nextDir)
+                        placeState = placeState.withProperty(BlockConveyorBendable.CURVE, BlockConveyorBendable.CurveType.LEFT);
                 }
             } else {
                 EnumFacing facing = side2.getAxis().isVertical() ? horDir.getOpposite() : side2;
                 placeState = placeBlock.getDefaultState().withProperty(BlockConveyor.FACING, facing);
-                if (shouldTurn) nextDir =
-                        getTargetDirection(currentPos, shouldTurnToTarget ? pos2 : targetPos, targetPos, currentDir, willBeObstructed, hasVertical);
             }
 
             if (buildWorld instanceof World) ((World) buildWorld).setBlockState(currentPos.subtract(boxOrigin), placeState, 3);
@@ -199,16 +201,13 @@ public class ItemConveyorWand extends Item implements ILookOverlay {
     @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-            for (String s : I18nUtil.resolveKeyArray(this.getTranslationKey(stack) + ".desc")) {
-                tooltip.add(TextFormatting.YELLOW + s);
-            }
+            tooltip.add(TextFormatting.YELLOW + I18nUtil.resolveKey("item.conveyor_wand.desc"));
             if (hasSnakesAndLadders(getType(stack))) {
-                tooltip.add(TextFormatting.AQUA + I18nUtil.resolveKey(this.getTranslationKey(stack) + ".vertical.desc"));
+                tooltip.add(TextFormatting.AQUA + I18nUtil.resolveKey("item.conveyor_wand.vertical.desc"));
             }
         } else {
             tooltip.add(
-                    TextFormatting.DARK_GRAY + "" + TextFormatting.ITALIC + "Hold <" + TextFormatting.YELLOW + TextFormatting.ITALIC + "LSHIFT" +
-                    TextFormatting.DARK_GRAY + TextFormatting.ITALIC + "> to display more info");
+                    I18nUtil.resolveKey("desc.misc.lshift"));
         }
     }
 

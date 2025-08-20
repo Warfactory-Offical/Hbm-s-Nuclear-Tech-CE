@@ -117,6 +117,15 @@ public class ItemEnums {
     ATOMIC_CLOCK,
   }
 
+  public enum EnumDepletedRTGMaterial {
+    BISMUTH,
+    MERCURY,
+    NEPTUNIUM,
+    LEAD,
+    ZIRCONIUM,
+    NICKEL;
+  }
+
   public enum EnumPartType {
     PISTON_PNEUMATIC("piston_pneumatic"),
     PISTON_HYDRAULIC("piston_hydraulic"),
@@ -130,5 +139,47 @@ public class ItemEnums {
     EnumPartType(String texName) {
       this.texName = texName;
     }
+  }
+
+  public static enum ScrapType {
+    //GENERAL BOARD
+    BOARD_BLANK,
+    BOARD_TRANSISTOR,
+    BOARD_CONVERTER,
+
+    //CHIPSET
+    BRIDGE_NORTH,
+    BRIDGE_SOUTH,
+    BRIDGE_IO,
+    BRIDGE_BUS,
+    BRIDGE_CHIPSET,
+    BRIDGE_CMOS,
+    BRIDGE_BIOS,
+
+    //CPU
+    CPU_REGISTER,
+    CPU_CLOCK,
+    CPU_LOGIC,
+    CPU_CACHE,
+    CPU_EXT,
+    CPU_SOCKET,
+
+    //RAM
+    MEM_SOCKET,
+    MEM_16K_A,
+    MEM_16K_B,
+    MEM_16K_C,
+    MEM_16K_D,
+
+    //EXTENSION CARD
+    CARD_BOARD,
+    CARD_PROCESSOR
+  }
+
+  public static enum CircuitComponentType {
+    CHIPSET,
+    CPU,
+    RAM,
+    CARD
   }
 }

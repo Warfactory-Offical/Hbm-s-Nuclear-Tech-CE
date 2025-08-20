@@ -110,7 +110,7 @@ public class GUIMachineArcFurnaceLarge extends GuiInfoContainer {
             int hex = sta.material.moltenColor;
             //hex = 0xC18336;
             Color color = new Color(hex);
-            GL11.glColor3f(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
+            GlStateManager.color(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
             drawTexturedModalRect(guiLeft + x, guiTop + y - targetHeight, 208, 70 - targetHeight, 16, targetHeight - lastHeight);
             GlStateManager.enableBlend();
             GlStateManager.color(1F, 1F, 1F, 0.3F);

@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformT
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.item.ItemStack;
-@AutoRegister(item = "canister_generic")
+@AutoRegister(item = "canister_full")
 public class FluidCanisterRender extends TileEntityItemStackRenderer {
 
 	public static final FluidCanisterRender INSTANCE = new FluidCanisterRender();

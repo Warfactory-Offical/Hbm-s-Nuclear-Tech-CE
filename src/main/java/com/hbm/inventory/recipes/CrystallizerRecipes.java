@@ -86,8 +86,8 @@ public class CrystallizerRecipes extends SerializableRecipe {
 
 		registerRecipe(KEY_SAND,			new CrystallizerRecipe(ModItems.ingot_fiberglass, utilityTime).prod(0.15F));
 		registerRecipe(SI.ingot(),			new CrystallizerRecipe(new ItemStack(Items.QUARTZ, 2), utilityTime).prod(0.1F), new FluidStack(Fluids.OXYGEN, 250));
-		registerRecipe(REDSTONE.block(),	new CrystallizerRecipe(new ItemStack(ModItems.nugget_mercury, 9), baseTime).prod(0.25F));
-		registerRecipe(CINNABAR.crystal(),	new CrystallizerRecipe(new ItemStack(ModItems.nugget_mercury, 27), baseTime).prod(0.25F));
+		registerRecipe(REDSTONE.block(),	new CrystallizerRecipe(new ItemStack(ModItems.ingot_mercury, 9), baseTime).prod(0.25F));
+		registerRecipe(CINNABAR.crystal(),	new CrystallizerRecipe(new ItemStack(ModItems.ingot_mercury, 27), baseTime).prod(0.25F));
 		registerRecipe(BORAX.dust(),		new CrystallizerRecipe(new ItemStack(ModItems.powder_boron_tiny, 3), baseTime).prod(0.25F), sulfur);
 		registerRecipe(COAL.block(),		new CrystallizerRecipe(ModBlocks.block_graphite, baseTime));
 

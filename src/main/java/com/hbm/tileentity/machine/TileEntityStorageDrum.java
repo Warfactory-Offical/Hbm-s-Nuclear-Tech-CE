@@ -1,7 +1,6 @@
 package com.hbm.tileentity.machine;
 
-import com.hbm.api.fluid.IFluidStandardTransceiver;
-import com.hbm.capability.NTMFluidHandlerWrapper;
+import com.hbm.api.fluid.IFluidStandardSender;
 import com.hbm.hazard.HazardSystem;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.recipes.StorageDrumRecipes;
@@ -23,16 +22,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
-
 @AutoRegister
-public class TileEntityStorageDrum extends TileEntityMachineBase implements ITickable, IFluidStandardTransceiver, IGUIProvider {
+public class TileEntityStorageDrum extends TileEntityMachineBase implements ITickable, IFluidStandardSender, IGUIProvider {
 
 	public FluidTankNTM[] tanks;
 	private static final int[] slots_arr = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 };
@@ -41,7 +36,7 @@ public class TileEntityStorageDrum extends TileEntityMachineBase implements ITic
 	private static final float decayRate = 0.9965402628F; //10s Halflife
 
 	public TileEntityStorageDrum() {
-		super(24, 1);
+		super(24, 1, true, false);
 		tanks = new FluidTankNTM[2];
 		tanks[0] = new FluidTankNTM(Fluids.WASTEFLUID, 16000);
 		tanks[1] = new FluidTankNTM(Fluids.WASTEGAS, 16000);
@@ -179,31 +174,8 @@ public class TileEntityStorageDrum extends TileEntityMachineBase implements ITic
 	}
 
 	@Override
-	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return true;
-		}
-		return super.hasCapability(capability, facing);
-	}
-
-	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(
-					new NTMFluidHandlerWrapper(this.getReceivingTanks(), this.getSendingTanks())
-			);
-		}
-		return super.getCapability(capability, facing);
-	}
-
-	@Override
 	public FluidTankNTM[] getSendingTanks() {
 		return tanks;
-	}
-
-	@Override
-	public FluidTankNTM[] getReceivingTanks() {
-		return null;
 	}
 
 	@Override

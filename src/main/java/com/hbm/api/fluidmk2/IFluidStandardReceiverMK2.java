@@ -2,6 +2,7 @@ package com.hbm.api.fluidmk2;
 
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * IFluidReceiverMK2 with standard implementation for transfer and demand getter.
@@ -9,7 +10,7 @@ import com.hbm.inventory.fluid.tank.FluidTankNTM;
  */
 public interface IFluidStandardReceiverMK2 extends IFluidReceiverMK2 {
 
-    FluidTankNTM[] getReceivingTanks();
+    @NotNull FluidTankNTM[] getReceivingTanks();
 
     @Override
     default long getDemand(FluidType type, int pressure) {

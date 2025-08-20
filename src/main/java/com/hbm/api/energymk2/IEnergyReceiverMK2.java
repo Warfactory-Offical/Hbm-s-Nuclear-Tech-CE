@@ -1,6 +1,7 @@
 package com.hbm.api.energymk2;
 
 import com.hbm.handler.threading.PacketThreading;
+import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.util.Compat;
@@ -44,6 +45,8 @@ public interface IEnergyReceiverMK2 extends IEnergyHandlerMK2 {
         // Return the maximum power capacity as the default reception speed
         return this.getMaxPower();
     }
+
+    public default void trySubscribe(World world, DirPos pos) { trySubscribe(world, pos.getPos(), pos.getDir()); }
 
     default void trySubscribe(World world, BlockPos pos, ForgeDirection dir) {
         trySubscribe(world, pos.getX(), pos.getY(), pos.getZ(), dir);

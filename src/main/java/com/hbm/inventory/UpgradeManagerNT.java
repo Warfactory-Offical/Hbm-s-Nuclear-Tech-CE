@@ -72,23 +72,11 @@ public class UpgradeManagerNT {
                     return;
 
                 if (upgradable.getValidUpgrades().containsKey(item.type)) { // Check if upgrade can even be accepted by the machine.
-                    if (item.type.mutex) {
-                        if (mutexType == null) {
-                            upgrades.put(item.type, 1);
-                            mutexType = item.type;
-                        } else if(item.type.ordinal() > mutexType.ordinal()) {
-                            upgrades.remove(mutexType);
-                            upgrades.put(item.type, 1);
-                            mutexType = item.type;
-                        }
-                    } else {
-
-                        Integer levelBefore = upgrades.get(item.type);
-                        int upgradeLevel = (levelBefore == null ? 0 : levelBefore);
-                        upgradeLevel += item.tier;
-                        // Add additional check to make sure it doesn't go over the max.
-                        upgrades.put(item.type, Math.min(upgradeLevel, upgradable.getValidUpgrades().get(item.type)));
-                    }
+                    Integer levelBefore = upgrades.get(item.type);
+                    int upgradeLevel = (levelBefore == null ? 0 : levelBefore);
+                    upgradeLevel += item.tier;
+                    // Add additional check to make sure it doesn't go over the max.
+                    upgrades.put(item.type, Math.min(upgradeLevel, upgradable.getValidUpgrades().get(item.type)));
                 }
             }
         }

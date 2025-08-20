@@ -2,14 +2,12 @@ package com.hbm.items.gear;
 
 import com.hbm.capability.HbmCapability;
 import com.hbm.capability.HbmCapability.IHBMData;
-import com.hbm.handler.HbmKeybinds.EnumKeybind;
+import com.hbm.handler.ArmorUtil;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.items.armor.JetpackFueledBase;
 import com.hbm.lib.HBMSoundHandler;
-import com.hbm.main.MainRegistry;
-import com.hbm.packet.toclient.AuxParticlePacketNT;
-import com.hbm.packet.KeybindPacket;
 import com.hbm.packet.PacketDispatcher;
+import com.hbm.packet.toclient.AuxParticlePacketNT;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -43,20 +41,7 @@ public class JetpackBreak extends JetpackFueledBase {
 	
 	public void onArmorTick(World world, EntityPlayer player, ItemStack stack) {
 		IHBMData props = HbmCapability.getData(player);
-		if(world.isRemote) {
-
-			if(player == MainRegistry.proxy.me() && props.isJetpackActive()) {
-
-				boolean last = props.getKeyPressed(EnumKeybind.JETPACK);
-				boolean current = MainRegistry.proxy.getIsKeyPressed(EnumKeybind.JETPACK);
-
-				if(last != current) {
-					PacketDispatcher.wrapper.sendToServer(new KeybindPacket(EnumKeybind.JETPACK, current));
-					props.setKeyPressed(EnumKeybind.JETPACK, current);
-				}
-			}
-
-		} else {
+		if(!world.isRemote) {
 
 			if(getFuel(stack) > 0 && (props.isJetpackActive() || (!player.onGround && !player.isSneaking() && props.getEnableBackpack()))) {
 
@@ -92,6 +77,8 @@ public class JetpackBreak extends JetpackFueledBase {
 				world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.flamethrowerShoot, SoundCategory.PLAYERS, 0.25F, 1.5F);
 				this.useUpFuel(player, stack, 10);
 			}
+
+			ArmorUtil.resetFlightTime(player);
 		}
 	}
 }

@@ -32,7 +32,7 @@ public class DFCRecipes {
 		
 		DFCRecipes.setRecipe(100000L, ModItems.marshmallow, new ItemStack(ModItems.marshmallow_roasted));
 		
-		DFCRecipes.setRecipe(2000000L, REDSTONE.dust(), new ItemStack(ModItems.nugget_mercury));
+		DFCRecipes.setRecipe(2000000L, REDSTONE.dust(), new ItemStack(ModItems.ingot_mercury));
 		DFCRecipes.setRecipe(2000000L, REDSTONE.block(), new ItemStack(ModItems.bottle_mercury));
 		
 		DFCRecipes.setRecipe(10000000L, W.dust(), new ItemStack(ModItems.powder_magnetized_tungsten));

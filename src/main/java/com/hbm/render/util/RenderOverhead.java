@@ -22,7 +22,9 @@ import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
+import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL14;
 
 import java.util.*;
 
@@ -454,43 +456,41 @@ public class RenderOverhead {
 		Minecraft mc = Minecraft.getMinecraft();
 		EntityPlayer player = mc.player;
 		if (player == null) return;
-		double pX = player.lastTickPosX + (player.posX - player.lastTickPosX) * partialTicks;
-		double pY = player.lastTickPosY + (player.posY - player.lastTickPosY) * partialTicks;
-		double pZ = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * partialTicks;
-		BlockRendererDispatcher dispatcher = mc.getBlockRendererDispatcher();
-		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder buffer = tessellator.getBuffer();
+		final double pX = player.lastTickPosX + (player.posX - player.lastTickPosX) * partialTicks;
+		final double pY = player.lastTickPosY + (player.posY - player.lastTickPosY) * partialTicks;
+		final double pZ = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * partialTicks;
+		final float r = actionPreviewSuccess ? 0.5F : 1.0F;
+		final float g = actionPreviewSuccess ? 1.0F : 0.5F;
+		final float b = actionPreviewSuccess ? 1.0F : 0.5F;
+		final float a = 0.6F;
 		RenderHelper.disableStandardItemLighting();
 		GlStateManager.pushMatrix();
 		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		if (actionPreviewSuccess) { // FIXME: This isn't working at all
-			GlStateManager.color(0.5F, 1.0F, 1.0F, 0.6F);
-		} else {
-			GlStateManager.color(1.0F, 0.5F, 0.5F, 0.6F);
-		}
+		GL14.glBlendColor(r * a, g * a, b * a, a);
+		GlStateManager.tryBlendFuncSeparate(GL11.GL_CONSTANT_COLOR, GL11.GL_ONE_MINUS_CONSTANT_ALPHA, GL11.GL_CONSTANT_ALPHA, GL11.GL_ONE_MINUS_CONSTANT_ALPHA);
 		mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder buffer = tessellator.getBuffer();
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
 		buffer.setTranslation(offsetX - pX, offsetY - pY, offsetZ - pZ);
+		BlockRendererDispatcher dispatcher = mc.getBlockRendererDispatcher();
+
 		for (int ix = 0; ix < actionPreviewWorld.sizeX; ix++) {
 			for (int iy = 0; iy < actionPreviewWorld.sizeY; iy++) {
 				for (int iz = 0; iz < actionPreviewWorld.sizeZ; iz++) {
 					BlockPos pos = new BlockPos(ix, iy, iz);
 					IBlockState state = actionPreviewWorld.getBlockState(pos);
-					if (state.getRenderType() != EnumBlockRenderType.INVISIBLE) {
-						try {
-							dispatcher.renderBlock(state, pos, actionPreviewWorld, buffer);
-						} catch (Exception ignored) {
-						}
-					}
+					if (state.getRenderType() == EnumBlockRenderType.INVISIBLE) continue;
+					dispatcher.renderBlock(state, pos, actionPreviewWorld, buffer);
 				}
 			}
 		}
 
 		buffer.setTranslation(0, 0, 0);
 		tessellator.draw();
+		GL14.glBlendColor(0F, 0F, 0F, 1F);
 		GlStateManager.disableBlend();
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1F, 1F, 1F, 1F);
 		GlStateManager.popMatrix();
 	}
 }

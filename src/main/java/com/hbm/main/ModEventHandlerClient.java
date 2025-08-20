@@ -140,6 +140,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
@@ -266,7 +267,7 @@ public class ModEventHandlerClient {
         FluidType[] order = Fluids.getInNiceOrder();
         for (i = 0; i < order.length; i++) {
             if (!order[i].hasNoID()) {
-                ModelLoader.setCustomModelResourceLocation(ModItems.forge_fluid_identifier, order[i].getID(),
+                ModelLoader.setCustomModelResourceLocation(ModItems.fluid_identifier, order[i].getID(),
                         ItemForgeFluidIdentifier.identifierModel);
                 if (order[i].getContainer(Fluids.CD_Canister.class) != null) {
 //                    ModelLoader.setCustomModelResourceLocation(ModItems.canister_generic, order[i].getID(),
@@ -415,7 +416,7 @@ public class ModEventHandlerClient {
             ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
         } else if (item instanceof IHasCustomModel) {
             ModelLoader.setCustomModelResourceLocation(item, meta, ((IHasCustomModel) item).getResourceLocation());
-        } else if (item instanceof IDynamicModels) { // we are literally registering them manually, why do it twice?..
+        } else if (item instanceof IDynamicModels dyn && dyn.INSTANCES.contains(item)) { // we are literally registering them manually, why do it twice?..
         } else {
             ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(item.getRegistryName(), "inventory"));
         }
@@ -533,13 +534,12 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         swapModels(ModItems.detonator_laser, reg);
         swapModels(ModItems.boltgun, reg);
 
-        swapModels(ModItems.forge_fluid_identifier, reg);
+        swapModels(ModItems.fluid_identifier, reg);
         swapModels(ModItems.fluid_barrel_full, reg);
         swapModels(ModItems.fluid_tank_full, reg);
         swapModels(ModItems.fluid_tank_lead_full, reg);
 
         swapModels(ModItems.ammo_himars, reg);
-        swapModels(ModItems.jetpack_glider, reg);
         swapModels(ModItems.gear_large, reg);
 
         for(Item item: ItemGunBaseNT.INSTANCES) {
@@ -591,7 +591,7 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         evt.getItemColors().registerItemColorHandler(fluidMetaHandler, ModItems.fluid_tank_full);
         evt.getItemColors().registerItemColorHandler(fluidMetaHandler, ModItems.fluid_tank_lead_full);
         evt.getItemColors().registerItemColorHandler(fluidMetaHandler, ModItems.fluid_barrel_full);
-        evt.getItemColors().registerItemColorHandler(fluidMetaHandler, ModItems.forge_fluid_identifier);
+        evt.getItemColors().registerItemColorHandler(fluidMetaHandler, ModItems.fluid_identifier);
         evt.getItemColors().registerItemColorHandler((stack, tintIndex) -> {
             if (tintIndex == 0) {
                 return ItemFluidIcon.getFluidType(stack).getColor();
@@ -615,6 +615,7 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         ItemGasCanister.registerColorHandler(evt);
         ItemAutogen.registerColorHandlers(evt);
         IDynamicModels.registerColorHandlers(evt);
+        ItemChemicalDye.registerColorHandlers(evt);
     }
 
     @SubscribeEvent
@@ -810,6 +811,8 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         map.registerSprite(new ResourceLocation(RefStrings.MODID, "items/fluid_barrel_overlay"));
         map.registerSprite(new ResourceLocation(RefStrings.MODID, "items/fluid_tank_overlay"));
         map.registerSprite(new ResourceLocation(RefStrings.MODID, "items/fluid_tank_lead_overlay"));
+        map.registerSprite(new ResourceLocation(RefStrings.MODID, "items/chemical_dye_overlay"));
+        map.registerSprite(new ResourceLocation(RefStrings.MODID, "items/crayon_overlay"));
     }
 
     @SubscribeEvent
@@ -1043,7 +1046,7 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
             }
         }
 
-        if(Keyboard.isKeyDown(Keyboard.KEY_TAB) && Minecraft.getMinecraft().currentScreen != null) {
+        if(Keyboard.isKeyDown(HbmKeybinds.qmaw.getKeyCode()) && Minecraft.getMinecraft().currentScreen != null) {
 
             QuickManualAndWiki qmaw = qmawTimestamp > System.currentTimeMillis() - 100 ? lastQMAW : null;
 
@@ -1477,6 +1480,7 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         if (!(Minecraft.getMinecraft().player.getHeldItemMainhand().getItem() instanceof IPostRender || Minecraft.getMinecraft().player.getHeldItemOffhand().getItem() instanceof IPostRender)) {
             HbmShaderManager2.postProcess();
         }
+        RenderOverhead.renderActionPreview(evt.getPartialTicks());
     }
 
     @SubscribeEvent
@@ -1844,6 +1848,11 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
     @SubscribeEvent
     public void clickHandler(MouseEvent event) {
         EntityPlayer player = Minecraft.getMinecraft().player;
+        /// OVERLAP HANDLING ///
+        HbmKeybinds.handleOverlap(event.isButtonstate(), event.getButton() - 100);
+
+        /// KEYBIND PROPS ///
+        HbmKeybinds.handleProps(event.isButtonstate(), event.getButton() - 100);
         if (event.getButton() == 1 && !event.isButtonstate())
             ItemSwordCutter.canClick = true;
 
@@ -1852,7 +1861,7 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         if (player.getHeldItem(EnumHand.MAIN_HAND) != null && player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof ItemGunBase ||
                 player.getHeldItem(EnumHand.MAIN_HAND) != null && player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof ItemGunBaseNT) {
 
-            if (event.getButton() == 0)
+            if (event.getButton() >= 0 && event.getButton() <= 2)
                 event.setCanceled(true);
             Item item = player.getHeldItem(EnumHand.MAIN_HAND).getItem();
             if(item instanceof ItemGunBase weapon) {
@@ -2078,7 +2087,7 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         try {
             QuickManualAndWiki qmaw = QMAWLoader.triggers.get(comp);
             if(qmaw != null) {
-                list.add(TextFormatting.GREEN + I18nUtil.resolveKey("qmaw.tab"));
+                list.add(TextFormatting.GREEN + I18nUtil.resolveKey("qmaw.tab", Keyboard.getKeyName(HbmKeybinds.qmaw.getKeyCode())));
                 lastQMAW = qmaw;
                 qmawTimestamp = System.currentTimeMillis();
             }
@@ -2128,8 +2137,24 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
     }
 
     @SubscribeEvent
-    public void onRenderWorldLast(RenderWorldLastEvent event) {
-        RenderOverhead.renderActionPreview(event.getPartialTicks());
+    public void worldTick(TickEvent.WorldTickEvent event) {
+
+        EntityPlayer player = Minecraft.getMinecraft().player;
+        // TODO
+        /*if(player != null && player.ridingEntity instanceof EntityRailCarRidable && player instanceof EntityClientPlayerMP) {
+            EntityRailCarRidable train = (EntityRailCarRidable) player.ridingEntity;
+            EntityClientPlayerMP client = (EntityClientPlayerMP) player;
+
+            //mojank compensation, because apparently the "this makes the render work" method also determines the fucking input
+            if(!train.shouldRiderSit()) {
+                client.sendQueue.addToSendQueue(new C03PacketPlayer.C05PacketPlayerLook(client.rotationYaw, client.rotationPitch, client.onGround));
+                client.sendQueue.addToSendQueue(new C0CPacketInput(client.moveStrafing, client.moveForward, client.movementInput.jump, client.movementInput.sneak));
+            }
+        }*/
+
+        if(event.phase == event.phase.END) {
+            ItemCustomLore.updateSystem();
+        }
     }
 
     private void wrapModel(ModelBakeEvent event, ModelResourceLocation location) {

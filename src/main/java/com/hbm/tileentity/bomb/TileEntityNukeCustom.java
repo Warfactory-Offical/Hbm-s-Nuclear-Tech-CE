@@ -92,9 +92,9 @@ public class TileEntityNukeCustom extends TileEntity implements ITickable, IGUIP
 		entries.put(new ComparableStack(ModItems.ball_dynamite), new CustomNukeEntry(EnumBombType.TNT, 4F));
 		entries.put(new ComparableStack(ModItems.ball_tnt), new CustomNukeEntry(EnumBombType.TNT, 6F));
 		entries.put(new ComparableStack(ModBlocks.det_charge), new CustomNukeEntry(EnumBombType.TNT, 15F));
-		entries.put(new ComparableStack(ModItems.canister_generic, 1, Fluids.DIESEL.getID()), new CustomNukeEntry(EnumBombType.TNT, 0.5F));
+		entries.put(new ComparableStack(ModItems.canister_full, 1, Fluids.DIESEL.getID()), new CustomNukeEntry(EnumBombType.TNT, 0.5F));
 		entries.put(new ComparableStack(ModItems.canister_napalm), new CustomNukeEntry(EnumBombType.TNT, 2.5F));
-		entries.put(new ComparableStack(ModItems.canister_generic, 1, Fluids.KEROSENE.getID()), new CustomNukeEntry(EnumBombType.TNT, 0.8F));
+		entries.put(new ComparableStack(ModItems.canister_full, 1, Fluids.KEROSENE.getID()), new CustomNukeEntry(EnumBombType.TNT, 0.8F));
 		entries.put(new ComparableStack(ModBlocks.red_barrel), new CustomNukeEntry(EnumBombType.TNT, 2.5F));
 		entries.put(new ComparableStack(ModBlocks.pink_barrel), new CustomNukeEntry(EnumBombType.TNT, 4F));
 		entries.put(new ComparableStack(ModItems.custom_tnt), new CustomNukeEntry(EnumBombType.TNT, 10F));

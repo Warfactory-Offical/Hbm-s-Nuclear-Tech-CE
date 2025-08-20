@@ -15,7 +15,7 @@ public class AudioWrapperClientStartStop extends AudioWrapperClient {
 	public float x, y, z;
 	
 	public AudioWrapperClientStartStop(World world, SoundEvent source, SoundEvent start, SoundEvent stop, float vol, SoundCategory cat){
-		super(source, cat);
+		super(source, cat, false);
 		if(sound != null){
 			sound.setVolume(vol);
 			sound.setAttenuation(ISound.AttenuationType.LINEAR);

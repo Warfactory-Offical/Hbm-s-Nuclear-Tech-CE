@@ -57,10 +57,11 @@ public class ItemPoolsLegacy {
                     weighted(ModItems.bottle_cherry, 0, 1, 1, 2),
                     weighted(ModItems.stealth_boy, 0, 1, 1, 1),
                     weighted(ModItems.cap_nuka, 0, 1, 15, 7),
-                    weighted(ModItems.canister_generic, Fluids.DIESEL.getID(), 1, 2, 2),
-                    weighted(ModItems.canister_generic, Fluids.BIOFUEL.getID(), 1, 2, 3),
+                    weighted(ModItems.canister_full, Fluids.DIESEL.getID(), 1, 2, 2),
+                    weighted(ModItems.canister_full, Fluids.BIOFUEL.getID(), 1, 2, 3),
                     weighted(ModItems.gas_mask_m65, 60, 1, 1, 2),
-                    weighted(ModItems.gas_mask_filter, 0, 1, 1, 3)
+                    weighted(ModItems.gas_mask_filter, 0, 1, 1, 3),
+                    weighted(ModItems.blueprint_folder, 0, 1, 1, 1)
             };
         }};
 
@@ -119,8 +120,8 @@ public class ItemPoolsLegacy {
                     weighted(ModItems.bottle_nuka, 0, 1, 3, 6),
                     weighted(ModItems.bottle_quantum, 0, 1, 1, 3),
                     weighted(ModBlocks.red_barrel, 0, 1, 1, 6),
-                    weighted(ModItems.canister_generic, Fluids.DIESEL.getID(), 1, 2, 2),
-                    weighted(ModItems.canister_generic, Fluids.BIOFUEL.getID(), 1, 2, 3),
+                    weighted(ModItems.canister_full, Fluids.DIESEL.getID(), 1, 2, 2),
+                    weighted(ModItems.canister_full, Fluids.BIOFUEL.getID(), 1, 2, 3),
                     weighted(ModItems.gas_mask_m65, 60, 1, 1, 5),
                     weighted(ModItems.bomb_caller, 0, 1, 1, 2),
                     weighted(ModItems.bomb_caller, 1, 1, 1, 1),
@@ -131,6 +132,7 @@ public class ItemPoolsLegacy {
                     // TODO
                     //weighted(ModItems.launch_code_piece, 0, 1, 1, 1),
                     weighted(ModItems.gun_double_barrel, 0, 1, 1, 1),
+                    weighted(ModItems.blueprint_folder, 1, 1, 1, 1)
             };
         }};
 

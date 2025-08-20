@@ -24,7 +24,7 @@ public class ElectrolyserFluidRecipes extends SerializableRecipe {
     public void registerDefaults() {
         recipes.put(Fluids.WATER, new ElectrolysisRecipe(2_000, new FluidStack(Fluids.HYDROGEN, 200), new FluidStack(Fluids.OXYGEN, 200), 10));
         recipes.put(Fluids.HEAVYWATER, new ElectrolysisRecipe(2_000, new FluidStack(Fluids.DEUTERIUM, 200), new FluidStack(Fluids.OXYGEN, 200), 10));
-        recipes.put(Fluids.VITRIOL, new ElectrolysisRecipe(1_000, new FluidStack(Fluids.SULFURIC_ACID, 500), new FluidStack(Fluids.CHLORINE, 500), new ItemStack(ModItems.powder_iron), new ItemStack(ModItems.nugget_mercury)));
+        recipes.put(Fluids.VITRIOL, new ElectrolysisRecipe(1_000, new FluidStack(Fluids.SULFURIC_ACID, 500), new FluidStack(Fluids.CHLORINE, 500), new ItemStack(ModItems.powder_iron), new ItemStack(ModItems.ingot_mercury)));
         recipes.put(Fluids.SLOP, new ElectrolysisRecipe(1_000, new FluidStack(Fluids.MERCURY, 250), new FluidStack(Fluids.NONE, 0), new ItemStack(ModItems.niter, 2), new ItemStack(ModItems.powder_limestone, 2), new ItemStack(ModItems.sulfur)));
         recipes.put(Fluids.REDMUD, new ElectrolysisRecipe(450, new FluidStack(Fluids.MERCURY, 150), new FluidStack(Fluids.LYE, 50), new ItemStack(ModItems.powder_titanium, 3), new ItemStack(ModItems.powder_iron, 3), new ItemStack(ModItems.powder_aluminium, 2)));
         recipes.put(Fluids.ALUMINA, new ElectrolysisRecipe(200, new FluidStack(Fluids.CARBONDIOXIDE, 100), new FluidStack(Fluids.NONE, 0),40, new ItemStack(ModItems.powder_aluminium, 7), new ItemStack(ModItems.fluorite, 2)));

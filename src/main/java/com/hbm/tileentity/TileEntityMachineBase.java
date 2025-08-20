@@ -132,17 +132,11 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase {
         return tank.getFluidAmount() * i / tank.getCapacity();
     }
 
-    /**
-     * only call super.serialize() on noisy machines. It has no effect on others.
-     */
     @Override
     public void serialize(ByteBuf buf) {
         buf.writeBoolean(muffled);
     }
 
-    /**
-     * only call super.deserialize() on noisy machines. It has no effect on others.
-     */
     @Override
     public void deserialize(ByteBuf buf) {
         this.muffled = buf.readBoolean();

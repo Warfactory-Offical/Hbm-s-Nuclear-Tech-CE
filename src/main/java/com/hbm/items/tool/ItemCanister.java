@@ -48,7 +48,7 @@ public class ItemCanister extends Item implements IDynamicModels {
     }
 
     public static ItemStack getStackFromFluid(FluidType f) {
-        return new ItemStack(ModItems.canister_generic, 1, f.getID());
+        return new ItemStack(ModItems.canister_full, 1, f.getID());
     }
 
     @Override

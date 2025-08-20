@@ -56,7 +56,7 @@ public class MachineFractionTower extends BlockDummyable implements ILookOverlay
 	public boolean onBlockActivated(World world, BlockPos pos1, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ){
 		if(!world.isRemote && !player.isSneaking()) {
 			
-			if(player.getHeldItem(hand).isEmpty() || player.getHeldItem(hand).getItem() == ModItems.forge_fluid_identifier) {
+			if(player.getHeldItem(hand).isEmpty() || player.getHeldItem(hand).getItem() == ModItems.fluid_identifier) {
 				int[] pos = this.findCore(world, pos1.getX(), pos1.getY(), pos1.getZ());
 					
 				if(pos == null)

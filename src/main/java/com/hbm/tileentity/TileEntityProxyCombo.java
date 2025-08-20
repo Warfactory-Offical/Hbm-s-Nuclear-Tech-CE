@@ -76,15 +76,17 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
 		return this;
 	}
 
-
-	// fewer messy recursive operations
+	/** Returns the actual tile entity that represents the core. Only for internal use, and EnergyControl. */
 	public TileEntity getTile() {
-
-		if(tile == null) {
+		if(tile == null || tile.isInvalid() || (tile instanceof TileEntityLoadedBase && !((TileEntityLoadedBase) tile).isLoaded)) {
 			tile = this.getTE();
 		}
-
 		return tile;
+	}
+
+	/** Returns the core tile entity, or a delegate object. */
+	protected Object getCoreObject() {
+		return getTile();
 	}
 
 	@Override
@@ -137,8 +139,8 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
 		if(!power)
 			return;
 
-		if(getTile() instanceof IEnergyReceiverMK2) {
-			((IEnergyReceiverMK2)getTile()).setPower(i);
+		if(getCoreObject() instanceof IEnergyReceiverMK2) {
+			((IEnergyReceiverMK2)getCoreObject()).setPower(i);
 		}
 	}
 
@@ -148,8 +150,8 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
 		if(!power)
 			return 0;
 
-		if(getTile() instanceof IEnergyReceiverMK2) {
-			return ((IEnergyReceiverMK2)getTile()).getPower();
+		if(getCoreObject() instanceof IEnergyReceiverMK2) {
+			return ((IEnergyReceiverMK2)getCoreObject()).getPower();
 		}
 
 		return 0;
@@ -161,8 +163,8 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
 		if(!power)
 			return 0;
 
-		if(getTile() instanceof IEnergyReceiverMK2) {
-			return ((IEnergyReceiverMK2)getTile()).getMaxPower();
+		if(getCoreObject() instanceof IEnergyReceiverMK2) {
+			return ((IEnergyReceiverMK2)getCoreObject()).getMaxPower();
 		}
 
 		return 0;
@@ -174,8 +176,8 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
 		if(!this.power)
 			return power;
 
-		if(getTile() instanceof IEnergyReceiverMK2) {
-			return ((IEnergyReceiverMK2)getTile()).transferPower(power, simulate);
+		if(getCoreObject() instanceof IEnergyReceiverMK2) {
+			return ((IEnergyReceiverMK2)getCoreObject()).transferPower(power, simulate);
 		}
 
 		return power;
@@ -187,8 +189,8 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
 		if(!power)
 			return false;
 
-		if(getTile() instanceof IEnergyReceiverMK2) {
-			return ((IEnergyReceiverMK2)getTile()).canConnect(dir);
+		if(getCoreObject() instanceof IEnergyReceiverMK2) {
+			return ((IEnergyReceiverMK2)getCoreObject()).canConnect(dir);
 		}
 
 		return true;
@@ -219,8 +221,8 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
 	public FluidTankNTM[] getAllTanks() {
 		if(!fluid) return EMPTY_TANKS;
 
-		if(getTile() instanceof IFluidReceiverMK2) {
-			return ((IFluidReceiverMK2)getTile()).getAllTanks();
+		if(getCoreObject() instanceof IFluidReceiverMK2) {
+			return ((IFluidReceiverMK2)getCoreObject()).getAllTanks();
 		}
 
 		return EMPTY_TANKS;
@@ -230,8 +232,8 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
 	public long transferFluid(FluidType type, int pressure, long amount) {
 		if(!fluid) return amount;
 
-		if(getTile() instanceof IFluidReceiverMK2) {
-			return ((IFluidReceiverMK2)getTile()).transferFluid(type, pressure, amount);
+		if(getCoreObject() instanceof IFluidReceiverMK2) {
+			return ((IFluidReceiverMK2)getCoreObject()).transferFluid(type, pressure, amount);
 		}
 
 		return amount;
@@ -241,8 +243,8 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
 	public long getDemand(FluidType type, int pressure) {
 		if(!fluid) return 0;
 
-		if(getTile() instanceof IFluidReceiverMK2) {
-			return ((IFluidReceiverMK2)getTile()).getDemand(type, pressure);
+		if(getCoreObject() instanceof IFluidReceiverMK2) {
+			return ((IFluidReceiverMK2)getCoreObject()).getDemand(type, pressure);
 		}
 
 		return 0;
@@ -254,8 +256,8 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
 		if(!this.fluid)
 			return false;
 
-		if(getTile() instanceof IFluidConnectorMK2) {
-			return ((IFluidConnectorMK2) getTile()).canConnect(type, dir);
+		if(getCoreObject() instanceof IFluidConnectorMK2) {
+			return ((IFluidConnectorMK2) getCoreObject()).canConnect(type, dir);
 		}
 		return true;
 	}
@@ -281,8 +283,8 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
 			return 0;
 		}
 
-		if (getTile() instanceof IHeatSource) {
-			return ((IHeatSource) getTile()).getHeatStored();
+		if (getCoreObject() instanceof IHeatSource) {
+			return ((IHeatSource) getCoreObject()).getHeatStored();
 		}
 		return 0;
 	}
@@ -293,8 +295,8 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
 			return;
 		}
 
-		if (getTile() instanceof IHeatSource) {
-			((IHeatSource) getTile()).useUpHeat(heat);
+		if (getCoreObject() instanceof IHeatSource) {
+			((IHeatSource) getCoreObject()).useUpHeat(heat);
 		}
 	}
 

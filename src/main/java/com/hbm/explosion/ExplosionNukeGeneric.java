@@ -110,7 +110,7 @@ public class ExplosionNukeGeneric {
         }
     }
 
-    @Spaghetti("just look at it")
+    @Spaghetti("just look at it") //mlbv: how about updating to jdk21 then use pattern matching for switch
     private static boolean isExplosionExempt(Entity e) {
 
         if (e instanceof EntityOcelot ||

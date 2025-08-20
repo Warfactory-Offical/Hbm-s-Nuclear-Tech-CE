@@ -182,9 +182,9 @@ public class CannerySILEX extends CanneryBase {
 		scene1.add(new ActionSetTile(6, 1, 0, duct));
 		scene1.add(new ActionSetTile(7, 1, 0, new Dummies.JarDummyConnector()));
 		scene1.add(new ActionSetTile(5, 2, 1, new Dummies.JarDummyConnector()));
-		scene1.add(new ActionSetBlock(5, 2, 0, ModBlocks.fluid_duct_mk2));
-		scene1.add(new ActionSetBlock(5, 1, 0, ModBlocks.fluid_duct_mk2));
-		scene1.add(new ActionSetBlock(6, 1, 0, ModBlocks.fluid_duct_mk2));
+		scene1.add(new ActionSetBlock(5, 2, 0, ModBlocks.fluid_duct_neo));
+		scene1.add(new ActionSetBlock(5, 1, 0, ModBlocks.fluid_duct_neo));
+		scene1.add(new ActionSetBlock(6, 1, 0, ModBlocks.fluid_duct_neo));
 		scene1.add(new ActionSetBlock(7, 1, 0, ModBlocks.barrel_tcalloy));
 		
 		scene1.add(new ActionWait(20));
@@ -218,10 +218,10 @@ public class CannerySILEX extends CanneryBase {
 		
 		for(int i = 1; i < 5; i++) {
 			scene1.add(new ActionSetTile(i, 1, 0, duct));
-			scene1.add(new ActionSetBlock(i, 1, 0, ModBlocks.fluid_duct_mk2));
+			scene1.add(new ActionSetBlock(i, 1, 0, ModBlocks.fluid_duct_neo));
 		}
 		scene1.add(new ActionSetTile(1, 2, 0, duct));
-		scene1.add(new ActionSetBlock(1, 2, 0, ModBlocks.fluid_duct_mk2));
+		scene1.add(new ActionSetBlock(1, 2, 0, ModBlocks.fluid_duct_neo));
 		scene1.add(new ActionSetTile(1, 2, 1, new Dummies.JarDummyConnector()));
 		
 		scene1.add(new ActionWait(20));

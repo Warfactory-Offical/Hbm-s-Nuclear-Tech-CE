@@ -31,12 +31,25 @@ import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class NTMAnvil extends BlockFalling implements IGUIProvider {
 	
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
+
+	public static final int TIER_IRON = 1;
+	public static final int TIER_STEEL = 2;
+	public static final int TIER_OIL = 3;
+	public static final int TIER_NUCLEAR = 4;
+	public static final int TIER_RBMK = 5;
+	public static final int TIER_FUSION = 6;
+	public static final int TIER_PARTICLE = 7;
+	public static final int TIER_GERALD = 8;
 	public final int tier;
+
+	public static final HashMap<Integer, List<NTMAnvil>> tierMap = new HashMap<>();
 
 	public NTMAnvil(Material mat, int tier, String s) {
 		super(mat);
@@ -46,8 +59,29 @@ public class NTMAnvil extends BlockFalling implements IGUIProvider {
 		this.setHardness(5.0F);
 		this.setResistance(100.0F);
 		this.tier = tier;
+
+		List<NTMAnvil> anvils = tierMap.get(tier);
+		if(anvils == null)
+			anvils = new ArrayList<>();
+		anvils.add(this);
+		tierMap.put(tier, anvils);
 		
 		ModBlocks.ALL_BLOCKS.add(this);
+	}
+
+	public static List<ItemStack> getAnvilsFromTier(int tier) {
+		List<NTMAnvil> anvils = tierMap.get(tier);
+
+		if(anvils != null) {
+			List<ItemStack> stacks = new ArrayList<>();
+
+			for(NTMAnvil anvil : anvils)
+				stacks.add(new ItemStack(anvil));
+
+			return stacks;
+		}
+
+		return new ArrayList<>();
 	}
 	
 	@Override

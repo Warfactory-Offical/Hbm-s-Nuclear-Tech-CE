@@ -2,7 +2,6 @@ package com.hbm.items;
 
 import com.google.common.collect.ImmutableMap;
 import com.hbm.lib.RefStrings;
-import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.model.ModelRotation;

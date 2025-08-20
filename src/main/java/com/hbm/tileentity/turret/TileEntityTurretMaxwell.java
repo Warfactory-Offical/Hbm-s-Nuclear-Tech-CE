@@ -10,6 +10,7 @@ import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
+import com.hbm.potion.HbmPotion;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.IUpgradeInfoProvider;
 import com.hbm.util.BobMathUtil;
@@ -24,6 +25,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
@@ -72,8 +74,7 @@ public class TileEntityTurretMaxwell extends TileEntityTurretBaseNT implements I
 		ammoStacks.add(new ItemStack(ModItems.upgrade_overdrive_1));
 		ammoStacks.add(new ItemStack(ModItems.upgrade_overdrive_2));
 		ammoStacks.add(new ItemStack(ModItems.upgrade_overdrive_3));
-		// TODO
-		// ammoStacks.add(new ItemStack(ModItems.upgrade_5g));
+		ammoStacks.add(new ItemStack(ModItems.upgrade_5g));
 		ammoStacks.add(new ItemStack(ModItems.upgrade_screm));
 
 		return ammoStacks;
@@ -216,6 +217,7 @@ public class TileEntityTurretMaxwell extends TileEntityTurretBaseNT implements I
 						if(item == ModItems.upgrade_overdrive_1) blackLevel += 1;
 						if(item == ModItems.upgrade_overdrive_2) blackLevel += 2;
 						if(item == ModItems.upgrade_overdrive_3) blackLevel += 3;
+						if(item == ModItems.upgrade_5g) _5g = true;
 						if(item == ModItems.upgrade_screm) screm = true;
 					}
 				}
@@ -231,8 +233,9 @@ public class TileEntityTurretMaxwell extends TileEntityTurretBaseNT implements I
 	int blueLevel;
 	int blackLevel;
 	int pinkLevel;
+	boolean _5g;
 	boolean screm;
-	
+
 	int checkDelay;
 
 	@Override
@@ -244,12 +247,12 @@ public class TileEntityTurretMaxwell extends TileEntityTurretBaseNT implements I
 			if(this.target instanceof EntityPlayer && (((EntityPlayer)this.target).capabilities.isCreativeMode || ((EntityPlayer)this.target).isSpectator()))
 				return;
 
-			/*if(_5g && target instanceof EntityPlayer) {
+			if(_5g && target instanceof EntityPlayer) {
 				EntityPlayer living = (EntityPlayer) target;
-				living.addPotionEffect(new PotionEffect(HbmPotion.death.id, 30 * 60 * 20, 0, true));
+				living.addPotionEffect(new PotionEffect(HbmPotion.death, 30 * 60 * 20, 0, true, false));
 			} else {
 				EntityDamageUtil.attackEntityFromIgnoreIFrame(this.target, ModDamageSource.microwave, (this.blackLevel * 10 + this.redLevel + 1F) * 0.25F);
-			}*/
+			}
 			EntityDamageUtil.attackEntityFromIgnoreIFrame(this.target, ModDamageSource.microwave, (this.blackLevel * 10 + this.redLevel + 1F) * 0.25F);
 			
 			if(pinkLevel > 0)

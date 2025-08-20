@@ -14,6 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * IFluidProviderMK2 with standard implementation for fluid provision and fluid removal.
@@ -73,7 +74,7 @@ public interface IFluidStandardSenderMK2 extends IFluidProviderMK2 {
         }
     }
 
-    FluidTankNTM[] getSendingTanks();
+    @NotNull FluidTankNTM[] getSendingTanks();
 
     @Override
     default long getFluidAvailable(FluidType type, int pressure) {

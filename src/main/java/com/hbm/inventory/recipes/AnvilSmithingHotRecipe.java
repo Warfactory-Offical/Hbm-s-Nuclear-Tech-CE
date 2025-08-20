@@ -4,7 +4,7 @@ import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.items.special.ItemHot;
 import net.minecraft.item.ItemStack;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class AnvilSmithingHotRecipe extends AnvilSmithingRecipe {
@@ -42,11 +42,11 @@ public class AnvilSmithingHotRecipe extends AnvilSmithingRecipe {
 	}
 	
 	public List<ItemStack> getLeft() {
-		return Arrays.asList(new ItemStack[] {getHot(left)});
+		return Collections.singletonList(getHot(left));
 	}
 	
 	public List<ItemStack> getRight() {
-		return Arrays.asList(new ItemStack[] {getHot(right)});
+		return Collections.singletonList(getHot(right));
 	}
 	
 	private ItemStack getHot(AStack stack) {

@@ -3,6 +3,7 @@ package com.hbm.blocks;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
 import com.hbm.itempool.ItemPool;
 import com.hbm.itempool.ItemPoolsSingle;
+import com.hbm.items.ItemEnums;
 import com.hbm.lib.TriFunction;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Items;
@@ -66,7 +67,7 @@ public class OreEnumUtil {
         COBALT_NETHER(new ItemStack(fragment_cobalt), OreEnumUtil::cobaltNetherAmount),
         PHOSPHORUS_NETHER(OreEnumUtil::phosphorusNetherDrop, OreEnumUtil::vanillaFortune),
         LIGNITE(new ItemStack(lignite), OreEnumUtil::vanillaFortune),
-        RARE_EARTHS(new ItemStack(rare_earth_chunk), OreEnumUtil::vanillaFortune),
+        RARE_EARTHS(new ItemStack(chunk_ore, 1, ItemEnums.EnumChunkType.RARE.ordinal()), OreEnumUtil::vanillaFortune),
         BLOCK_METEOR(OreEnumUtil::blockMeteorDrop, OreEnumUtil::vanillaFortune),
         CINNABAR(new ItemStack(cinnabar), OreEnumUtil::base1Rand2Fortune),
         ALEXANDRITE(new ItemStack(gem_alexandrite), OreEnumUtil::base1Rand2Fortune),

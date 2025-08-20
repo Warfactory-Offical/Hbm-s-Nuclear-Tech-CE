@@ -17,11 +17,12 @@ import com.hbm.dim.trait.CBT_Atmosphere;
 import com.hbm.entity.logic.IChunkLoader;
 import com.hbm.entity.mob.EntityCreeperTainted;
 import com.hbm.entity.mob.EntityCyberCrab;
+import com.hbm.entity.projectile.EntityBulletBaseMK4;
 import com.hbm.entity.projectile.EntityBurningFOEQ;
+import com.hbm.events.CheckLadderEvent;
 import com.hbm.events.InventoryChangedEvent;
 import com.hbm.forgefluid.FFPipeNetwork;
 import com.hbm.handler.*;
-import com.hbm.handler.HbmKeybinds.EnumKeybind;
 import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.hazard.HazardSystem;
@@ -36,35 +37,33 @@ import com.hbm.items.gear.ArmorFSB;
 import com.hbm.items.special.ItemHot;
 import com.hbm.items.tool.ItemDigammaDiagnostic;
 import com.hbm.items.weapon.ItemGunBase;
+import com.hbm.items.weapon.sedna.BulletConfig;
+import com.hbm.items.weapon.sedna.factory.XFactory12ga;
 import com.hbm.lib.*;
-import com.hbm.packet.KeybindPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.packet.toclient.PlayerInformPacket;
 import com.hbm.packet.toclient.SerializableRecipePacket;
 import com.hbm.packet.toclient.SurveyPacket;
 import com.hbm.particle.bullet_hit.EntityHitDataHandler;
+import com.hbm.particle.helper.BlackPowderCreator;
 import com.hbm.potion.HbmDetox;
 import com.hbm.potion.HbmPotion;
 import com.hbm.render.amlfrom1710.Vec3;
-import com.hbm.render.item.weapon.sedna.ItemRenderWeaponBase;
 import com.hbm.tileentity.machine.TileEntityMachineRadarNT;
 import com.hbm.tileentity.machine.rbmk.RBMKDials;
 import com.hbm.tileentity.network.RTTYSystem;
 import com.hbm.tileentity.network.RequestNetwork;
 import com.hbm.uninos.UniNodespace;
-import com.hbm.util.ArmorRegistry;
+import com.hbm.util.*;
 import com.hbm.util.ArmorRegistry.HazardClass;
-import com.hbm.util.EnchantmentUtil;
-import com.hbm.util.EntityDamageUtil;
-import com.hbm.util.ParticleUtil;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.*;
@@ -102,6 +101,7 @@ import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.PotionEvent.PotionApplicableEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerFlyableFallEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
@@ -173,6 +173,7 @@ public class ModEventHandler {
                 itr.remove();
             }
         }
+        ClimbableRegistry.clearDimension(e.getWorld());
     }
 
     @SubscribeEvent
@@ -679,6 +680,54 @@ public class ModEventHandler {
         ArmorFSB.handleFall(event.getEntityLiving());
     }
 
+    // only for the ballistic gauntlet! contains dangerous conditional returns!
+    @SubscribeEvent
+    public void onPlayerPunch(AttackEntityEvent event) {
+
+        EntityPlayer player = event.getEntityPlayer();
+        ItemStack chestplate = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+
+        if (!player.world.isRemote && !chestplate.isEmpty() && ArmorModHandler.hasMods(chestplate)) {
+
+            ItemStack held = player.getHeldItemMainhand();
+            if (!held.isEmpty() && held.getAttributeModifiers(EntityEquipmentSlot.MAINHAND).containsKey(SharedMonsterAttributes.ATTACK_DAMAGE.getName())) return;
+
+            ItemStack[] mods = ArmorModHandler.pryMods(chestplate);
+            ItemStack servo = mods[ArmorModHandler.servos];
+
+            if (servo != null && !servo.isEmpty() && servo.getItem() == ModItems.ballistic_gauntlet) {
+
+                BulletConfig firedConfig = null;
+                BulletConfig[] gauntletConfigs = new BulletConfig[] {XFactory12ga.g12_bp, XFactory12ga.g12_bp_magnum, XFactory12ga.g12_bp_slug, XFactory12ga.g12, XFactory12ga.g12_slug, XFactory12ga.g12_flechette, XFactory12ga.g12_magnum, XFactory12ga.g12_explosive, XFactory12ga.g12_phosphorus};
+
+                for (BulletConfig config : gauntletConfigs) {
+                    if (InventoryUtil.doesPlayerHaveAStack(player, config.ammo, true, true)) {
+                        firedConfig = config;
+                        break;
+                    }
+                }
+
+                if (firedConfig != null) {
+                    int bullets = firedConfig.projectilesMin;
+
+                    if (firedConfig.projectilesMax > firedConfig.projectilesMin) {
+                        bullets += player.getRNG().nextInt(firedConfig.projectilesMax - firedConfig.projectilesMin);
+                    }
+
+                    for (int i = 0; i < bullets; i++) {
+                        EntityBulletBaseMK4 mk4 = new EntityBulletBaseMK4(player, firedConfig, 15F, 0F, -0.1875, -0.0625, 0.5);
+                        player.world.spawnEntity(mk4);
+                        if (i == 0 && firedConfig.blackPowder) {
+                            BlackPowderCreator.composeEffect(player.world, mk4.posX, mk4.posY, mk4.posZ, mk4.motionX, mk4.motionY, mk4.motionZ, 10, 0.25F, 0.5F, 10, 0.25F);
+                        }
+                    }
+
+                    player.world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.shotgunShoot, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                }
+            }
+        }
+    }
+
     @SubscribeEvent
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
         EntityPlayer player = event.player;
@@ -1091,11 +1140,6 @@ public class ModEventHandler {
     @SubscribeEvent
     public void onPlayerLogin(PlayerLoggedInEvent event) {
         if (event.player instanceof EntityPlayerMP player) {
-            JetpackHandler.playerLoggedIn(event);
-            IHBMData props = HbmCapability.getData(event.player);
-
-            PacketDispatcher.sendTo(new KeybindPacket(EnumKeybind.TOGGLE_JETPACK, props.getEnableBackpack()), player);
-            PacketDispatcher.sendTo(new KeybindPacket(EnumKeybind.TOGGLE_HEAD, props.getEnableHUD()), player);
 
             if (GeneralConfig.enableWelcomeMessage) {
                 event.player.sendMessage(new TextComponentTranslation("chat.welcome"));
@@ -1361,6 +1405,13 @@ public class ModEventHandler {
             }
         } else changed = false;
         event.setCanceled(changed);
+    }
+
+    @SubscribeEvent
+    public void onCheckLadder(CheckLadderEvent evt) {
+        if (ClimbableRegistry.isEntityOnAny(evt.getWorld(), evt.getEntity())) {
+            evt.setResult(Result.ALLOW);
+        }
     }
 
     private static final String NBT_AKIMBO = "AkimboGhost";

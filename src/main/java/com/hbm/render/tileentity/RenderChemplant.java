@@ -14,8 +14,7 @@ import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
 @AutoRegister
-public class RenderChemplant extends TileEntitySpecialRenderer<TileEntityMachineChemplant>
-        implements IItemRendererProvider {
+public class RenderChemplant extends TileEntitySpecialRenderer<TileEntityMachineChemplant> implements IItemRendererProvider {
 
     @Override
     public void render(

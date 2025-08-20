@@ -64,6 +64,15 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
 		ModBlocks.ALL_BLOCKS.add(this);
 		IDynamicModels.INSTANCES.add(this);
 	}
+
+	public BlockDummyable(Material materialIn, String s, boolean useBakedModel) {
+		super(materialIn);
+		this.setTranslationKey(s);
+		this.setRegistryName(s);
+		this.setTickRandomly(true);
+
+		ModBlocks.ALL_BLOCKS.add(this);
+	}
 	
 	/// BLOCK METADATA ///
 	

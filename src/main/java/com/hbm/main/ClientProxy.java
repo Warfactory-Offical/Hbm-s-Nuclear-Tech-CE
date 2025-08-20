@@ -44,6 +44,9 @@ import com.hbm.render.anim.BusAnimationSequence;
 import com.hbm.render.anim.HbmAnimations;
 import com.hbm.render.anim.HbmAnimations.Animation;
 import com.hbm.render.anim.HbmAnimations.BlenderAnimation;
+import com.hbm.render.anim.sedna.BusAnimationSedna;
+import com.hbm.render.anim.sedna.BusAnimationSequenceSedna;
+import com.hbm.render.anim.sedna.HbmAnimationsSedna;
 import com.hbm.render.entity.ElectricityRenderer;
 import com.hbm.render.item.ItemRenderMissile;
 import com.hbm.render.item.ItemRenderMissileGeneric;
@@ -1419,6 +1422,49 @@ public class ClientProxy extends ServerProxy {
                                     }
                                 }
                             }
+                            case "sSwing", "lSwing" -> { //temp for lance
+
+                                int forward = 150;
+                                int sideways = 100;
+                                int retire = 200;
+
+                                if(HbmAnimationsSedna.getRelevantAnim() == null) {
+
+                                    BusAnimationSedna animation = new BusAnimationSedna()
+                                            .addBus("SWING_ROT", new BusAnimationSequenceSedna()
+                                                    .addPos(0, 0, 90, forward)
+                                                    .addPos(45, 0, 90, sideways)
+                                                    .addPos(0, 0, 0, retire))
+                                            .addBus("SWING_TRANS", new BusAnimationSequenceSedna()
+                                                    .addPos(0, 0, 3, forward)
+                                                    .addPos(2, 0, 2, sideways)
+                                                    .addPos(0, 0, 0, retire));
+
+
+                                    HbmAnimationsSedna.hotbar[player.inventory.currentItem][0] = new HbmAnimationsSedna.Animation(player.getHeldItemMainhand().getItem().getTranslationKey(), System.currentTimeMillis(), animation, null);
+
+                                } else {
+
+                                    double[] rot = HbmAnimationsSedna.getRelevantTransformation("SWING_ROT");
+                                    double[] trans = HbmAnimationsSedna.getRelevantTransformation("SWING_TRANS");
+
+                                    if(System.currentTimeMillis() - HbmAnimationsSedna.getRelevantAnim().startMillis < 50) return;
+
+                                    BusAnimationSedna animation = new BusAnimationSedna()
+                                            .addBus("SWING_ROT", new BusAnimationSequenceSedna()
+                                                    .addPos(rot[0], rot[1], rot[2], 0)
+                                                    .addPos(0, 0, 90, forward)
+                                                    .addPos(45, 0, 90, sideways)
+                                                    .addPos(0, 0, 0, retire))
+                                            .addBus("SWING_TRANS", new BusAnimationSequenceSedna()
+                                                    .addPos(trans[0], trans[1], trans[2], 0)
+                                                    .addPos(0, 0, 3, forward)
+                                                    .addPos(2, 0, 2, sideways)
+                                                    .addPos(0, 0, 0, retire));
+
+                                    HbmAnimationsSedna.hotbar[player.inventory.currentItem][0] = new HbmAnimationsSedna.Animation(player.getHeldItemMainhand().getItem().getTranslationKey(), System.currentTimeMillis(), animation, null);
+                                }
+                            }
                         }
                     }
                     case "hs_sword" -> {
@@ -1558,9 +1604,11 @@ public class ClientProxy extends ServerProxy {
             case CRANE_LEFT -> HbmKeybinds.craneLeftKey.isKeyDown();
             case CRANE_RIGHT -> HbmKeybinds.craneRightKey.isKeyDown();
             case CRANE_LOAD -> HbmKeybinds.craneLoadKey.isKeyDown();
+            case ABILITY_CYCLE -> HbmKeybinds.abilityCycle.isKeyDown();
+            case ABILITY_ALT -> HbmKeybinds.abilityAlt.isKeyDown();
             case GUN_PRIMARY -> Mouse.isButtonDown(0);
-            case GUN_SECONDARY -> Mouse.isButtonDown(1);
-            case GUN_TERTIARY -> Mouse.isButtonDown(2);
+            case GUN_SECONDARY -> HbmKeybinds.gunSecondaryKey.isKeyDown();
+            case GUN_TERTIARY -> HbmKeybinds.gunTertiaryKey.isKeyDown();
         };
 
     }
@@ -1634,11 +1682,21 @@ public class ClientProxy extends ServerProxy {
             }
         }
     }
-
+    @Deprecated
     @Override
     public AudioWrapper getLoopedSound(SoundEvent sound, SoundCategory cat, float x, float y, float z, float volume, float pitch) {
-        AudioWrapperClient audio = new AudioWrapperClient(sound, cat);
+        AudioWrapperClient audio = new AudioWrapperClient(sound, cat, false);
         audio.updatePosition(x, y, z);
+        return audio;
+    }
+
+    @Override
+    public AudioWrapper getLoopedSound(SoundEvent sound, SoundCategory cat, float x, float y, float z, float volume, float range, float pitch, int keepAlive) {
+        AudioWrapperClient audio = new AudioWrapperClient(sound, cat, true);
+        audio.updatePosition(x, y, z);
+        audio.updateVolume(volume);
+        audio.updateRange(range);
+        audio.setKeepAlive(keepAlive);
         return audio;
     }
 

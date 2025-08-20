@@ -1,8 +1,8 @@
 package com.hbm.packet.toclient;
 
+import com.hbm.items.armor.ArmorTrenchmaster;
 import com.hbm.items.weapon.sedna.GunConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
-import com.hbm.items.weapon.sedna.ItemGunBaseSedna;
 import com.hbm.items.weapon.sedna.Receiver;
 import com.hbm.render.anim.sedna.BusAnimationSedna;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
@@ -69,40 +69,13 @@ public class GunAnimationPacketSedna implements IMessage {
             try {
 
                 EntityPlayer player = Minecraft.getMinecraft().player;
-                ItemStack stack = player.getHeldItem(EnumHand.MAIN_HAND);
+                ItemStack stack = player.getHeldItemMainhand();
                 int slot = player.inventory.currentItem;
 
-                if(stack.isEmpty())
-                    return null;
+                if(stack.isEmpty()) return null;
 
                 if(stack.getItem() instanceof ItemGunBaseNT) {
                     handleSedna(player, stack, slot, HbmAnimationsSedna.AnimType.values()[m.type], m.receiverIndex, m.gunIndex);
-                }
-
-                if(!(stack.getItem() instanceof ItemGunBaseSedna))
-                    return null;
-
-                if(m.type < 0 || m.type >= HbmAnimationsSedna.AnimType.values().length)
-                    return null;
-
-                HbmAnimationsSedna.AnimType type = HbmAnimationsSedna.AnimType.values()[m.type];
-                ItemGunBaseSedna base = (ItemGunBaseSedna) stack.getItem();
-
-                BusAnimationSedna animation = base.getAnimation(stack, type);
-
-                // Fallback to regular reload if no empty reload animation
-                if(animation == null && type == HbmAnimationsSedna.AnimType.RELOAD_EMPTY) {
-                    animation = base.getAnimation(stack, HbmAnimationsSedna.AnimType.RELOAD);
-                }
-
-                // Fallback to regular CYCLE if no ALT_CYCLE (or CYCLE_EMPTY) exists
-                if(animation == null && (type == HbmAnimationsSedna.AnimType.ALT_CYCLE || type == HbmAnimationsSedna.AnimType.CYCLE_EMPTY)) {
-                    animation = base.getAnimation(stack, HbmAnimationsSedna.AnimType.CYCLE);
-                }
-
-                if(animation != null) {
-                    boolean isReloadAnimation = type == HbmAnimationsSedna.AnimType.RELOAD || type == HbmAnimationsSedna.AnimType.RELOAD_CYCLE || type == HbmAnimationsSedna.AnimType.RELOAD_EMPTY;
-                    HbmAnimationsSedna.hotbar[slot][0] = new HbmAnimationsSedna.Animation(stack.getItem().getTranslationKey(), System.currentTimeMillis(), animation, isReloadAnimation && base.mainConfig.reloadAnimationsSequential);
                 }
 
             } catch(Exception x) { }
@@ -140,7 +113,8 @@ public class GunAnimationPacketSedna implements IMessage {
                 Minecraft.getMinecraft().entityRenderer.itemRenderer.resetEquippedProgress(EnumHand.MAIN_HAND);
                 Minecraft.getMinecraft().entityRenderer.itemRenderer.updateEquippedItem();
                 boolean isReloadAnimation = type == HbmAnimationsSedna.AnimType.RELOAD || type == HbmAnimationsSedna.AnimType.RELOAD_CYCLE || type == HbmAnimationsSedna.AnimType.RELOAD_EMPTY;
-                HbmAnimationsSedna.hotbar[slot][gunIndex] = new HbmAnimationsSedna.Animation(stack.getItem().getTranslationKey(), System.currentTimeMillis(), animation, isReloadAnimation && config.getReloadAnimSequential(stack));
+                if(isReloadAnimation && ArmorTrenchmaster.isTrenchMaster(player)) animation.setTimeMult(0.5D);
+                HbmAnimationsSedna.hotbar[slot][gunIndex] = new HbmAnimationsSedna.Animation(stack.getItem().getTranslationKey(), System.currentTimeMillis(), animation, type, isReloadAnimation && config.getReloadAnimSequential(stack));
             }
         }
     }

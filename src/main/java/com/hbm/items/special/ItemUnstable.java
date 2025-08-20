@@ -3,16 +3,14 @@ package com.hbm.items.special;
 import com.hbm.config.BombConfig;
 import com.hbm.entity.effect.EntityNukeTorex;
 import com.hbm.entity.logic.EntityNukeExplosionMK5;
-import com.hbm.items.ModItems;
+import com.hbm.items.ItemBakedBase;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundCategory;
@@ -22,19 +20,16 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-public class ItemUnstable extends Item {
+public class ItemUnstable extends ItemBakedBase {
 
 	int radius;
 	int timer;
 
 	public ItemUnstable(int radius, int timer, String s) {
-		this.setTranslationKey(s);
-		this.setRegistryName(s);
+		super(s);
 		this.radius = radius;
 		this.timer = timer;
 		this.setHasSubtypes(true);
-
-		ModItems.ALL_ITEMS.add(this);
 	}
 
 	@Override

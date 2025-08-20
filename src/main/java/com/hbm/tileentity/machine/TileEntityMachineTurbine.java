@@ -16,8 +16,6 @@ import com.hbm.inventory.gui.GUIMachineTurbine;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
-import com.hbm.packet.toclient.AuxElectricityPacket;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import io.netty.buffer.ByteBuf;
@@ -37,7 +35,6 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.ItemStackHandler;
@@ -76,7 +73,7 @@ public class TileEntityMachineTurbine extends TileEntityLoadedBase implements IT
 			@Override
 			public boolean isItemValid(int slot, @NotNull ItemStack stack) {
 				if(slot == 0)
-					return stack.getItem() == ModItems.forge_fluid_identifier;
+					return stack.getItem() == ModItems.fluid_identifier;
 				if(slot == 4)
 					return Library.isItemBattery(stack);
 
@@ -148,19 +145,20 @@ public class TileEntityMachineTurbine extends TileEntityLoadedBase implements IT
 			this.sendFluidToAll(tanksNew[1], this);
 
 			tanksNew[1].unloadTank(5, 6, inventory);
-			PacketDispatcher.wrapper.sendToAllAround(new AuxElectricityPacket(pos.getX(), pos.getY(), pos.getZ(), power), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 50));
 			networkPackNT(50);
 		}
 	}
 
 	@Override
 	public void serialize(ByteBuf buf){
+		buf.writeLong(power);
 		for(FluidTankNTM tank : tanksNew)
 			tank.serialize(buf);
 	}
 
 	@Override
 	public void deserialize(ByteBuf buf){
+		power = buf.readLong();
 		for(FluidTankNTM tank : tanksNew)
 			tank.deserialize(buf);
 	}

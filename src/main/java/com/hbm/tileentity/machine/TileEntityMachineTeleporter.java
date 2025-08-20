@@ -5,8 +5,6 @@ import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.ModDamageSource;
-import com.hbm.packet.toclient.AuxElectricityPacket;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
@@ -21,7 +19,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -80,8 +77,6 @@ public class TileEntityMachineTeleporter extends TileEntityLoadedBase implements
 						b0 = true;
 					}
 				}
-
-			PacketDispatcher.wrapper.sendToAllAround(new AuxElectricityPacket(pos, power), new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 10));
 			networkPack();
 			prevLinked = linked;
 		}
@@ -99,18 +94,22 @@ public class TileEntityMachineTeleporter extends TileEntityLoadedBase implements
 
 	@Override
 	public void serialize(ByteBuf buf) {
-		if(this.target != null){
+		buf.writeLong(power);
+		if(this.target != null) {
+			buf.writeBoolean(true);
 			buf.writeInt(this.target.getX());
 			buf.writeInt(this.target.getY());
 			buf.writeInt(this.target.getZ());
-		}
+		} else buf.writeBoolean(false);
 
 		buf.writeBoolean(this.linked);
 	}
 
 	@Override
 	public void deserialize(ByteBuf buf) {
-		this.target = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
+		power = buf.readLong();
+		if (buf.readBoolean())
+			this.target = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
 		this.linked = buf.readBoolean();
 	}
 	

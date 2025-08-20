@@ -17,7 +17,8 @@ import java.util.Locale;
 
 
 //DUDE a third implementation of fucking metablocks?? Yea no, we're extending BlockMeta
-public abstract class BlockEnumMeta extends BlockMeta {
+// Th3_Sl1ze: name me one, ONE fucking reason it should've been abstract this whole time
+public class BlockEnumMeta extends BlockMeta {
 
 
     final public boolean multiName;

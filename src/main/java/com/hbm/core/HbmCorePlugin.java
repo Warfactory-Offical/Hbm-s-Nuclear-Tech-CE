@@ -16,8 +16,8 @@ public class HbmCorePlugin implements IFMLLoadingPlugin {
 
     @Override
     public String[] getASMTransformerClass() {
-        return new String[]{"com.hbm.core.GlStateManagerTransformer", "com.hbm.core.ContainerTransformer", "com.hbm.core" +
-                ".InventoryPlayerTransformer"};
+        return new String[]{GlStateManagerTransformer.class.getName(), ContainerTransformer.class.getName(),
+                InventoryPlayerTransformer.class.getName(), ForgeHooksTransformer.class.getName()};
     }
 
     @Override

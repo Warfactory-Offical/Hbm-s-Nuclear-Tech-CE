@@ -55,11 +55,11 @@ public class BobmazonOfferFactory {
 		materials.add(new Offer(new ItemStack(ModItems.nitra, 4), Requirement.CHEMICS, 16 * inflation));
 		materials.add(new Offer(new ItemStack(ModItems.solid_fuel), Requirement.OIL, 4 * inflation));
 		materials.add(new Offer(new ItemStack(ModItems.lignite), Requirement.STEEL, 2 * inflation));
-		materials.add(new Offer(new ItemStack(ModItems.canister_generic, 1, Fluids.OIL.getID()), Requirement.OIL, 4 * inflation));
-		materials.add(new Offer(new ItemStack(ModItems.canister_generic, 1, Fluids.DIESEL.getID()), Requirement.OIL, 16 * inflation));
-		materials.add(new Offer(new ItemStack(ModItems.canister_generic, 1, Fluids.PETROIL.getID()), Requirement.OIL, 12 * inflation));
-		materials.add(new Offer(new ItemStack(ModItems.canister_generic, 1, Fluids.KEROSENE.getID()), Requirement.OIL, 20 * inflation));
-		materials.add(new Offer(new ItemStack(ModItems.canister_generic, 1, Fluids.NITAN.getID()), Requirement.OIL, 100 * inflation));
+		materials.add(new Offer(new ItemStack(ModItems.canister_full, 1, Fluids.OIL.getID()), Requirement.OIL, 4 * inflation));
+		materials.add(new Offer(new ItemStack(ModItems.canister_full, 1, Fluids.DIESEL.getID()), Requirement.OIL, 16 * inflation));
+		materials.add(new Offer(new ItemStack(ModItems.canister_full, 1, Fluids.PETROIL.getID()), Requirement.OIL, 12 * inflation));
+		materials.add(new Offer(new ItemStack(ModItems.canister_full, 1, Fluids.KEROSENE.getID()), Requirement.OIL, 20 * inflation));
+		materials.add(new Offer(new ItemStack(ModItems.canister_full, 1, Fluids.NITAN.getID()), Requirement.OIL, 100 * inflation));
 		materials.add(new Offer(new ItemStack(ModItems.motor), Requirement.ASSEMBLY, 12 * inflation));
 		materials.add(new Offer(new ItemStack(ModItems.rtg_unit), Requirement.NUCLEAR, 25 * inflation));
 		materials.add(new Offer(new ItemStack(ModItems.circuit, 1, ItemEnums.EnumCircuitType.ANALOG.ordinal()), Requirement.ASSEMBLY, 4 * inflation));

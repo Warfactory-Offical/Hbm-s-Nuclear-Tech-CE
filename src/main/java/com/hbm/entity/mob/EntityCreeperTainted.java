@@ -51,7 +51,7 @@ public class EntityCreeperTainted extends EntityCreeper implements IRadiationImm
     }
 
     @Override
-    protected void explode() {
+    public void explode() {
         if (!this.world.isRemote) {
             boolean isPowered = this.getPowered();
             boolean mobGriefing = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this);

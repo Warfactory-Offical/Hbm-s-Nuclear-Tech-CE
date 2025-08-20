@@ -30,6 +30,7 @@ public final class HBMSoundHandler {
     public static SoundEvent reactorStart;
     public static SoundEvent reactorStop;
     public static SoundEvent chemplantOperate;
+    public static SoundEvent chemicalPlant;
     public static SoundEvent potatOSRandom;
     public static SoundEvent weaponSpinDown;
     public static SoundEvent weaponSpinUp;
@@ -351,6 +352,7 @@ public final class HBMSoundHandler {
         reactorStart = register("block.reactorStart");
         reactorStop = register("block.reactorStop");
         chemplantOperate = register("block.chemplantOperate");
+        chemicalPlant = register("block.chemicalPlant");
         potatOSRandom = register("potatos.random");
         weaponSpinDown = register("weapon.spindown");
         weaponSpinUp = register("weapon.spinup");

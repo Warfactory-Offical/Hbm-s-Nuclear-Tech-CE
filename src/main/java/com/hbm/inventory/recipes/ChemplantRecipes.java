@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.GeneralConfig;
-import com.hbm.config.MachineConfig;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.RecipesCommon.OreDictStack;
@@ -57,16 +56,6 @@ public class ChemplantRecipes extends SerializableRecipe {
 	}
 
 	public static void register(){
-		//No fuck off
-//		if(MachineConfig.chemplantKeepOilProcessing){
-//			recipes.add(new ChemRecipe(0, "FP_HEAVYOIL", 50).inputFluids(new FluidStack(Fluids.HEAVYOIL, 1000)).outputFluids(new FluidStack(Fluids.BITUMEN, 300), new FluidStack(Fluids.SMEAR, 700)));
-//
-//			recipes.add(new ChemRecipe(10, "FP_SMEAR", 50).inputFluids(new FluidStack(Fluids.SMEAR, 1000)).outputFluids(new FluidStack(Fluids.HEATINGOIL, 600), new FluidStack(Fluids.LUBRICANT, 400)));
-//
-//			recipes.add(new ChemRecipe(20, "FP_NAPHTHA", 50).inputFluids(new FluidStack(Fluids.NAPHTHA, 1000)).outputFluids(new FluidStack(Fluids.HEATINGOIL, 400), new FluidStack(Fluids.DIESEL, 600)));
-//
-//			recipes.add(new ChemRecipe(30, "FP_LIGHTOIL", 50).inputFluids(new FluidStack(Fluids.LIGHTOIL, 1000)).outputFluids(new FluidStack(Fluids.DIESEL, 400), new FluidStack(Fluids.KEROSENE, 600)));
-//		}
 
 		//6-30, formerly oil cracking, coal liquefaction and solidifciation
 		registerOtherOil();
@@ -81,7 +70,7 @@ public class ChemplantRecipes extends SerializableRecipe {
 		recipes.add(new ChemRecipe(38, "DESH", 300)
 				.inputItems(new ComparableStack(ModItems.powder_desh_mix))
 				.inputFluids(
-						(GeneralConfig.enableBabyMode) ?
+						(GeneralConfig.enableLBSM && GeneralConfig.enableLBSMSimpleChemsitry) ?
 								new FluidStack[] {new FluidStack(Fluids.LIGHTOIL, 200)} :
 								new FluidStack[] {new FluidStack(Fluids.MERCURY, 200), new FluidStack(Fluids.LIGHTOIL, 200)})
 				.outputItems(new ItemStack(ModItems.ingot_desh)));
@@ -200,7 +189,7 @@ public class ChemplantRecipes extends SerializableRecipe {
 						new OreDictStack(KEY_PLANKS),
 						new ComparableStack(Items.SUGAR))
 				.inputFluids(
-						(GeneralConfig.enableBabyMode) ?
+						(GeneralConfig.enableLBSM && GeneralConfig.enableLBSMSimpleChemsitry) ?
 								new FluidStack(Fluids.HEATINGOIL, 200) :
 								new FluidStack(Fluids.GAS, 200))
 				.outputItems(new ItemStack(ModItems.cordite, 4)));
@@ -223,7 +212,7 @@ public class ChemplantRecipes extends SerializableRecipe {
 						new ComparableStack(ModItems.powder_cement, 1),
 						new ComparableStack(Blocks.GRAVEL, 2),
 						new OreDictStack(KEY_SAND, 2),
-						(GeneralConfig.enableBabyMode) ?
+						(GeneralConfig.enableLBSM && GeneralConfig.enableLBSMSimpleChemsitry) ?
 								new OreDictStack(ASBESTOS.ingot(), 1) :
 								new OreDictStack(ASBESTOS.ingot(), 4))
 				.inputFluids(new FluidStack(Fluids.WATER, 2000))

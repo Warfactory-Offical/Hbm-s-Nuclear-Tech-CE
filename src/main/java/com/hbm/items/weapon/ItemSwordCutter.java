@@ -4,8 +4,8 @@ import com.hbm.handler.threading.PacketThreading;
 import com.hbm.items.IEquipReceiver;
 import com.hbm.items.tool.ItemSwordAbility;
 import com.hbm.main.MainRegistry;
-import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.packet.PacketDispatcher;
+import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.packet.toserver.PacketMobSlicer;
 import com.hbm.render.anim.HbmAnimations;
 import com.hbm.render.anim.HbmAnimations.Animation;
@@ -37,7 +37,7 @@ public class ItemSwordCutter extends ItemSwordAbility implements IEquipReceiver 
 	public static final float MAX_DPITCH = 120;
 	
 	public ItemSwordCutter(float damage, double movement, ToolMaterial material, String s) {
-		super(damage, movement, material, s);
+		super(damage, movement, material, s, false);
 	}
 
 	@Override

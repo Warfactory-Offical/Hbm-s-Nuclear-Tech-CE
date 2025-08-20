@@ -53,7 +53,7 @@ public class CanneryCentrifuge extends CanneryBase {
 				TileEntityPipeBaseNT duct = new TileEntityPipeBaseNT();
 				duct.setType(Fluids.UF6);
 				scene0.add(new ActionSetTile(6, 1, 2, duct));
-				scene0.add(new ActionSetBlock(6, 1, 2, ModBlocks.fluid_duct_mk2, 0));
+				scene0.add(new ActionSetBlock(6, 1, 2, ModBlocks.fluid_duct_neo, 0));
 			}
 			
 			if(x == 5) {

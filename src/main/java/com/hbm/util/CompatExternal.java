@@ -51,8 +51,7 @@ public class CompatExternal {
         TileEntity tile = world.getTileEntity(pos);
 
         //if the tile at that pos is an old dummy tile, use mk1
-        if(tile instanceof TileEntityDummy) {
-            TileEntityDummy dummy = (TileEntityDummy) tile;
+        if(tile instanceof TileEntityDummy dummy) {
             return world.getTileEntity(dummy.target);
         }
 
