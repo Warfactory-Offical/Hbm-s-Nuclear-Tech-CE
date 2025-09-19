@@ -4,14 +4,24 @@ import com.google.common.collect.Sets;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.items.ItemBakedBase;
 import com.hbm.items.ModItems;
+import com.hbm.tileentity.IUpgradeInfoProvider;
 import com.hbm.util.I18nUtil;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
 import java.util.List;
 import java.util.Set;
@@ -60,166 +70,31 @@ public class ItemMachineUpgrade extends ItemBakedBase {
 
 	@Override
 	public void addInformation(ItemStack stack, World worldIn, List<String> list, ITooltipFlag flagIn) {
-		if(this == ModItems.upgrade_speed_1)
-		{
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade1"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradesp11"));
-			list.add("");
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade2"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradesp12"));
-			list.add("");
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade3"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradesp13"));
-			list.add("");
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade4"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradesp14"));
-			list.add("");
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade5"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradesp15"));
-		}
-		
-		if(this == ModItems.upgrade_speed_2)
-		{
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade1"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradesp21"));
-			list.add("");
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade2"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradesp22"));
-			list.add("");
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade3"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradesp23"));
-			list.add("");
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade4"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradesp24"));
-			list.add("");
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade5"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradesp25"));
-		}
+		GuiScreen open = Minecraft.getMinecraft().currentScreen;
 
-		if(this == ModItems.upgrade_speed_3)
-		{
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade1"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradesp31"));
-			list.add("");
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade2"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradesp32"));
-			list.add("");
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade3"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradesp33"));
-			list.add("");
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade4"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradesp34"));
-			list.add("");
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade5"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradesp35"));
-		}
+		if (open instanceof GuiContainer guiContainer) {
+			Container container = guiContainer.inventorySlots;
+			if (!container.inventorySlots.isEmpty()) {
+				Slot first = container.getSlot(0);
 
-		if(this == ModItems.upgrade_effect_1)
-		{
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade1"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradeef11"));
-			list.add("");
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade4"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradeef12"));
-			list.add("");
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade5"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradeef13"));
-		}
+				IItemHandler handler = null;
 
-		if(this == ModItems.upgrade_effect_2)
-		{
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade1"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradeef21"));
-			list.add("");
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade4"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradeef22"));
-			list.add("");
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade5"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradeef23"));
-		}
+				if (first instanceof SlotItemHandler) {
+					handler = ((SlotItemHandler) first).getItemHandler();
+				} else if (first.inventory instanceof ICapabilityProvider capProv) {
+					if (capProv.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)) {
+						handler = capProv.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+					}
+				}
 
-		if(this == ModItems.upgrade_effect_3)
-		{
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade1"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradeef31"));
-			list.add("");
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade4"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradeef32"));
-			list.add("");
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade5"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradeef33"));
-		}
-
-		if(this == ModItems.upgrade_power_1)
-		{
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade2"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradecs11"));
-			list.add("");
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade3"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradecs11"));
-			list.add("");
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade5"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradecs12"));
-		}
-
-		if(this == ModItems.upgrade_power_2)
-		{
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade2"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradecs21"));
-			list.add("");
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade3"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradecs21"));
-			list.add("");
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade5"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradecs22"));
-		}
-
-		if(this == ModItems.upgrade_power_3)
-		{
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade2"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradecs31"));
-			list.add("");
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade3"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradecs31"));
-			list.add("");
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade5"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradecs32"));
-		}
-
-		if(this == ModItems.upgrade_fortune_1)
-		{
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade1"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradeft1"));
-		}
-
-		if(this == ModItems.upgrade_fortune_2)
-		{
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade1"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradeft2"));
-		}
-
-		if(this == ModItems.upgrade_fortune_3)
-		{
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade1"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradeft3"));
-		}
-
-		if(this == ModItems.upgrade_afterburn_1)
-		{
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade6"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradeaf1"));
-		}
-
-		if(this == ModItems.upgrade_afterburn_2)
-		{
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade6"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradeaf2"));
-		}
-
-		if(this == ModItems.upgrade_afterburn_3)
-		{
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade6"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradeaf3"));
+				if (handler instanceof IUpgradeInfoProvider provider) {
+					boolean advanced = flagIn.isAdvanced();
+					if (provider.canProvideInfo(this.type, this.tier, advanced)) {
+						provider.provideInfo(this.type, this.tier, list, advanced);
+						return;
+					}
+				}
+			}
 		}
 
 		if(this == ModItems.upgrade_radius)
@@ -277,42 +152,6 @@ public class ItemMachineUpgrade extends ItemBakedBase {
 		{
 			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade10"));
 			list.add(" "+I18nUtil.resolveKey("desc.upgrade19"));
-		}
-
-		if(this == ModItems.upgrade_ejector_1)
-		{
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade22"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradeej1"));
-		}
-
-		if(this == ModItems.upgrade_ejector_2)
-		{
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade22"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradeej2"));
-		}
-
-		if(this == ModItems.upgrade_ejector_3)
-		{
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade22"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradeej3"));
-		}
-
-		if(this == ModItems.upgrade_stack_1)
-		{
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade22"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradeej4"));
-		}
-
-		if(this == ModItems.upgrade_stack_2)
-		{
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade22"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradeej5"));
-		}
-
-		if(this == ModItems.upgrade_stack_3)
-		{
-			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade22"));
-			list.add(" "+I18nUtil.resolveKey("desc.upgradeej6"));
 		}
 		// I'm not translating this shit for now
 		if(this == ModItems.upgrade_gc_speed) {

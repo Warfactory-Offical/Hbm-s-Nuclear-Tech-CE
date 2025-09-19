@@ -4,14 +4,18 @@ import com.hbm.main.MainRegistry;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.BiomeSyncPacket;
 import com.hbm.util.Compat;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.AnvilChunkLoader;
 import net.minecraft.world.gen.ChunkProviderServer;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.chunkio.ChunkIOExecutor;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import org.jetbrains.annotations.Nullable;
 
@@ -108,6 +112,34 @@ public class WorldUtil {
             PacketDispatcher.wrapper.sendToAllAround(new BiomeSyncPacket(chunkX, chunkZ, getIntBiomeArray(chunk)), new TargetPoint(world.provider.getDimension(), chunkX << 4, 128, chunkZ << 4, 1024D));
         } else {
             PacketDispatcher.wrapper.sendToAllAround(new BiomeSyncPacket(chunkX, chunkZ, chunk.getBiomeArray()), new TargetPoint(world.provider.getDimension(), chunkX << 4, 128, chunkZ << 4, 1024D));
+        }
+    }
+
+    /**Chunkloads the chunk the entity is going to spawn in and then spawns it
+     * @param entity The entity to be spawned**/
+
+	/*fun fact: this is based off of joinEntityInSurroundings in World
+	  however, since mojang is staffed by field mice, that function is client side only and half-baked
+	 */
+    public static void loadAndSpawnEntityInWorld(Entity entity) {
+
+        World world = entity.world;
+        int chunkX = MathHelper.floor(entity.posX / 16.0D);
+        int chunkZ = MathHelper.floor(entity.posZ / 16.0D);
+        byte loadRadius = 2;
+
+        for(int k = chunkX - loadRadius; k <= chunkX + loadRadius; ++k) {
+            for(int l = chunkZ - loadRadius; l <= chunkZ + loadRadius; ++l) {
+                world.getChunk(k, l);
+            }
+        }
+
+        if(!world.loadedEntityList.contains(entity)) {
+            if(!MinecraftForge.EVENT_BUS.post(new EntityJoinWorldEvent(entity, world))) {
+                world.getChunk(chunkX, chunkZ).addEntity(entity);
+                world.loadedEntityList.add(entity);
+                world.onEntityAdded(entity);
+            }
         }
     }
 }

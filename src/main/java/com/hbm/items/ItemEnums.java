@@ -85,10 +85,8 @@ public class ItemEnums {
     PAGE8
   }
 
-  public enum EnumSecretType {
-    CANISTER,
-    CONTROLLER,
-    SELENIUM_STEEL
+  public static enum EnumSecretType {
+    CANISTER, CONTROLLER, SELENIUM_STEEL, ABERRATOR, FOLLY
   }
 
   public enum EnumCasingType {

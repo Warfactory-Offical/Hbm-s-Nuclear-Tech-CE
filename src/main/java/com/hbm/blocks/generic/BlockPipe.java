@@ -1,6 +1,7 @@
 package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.world.gen.nbt.INBTBlockTransformable;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
@@ -15,7 +16,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockPipe extends Block {
+public class BlockPipe extends Block implements INBTBlockTransformable {
 
     public static final PropertyEnum<EnumFacing.Axis> AXIS = PropertyEnum.create("axis", EnumFacing.Axis.class);
 
@@ -83,11 +84,26 @@ public class BlockPipe extends Block {
 
     @Override
     public int getMetaFromState(IBlockState state) {
-        return state.getValue(AXIS).ordinal();
+        EnumFacing.Axis axis = state.getValue(AXIS);
+        return switch (axis) {
+            case X -> 4;
+            case Z -> 8;
+            case Y -> 0;
+        };
     }
 
     @Override
     public IBlockState getStateFromMeta(int meta) {
-        return this.getDefaultState().withProperty(AXIS, EnumFacing.Axis.values()[meta & 3]);
+        int rot = meta & 12;
+        EnumFacing.Axis axis;
+        if (rot == 4) axis = EnumFacing.Axis.X;
+        else if (rot == 8) axis = EnumFacing.Axis.Z;
+        else axis = EnumFacing.Axis.Y;
+        return this.getDefaultState().withProperty(AXIS, axis);
+    }
+
+    @Override
+    public int transformMeta(int meta, int coordBaseMode) {
+        return INBTBlockTransformable.transformMetaPillar(meta, coordBaseMode);
     }
 }

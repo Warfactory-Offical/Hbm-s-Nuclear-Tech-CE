@@ -176,7 +176,7 @@ public class TileEntityElectrolyser extends TileEntityMachineBase implements IEn
             if(this.leftStack != null) {
 
                 ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset).getOpposite();
-                List<Mats.MaterialStack> toCast = new ArrayList();
+                List<Mats.MaterialStack> toCast = new ArrayList<>();
                 toCast.add(this.leftStack);
 
                 Vec3d impact = new Vec3d(0, 0, 0);
@@ -199,7 +199,7 @@ public class TileEntityElectrolyser extends TileEntityMachineBase implements IEn
             if(this.rightStack != null) {
 
                 ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
-                List<Mats.MaterialStack> toCast = new ArrayList();
+                List<Mats.MaterialStack> toCast = new ArrayList<>();
                 toCast.add(this.rightStack);
 
                 Vec3d impact = new Vec3d(0, 0, 0);
@@ -462,7 +462,7 @@ public class TileEntityElectrolyser extends TileEntityMachineBase implements IEn
         if(bb == null) {
             bb = new AxisAlignedBB(
                     pos.getX() - 5,
-                    pos.getY() - 0,
+                    pos.getY(),
                     pos.getZ() - 5,
                     pos.getX() + 6,
                     pos.getY() + 4,

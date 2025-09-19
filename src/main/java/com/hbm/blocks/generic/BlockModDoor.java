@@ -3,6 +3,7 @@ package com.hbm.blocks.generic;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.items.ModItems;
 import com.hbm.lib.HBMSoundHandler;
+import com.hbm.world.gen.nbt.INBTBlockTransformable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.material.MapColor;
@@ -21,7 +22,7 @@ import net.minecraft.world.World;
 
 import java.util.Random;
 
-public class BlockModDoor extends BlockDoor {
+public class BlockModDoor extends BlockDoor implements INBTBlockTransformable {
     public BlockModDoor(Material materialIn, String key) {
         super(materialIn);
         this.setTranslationKey(key);
@@ -129,5 +130,10 @@ public class BlockModDoor extends BlockDoor {
         if (this == ModBlocks.door_metal) return ModItems.door_metal;
         if (this == ModBlocks.door_office) return ModItems.door_office;
         return ModItems.door_bunker;
+    }
+
+    @Override
+    public int transformMeta(int meta, int coordBaseMode) {
+        return INBTBlockTransformable.transformMetaDoor(meta, coordBaseMode);
     }
 }

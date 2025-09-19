@@ -193,4 +193,9 @@ public abstract class RBMKBase extends BlockDummyable implements IToolable, IToo
 		
 		return false;
 	}
+
+	@Override
+	public int transformMeta(int meta, int coordBaseMode) {
+		return meta;
+	}
 }

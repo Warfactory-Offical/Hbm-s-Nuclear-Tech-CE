@@ -2,6 +2,7 @@ package com.hbm.blocks.machine;
 
 import com.hbm.render.block.BlockBakeFrame;
 import com.hbm.tileentity.machine.TileEntityCharger;
+import com.hbm.world.gen.nbt.INBTBlockTransformable;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
@@ -17,7 +18,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class Charger extends BlockContainerBakeable {
+public class Charger extends BlockContainerBakeable implements INBTBlockTransformable {
 
     public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 
@@ -94,5 +95,10 @@ public class Charger extends BlockContainerBakeable {
     @Override
     protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, FACING);
+    }
+
+    @Override
+    public int transformMeta(int meta, int coordBaseMode) {
+        return INBTBlockTransformable.transformMetaDeco(meta, coordBaseMode);
     }
 }

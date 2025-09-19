@@ -1,7 +1,7 @@
 {   "parent": "block/thin_block",
     "textures": {
-        "particle": "hbm:blocks/oil_spill",
-        "texture": "hbm:blocks/oil_spill"
+        "texture": "hbm:blocks/oil_spill",
+        "particle": "#texture"
     },
     "elements": [
         {   "from": [ 0, 0, 0 ],

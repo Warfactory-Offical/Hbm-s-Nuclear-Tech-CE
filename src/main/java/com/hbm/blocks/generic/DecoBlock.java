@@ -4,6 +4,7 @@ import com.hbm.blocks.ICustomBlockHighlight;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.deco.TileEntityDecoBlock;
+import com.hbm.world.gen.nbt.INBTBlockTransformable;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.material.Material;
@@ -34,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Random;
 import java.util.function.Consumer;
 
-public class DecoBlock extends BlockContainer implements ICustomBlockHighlight {
+public class DecoBlock extends BlockContainer implements ICustomBlockHighlight, INBTBlockTransformable {
 
     public static final PropertyDirection FACING = BlockHorizontal.FACING;
 
@@ -316,6 +317,11 @@ public class DecoBlock extends BlockContainer implements ICustomBlockHighlight {
     @Override
     public @NotNull IBlockState withMirror(IBlockState state, Mirror mirrorIn) {
         return state.withRotation(mirrorIn.toRotation(state.getValue(FACING)));
+    }
+
+    @Override
+    public int transformMeta(int meta, int coordBaseMode) {
+        return INBTBlockTransformable.transformMetaDeco(meta, coordBaseMode);
     }
 
 }

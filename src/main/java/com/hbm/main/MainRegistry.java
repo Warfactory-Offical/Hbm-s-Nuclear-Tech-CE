@@ -10,6 +10,7 @@ import com.hbm.capability.HbmCapability;
 import com.hbm.capability.HbmLivingCapability;
 import com.hbm.capability.NTMBatteryCapabilityHandler;
 import com.hbm.command.CommandHbm;
+import com.hbm.command.CommandLocate;
 import com.hbm.command.CommandPacketInfo;
 import com.hbm.command.CommandRadiation;
 import com.hbm.config.*;
@@ -220,6 +221,7 @@ public class MainRegistry {
         WeaponConfig.loadFromConfig(config);
         MobConfig.loadFromConfig(config);
         SpaceConfig.loadFromConfig(config);
+        StructureConfig.loadFromConfig(config);
         reloadCompatConfig();
         BedrockOreJsonConfig.init();
         config.save();
@@ -455,6 +457,7 @@ public class MainRegistry {
         RBMKDials.createDials(evt.getServer().getEntityWorld());
         evt.registerServerCommand(new CommandRadiation());
         evt.registerServerCommand(new CommandHbm());
+        evt.registerServerCommand(new CommandLocate());
         evt.registerServerCommand(new CommandSpaceTP());
         evt.registerServerCommand(new CommandPacketInfo());
         AdvancementManager.init(evt.getServer());

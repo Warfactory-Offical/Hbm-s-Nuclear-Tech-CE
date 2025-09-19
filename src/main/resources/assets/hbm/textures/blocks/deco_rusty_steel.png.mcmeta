@@ -1,0 +1,15 @@
+{
+	"ctm": {
+		"ctm_version": 1,
+		"type": "CTM",
+		"textures": [
+			"hbm:blocks/deco_rusty_steel_ctm"
+		],
+        "extra": {
+            "connect_to": [
+                { "block": "hbm:deco_rusty_steel" },
+                { "block": "hbm:deco_steel" }
+            ]
+        }
+	}
+}

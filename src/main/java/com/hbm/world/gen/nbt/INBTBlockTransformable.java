@@ -32,25 +32,49 @@ public interface INBTBlockTransformable {
         if(coordBaseMode == 0) return meta;
         switch(coordBaseMode) {
             case 1: //West
-                switch(meta) {
-                    case 2: return 5;
-                    case 3: return 4;
-                    case 4: return 2;
-                    case 5: return 3;
+                switch (meta) {
+                    case 2 -> {
+                        return 5;
+                    }
+                    case 3 -> {
+                        return 4;
+                    }
+                    case 4 -> {
+                        return 2;
+                    }
+                    case 5 -> {
+                        return 3;
+                    }
                 }
             case 2: //North
-                switch(meta) {
-                    case 2: return 3;
-                    case 3: return 2;
-                    case 4: return 5;
-                    case 5: return 4;
+                switch (meta) {
+                    case 2 -> {
+                        return 3;
+                    }
+                    case 3 -> {
+                        return 2;
+                    }
+                    case 4 -> {
+                        return 5;
+                    }
+                    case 5 -> {
+                        return 4;
+                    }
                 }
             case 3: //East
-                switch(meta) {
-                    case 2: return 4;
-                    case 3: return 5;
-                    case 4: return 3;
-                    case 5: return 2;
+                switch (meta) {
+                    case 2 -> {
+                        return 4;
+                    }
+                    case 3 -> {
+                        return 5;
+                    }
+                    case 4 -> {
+                        return 3;
+                    }
+                    case 5 -> {
+                        return 2;
+                    }
                 }
         }
         return meta;
@@ -66,22 +90,21 @@ public interface INBTBlockTransformable {
 
     static int transformMetaStairs(int meta, int coordBaseMode) {
         if(coordBaseMode == 0) return meta;
-        switch(coordBaseMode) {
-            case 1: //West
-                if((meta & 3) < 2) //Flip second bit for E/W
+        switch (coordBaseMode) {
+            case 1 -> { //West
+                if ((meta & 3) < 2) //Flip second bit for E/W
                     meta = meta ^ 2;
                 else
                     meta = meta ^ 3; //Flip both bits for N/S
-                break;
-            case 2: //North
-                meta = meta ^ 1; //Flip first bit
-                break;
-            case 3: //East
-                if((meta & 3) < 2) //Flip both bits for E/W
+            }
+            case 2 -> //North
+                    meta = meta ^ 1; //Flip first bit
+            case 3 -> { //East
+                if ((meta & 3) < 2) //Flip both bits for E/W
                     meta = meta ^ 3;
                 else //Flip second bit for N/S
                     meta = meta ^ 2;
-                break;
+            }
         }
         return meta;
     }
@@ -90,22 +113,21 @@ public interface INBTBlockTransformable {
     // same as stairs but 1 & 3 flipped
     static int transformMetaTrapdoor(int meta, int coordBaseMode) {
         if(coordBaseMode == 0) return meta;
-        switch(coordBaseMode) {
-            case 1: //West
-                if((meta & 3) < 2)
+        switch (coordBaseMode) {
+            case 1 -> { //West
+                if ((meta & 3) < 2)
                     meta = meta ^ 3;
                 else
                     meta = meta ^ 2;
-                break;
-            case 2: //North
-                meta = meta ^ 1; //Flip first bit
-                break;
-            case 3: //East
-                if((meta & 3) < 2)
+            }
+            case 2 -> //North
+                    meta = meta ^ 1; //Flip first bit
+            case 3 -> { //East
+                if ((meta & 3) < 2)
                     meta = meta ^ 2;
                 else
                     meta = meta ^ 3;
-                break;
+            }
         }
         return meta;
     }
@@ -126,15 +148,15 @@ public interface INBTBlockTransformable {
         int rot = meta & 3;
         int other = meta & 12;
 
-        switch(coordBaseMode) {
-            case 1: //W
-                rot = (rot + 1) % 4; break;
-            case 2: //N
-                rot ^= 2; break;
-            case 3: //E
-                rot = (rot + 3) % 4; break;
-            default: //S
-                break;
+        switch (coordBaseMode) {
+            case 1 -> //W
+                    rot = (rot + 1) % 4;
+            case 2 -> //N
+                    rot ^= 2;
+            case 3 -> //E
+                    rot = (rot + 3) % 4;
+            default -> {
+            } //S
         }
 
         return other | rot;
@@ -144,25 +166,49 @@ public interface INBTBlockTransformable {
         if(coordBaseMode == 0) return meta;
         switch(coordBaseMode) {
             case 1: //West
-                switch(meta) {
-                    case 1: return 3;
-                    case 2: return 4;
-                    case 3: return 2;
-                    case 4: return 1;
+                switch (meta) {
+                    case 1 -> {
+                        return 3;
+                    }
+                    case 2 -> {
+                        return 4;
+                    }
+                    case 3 -> {
+                        return 2;
+                    }
+                    case 4 -> {
+                        return 1;
+                    }
                 }
             case 2: //North
-                switch(meta) {
-                    case 1: return 2;
-                    case 2: return 1;
-                    case 3: return 4;
-                    case 4: return 3;
+                switch (meta) {
+                    case 1 -> {
+                        return 2;
+                    }
+                    case 2 -> {
+                        return 1;
+                    }
+                    case 3 -> {
+                        return 4;
+                    }
+                    case 4 -> {
+                        return 3;
+                    }
                 }
             case 3: //East
-                switch(meta) {
-                    case 1: return 4;
-                    case 2: return 3;
-                    case 3: return 1;
-                    case 4: return 2;
+                switch (meta) {
+                    case 1 -> {
+                        return 4;
+                    }
+                    case 2 -> {
+                        return 3;
+                    }
+                    case 3 -> {
+                        return 1;
+                    }
+                    case 4 -> {
+                        return 2;
+                    }
                 }
         }
         return meta;
@@ -178,14 +224,14 @@ public interface INBTBlockTransformable {
     static int transformMetaLever(int meta, int coordBaseMode) {
         if(coordBaseMode == 0) return meta;
         if(meta <= 0 || meta >= 7) { //levers suck ass
-            switch(coordBaseMode) {
-                case 1: case 3: //west / east
-                    meta ^= 0b111;
+            switch (coordBaseMode) {
+                case 1, 3 -> //west / east
+                        meta ^= 0b111;
             }
         } else if(meta >= 5) {
-            switch(coordBaseMode) {
-                case 1: case 3: //west / east
-                    meta = (meta + 1) % 2 + 5;
+            switch (coordBaseMode) {
+                case 1, 3 -> //west / east
+                        meta = (meta + 1) % 2 + 5;
             }
         } else {
             meta = transformMetaTorch(meta, coordBaseMode);
@@ -211,29 +257,35 @@ public interface INBTBlockTransformable {
         int index = -1;
 
         switch (bit) {
-            case 1: index = 0; break; // south
-            case 2: index = 1; break; // west
-            case 4: index = 2; break; // north
-            case 8: index = 3; break; // east
-            default: return 0;
+            case 1 -> index = 0;
+            // south
+            case 2 -> index = 1;
+            // west
+            case 4 -> index = 2;
+            // north
+            case 8 -> index = 3;
+            // east
+            default -> {
+                return 0;
+            }
         }
 
-        int rotated = index;
-
-        switch (coordBaseMode) {
-            case 1: rotated = (index + 1) % 4; break; // 90°
-            case 2: rotated = (index + 2) % 4; break; // 180°
-            case 3: rotated = (index + 3) % 4; break; // 270°
+        int rotated = switch (coordBaseMode) {
+            case 1 -> (index + 1) % 4; // 90°
+            case 2 -> (index + 2) % 4; // 180°
+            case 3 -> (index + 3) % 4;
+            default -> index; // 270°
             // case 0: vines work ughhggh (im dragging it)
-        }
+        };
 
-        switch (rotated) {
-            case 0: return 1; // south
-            case 1: return 2; // west
-            case 2: return 4; // north
-            case 3: return 8; // east
-        }
+        return switch (rotated) {
+            case 0 -> 1; // south
+            case 1 -> 2; // west
+            case 2 -> 4; // north
+            case 3 -> 8;
+            default -> // east
+                    0;
+        };
 
-        return 0;
     }
 }

@@ -1,23 +1,48 @@
 package com.hbm.lib;
 
+import com.hbm.world.gen.MapGenNTMFeatures;
+import com.hbm.world.gen.NTMWorldGenerator;
+import com.hbm.world.gen.component.BunkerComponents;
+import com.hbm.world.gen.component.CivilianFeatures;
+import com.hbm.world.gen.nbt.NBTStructure;
 import com.hbm.world.phased.PhasedStructureGenerator;
+import net.minecraft.world.gen.structure.MapGenStructureIO;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.IWorldGenerator;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class HbmWorld {
 
-	public static void mainRegistry()
-	{
+	public static void mainRegistry() {
 		initWorldGen();
 	}
-	
-	public static void initWorldGen()
-	{
+
+	public static NTMWorldGenerator worldGenerator;
+
+	public static void initWorldGen() {
+		MapGenStructureIO.registerStructure(MapGenNTMFeatures.Start.class, "NTMFeatures");
+		MapGenStructureIO.registerStructure(BunkerComponents.BunkerStart.class, "NTMBunker");
+		registerNTMFeatures();
+
 		registerWorldGen(new HbmWorldGen(), 1);
+
+		worldGenerator = new NTMWorldGenerator();
+		registerWorldGen(worldGenerator, 1);
+		MinecraftForge.EVENT_BUS.register(worldGenerator);
+
+		NBTStructure.register();
 	}
-	
-	public static void registerWorldGen(HbmWorldGen nukerWorldGen, int weightedProbability)
-	{
-		 GameRegistry.registerWorldGenerator(nukerWorldGen, weightedProbability);
-		 GameRegistry.registerWorldGenerator(PhasedStructureGenerator.INSTANCE, weightedProbability);
+
+	private static void registerWorldGen(IWorldGenerator nukerWorldGen, int weightedProbability) {
+		GameRegistry.registerWorldGenerator(nukerWorldGen, weightedProbability);
+		GameRegistry.registerWorldGenerator(PhasedStructureGenerator.INSTANCE, weightedProbability);
+	}
+
+	private static void registerNTMFeatures() {
+		CivilianFeatures.registerComponents();
+		// OfficeFeatures.registerComponents();
+		// RuinFeatures.registerComponents();
+		BunkerComponents.registerComponents();
+		// MapGenStructureIO.registerStructureComponent(SiloComponent.class, "NTMSiloComponent");
 	}
 }

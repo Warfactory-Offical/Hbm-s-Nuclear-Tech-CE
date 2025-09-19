@@ -2,6 +2,7 @@ package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.tileentity.deco.TileEntityDecoPoleSatelliteReceiver;
+import com.hbm.world.gen.nbt.INBTBlockTransformable;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.material.Material;
@@ -21,7 +22,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class DecoPoleSatelliteReceiver extends BlockContainer {
+public class DecoPoleSatelliteReceiver extends BlockContainer implements INBTBlockTransformable {
 
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 
@@ -111,6 +112,11 @@ public class DecoPoleSatelliteReceiver extends BlockContainer {
 	public IBlockState withMirror(IBlockState state, Mirror mirrorIn)
 	{
 	   return state.withRotation(mirrorIn.toRotation((EnumFacing)state.getValue(FACING)));
+	}
+
+	@Override
+	public int transformMeta(int meta, int coordBaseMode) {
+		return INBTBlockTransformable.transformMetaDeco(meta, coordBaseMode);
 	}
 
 }

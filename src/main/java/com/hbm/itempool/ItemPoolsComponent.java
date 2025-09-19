@@ -1,5 +1,6 @@
 package com.hbm.itempool;
 
+import com.hbm.blocks.ModBlocks;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
 import com.hbm.inventory.material.Mats;
 import com.hbm.items.ItemEnums;
@@ -91,9 +92,8 @@ public class ItemPoolsComponent {
                     weighted(Items.PAPER, 0, 1, 12, 10),
                     weighted(Items.BOOK, 0, 1, 3, 4),
                     weighted(ModItems.twinkie, 0, 1, 2, 6),
-                    // TODO
-                    /*weighted(ModItems.coffee, 0, 1, 1, 4),
-                    weighted(ModBlocks.deco_computer, 0, 1, 1, 1)*/
+                    weighted(ModItems.coffee, 0, 1, 1, 4),
+                    weighted(ModBlocks.deco_computer, 0, 1, 1, 1),
                     weighted(ModItems.flame_politics, 0, 1, 1, 2),
                     weighted(ModItems.ring_pull, 0, 1, 1, 4),
                     weighted(ModItems.can_empty, 0, 1, 1, 2),

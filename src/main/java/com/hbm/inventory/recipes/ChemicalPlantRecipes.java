@@ -193,12 +193,12 @@ public class ChemicalPlantRecipes extends GenericRecipes<GenericRecipe> {
                 .inputItems(new RecipesCommon.OreDictStack(KEY_GLYPHID_MEAT, 3))
                 .inputFluids(new FluidStack(Fluids.WATER, 1_000))
                 .outputItems(new ItemStack(ModItems.sulfur, 4), new ItemStack(ModItems.niter, 3))
-                .outputFluids(new FluidStack(Fluids.SALIENT, 250)));
+                .outputFluids(new FluidStack(Fluids.SALIENT, 250)));*/
 
         this.register(new GenericRecipe("chem.rustysteel").setup(40, 100)
                 .inputItems(new RecipesCommon.ComparableStack(ModBlocks.deco_steel, 8))
                 .inputFluids(new FluidStack(Fluids.WATER, 1000))
-                .outputItems(new ItemStack(ModBlocks.deco_rusty_steel, 8)));*/
+                .outputItems(new ItemStack(ModBlocks.deco_rusty_steel, 8)));
 
         /// ACIDS ///
         this.register(new GenericRecipe("chem.peroxide").setup(50, 100)

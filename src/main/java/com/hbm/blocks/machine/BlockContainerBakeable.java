@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.items.IDynamicModels;
 import com.hbm.render.block.BlockBakeFrame;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -25,7 +24,7 @@ import net.minecraftforge.client.model.ModelLoaderRegistry;
 import java.util.Objects;
 
 public abstract class BlockContainerBakeable extends BlockContainer implements IDynamicModels {
-    BlockBakeFrame blockFrame;
+    protected BlockBakeFrame blockFrame;
     public EnumBlockRenderType getRenderType(IBlockState state){
         return EnumBlockRenderType.MODEL;
     }

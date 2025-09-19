@@ -6,6 +6,7 @@ import net.minecraftforge.common.config.Property;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Locale;
 
 public class CommonConfig {
 	public static final String CATEGORY_GENERAL = "01_general";
@@ -128,6 +129,16 @@ public class CommonConfig {
 		}
 	
 		return value;
+	}
+
+	public static int parseStructureFlag(String flag) {
+		if(flag == null) flag = "";
+
+		return switch (flag.toLowerCase(Locale.US)) {
+			case "true", "on", "yes" -> 1;
+			case "false", "off", "no" -> 0;
+			default -> 2;
+		};
 	}
 
 }

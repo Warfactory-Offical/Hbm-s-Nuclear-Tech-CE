@@ -5,6 +5,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.amlfrom1710.WavefrontObject;
 import com.hbm.render.model.BlockDecoBakedModel;
+import com.hbm.world.gen.nbt.INBTBlockTransformable;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -38,7 +39,7 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-public class BlockDecoModel extends BlockEnumMeta {
+public class BlockDecoModel extends BlockEnumMeta implements INBTBlockTransformable {
 
     private float mnX = 0.0F;
     private float mnY = 0.0F;
@@ -147,6 +148,35 @@ public class BlockDecoModel extends BlockEnumMeta {
     public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         int meta = state.getValue(META) & 3;
         return Collections.singletonList(new ItemStack(Item.getItemFromBlock(this), 1, meta));
+    }
+
+    @Override
+    public int transformMeta(int meta, int coordBaseMode) {
+        if(coordBaseMode == 0) return meta;
+        //N: 0b00, S: 0b01, W: 0b10, E: 0b11
+        int rot = meta >> 2;
+        int type = meta & 3;
+
+        switch (coordBaseMode) {
+            default -> {
+            } //South
+            case 1 -> { //West
+                if ((rot & 3) < 2) //N & S can just have bits toggled
+                    rot = rot ^ 3;
+                else //W & E can just have first bit set to 0
+                    rot = rot ^ 2;
+            }
+            case 2 -> //North
+                    rot = rot ^ 1; //N, W, E & S can just have first bit toggled
+            case 3 -> { //East
+                if ((rot & 3) < 2)//N & S can just have second bit set to 1
+                    rot = rot ^ 2;
+                else //W & E can just have bits toggled
+                    rot = rot ^ 3;
+            }
+        }
+        //genuinely like. why did i do that
+        return (rot << 2) | type; //To accommodate for BlockDecoModel's shift in the rotation bits; otherwise, simply bit-shift right and or any non-rotation meta after
     }
 
     @SideOnly(Side.CLIENT)

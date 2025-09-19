@@ -123,7 +123,7 @@ public class BlockBakeFrame {
     public enum BlockForm {
         ALL("minecraft:block/cube_all", 1, new String[]{"all"}),
         CROP("minecraft:block/crop", 1, new String[]{"crop"}),
-        LAYER("minecraft:block/snow", 1, new String[]{"snow"}),
+        LAYER("hbm:block/block_layering", 1, new String[]{"texture"}),
         CROSS("minecraft:block/cross", 1, new String[]{"cross"}),
         PILLAR("minecraft:block/cube_column", 2, new String[]{"end", "side"}),
         PILLAR_BOTTOM("minecraft:block/cube_column", 3, new String[]{"end", "side", "bottom"}),

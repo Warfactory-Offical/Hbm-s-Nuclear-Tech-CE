@@ -8,6 +8,7 @@ import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.InventoryHelper;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.IPersistentNBT;
+import com.hbm.world.gen.nbt.INBTBlockTransformable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -51,7 +52,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public abstract class BlockDummyable extends BlockContainer implements ICustomBlockHighlight, ICopiable, IDynamicModels {
+public abstract class BlockDummyable extends BlockContainer implements ICustomBlockHighlight, ICopiable, INBTBlockTransformable, IDynamicModels {
 
 	//Drillgon200: I'm far to lazy to figure out what all the meta values should be translated to in properties
 	public static final PropertyInteger META = PropertyInteger.create("meta", 0, 15);
@@ -506,6 +507,28 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
 		if (tile instanceof ICopiable)
 			return ((ICopiable) tile).infoForDisplay(world, x, y, z);
 		return null;
+	}
+
+	@Override
+	public int transformMeta(int meta, int coordBaseMode) {
+		boolean isOffset = meta >= 12; // squishing causes issues
+		boolean isExtra = !isOffset && meta >= extra;
+
+		if(isOffset) {
+			meta -= offset;
+		} else if(isExtra) {
+			meta -= extra;
+		}
+
+		meta = INBTBlockTransformable.transformMetaDeco(meta, coordBaseMode);
+
+		if(isOffset) {
+			meta += offset;
+		} else if(isExtra) {
+			meta += extra;
+		}
+
+		return meta;
 	}
 
 	@Override
