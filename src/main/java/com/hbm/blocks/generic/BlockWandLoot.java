@@ -251,7 +251,7 @@ public class BlockWandLoot extends BlockContainerBakeable implements ILookOverla
                 world.setTileEntity(pos, te);
             }
             // Th3_Sl1ze: sometimes it does still output null in cases of vanilla chests, though it works seamlessly with crates for example
-            // do I know why? nope
+            // do I know why? nope..
             IItemHandler handler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 
             if (handler instanceof IItemHandlerModifiable modHandler) {
