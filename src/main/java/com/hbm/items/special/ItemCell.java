@@ -155,11 +155,6 @@ public class ItemCell extends Item {
     }
 
     @Override
-    public int getItemStackLimit(ItemStack stack) {
-        return isEmptyCell(stack) ? 64 : 1;
-    }
-
-    @Override
     @SideOnly(Side.CLIENT)
     public @NotNull String getItemStackDisplayName(@NotNull ItemStack stack) {
         if (isEmptyCell(stack)) {

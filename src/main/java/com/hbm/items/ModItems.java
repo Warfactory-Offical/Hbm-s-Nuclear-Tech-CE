@@ -396,7 +396,7 @@ public class ModItems {
     public static final Item canister_napalm = new ItemCustomLore("canister_napalm").setCreativeTab(MainRegistry.controlTab);
     public static final Item gas_empty = new ItemBase("gas_empty").setCreativeTab(MainRegistry.controlTab);
     public static final Item gas_full = new ItemGasCanister("gas_full").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.gas_empty);
-    public static final Item cell = new ItemCell("cell").setMaxStackSize(64).setCreativeTab(MainRegistry.controlTab);
+    public static final Item cell = new ItemCell("cell").setCreativeTab(MainRegistry.controlTab);
 
     // Th3_Sl1ze: welp, technically balefire is not a fluid, so I guess I have to make it a separate item?..
     public static final Item cell_balefire = new ItemBakedBase("cell_balefire").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.cell);
