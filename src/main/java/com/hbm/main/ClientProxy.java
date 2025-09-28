@@ -1043,8 +1043,18 @@ public class ClientProxy extends ServerProxy {
                     }
                 }
 
-                if (fx != null)
+                if (fx != null) {
+                    if(data.getBoolean("noclip")) {
+                        fx.canCollide = false;
+                    } else
+                        fx.canCollide = true;
+
+                    if(data.getInteger("overrideAge") > 0) {
+                        fx.setMaxAge(data.getInteger("overrideAge"));
+                    }
+
                     Minecraft.getMinecraft().effectRenderer.addEffect(fx);
+                }
             }
             case "spark" -> {
                 String mode = data.getString("mode");
