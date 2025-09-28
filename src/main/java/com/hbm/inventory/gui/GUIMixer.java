@@ -47,7 +47,7 @@ public class GUIMixer extends GuiInfoContainer {
 			MixerRecipes.MixerRecipe recipe = recipes[mixer.recipeIndex % recipes.length];
 			if(recipe.input1 != null) label.add("-" + recipe.input1.type.getLocalizedName());
 			if(recipe.input2 != null) label.add("-" + recipe.input2.type.getLocalizedName());
-			if(recipe.solidInput != null) label.add("-" + recipe.solidInput.getStackList().get(20).getDisplayName());
+			if(recipe.solidInput != null) label.add("-" + recipe.solidInput.extractForCyclingDisplay(20).getDisplayName());
 			label.add(ChatFormatting.RED + "Click to change!");
 			String[] labelArray = label.toArray(new String[0]);
 			this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 62, guiTop + 22, 12, 12, mouseX, mouseY, labelArray);
