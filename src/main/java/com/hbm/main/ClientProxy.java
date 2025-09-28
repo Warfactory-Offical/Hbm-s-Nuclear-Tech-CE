@@ -797,6 +797,14 @@ public class ClientProxy extends ServerProxy {
                 player.maxHurtTime = data.getInteger("maxTime");
                 player.attackedAtYaw = 0F;
             }
+            case "gasfire" -> {
+                double mX = data.getDouble("mX");
+                double mY = data.getDouble("mY");
+                double mZ = data.getDouble("mZ");
+                float scale = data.getFloat("scale");
+                ParticleGasFlame text = new ParticleGasFlame(world, x, y, z, mX, mY, mZ, scale > 0 ? scale : 6.5F);
+                Minecraft.getMinecraft().effectRenderer.addEffect(text);
+            }
             case "marker" -> {
                 int color = data.getInteger("color");
                 String label = data.getString("label");
@@ -1044,10 +1052,7 @@ public class ClientProxy extends ServerProxy {
                 }
 
                 if (fx != null) {
-                    if(data.getBoolean("noclip")) {
-                        fx.canCollide = false;
-                    } else
-                        fx.canCollide = true;
+                    fx.canCollide = !data.getBoolean("noclip");
 
                     if(data.getInteger("overrideAge") > 0) {
                         fx.setMaxAge(data.getInteger("overrideAge"));
