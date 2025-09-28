@@ -569,7 +569,7 @@ public class TileEntityMachineRadarNT extends TileEntityMachineBase implements I
 		matchingEntities.clear();
 
 		for(WorldServer world : FMLCommonHandler.instance().getMinecraftServerInstance().worlds) {
-			for(Object entity : world.loadedEntityList) {
+			for(Object entity : new ArrayList<>(world.loadedEntityList)) {
 				for(Class clazz : classes) {
 					if(clazz.isAssignableFrom(entity.getClass())) {
 						matchingEntities.add((Entity) entity);
