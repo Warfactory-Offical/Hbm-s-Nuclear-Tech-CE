@@ -67,6 +67,7 @@ import com.hbm.util.ColorUtil;
 import com.hbm.util.I18nUtil;
 import com.hbm.util.Vec3dUtil;
 import com.hbm.wiaj.cannery.Jars;
+import it.unimi.dsi.fastutil.ints.Int2LongOpenHashMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirt;
 import net.minecraft.block.BlockStainedHardenedClay;
@@ -148,7 +149,7 @@ public class ClientProxy extends ServerProxy {
     public static boolean renderingConstant = false;
     public static int boxcarCalllist;
     public RenderInfoSystemLegacy theInfoSystem = new RenderInfoSystemLegacy();
-    private static HashMap<Integer, Long> vanished = new HashMap<>();
+    private static final Int2LongOpenHashMap vanished = new Int2LongOpenHashMap();
 
     public static void registerItemRenderer(Item i, TileEntityItemStackRenderer render, IRegistry<ModelResourceLocation, IBakedModel> reg) {
         i.setTileEntityItemStackRenderer(render);
@@ -417,7 +418,7 @@ public class ClientProxy extends ServerProxy {
 
     //version 2, now with strings!
     @Override
-    public void spawnParticle(double x, double y, double z, String type, float args[]) {
+    public void spawnParticle(double x, double y, double z, String type, float[] args) {
         World world = Minecraft.getMinecraft().world;
         TextureManager man = Minecraft.getMinecraft().renderEngine;
 
@@ -685,6 +686,7 @@ public class ClientProxy extends ServerProxy {
                             vec = vec.rotateYaw(360F / count);
                         }
                     }
+                    default -> throw new IllegalStateException("Unexpected value: " + mode);
                 }
             }
             case "debugdrone" -> {
@@ -707,18 +709,18 @@ public class ClientProxy extends ServerProxy {
                 }
             }
             case "network" -> {
-                ParticleDebug debug = null;
                 double mX = data.getDouble("mX");
                 double mY = data.getDouble("mY");
                 double mZ = data.getDouble("mZ");
 
-                switch (data.getString("mode")) {
-                    case "power" -> debug = new ParticleDebug(world, x, y, z);
+                ParticleDebug debug = switch (data.getString("mode")) {
+                    case "power" -> new ParticleDebug(world, x, y, z);
                     case "fluid" -> {
                         int color = data.getInteger("color");
-                        debug = new ParticleDebug(world, x, y, z, mX, mY, mZ, color);
+                        yield new ParticleDebug(world, x, y, z, mX, mY, mZ, color);
                     }
-                }
+                    default -> throw new IllegalStateException("Unexpected value: " + data.getString("mode"));
+                };
                 Minecraft.getMinecraft().effectRenderer.addEffect(debug);
             }
             case "exhaust" -> {
@@ -767,6 +769,7 @@ public class ClientProxy extends ServerProxy {
                             }
                         }
                     }
+                    default -> throw new IllegalStateException("Unexpected value: " + mode);
                 }
             }
             case "ufo" -> {
@@ -844,7 +847,7 @@ public class ClientProxy extends ServerProxy {
                 Minecraft.getMinecraft().effectRenderer.addEffect(fx);
 
                 for (int i = 0; i < 50; i++) {
-                    Spark blast = new ParticleFirework.Spark(world, x, y, z,
+                    Spark blast = new Spark(world, x, y, z,
                             0.4 * world.rand.nextGaussian(),
                             0.4 * world.rand.nextGaussian(),
                             0.4 * world.rand.nextGaussian(), Minecraft.getMinecraft().effectRenderer);
@@ -894,6 +897,7 @@ public class ClientProxy extends ServerProxy {
                                 ((ParticleSmokeNormal) fx).smokeParticleScale = fx.particleScale;
                                 Minecraft.getMinecraft().effectRenderer.addEffect(fx);
                             }
+                            default -> throw new IllegalStateException("Unexpected value: " + mode);
                         }
                     }
                 }
@@ -965,27 +969,27 @@ public class ClientProxy extends ServerProxy {
                     double mY = rand.nextGaussian() * motion;
                     double mZ = rand.nextGaussian() * motion;
 
-                    Particle fx = null;
                     String mode = data.getString("mode");
-                    switch (mode) {
-                        case "flame" -> fx = new ParticleFlame.Factory().createParticle(-1, world, x, y, z, mX, mY, mZ);
-                        case "cloud" -> fx = new ParticleCloud.Factory().createParticle(-1, world, x, y, z, mX, mY, mZ);
-                        case "reddust" -> fx = new ParticleRedstone.Factory().createParticle(-1, world, x, y, z, 0.0F, 0.0F,
+                    Particle fx = switch (mode) {
+                        case "flame" -> new ParticleFlame.Factory().createParticle(-1, world, x, y, z, mX, mY, mZ);
+                        case "cloud" -> new ParticleCloud.Factory().createParticle(-1, world, x, y, z, mX, mY, mZ);
+                        case "reddust" -> new ParticleRedstone.Factory().createParticle(-1, world, x, y, z, 0.0F, 0.0F,
                                 0.0F);
-                        case "bluedust" -> fx = new ParticleRedstone.Factory().createParticle(-1, world, x, y, z, 0.01F, 0.01F,
+                        case "bluedust" -> new ParticleRedstone.Factory().createParticle(-1, world, x, y, z, 0.01F, 0.01F,
                                 1F);
-                        case "greendust" -> fx = new ParticleRedstone.Factory().createParticle(-1, world, x, y, z, 0.01F, 0.5F,
+                        case "greendust" -> new ParticleRedstone.Factory().createParticle(-1, world, x, y, z, 0.01F, 0.5F,
                                 0.1F);
                         case "blockdust" -> {
                             Block b = Block.getBlockById(data.getInteger("block"));
-                            fx = new ParticleBlockDust.Factory().createParticle(-1, world, x, y, z, mX, mY + 0.2, mZ,
+                            Particle particle = new ParticleBlockDust.Factory().createParticle(-1, world, x, y, z, mX, mY + 0.2, mZ,
                                     Block.getStateId(b.getDefaultState()));
-                            fx.setMaxAge(50 + rand.nextInt(50));
+                            particle.setMaxAge(50 + rand.nextInt(50));
+                            yield particle;
                         }
-                    }
+                        default -> throw new IllegalStateException("Unexpected value: " + mode);
+                    };
 
-                    if (fx != null)
-                        Minecraft.getMinecraft().effectRenderer.addEffect(fx);
+                    Minecraft.getMinecraft().effectRenderer.addEffect(fx);
                 }
             }
             case "vanillaExt" -> {
@@ -994,30 +998,30 @@ public class ClientProxy extends ServerProxy {
                 double mY = data.getDouble("mY");
                 double mZ = data.getDouble("mZ");
 
-                Particle fx = null;
                 String mode = data.getString("mode");
-                switch (mode) {
-                    case "flame" -> fx = new ParticleFlame.Factory().createParticle(-1, world, x, y, z, mX, mY, mZ);
-                    case "smoke" -> fx = new ParticleSmokeNormal.Factory().createParticle(-1, world, x, y, z, mX, mY, mZ);
+                Particle fx = switch (mode) {
+                    case "flame" -> new ParticleFlame.Factory().createParticle(-1, world, x, y, z, mX, mY, mZ);
+                    case "smoke" -> new ParticleSmokeNormal.Factory().createParticle(-1, world, x, y, z, mX, mY, mZ);
                     case "volcano" -> {
-                        fx = new ParticleSmokeNormal.Factory().createParticle(-1, world, x, y, z, mX, mY, mZ);
-                        ((ParticleSmokeNormal) fx).smokeParticleScale = 100f;
-                        fx.setMaxAge(200 + rand.nextInt(50));
-                        fx.canCollide = false;
-                        fx.motionX = rand.nextGaussian() * 0.2;
-                        fx.motionY = 2.5 + rand.nextDouble();
-                        fx.motionZ = rand.nextGaussian() * 0.2;
+                        Particle particle = new ParticleSmokeNormal.Factory().createParticle(-1, world, x, y, z, mX, mY, mZ);
+                        ((ParticleSmokeNormal) particle).smokeParticleScale = 100f;
+                        particle.setMaxAge(200 + rand.nextInt(50));
+                        particle.canCollide = false;
+                        particle.motionX = rand.nextGaussian() * 0.2;
+                        particle.motionY = 2.5 + rand.nextDouble();
+                        particle.motionZ = rand.nextGaussian() * 0.2;
+                        yield particle;
                     }
-                    case "cloud" -> fx = new ParticleCloud.Factory().createParticle(-1, world, x, y, z, mX, mY, mZ);
-                    case "reddust" -> fx = new ParticleRedstone.Factory().createParticle(-1, world, x, y, z, (float) mX,
+                    case "cloud" -> new ParticleCloud.Factory().createParticle(-1, world, x, y, z, mX, mY, mZ);
+                    case "reddust" -> new ParticleRedstone.Factory().createParticle(-1, world, x, y, z, (float) mX,
                             (float) mY, (float) mZ);
-                    case "bluedust" -> fx = new ParticleRedstone.Factory().createParticle(-1, world, x, y, z, 0.01F, 0.01F, 1F);
-                    case "greendust" -> fx = new ParticleRedstone.Factory().createParticle(-1, world, x, y, z, 0.01F, 0.5F, 0.1F);
+                    case "bluedust" -> new ParticleRedstone.Factory().createParticle(-1, world, x, y, z, 0.01F, 0.01F, 1F);
+                    case "greendust" -> new ParticleRedstone.Factory().createParticle(-1, world, x, y, z, 0.01F, 0.5F, 0.1F);
                     case "largeexplode" -> {
-                        fx = new ParticleExplosionLarge.Factory().createParticle(-1, world, x, y, z, data.getFloat(
+                        Particle particle = new ParticleExplosionLarge.Factory().createParticle(-1, world, x, y, z, data.getFloat(
                                 "size"), 0.0F, 0.0F);
                         float r = 1.0F - rand.nextFloat() * 0.2F;
-                        fx.setRBGColorF(1F * r, 0.9F * r, 0.5F * r);
+                        particle.setRBGColorF(r, 0.9F * r, 0.5F * r);
 
                         for (int i = 0; i < data.getByte("count"); i++) {
                             ParticleExplosion sec =
@@ -1028,38 +1032,41 @@ public class ClientProxy extends ServerProxy {
                             sec.multipleParticleScaleBy(i + 1);
                             Minecraft.getMinecraft().effectRenderer.addEffect(sec);
                         }
+                        yield particle;
                     }
                     case "townaura" -> {
-                        fx = new ParticleSuspendedTown.Factory().createParticle(-1, world, x, y, z, 0, 0, 0);
+                        Particle particle = new ParticleSuspendedTown.Factory().createParticle(-1, world, x, y, z, 0, 0, 0);
                         float color = 0.5F + rand.nextFloat() * 0.5F;
-                        fx.setRBGColorF(0.8F * color, 0.9F * color, 1.0F * color);
-                        fx.motionX = mX;
-                        fx.motionY = mY;
-                        fx.motionZ = mZ;
+                        particle.setRBGColorF(0.8F * color, 0.9F * color, color);
+                        particle.motionX = mX;
+                        particle.motionY = mY;
+                        particle.motionZ = mZ;
+                        yield particle;
                     }
                     case "blockdust" -> {
                         Block b = Block.getBlockById(data.getInteger("block"));
                         int id = Block.getStateId(b.getDefaultState());
-                        fx = new ParticleBlockDust.Factory().createParticle(-1, world, x, y, z, mX, mY + 0.2, mZ, id);
-                        fx.setMaxAge(10 + rand.nextInt(20));
+                        Particle particle = new ParticleBlockDust.Factory().createParticle(-1, world, x, y, z, mX, mY + 0.2, mZ, id);
+                        particle.setMaxAge(10 + rand.nextInt(20));
+                        yield particle;
                     }
                     case "colordust" -> {
                         int id = Block.getStateId(Blocks.WOOL.getDefaultState());
-                        fx = new ParticleBlockDust.Factory().createParticle(-1, world, x, y, z, mX, mY + 0.2, mZ, id);
-                        fx.setRBGColorF(data.getFloat("r"), data.getFloat("g"), data.getFloat("b"));
-                        fx.setMaxAge(10 + rand.nextInt(20));
+                        Particle particle = new ParticleBlockDust.Factory().createParticle(-1, world, x, y, z, mX, mY + 0.2, mZ, id);
+                        particle.setRBGColorF(data.getFloat("r"), data.getFloat("g"), data.getFloat("b"));
+                        particle.setMaxAge(10 + rand.nextInt(20));
+                        yield particle;
                     }
+                    default -> throw new IllegalStateException("Unexpected value: " + mode);
+                };
+
+                fx.canCollide = !data.getBoolean("noclip");
+
+                if(data.getInteger("overrideAge") > 0) {
+                    fx.setMaxAge(data.getInteger("overrideAge"));
                 }
 
-                if (fx != null) {
-                    fx.canCollide = !data.getBoolean("noclip");
-
-                    if(data.getInteger("overrideAge") > 0) {
-                        fx.setMaxAge(data.getInteger("overrideAge"));
-                    }
-
-                    Minecraft.getMinecraft().effectRenderer.addEffect(fx);
-                }
+                Minecraft.getMinecraft().effectRenderer.addEffect(fx);
             }
             case "spark" -> {
                 String mode = data.getString("mode");
@@ -1096,8 +1103,7 @@ public class ClientProxy extends ServerProxy {
                         //Multiply it by the original vector's length to ensure it has the right magnitude
                         newDirection = newDirection.scale((float) direction.length() + rand.nextFloat() * velocityRand);
                         Particle fx = new ParticleSpark(world, x, y, z, length + rand.nextFloat() * randLength, width
-                                , lifetime + rand.nextInt(randLifeTime), gravity).color(r, g, b, a).motion((float) newDirection.x,
-(float) newDirection.y, (float) newDirection.z);
+                                , lifetime + rand.nextInt(randLifeTime), gravity).color(r, g, b, a).motion((float) newDirection.x, (float) newDirection.y, (float) newDirection.z);
                         Minecraft.getMinecraft().effectRenderer.addEffect(fx);
                     }
                 }
@@ -1178,8 +1184,7 @@ public class ClientProxy extends ServerProxy {
                             world, ix + ox, iy, iz + oz, p.motionX + moX * 2, p.motionY + moY * 2, p.motionZ + moZ * 2));
                     Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleFlame.Factory().createParticle(-1,
                             world, ix - ox, iy, iz - oz, p.motionX + moX * 2, p.motionY + moY * 2, p.motionZ + moZ * 2));
-                    Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleSmokeNormal.Factory().createParticle(-1, world, ix + ox, iy,
- iz + oz, p.motionX + moX * 3, p.motionY + moY * 3, p.motionZ + moZ * 3));
+                    Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleSmokeNormal.Factory().createParticle(-1, world, ix + ox, iy, iz + oz, p.motionX + moX * 3, p.motionY + moY * 3, p.motionZ + moZ * 3));
                     Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleSmokeNormal.Factory().createParticle(-1, world, ix - ox, iy,
                             iz - oz, p.motionX + moX * 3, p.motionY + moY * 3, p.motionZ + moZ * 3));
                 }
@@ -1273,13 +1278,12 @@ public class ClientProxy extends ServerProxy {
                             Vec3d offset = normal.scale(0.2F);
                             ParticleHitDebris particle = new ParticleHitDebris(world, x + offset.x, y + offset.y,
                                     z + offset.z, tex, world.rand.nextInt(16), scale, 40 + world.rand.nextInt(20));
-                            offset = offset.scale(1);
+                            offset.scale(1);
                             particle.motion((float) dir.x, (float) dir.y, (float) dir.z);
                             particle.color(r, g, b);
                             ParticleBatchRenderer.addParticle(particle);
                         }
                         if (mat == Material.WOOD) {
-                            tex = ResourceManager.wood_fragments;
                             r = 0.8F;
                             g = 0.5F;
                             b = 0.3F;
@@ -1491,6 +1495,7 @@ public class ClientProxy extends ServerProxy {
                                     HbmAnimationsSedna.hotbar[player.inventory.currentItem][0] = new HbmAnimationsSedna.Animation(player.getHeldItemMainhand().getItem().getTranslationKey(), System.currentTimeMillis(), animation, null);
                                 }
                             }
+                            default -> throw new IllegalStateException("Unexpected value: " + mode);
                         }
                     }
                     case "hs_sword" -> {
@@ -1513,6 +1518,7 @@ public class ClientProxy extends ServerProxy {
                                                     System.currentTimeMillis(), animation);
                                 }
                             }
+                            default -> throw new IllegalStateException("Unexpected value: " + mode);
                         }
                     }
                     case "hf_sword" -> {
@@ -1535,6 +1541,7 @@ public class ClientProxy extends ServerProxy {
                                                     System.currentTimeMillis(), animation);
                                 }
                             }
+                            default -> throw new IllegalStateException("Unexpected value: " + mode);
                         }
                     }
                 }
@@ -1559,10 +1566,10 @@ public class ClientProxy extends ServerProxy {
                             rand.nextGaussian() * 0.05, 0.05, rand.nextGaussian() * 0.05));
                 Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleHadron(world, x, y, z));
             }
-            case "vanish" -> this.vanish(data.getInteger("ent"));
+            case "vanish" -> vanish(data.getInteger("ent"));
             case "giblets" -> {
                 int ent = data.getInteger("ent");
-                this.vanish(ent);
+                vanish(ent);
                 Entity e = world.getEntityByID(ent);
 
                 if (e == null)
@@ -1597,6 +1604,7 @@ public class ClientProxy extends ServerProxy {
                     }
                 }
             }
+            default -> throw new IllegalStateException("Unexpected value: " + type);
         }
     }
 
@@ -1610,10 +1618,10 @@ public class ClientProxy extends ServerProxy {
         if (e == null)
             return false;
 
-        if (!this.vanished.containsKey(e.getEntityId()))
+        if (!vanished.containsKey(e.getEntityId()))
             return false;
 
-        return this.vanished.get(e.getEntityId()) > System.currentTimeMillis();
+        return vanished.get(e.getEntityId()) > System.currentTimeMillis();
     }
 
     @Override
@@ -1662,7 +1670,7 @@ public class ClientProxy extends ServerProxy {
             vec = Vec3dUtil.rotateRoll(vec, ((float) (angle * world.rand.nextGaussian() * sway * Math.PI / 180D)));
             vec = vec.rotateYaw((float) (angle * world.rand.nextGaussian() * sway * Math.PI / 180D));
 
-            ParticleFirework.Spark blast = new ParticleFirework.Spark(world, posX, posY, posZ, vec.x * momentum, vec.y * momentum, vec.z * momentum, Minecraft.getMinecraft().effectRenderer);
+            Spark blast = new Spark(world, posX, posY, posZ, vec.x * momentum, vec.y * momentum, vec.z * momentum, Minecraft.getMinecraft().effectRenderer);
 
             if (world.rand.nextBoolean())
                 blast.setColor(0x0088EA);
@@ -1744,9 +1752,9 @@ public class ClientProxy extends ServerProxy {
     @Override
     public void displayTooltipLegacy(String msg, int time, int id) {
         if (id != 0)
-            this.theInfoSystem.push(new RenderInfoSystemLegacy.InfoEntry(msg, time), id);
+            RenderInfoSystemLegacy.push(new RenderInfoSystemLegacy.InfoEntry(msg, time), id);
         else
-            this.theInfoSystem.push(new RenderInfoSystemLegacy.InfoEntry(msg, time));
+            RenderInfoSystemLegacy.push(new RenderInfoSystemLegacy.InfoEntry(msg, time));
     }
 
     @Override
