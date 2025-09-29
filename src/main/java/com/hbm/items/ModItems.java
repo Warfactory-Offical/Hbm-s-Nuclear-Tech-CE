@@ -151,8 +151,8 @@ public class ModItems {
         ItemSimpleConsumable.giveSoundAndDecrement(stack, user, HBMSoundHandler.radawayUse, new ItemStack(ModItems.iv_empty));
         ItemSimpleConsumable.addPotionEffect(user, HbmPotion.radaway, 200, 24);
     }).setCreativeTab(MainRegistry.consumableTab);
-    public static final Item gun_kit_1 = new ItemConsumable("gun_kit_1").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
-    public static final Item gun_kit_2 = new ItemConsumable("gun_kit_2").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
+    public static final Item gun_kit_1 = new ItemRepairKit("gun_kit_1", 10).setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
+    public static final Item gun_kit_2 = new ItemRepairKit("gun_kit_2",100).setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
     public static final Item radaway_strong = new ItemSimpleConsumable("radaway_strong").setUseActionServer((stack, user) -> {
         ItemSimpleConsumable.giveSoundAndDecrement(stack, user, HBMSoundHandler.radawayUse, new ItemStack(ModItems.iv_empty));
         ItemSimpleConsumable.addPotionEffect(user, HbmPotion.radaway, 100, 99);

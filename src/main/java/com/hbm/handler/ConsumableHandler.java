@@ -5,7 +5,8 @@ import com.hbm.config.VersatileConfig;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ModItems;
 import com.hbm.items.armor.JetpackFueledBase;
-import com.hbm.items.weapon.ItemGunBase;
+import com.hbm.items.weapon.sedna.GunConfig;
+import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.potion.HbmPotion;
@@ -202,16 +203,30 @@ public class ConsumableHandler {
     }
 
     private static void handleGunKit(final Context context, final float repairFactor, final SoundEvent sound) {
+        boolean didSomething = false;
         for (int i = 0; i < 10; i++) {
-            final ItemStack gun = (i == 9) ? context.target.getHeldItemOffhand() : context.user.inventory.mainInventory.get(i);
-            if (gun.getItem() instanceof ItemGunBase) {
-                final int fullDurability = ((ItemGunBase) gun.getItem()).mainConfig.durability;
-                final int newWear = Math.max(ItemGunBase.getItemWear(gun) - (int) (fullDurability * repairFactor), 0);
-                ItemGunBase.setItemWear(gun, newWear);
+            final ItemStack item = (i == 9) ? context.target.getHeldItemOffhand() : context.user.inventory.mainInventory.get(i);
+            if (!item.isEmpty() && item.getItem() instanceof ItemGunBaseNT) {
+                ItemGunBaseNT itemGunBaseNT = (ItemGunBaseNT) item.getItem();
+                int configs = itemGunBaseNT.getConfigCount();
+                for (int j = 0; j < configs; j++) {
+                    GunConfig cfg = itemGunBaseNT.getConfig(item, j);
+                    float maxDura = cfg.getDurability(item);
+                    float wear = Math.min(itemGunBaseNT.getWear(item, j), maxDura);
+                    if (wear > 0) {
+                        itemGunBaseNT.setWear(item, j, Math.max(0F, itemGunBaseNT.getWear(item, j) - maxDura * 0.25F));
+                        didSomething = true;
+                    }
+                }
             }
         }
+        if (!didSomething){
+            context.setActionResult(EnumActionResult.FAIL);
+            return;
+        }
+        context.setActionResult(EnumActionResult.SUCCESS);
         context.playSound(sound);
-        context.shrinkCurrentItem();
+        context.damageCurrentItem(1);
     }
 
     private static void handleCbtDevice(final Context context) {
@@ -232,6 +247,7 @@ public class ConsumableHandler {
         public final EntityLivingBase target;
         public final EntityPlayer user;
         public final EnumHand hand;
+        public EnumActionResult actionResult = EnumActionResult.PASS;
 
         public final Random rand = new Random();
 
@@ -255,6 +271,9 @@ public class ConsumableHandler {
             this.user.getHeldItem(hand).shrink(1);
         }
 
+        public void damageCurrentItem(int damage) {
+            this.user.getHeldItem(hand).damageItem(damage, user);
+        }
         public void shrinkAndReplaceItem(final Item... replacements) {
             shrinkCurrentItem();
             if (user.getHeldItem(hand).isEmpty()) {
@@ -284,7 +303,11 @@ public class ConsumableHandler {
         }
 
         public ActionResult<ItemStack> getActionResult() {
-            return new ActionResult<>(EnumActionResult.SUCCESS, target.getHeldItem(hand));
+            return new ActionResult<>(actionResult, target.getHeldItem(hand));
+        }
+
+        public void setActionResult(EnumActionResult result) {
+            this.actionResult = result;
         }
     }
 }
