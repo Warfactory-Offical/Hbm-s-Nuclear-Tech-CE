@@ -588,7 +588,7 @@ public class CivilianFeatures {
 			int westMeta = this.getDecoMeta(5);
 			int northMeta = this.getDecoMeta(3);
 			int southMeta = this.getDecoMeta(2);
-			this.setBlockState(world, ModBlocks.crashed_balefire.getStateFromMeta(southMeta), 6, 11 - 2, 3, box);
+			this.setBlockState(world, ModBlocks.crashed_bomb.getStateFromMeta(southMeta), 6, 11 - 2, 3, box);
 
 			EnumFacing baseDoorFacing = EnumFacing.SOUTH;
 			EnumFacing mode = this.getCoordBaseMode();
