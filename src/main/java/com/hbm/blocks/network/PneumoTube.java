@@ -45,6 +45,8 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -186,8 +188,9 @@ public class PneumoTube extends BlockContainer implements IToolable, ITooltipPro
             if(rot == ForgeDirection.UNKNOWN) break; //unknown is always valid, simply disables this part
             if(rot == oth) continue; //skip if both positions collide
             TileEntity tile = Compat.getTileStandard(world, pos.getX() + rot.offsetX, pos.getY() + rot.offsetY, pos.getZ() + rot.offsetZ);
-            if(tile instanceof TileEntityPneumoTube) continue;
-            if(tile instanceof IInventory) break; //valid if connected to an IInventory
+            if(tile == null || tile instanceof TileEntityPneumoTube) continue;
+            if(hasItemHandler(tile, rot)) break;
+            if(tile instanceof IInventory) break; //fallback for legacy inventories
         }
 
         if(player.isSneaking()) tube.insertionDir = rot; else tube.ejectionDir = rot;
@@ -300,6 +303,20 @@ public class PneumoTube extends BlockContainer implements IToolable, ITooltipPro
         @Override public boolean isValid(Boolean value) { return true; }
         @Override public Class<Boolean> getType() { return Boolean.class; }
         @Override public String valueToString(Boolean value) { return value.toString(); }
+    }
+
+    private static boolean hasItemHandler(@NotNull TileEntity tile, @NotNull ForgeDirection tubeDir) {
+        ForgeDirection dir = tubeDir != ForgeDirection.UNKNOWN ? tubeDir.getOpposite() : ForgeDirection.UNKNOWN;
+        EnumFacing facing = dir != ForgeDirection.UNKNOWN ? dir.toEnumFacing() : null;
+        if(facing != null && tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing)) {
+            IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing);
+            if(handler != null && handler.getSlots() > 0) return true;
+        }
+//        if(tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)) {
+//            IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+//            return handler != null && handler.getSlots() > 0;
+//        }
+        return false;
     }
 
     public static class DirectionProperty implements IUnlistedProperty<ForgeDirection> {

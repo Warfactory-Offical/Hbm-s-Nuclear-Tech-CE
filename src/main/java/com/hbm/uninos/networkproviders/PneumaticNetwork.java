@@ -6,14 +6,21 @@ import com.hbm.tileentity.network.TileEntityPneumoTube;
 import com.hbm.uninos.INetworkProvider;
 import com.hbm.uninos.NodeNet;
 import com.hbm.util.BobMathUtil;
+import com.hbm.util.Compat;
 import com.hbm.util.ItemStackUtil;
-import com.hbm.util.Tuple.Pair;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.wrapper.InvWrapper;
+import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 import java.util.*;
 
@@ -33,186 +40,290 @@ public class PneumaticNetwork extends NodeNet<IInventory, TileEntityPneumoTube, 
     protected static final int timeout = 1_000;
     public static final int ITEMS_PER_TRANSFER = 64;
 
-    // while the system has parts that expects IInventires to be TileEntities to work properly (mostly range checks),
-    // it can actually handle non-TileEntities just fine.
-    public HashMap<IInventory, Pair<ForgeDirection, Long>> receivers = new HashMap<>();
+    public Map<ReceiverTarget, Long> receivers = new HashMap<>();
 
-    public void addReceiver(IInventory inventory, ForgeDirection pipeDir) {
-        receivers.put(inventory, new Pair<>(pipeDir, System.currentTimeMillis()));
+    public void addReceiver(BlockPos pos, ForgeDirection pipeDir) {
+        receivers.put(new ReceiverTarget(pos, pipeDir), System.currentTimeMillis());
     }
 
-    @Override public void update() {
-
-        // weeds out invalid targets
-        // technically not necessary since that step is taken during the send operation,
-        // but we still want to reap garbage data that would otherwise accumulate
+    @Override
+    public void update() {
         long timestamp = System.currentTimeMillis();
-        receivers.entrySet().removeIf(x -> (timestamp - x.getValue().getValue() > timeout) || NodeNet.isBadLink(x.getKey()));
+        receivers.entrySet().removeIf(entry -> timestamp - entry.getValue() > timeout);
     }
 
-    public boolean send(IInventory source, TileEntityPneumoTube tube, ForgeDirection accessDir, int sendOrder, int receiveOrder, int maxRange) {
-
-        // turns out there may be a short time window where the cleanup hasn't happened yet, but chunkloading has already caused tiles to go invalid
-        // so we just run it again here, just to be sure.
-        long timestamp = System.currentTimeMillis();
-        receivers.entrySet().removeIf(x -> (timestamp - x.getValue().getValue() > timeout) || NodeNet.isBadLink(x.getKey()));
-
+    public boolean send(TileEntity sourceTile, IItemHandler sourceHandler, TileEntityPneumoTube tube, ForgeDirection accessDir, int sendOrder, int receiveOrder, int maxRange) {
+        if(sourceTile == null || sourceHandler == null) return false;
         if(receivers.isEmpty()) return false;
+        World world = tube.getWorld();
+        if(world == null) return false;
 
-        int[] sourceSlotAccess = getSlotAccess(source, accessDir.toEnumFacing());
+        long timestamp = System.currentTimeMillis();
+        receivers.entrySet().removeIf(entry -> timestamp - entry.getValue() > timeout);
 
-        if(sendOrder == SEND_LAST) BobMathUtil.reverseIntArray(sourceSlotAccess);
-        if(sendOrder == SEND_RANDOM) BobMathUtil.shuffleIntArray(sourceSlotAccess);
+        List<ReceiverCandidate> candidates = collectCandidates(world);
+        if(candidates.isEmpty()) return false;
 
-        // for round robin, receivers are ordered by proximity to the source
-        ReceiverComparator comparator = new ReceiverComparator(tube);
-        List<Map.Entry<IInventory, Pair<ForgeDirection, Long>>> receiverList = new ArrayList<>(receivers.size());
-        receiverList.addAll(receivers.entrySet());
-        receiverList.sort(comparator);
+        candidates.sort(new ReceiverComparator(tube));
+        ReceiverCandidate chosen = selectCandidate(candidates, receiveOrder);
+        if(chosen == null) return false;
 
-        Map.Entry<IInventory, Pair<ForgeDirection, Long>> chosenReceiverEntry = null;
-
-        if(receiveOrder == RECEIVE_ROBIN) {
-            int index = nextReceiver % receivers.size();
-            chosenReceiverEntry = receiverList.get(index);
-        } else if(receiveOrder == RECEIVE_RANDOM) {
-            chosenReceiverEntry = receiverList.get(rand.nextInt(receiverList.size()));
-        }
-
-        if(chosenReceiverEntry == null) return false;
-
-        IInventory dest = chosenReceiverEntry.getKey();
-        ISidedInventory sidedDest = dest instanceof ISidedInventory ? (ISidedInventory) dest : null;
-        ISidedInventory sidedSource = source instanceof ISidedInventory ? (ISidedInventory) source : null;
-
-        TileEntity tile1 = source instanceof TileEntity ? (TileEntity) source : null;
-        TileEntity tile2 = dest instanceof TileEntity ? (TileEntity) dest : null;
-
-        // range check for our compression level, skip if either source or dest aren't tile entities
-        if(tile1 != null && tile2 != null) {
-            int sq = (tile1.getPos().getX() - tile2.getPos().getX()) * (tile1.getPos().getX() - tile2.getPos().getX()) + (tile1.getPos().getY() - tile2.getPos().getY()) * (tile1.getPos().getY() - tile2.getPos().getY()) + (tile1.getPos().getZ() - tile2.getPos().getZ()) * (tile1.getPos().getZ() - tile2.getPos().getZ());
+        TileEntity destTile = chosen.tile;
+        if(destTile != null) {
+            int dx = sourceTile.getPos().getX() - destTile.getPos().getX();
+            int dy = sourceTile.getPos().getY() - destTile.getPos().getY();
+            int dz = sourceTile.getPos().getZ() - destTile.getPos().getZ();
+            int sq = dx * dx + dy * dy + dz * dz;
             if(sq > maxRange * maxRange) {
                 return false;
             }
         }
 
-        EnumFacing destSide = chosenReceiverEntry.getValue().getKey().getOpposite().toEnumFacing();
-        int[] destSlotAccess = getSlotAccess(dest, destSide);
-        int itemsLeftToSend = ITEMS_PER_TRANSFER; // not actually individual items, but rather the total "mass", based on max stack size
-        int itemHardCap = dest instanceof TileEntityMachineAutocrafter ? 1 : ITEMS_PER_TRANSFER;
+        IItemHandler destHandler = chosen.handler;
+        int[] sourceSlotOrder = buildSlotOrder(sourceHandler);
+        if(sendOrder == SEND_LAST) BobMathUtil.reverseIntArray(sourceSlotOrder);
+        if(sendOrder == SEND_RANDOM) BobMathUtil.shuffleIntArray(sourceSlotOrder);
+
+        int itemsLeftToSend = ITEMS_PER_TRANSFER;
+        int itemHardCap = chosen.autocrafter ? 1 : ITEMS_PER_TRANSFER;
         boolean didSomething = false;
 
-        for(int sourceIndex : sourceSlotAccess) {
-            ItemStack sourceStack = source.getStackInSlot(sourceIndex);
-            if(sourceStack == ItemStack.EMPTY) continue;
-            if(sidedSource != null && !sidedSource.canExtractItem(sourceIndex, sourceStack, Objects.requireNonNull(accessDir.toEnumFacing()))) continue;
+        for(int sourceSlot : sourceSlotOrder) {
+            ItemStack sourceStack = sourceHandler.getStackInSlot(sourceSlot);
+            if(sourceStack.isEmpty()) continue;
+
             boolean match = tube.matchesFilter(sourceStack);
             if((match && !tube.whitelist) || (!match && tube.whitelist)) continue;
-            // the "mass" of an item. something that only stacks to 4 has a "mass" of 16. max transfer mass is 64, i.e. one standard stack, or one single unstackable item
+
             int proportionalValue = MathHelper.clamp(64 / sourceStack.getMaxStackSize(), 1, 64);
+            if(itemsLeftToSend < proportionalValue) break;
 
-            // try to fill partial stacks first
-            for(int destIndex : destSlotAccess) {
-                ItemStack destStack = dest.getStackInSlot(destIndex);
-                if(destStack == ItemStack.EMPTY) continue;
+            // fill existing stacks first
+            for(int destSlot = 0; destSlot < destHandler.getSlots(); destSlot++) {
+                if(itemsLeftToSend < proportionalValue) break;
+                ItemStack destStack = destHandler.getStackInSlot(destSlot);
+                if(destStack.isEmpty()) continue;
                 if(!ItemStackUtil.areStacksCompatible(sourceStack, destStack)) continue;
-                int toMove = BobMathUtil.min(sourceStack.getCount(), destStack.getMaxStackSize() - destStack.getCount(), dest.getInventoryStackLimit() - destStack.getCount(), itemsLeftToSend / proportionalValue, itemHardCap);
-                if(toMove <= 0) continue;
 
-                ItemStack checkStack = destStack.copy();
-                checkStack.grow(toMove);
-                if(!dest.isItemValidForSlot(destIndex, checkStack)) continue;
-                if(sidedDest != null && !sidedDest.canInsertItem(destIndex, checkStack, Objects.requireNonNull(destSide))) continue;
+                int capacity = Math.min(destHandler.getSlotLimit(destSlot), destStack.getMaxStackSize());
+                int space = capacity - destStack.getCount();
+                if(space <= 0) continue;
 
-                sourceStack.shrink(toMove);
-                if(sourceStack.getCount() <= 0) source.setInventorySlotContents(sourceIndex, ItemStack.EMPTY);
-                destStack.grow(toMove);
-                itemsLeftToSend -= toMove * proportionalValue;
-                didSomething = true;
-                if(itemsLeftToSend <= 0) break;
+                int maxByMass = Math.min(itemsLeftToSend / proportionalValue, itemHardCap);
+                if(maxByMass <= 0) break;
+
+                ItemStack currentSource = sourceHandler.getStackInSlot(sourceSlot);
+                if(currentSource.isEmpty()) break;
+                int attempt = Math.min(Math.min(space, currentSource.getCount()), maxByMass);
+                if(attempt <= 0) continue;
+
+                int moved = transferItems(sourceHandler, sourceSlot, destHandler, destSlot, attempt);
+                if(moved > 0) {
+                    itemsLeftToSend -= moved * proportionalValue;
+                    didSomething = true;
+                    if(itemsLeftToSend < proportionalValue) break;
+                    sourceStack = sourceHandler.getStackInSlot(sourceSlot);
+                    if(sourceStack.isEmpty()) break;
+                }
             }
 
-            // if there's stuff left to send, occupy empty slots
-            if(itemsLeftToSend > 0 && sourceStack.getCount() > 0) for(int destIndex : destSlotAccess) {
-                if(dest.getStackInSlot(destIndex) != ItemStack.EMPTY) continue;
-                int toMove = BobMathUtil.min(sourceStack.getCount(), dest.getInventoryStackLimit(), itemsLeftToSend / proportionalValue, itemHardCap);
-                if(toMove <= 0) continue;
+            if(itemsLeftToSend < proportionalValue) break;
+            ItemStack updatedSource = sourceHandler.getStackInSlot(sourceSlot);
+            if(updatedSource.isEmpty()) continue;
 
-                ItemStack checkStack = sourceStack.copy();
-                checkStack.setCount(toMove);
-                if(!dest.isItemValidForSlot(destIndex, checkStack)) continue;
-                if(sidedDest != null && !sidedDest.canInsertItem(destIndex, checkStack, Objects.requireNonNull(destSide))) continue;
+            for(int destSlot = 0; destSlot < destHandler.getSlots(); destSlot++) {
+                if(itemsLeftToSend < proportionalValue) break;
+                ItemStack destStack = destHandler.getStackInSlot(destSlot);
+                if(!destStack.isEmpty()) continue;
 
-                ItemStack newStack = sourceStack.copy();
-                newStack.setCount(toMove);
-                sourceStack.shrink(toMove);
-                if(sourceStack.getCount() <= 0) source.setInventorySlotContents(sourceIndex, ItemStack.EMPTY);
-                dest.setInventorySlotContents(destIndex, newStack);
-                itemsLeftToSend -= toMove * proportionalValue;
-                didSomething = true;
-                if(itemsLeftToSend <= 0) break;
+                ItemStack currentSource = sourceHandler.getStackInSlot(sourceSlot);
+                if(currentSource.isEmpty()) break;
+
+                int slotLimit = destHandler.getSlotLimit(destSlot);
+                int maxByMass = Math.min(itemsLeftToSend / proportionalValue, itemHardCap);
+                int attempt = Math.min(Math.min(slotLimit, currentSource.getMaxStackSize()), Math.min(currentSource.getCount(), maxByMass));
+                if(attempt <= 0) continue;
+
+                int moved = transferItems(sourceHandler, sourceSlot, destHandler, destSlot, attempt);
+                if(moved > 0) {
+                    itemsLeftToSend -= moved * proportionalValue;
+                    didSomething = true;
+                    if(itemsLeftToSend < proportionalValue) break;
+                }
             }
 
-            if(itemsLeftToSend <= 0) break;
+            if(itemsLeftToSend < proportionalValue) break;
         }
 
-        // make sure both parties are saved to disk and increment the counter for round robin
         if(didSomething) {
-            source.markDirty();
-            dest.markDirty();
-
             if(receiveOrder == RECEIVE_ROBIN) {
                 nextReceiver++;
             }
+            sourceTile.markDirty();
+            if(destTile != null) destTile.markDirty();
         }
 
         return didSomething;
     }
 
-    /** Returns an array of accessible slots from the given side of an IInventory. If it's an ISidedInventory, uses the sided restrictions instead. */
-    public static int[] getSlotAccess(IInventory inventory, EnumFacing dir) {
+    private List<ReceiverCandidate> collectCandidates(World world) {
+        List<ReceiverCandidate> list = new ArrayList<>(receivers.size());
+        Iterator<Map.Entry<ReceiverTarget, Long>> iterator = receivers.entrySet().iterator();
+        while(iterator.hasNext()) {
+            Map.Entry<ReceiverTarget, Long> entry = iterator.next();
+            ReceiverTarget target = entry.getKey();
+            TileEntity tile = Compat.getTileStandard(world, target.pos.getX(), target.pos.getY(), target.pos.getZ());
+            if(tile == null || tile.isInvalid()) {
+                iterator.remove();
+                continue;
+            }
+            IItemHandler handler = resolveItemHandler(tile, target.pipeDir.getOpposite());
+            if(handler == null || handler.getSlots() <= 0) {
+                iterator.remove();
+                continue;
+            }
+            list.add(new ReceiverCandidate(target, tile, handler));
+        }
+        return list;
+    }
 
-        if(inventory instanceof ISidedInventory) {
-            int[] slotAccess = ((ISidedInventory) inventory).getSlotsForFace(dir);
-            return Arrays.copyOf(slotAccess, slotAccess.length); //we mess with the order, so better not use the original array
-        } else {
-            int[] slotAccess = new int[inventory.getSizeInventory()];
-            for(int i = 0; i < inventory.getSizeInventory(); i++) slotAccess[i] = i;
-            return slotAccess;
+    private ReceiverCandidate selectCandidate(List<ReceiverCandidate> candidates, int receiveOrder) {
+        if(candidates.isEmpty()) return null;
+        if(receiveOrder == RECEIVE_RANDOM) {
+            return candidates.get(rand.nextInt(candidates.size()));
+        }
+        int index = nextReceiver % candidates.size();
+        return candidates.get(index);
+    }
+
+    private static int[] buildSlotOrder(IItemHandler handler) {
+        int[] order = new int[handler.getSlots()];
+        for(int i = 0; i < order.length; i++) order[i] = i;
+        return order;
+    }
+
+    private static int transferItems(IItemHandler source, int sourceSlot, IItemHandler dest, int destSlot, int maxAmount) {
+        if(maxAmount <= 0) return 0;
+        ItemStack simulatedExtraction = source.extractItem(sourceSlot, maxAmount, true);
+        if(simulatedExtraction.isEmpty()) return 0;
+
+        ItemStack simulatedInsertion = dest.insertItem(destSlot, simulatedExtraction, true);
+        int accepted = simulatedExtraction.getCount() - simulatedInsertion.getCount();
+        if(accepted <= 0) return 0;
+
+        ItemStack extracted = source.extractItem(sourceSlot, accepted, false);
+        if(extracted.isEmpty()) return 0;
+
+        ItemStack leftover = dest.insertItem(destSlot, extracted, false);
+        int inserted = extracted.getCount() - leftover.getCount();
+
+        if(!leftover.isEmpty()) {
+            ItemStack remainder = ItemHandlerHelper.insertItem(source, leftover, false);
+            if(!remainder.isEmpty()) {
+                remainder = source.insertItem(sourceSlot, remainder, false);
+                if(!remainder.isEmpty()) {
+                    inserted -= remainder.getCount();
+                    if(inserted < 0) inserted = 0;
+                }
+            }
+        }
+
+        return inserted;
+    }
+
+    public static IItemHandler resolveItemHandler(TileEntity tile, ForgeDirection direction) {
+        if(tile == null || tile.isInvalid()) return null;
+        EnumFacing facing = direction != ForgeDirection.UNKNOWN ? direction.toEnumFacing() : null;
+        if(facing != null && tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing)) {
+            IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing);
+            if(handler != null && handler.getSlots() > 0) return handler;
+        }
+        if(tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)) {
+            IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+            if(handler != null && handler.getSlots() > 0) return handler;
+        }
+        if(tile instanceof ISidedInventory sided && facing != null) {
+            IItemHandler handler = new SidedInvWrapper(sided, facing);
+            if(handler.getSlots() > 0) return handler;
+        }
+        if(tile instanceof IInventory inventory) {
+            IItemHandler handler = new InvWrapper(inventory);
+            if(handler.getSlots() > 0) return handler;
+        }
+        return null;
+    }
+
+    public static boolean hasItemHandler(TileEntity tile, ForgeDirection direction) {
+        return resolveItemHandler(tile, direction) != null;
+    }
+
+    private static final class ReceiverTarget {
+        private final BlockPos pos;
+        private final ForgeDirection pipeDir;
+
+        private ReceiverTarget(BlockPos pos, ForgeDirection pipeDir) {
+            this.pos = pos.toImmutable();
+            this.pipeDir = pipeDir;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if(this == o) return true;
+            if(!(o instanceof ReceiverTarget other)) return false;
+            return Objects.equals(pos, other.pos) && pipeDir == other.pipeDir;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(pos, pipeDir);
         }
     }
 
-    /** Compares IInventory by distance, going off the assumption that they are TileEntities. Uses positional data for tie-breaking if the distance is the same. */
-    public static class ReceiverComparator implements Comparator<Map.Entry<IInventory, Pair<ForgeDirection, Long>>> {
+    private static final class ReceiverCandidate {
+        private final ReceiverTarget target;
+        private final TileEntity tile;
+        private final IItemHandler handler;
+        private final boolean autocrafter;
+
+        private ReceiverCandidate(ReceiverTarget target, TileEntity tile, IItemHandler handler) {
+            this.target = target;
+            this.tile = tile;
+            this.handler = handler;
+            this.autocrafter = tile instanceof TileEntityMachineAutocrafter;
+        }
+    }
+
+    private static final class ReceiverComparator implements Comparator<ReceiverCandidate> {
 
         private final TileEntityPneumoTube origin;
 
-        public ReceiverComparator(TileEntityPneumoTube origin) {
+        private ReceiverComparator(TileEntityPneumoTube origin) {
             this.origin = origin;
         }
 
         @Override
-        public int compare(Map.Entry<IInventory, Pair<ForgeDirection, Long>> o1, Map.Entry<IInventory, Pair<ForgeDirection, Long>> o2) {
+        public int compare(ReceiverCandidate c1, ReceiverCandidate c2) {
+            TileEntity tile1 = c1.tile;
+            TileEntity tile2 = c2.tile;
 
-            TileEntity tile1 = o1.getKey() instanceof TileEntity ? (TileEntity) o1.getKey() : null;
-            TileEntity tile2 = o2.getKey() instanceof TileEntity ? (TileEntity) o2.getKey() : null;
-
-            // prioritize actual TileEntities
             if(tile1 == null && tile2 != null) return 1;
             if(tile1 != null && tile2 == null) return -1;
             if(tile1 == null) return 0;
 
-            // calculate distances from origin
-            int dist1 = (tile1.getPos().getX() - origin.getPos().getX()) * (tile1.getPos().getX() - origin.getPos().getX()) + (tile1.getPos().getY() - origin.getPos().getY()) * (tile1.getPos().getY() - origin.getPos().getY()) + (tile1.getPos().getZ() - origin.getPos().getZ()) * (tile1.getPos().getZ() - origin.getPos().getZ());
-            int dist2 = (tile2.getPos().getX() - origin.getPos().getX()) * (tile2.getPos().getX() - origin.getPos().getX()) + (tile2.getPos().getY() - origin.getPos().getY()) * (tile2.getPos().getY() - origin.getPos().getY()) + (tile2.getPos().getZ() - origin.getPos().getZ()) * (tile2.getPos().getZ() - origin.getPos().getZ());
+            int dist1 = squaredDistance(tile1, origin);
+            int dist2 = squaredDistance(tile2, origin);
 
-            // tier-breaker: use hash value instead
             if(dist1 == dist2) {
                 return TileEntityPneumoTube.getIdentifier(tile1.getPos().getX(), tile1.getPos().getY(), tile1.getPos().getZ()) - TileEntityPneumoTube.getIdentifier(tile2.getPos().getX(), tile2.getPos().getY(), tile2.getPos().getZ());
             }
-
-            // no tie? return difference of the distances
             return dist1 - dist2;
+        }
+
+        private static int squaredDistance(TileEntity tile, TileEntityPneumoTube origin) {
+            int dx = tile.getPos().getX() - origin.getPos().getX();
+            int dy = tile.getPos().getY() - origin.getPos().getY();
+            int dz = tile.getPos().getZ() - origin.getPos().getZ();
+            return dx * dx + dy * dy + dz * dz;
         }
     }
 }

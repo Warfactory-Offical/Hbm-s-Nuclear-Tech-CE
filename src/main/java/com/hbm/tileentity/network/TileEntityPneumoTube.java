@@ -37,6 +37,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 @AutoRegister
@@ -114,10 +115,11 @@ public class TileEntityPneumoTube extends TileEntityMachineBase implements IGUIP
                 if(randTime % 5 == 0 && this.node != null && !this.node.expired && this.node.net != null && this.compair.getFill() >= 50) {
                     TileEntity sendFrom = Compat.getTileStandard(world, pos.getX() + ejectionDir.offsetX, pos.getY() + ejectionDir.offsetY, pos.getZ() + ejectionDir.offsetZ);
 
-                    if(sendFrom instanceof IInventory) {
+                    IItemHandler sourceHandler = PneumaticNetwork.resolveItemHandler(sendFrom, this.ejectionDir.getOpposite());
+                    if(sourceHandler != null) {
                         PneumaticNetwork net = node.net;
 
-                        if(net.send((IInventory) sendFrom, this, this.ejectionDir.getOpposite(), sendOrder, receiveOrder, getRangeFromPressure(compair.getPressure()))) {
+                        if(net.send(sendFrom, sourceHandler, this, this.ejectionDir.getOpposite(), sendOrder, receiveOrder, getRangeFromPressure(compair.getPressure()))) {
                             this.compair.setFill(this.compair.getFill() - 50);
 
                             if(this.soundDelay <= 0 && !this.muffled) {
@@ -131,7 +133,7 @@ public class TileEntityPneumoTube extends TileEntityMachineBase implements IGUIP
 
             if(this.isEndpoint() && this.node != null && this.node.net != null && world.getTotalWorldTime() % 10 == 0) {
                 TileEntity tile = Compat.getTileStandard(world, pos.getX() + this.insertionDir.offsetX, pos.getY() + this.insertionDir.offsetY, pos.getZ() + this.insertionDir.offsetZ);
-                if(tile instanceof IInventory) this.node.net.addReceiver((IInventory) tile, this.insertionDir);
+                if(tile != null && PneumaticNetwork.hasItemHandler(tile, this.insertionDir.getOpposite())) this.node.net.addReceiver(tile.getPos(), this.insertionDir);
             }
 
             this.networkPackNT(15);
