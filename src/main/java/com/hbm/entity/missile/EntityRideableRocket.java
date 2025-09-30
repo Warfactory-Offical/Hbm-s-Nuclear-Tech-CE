@@ -1,6 +1,5 @@
 package com.hbm.entity.missile;
 
-import com.google.common.base.Predicate;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.config.SpaceConfig;
 import com.hbm.dim.CelestialBody;
@@ -58,7 +57,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 @AutoRegister(name = "entity_rideable_rocket", trackingRange = 1000)
@@ -81,7 +79,8 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 	private boolean sizeSet = false;
 
 	private AudioWrapper audio;
-	protected final DataWatcher dataWatcher = new DataWatcher(this);
+
+	protected DataWatcher dataWatcher;
 
 	private RocketState lastState = RocketState.AWAITING;
 
@@ -90,6 +89,8 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 	private int satFreq = 0;
 
 	private TileEntityOrbitalStation targetPort;
+
+	private RocketStruct cachedRocket;
 
 	public enum RocketState {
 		AWAITING,		// Prepped for launch, once mounted will transition to launching
@@ -106,14 +107,12 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 		super(world);
 		setSize(2, 8);
 		sizeSet = false;
-		targetX = (int)posX + 10000;
+		targetX = (int)posX - 10000;
 		targetZ = (int)posZ;
 	}
 
 	public EntityRideableRocket(World world, float x, float y, float z, ItemStack stack) {
 		super(world, x, y, z, (int)x + 10000, (int)z);
-		this.dataWatcher.addObject(0, (byte) 0);
-		this.dataWatcher.addObject(1, (short) 300);
 		RocketStruct rocket = ItemCustomRocket.get(stack);
 		satFreq = ISatChip.getFreqS(stack);
 
@@ -161,7 +160,8 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 		if(!sizeSet) {
 			setSize(2, (float)getRocket().getHeight() + 1);
 			if(!world.isRemote && (state == RocketState.LANDED || state == RocketState.AWAITING || state == RocketState.NEEDSFUEL)) {
-				TileEntity te = CompatExternal.getCoreFromPos(world, new BlockPos(MathHelper.floor(posX), MathHelper.floor(posY + height - 1.0D), MathHelper.floor(posZ)));
+				BlockPos pos = new BlockPos(MathHelper.floor(posX), MathHelper.floor(posY + height - 1.0D), MathHelper.floor(posZ));
+				TileEntity te = CompatExternal.getCoreFromPos(world, pos);
 
 				if(te instanceof TileEntityOrbitalStation) {
 					((TileEntityOrbitalStation)te).dockRocket(this);
@@ -169,9 +169,14 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 			}
 		}
 
-		EntityPlayer rider = (EntityPlayer) this.getPassengers().get(0);
+		EntityPlayer rider = null;
+		if(!getPassengers().isEmpty() && getPassengers().get(0) instanceof EntityPlayer) {
+			rider = (EntityPlayer)getPassengers().get(0);
+		}
 
 		if(!world.isRemote) {
+			rotationYaw = -90.0F;
+
 			if(navDrive != null && navDrive.getItem() instanceof ItemVOTVdrive) {
 				ItemVOTVdrive.getTarget(navDrive, world);
 				setDrive(navDrive);
@@ -184,7 +189,7 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 
 				RocketState transitionTo = from.inOrbit ? RocketState.UNDOCKING : RocketState.LAUNCHING;
 
-				targetX = (int)posX + 10000;
+				targetX = (int)posX - 10000;
 				targetZ = (int)posZ;
 
 				// To another body
@@ -212,27 +217,28 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 				if(navDrive != null && navDrive.getItem() instanceof ItemVOTVdrive) {
 					Destination destination = ItemVOTVdrive.getDestination(navDrive);
 
-					// Check if we're about to land on top of another rocket and adjust accordingly
-					AxisAlignedBB bbC = super.getEntityBoundingBox();
-					AxisAlignedBB bb = setMinY(bbC, targetHeight);
-					if (!world.getEntitiesInAABBexcluding(this, bb, new Predicate<Entity>() {
-						@Override
-						public boolean apply(@Nullable Entity input) {
-							return false;
-						}
-
-						@Override
-						public boolean test(Entity entity) {
-							return entity instanceof EntityRideableRocket;
-						}
-					}).isEmpty()) {
-						int distance = world.rand.nextBoolean() ? -5 : 5;
-						if(world.rand.nextBoolean()) {
-							destination.x += distance;
-							navDrive.getTagCompound().setInteger("x", destination.x);
-						} else {
-							destination.z += distance;
-							navDrive.getTagCompound().setInteger("z", destination.z);
+					AxisAlignedBB entityBB = getEntityBoundingBox();
+					if(entityBB != null) {
+						AxisAlignedBB bb = setMinY(entityBB, targetHeight);
+						if(!world.getEntitiesInAABBexcluding(this, bb, entity -> entity instanceof EntityRideableRocket).isEmpty()) {
+							int distance = world.rand.nextBoolean() ? -5 : 5;
+							if(world.rand.nextBoolean()) {
+								destination.x += distance;
+								NBTTagCompound tag = navDrive.getTagCompound();
+								if(tag == null) {
+									tag = new NBTTagCompound();
+									navDrive.setTagCompound(tag);
+								}
+								tag.setInteger("x", destination.x);
+							} else {
+								destination.z += distance;
+								NBTTagCompound tag = navDrive.getTagCompound();
+								if(tag == null) {
+									tag = new NBTTagCompound();
+									navDrive.setTagCompound(tag);
+								}
+								tag.setInteger("z", destination.z);
+							}
 						}
 					}
 
@@ -267,16 +273,17 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 	
 					// Just in case no ports have loaded in time, do nothing until they have
 					if(targetPort != null) {
-						posX = targetPort.getPos().getX() + 0.5D;
-						posZ = targetPort.getPos().getZ() + 0.5D;
-		
+						BlockPos portPos = targetPort.getPos();
+						posX = portPos.getX() + 0.5D;
+						posZ = portPos.getZ() + 0.5D;
+
 						targetPort.despawnRocket();
 						targetPort.reservePort();
-		
-						if(posY + height > targetPort.getPos().getY() + 1.5D) {
+
+						if(posY + height > portPos.getY() + 1.5D) {
 							setState(isReusable() ? RocketState.NEEDSFUEL : RocketState.LANDED);
-							posY = targetPort.getPos().getY() + 1.5D - height;
-							
+							posY = portPos.getY() + 1.5D - height;
+
 							targetPort.dockRocket(this);
 							targetPort = null;
 						}
@@ -355,8 +362,8 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 							// We mark the station as travellable, but we don't actually add the station until the player travels to it
 							OrbitalStation.addStation(x, z, CelestialBody.getBody(world));
 
-							if(thrower != null && thrower instanceof EntityPlayer) {
-								EntityPlayer player = (EntityPlayer) thrower;
+							if(thrower instanceof EntityPlayer) {
+								EntityPlayer player = (EntityPlayer)thrower;
 								if(!player.capabilities.isCreativeMode && !ItemVOTVdrive.wasCopied(navDrive)) {
 									AdvancementManager.grantAchievement(player, AdvancementManager.achDriveFail);
 								}
@@ -368,8 +375,11 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 				}
 			}
 
-			if(state == RocketState.LANDING && world.getBlockState(new BlockPos(MathHelper.floor(posX), MathHelper.floor(posY), MathHelper.floor(posZ))).getMaterial() == Material.WATER) {
-				setState(RocketState.TIPPING);
+			if(state == RocketState.LANDING) {
+				BlockPos blockPos = new BlockPos(MathHelper.floor(posX), MathHelper.floor(posY), MathHelper.floor(posZ));
+				if(world.getBlockState(blockPos).getMaterial() == Material.WATER) {
+					setState(RocketState.TIPPING);
+				}
 			}
 
 			if(height > 8) {
@@ -420,8 +430,7 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 		setStateTimer(++stateTimer);
 	}
 
-	public AxisAlignedBB setMinY(AxisAlignedBB bb, double y1)
-	{
+	public AxisAlignedBB setMinY(AxisAlignedBB bb, double y1) {
 		return new AxisAlignedBB(bb.minX, y1, bb.minZ, bb.maxX, bb.maxY, bb.maxZ);
 	}
 
@@ -452,13 +461,22 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 		}
 	}
 
-	// Does this rocket accept passengers (is a capsule)
 	public boolean canRide() {
 		return getRocket().capsule.part.attributes[0] == ItemMissile.WarheadType.APOLLO;
 	}
 
 	public boolean isReusable() {
 		return getRocket().capsule.part == ModItems.rp_pod_20;
+	}
+
+	@Override
+	public void updatePassenger(Entity passenger) {
+		if(!this.isPassenger(passenger)) return;
+
+		double length = getMountedYOffset() + passenger.getYOffset();
+		Vec3d target = BobMathUtil.getDirectionFromAxisAngle(rotationPitch - 90.0F, 180.0F - rotationYaw, length);
+
+		passenger.setPosition(posX + target.x, posY + target.y, posZ + target.z);
 	}
 
 	@Override
@@ -517,7 +535,9 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 				if((getRocket().stages.isEmpty() && getRocket().capsule.part != ModItems.rp_pod_20) || getState() == RocketState.TIPPING) {
 					dropNDie(source);
 				} else {
-					ItemStack stack = ((EntityPlayer) source.getTrueSource()).getHeldItem(((EntityPlayer) source.getTrueSource()).getActiveHand());
+					EntityPlayer player = (EntityPlayer)source.getTrueSource();
+					ItemStack stack = player.getHeldItemMainhand();
+					if(stack.isEmpty()) stack = player.getHeldItemOffhand();
 					if(!stack.isEmpty() && stack.getItem().canHarvestBlock(Blocks.STONE.getDefaultState(), stack)) {
 						dropNDie(source);
 					}
@@ -633,47 +653,91 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 
 	@Override
 	protected void entityInit() {
-		super.entityInit();
+		if(this.dataWatcher == null) {
+			this.dataWatcher = new DataWatcher(this);
+		}
+
 		dataWatcher.addObject(WATCHABLE_STATE, RocketState.AWAITING.ordinal());
 		dataWatcher.addObjectByDataType(WATCHABLE_DRIVE, 5);
 		dataWatcher.addObject(WATCHABLE_TIMER, 0);
-		RocketStruct.setupDataWatcher(dataWatcher, WATCHABLE_ROCKET); // again, this MUST be the highest int!
+		RocketStruct.setupDataWatcher(dataWatcher, WATCHABLE_ROCKET);
+
+		if(cachedRocket != null) {
+			cachedRocket.writeToDataWatcher(dataWatcher, WATCHABLE_ROCKET);
+		}
+
+		if(navDrive != null) {
+			dataWatcher.updateObject(WATCHABLE_DRIVE, navDrive);
+		}
 	}
 
 	public RocketStruct getRocket() {
-		return RocketStruct.readFromDataWatcher(dataWatcher, WATCHABLE_ROCKET);
+		if(dataWatcher != null && !dataWatcher.getIsBlank()) {
+			cachedRocket = RocketStruct.readFromDataWatcher(dataWatcher, WATCHABLE_ROCKET);
+		}
+		if(cachedRocket == null) {
+			cachedRocket = new RocketStruct();
+		}
+		return cachedRocket;
 	}
 
 	public void setRocket(RocketStruct rocket) {
-		rocket.writeToDataWatcher(dataWatcher, WATCHABLE_ROCKET);
+		this.cachedRocket = rocket;
+		if(dataWatcher != null && !dataWatcher.getIsBlank()) {
+			rocket.writeToDataWatcher(dataWatcher, WATCHABLE_ROCKET);
+		}
 	}
 
 	public RocketState getState() {
-		return RocketState.values()[dataWatcher.getWatchableObjectInt(WATCHABLE_STATE)];
+		if(dataWatcher == null || dataWatcher.getIsBlank()) {
+			return lastState;
+		}
+		int index = dataWatcher.getWatchableObjectInt(WATCHABLE_STATE);
+		RocketState[] values = RocketState.values();
+		if(index < 0 || index >= values.length) {
+			return RocketState.AWAITING;
+		}
+		return values[index];
 	}
 
 	public void setState(RocketState state) {
-		dataWatcher.updateObject(WATCHABLE_STATE, state.ordinal());
-		dataWatcher.updateObject(WATCHABLE_TIMER, 0);
+		if(dataWatcher != null && !dataWatcher.getIsBlank()) {
+			dataWatcher.updateObject(WATCHABLE_STATE, state.ordinal());
+			dataWatcher.updateObject(WATCHABLE_TIMER, 0);
+		}
 		stateTimer = 0;
 	}
 
 	public Target getTarget() {
-		ItemStack drive = dataWatcher.getWatchableObjectItemStack(WATCHABLE_DRIVE);
+		ItemStack drive = null;
+		if(dataWatcher != null && !dataWatcher.getIsBlank()) {
+			drive = dataWatcher.getWatchableObjectItemStack(WATCHABLE_DRIVE);
+		}
+		if(drive == null) {
+			drive = navDrive;
+		}
 		return ItemVOTVdrive.getTarget(drive, world);
 	}
 
 	public void setDrive(ItemStack drive) {
-		dataWatcher.updateObject(WATCHABLE_DRIVE, drive);
+		navDrive = drive;
+		if(dataWatcher != null && !dataWatcher.getIsBlank()) {
+			dataWatcher.updateObject(WATCHABLE_DRIVE, drive);
+		}
 	}
 
 	public int getStateTimer() {
-		// TODO: space content should be separated so I'll leave 0 here
-		return 0; // dataWatcher.getWatchableObjectInt(WATCHABLE_TIMER);
+		if(dataWatcher != null && !dataWatcher.getIsBlank()) {
+			return dataWatcher.getWatchableObjectInt(WATCHABLE_TIMER);
+		}
+		return stateTimer;
 	}
 
 	public void setStateTimer(int timer) {
-		dataWatcher.updateObject(WATCHABLE_TIMER, timer);
+		stateTimer = timer;
+		if(dataWatcher != null && !dataWatcher.getIsBlank()) {
+			dataWatcher.updateObject(WATCHABLE_TIMER, timer);
+		}
 	}
 
 	@Override
@@ -687,8 +751,10 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 
 		if(nbt.hasKey("drive")) {
 			navDrive = new ItemStack(nbt.getCompoundTag("drive"));
+			setDrive(navDrive);
 		} else {
 			navDrive = null;
+			setDrive(null);
 		}
 
 		satFreq = nbt.getInteger("freq");
@@ -765,8 +831,8 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 				text.add("Insert next drive to continue");
 			}
 
-			ItemStack stack = player.getHeldItem(player.getActiveHand());
-			if((state == RocketState.LANDED || state == RocketState.AWAITING) && stack != null && stack.getItem() instanceof ItemVOTVdrive) {
+			ItemStack stack = player.getHeldItemMainhand();
+			if((state == RocketState.LANDED || state == RocketState.AWAITING) && !stack.isEmpty() && stack.getItem() instanceof ItemVOTVdrive) {
 				if(ItemVOTVdrive.getProcessed(stack)) {
 					text.add("Interact to swap drive");
 				}
@@ -813,6 +879,7 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 		if(canRide()) return;
 		super.clearChunkLoader();
 	}
+
 	@AutoRegister(name = "entity_rideable_rocket_dummy", trackingRange = 1000)
 	public static class EntityRideableRocketDummy extends Entity implements ILookOverlay {
 
@@ -837,6 +904,7 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 
 		@Override
 		public void onUpdate() {
+			super.onUpdate();
 			if(!world.isRemote) {
 				if(parent == null || parent.isDead) {
 					setDead();
@@ -844,8 +912,8 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 			} else {
 				if(parent == null) {
 					Entity entity = world.getEntityByID(dataManager.get(PARENT_ID));
-					if(entity != null && entity instanceof EntityRideableRocket) {
-						parent = (EntityRideableRocket) entity;
+					if(entity instanceof EntityRideableRocket) {
+						parent = (EntityRideableRocket)entity;
 					}
 				}
 			}
