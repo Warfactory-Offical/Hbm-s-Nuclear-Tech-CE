@@ -57,6 +57,7 @@ public class GUIPneumoTube extends GuiInfoContainer {
                 }
             }
         }
+        super.renderHoveredToolTip(x, y);
     }
 
     @Override

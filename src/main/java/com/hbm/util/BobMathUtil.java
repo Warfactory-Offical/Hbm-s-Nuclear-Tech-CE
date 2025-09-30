@@ -23,6 +23,7 @@ import java.math.RoundingMode;
 import java.nio.FloatBuffer;
 import java.text.NumberFormat;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.ToIntFunction;
 
 public class BobMathUtil {
@@ -67,8 +68,6 @@ public class BobMathUtil {
         for(double num : nums) if(num > largest) largest = num;
         return largest;
     }
-
-    public static Random rand = new Random();
 
     public static String getShortNumber(long number) {
         if (number < 1000) {
@@ -373,7 +372,7 @@ public class BobMathUtil {
     }
 
     public static Vec3d randVecInCone(Vec3d coneDirection, float angle) {
-        return randVecInCone(coneDirection, angle, rand);
+        return randVecInCone(coneDirection, angle, ThreadLocalRandom.current());
     }
 
     public static Vec3d randVecInCone(Vec3d coneDirection, float angle, Random rand) {
@@ -492,7 +491,7 @@ public class BobMathUtil {
     }
 
     public static void shuffleIntArray(int[] array) {
-        Random rand = new Random();
+        Random rand = ThreadLocalRandom.current();
         for(int i = array.length - 1; i > 0; i--) {
             int r = rand.nextInt(i + 1);
             int temp = array[r];
