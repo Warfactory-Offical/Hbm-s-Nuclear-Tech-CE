@@ -32,6 +32,7 @@ public class ItemTooling extends Item { //TODO: change parent class to Degradabl
 		this.type = type;
 		
 		ModItems.ALL_ITEMS.add(this);
+		type.register(new ItemStack(this));
 	}
 	
 	@Override
