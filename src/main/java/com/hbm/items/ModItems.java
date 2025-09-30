@@ -5,6 +5,8 @@ import com.hbm.blocks.ICustomBlockItem;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockModDoor;
 import com.hbm.blocks.machine.ItemSelfcharger;
+import com.hbm.blocks.network.FluidDuctBox;
+import com.hbm.blocks.network.FluidDuctStandard;
 import com.hbm.config.BombConfig;
 import com.hbm.handler.ability.IToolAreaAbility;
 import com.hbm.handler.ability.IToolHarvestAbility;
@@ -2867,6 +2869,8 @@ public class ModItems {
             if (block instanceof ICustomBlockItem) {
                 ((ICustomBlockItem) block).registerItem();
             } else if (block instanceof BlockModDoor) {
+            } else if (block instanceof FluidDuctBox || block instanceof FluidDuctStandard) {
+                ForgeRegistries.ITEMS.register(new ItemBlock(block).setRegistryName(block.getRegistryName()).setHasSubtypes(true));
             } else {
                 ForgeRegistries.ITEMS.register(new ItemBlock(block).setRegistryName(block.getRegistryName()));
             }

@@ -154,6 +154,11 @@ public class FluidDuctBox extends BlockContainer implements IDynamicModels, ILoo
     }
 
     @Override
+    public int damageDropped(IBlockState state) {
+        return getMetaFromState(state);
+    }
+
+    @Override
     public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
         return new ItemStack(Item.getItemFromBlock(this), 1, this.getMetaFromState(state));
     }
