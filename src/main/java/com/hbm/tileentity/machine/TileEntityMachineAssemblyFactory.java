@@ -75,7 +75,7 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
         super(60);
 
         animations = new AssemfacArm[2];
-        for(int i = 0; i < animations.length; i++) animations[i] = new AssemfacArm();
+        for(int i = 0; i < animations.length; i++) animations[i] = new AssemfacArm(i);
 
         this.inputTanks = new FluidTankNTM[4];
         this.outputTanks = new FluidTankNTM[4];
@@ -190,7 +190,25 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
             this.networkPackNT(100);
         } else {
 
-            for(AssemfacArm animation : animations) animation.update(true);
+            if((didProcess[0] ||didProcess[1] ||didProcess[2] ||didProcess[3]) && MainRegistry.proxy.me().getDistance(pos.getX(), pos.getY(), pos.getZ()) < 50) {
+                if(audio == null) {
+                    audio = createAudioLoop();
+                    audio.startSound();
+                } else if(!audio.isPlaying()) {
+                    audio = rebootAudio(audio);
+                }
+                audio.keepAlive();
+                audio.updatePitch(0.75F);
+                audio.updateVolume(this.getVolume(0.5F));
+
+            } else {
+                if(audio != null) {
+                    audio.stopSound();
+                    audio = null;
+                }
+            }
+
+            for(AssemfacArm animation : animations) animation.update(didProcess[0] ||didProcess[1] ||didProcess[2] ||didProcess[3]);
 
             if(world.getTotalWorldTime() % 20 == 0) {
                 frame = world.getBlockState(pos.up(3)).getBlock() != Blocks.AIR;
@@ -437,16 +455,17 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
         boolean direction = false;
         int timeUntilReposition;
 
-        public AssemfacArm() {
-            striker = new AssemblerArm();
-            saw = new AssemblerArm().yepThatsASaw();
-            timeUntilReposition = 200;
+        public AssemfacArm(int group) {
+            striker = new AssemblerArm(	group == 0 ? 0 : 3);
+            saw = new AssemblerArm(		group == 0 ? 1 : 2).yepThatsASaw();
+            timeUntilReposition = 140 + rand.nextInt(161);
         }
 
         public void update(boolean working) {
             this.prevSlider = this.slider;
 
-            if(working) switch (state) {
+            // one of the arms must do something. doesn't matter which or what position the carriage is in
+            if(didProcess[striker.recipeIndex] || didProcess[saw.recipeIndex]) switch(state) {
                 case WORKING -> {
                     timeUntilReposition--;
                     if (timeUntilReposition <= 0) {
@@ -462,7 +481,7 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
                     }
                 }
                 case SLIDING -> {
-                    double sliderSpeed = 1D / 20D; // 20 ticks for transit
+                    double sliderSpeed = 1D / 10D; // 10 ticks for transit
                     if (direction) {
                         slider += sliderSpeed;
                         if (slider >= 1) {
@@ -480,8 +499,8 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
                 }
             }
 
-            striker.updateArm(working);
-            saw.updateArm(working);
+            striker.updateArm();
+            saw.updateArm();
         }
 
         public double getSlider(float interp) {
@@ -497,12 +516,14 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
             public double[] speed = new double[4];
             public double sawAngle;
             public double prevSawAngle;
+            public int recipeIndex; // the index of which pedestal is serviced, assuming the carriage is at default position
 
             ArmState state = ArmState.REPOSITION;
             int actionDelay = 0;
             boolean saw = false;
 
-            public AssemblerArm() {
+            public AssemblerArm(int index) {
+                this.recipeIndex = index;
                 this.resetSpeed();
                 this.chooseNewArmPoistion();
             }
@@ -516,14 +537,16 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
                 speed[3] = saw ? 0.125 : 0.5;	//Striker
             }
 
-            public void updateArm(boolean working) {
+            public void updateArm() {
                 resetSpeed();
 
                 System.arraycopy(angles, 0, prevAngles, 0, angles.length);
 
                 prevSawAngle = sawAngle;
 
-                if(!working) return;
+                int serviceIndex = recipeIndex;
+                if(slider > 0.5) serviceIndex += (serviceIndex % 2 == 0 ? 1 : -1); // if the carriage has moved, swap the indices so they match up with the serviced pedestal
+                if(!didProcess[serviceIndex]) state = ArmState.RETIRE;
 
                 if(state == ArmState.CUT || state == ArmState.EXTEND) {
                     this.sawAngle += 45D;
@@ -549,6 +572,7 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
                             if (saw) {
                                 state = ArmState.CUT;
                                 targetAngles[2] = -targetAngles[2];
+                                if(!muffled) MainRegistry.proxy.playSoundClient(pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.assemblerCut, SoundCategory.BLOCKS, getVolume(0.5F), 1F + rand.nextFloat() * 0.25F);
                             } else {
                                 state = ArmState.RETRACT;
                                 targetAngles[3] = 0D;

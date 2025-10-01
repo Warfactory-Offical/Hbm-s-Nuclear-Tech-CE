@@ -350,6 +350,7 @@ public final class HBMSoundHandler {
     public static SoundEvent assemblerStrike;
     public static SoundEvent assemblerStart;
     public static SoundEvent assemblerStop;
+    public static SoundEvent assemblerCut;
 
     public static SoundEvent alarmHatch = registerBypass("alarm.hatch");
     public static SoundEvent alarmAutopilot = registerBypass("alarm.autopilot");
@@ -735,6 +736,7 @@ public final class HBMSoundHandler {
         assemblerStrike = register("block.assemblerStrike");
         assemblerStart = register("block.assemblerStart");
         assemblerStop = register("block.assemblerStop");
+        assemblerCut = register("block.assemblerCut");
         tubeFwoomp = register("weapon.reload.tubeFwoomp");
 
         geigerSounds = new SoundEvent[]{geiger1, geiger2, geiger3, geiger4, geiger5, geiger6, geiger7, geiger8};

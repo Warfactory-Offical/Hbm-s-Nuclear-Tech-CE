@@ -10,9 +10,13 @@ import com.hbm.main.ResourceManager;
 import com.hbm.render.item.ItemRenderBase;
 import com.hbm.tileentity.machine.TileEntityMachineAssemblyFactory;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -139,7 +143,7 @@ public class RenderAssemblyFactory extends TileEntitySpecialRenderer<TileEntityM
             GlStateManager.translate(0, arm4[3], 0);
             ResourceManager.assembly_factory.renderPart("Striker4");
             GlStateManager.translate(0, 1.625, -0.3125);
-            GlStateManager.rotate((float) -arm4[4], 1, 0, 0);
+            GlStateManager.rotate((float) arm4[4], 1, 0, 0);
             GlStateManager.translate(0, -1.625, 0.3125);
             ResourceManager.assembly_factory.renderPart("Blade4");
         } GlStateManager.popMatrix();
@@ -184,6 +188,62 @@ public class RenderAssemblyFactory extends TileEntitySpecialRenderer<TileEntityM
                 }
                 GlStateManager.popMatrix();
             }
+
+            RenderArcFurnace.fullbright(true);
+            GlStateManager.disableCull();
+            GlStateManager.enableBlend();
+            GlStateManager.alphaFunc(GL11.GL_GREATER, 0F);
+            OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+            bindTexture(ResourceManager.assembly_factory_sparks_tex);
+
+            Tessellator tessellator = Tessellator.getInstance();
+            BufferBuilder buffer = tessellator.getBuffer();
+
+            double wide = 0.1875D;
+            double narrow = 0.0D;
+            double length = 1.25D;
+            double uMin = ((assemfac.getWorld().getTotalWorldTime() / 10D) + interp) % 10D;
+            double uMax = uMin + 1D;
+            double epsilon = 0.01D;
+
+            GlStateManager.pushMatrix();
+            if (arm2[3] <= -0.375D) {
+                GlStateManager.translate(0.5D + slide1, 1.0625D, -arm2[2] / 45D);
+                buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+                buffer.pos(-epsilon, -wide, length).tex(uMin + 0.5D, 0D).color(1F, 1F, 1F, 0F).endVertex();
+                buffer.pos(-epsilon, wide, length).tex(uMin + 0.5D, 1D).color(1F, 1F, 1F, 0F).endVertex();
+                buffer.pos(-epsilon, narrow, 0D).tex(uMax + 0.5D, 1D).color(1F, 1F, 1F, 1F).endVertex();
+                buffer.pos(-epsilon, -narrow, 0D).tex(uMax + 0.5D, 0D).color(1F, 1F, 1F, 1F).endVertex();
+
+                buffer.pos(epsilon, -wide, length).tex(uMin, 1D).color(1F, 1F, 1F, 0F).endVertex();
+                buffer.pos(epsilon, wide, length).tex(uMin, 0D).color(1F, 1F, 1F, 0F).endVertex();
+                buffer.pos(epsilon, narrow, 0D).tex(uMax, 0D).color(1F, 1F, 1F, 1F).endVertex();
+                buffer.pos(epsilon, -narrow, 0D).tex(uMax, 1D).color(1F, 1F, 1F, 1F).endVertex();
+                tessellator.draw();
+            }
+            GlStateManager.popMatrix();
+
+            GlStateManager.pushMatrix();
+            if (arm4[3] <= -0.375D) {
+                GlStateManager.translate(-0.5D - slide2, 1.0625D, arm4[2] / 45D);
+                buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
+                buffer.pos(-epsilon, -wide, -length).tex(uMin + 0.5D, 0D).color(1F, 1F, 1F, 0F).endVertex();
+                buffer.pos(-epsilon, wide, -length).tex(uMin + 0.5D, 1D).color(1F, 1F, 1F, 0F).endVertex();
+                buffer.pos(-epsilon, narrow, 0D).tex(uMax + 0.5D, 1D).color(1F, 1F, 1F, 1F).endVertex();
+                buffer.pos(-epsilon, -narrow, 0D).tex(uMax + 0.5D, 0D).color(1F, 1F, 1F, 1F).endVertex();
+
+                buffer.pos(epsilon, -wide, -length).tex(uMin, 1D).color(1F, 1F, 1F, 0F).endVertex();
+                buffer.pos(epsilon, wide, -length).tex(uMin, 0D).color(1F, 1F, 1F, 0F).endVertex();
+                buffer.pos(epsilon, narrow, 0D).tex(uMax, 0D).color(1F, 1F, 1F, 1F).endVertex();
+                buffer.pos(epsilon, -narrow, 0D).tex(uMax, 1D).color(1F, 1F, 1F, 1F).endVertex();
+                tessellator.draw();
+            }
+            GlStateManager.popMatrix();
+
+            GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
+            GlStateManager.disableBlend();
+            GlStateManager.enableCull();
+            RenderArcFurnace.fullbright(false);
         }
 
         GlStateManager.shadeModel(GL11.GL_FLAT);

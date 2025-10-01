@@ -22,6 +22,7 @@
     "block.assemblerStrike": {"category": "block", "sounds": ["hbm:block/assemblerStrike1", "hbm:block/assemblerStrike2"]},
     "block.assemblerStart": {"category": "block", "sounds": [{"name": "hbm:block/assemblerStart", "stream": false}]},
     "block.assemblerStop": {"category": "block", "sounds": [{"name": "hbm:block/assemblerStop", "stream": false}]},
+    "block.assemblerCut": {"category": "block", "sounds": [{"name": "hbm:block/assemblerCut", "stream": false}]},
     "block.chemplantOperate": {"category": "block", "sounds": [{"name": "hbm:block/chemplantOperate", "stream": false}]},
     "block.dieselOperate": {"category": "block", "sounds": [{"name": "hbm:block/dieselOperate", "stream": false}]},
     "block.igeneratorOperate": {"category": "block", "sounds": [{"name": "hbm:block/igeneratorOperate", "stream": false}]},
