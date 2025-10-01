@@ -267,6 +267,7 @@ public class PneumoTube extends BlockContainer implements IToolable, ITooltipPro
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerSprite(TextureMap map) {
         iconBase = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/pneumatic_tube"));
         iconStraight = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/pneumatic_tube_straight"));
@@ -276,6 +277,7 @@ public class PneumoTube extends BlockContainer implements IToolable, ITooltipPro
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void bakeModel(ModelBakeEvent event) {
         IBakedModel bakedModel = new PneumoTubeBakedModel();
         ModelResourceLocation modelLocation = new ModelResourceLocation(getRegistryName().toString());
@@ -283,6 +285,7 @@ public class PneumoTube extends BlockContainer implements IToolable, ITooltipPro
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public StateMapperBase getStateMapper(ResourceLocation loc) {
         return new StateMapperBase() {
             @Override
