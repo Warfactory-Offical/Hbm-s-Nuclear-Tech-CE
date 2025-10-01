@@ -18,11 +18,13 @@ import java.util.List;
 
 import static com.hbm.blocks.network.PneumoTube.*;
 
-@SuppressWarnings("deprecation")
 @MethodsReturnNonnullByDefault
 @SideOnly(Side.CLIENT)
-public class PneumoTubeBakedModel implements IBakedModel {
-    public PneumoTubeBakedModel() {}
+public class PneumoTubeBakedModel extends AbstractBakedModel {
+
+    public PneumoTubeBakedModel() {
+        super(BakedModelTransforms.standardBlock());
+    }
 
     private TextureAtlasSprite getIcon(EnumFacing face, boolean pX, boolean nX, boolean pY, boolean nY, boolean pZ, boolean nZ, byte type) {
         if (type == 1) return iconIn;
@@ -173,7 +175,7 @@ public class PneumoTubeBakedModel implements IBakedModel {
         return quads;
     }
 
-    private void addConnectorBounds(List<float[]> boundsList, ForgeDirection dir, float type) {
+    private static void addConnectorBounds(List<float[]> boundsList, ForgeDirection dir, float type) {
         float tLower = 5f / 16f;
         float tUpper = 11f / 16f;
         float cLower = 4f / 16f;
@@ -210,73 +212,7 @@ public class PneumoTubeBakedModel implements IBakedModel {
     }
 
     @Override
-    public boolean isAmbientOcclusion() {
-        return true;
-    }
-
-    @Override
-    public boolean isGui3d() {
-        return true;
-    }
-
-    @Override
-    public boolean isBuiltInRenderer() {
-        return false;
-    }
-
-    @Override
     public TextureAtlasSprite getParticleTexture() {
         return iconBase;
-    }
-
-    private static final ItemCameraTransforms CUSTOM_TRANSFORMS = createCustomTransforms();
-    private static ItemCameraTransforms createCustomTransforms() {
-        ItemTransformVec3f gui = new ItemTransformVec3f(
-                new Vector3f(30, -135, 0),
-                new Vector3f(0, 0, 0),
-                new Vector3f(0.625f, 0.625f, 0.625f)
-        );
-
-        ItemTransformVec3f thirdPerson = new ItemTransformVec3f(
-                new Vector3f(75, 45, 0),
-                new Vector3f(0, 1.5f / 16, -2.5f / 16),
-                new Vector3f(0.5f, 0.5f, 0.5f)
-        );
-
-        ItemTransformVec3f firstPerson = new ItemTransformVec3f(
-                new Vector3f(0, 45, 0),
-                new Vector3f(0, 0, 0),
-                new Vector3f(0.5f, 0.5f, 0.5f)
-        );
-
-        ItemTransformVec3f ground = new ItemTransformVec3f(
-                new Vector3f(0, 0, 0),
-                new Vector3f(0, 2f / 16, 0),
-                new Vector3f(0.5f, 0.5f, 0.5f)
-        );
-
-        ItemTransformVec3f head = new ItemTransformVec3f(
-                new Vector3f(0, 0, 0),
-                new Vector3f(0, 13f / 16, 7f / 16),
-                new Vector3f(1, 1, 1)
-        );
-
-        ItemTransformVec3f fixed = new ItemTransformVec3f(
-                new Vector3f(0, 180, 0),
-                new Vector3f(0, 0, 0),
-                new Vector3f(0.75f, 0.75f, 0.75f)
-        );
-
-        return new ItemCameraTransforms(thirdPerson, thirdPerson, firstPerson, firstPerson, head, gui, ground, fixed);
-    }
-
-    @Override
-    public ItemCameraTransforms getItemCameraTransforms() {
-        return CUSTOM_TRANSFORMS;
-    }
-
-    @Override
-    public ItemOverrideList getOverrides() {
-        return ItemOverrideList.NONE;
     }
 }

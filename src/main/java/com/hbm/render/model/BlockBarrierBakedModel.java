@@ -2,24 +2,30 @@ package com.hbm.render.model;
 
 import com.hbm.blocks.generic.BlockBarrier;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.*;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.BlockFaceUV;
+import net.minecraft.client.renderer.block.model.BlockPartFace;
+import net.minecraft.client.renderer.block.model.FaceBakery;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-// note for EOS: I think you might make an abstract class out of it and then specify the render in different classes because they literally
-// are following the same template. Hwr I'm too lazy to make an abstract class rn, sry
-public class BlockBarrierBakedModel implements IBakedModel {
+
+@SideOnly(Side.CLIENT)
+public class BlockBarrierBakedModel extends AbstractBakedModel {
 
     private final TextureAtlasSprite sprite;
     private final boolean isInventory;
 
     public BlockBarrierBakedModel(TextureAtlasSprite sprite, boolean isInventory) {
+        super(BakedModelTransforms.standardBlock());
         this.sprite = sprite;
         this.isInventory = isInventory;
     }
@@ -67,90 +73,26 @@ public class BlockBarrierBakedModel implements IBakedModel {
 
         if (negX) {
             addBox(quads, 0.0f, 0.0f, 0.4375f, 0.125f, 1.0f, 0.5625f, sprite);
-            addBox(
-                    quads,
-                    0.0f,
-                    0.0625f,
-                    negZ ? 0.125f : 0.0f,
-                    0.0625f,
-                    0.4375f,
-                    posZ ? 0.875f : 1.0f,
-                    sprite);
-            addBox(
-                    quads,
-                    0.0f,
-                    0.5625f,
-                    negZ ? 0.125f : 0.0f,
-                    0.0625f,
-                    0.9375f,
-                    posZ ? 0.875f : 1.0f,
-                    sprite);
+            addBox(quads, 0.0f, 0.0625f, negZ ? 0.125f : 0.0f, 0.0625f, 0.4375f, posZ ? 0.875f : 1.0f, sprite);
+            addBox(quads, 0.0f, 0.5625f, negZ ? 0.125f : 0.0f, 0.0625f, 0.9375f, posZ ? 0.875f : 1.0f, sprite);
         }
 
         if (negZ) {
             addBox(quads, 0.4375f, 0.0f, 0.0f, 0.5625f, 1.0f, 0.125f, sprite);
-            addBox(
-                    quads,
-                    negX ? 0.125f : 0.0f,
-                    0.0625f,
-                    0.0f,
-                    posX ? 0.875f : 1.0f,
-                    0.4375f,
-                    0.0625f,
-                    sprite);
-            addBox(
-                    quads,
-                    negX ? 0.125f : 0.0f,
-                    0.5625f,
-                    0.0f,
-                    posX ? 0.875f : 1.0f,
-                    0.9375f,
-                    0.0625f,
-                    sprite);
+            addBox(quads, negX ? 0.125f : 0.0f, 0.0625f, 0.0f, posX ? 0.875f : 1.0f, 0.4375f, 0.0625f, sprite);
+            addBox(quads, negX ? 0.125f : 0.0f, 0.5625f, 0.0f, posX ? 0.875f : 1.0f, 0.9375f, 0.0625f, sprite);
         }
 
         if (posX) {
             addBox(quads, 0.875f, 0.0f, 0.4375f, 1.0f, 1.0f, 0.5625f, sprite);
-            addBox(
-                    quads,
-                    0.9375f,
-                    0.0625f,
-                    negZ ? 0.125f : 0.0f,
-                    1.0f,
-                    0.4375f,
-                    posZ ? 0.875f : 1.0f,
-                    sprite);
-            addBox(
-                    quads,
-                    0.9375f,
-                    0.5625f,
-                    negZ ? 0.125f : 0.0f,
-                    1.0f,
-                    0.9375f,
-                    posZ ? 0.875f : 1.0f,
-                    sprite);
+            addBox(quads, 0.9375f, 0.0625f, negZ ? 0.125f : 0.0f, 1.0f, 0.4375f, posZ ? 0.875f : 1.0f, sprite);
+            addBox(quads, 0.9375f, 0.5625f, negZ ? 0.125f : 0.0f, 1.0f, 0.9375f, posZ ? 0.875f : 1.0f, sprite);
         }
 
         if (posZ) {
             addBox(quads, 0.4375f, 0.0f, 0.875f, 0.5625f, 1.0f, 1.0f, sprite);
-            addBox(
-                    quads,
-                    negX ? 0.125f : 0.0f,
-                    0.0625f,
-                    0.9375f,
-                    posX ? 0.875f : 1.0f,
-                    0.4375f,
-                    1.0f,
-                    sprite);
-            addBox(
-                    quads,
-                    negX ? 0.125f : 0.0f,
-                    0.5625f,
-                    0.9375f,
-                    posX ? 0.875f : 1.0f,
-                    0.9375f,
-                    1.0f,
-                    sprite);
+            addBox(quads, negX ? 0.125f : 0.0f, 0.0625f, 0.9375f, posX ? 0.875f : 1.0f, 0.4375f, 1.0f, sprite);
+            addBox(quads, negX ? 0.125f : 0.0f, 0.5625f, 0.9375f, posX ? 0.875f : 1.0f, 0.9375f, 1.0f, sprite);
         }
 
         if (posY) {
@@ -164,28 +106,8 @@ public class BlockBarrierBakedModel implements IBakedModel {
     }
 
     @Override
-    public boolean isAmbientOcclusion() {
-        return true;
-    }
-
-    @Override
-    public boolean isGui3d() {
-        return true;
-    }
-
-    @Override
-    public boolean isBuiltInRenderer() {
-        return false;
-    }
-
-    @Override
     public TextureAtlasSprite getParticleTexture() {
         return sprite;
-    }
-
-    @Override
-    public ItemOverrideList getOverrides() {
-        return ItemOverrideList.NONE;
     }
 
     private static void addBox(List<BakedQuad> quads, float minX, float minY, float minZ, float maxX, float maxY, float maxZ, TextureAtlasSprite sprite) {
@@ -249,51 +171,5 @@ public class BlockBarrierBakedModel implements IBakedModel {
             }
         }
         return new BlockFaceUV(new float[] {u1, v1, u2, v2}, 0);
-    }
-
-    private static final ItemCameraTransforms CUSTOM_TRANSFORMS = createCustomTransforms();
-    private static ItemCameraTransforms createCustomTransforms() {
-        ItemTransformVec3f gui = new ItemTransformVec3f(
-                new Vector3f(30, -135, 0),
-                new Vector3f(0, 0, 0),
-                new Vector3f(0.625f, 0.625f, 0.625f)
-        );
-
-        ItemTransformVec3f thirdPerson = new ItemTransformVec3f(
-                new Vector3f(75, 45, 0),
-                new Vector3f(0, 1.5f / 16, -2.5f / 16),
-                new Vector3f(0.5f, 0.5f, 0.5f)
-        );
-
-        ItemTransformVec3f firstPerson = new ItemTransformVec3f(
-                new Vector3f(0, 45, 0),
-                new Vector3f(0, 0, 0),
-                new Vector3f(0.5f, 0.5f, 0.5f)
-        );
-
-        ItemTransformVec3f ground = new ItemTransformVec3f(
-                new Vector3f(0, 0, 0),
-                new Vector3f(0, 2f / 16, 0),
-                new Vector3f(0.5f, 0.5f, 0.5f)
-        );
-
-        ItemTransformVec3f head = new ItemTransformVec3f(
-                new Vector3f(0, 0, 0),
-                new Vector3f(0, 13f / 16, 7f / 16),
-                new Vector3f(1, 1, 1)
-        );
-
-        ItemTransformVec3f fixed = new ItemTransformVec3f(
-                new Vector3f(0, 180, 0),
-                new Vector3f(0, 0, 0),
-                new Vector3f(0.75f, 0.75f, 0.75f)
-        );
-
-        return new ItemCameraTransforms(thirdPerson, thirdPerson, firstPerson, firstPerson, head, gui, ground, fixed);
-    }
-
-    @Override
-    public ItemCameraTransforms getItemCameraTransforms() {
-        return CUSTOM_TRANSFORMS;
     }
 }
