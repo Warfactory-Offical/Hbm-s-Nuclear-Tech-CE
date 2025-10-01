@@ -14,6 +14,7 @@ import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.fluid.trait.FT_Coolable;
 import com.hbm.inventory.gui.GUIMachineTurbine;
 import com.hbm.items.ModItems;
+import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.IGUIProvider;
@@ -73,7 +74,8 @@ public class TileEntityMachineTurbine extends TileEntityLoadedBase implements IT
 			@Override
 			public boolean isItemValid(int slot, @NotNull ItemStack stack) {
 				if(slot == 0)
-					return stack.getItem() == ModItems.fluid_identifier;
+					return stack.getItem() instanceof IItemFluidIdentifier;
+
 				if(slot == 4)
 					return Library.isItemBattery(stack);
 
