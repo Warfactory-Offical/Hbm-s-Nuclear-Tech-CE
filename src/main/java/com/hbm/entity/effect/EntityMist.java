@@ -3,7 +3,7 @@ package com.hbm.entity.effect;
 
 import com.hbm.capability.HbmLivingProps;
 import com.hbm.handler.ArmorUtil;
-import com.hbm.handler.radiation.RadiationSystemNT;
+import com.hbm.handler.radiation.ChunkRadiationManager;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
@@ -115,10 +115,7 @@ public class EntityMist extends Entity {
 
             if (type.hasTrait(FT_VentRadiation.class)) {
                 FT_VentRadiation trait = type.getTrait(FT_VentRadiation.class);
-                //ChunkRadiationManager.proxy.incrementRad(world, (int) Math.floor(posX), (int) Math.floor(posY), (int) Math.floor(posZ), trait.getRadPerMB() * 2);
-                //TODO: add newer radiation
-                RadiationSystemNT.incrementRad(world, this.getPosition(), trait.getRadPerMB(), Integer.MAX_VALUE);
-
+                ChunkRadiationManager.proxy.incrementRad(world, this.getPosition(), trait.getRadPerMB() * 2);
             }
 
             double intensity = 1D - (double) this.ticksExisted / (double) this.getMaxAge();

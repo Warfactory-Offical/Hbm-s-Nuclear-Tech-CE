@@ -3,7 +3,7 @@ package com.hbm.entity.projectile;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.HbmLivingProps;
 import com.hbm.handler.ArmorUtil;
-import com.hbm.handler.radiation.RadiationSystemNT;
+import com.hbm.handler.radiation.ChunkRadiationManager;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
@@ -250,8 +250,7 @@ public class EntityChemical extends EntityThrowableNT{
             if(living != null) {
                 ContaminationUtil.contaminate(living, ContaminationUtil.HazardType.RADIATION, ContaminationUtil.ContaminationType.CREATIVE, trait.getRadPerMB() * 5);
             }
-            //ChunkRadiationManager.proxy.incrementRad(world, (int) Math.floor(e.posX), (int) Math.floor(e.posY), (int) Math.floor(e.posZ), trait.getRadPerMB() * 5);
-            RadiationSystemNT.incrementRad(world, this.getPosition(),trait.getRadPerMB(), Integer.MAX_VALUE );
+            ChunkRadiationManager.proxy.incrementRad(world, this.getPosition(),trait.getRadPerMB() * 5);
         }
 
         if(type.hasTrait(FT_Poison.class)) {
@@ -405,7 +404,7 @@ public class EntityChemical extends EntityThrowableNT{
 
                 if (type.hasTrait(FT_VentRadiation.class)) {
                     FT_VentRadiation trait = type.getTrait(FT_VentRadiation.class);
-                    RadiationSystemNT.incrementRad(world, pos, trait.getRadPerMB(), Integer.MAX_VALUE);
+                    ChunkRadiationManager.proxy.incrementRad(world, pos, trait.getRadPerMB() * 5);
                 }
 
                 ChemicalStyle style = getStyle();

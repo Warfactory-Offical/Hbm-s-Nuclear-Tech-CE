@@ -2,11 +2,11 @@ package com.hbm.blocks.generic;
 
 import com.hbm.blocks.BlockBase;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.handler.radiation.ChunkRadiationManager;
 import com.hbm.hazard.HazardSystem;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.main.MainRegistry;
 import com.hbm.potion.HbmPotion;
-import com.hbm.saveddata.RadiationSavedData;
 import com.hbm.util.ContaminationUtil;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -165,7 +165,7 @@ public class BlockHazard extends BlockBase {
             return;
         }
         if (this.radIn > 0) {
-            RadiationSavedData.incrementRad(worldIn, pos, radIn, radIn * 10F);
+            ChunkRadiationManager.proxy.incrementRad(worldIn, pos, radIn, radIn * 10F);
         }
     }
 

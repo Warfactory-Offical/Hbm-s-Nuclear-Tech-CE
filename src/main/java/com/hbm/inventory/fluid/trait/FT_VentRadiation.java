@@ -2,8 +2,8 @@ package com.hbm.inventory.fluid.trait;
 
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
+import com.hbm.handler.radiation.ChunkRadiationManager;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
-import com.hbm.saveddata.RadiationSavedData;
 import com.hbm.util.I18nUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.util.math.BlockPos;
@@ -28,8 +28,8 @@ public class FT_VentRadiation extends FluidTrait {
 	
 	@Override
 	public void onFluidRelease(World world, int x, int y, int z, FluidTankNTM tank, int overflowAmount, FluidReleaseType type) {
-		RadiationSavedData.incrementRad(world, new BlockPos(x, y, z), overflowAmount * radPerMB, Integer.MAX_VALUE);
-	}
+        ChunkRadiationManager.proxy.incrementRad(world, new BlockPos(x, y, z), overflowAmount * radPerMB);
+    }
 	
 	@Override
 	public void addInfo(List<String> info) {

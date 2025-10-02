@@ -1,5 +1,6 @@
 package com.hbm.entity.mob;
 
+import com.hbm.handler.radiation.ChunkRadiationManager;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IRadiationImmune;
 import com.hbm.items.ModItems;
@@ -7,7 +8,6 @@ import com.hbm.items.machine.ItemZirnoxRodDepleted;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.main.AdvancementManager;
-import com.hbm.saveddata.RadiationSavedData;
 import com.hbm.util.ContaminationUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -23,6 +23,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -178,14 +179,11 @@ public class EntityRADBeast extends EntityMob implements IRadiationImmune {
             this.idleTime = 20;
             return super.attackEntityAsMob(target);
         } else if(dist < 30.0F) {
-
-            double deltaX = target.posX - this.posX;
-            double deltaZ = target.posZ - this.posZ;
-
             if (this.idleTime == 0 && getAttackTarget() != null) {
 
-            	RadiationSavedData.incrementRad(world, this.getPosition(), 150, 1000);
-            	flag = target.attackEntityFrom(ModDamageSource.radiation, 16.0F);
+                BlockPos pos = this.getPosition();
+                ChunkRadiationManager.proxy.incrementRad(world, pos, (float) 150, (float) 1000);
+                flag = target.attackEntityFrom(ModDamageSource.radiation, 16.0F);
             	this.swingArm(EnumHand.MAIN_HAND);
             	this.playLivingSound();
             	this.idleTime = 20;

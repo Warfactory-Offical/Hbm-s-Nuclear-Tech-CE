@@ -5,7 +5,6 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.saveddata.RadiationSavedData;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;

@@ -4,23 +4,22 @@ import com.hbm.capability.HbmLivingProps;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.config.GeneralConfig;
 import com.hbm.config.RadiationConfig;
-import com.hbm.entity.mob.EntityDuck;
 import com.hbm.entity.mob.EntityCreeperNuclear;
+import com.hbm.entity.mob.EntityDuck;
 import com.hbm.entity.mob.EntityQuackos;
 import com.hbm.entity.mob.EntityRADBeast;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.IRadResistantBlock;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.lib.RefStrings;
+import com.hbm.lib.maps.NonBlockingHashMapLong;
 import com.hbm.main.AdvancementManager;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.saveddata.AuxSavedData;
-import com.hbm.saveddata.RadiationSavedData;
 import com.hbm.util.AtomicFloat;
 import com.hbm.util.ChunkUtil;
 import com.hbm.util.SubChunkKey;
-import com.hbm.lib.maps.NonBlockingHashMapLong;
 import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import net.minecraft.block.Block;
@@ -138,9 +137,8 @@ public final class RadiationSystemNT {
      * @param amount - the amount to increment by
      * @param max    - the maximum amount of radiation allowed before it doesn't increment
      */
-    public static void incrementRad(World world, BlockPos pos, float amount, float max) {
-        if (world.isRemote || pos.getY() < 0 || pos.getY() > 255 || !world.isBlockLoaded(pos)) return;
-        WorldServer server = (WorldServer) world;
+    public static void incrementRad(WorldServer server, BlockPos pos, float amount, float max) {
+        if (pos.getY() < 0 || pos.getY() > 255 || !server.isBlockLoaded(pos)) return;
         if (amount < 0 || max < 0) throw new IllegalArgumentException("Radiation amount and max must be positive.");
         if (!isSubChunkLoaded(server, pos)) rebuildChunkPockets(server, server.getChunk(pos), pos.getY() >> 4);
         RadPocket p = getPocket(server, pos);
@@ -238,7 +236,7 @@ public final class RadiationSystemNT {
     }
 
     /**
-     * Gets whether the sub chunk at spefified position is loaded
+     * Gets whether the rad data of the section at the specified position exists
      *
      * @param world - the world to check in
      * @param pos   - ths position to check at
@@ -276,16 +274,6 @@ public final class RadiationSystemNT {
     @NotNull
     private static WorldRadiationData getWorldRadData(WorldServer world) {
         return worldMap.computeIfAbsent(world, WorldRadiationData::new);
-    }
-
-    private static void updateRadSaveData(WorldServer world) {
-        RadiationSavedData data = RadiationSavedData.getData(world);
-        if (data.world == null) data.world = world;
-        if (GeneralConfig.enableDebugMode) {
-            MainRegistry.logger.info("[Debug] Updated system for entity contamination processing at worldtime {}", world.getTotalWorldTime());
-        }
-
-        data.updateSystem();
     }
 
     /**
@@ -338,24 +326,6 @@ public final class RadiationSystemNT {
         return res;
     }
 
-    /**
-     * Updates world-specific radiation data, such as thunder and the radiation save data.
-     */
-    private static void updateWorldRadiationData(WorldServer world, boolean updateData) {
-        if (world != null && !world.isRemote && GeneralConfig.enableRads) {
-            int thunder = AuxSavedData.getThunder(world);
-            if (thunder > 0) AuxSavedData.setThunder(world, thunder - 1);
-
-            RadiationSavedData data = RadiationSavedData.getData(world);
-            if (data.world == null) data.world = world;
-
-            if (world.getTotalWorldTime() % 20 == 15 && updateData) {
-                // unless a chunk requires update
-                updateRadSaveData(world);
-            }
-        }
-    }
-
     @SubscribeEvent
     public static void onUpdate(TickEvent.ServerTickEvent e) {
         if (!GeneralConfig.enableRads || !GeneralConfig.advancedRadiation) return;
@@ -366,8 +336,6 @@ public final class RadiationSystemNT {
                 scheduleUpdate(RadiationSystemNT::scheduleFullUpdate);
             }
         }
-
-        // Rebuild chunks marked as dirty by block changes instantly on the main thread.
         rebuildDirty();
     }
 
@@ -563,7 +531,10 @@ public final class RadiationSystemNT {
         if (e.phase == Phase.START) {
             RadiationWorldHandler.handleWorldDestruction(worldServer);
         }
-        updateWorldRadiationData(worldServer, e.phase == Phase.START);
+        if (GeneralConfig.enableRads) {
+            int thunder = AuxSavedData.getThunder(worldServer);
+            if (thunder > 0) AuxSavedData.setThunder(worldServer, thunder - 1);
+        }
     }
 
     @SubscribeEvent

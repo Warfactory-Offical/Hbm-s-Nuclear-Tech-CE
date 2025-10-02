@@ -5,29 +5,20 @@ import com.hbm.config.GeneralConfig;
 import com.hbm.config.RadiationConfig;
 import com.hbm.handler.radiation.RadiationSystemNT.RadPocket;
 import com.hbm.main.MainRegistry;
-import com.hbm.saveddata.RadiationSaveStructure;
-import com.hbm.saveddata.RadiationSavedData;
 import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraft.world.gen.ChunkProviderServer;
 
 import java.util.Collection;
-import java.util.Map.Entry;
 
 public class RadiationWorldHandler {
 
     public static void handleWorldDestruction(WorldServer world) {
         if (!RadiationConfig.worldRadEffects || !GeneralConfig.enableRads) return;
-        if (GeneralConfig.advancedRadiation) {
-            handleAdvancedDestruction(world);
-        } else {
-            handleLegacyDestruction(world);
-        }
+        handleAdvancedDestruction(world);
     }
 
     private static void handleAdvancedDestruction(WorldServer world) {
@@ -67,38 +58,6 @@ public class RadiationWorldHandler {
 
         if (GeneralConfig.enableDebugMode) {
             MainRegistry.logger.info("[Debug] Finished advanced world destruction processing");
-        }
-    }
-
-    private static void handleLegacyDestruction(WorldServer world) {
-        RadiationSavedData data = RadiationSavedData.getData(world);
-        ChunkProviderServer provider = world.getChunkProvider();
-        Object[] entries = data.contamination.entrySet().toArray();
-
-        if (entries.length == 0) return;
-
-        @SuppressWarnings("unchecked") Entry<ChunkPos, RadiationSaveStructure> randEnt =
-                (Entry<ChunkPos, RadiationSaveStructure>) entries[world.rand.nextInt(entries.length)];
-        ChunkPos coords = randEnt.getKey();
-        float threshold = 5.0F;
-
-        if (randEnt.getValue().radiation < threshold) return;
-        if (!provider.chunkExists(coords.x, coords.z)) return;
-
-        for (int a = 0; a < 16; a++) {
-            for (int b = 0; b < 16; b++) {
-                if (world.rand.nextInt(3) != 0) continue;
-
-                int x = coords.getXStart() + a;
-                int z = coords.getZStart() + b;
-                int y = world.getHeight(x, z) - world.rand.nextInt(2);
-                BlockPos pos = new BlockPos(x, y, z);
-
-                if (world.isAirBlock(pos)) continue;
-
-                IBlockState state = world.getBlockState(pos);
-                decayBlock(world, pos, state, true);
-            }
         }
     }
 

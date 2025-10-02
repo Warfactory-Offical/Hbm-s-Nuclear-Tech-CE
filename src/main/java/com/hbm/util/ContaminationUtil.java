@@ -17,6 +17,7 @@ import com.hbm.entity.projectile.EntityMiniMIRV;
 import com.hbm.entity.projectile.EntityMiniNuke;
 import com.hbm.handler.ArmorUtil;
 import com.hbm.handler.HazmatRegistry;
+import com.hbm.handler.radiation.ChunkRadiationManager;
 import com.hbm.hazard.HazardSystem;
 import com.hbm.hazard.type.HazardTypeRadiation;
 import com.hbm.interfaces.IRadiationImmune;
@@ -25,7 +26,6 @@ import com.hbm.lib.Library;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.potion.HbmPotion;
 import com.hbm.render.amlfrom1710.Vec3;
-import com.hbm.saveddata.RadiationSavedData;
 import com.hbm.util.ArmorRegistry.HazardClass;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -124,8 +124,7 @@ public class ContaminationUtil {
 	public static void printGeigerData(EntityPlayer player) {
 
 		double eRad = ((long)(HbmLivingProps.getRadiation(player) * 1000)) / 1000D;
-		RadiationSavedData data = RadiationSavedData.getData(player.world);
-		double rads = ((long)(data.getRadNumFromCoord(player.getPosition()) * 1000D)) / 1000D;
+        double rads = ((long)(ChunkRadiationManager.proxy.getRadiation(player.world, player.getPosition()) * 1000D)) / 1000D;
 		double env = ((long)(getPlayerRads(player) * 1000D)) / 1000D;
 
 

@@ -2,6 +2,7 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.MobConfig;
+import com.hbm.handler.radiation.ChunkRadiationManager;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.RecipesCommon;
@@ -10,7 +11,6 @@ import com.hbm.inventory.gui.GUIReactorResearch;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemPlateFuel;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.saveddata.RadiationSavedData;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.BufferUtil;
@@ -145,7 +145,7 @@ public class TileEntityReactorResearch extends TileEntityMachineBase implements 
 
             if(level > 0 && heat > 0 && !(blocksRad(pos.add(1, 1, 0)) && blocksRad(pos.add(-1, 1, 0)) && blocksRad(pos.add(0, 1, 1)) && blocksRad(pos.add(0, 1, -1)))) {
                 float rad = (float) heat / (float) maxHeat * 50F;
-                RadiationSavedData.incrementRad(world, pos, rad, 25000);
+                ChunkRadiationManager.proxy.incrementRad(world, pos, rad, (float) 25000);
             }
 
             networkPackNT(150);
@@ -322,7 +322,7 @@ public class TileEntityReactorResearch extends TileEntityMachineBase implements 
         world.setBlockState(this.pos.add(0, 1, 0), ModBlocks.corium_block.getDefaultState());
         world.setBlockState(this.pos.add(0, 2, 0), ModBlocks.deco_steel.getDefaultState());
 
-        RadiationSavedData.incrementRad(world, pos, 50, 15000);
+        ChunkRadiationManager.proxy.incrementRad(world, pos, 50F, 15000F);
 
         if(MobConfig.enableElementals) {
             List<EntityPlayer> players = world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5).expand(100, 100, 100));

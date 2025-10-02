@@ -10,6 +10,7 @@ import com.hbm.config.RadiationConfig;
 import com.hbm.config.WorldConfig;
 import com.hbm.handler.HbmKeybinds.EnumKeybind;
 import com.hbm.handler.pollution.PollutionHandler;
+import com.hbm.handler.radiation.ChunkRadiationManager;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.IArmorModDash;
 import com.hbm.interfaces.Untested;
@@ -24,7 +25,6 @@ import com.hbm.packet.toclient.HbmCapabilityPacket;
 import com.hbm.particle.helper.FlameCreator;
 import com.hbm.potion.HbmPotion;
 import com.hbm.saveddata.AuxSavedData;
-import com.hbm.saveddata.RadiationSavedData;
 import com.hbm.util.ArmorRegistry;
 import com.hbm.util.ContaminationUtil;
 import com.hbm.util.ContaminationUtil.ContaminationType;
@@ -153,14 +153,12 @@ public class EntityEffectHandler {
 		World world = entity.world;
 
 		if(!world.isRemote) {
-            RadiationSavedData data = RadiationSavedData.getData(world);
-
             int ix = MathHelper.floor(entity.posX);
 			int iy = MathHelper.floor(entity.posY);
 			int iz = MathHelper.floor(entity.posZ);
 
 			BlockPos pos = new BlockPos(ix, iy, iz);
-			float offset =  data.getRadNumFromCoord(pos);
+			float offset = ChunkRadiationManager.proxy.getRadiation(world, pos);
 
 			Object v = CompatibilityConfig.dimensionRad.get(world.provider.getDimension());
 			float background = (v instanceof Number) ? ((Number) v).floatValue() : 0f;

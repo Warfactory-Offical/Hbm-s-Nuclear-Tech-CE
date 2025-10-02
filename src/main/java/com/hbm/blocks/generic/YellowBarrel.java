@@ -2,7 +2,7 @@ package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.explosion.ExplosionNukeGeneric;
-import com.hbm.saveddata.RadiationSavedData;
+import com.hbm.handler.radiation.ChunkRadiationManager;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumParticleTypes;
@@ -44,18 +44,18 @@ public class YellowBarrel extends BaseBarrel {
 		}
     	ExplosionNukeGeneric.waste(p_149695_1_, x, y, z, 35);
 
-        RadiationSavedData.incrementRad(p_149695_1_, new BlockPos(x, y, z), 35, 1500);
-	}
+        ChunkRadiationManager.proxy.incrementRad(p_149695_1_, new BlockPos(x, y, z), 35F, 1500F);
+    }
 
 	@Override
 	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
 		super.updateTick(world, pos, state, rand);
 
 		if(this == ModBlocks.yellow_barrel){
-    		RadiationSavedData.incrementRad(world, pos, 5, 75);
-		} else {
-			RadiationSavedData.incrementRad(world, pos, 0.5F, 5);
-		}
+            ChunkRadiationManager.proxy.incrementRad(world, pos, 5F, 75F);
+        } else {
+            ChunkRadiationManager.proxy.incrementRad(world, pos, 0.5F, 5F);
+        }
 
         world.scheduleUpdate(pos, this, this.tickRate(world));
 	}

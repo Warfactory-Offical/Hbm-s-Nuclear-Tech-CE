@@ -1,7 +1,7 @@
 package com.hbm.tileentity.machine;
 
+import com.hbm.handler.radiation.ChunkRadiationManager;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.saveddata.RadiationSavedData;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
@@ -131,10 +131,7 @@ public class TileEntityRadSensor extends TileEntity implements ITickable, Simple
 	@Override
 	public void update() {
 		if(!world.isRemote) {
-			
-
-			RadiationSavedData data = RadiationSavedData.getData(world);
-			chunkRads = (data.getRadNumFromCoord(pos) + lastChunkRads)/2F;
+			chunkRads = (ChunkRadiationManager.proxy.getRadiation(world, pos) + lastChunkRads) / 2F;
 			
 			if(0 < getRedstonePower(world, pos, EnumFacing.DOWN)){
 				recievedDose = 0;

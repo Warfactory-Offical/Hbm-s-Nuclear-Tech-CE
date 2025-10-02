@@ -13,39 +13,54 @@ import net.minecraft.world.WorldServer;
  * @author mlbv
  */
 public final class ChunkRadiationManager {
-    @Deprecated
-    public static final class proxy {
+    public static final ProxyClass proxy = new ProxyClass();
+
+    @SuppressWarnings("MethodMayBeStatic")
+    public static final class ProxyClass {
         /**
          * Updates the radiation system, i.e. all worlds.
          * Doesn't need parameters because it governs the ENTIRE system.
          */
         @DoNotCall("unless you know what you are doing")
-        public static void updateSystem() {
+        public void updateSystem() {
             RadiationSystemNT.forceUpdateAll();
         }
 
-        public static float getRadiation(World world, BlockPos pos) {
+        public float getRadiation(World world, BlockPos pos) {
             if (world.isRemote) return 0F;
             return RadiationSystemNT.getRadForCoord((WorldServer) world, pos);
         }
 
-        public static void setRadiation(World world, BlockPos pos, float rad) {
+        public void setRadiation(World world, BlockPos pos, float rad) {
             if (world.isRemote) return;
             RadiationSystemNT.setRadForCoord((WorldServer) world, pos, rad);
         }
 
         @DoNotCall("no max rad limit")
-        public static void incrementRad(World world, BlockPos pos, float rad) {
+        public void incrementRad(World world, BlockPos pos, float rad) {
             if (world.isRemote) return;
             RadiationSystemNT.incrementRad((WorldServer) world, pos, rad, Float.MAX_VALUE);
         }
 
-        public static void decrementRad(World world, BlockPos pos, float rad) {
+        public void incrementRad(WorldServer world, BlockPos pos, float rad) {
+            RadiationSystemNT.incrementRad(world, pos, rad, Float.MAX_VALUE);
+        }
+
+        public void incrementRad(World world, BlockPos pos, float rad, float max) {
+            if (world.isRemote) return;
+            RadiationSystemNT.incrementRad((WorldServer) world, pos, rad, max);
+        }
+
+        public void incrementRad(WorldServer world, BlockPos pos, float rad, float max) {
+            RadiationSystemNT.incrementRad(world, pos, rad, max);
+        }
+
+        public void decrementRad(World world, BlockPos pos, float rad) {
             if (world.isRemote) return;
             RadiationSystemNT.decrementRad((WorldServer) world, pos, rad);
         }
 
-        public static void clearSystem(World world) {
+        public void clearSystem(World world) {
             if (world.isRemote) return;
             RadiationSystemNT.jettisonData((WorldServer) world);
         }

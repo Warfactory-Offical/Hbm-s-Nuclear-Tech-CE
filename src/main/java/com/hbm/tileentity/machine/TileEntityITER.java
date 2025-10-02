@@ -5,6 +5,7 @@ import com.hbm.api.fluid.IFluidStandardTransceiver;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.MachineITER;
 import com.hbm.handler.CompatHandler;
+import com.hbm.handler.radiation.ChunkRadiationManager;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerITER;
 import com.hbm.inventory.fluid.FluidType;
@@ -23,7 +24,6 @@ import com.hbm.lib.Library;
 import com.hbm.main.AdvancementManager;
 import com.hbm.main.MainRegistry;
 import com.hbm.render.amlfrom1710.Vec3;
-import com.hbm.saveddata.RadiationSavedData;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.IGUIProvider;
@@ -111,8 +111,8 @@ public class TileEntityITER extends TileEntityMachineBase implements ITickable, 
 				vec.rotateAroundY(world.rand.nextFloat() * (float) Math.PI * 2F);
 
 				world.newExplosion(null, pos.getX() + 0.5 + vec.xCoord, pos.getY() + 0.5 + world.rand.nextGaussian() * 1.5D, pos.getZ() + 0.5 + vec.zCoord, 2.5F, true, true);
-				RadiationSavedData.incrementRad(world, pos, 2000F, 10000F);
-			}
+                ChunkRadiationManager.proxy.incrementRad(world, pos, 2000F, 10000F);
+            }
 
 			if(isOn && power >= powerReq) {
 				power -= powerReq;

@@ -1,7 +1,7 @@
 package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.handler.radiation.RadiationSystemNT;
+import com.hbm.handler.radiation.ChunkRadiationManager;
 import com.hbm.items.ModItems;
 import com.hbm.potion.HbmPotion;
 import com.hbm.util.ContaminationUtil;
@@ -49,7 +49,7 @@ public class BlockPowder extends Block {
     @Override
     public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
         if (!worldIn.isRemote) {
-            RadiationSystemNT.incrementRad(worldIn, pos, 1, 100);
+            ChunkRadiationManager.proxy.incrementRad(worldIn, pos, 1, 100);
             worldIn.scheduleUpdate(pos, this, 10 + worldIn.rand.nextInt(30));
         }
     }

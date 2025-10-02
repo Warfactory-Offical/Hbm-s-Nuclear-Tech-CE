@@ -4,7 +4,7 @@ import com.hbm.config.BombConfig;
 import com.hbm.entity.effect.EntityCloudFleijaRainbow;
 import com.hbm.entity.logic.EntityNukeExplosionMK3;
 import com.hbm.handler.ArmorUtil;
-import com.hbm.handler.radiation.RadiationSystemNT;
+import com.hbm.handler.radiation.ChunkRadiationManager;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerCore;
 import com.hbm.inventory.fluid.FluidType;
@@ -140,7 +140,7 @@ public class TileEntityCore extends TileEntityMachineBase implements ITickable, 
 
                 } else {
                     meltdownTick = true;
-                    RadiationSystemNT.incrementRad(world, new BlockPos(pos.getX(), pos.getY(), pos.getZ()), 100, 4000);
+                    ChunkRadiationManager.proxy.incrementRad(world, new BlockPos(pos.getX(), pos.getY(), pos.getZ()), 100);
                 }
             }
 

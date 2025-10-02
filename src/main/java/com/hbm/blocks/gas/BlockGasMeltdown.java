@@ -3,9 +3,9 @@ package com.hbm.blocks.gas;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.HbmLivingProps;
 import com.hbm.handler.ArmorUtil;
+import com.hbm.handler.radiation.ChunkRadiationManager;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.potion.HbmPotion;
-import com.hbm.saveddata.RadiationSavedData;
 import com.hbm.util.ArmorRegistry;
 import com.hbm.util.ContaminationUtil;
 import net.minecraft.block.state.IBlockState;
@@ -79,7 +79,7 @@ public class BlockGasMeltdown extends BlockGasBase {
             }
 
             if (world.canSeeSky(pos)) {
-                RadiationSavedData.incrementRad(world, pos, 5F, 50F);
+                ChunkRadiationManager.proxy.incrementRad(world, pos, 5F, 50F);
             }
 
             if (rand.nextInt(350) == 0) {

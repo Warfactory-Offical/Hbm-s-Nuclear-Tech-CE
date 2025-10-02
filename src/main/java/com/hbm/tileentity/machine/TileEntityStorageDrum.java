@@ -1,15 +1,15 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.api.fluid.IFluidStandardSender;
+import com.hbm.handler.radiation.ChunkRadiationManager;
 import com.hbm.hazard.HazardSystem;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.inventory.recipes.StorageDrumRecipes;
 import com.hbm.inventory.container.ContainerStorageDrum;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.gui.GUIStorageDrum;
+import com.hbm.inventory.recipes.StorageDrumRecipes;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.saveddata.RadiationSavedData;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.ContaminationUtil;
@@ -88,8 +88,8 @@ public class TileEntityStorageDrum extends TileEntityMachineBase implements ITic
 				int overflow = Math.max(this.tanks[i].getFluidAmount() + (i == 0 ? liquid : gas) - this.tanks[i].getCapacity(), 0);
 				
 				if(overflow > 0) {
-					RadiationSavedData.incrementRad(world, pos, overflow * 0.5F, Float.MAX_VALUE);
-				}
+                    ChunkRadiationManager.proxy.incrementRad(world, pos, overflow * 0.5F);
+                }
 			}
 			
 			this.tanks[0].fill(Fluids.WASTEFLUID, liquid, true);

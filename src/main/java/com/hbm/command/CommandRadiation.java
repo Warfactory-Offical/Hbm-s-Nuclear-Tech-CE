@@ -1,7 +1,7 @@
 package com.hbm.command;
 
 import com.hbm.capability.HbmLivingCapability;
-import com.hbm.saveddata.RadiationSavedData;
+import com.hbm.handler.radiation.ChunkRadiationManager;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -73,13 +73,12 @@ public class CommandRadiation extends CommandBase {
                 int blockY = parseCoord(args[2], sender.getPosition().getY());
                 int blockZ = parseCoord(args[3], sender.getPosition().getZ());
                 int amount = Integer.parseInt(args[4]);
-
-                RadiationSavedData.getData(sender.getEntityWorld()).setRadForCoord(new BlockPos(blockX, blockY, blockZ), amount);
+                ChunkRadiationManager.proxy.setRadiation(sender.getEntityWorld(), new BlockPos(blockX, blockY, blockZ), amount);
                 sender.sendMessage(
                         new TextComponentTranslation("Set radiation at coords (" + blockX + ", " + blockY + ", " + blockZ + ") to " + amount + "."));
             }
             case "clearall", "reset" -> {
-                RadiationSavedData.getData(sender.getEntityWorld()).jettisonData();
+                ChunkRadiationManager.proxy.clearSystem(sender.getEntityWorld());
                 sender.sendMessage(new TextComponentTranslation("commands.hbmrad.removeall", sender.getEntityWorld().provider.getDimension()));
             }
             case "player" -> {

@@ -1,7 +1,7 @@
 package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.saveddata.RadiationSavedData;
+import com.hbm.handler.radiation.ChunkRadiationManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -30,9 +30,9 @@ public class BlockAbsorber extends Block {
 
 	@Override
 	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
-		RadiationSavedData.decrementRad(world, pos, absorb / 10);
+        ChunkRadiationManager.proxy.decrementRad(world, pos, absorb / 10);
 
-    	world.scheduleUpdate(pos, this, this.tickRate(world));
+        world.scheduleUpdate(pos, this, this.tickRate(world));
 	}
 
 	@Override

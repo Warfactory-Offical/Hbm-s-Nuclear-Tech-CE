@@ -2,7 +2,7 @@ package com.hbm.blocks.fluid;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockMeta;
-import com.hbm.saveddata.RadiationSavedData;
+import com.hbm.handler.radiation.ChunkRadiationManager;
 import com.hbm.util.ContaminationUtil;
 import com.hbm.util.ContaminationUtil.ContaminationType;
 import com.hbm.util.ContaminationUtil.HazardType;
@@ -76,7 +76,7 @@ public class ToxicBlock extends BlockFluidClassic {
 		if(reactToBlocks(world, pos.north()))
 			world.setBlockState(pos.north(), getRandomSellafite(world));
 
-		if(world.rand.nextInt(15) == 0) RadiationSavedData.incrementRad(world, pos, 300F, 3000F);
+		if(world.rand.nextInt(15) == 0) ChunkRadiationManager.proxy.incrementRad(world, pos, 300F, 3000F);
 
 		super.updateTick(world, pos, state, rand);
 	}

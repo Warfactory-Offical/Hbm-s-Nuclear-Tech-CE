@@ -2,8 +2,8 @@ package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.GeneralConfig;
+import com.hbm.handler.radiation.ChunkRadiationManager;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.saveddata.RadiationSavedData;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -87,8 +87,8 @@ public class BlockOutgas extends BlockNTMOre {
 
     @Override
     public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
-        if (this == ModBlocks.block_corium_cobble) RadiationSavedData.incrementRad(world, pos, 1000F, 10000F);
-        if (this == ModBlocks.ancient_scrap) RadiationSavedData.incrementRad(world, pos, 150F, 1500F);
+        if (this == ModBlocks.block_corium_cobble) ChunkRadiationManager.proxy.incrementRad(world, pos, 1000F, 10000F);
+        if (this == ModBlocks.ancient_scrap) ChunkRadiationManager.proxy.incrementRad(world, pos, 150F, 1500F);
 
         ForgeDirection dir = ForgeDirection.getOrientation(rand.nextInt(6));
 

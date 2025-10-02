@@ -2,8 +2,8 @@ package com.hbm.blocks.generic;
 
 import com.google.common.base.Predicate;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.handler.radiation.ChunkRadiationManager;
 import com.hbm.interfaces.Untested;
-import com.hbm.saveddata.RadiationSavedData;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -47,7 +47,7 @@ public class BlockPorous extends Block {
 
     @Override
     public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
-        RadiationSavedData.decrementRad(worldIn, pos, 10F);
+        ChunkRadiationManager.proxy.decrementRad(worldIn, pos, 10F);
     }
 
     @Override

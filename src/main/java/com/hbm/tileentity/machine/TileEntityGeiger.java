@@ -1,8 +1,8 @@
 package com.hbm.tileentity.machine;
 
+import com.hbm.handler.radiation.ChunkRadiationManager;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.HBMSoundHandler;
-import com.hbm.saveddata.RadiationSavedData;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
@@ -59,11 +59,6 @@ public class TileEntityGeiger extends TileEntity implements ITickable {
 	}
 	
 	public int check() {
-		
-		RadiationSavedData data = RadiationSavedData.getData(world);
-		
-		int rads = (int)Math.ceil(data.getRadNumFromCoord(pos));
-		
-		return rads;
+        return (int)Math.ceil(ChunkRadiationManager.proxy.getRadiation(world, pos));
 	}
 }

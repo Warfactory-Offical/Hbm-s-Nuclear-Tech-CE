@@ -1,8 +1,8 @@
 package com.hbm.entity.projectile;
 
+import com.hbm.handler.radiation.ChunkRadiationManager;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
-import com.hbm.saveddata.RadiationSavedData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
@@ -25,7 +25,7 @@ public class EntityZirnoxDebris extends EntityDebrisBase {
         if (!world.isRemote) {
             if (this.getType() == DebrisType.ELEMENT) {
                 BlockPos pos = new BlockPos(this.posX, this.posY, this.posZ);
-                RadiationSavedData.incrementRad(world, pos, 20, 150);
+                ChunkRadiationManager.proxy.incrementRad(world, pos, 20F, 150F);
             }
         }
         super.onUpdate();

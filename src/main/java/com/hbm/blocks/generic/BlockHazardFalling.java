@@ -1,8 +1,8 @@
 package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.handler.radiation.ChunkRadiationManager;
 import com.hbm.hazard.HazardSystem;
-import com.hbm.saveddata.RadiationSavedData;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -57,8 +57,8 @@ public class BlockHazardFalling extends BlockFalling {
 	@Override
 	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand){
 		if(this.rad > 0) {
-			RadiationSavedData.incrementRad(world, pos, rad*0.01F, rad);
-		}
+            ChunkRadiationManager.proxy.incrementRad(world, pos, rad*0.01F, rad);
+        }
 		super.updateTick(world, pos, state, rand);
 	}
 

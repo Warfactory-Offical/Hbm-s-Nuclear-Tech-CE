@@ -1,7 +1,7 @@
 package com.hbm.blocks.fluid;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.handler.radiation.RadiationSystemNT;
+import com.hbm.handler.radiation.ChunkRadiationManager;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.util.ContaminationUtil;
 import com.hbm.util.ContaminationUtil.ContaminationType;
@@ -79,7 +79,7 @@ public class CoriumFinite extends BlockFluidFinite {
     @Override
     public void updateTick(@NotNull World world, @NotNull BlockPos pos, @NotNull IBlockState state, @NotNull Random random) {
         super.updateTick(world, pos, state, random);
-        RadiationSystemNT.incrementRad(world, pos, 50, Float.MAX_VALUE);
+        ChunkRadiationManager.proxy.incrementRad(world, pos, 50);
         if (!world.isRemote && random.nextInt(10) == 0 && world.getBlockState(pos.down()).getBlock() != this) {
             if (random.nextInt(3) == 0) {
                 world.setBlockState(pos, ModBlocks.block_corium.getDefaultState());
