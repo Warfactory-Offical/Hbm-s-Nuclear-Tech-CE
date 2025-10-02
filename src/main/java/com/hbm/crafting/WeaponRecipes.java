@@ -243,7 +243,7 @@ public class WeaponRecipes {
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.grenade_frag, 2), " G ", "WGW", " K ", 'G', ModItems.grenade_generic, 'W', KEY_PLANKS, 'K', Item.getItemFromBlock(Blocks.GRAVEL) );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.grenade_poison, 2), " G ", "PGP", " P ", 'G', ModItems.grenade_generic, 'P', ModItems.powder_poison );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.grenade_gas, 2), " G ", "CGC", " C ", 'G', ModItems.grenade_generic, 'C', ModItems.pellet_gas );
-        CraftingManager.addRecipeAuto(new ItemStack(ModItems.grenade_aschrab, 1), "RS ", "ITI", " S ", 'I', KEY_CLEARGLASS, 'R', MINGRADE.wireFine(), 'S', STEEL.plate(), 'T', ItemCell.getFullCell(Fluids.AMAT) );
+        CraftingManager.addRecipeAuto(new ItemStack(ModItems.grenade_aschrab, 1), "RS ", "ITI", " S ", 'I', KEY_CLEARGLASS, 'R', MINGRADE.wireFine(), 'S', STEEL.plate(), 'T', ItemCell.getFullCell(Fluids.ASCHRAB) );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.grenade_mk2, 2), " G ", "SGS", " S ", 'G', ModItems.grenade_strong, 'S', Items.GUNPOWDER );
         CraftingManager.addShapelessAuto(new ItemStack(ModItems.grenade_gascan, 1), Fluids.DIESEL.getDict(1000), Items.FLINT );
         CraftingManager.addShapelessAuto(new ItemStack(ModItems.grenade_gascan, 1), Fluids.DIESEL_CRACK.getDict(1000), Items.FLINT );
