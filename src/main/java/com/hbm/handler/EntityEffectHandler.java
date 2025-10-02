@@ -7,6 +7,7 @@ import com.hbm.capability.HbmLivingProps;
 import com.hbm.capability.HbmLivingProps.ContaminationEffect;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.config.RadiationConfig;
+import com.hbm.config.WorldConfig;
 import com.hbm.handler.HbmKeybinds.EnumKeybind;
 import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.handler.threading.PacketThreading;
@@ -28,6 +29,7 @@ import com.hbm.util.ArmorRegistry;
 import com.hbm.util.ContaminationUtil;
 import com.hbm.util.ContaminationUtil.ContaminationType;
 import com.hbm.util.ContaminationUtil.HazardType;
+import com.hbm.world.biome.BiomeGenCraterBase;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -44,11 +46,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 import java.util.ArrayList;
@@ -64,6 +68,17 @@ public class EntityEffectHandler {
 				HbmLivingProps.setRadBuf(entity, HbmLivingProps.getRadEnv(entity));
 				HbmLivingProps.setRadEnv(entity, 0);
 			}
+
+            Biome biome = entity.world.getBiome(entity.getPosition());
+            float radiation = 0;
+            if(biome == BiomeGenCraterBase.craterOuterBiome) radiation = WorldConfig.craterBiomeOuterRad;
+            if(biome == BiomeGenCraterBase.craterBiome) radiation = WorldConfig.craterBiomeRad;
+            if(biome == BiomeGenCraterBase.craterInnerBiome) radiation = WorldConfig.craterBiomeInnerRad;
+            if(entity.isWet()) radiation *= WorldConfig.craterBiomeWaterMult;
+
+            if(radiation > 0) {
+                ContaminationUtil.contaminate(entity, HazardType.RADIATION, ContaminationType.CREATIVE, radiation / 20F);
+            }
 			
 			if(entity instanceof EntityPlayerMP) {
 				NBTTagCompound data = new NBTTagCompound();
@@ -84,7 +99,18 @@ public class EntityEffectHandler {
 					cap.setShield(cap.getEffectiveMaxShield(playerMP));
 				PacketThreading.createSendToThreadedPacket(new HbmCapabilityPacket(cap), playerMP);
 			}
-		}
+		} else {
+            if(entity == MainRegistry.proxy.me()) {
+                EntityPlayer player = MainRegistry.proxy.me();
+                if(player != null) {
+                    Biome biome = player.world.getBiome(player.getPosition());
+                    if(biome == BiomeGenCraterBase.craterBiome || biome == BiomeGenCraterBase.craterInnerBiome) {
+                        Random rand = player.getRNG();
+                        for(int i = 0; i < 3; i++) player.world.spawnParticle(EnumParticleTypes.TOWN_AURA, player.posX + rand.nextGaussian() * 3, player.posY + rand.nextGaussian() * 2, player.posZ + rand.nextGaussian() * 3, 0, 0, 0);
+                    }
+                }
+            }
+        }
 		
 		handleContamination(entity);
 		handleContagion(entity);
@@ -144,7 +170,6 @@ public class EntityEffectHandler {
 			}
 	
 			if(entity.world.isRaining() && RadiationConfig.cont > 0 && AuxSavedData.getThunder(entity.world) > 0 && entity.world.canBlockSeeSky(pos)) {
-				
 				ContaminationUtil.contaminate(entity, HazardType.RADIATION, ContaminationType.CREATIVE, RadiationConfig.cont * 0.0005F);
 			}
 			
