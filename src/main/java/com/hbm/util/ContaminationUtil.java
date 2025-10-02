@@ -124,7 +124,6 @@ public class ContaminationUtil {
 	public static void printGeigerData(EntityPlayer player) {
 
 		double eRad = ((long)(HbmLivingProps.getRadiation(player) * 1000)) / 1000D;
-
 		RadiationSavedData data = RadiationSavedData.getData(player.world);
 		double rads = ((long)(data.getRadNumFromCoord(player.getPosition()) * 1000D)) / 1000D;
 		double env = ((long)(getPlayerRads(player) * 1000D)) / 1000D;

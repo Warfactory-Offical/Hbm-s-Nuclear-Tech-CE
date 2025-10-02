@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
@@ -24,13 +25,13 @@ public class RadiationSavedData extends WorldSavedData {
 	//Drillgon200: I'm pretty sure this doesn't actually help since all the world saved datas are cached in a map anyway...
 	private static RadiationSavedData openInstance;
 	
-    public World world;
+    public WorldServer world;
 
 	public RadiationSavedData(String name) {
 		super(name);
 	}
 
-    public RadiationSavedData(World world) {
+    public RadiationSavedData(WorldServer world) {
         super("radiation");
         this.world = world;
         this.markDirty();
@@ -208,29 +209,33 @@ public class RadiationSavedData extends WorldSavedData {
 	}
 	
 	public static RadiationSavedData getData(World worldObj) {
-		
-		if(openInstance != null && openInstance.world == worldObj)
+        if(worldObj.isRemote) throw new IllegalStateException("RadiationSavedData can only be accessed on the server side");
+        WorldServer server = (WorldServer) worldObj;
+
+		if(openInstance != null && openInstance.world == server)
 			return openInstance;
 
 		RadiationSavedData data = (RadiationSavedData)worldObj.getPerWorldStorage().getOrLoadData(RadiationSavedData.class, "radiation");
 	    if(data == null) {
-	        worldObj.getPerWorldStorage().setData("radiation", new RadiationSavedData(worldObj));
-	        
-	        data = (RadiationSavedData)worldObj.getPerWorldStorage().getOrLoadData(RadiationSavedData.class, "radiation");
+	        server.getPerWorldStorage().setData("radiation", new RadiationSavedData(server));
+
+	        data = (RadiationSavedData)server.getPerWorldStorage().getOrLoadData(RadiationSavedData.class, "radiation");
 	    }
 	    
-	    data.world = worldObj;
+	    data.world = server;
 	    openInstance  = data;
 	    
 	    return openInstance;
 	}
 	
 	public static void incrementRad(World worldObj, BlockPos pos, float rad, float maxRad) {
+        if(worldObj.isRemote) return;
+        WorldServer server = (WorldServer) worldObj;
 		if(GeneralConfig.advancedRadiation){
-			RadiationSystemNT.incrementRad(worldObj, pos, rad, maxRad);
+			RadiationSystemNT.incrementRad(server, pos, rad, maxRad);
 			return;
 		}
-		RadiationSavedData data = getData(worldObj);
+		RadiationSavedData data = getData(server);
 		
 		Chunk chunk = worldObj.getChunk(pos);
 		
@@ -243,11 +248,13 @@ public class RadiationSavedData extends WorldSavedData {
 	}
 	
 	public static void decrementRad(World worldObj, BlockPos pos, float rad) {
+        if(worldObj.isRemote) return;
+        WorldServer server = (WorldServer) worldObj;
 		if(GeneralConfig.advancedRadiation){
-			RadiationSystemNT.decrementRad(worldObj, pos, rad);
+			RadiationSystemNT.decrementRad(server, pos, rad);
 			return;
 		}
-		RadiationSavedData data = getData(worldObj);
+		RadiationSavedData data = getData(server);
 		
 		Chunk chunk = worldObj.getChunk(pos);
 		

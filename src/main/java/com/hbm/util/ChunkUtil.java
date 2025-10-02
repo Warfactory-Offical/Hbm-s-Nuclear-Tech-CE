@@ -122,7 +122,6 @@ public final class ChunkUtil {
     private static final long IIHBM_BYID_OFFSET = UnsafeHolder.fieldOffset(IntIdentityHashBiMap.class, "byId", "field_186820_d");
     private static final long IIHBM_NEXTFREE_OFFSET = UnsafeHolder.fieldOffset(IntIdentityHashBiMap.class, "nextFreeIndex", "field_186821_e");
     private static final long IIHBM_MAPSIZE_OFFSET = UnsafeHolder.fieldOffset(IntIdentityHashBiMap.class, "mapSize", "field_186822_f");
-    private static final long TE_INVALID_OFFSET = UnsafeHolder.fieldOffset(TileEntity.class, "tileEntityInvalid", "field_145846_f");
 
     private static final ThreadLocal<Int2ObjectOpenHashMap<IBlockState>[]> TL_BUCKET = ThreadLocal.withInitial(() -> {
         // noinspection unchecked
@@ -284,7 +283,7 @@ public final class ChunkUtil {
     public static BlockStateContainer copyOf(@NotNull BlockStateContainer srcData) {
         final int bits = srcData.bits;
         final IBlockStatePalette srcPalette = srcData.palette;
-        final BlockStateContainer copied = new BlockStateContainer();
+        final BlockStateContainer copied = UnsafeHolder.allocateInstance(BlockStateContainer.class);
         copied.bits = bits;
 
         if (bits <= 4) {
@@ -776,14 +775,6 @@ public final class ChunkUtil {
             if (newTileEntity != null) world.setTileEntity(pos, newTileEntity);
         }
         if (newTileEntity != null) newTileEntity.updateContainingBlockInfo();
-    }
-
-    /**
-     * Mark a {@link TileEntity} as invalid via a volatile store to its internal flag.
-     */
-    @ThreadSafeMethod
-    public static void invalidateTE(TileEntity te) {
-        U.putBooleanVolatile(te, TE_INVALID_OFFSET, true);
     }
 
     /**

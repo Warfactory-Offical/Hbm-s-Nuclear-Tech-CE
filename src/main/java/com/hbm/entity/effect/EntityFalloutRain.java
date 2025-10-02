@@ -245,9 +245,10 @@ public class EntityFalloutRain extends EntityExplosionChunkloading {
         }
 
         int mask = 0;
-        LongIterator it = changed.keySet().iterator();
+        ObjectIterator<Long2ObjectMap.Entry<IBlockState>> it = changed.long2ObjectEntrySet().fastIterator();
         while (it.hasNext()) {
-            long p = it.nextLong();
+            Long2ObjectMap.Entry<IBlockState> stateEntry = it.next();
+            long p = stateEntry.getLongKey();
             int y = Library.getBlockPosY(p);
             mask |= 1 << (y >>> 4);
         }
@@ -286,7 +287,9 @@ public class EntityFalloutRain extends EntityExplosionChunkloading {
                 if (!biomeChanges.isEmpty()) {
                     int cx = ChunkUtil.getChunkPosX(cpLong);
                     int cz = ChunkUtil.getChunkPosZ(cpLong);
-                    for (Long2IntMap.Entry be : biomeChanges.long2IntEntrySet()) {
+                    ObjectIterator<Long2IntMap.Entry> iterator = biomeChanges.long2IntEntrySet().fastIterator();
+                    while (iterator.hasNext()) {
+                        Long2IntMap.Entry be = iterator.next();
                         long packed = be.getLongKey();
                         int x = ChunkUtil.getChunkPosX(packed);
                         int z = ChunkUtil.getChunkPosZ(packed);
@@ -444,7 +447,7 @@ public class EntityFalloutRain extends EntityExplosionChunkloading {
                                 EntityFallingBlock falling = new EntityFallingBlock(world, x + 0.5D, yy + 0.5D, z + 0.5D, sAt);
                                 falling.shouldDropItem = false;
                                 long key = Library.blockPosToLong(x, yy, z);
-                                spawnFalling.putIfAbsentLong(key, falling);
+                                spawnFalling.putIfAbsent(key, falling);
                             }
                         }
                     }

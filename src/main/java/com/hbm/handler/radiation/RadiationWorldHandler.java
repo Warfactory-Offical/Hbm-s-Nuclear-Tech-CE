@@ -21,8 +21,7 @@ import java.util.Map.Entry;
 
 public class RadiationWorldHandler {
 
-    public static void handleWorldDestruction(World world) {
-        if (!(world instanceof WorldServer)) return;
+    public static void handleWorldDestruction(WorldServer world) {
         if (!RadiationConfig.worldRadEffects || !GeneralConfig.enableRads) return;
         if (GeneralConfig.advancedRadiation) {
             handleAdvancedDestruction(world);
@@ -31,7 +30,7 @@ public class RadiationWorldHandler {
         }
     }
 
-    private static void handleAdvancedDestruction(World world) {
+    private static void handleAdvancedDestruction(WorldServer world) {
         if (GeneralConfig.enableDebugMode) {
             MainRegistry.logger.info("[Debug] Starting advanced world destruction processing");
         }
@@ -71,10 +70,9 @@ public class RadiationWorldHandler {
         }
     }
 
-    private static void handleLegacyDestruction(World world) {
-        WorldServer serv = (WorldServer) world;
-        RadiationSavedData data = RadiationSavedData.getData(serv);
-        ChunkProviderServer provider = serv.getChunkProvider();
+    private static void handleLegacyDestruction(WorldServer world) {
+        RadiationSavedData data = RadiationSavedData.getData(world);
+        ChunkProviderServer provider = world.getChunkProvider();
         Object[] entries = data.contamination.entrySet().toArray();
 
         if (entries.length == 0) return;

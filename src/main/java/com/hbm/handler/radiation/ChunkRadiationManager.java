@@ -3,6 +3,7 @@ package com.hbm.handler.radiation;
 import com.google.errorprone.annotations.DoNotCall;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
 /**
  * We only have one radiation system, unlike upstream
@@ -24,24 +25,29 @@ public final class ChunkRadiationManager {
         }
 
         public static float getRadiation(World world, BlockPos pos) {
-            return RadiationSystemNT.getRadForCoord(world, pos);
+            if (world.isRemote) return 0F;
+            return RadiationSystemNT.getRadForCoord((WorldServer) world, pos);
         }
 
         public static void setRadiation(World world, BlockPos pos, float rad) {
-            RadiationSystemNT.setRadForCoord(world, pos, rad);
+            if (world.isRemote) return;
+            RadiationSystemNT.setRadForCoord((WorldServer) world, pos, rad);
         }
 
         @DoNotCall("no max rad limit")
         public static void incrementRad(World world, BlockPos pos, float rad) {
-            RadiationSystemNT.incrementRad(world, pos, rad, Float.MAX_VALUE);
+            if (world.isRemote) return;
+            RadiationSystemNT.incrementRad((WorldServer) world, pos, rad, Float.MAX_VALUE);
         }
 
         public static void decrementRad(World world, BlockPos pos, float rad) {
-            RadiationSystemNT.decrementRad(world, pos, rad);
+            if (world.isRemote) return;
+            RadiationSystemNT.decrementRad((WorldServer) world, pos, rad);
         }
 
         public static void clearSystem(World world) {
-            RadiationSystemNT.jettisonData(world);
+            if (world.isRemote) return;
+            RadiationSystemNT.jettisonData((WorldServer) world);
         }
     }
 }

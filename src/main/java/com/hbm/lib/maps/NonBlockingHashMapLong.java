@@ -297,6 +297,10 @@ public class NonBlockingHashMapLong<TypeV>
      *  @throws NullPointerException if the specified is value is null  */
     public TypeV   putIfAbsent( long key, TypeV val ) { return putIfMatch( key,      val,TOMBSTONE   );}
 
+    /**
+     * @deprecated use {@link #putIfAbsent(long, Object)} when possible
+     */
+    @Deprecated
     public TypeV   putIfAbsentLong( long key, TypeV val ) { return putIfMatch( key,      val,TOMBSTONE   );}
 
     /** Removes the key (and its corresponding value) from this map.
@@ -1594,6 +1598,61 @@ public class NonBlockingHashMapLong<TypeV>
                 }
             }
             // CAS failed, retry
+        }
+    }
+
+    public static NBHMLKeySet newKeySet() {
+        return new NBHMLKeySet(new NonBlockingHashMapLong<>());
+    }
+
+    public static NBHMLKeySet newKeySet(int initial_capacity) {
+        return new NBHMLKeySet(new NonBlockingHashMapLong<>(initial_capacity));
+    }
+
+    public static final class NBHMLKeySet extends AbstractLongSet implements LongSet, Serializable {
+        private static final long serialVersionUID = 1L;
+        private static final Object PRESENT = new Object();
+
+        private final NonBlockingHashMapLong<Object> map;
+
+        private NBHMLKeySet(NonBlockingHashMapLong<Object> map) {
+            if (map == null) throw new NullPointerException("map");
+            this.map = map;
+        }
+
+        @Override
+        public LongIterator iterator() {
+            return map.new IteratorLong();
+        }
+
+        @Override
+        public int size() {
+            return map.size();
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return size() == 0;
+        }
+
+        @Override
+        public boolean contains(long k) {
+            return map.containsKey(k);
+        }
+
+        @Override
+        public boolean add(long k) {
+            return map.putIfAbsent(k, PRESENT) == null;
+        }
+
+        @Override
+        public boolean remove(long k) {
+            return map.remove(k) != null;
+        }
+
+        @Override
+        public void clear() {
+            map.clear();
         }
     }
 

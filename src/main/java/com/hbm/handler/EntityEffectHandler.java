@@ -125,11 +125,11 @@ public class EntityEffectHandler {
 			return;
 		
 		World world = entity.world;
-		
-		RadiationSavedData data = RadiationSavedData.getData(world);
-		
+
 		if(!world.isRemote) {
-			int ix = MathHelper.floor(entity.posX);
+            RadiationSavedData data = RadiationSavedData.getData(world);
+
+            int ix = MathHelper.floor(entity.posX);
 			int iy = MathHelper.floor(entity.posY);
 			int iz = MathHelper.floor(entity.posZ);
 
