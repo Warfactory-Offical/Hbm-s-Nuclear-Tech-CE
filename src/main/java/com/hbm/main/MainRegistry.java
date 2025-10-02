@@ -35,6 +35,7 @@ import com.hbm.interfaces.Spaghetti;
 import com.hbm.inventory.BedrockOreRegistry;
 import com.hbm.inventory.FluidContainerRegistry;
 import com.hbm.inventory.OreDictManager;
+import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.control_panel.ControlEvent;
 import com.hbm.inventory.control_panel.ControlRegistry;
 import com.hbm.inventory.fluid.Fluids;
@@ -470,6 +471,7 @@ public class MainRegistry {
     public void serverStopping(FMLServerStoppingEvent evt) {
         RadiationSystemNT.onServerStopping(evt);
         ChunkUtil.onServerStopping();
+        RecipesCommon.onServerStopping();
     }
 
     @EventHandler

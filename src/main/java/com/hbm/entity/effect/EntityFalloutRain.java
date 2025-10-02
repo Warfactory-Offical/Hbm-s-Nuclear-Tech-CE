@@ -13,6 +13,7 @@ import com.hbm.lib.maps.NonBlockingHashMapLong;
 import com.hbm.util.ChunkUtil;
 import com.hbm.world.WorldUtil;
 import com.hbm.world.biome.BiomeGenCraterBase;
+import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import org.jctools.queues.atomic.MpscLinkedAtomicQueue;
 import it.unimi.dsi.fastutil.longs.*;
 import net.minecraft.block.Block;
@@ -37,6 +38,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 
+import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 import java.util.UUID;
@@ -254,7 +256,7 @@ public class EntityFalloutRain extends EntityExplosionChunkloading {
         if (pendingChunks.decrementAndGet() == 0) maybeFinish();
     }
 
-    private void notifyMainThread(long cpLong, Long2ObjectMap<IBlockState> changed, int mask, Long2IntOpenHashMap biomeChanges,
+    private void notifyMainThread(long cpLong,  Long2ObjectOpenHashMap<IBlockState> changed, int mask, Long2IntOpenHashMap biomeChanges,
                                   NonBlockingHashMapLong<Entity> spawnFalling) {
         pendingMainThreadNotifies.incrementAndGet();
         ((WorldServer) world).addScheduledTask(() -> {
@@ -263,11 +265,13 @@ public class EntityFalloutRain extends EntityExplosionChunkloading {
                 sectionMaskByChunk.put(cpLong, sectionMaskByChunk.get(cpLong) | mask);
                 final MutableBlockPos mutableBlockPos = TL_POS.get();
                 if (loadedChunk != null) {
-                    for (var e : changed.long2ObjectEntrySet()) {
-                        long lp = e.getLongKey();
+                    ObjectIterator<Long2ObjectMap.Entry<IBlockState>> iterator = changed.long2ObjectEntrySet().fastIterator();
+                    while (iterator.hasNext()) {
+                        Long2ObjectMap.Entry<IBlockState> stateEntry = iterator.next();
+                        long lp = stateEntry.getLongKey();
+                        IBlockState oldState = stateEntry.getValue();
                         Library.fromLong(mutableBlockPos, lp);
                         IBlockState newState = world.getBlockState(mutableBlockPos);
-                        IBlockState oldState = e.getValue();
                         // This check can't be done in the workers as it reads the world instance, so instead we restore the state
                         if (newState.getBlock() == ModBlocks.fallout && !ModBlocks.fallout.canPlaceBlockAt(world, mutableBlockPos)) {
                             world.setBlockState(mutableBlockPos, oldState, 3);
@@ -406,7 +410,10 @@ public class EntityFalloutRain extends EntityExplosionChunkloading {
             }
 
             boolean transformed = false;
-            for (FalloutEntry entry : FalloutConfigJSON.entries) {
+            List<FalloutEntry> entries = FalloutConfigJSON.entries;
+            //noinspection ForLoopReplaceableByForEach
+            for (int i = 0, entriesSize = entries.size(); i < entriesSize; i++) {
+                FalloutEntry entry = entries.get(i);
                 IBlockState result = entry.eval(y, state, distPercent, rand);
                 if (result != null) {
                     updates.put(Library.blockPosToLong(x, y, z), result);

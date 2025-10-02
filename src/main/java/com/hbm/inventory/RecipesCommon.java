@@ -1,9 +1,13 @@
 package com.hbm.inventory;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.hbm.items.ModItems;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -12,11 +16,19 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.concurrent.Immutable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class RecipesCommon {
+    private static final LoadingCache<Block, MetaBlock[]> META_POOLS =
+            CacheBuilder.newBuilder().maximumSize(2048).concurrencyLevel(Runtime.getRuntime().availableProcessors()).build(new CacheLoader<>() {
+                @Override
+                public MetaBlock[] load(Block key) {
+                    return new MetaBlock[16];
+                }
+            });
 
     @Contract("null -> null; !null -> !null")
     public static ItemStack[] copyStackArray(ItemStack[] array) {
@@ -526,11 +538,37 @@ public class RecipesCommon {
         }
     }
 
-    public static class MetaBlock {
+    public static MetaBlock metaOf(Block b, int meta) {
+        final MetaBlock[] pool = META_POOLS.getUnchecked(b);
+        final int m = meta & 15;
+        MetaBlock mb = pool[m];
+        if (mb == null) {
+            mb = new MetaBlock(b, m);
+            // mlbv: yes it races, but who cares?
+            pool[m] = mb;
+        }
+        return mb;
+    }
 
-        public Block block;
-        public int meta;
+    public static MetaBlock metaOf(IBlockState state) {
+        final Block b = state.getBlock();
+        return metaOf(b, b.getMetaFromState(state));
+    }
 
+    public static void onServerStopping() {
+        META_POOLS.invalidateAll();
+    }
+
+    @Immutable
+    public static final class MetaBlock {
+
+        public final Block block;
+        public final int meta;
+
+        /**
+         * @deprecated Use {@link #metaOf(Block, int)} or {@link #metaOf(IBlockState)} instead.
+         */
+        @Deprecated
         public MetaBlock(Block block, int meta) {
             this.block = block;
             this.meta = meta;

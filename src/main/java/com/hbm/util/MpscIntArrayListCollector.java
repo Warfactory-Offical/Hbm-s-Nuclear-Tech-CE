@@ -23,6 +23,23 @@ public class MpscIntArrayListCollector {
         }
     }
 
+    public void pushBatch(@NotNull IntArrayList values) {
+        int size = values.size();
+        if (size == 0) return;
+        Node headNode = null;
+        Node tailNode = null;
+        for (int i = 0; i < size; i++) {
+            Node n = new Node(values.getInt(i), headNode);
+            headNode = n;
+            if (tailNode == null) tailNode = n;
+        }
+        while (true) {
+            Node h = (Node) U.getObjectVolatile(this, HEAD_OFF);
+            tailNode.next = h;
+            if (U.compareAndSwapObject(this, HEAD_OFF, h, headNode)) return;
+        }
+    }
+
     @NotNull
     public IntArrayList drain() {
         Node h = (Node) U.getAndSetObject(this, HEAD_OFF, null);
@@ -33,7 +50,7 @@ public class MpscIntArrayListCollector {
 
     private static final class Node {
         private final int v;
-        private final Node next;
+        private Node next;
 
         Node(int v, Node next) {
             this.v = v;

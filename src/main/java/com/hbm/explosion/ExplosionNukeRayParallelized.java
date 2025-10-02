@@ -13,13 +13,9 @@ import com.hbm.main.MainRegistry;
 import com.hbm.util.ChunkUtil;
 import com.hbm.util.ConcurrentBitSet;
 import com.hbm.util.MpscIntArrayListCollector;
-import org.jctools.queues.atomic.MpscLinkedAtomicQueue;
-
-import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.*;
 import it.unimi.dsi.fastutil.longs.*;
+import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -35,6 +31,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraftforge.common.util.Constants;
+import org.jctools.queues.atomic.MpscLinkedAtomicQueue;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -478,7 +475,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
                 neighborNotifies.add(lp);
                 Library.fromLong(pos, lp);
                 long nck = ChunkPos.asLong(pos.getX() >> 4, pos.getZ() >> 4);
-                int m = neighborMask.getOrDefault(nck, 0);
+                int m = neighborMask.get(nck);
                 m |= 1 << (pos.getY() >>> 4);
                 neighborMask.put(nck, m);
             }
@@ -492,7 +489,9 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         Int2DoubleOpenHashMap len = agg.passLen;
 
         if (!dmg.isEmpty()) {
-            for (Int2DoubleOpenHashMap.Entry e : dmg.int2DoubleEntrySet()) {
+            ObjectIterator<Int2DoubleMap.Entry> iterator = dmg.int2DoubleEntrySet().fastIterator();
+            while (iterator.hasNext()) {
+                Int2DoubleOpenHashMap.Entry e = iterator.next();
                 int bitIndex = e.getIntKey();
                 if (shouldDestroy(bitIndex, storages, e.getDoubleValue(), len.get(bitIndex))) {
                     int subY = (WORLD_HEIGHT - 1 - (bitIndex >>> 8)) >> 4;
@@ -500,8 +499,11 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
                 }
             }
         }
+
         if (!len.isEmpty()) {
-            for (Int2DoubleOpenHashMap.Entry e : len.int2DoubleEntrySet()) {
+            ObjectIterator<Int2DoubleMap.Entry> iterator = len.int2DoubleEntrySet().fastIterator();
+            while (iterator.hasNext()) {
+                Int2DoubleOpenHashMap.Entry e = iterator.next();
                 int bitIndex = e.getIntKey();
                 if (dmg.containsKey(bitIndex)) continue;
                 if (shouldDestroy(bitIndex, storages, 0.0, e.getDoubleValue())) {
@@ -678,17 +680,64 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         }
     }
 
-    private void enqueueIndexForMissingChunk(long chunkPos, int dirIndex) {
-        boolean amFirst = false;
+    private void handleMissingChunk(LocalAgg agg, long chunkPos, int dirIndex) {
         MpscIntArrayListCollector group = waitingRoom.get(chunkPos);
         if (group == null) {
             MpscIntArrayListCollector created = new MpscIntArrayListCollector();
             MpscIntArrayListCollector prev = waitingRoom.putIfAbsent(chunkPos, created);
             group = (prev != null) ? prev : created;
-            amFirst = (prev == null);
+            if (prev == null) {
+                chunkLoadQueue.add(chunkPos);
+                group.push(dirIndex);
+                return;
+            }
         }
-        if (amFirst) chunkLoadQueue.add(chunkPos);
-        group.push(dirIndex);
+        agg.deferMissing(chunkPos, dirIndex);
+    }
+
+    private void flushDeferredMissing(LocalAgg agg) {
+        if (!agg.hasDeferredMissing()) return;
+        Long2ObjectOpenHashMap<IntArrayList> map = agg.missingChunks();
+        for (Long2ObjectMap.Entry<IntArrayList> entry : map.long2ObjectEntrySet()) {
+            IntArrayList list = entry.getValue();
+            if (list == null || list.isEmpty()) continue;
+            long chunkPos = entry.getLongKey();
+            MpscIntArrayListCollector collector = waitingRoom.get(chunkPos);
+            boolean amFirst = false;
+            if (collector == null) {
+                MpscIntArrayListCollector created = new MpscIntArrayListCollector();
+                MpscIntArrayListCollector prev = waitingRoom.putIfAbsent(chunkPos, created);
+                if (prev == null) {
+                    collector = created;
+                    amFirst = true;
+                } else {
+                    collector = prev;
+                }
+            }
+            collector.pushBatch(list);
+            boolean requeued = ensureCollectorRegistered(chunkPos, collector);
+            if (amFirst || requeued) chunkLoadQueue.add(chunkPos);
+            list.clear();
+        }
+        map.clear();
+    }
+
+    private boolean ensureCollectorRegistered(long chunkPos, MpscIntArrayListCollector collector) {
+        while (true) {
+            MpscIntArrayListCollector current = waitingRoom.get(chunkPos);
+            if (current == collector) return false;
+            if (current == null) {
+                if (waitingRoom.putIfAbsent(chunkPos, collector) == null) return true;
+                continue;
+            }
+            IntArrayList drained = collector.drain();
+            if (!drained.isEmpty()) {
+                for (int i = drained.size() - 1; i >= 0; i--) {
+                    current.push(drained.getInt(i));
+                }
+            }
+            collector = current;
+        }
     }
 
     private void enqueueResumableForMissingChunk(long chunkPos, LongObjectConsumer<ExtendedBlockStorage[]> task) {
@@ -752,7 +801,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
                     cachedCPLong = ChunkPos.asLong(cx, cz);
                     storages = ChunkUtil.getLoadedEBS(world, cachedCPLong);
                     if (storages == null) {
-                        enqueueIndexForMissingChunk(cachedCPLong, dirIndex);
+                        handleMissingChunk(agg, cachedCPLong, dirIndex);
                         return false;
                     }
                     lastCX = cx;
@@ -965,10 +1014,32 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
     private static final class LocalAgg {
         final Long2ObjectOpenHashMap<IntDoubleAccumulator> localDamage = new Long2ObjectOpenHashMap<>(16);
         final Long2ObjectOpenHashMap<IntDoubleAccumulator> localLen = new Long2ObjectOpenHashMap<>(16);
+        final Long2ObjectOpenHashMap<IntArrayList> deferredMissing = new Long2ObjectOpenHashMap<>(4);
 
         void clear() {
             localDamage.clear();
             localLen.clear();
+            if (!deferredMissing.isEmpty()) {
+                for (IntArrayList list : deferredMissing.values()) list.clear();
+                deferredMissing.clear();
+            }
+        }
+
+        void deferMissing(long chunkPos, int dirIndex) {
+            IntArrayList list = deferredMissing.get(chunkPos);
+            if (list == null) {
+                list = new IntArrayList(64);
+                deferredMissing.put(chunkPos, list);
+            }
+            list.add(dirIndex);
+        }
+
+        boolean hasDeferredMissing() {
+            return !deferredMissing.isEmpty();
+        }
+
+        Long2ObjectOpenHashMap<IntArrayList> missingChunks() {
+            return deferredMissing;
         }
 
         IntDoubleAccumulator dmg(long cp) {
@@ -1060,6 +1131,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
                     if (Thread.currentThread().isInterrupted()) break;
                     if (traceSingle(i, agg)) completed++;
                 }
+                flushDeferredMissing(agg);
                 mergeLocalAgg(agg);
                 if (completed > 0) {
                     if (pendingRays.addAndGet(-completed) == 0) onAllRaysFinished();
@@ -1094,6 +1166,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
                     if (Thread.currentThread().isInterrupted()) break;
                     if (traceSingle(dirIndex, agg)) completed++;
                 }
+                flushDeferredMissing(agg);
                 mergeLocalAgg(agg);
                 if (completed > 0) {
                     if (pendingRays.addAndGet(-completed) == 0) onAllRaysFinished();

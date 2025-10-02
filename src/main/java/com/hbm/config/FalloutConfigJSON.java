@@ -694,11 +694,11 @@ public class FalloutConfigJSON {
                 r -= choice.getSecond();
 
                 if (r <= 0) {
-                    return new RecipesCommon.MetaBlock(choice.getFirst().getBlock(), choice.getFirst().getBlock().getMetaFromState(choice.getFirst()));
+                    return RecipesCommon.metaOf(choice.getFirst());
                 }
             }
 
-            return new RecipesCommon.MetaBlock(blocks[0].getFirst().getBlock(), blocks[0].getFirst().getBlock().getMetaFromState(blocks[0].getFirst()));
+            return RecipesCommon.metaOf(blocks[0].getFirst());
         }
 
         public boolean isSolid() {
