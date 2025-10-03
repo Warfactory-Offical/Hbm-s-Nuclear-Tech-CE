@@ -95,7 +95,7 @@ public class CombinationRecipes extends SerializableRecipe {
 
         recipes.put(CHLOROCALCITE.dust(), new Pair<>(new ItemStack(ModItems.powder_calcium), new FluidStack(Fluids.CHLORINE, 250)));
         recipes.put(MOLYSITE.dust(), new Pair<>(new ItemStack(Items.IRON_INGOT), new FluidStack(Fluids.CHLORINE, 250)));
-        recipes.put(CINNABAR.gem(), new Pair<>(new ItemStack(ModItems.sulfur), new FluidStack(Fluids.MERCURY, 100)));
+        recipes.put(CINNABAR.crystal(), new Pair<>(new ItemStack(ModItems.sulfur), new FluidStack(Fluids.MERCURY, 100)));
         recipes.put(new ComparableStack(Items.GLOWSTONE_DUST), new Pair<>(new ItemStack(ModItems.sulfur), new FluidStack(Fluids.CHLORINE, 100)));
         recipes.put(SODALITE.gem(), new Pair<>(new ItemStack(ModItems.powder_sodium), new FluidStack(Fluids.CHLORINE, 100)));
         recipes.put(new ComparableStack(DictFrame.fromOne(ModItems.chunk_ore, ItemEnums.EnumChunkType.CRYOLITE)),
