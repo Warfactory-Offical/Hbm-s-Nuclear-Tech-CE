@@ -99,9 +99,11 @@ public class TileEntityMachineChemicalPlant extends TileEntityMachineBase implem
             this.power = Library.chargeTEFromItems(inventory, 0, power, maxPower);
             upgradeManager.checkSlots(inventory, 2, 3);
 
-            inputTanks[0].loadTank(10, 13, inventory);
-            inputTanks[1].loadTank(11, 14, inventory);
-            inputTanks[2].loadTank(12, 15, inventory);
+            if(recipe != null && recipe.inputFluid != null) {
+                for(int i = 0; i < Math.min(3, recipe.inputFluid.length); i++) {
+                    inputTanks[i].loadTank(10 + i, 13 + i, inventory);
+                }
+            }
 
             outputTanks[0].unloadTank(16, 19, inventory);
             outputTanks[1].unloadTank(17, 20, inventory);
