@@ -20,6 +20,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
@@ -27,6 +28,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.oredict.OreDictionary;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
@@ -116,6 +118,29 @@ public class GUIAnvil extends GuiContainer {
 		this.index = 0;
 		this.selection = -1;
 		this.size = Math.max(0, (int)Math.ceil((this.recipes.size() - 10) / 2D));
+	}
+
+	@Override
+	public void drawScreen(int x, int y, float interp) {
+		super.drawScreen(x, y, interp);
+
+		for(Object obj : this.inventorySlots.inventorySlots) {
+			Slot slot = (Slot) obj;
+
+			// if the mouse is over a slot, cancel
+			if(this.isPointInRegion(slot.xPos, slot.yPos, 16, 16, x, y) && slot.getHasStack()) {
+				return;
+			}
+		}
+
+		if(guiLeft <= x && guiLeft + xSize > x && guiTop < y && guiTop + ySize >= y && getSlotAtPosition(x, y) == null) {
+			if(!Mouse.isButtonDown(0) && !Mouse.isButtonDown(1) && Mouse.next()) {
+				int scroll = Mouse.getEventDWheel();
+
+				if(scroll > 0 && this.index > 0) this.index--;
+				if(scroll < 0 && this.index < this.size) this.index++;
+			}
+		}
 	}
 	
 	@Override
