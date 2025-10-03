@@ -521,7 +521,7 @@ public class OreDictManager {
         COALCOKE.gem(fromOne(coke, EnumCokeType.COAL)).block(fromOne(block_coke, EnumCokeType.COAL));
         PETCOKE.gem(fromOne(coke, EnumCokeType.PETROLEUM)).block(fromOne(block_coke, EnumCokeType.PETROLEUM));
         LIGCOKE.gem(fromOne(coke, EnumCokeType.LIGNITE)).block(fromOne(block_coke, EnumCokeType.LIGNITE));
-        CINNABAR.crystal(crystal_cinnabar).gem(cinnabar).ore(ore_cinnabar, ore_depth_cinnabar);
+        CINNABAR.crystal(cinnabar).gem(cinnabar).ore(ore_cinnabar, ore_depth_cinnabar);
         BORAX.dust(powder_borax).ore(ore_depth_borax);
         CHLOROCALCITE.dust(powder_chlorocalcite);
         MOLYSITE.dust(powder_molysite).ore(DictFrame.fromOne(basalt_ore, EnumBasaltOreType.MOLYSITE));
