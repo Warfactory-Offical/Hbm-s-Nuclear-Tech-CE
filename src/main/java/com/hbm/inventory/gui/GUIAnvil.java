@@ -123,6 +123,7 @@ public class GUIAnvil extends GuiContainer {
 	@Override
 	public void drawScreen(int x, int y, float interp) {
 		super.drawScreen(x, y, interp);
+		super.renderHoveredToolTip(x, y);
 
 		for(Object obj : this.inventorySlots.inventorySlots) {
 			Slot slot = (Slot) obj;
@@ -311,12 +312,6 @@ public class GUIAnvil extends GuiContainer {
 		}
 		
 		return list;
-	}
-	
-	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks){
-		super.drawScreen(mouseX, mouseY, partialTicks);
-		super.renderHoveredToolTip(mouseX, mouseY);
 	}
 	
 	int lastSize = 1;
