@@ -89,7 +89,7 @@ public class TileEntityMachineCentrifuge extends TileEntityMachineBase implement
         writer.name("I:consumption").value(baseConsumption);
     }
 
-    public String getName() {
+    public String getDefaultName() {
         return "container.centrifuge";
     }
 

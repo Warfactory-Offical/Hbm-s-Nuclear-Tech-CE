@@ -43,7 +43,7 @@ public class TileEntityStorageDrum extends TileEntityMachineBase implements ITic
 	}
 
 	@Override
-	public String getName() {
+	public String getDefaultName() {
 		return "container.storageDrum";
 	}
 

@@ -57,7 +57,7 @@ public class GUIRBMKAutoloader extends GuiInfoContainer {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int i, int j) {
-        String name = this.loader.hasCustomInventoryName() ? this.loader.getInventoryName() : I18n.format(this.loader.getInventoryName());
+        String name = this.loader.hasCustomName() ? this.loader.getName() : I18n.format(this.loader.getName());
 
         this.fontRenderer.drawString(name, this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2, 6, 0xFFFFFF);
         this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, 4210752);

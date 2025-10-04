@@ -110,7 +110,7 @@ public class TileEntityMachineArcWelder extends TileEntityMachineBase
   }
 
   @Override
-  public @NotNull String getName() {
+  public @NotNull String getDefaultName() {
     return "container.machineArcWelder";
   }
 

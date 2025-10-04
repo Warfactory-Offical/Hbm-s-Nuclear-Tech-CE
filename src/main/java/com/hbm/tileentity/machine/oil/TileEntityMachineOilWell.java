@@ -52,7 +52,7 @@ public class TileEntityMachineOilWell extends TileEntityOilDrillBase {
 
 
 	@Override
-	public String getName() {
+	public String getDefaultName() {
 		return "container.oilWell";
 	}
 

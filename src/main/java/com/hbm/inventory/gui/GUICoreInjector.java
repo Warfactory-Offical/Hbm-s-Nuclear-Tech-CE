@@ -35,7 +35,7 @@ public class GUICoreInjector extends GuiInfoContainer {
     @Override
     protected void drawGuiContainerForegroundLayer(int i, int j) {
 
-        String name = this.injector.hasCustomInventoryName() ? this.injector.getInventoryName() : I18n.format(this.injector.getInventoryName());
+        String name = this.injector.hasCustomName() ? this.injector.getName() : I18n.format(this.injector.getName());
         this.fontRenderer.drawString(name, this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2, 6, 4210752);
         this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
     }

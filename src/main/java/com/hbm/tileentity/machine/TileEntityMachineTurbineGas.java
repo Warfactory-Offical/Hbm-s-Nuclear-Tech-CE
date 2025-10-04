@@ -528,7 +528,7 @@ public class TileEntityMachineTurbineGas extends TileEntityMachineBase implement
 	}
 
 	@Override
-	public String getName() {
+	public String getDefaultName() {
 		return "container.turbinegas";
 	}
 

@@ -16,7 +16,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.io.IOException;
@@ -53,7 +53,7 @@ public class GUIFEL extends GuiInfoContainer {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
-		String name = this.fel.hasCustomInventoryName() ? this.fel.getInventoryName() : I18n.format(this.fel.getInventoryName());
+		String name = this.fel.hasCustomName() ? this.fel.getName() : I18n.format(this.fel.getName());
 
 		this.fontRenderer.drawString(name, 90 + this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2, 7, 0xffffff);
 		this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 98, 4210752);

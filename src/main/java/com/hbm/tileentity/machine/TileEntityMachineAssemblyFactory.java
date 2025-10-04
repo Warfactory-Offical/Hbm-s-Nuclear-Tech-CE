@@ -127,7 +127,7 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.machineAssemblyFactory";
     }
 

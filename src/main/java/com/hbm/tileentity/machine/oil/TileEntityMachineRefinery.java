@@ -93,7 +93,7 @@ public class TileEntityMachineRefinery extends TileEntityMachineBase implements 
         converted = true;
     }
 
-    public String getName() {
+    public String getDefaultName() {
         return "container.machineRefinery";
     }
 

@@ -62,7 +62,7 @@ public class TileEntityMachineWoodBurner extends TileEntityMachinePolluting impl
 	}
 
 	@Override
-	public String getName() {
+	public String getDefaultName() {
 		return "container.machineWoodBurner";
 	}
 

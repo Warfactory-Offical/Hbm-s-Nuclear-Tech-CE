@@ -39,7 +39,7 @@ public class TileEntityReactorControl extends TileEntityMachineBase implements I
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.reactorControl";
     }
 

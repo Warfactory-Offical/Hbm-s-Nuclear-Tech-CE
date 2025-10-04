@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager;
 
 public class GUIMachinePuF6Tank extends GuiInfoContainer {
 
@@ -31,7 +31,7 @@ public class GUIMachinePuF6Tank extends GuiInfoContainer {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer( int i, int j) {
-		String name = this.puF6Tank.hasCustomInventoryName() ? this.puF6Tank.getInventoryName() : I18n.format(this.puF6Tank.getInventoryName());
+		String name = this.puF6Tank.hasCustomName() ? this.puF6Tank.getName() : I18n.format(this.puF6Tank.getName());
 		
 		this.fontRenderer.drawString(name, this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2, 6, 4210752);
 		this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, 4210752);

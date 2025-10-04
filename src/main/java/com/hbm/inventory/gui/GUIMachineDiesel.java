@@ -42,7 +42,7 @@ public class GUIMachineDiesel extends GuiInfoContainer {
 	
 	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
-		String name = this.machineDiesel.hasCustomInventoryName() ? this.machineDiesel.getInventoryName() : I18n.format(this.machineDiesel.getInventoryName());
+		String name = this.machineDiesel.hasCustomName() ? this.machineDiesel.getName() : I18n.format(this.machineDiesel.getName());
 		
 		this.fontRenderer.drawString(name, this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2, 6, 4210752);
 		this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, 4210752);

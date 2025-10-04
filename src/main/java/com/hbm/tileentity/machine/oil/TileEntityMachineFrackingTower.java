@@ -58,7 +58,7 @@ public class TileEntityMachineFrackingTower extends TileEntityOilDrillBase {
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.frackingTower";
     }
 

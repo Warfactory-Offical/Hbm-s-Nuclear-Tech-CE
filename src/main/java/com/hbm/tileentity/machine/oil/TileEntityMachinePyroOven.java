@@ -100,7 +100,7 @@ public class TileEntityMachinePyroOven extends TileEntityMachinePolluting implem
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.machinePyroOven";
     }
 

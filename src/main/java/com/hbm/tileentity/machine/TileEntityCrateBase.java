@@ -1,5 +1,6 @@
 package com.hbm.tileentity.machine;
 
+import com.hbm.api.tile.IWorldRenameable;
 import com.hbm.config.MachineConfig;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.hazard.HazardSystem;
@@ -20,6 +21,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.world.IWorldNameable;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -32,7 +34,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 // mlbv: I tried overriding markDirty to calculate the changes but somehow it always delays by one operation.
 // also, implementing ITickable is a bad idea, remove it if you can find a better way.
-public abstract class TileEntityCrateBase extends TileEntityLockableBase implements IGUIProvider, IBufPacketReceiver, ITickable {
+public abstract class TileEntityCrateBase extends TileEntityLockableBase implements IGUIProvider, IBufPacketReceiver, ITickable, IWorldRenameable {
 
     private final AtomicBoolean isCheckScheduled = new AtomicBoolean(false);
     public ItemStackHandler inventory;
@@ -155,14 +157,17 @@ public abstract class TileEntityCrateBase extends TileEntityLockableBase impleme
         }
     }
 
-    public String getInventoryName() {
-        return this.hasCustomInventoryName() ? this.customName : name;
+    @Override
+    public String getName() {
+        return this.hasCustomName() ? this.customName : name;
     }
 
-    public boolean hasCustomInventoryName() {
+    @Override
+    public boolean hasCustomName() {
         return this.customName != null && !this.customName.isEmpty();
     }
 
+    @Override
     public void setCustomName(String name) {
         this.customName = name;
     }

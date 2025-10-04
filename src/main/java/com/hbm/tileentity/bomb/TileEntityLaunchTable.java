@@ -85,7 +85,7 @@ public class TileEntityLaunchTable extends TileEntityMachineBase implements ITic
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.launchTable";
     }
 

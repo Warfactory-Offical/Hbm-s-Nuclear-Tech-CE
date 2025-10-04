@@ -55,7 +55,7 @@ public class TileEntityCraneExtractor extends TileEntityCraneBase implements IGU
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.craneExtractor";
     }
 

@@ -233,7 +233,7 @@ public class TileEntityMachineChemfac extends TileEntityMachineChemplantBase imp
 	}
 
 	@Override
-	public String getName() {
+	public String getDefaultName() {
 		return "container.machineChemFac";
 	}
 

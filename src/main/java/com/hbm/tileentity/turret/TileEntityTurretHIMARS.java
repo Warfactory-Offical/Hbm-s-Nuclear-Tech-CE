@@ -69,7 +69,7 @@ public class TileEntityTurretHIMARS extends TileEntityTurretBaseArtillery implem
   }
 
   @Override
-  public String getName() {
+  public String getDefaultName() {
     return "container.turretHIMARS";
   }
 

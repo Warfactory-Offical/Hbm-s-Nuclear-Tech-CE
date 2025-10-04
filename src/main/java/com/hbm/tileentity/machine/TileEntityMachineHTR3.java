@@ -357,7 +357,7 @@ public class TileEntityMachineHTR3 extends TileEntityMachineBase implements ITic
 	}
 
 	@Override
-	public String getName() {
+	public String getDefaultName() {
 		return "container.htr";
 	}
 

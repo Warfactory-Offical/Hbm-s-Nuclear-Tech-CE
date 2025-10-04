@@ -59,9 +59,7 @@ public class TileEntityMachineBattery extends TileEntityMachineBase implements I
 	public ConnectionPriority priority = ConnectionPriority.LOW;
 
 	public byte lastRedstone = 0;
-	
-	private String customName;
-	
+
 	public TileEntityMachineBattery() {
 		super(4);
 	}
@@ -70,20 +68,8 @@ public class TileEntityMachineBattery extends TileEntityMachineBase implements I
 		return ForgeDirection.VALID_DIRECTIONS;
 	}
 	
-	public String getInventoryName() {
-		return this.hasCustomInventoryName() ? this.customName : "container.battery";
-	}
-
-	public boolean hasCustomInventoryName() {
-		return this.customName != null && this.customName.length() > 0;
-	}
-	
-	public void setCustomName(String name) {
-		this.customName = name;
-	}
-	
 	@Override
-	public String getName() {
+	public String getDefaultName() {
 		return "container.battery";
 	}
 	

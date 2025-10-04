@@ -32,7 +32,7 @@ public class TileEntityPADetector extends TileEntityCooledBase implements IGUIPr
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.paDetector";
     }
 

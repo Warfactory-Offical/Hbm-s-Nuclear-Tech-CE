@@ -79,7 +79,7 @@ public class TileEntityMachineChemicalPlant extends TileEntityMachineBase implem
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.machineChemicalPlant";
     }
 

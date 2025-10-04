@@ -13,7 +13,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.network.play.server.SPacketCloseWindow;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -52,7 +52,7 @@ public class GUIMachineRadarNTSlots extends GuiInfoContainer {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int i, int j) {
-        String name = this.radar.hasCustomInventoryName() ? this.radar.getInventoryName() : I18n.format(this.radar.getInventoryName());
+        String name = this.radar.hasCustomName() ? this.radar.getName() : I18n.format(this.radar.getName());
         if(MainRegistry.polaroidID == 11) name = "Reda";
         this.fontRenderer.drawString(name, this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2, 6, 4210752);
         this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, 4210752);

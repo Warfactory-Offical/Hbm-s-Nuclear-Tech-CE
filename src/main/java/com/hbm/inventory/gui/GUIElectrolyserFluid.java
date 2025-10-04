@@ -13,7 +13,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 
@@ -55,7 +55,7 @@ public class GUIElectrolyserFluid extends GuiInfoContainer {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int i, int j) {
-        String name = this.electrolyser.hasCustomInventoryName() ? this.electrolyser.getInventoryName() : I18n.format(this.electrolyser.getInventoryName());
+        String name = this.electrolyser.hasCustomName() ? this.electrolyser.getName() : I18n.format(this.electrolyser.getName());
 
         this.fontRenderer.drawString(name, (this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2) - 16, 7, 0xffffff);
         this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 94, 4210752);

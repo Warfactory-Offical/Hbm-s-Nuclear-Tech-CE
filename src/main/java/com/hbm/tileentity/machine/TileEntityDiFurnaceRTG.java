@@ -94,7 +94,7 @@ public class TileEntityDiFurnaceRTG extends TileEntityMachineBase implements ITi
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.diFurnaceRTG";
     }
 

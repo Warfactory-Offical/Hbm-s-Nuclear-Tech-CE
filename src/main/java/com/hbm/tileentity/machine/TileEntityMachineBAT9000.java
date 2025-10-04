@@ -15,7 +15,7 @@ public class TileEntityMachineBAT9000 extends TileEntityBarrel {
 	}
 	
 	@Override
-	public String getName() {
+	public String getDefaultName() {
 		return "container.bat9000";
 	}
 	

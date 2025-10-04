@@ -78,7 +78,7 @@ public class GUICoreStabilizer extends GuiInfoContainer {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer( int i, int j) {
-		String name = this.stabilizer.hasCustomInventoryName() ? this.stabilizer.getInventoryName() : I18n.format(this.stabilizer.getInventoryName());
+		String name = this.stabilizer.hasCustomName() ? this.stabilizer.getName() : I18n.format(this.stabilizer.getName());
 		this.fontRenderer.drawString(name, this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2, 6, 4210752);
 		
 		String inventory = I18n.format("container.inventory");

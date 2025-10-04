@@ -44,8 +44,6 @@ public abstract class TileEntityOilDrillBase extends TileEntityMachineBase imple
     public int energyLevel;
     public int overLevel;
     HashSet<BlockPos> processed = new HashSet<>();
-    private String customName;
-
 
     public TileEntityOilDrillBase() {
         super(8, true, true);
@@ -66,18 +64,6 @@ public abstract class TileEntityOilDrillBase extends TileEntityMachineBase imple
         upgradeManager = new UpgradeManager();
 
         converted = true;
-    }
-
-    public boolean hasCustomInventoryName() {
-        return this.customName != null && this.customName.length() > 0;
-    }
-
-    protected String getCustomName() {
-        return customName;
-    }
-
-    public void setCustomName(String name) {
-        this.customName = name;
     }
 
     public boolean isUseableByPlayer(EntityPlayer player) {

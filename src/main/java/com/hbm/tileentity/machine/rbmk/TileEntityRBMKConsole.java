@@ -59,7 +59,7 @@ public class TileEntityRBMKConsole extends TileEntityMachineBase implements ICon
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return null;
     }
 

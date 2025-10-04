@@ -73,7 +73,7 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 		tank = new FluidTankNTM(Fluids.NONE, 256000);
 	}
 
-	public String getName() {
+	public String getDefaultName() {
 		return "container.fluidtank";
 	}
 

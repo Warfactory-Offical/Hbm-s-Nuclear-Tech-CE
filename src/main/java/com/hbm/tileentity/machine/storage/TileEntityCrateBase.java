@@ -1,5 +1,6 @@
 package com.hbm.tileentity.machine.storage;
 
+import com.hbm.api.tile.IWorldRenameable;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ItemStackHandlerWrapper;
 import com.hbm.tileentity.machine.TileEntityLockableBase;
@@ -8,11 +9,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.world.IWorldNameable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-public abstract class TileEntityCrateBase extends TileEntityLockableBase {
+public abstract class TileEntityCrateBase extends TileEntityLockableBase implements IWorldRenameable {
 
 	public ItemStackHandler inventory;
 	public String customName;
@@ -50,11 +52,12 @@ public abstract class TileEntityCrateBase extends TileEntityLockableBase {
 		}
 	}
 
-
-	public boolean hasCustomInventoryName() {
-		return this.customName != null && this.customName.length() > 0;
+    @Override
+	public boolean hasCustomName() {
+		return this.customName != null && !this.customName.isEmpty();
 	}
 
+    @Override
 	public void setCustomName(String name) {
 		this.customName = name;
 	}

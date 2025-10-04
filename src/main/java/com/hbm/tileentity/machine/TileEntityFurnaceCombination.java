@@ -54,7 +54,7 @@ public class TileEntityFurnaceCombination extends TileEntityMachinePolluting imp
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.furnaceCombination";
     }
 

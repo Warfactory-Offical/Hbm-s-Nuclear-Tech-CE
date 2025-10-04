@@ -50,7 +50,7 @@ public class TileEntityMachinePumpjack extends TileEntityOilDrillBase {
 	public float speed = 0;
 
 	@Override
-	public String getName() {
+	public String getDefaultName() {
 		return "container.pumpjack";
 	}
 

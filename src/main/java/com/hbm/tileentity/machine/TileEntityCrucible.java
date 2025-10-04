@@ -94,7 +94,7 @@ public class TileEntityCrucible extends TileEntityMachineBase implements IGUIPro
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.machineCrucible";
     }
 

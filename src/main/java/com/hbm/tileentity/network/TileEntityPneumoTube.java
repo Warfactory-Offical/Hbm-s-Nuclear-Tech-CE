@@ -63,7 +63,7 @@ public class TileEntityPneumoTube extends TileEntityMachineBase implements IGUIP
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.pneumoTube";
     }
 

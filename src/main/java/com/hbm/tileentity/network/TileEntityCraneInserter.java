@@ -25,7 +25,7 @@ public class TileEntityCraneInserter extends TileEntityCraneBase implements IGUI
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.craneInserter";
     }
 

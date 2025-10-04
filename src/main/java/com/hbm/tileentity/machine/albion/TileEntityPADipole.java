@@ -63,7 +63,7 @@ public class TileEntityPADipole extends TileEntityCooledBase implements IGUIProv
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.paDipole";
     }
 

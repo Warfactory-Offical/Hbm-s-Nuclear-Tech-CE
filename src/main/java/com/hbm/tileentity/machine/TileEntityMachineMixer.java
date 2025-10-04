@@ -65,7 +65,7 @@ public class TileEntityMachineMixer extends TileEntityMachineBase implements ICo
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.machineMixer";
     }
 

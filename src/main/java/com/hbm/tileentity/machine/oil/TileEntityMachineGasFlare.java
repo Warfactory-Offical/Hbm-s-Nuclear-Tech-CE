@@ -62,7 +62,7 @@ public class TileEntityMachineGasFlare extends TileEntityMachineBase implements 
 	}
 
 	@Override
-	public String getName() {
+	public String getDefaultName() {
 		return "container.gasFlare";
 	}
 

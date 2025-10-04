@@ -42,7 +42,7 @@ public class GUIICF extends GuiInfoContainer {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int i, int j) {
-        String name = this.icf.hasCustomInventoryName() ? this.icf.getInventoryName() : I18n.format(this.icf.getInventoryName());
+        String name = this.icf.hasCustomName() ? this.icf.getName() : I18n.format(this.icf.getName());
         this.fontRenderer.drawString(name, this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2, 6, 4210752);
         this.fontRenderer.drawString(I18n.format("container.inventory"), 44, this.ySize - 93, 4210752);
     }

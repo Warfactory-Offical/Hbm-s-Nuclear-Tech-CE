@@ -95,7 +95,7 @@ public class TileEntityMachineArcFurnaceLarge extends TileEntityMachineBase impl
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.machineArcFurnaceLarge";
     }
     public ItemStackHandler getNewInventory(int scount) {

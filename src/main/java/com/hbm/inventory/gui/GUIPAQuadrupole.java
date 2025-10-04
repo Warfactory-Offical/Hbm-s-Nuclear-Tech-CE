@@ -35,7 +35,7 @@ public class GUIPAQuadrupole extends GuiInfoContainer {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        String name = this.quadrupole.hasCustomInventoryName() ? this.quadrupole.getInventoryName() : I18n.format(this.quadrupole.getInventoryName());
+        String name = this.quadrupole.hasCustomName() ? this.quadrupole.getName() : I18n.format(this.quadrupole.getName());
         this.fontRenderer.drawString(name, this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2 - 9, 6, 4210752);
         this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
 

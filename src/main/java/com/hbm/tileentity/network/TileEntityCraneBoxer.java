@@ -51,7 +51,7 @@ public class TileEntityCraneBoxer extends TileEntityCraneBase implements IGUIPro
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.craneBoxer";
     }
 

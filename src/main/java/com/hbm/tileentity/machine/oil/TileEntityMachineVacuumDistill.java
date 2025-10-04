@@ -58,7 +58,7 @@ public class TileEntityMachineVacuumDistill extends TileEntityMachineBase implem
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.vacuumDistill";
     }
 

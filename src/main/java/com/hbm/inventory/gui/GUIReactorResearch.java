@@ -18,7 +18,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 
@@ -78,7 +78,7 @@ public class GUIReactorResearch extends GuiInfoContainer {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int i, int j) {
-        String name = this.reactor.hasCustomInventoryName() ? this.reactor.getInventoryName() : I18n.format(this.reactor.getInventoryName());
+        String name = this.reactor.hasCustomName() ? this.reactor.getName() : I18n.format(this.reactor.getName());
         final String[] labels = { "Flux", "Heat", "Control" };
 
         this.fontRenderer.drawString(name, 121 - this.fontRenderer.getStringWidth(name) / 2, 6, 15066597);

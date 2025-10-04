@@ -50,7 +50,7 @@ public class TileEntityTurretChekhov extends TileEntityTurretBaseNT implements I
 	}
 
 	@Override
-	public String getName(){
+	public String getDefaultName(){
 		return "container.turretChekhov";
 	}
 	

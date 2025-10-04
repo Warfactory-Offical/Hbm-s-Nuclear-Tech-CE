@@ -43,7 +43,7 @@ public class TileEntityMicrowave extends TileEntityMachineBase implements ITicka
 	}
 	
 	@Override
-	public String getName() {
+	public String getDefaultName() {
 		return "container.microwave";
 	}
 	

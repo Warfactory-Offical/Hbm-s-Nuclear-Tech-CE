@@ -145,7 +145,7 @@ public class TileEntityDiFurnace extends TileEntityMachinePolluting implements I
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.diFurnace";
     }
 

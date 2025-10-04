@@ -87,7 +87,7 @@ public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implem
 		converted = true;
 	}
 	@Override
-	public String getName() {
+	public String getDefaultName() {
 		return "container.machineTurbofan";
 	}
 	

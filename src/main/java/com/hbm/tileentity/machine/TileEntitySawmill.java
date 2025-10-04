@@ -57,7 +57,7 @@ public class TileEntitySawmill extends TileEntityMachineBase implements ITickabl
     }
 
     @Override
-    public String getName() { return ""; }
+    public String getDefaultName() { return ""; }
 
     @Override
     public void update() {

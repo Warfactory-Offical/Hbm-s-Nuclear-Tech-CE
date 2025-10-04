@@ -36,7 +36,7 @@ public class TileEntityPARFC extends TileEntityCooledBase implements IGUIProvide
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.paRFC";
     }
 

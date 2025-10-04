@@ -32,7 +32,7 @@ public class TileEntityCraneUnboxer extends TileEntityCraneBase implements IGUIP
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.craneUnboxer";
     }
 

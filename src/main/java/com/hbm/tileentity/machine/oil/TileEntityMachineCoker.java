@@ -52,7 +52,7 @@ public class TileEntityMachineCoker extends TileEntityMachineBase implements IFl
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.machineCoker";
     }
 

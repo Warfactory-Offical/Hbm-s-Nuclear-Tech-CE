@@ -21,7 +21,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -307,7 +307,7 @@ public class GUIMachineTurbineGas extends GuiInfoContainer {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int i, int j) {
-        String name = this.turbinegas.hasCustomInventoryName() ? this.turbinegas.getInventoryName() : I18n.format(this.turbinegas.getName());
+        String name = this.turbinegas.hasCustomName() ? this.turbinegas.getName() : I18n.format(this.turbinegas.getDefaultName());
 
         this.fontRenderer.drawString(name, this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2, 6, 4210752);
         this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 94, 4210752);

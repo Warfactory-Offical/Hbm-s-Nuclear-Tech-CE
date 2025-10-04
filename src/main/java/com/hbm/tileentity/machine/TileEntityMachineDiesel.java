@@ -68,7 +68,7 @@ public class TileEntityMachineDiesel extends TileEntityMachinePolluting implemen
 	}
 	
 	@Override
-	public String getName() {
+	public String getDefaultName() {
 		return "container.machineDiesel";
 	}
 	

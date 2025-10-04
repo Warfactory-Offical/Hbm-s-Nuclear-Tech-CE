@@ -41,7 +41,7 @@ public class TileEntityTurretTauon extends TileEntityTurretBaseNT implements IGU
 	}
 
 	@Override
-	public String getName(){
+	public String getDefaultName(){
 		return "container.turretTauon";
 	}
 

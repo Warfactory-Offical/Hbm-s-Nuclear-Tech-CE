@@ -61,7 +61,7 @@ public class GUICrateBase<T extends TileEntityCrateBase, C extends Container> ex
 
     @Override
     protected void drawGuiContainerForegroundLayer(int i, int j) {
-        String name = this.diFurnace.hasCustomInventoryName() ? this.diFurnace.getInventoryName() : I18n.format(this.diFurnace.getInventoryName());
+        String name = this.diFurnace.hasCustomName() ? this.diFurnace.getName() : I18n.format(this.diFurnace.getName());
         float percent = this.diFurnace.fillPercentage;
         String title = combineTitle(name, percent);
         this.fontRenderer.drawString(title, this.xSize / 2 - this.fontRenderer.getStringWidth(title) / 2, 6, 0x3F1515);

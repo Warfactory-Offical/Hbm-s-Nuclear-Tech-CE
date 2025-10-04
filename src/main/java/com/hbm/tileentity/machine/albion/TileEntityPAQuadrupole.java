@@ -38,7 +38,7 @@ public class TileEntityPAQuadrupole extends TileEntityCooledBase implements IGUI
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.paQuadrupole";
     }
 

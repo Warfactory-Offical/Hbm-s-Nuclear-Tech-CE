@@ -35,7 +35,7 @@ public class GUIMachineExposureChamber extends GuiInfoContainer {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int i, int j) {
-        String name = this.chamber.hasCustomInventoryName() ? this.chamber.getInventoryName() : I18n.format(this.chamber.getInventoryName());
+        String name = this.chamber.hasCustomName() ? this.chamber.getName() : I18n.format(this.chamber.getName());
         this.fontRenderer.drawString(name, 70 - this.fontRenderer.getStringWidth(name) / 2, 6, 4210752);
         this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
     }

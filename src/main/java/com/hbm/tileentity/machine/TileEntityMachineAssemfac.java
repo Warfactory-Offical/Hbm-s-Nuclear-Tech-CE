@@ -74,7 +74,7 @@ public class TileEntityMachineAssemfac extends TileEntityMachineAssemblerBase im
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.assemfac";
     }
 
