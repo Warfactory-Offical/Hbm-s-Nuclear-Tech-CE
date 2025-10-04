@@ -2,6 +2,7 @@ package com.hbm.blocks.machine;
 
 import com.hbm.blocks.*;
 import com.hbm.items.ModItems;
+import com.hbm.items.weapon.IMetaItemTesr;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.tileentity.TileEntityProxyCombo;
@@ -10,6 +11,7 @@ import com.hbm.util.BobMathUtil;
 import com.hbm.util.I18nUtil;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,6 +25,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -31,10 +34,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class MachineStirling extends BlockDummyable implements ILookOverlay, ITooltipProvider, IBlockMulti {
+public class MachineStirling extends BlockDummyable implements ILookOverlay, ITooltipProvider, IBlockMulti, IMetaItemTesr {
 
     public MachineStirling(String name) {
         super(Material.IRON, name);
+        IMetaItemTesr.INSTANCES.add(this);
     }
 
     @Override
@@ -191,6 +195,17 @@ public class MachineStirling extends BlockDummyable implements ILookOverlay, ITo
 
     @Override
     public int getSubCount() {
-        return 0;
+        return 1;
     }
+
+    @Override
+    public int getSubitemCount() {
+        return 2;
+    }
+
+    @Override
+    public String getName() {
+        return getRegistryName().toString();
+    }
+
 }

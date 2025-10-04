@@ -1,5 +1,6 @@
 package com.hbm.items.weapon;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.model.ModelLoader;
@@ -20,7 +21,15 @@ public interface IMetaItemTesr {
 
     default void redirectModel() {
         for (int i = 1; i < getSubitemCount(); i++) {
-            ModelLoader.setCustomModelResourceLocation((Item) this, i, new ModelResourceLocation(getName(), "inventory"));
+            Item itemInsance = null;
+            if(this instanceof Block block)
+                itemInsance = Item.getItemFromBlock(block);
+            if(this instanceof Item item)
+                itemInsance = item;
+
+            if(itemInsance == null)
+                return;
+            ModelLoader.setCustomModelResourceLocation(itemInsance, i, new ModelResourceLocation(getName(), "inventory"));
         }
     }
 
