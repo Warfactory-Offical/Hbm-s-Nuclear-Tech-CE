@@ -55,7 +55,7 @@ public class DetMiner extends Block implements IBomb {
 	
 	@Override
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
-		if (world.getStrongPower(pos) > 0)
+		if (world.isBlockPowered(pos))
         {
         	this.explode(world, pos, null);
         }

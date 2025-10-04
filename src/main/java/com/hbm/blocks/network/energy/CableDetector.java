@@ -35,7 +35,7 @@ public class CableDetector extends BlockContainer {
 	
 	@Override
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
-		boolean on = world.getStrongPower(pos) > 0;
+		boolean on = world.isBlockPowered(pos);
 		if(on) {
 			world.setBlockState(pos, world.getBlockState(pos).withProperty(STATE, true), 2);
 			world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.reactorStart, SoundCategory.BLOCKS, 1.0F, 0.3F);

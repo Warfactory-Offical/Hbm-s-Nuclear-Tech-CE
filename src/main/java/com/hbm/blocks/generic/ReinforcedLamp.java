@@ -37,11 +37,11 @@ public class ReinforcedLamp extends Block implements IRadResistantBlock {
 	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
 		if (!worldIn.isRemote)
         {
-            if (this.isOn && !(worldIn.getStrongPower(pos) > 0))
+            if (this.isOn && !(worldIn.isBlockPowered(pos)))
             {
             	worldIn.scheduleUpdate(pos, this, 4);
             }
-            else if (!this.isOn && worldIn.getStrongPower(pos) > 0)
+            else if (!this.isOn && worldIn.isBlockPowered(pos))
             {
             	worldIn.setBlockState(pos, ModBlocks.reinforced_lamp_on.getDefaultState(), 2);
             }
@@ -53,11 +53,11 @@ public class ReinforcedLamp extends Block implements IRadResistantBlock {
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
 		if (!worldIn.isRemote)
         {
-            if (this.isOn && !(worldIn.getStrongPower(pos) > 0))
+            if (this.isOn && !(worldIn.isBlockPowered(pos)))
             {
             	worldIn.scheduleUpdate(pos, this, 4);
             }
-            else if (!this.isOn && worldIn.getStrongPower(pos) > 0)
+            else if (!this.isOn && worldIn.isBlockPowered(pos))
             {
             	worldIn.setBlockState(pos, ModBlocks.reinforced_lamp_on.getDefaultState(), 2);
             }
@@ -66,7 +66,7 @@ public class ReinforcedLamp extends Block implements IRadResistantBlock {
 
 	@Override
 	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
-		if (!worldIn.isRemote && this.isOn && !(worldIn.getStrongPower(pos) > 0))
+		if (!worldIn.isRemote && this.isOn && !(worldIn.isBlockPowered(pos)))
         {
 			worldIn.setBlockState(pos, ModBlocks.reinforced_lamp_off.getDefaultState(), 2);
         }

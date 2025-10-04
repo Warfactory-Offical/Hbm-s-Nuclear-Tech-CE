@@ -20,7 +20,7 @@ public class TileEntityVent extends TileEntity implements ITickable {
 	
 	@Override
 	public void update() {
-		if(!world.isRemote && world.getStrongPower(pos) > 0) {
+		if(!world.isRemote && world.isBlockPowered(pos)) {
 			Block b = world.getBlockState(pos).getBlock();
 
 			if(b == ModBlocks.vent_chlorine) {

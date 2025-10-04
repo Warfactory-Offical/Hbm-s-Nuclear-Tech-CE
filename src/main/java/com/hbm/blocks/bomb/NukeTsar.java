@@ -71,7 +71,7 @@ public class NukeTsar extends BlockContainer implements IBomb {
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
 		TileEntityNukeTsar entity = (TileEntityNukeTsar) worldIn.getTileEntity(pos);
-		if(worldIn.getStrongPower(pos) > 0 && !worldIn.isRemote) {
+		if(worldIn.isBlockPowered(pos) && !worldIn.isRemote) {
 			boolean isReady = entity.isReady();
 			boolean isStage1Filled = entity.isStage1Filled();
 			boolean isStage2Filled = entity.isStage2Filled();

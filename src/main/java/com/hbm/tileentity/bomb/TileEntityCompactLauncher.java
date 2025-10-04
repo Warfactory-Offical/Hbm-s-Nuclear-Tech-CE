@@ -129,7 +129,7 @@ public class TileEntityCompactLauncher extends TileEntityMachineBase implements 
 				for(int x = -1; x <= 1; x++) {
 					for(int z = -1; z <= 1; z++) {
 
-						if(world.getStrongPower(mPos.setPos(pos.getX() + x, pos.getY(), pos.getZ() + z)) > 0) {
+						if(world.isBlockPowered(mPos.setPos(pos.getX() + x, pos.getY(), pos.getZ() + z))) {
 							launch();
 							break outer;
 						}

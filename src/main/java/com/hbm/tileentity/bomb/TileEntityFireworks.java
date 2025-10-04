@@ -25,7 +25,7 @@ public class TileEntityFireworks extends TileEntity implements ITickable {
 	public void update() {
 		if(!world.isRemote) {
 
-			if(world.getStrongPower(pos) > 0 && !message.isEmpty() && charges > 0) {
+			if(world.isBlockPowered(pos) && !message.isEmpty() && charges > 0) {
 
 				delay--;
 

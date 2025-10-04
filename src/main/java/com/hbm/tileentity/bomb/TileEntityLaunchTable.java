@@ -142,7 +142,7 @@ public class TileEntityLaunchTable extends TileEntityMachineBase implements ITic
             this.redstonePower = 0;
             for (int x = -4; x <= 4; x++) {
                 for (int z = -4; z <= 4; z++) {
-                    if (world.getStrongPower(pos.add(x, 0, z)) > 0) {
+                    if (world.isBlockPowered(pos.add(x, 0, z))) {
                         this.redstonePower++;
                     }
                 }

@@ -23,7 +23,7 @@ public class BombThermo extends Block implements IBomb {
 	
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
-		if (!worldIn.isRemote && worldIn.getStrongPower(pos) > 0)
+		if (!worldIn.isRemote && worldIn.isBlockPowered(pos))
         {
 			worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());
         	if(this == ModBlocks.therm_endo)

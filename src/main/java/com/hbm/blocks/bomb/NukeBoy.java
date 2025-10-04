@@ -72,7 +72,7 @@ public class NukeBoy extends BlockContainer implements IBomb {
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
 		TileEntityNukeBoy entity = (TileEntityNukeBoy) worldIn.getTileEntity(pos);
-		if(worldIn.getStrongPower(pos) > 0) {
+		if(worldIn.isBlockPowered(pos)) {
 			if(entity.isReady() && !worldIn.isRemote) {
 				this.onPlayerDestroy(worldIn, pos, state);
 				entity.clearSlots();

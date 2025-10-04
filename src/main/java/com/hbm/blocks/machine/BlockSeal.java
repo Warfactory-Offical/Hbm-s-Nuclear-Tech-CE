@@ -209,7 +209,7 @@ public class BlockSeal extends Block implements IBomb {
 	
 	@Override
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos fromPos) {
-		if (world.getStrongPower(pos) > 0)
+		if (world.isBlockPowered(pos))
         {
         	if(!world.getBlockState(pos).getValue(ACTIVATED)) {
         		world.setBlockState(pos, world.getBlockState(pos).withProperty(ACTIVATED, true), 2);
