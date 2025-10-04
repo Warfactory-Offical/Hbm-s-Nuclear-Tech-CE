@@ -50,6 +50,8 @@ dependencies {
     implementation rfg.deobf("curse.maven:opencomputers-223008:6608365")
     implementation 'mezz:jei:4.29.1'
     implementation 'com.google.guava:guava:31.0.1-jre'
+//    compileOnly rfg.deobf("curse.maven:inventory-bogosorter-632327:6717232")
+    // in case anyone wants to run obfuscated client/server: comment the two lines below and uncomment the line above
     implementation rfg.deobf("curse.maven:inventory-bogosorter-632327:6717232")
     implementation("com.cleanroommc:modularui:2.5.0-rc5") { transitive false }
 

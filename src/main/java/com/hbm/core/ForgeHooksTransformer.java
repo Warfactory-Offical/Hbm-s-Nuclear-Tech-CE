@@ -1,6 +1,8 @@
 package com.hbm.core;
 
 import net.minecraft.launchwrapper.IClassTransformer;
+import net.minecraft.launchwrapper.Launch;
+import net.minecraftforge.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.*;
@@ -143,7 +145,36 @@ public class ForgeHooksTransformer implements IClassTransformer {
                 return basicClass;
             }
 
-            ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+            ClassWriter cw = HbmCorePlugin.getBrand() == HbmCorePlugin.Brand.CAT_SERVER ? new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES) {
+                private static String mapForLoad(String internalName) {
+                    String dotted = internalName.replace('/', '.');
+                    String unmapped = FMLDeobfuscatingRemapper.INSTANCE.unmap(dotted);
+                    return unmapped.replace('.', '/');
+                }
+
+                @Override
+                protected String getCommonSuperClass(String t1, String t2) {
+                    try {
+                        ClassLoader cl = Launch.classLoader;
+                        String n1 = mapForLoad(t1);
+                        String n2 = mapForLoad(t2);
+
+                        Class<?> c1 = Class.forName(n1.replace('/', '.'), false, cl);
+                        Class<?> c2 = Class.forName(n2.replace('/', '.'), false, cl);
+
+                        if (c1.isAssignableFrom(c2)) return t1;
+                        if (c2.isAssignableFrom(c1)) return t2;
+                        if (c1.isInterface() || c2.isInterface()) return "java/lang/Object";
+
+                        do {
+                            c1 = c1.getSuperclass();
+                        } while (!c1.isAssignableFrom(c2));
+                        return c1.getName().replace('.', '/');
+                    } catch (Throwable ex) {
+                        throw new RuntimeException("Failed to find common superclass", ex);
+                    }
+                }
+            } : new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
             cn.accept(cw);
             return cw.toByteArray();
         } catch (Throwable t) {
