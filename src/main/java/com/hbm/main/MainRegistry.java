@@ -60,6 +60,7 @@ import com.hbm.tileentity.machine.rbmk.RBMKDials;
 import com.hbm.util.ChunkUtil;
 import com.hbm.util.CrashHelper;
 import com.hbm.util.DamageResistanceHandler;
+import com.hbm.util.MobUtil;
 import com.hbm.world.ModBiomes;
 import com.hbm.world.PlanetGen;
 import com.hbm.world.feature.OreCave;
@@ -434,6 +435,8 @@ public class MainRegistry {
         RadiolysisRecipes.registerRadiolysis();
 
         ItemPoolConfigJSON.initialize();
+
+        MobUtil.intializeMobPools();
 
         //Drillgon200: expand the max entity radius for the hunter chopper
         if (World.MAX_ENTITY_RADIUS < 5)

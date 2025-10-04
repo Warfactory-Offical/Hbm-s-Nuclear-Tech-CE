@@ -291,10 +291,7 @@ public class CommandHbm extends CommandBase {
                 case "relay" -> Relay.INSTANCE.generate(world, rand, genPos, force);
                 case "dud" -> new Dud().generate(world, rand, genPos, force);
                 case "silo" -> Silo.INSTANCE.generate(world, rand, genPos, force);
-                case "factory" -> Factory.INSTANCE.generate(world, rand, genPos, force);
                 case "barrel" -> Barrel.INSTANCE.generate(world, rand, genPos, force);
-                case "vertibird" -> Vertibird.INSTANCE.generate(world, rand, genPos, force);
-                case "vertibird_crashed" -> CrashedVertibird.INSTANCE.generate(world, rand, genPos, force);
                 case "satellite" -> Satellite.INSTANCE.generate(world, rand, genPos, force);
                 case "spaceship" -> Spaceship.INSTANCE.generate(world, rand, genPos, force);
                 case "sellafield" -> {

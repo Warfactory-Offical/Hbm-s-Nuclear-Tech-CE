@@ -9,6 +9,7 @@ import com.hbm.capability.HbmLivingCapability;
 import com.hbm.capability.HbmLivingProps;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.config.GeneralConfig;
+import com.hbm.config.MobConfig;
 import com.hbm.config.RadiationConfig;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.DebugTeleporter;
@@ -33,11 +34,13 @@ import com.hbm.items.ModItems;
 import com.hbm.items.armor.ItemArmorMod;
 import com.hbm.items.armor.ItemModRevive;
 import com.hbm.items.armor.ItemModShackles;
+import com.hbm.items.food.ItemConserve;
 import com.hbm.items.gear.ArmorFSB;
 import com.hbm.items.special.ItemHot;
 import com.hbm.items.tool.ItemDigammaDiagnostic;
 import com.hbm.items.weapon.ItemGunBase;
 import com.hbm.items.weapon.sedna.BulletConfig;
+import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.items.weapon.sedna.factory.XFactory12ga;
 import com.hbm.lib.*;
 import com.hbm.packet.PacketDispatcher;
@@ -97,6 +100,7 @@ import net.minecraft.world.storage.loot.functions.LootFunction;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.*;
 import net.minecraftforge.event.entity.EntityEvent.EnteringChunk;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
@@ -256,20 +260,19 @@ public class ModEventHandler {
                 e.player.inventoryContainer.detectAndSendChanges();
         }
     }
-    // TODO: implement
-//    @SubscribeEvent
-//    public void onItemPickup(PlayerEvent.ItemPickupEvent event) {
-//        if(event.getStack().getItem() == ModItems.canned_conserve && EnumUtil.grabEnumSafely(
-//                ItemConserve.EnumFoodType.class, event.getStack().getItemDamage()) == ItemConserve.EnumFoodType.JIZZ)
-//            AdvancementManager.grantAchievement(event.player, AdvancementManager.achC20_5);
-//        if(event.getStack().getItem() == Items.SLIME_BALL)
-//            AdvancementManager.grantAchievement(event.player, AdvancementManager.achSlimeball);
-//    }
+    @SubscribeEvent
+    public void onItemPickup(PlayerEvent.ItemPickupEvent event) {
+        if(event.getStack().getItem() == ModItems.canned_conserve && EnumUtil.grabEnumSafely(
+                ItemConserve.EnumFoodType.class, event.getStack().getItemDamage()) == ItemConserve.EnumFoodType.JIZZ)
+            AdvancementManager.grantAchievement(event.player, AdvancementManager.achC20_5);
+        if(event.getStack().getItem() == Items.SLIME_BALL)
+            AdvancementManager.grantAchievement(event.player, AdvancementManager.achSlimeball);
+    }
 
     public boolean canWear(Entity entity) {
         return entity instanceof EntityZombie || entity instanceof EntitySkeleton || entity instanceof EntityVillager || entity instanceof EntityIronGolem;
     }
-
+    // Th3_Sl1ze: maybe we should go and just fucking delete this slop?..
     @SubscribeEvent
     public void mobSpawn(LivingSpawnEvent.SpecialSpawn event) {
         if (CompatibilityConfig.mobGear) {
@@ -373,6 +376,84 @@ public class ModEventHandler {
                         entity.setItemStackToSlot(EntityEquipmentSlot.OFFHAND, new ItemStack(ModItems.geiger_counter, 1));
                 }
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void decorateMob(LivingSpawnEvent event) {
+        EntityLivingBase entity = event.getEntityLiving();
+        World world = event.getWorld();
+
+        if(!MobConfig.enableMobGear || entity.isChild() || world.isRemote) return;
+
+        Map<Integer, List<WeightedRandomObject>> slotPools = new HashMap<>();
+
+        float soot = PollutionHandler.getPollution(entity.getEntityWorld(), new BlockPos(MathHelper.floor(event.getX()), MathHelper.floor(event.getY()), MathHelper.floor(event.getZ())), PollutionHandler.PollutionType.SOOT); //uhfgfg
+
+        if(entity instanceof EntityZombie) {
+            if(world.rand.nextFloat() < 0.005F && soot > 2) { // full hazmat zombine
+                MobUtil.equipFullSet(entity, ModItems.hazmat_helmet, ModItems.hazmat_plate, ModItems.hazmat_legs, ModItems.hazmat_boots);
+                return;
+            }
+            slotPools = MobUtil.slotPoolCommon;
+
+        } else if(entity instanceof EntitySkeleton) {
+            slotPools = MobUtil.slotPoolRanged;
+            ItemStack bowReplacement = getSkelegun(soot, world.rand);
+            slotPools.put(0, createSlotPool(50, bowReplacement != null ? new Object[][]{{bowReplacement, 1}} : new Object[][]{}));
+        }
+
+        MobUtil.assignItemsToEntity(entity, slotPools, rand);
+    }
+
+    private List<WeightedRandomObject> createSlotPool(int nullWeight, Object[][] items) {
+        List<WeightedRandomObject> pool = new ArrayList<>();
+        pool.add(new WeightedRandomObject(null, nullWeight));
+        for (Object[] item : items) {
+            Object obj = item[0];
+            int weight = (int) item[1];
+
+            if (obj instanceof Item) {
+                pool.add(new WeightedRandomObject(new ItemStack((Item) obj), weight));
+            } else if (obj instanceof ItemStack) {		//lol just make it pass ItemStack aswell
+                pool.add(new WeightedRandomObject(obj, weight));
+            }
+        }
+        return pool;
+    }
+
+    private static ItemStack getSkelegun(float soot, Random rand) {
+        if (!MobConfig.enableMobWeapons) return null;
+        if (rand.nextDouble() > Math.log(soot) * 0.25) return null;
+
+        ArrayList<WeightedRandomObject> pool = new ArrayList<>();
+
+        if(soot < 0.3){
+            pool.add(new WeightedRandomObject(new ItemStack(ModItems.gun_pepperbox), 5));
+            pool.add(new WeightedRandomObject(null, 20));
+        } else if(soot > 0.3 && soot < 1) {
+            pool.addAll(MobUtil.slotPoolGuns.get(0.3));
+        } else if (soot < 3) {
+            pool.addAll(MobUtil.slotPoolGuns.get(1D));
+        } else if (soot < 5) {
+            pool.addAll(MobUtil.slotPoolGuns.get(3D));
+        } else {
+            pool.addAll(MobUtil.slotPoolGuns.get(5D));
+        }
+
+        WeightedRandomObject selected = WeightedRandom.getRandomItem(rand, pool);
+
+        return selected.asStack();
+    }
+
+    @SubscribeEvent
+    public void addAITasks(EntityJoinWorldEvent event) {
+        if(event.getWorld().isRemote || !(event.getEntity() instanceof EntityLiving living)) return;
+
+        ItemStack held = living.getHeldItem(EnumHand.MAIN_HAND);
+
+        if(!held.isEmpty() && held.getItem() instanceof ItemGunBaseNT) {
+            MobUtil.addFireTask(living);
         }
     }
 
@@ -1431,7 +1512,7 @@ public class ModEventHandler {
             return false;
         }
         return switch (stack.getItem().getRegistryName().getPath()){
-            case "gun_light_revolver_dani", "gun_aberrator_eott", "gun_maresleg_akimbo", "gun_uzi_akimbo" -> true;
+            case "gun_light_revolver_dani", "gun_aberrator_eott", "gun_maresleg_akimbo", "gun_uzi_akimbo", "gun_minigun_dual" -> true;
             default -> false;
         };
         // TileEntityItemStackRenderer is client only. I'll comment them out for now.

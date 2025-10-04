@@ -85,6 +85,7 @@ public class Lego {
 
     public static void clickReceiver(ItemStack stack, LambdaContext ctx, int receiver) {
 
+        EntityLivingBase entity = ctx.entity;
         EntityPlayer player = ctx.getPlayer();
         Receiver rec = ctx.config.getReceivers(stack)[receiver];
         int index = ctx.configIndex;
@@ -96,7 +97,7 @@ public class Lego {
                 rec.getOnFire(stack).accept(stack, ctx);
 
                 if(rec.getFireSound(stack) != null)
-                    player.world.playSound(null, player.getPosition(), rec.getFireSound(stack), SoundCategory.PLAYERS, rec.getFireVolume(stack), rec.getFirePitch(stack));
+                    entity.world.playSound(null, entity.getPosition(), rec.getFireSound(stack), SoundCategory.PLAYERS, rec.getFireVolume(stack), rec.getFirePitch(stack));
 
                 int remaining = rec.getRoundsPerCycle(stack) - 1;
                 for(int i = 0; i < remaining; i++) if(rec.getCanFire(stack).apply(stack, ctx)) rec.getOnFire(stack).accept(stack, ctx);

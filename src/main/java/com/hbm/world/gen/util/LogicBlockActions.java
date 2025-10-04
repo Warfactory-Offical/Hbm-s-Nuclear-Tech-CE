@@ -19,6 +19,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.item.EntityFallingBlock;
+import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
@@ -130,7 +131,46 @@ public class LogicBlockActions {
 			}
 		}
 
-		world.setBlockState(pos, ModBlocks.block_steel.getDefaultState(), 3);
+		world.setBlockToAir(pos);
+	};
+
+	public static Consumer<LogicBlock.TileEntityLogicBlock> COLLAPSE_ROOF_RAD_10 = (tile) -> {
+		World world = tile.getWorld();
+		BlockPos pos = tile.getPos();
+		int x = pos.getX();
+		int y = pos.getY();
+		int z = pos.getZ();
+
+		if(tile.phase == 0) return;
+
+		int r = 8;
+		int r2 = r * r;
+		int r22 = r2 / 2;
+
+		for (int xx = -r; xx < r; xx++) {
+			int X = xx + x;
+			int XX = xx * xx;
+			for (int yy = -r; yy < r; yy++) {
+				int Y = yy + y;
+				int YY = XX + yy * yy;
+				for (int zz = -r; zz < r; zz++) {
+					int Z = zz + z;
+					int ZZ = YY + zz * zz;
+					if (ZZ < r22) {
+						BlockPos p = new BlockPos(X, Y, Z);
+						IBlockState state = world.getBlockState(p);
+						Block block = state.getBlock();
+
+						if (!world.isAirBlock(p) && block.getExplosionResistance(null) <= 70.0F) {
+							world.setBlockToAir(p);
+							EntityFallingBlock entity = new EntityFallingBlock(world, X + 0.5D, Y + 0.5D, Z + 0.5D, state);
+							world.spawnEntity(entity);
+						}
+					}
+				}
+			}
+		}
+		world.setBlockToAir(pos);
 	};
 
 	public static Consumer<LogicBlock.TileEntityLogicBlock> FODDER_WAVE = (tile) -> {
@@ -155,6 +195,94 @@ public class LogicBlockActions {
 				vec.rotateAroundYDeg(36D);
 			}
 			world.setBlockState(pos, ModBlocks.block_steel.getDefaultState(), 3);
+		}
+	};
+
+	public static Consumer<LogicBlock.TileEntityLogicBlock> SKELETON_GUN_TIER_1 = (tile) -> {
+		World world = tile.getWorld();
+		BlockPos pos = tile.getPos();
+		int x = pos.getX();
+		int y = pos.getY();
+		int z = pos.getZ();
+		if (tile.phase == 1) {
+			Vec3NT vec = new Vec3NT(0, 0, 0);
+			EntitySkeleton mob = new EntitySkeleton(world);
+			mob.setPositionAndRotation(x, y, z, 0, 0);
+			MobUtil.assignItemsToEntity(mob, MobUtil.slotPoolGunsTier1, new Random());
+			MobUtil.assignItemsToEntity(mob, MobUtil.slotPoolMasks, new Random());
+			MobUtil.assignItemsToEntity(mob, MobUtil.slotPoolRanged, new Random());
+			world.spawnEntity(mob);
+			world.setBlockToAir(pos);
+		}
+	};
+
+	public static Consumer<LogicBlock.TileEntityLogicBlock> SKELETON_GUN_TIER_2 = (tile) -> {
+		World world = tile.getWorld();
+		BlockPos pos = tile.getPos();
+		int x = pos.getX();
+		int y = pos.getY();
+		int z = pos.getZ();
+		if (tile.phase == 1) {
+			Vec3NT vec = new Vec3NT(0, 0, 0);
+			EntitySkeleton mob = new EntitySkeleton(world);
+			mob.setPositionAndRotation(x, y, z, 0, 0);
+			MobUtil.assignItemsToEntity(mob, MobUtil.slotPoolGunsTier2, new Random());
+			MobUtil.assignItemsToEntity(mob, MobUtil.slotPoolMasks, new Random());
+			MobUtil.assignItemsToEntity(mob, MobUtil.slotPoolTierArmor, new Random());
+			world.spawnEntity(mob);
+			world.setBlockToAir(pos);
+		}
+	};
+
+	public static Consumer<LogicBlock.TileEntityLogicBlock> SKELETON_GUN_TIER_3 = (tile) -> {
+		World world = tile.getWorld();
+		BlockPos pos = tile.getPos();
+		int x = pos.getX();
+		int y = pos.getY();
+		int z = pos.getZ();
+		if (tile.phase == 1) {
+			Vec3NT vec = new Vec3NT(0, 0, 0);
+			EntitySkeleton mob = new EntitySkeleton(world);
+			mob.setPositionAndRotation(x, y, z, 0, 0);
+			MobUtil.assignItemsToEntity(mob, MobUtil.slotPoolGunsTier3, new Random());
+			MobUtil.assignItemsToEntity(mob, MobUtil.slotPoolMasks, new Random());
+			MobUtil.assignItemsToEntity(mob, MobUtil.slotPoolAdvRanged, new Random());
+			world.spawnEntity(mob);
+			world.setBlockToAir(pos);
+		}
+	};
+
+	public static Consumer<LogicBlock.TileEntityLogicBlock> ZOMBIE_TIER_1 = (tile) -> {
+		World world = tile.getWorld();
+		BlockPos pos = tile.getPos();
+		int x = pos.getX();
+		int y = pos.getY();
+		int z = pos.getZ();
+		if (tile.phase == 1) {
+			Vec3NT vec = new Vec3NT(0, 0, 0);
+			EntityZombie mob = new EntityZombie(world);
+			mob.setPositionAndRotation(x, y, z, 0, 0);
+			MobUtil.assignItemsToEntity(mob, MobUtil.slotPoolMelee, new Random());
+			MobUtil.assignItemsToEntity(mob, MobUtil.slotPoolTierArmor, new Random());
+			world.spawnEntity(mob);
+			world.setBlockToAir(pos);
+		}
+	};
+
+	public static Consumer<LogicBlock.TileEntityLogicBlock> ZOMBIE_TIER_2 = (tile) -> {
+		World world = tile.getWorld();
+		BlockPos pos = tile.getPos();
+		int x = pos.getX();
+		int y = pos.getY();
+		int z = pos.getZ();
+		if (tile.phase == 1) {
+			Vec3NT vec = new Vec3NT(0, 0, 0);
+			EntityZombie mob = new EntityZombie(world);
+			mob.setPositionAndRotation(x, y, z, 0, 0);
+			MobUtil.assignItemsToEntity(mob, MobUtil.slotPoolTierArmor, new Random());
+			MobUtil.assignItemsToEntity(mob, MobUtil.slotPoolMelee, new Random());
+			world.spawnEntity(mob);
+			world.setBlockToAir(pos);
 		}
 	};
 
@@ -299,9 +427,18 @@ public class LogicBlockActions {
 		actions.put("FODDER_WAVE", FODDER_WAVE);
 		actions.put("ABERRATOR", PHASE_ABERRATOR);
 		actions.put("COLLAPSE_ROOF_RAD_5", COLLAPSE_ROOF_RAD_5);
+		actions.put("COLLAPSE_ROOF_RAD_10", COLLAPSE_ROOF_RAD_10);
 		actions.put("PUZZLE_TEST", PUZZLE_TEST);
 		actions.put("MISSILE_STRIKE", MISSILE_STRIKE);
 		actions.put("IRRADIATE_ENTITIES_AOE", RAD_CONTAINMENT_SYSTEM);
+
+		//Mob Block Actions
+		actions.put("SKELETON_GUN_TIER_1", SKELETON_GUN_TIER_1);
+		actions.put("SKELETON_GUN_TIER_2", SKELETON_GUN_TIER_2);
+		actions.put("SKELETON_GUN_TIER_3", SKELETON_GUN_TIER_3);
+
+		actions.put("ZOMBIE_TIER_1", ZOMBIE_TIER_1);
+		actions.put("ZOMBIE_TIER_2", ZOMBIE_TIER_2);
 	}
 
 

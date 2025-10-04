@@ -364,20 +364,12 @@ public class HbmWorldGen implements IWorldGenerator {
             if (biome.getDefaultTemperature() > 1.8F) {
                 generateAStructure(world, rand, i, j, Barrel.INSTANCE, parseInt(CompatibilityConfig.barrelStructure.get(dimID)));
             }
-            if (!biome.canRain() && biome.getDefaultTemperature() >= 2F) {
-                if (rand.nextInt(2) == 0) {
-                    generateAStructure(world, rand, i, j, Vertibird.INSTANCE, parseInt(CompatibilityConfig.vertibirdStructure.get(dimID)));
-                } else {
-                    generateAStructure(world, rand, i, j, CrashedVertibird.INSTANCE, parseInt(CompatibilityConfig.vertibirdStructure.get(dimID)));
-                }
-            }
             if (biome.getDefaultTemperature() < 1F || biome.getDefaultTemperature() > 1.8F) {
                 generateAStructure(world, rand, i, j, Satellite.INSTANCE, parseInt(CompatibilityConfig.satelliteStructure.get(dimID)));
             }
             generateAStructure(world, rand, i, j, Spaceship.INSTANCE, parseInt(CompatibilityConfig.spaceshipStructure.get(dimID)));
             generateAStructure(world, rand, i, j, Bunker.INSTANCE, parseInt(CompatibilityConfig.bunkerStructure.get(dimID)));
             generateAStructure(world, rand, i, j, Silo.INSTANCE, parseInt(CompatibilityConfig.siloStructure.get(dimID)));
-            generateAStructure(world, rand, i, j, Factory.INSTANCE, parseInt(CompatibilityConfig.factoryStructure.get(dimID)));
             generateAStructure(world, rand, i, j, new Dud(), parseInt(CompatibilityConfig.dudStructure.get(dimID)));
             if (biome.getTempCategory() == Biome.TempCategory.WARM && biome.getTempCategory() != Biome.TempCategory.OCEAN)
                 generateSellafieldPool(world, rand, i, j, dimID);

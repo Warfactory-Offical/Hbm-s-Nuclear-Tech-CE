@@ -1,15 +1,15 @@
 package com.hbm.inventory.gui;
 
-import com.hbm.inventory.recipes.anvil.AnvilRecipes;
-import com.hbm.inventory.recipes.anvil.AnvilRecipes.AnvilConstructionRecipe;
-import com.hbm.inventory.recipes.anvil.AnvilRecipes.AnvilOutput;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.RecipesCommon.OreDictStack;
 import com.hbm.inventory.container.ContainerAnvil;
+import com.hbm.inventory.recipes.anvil.AnvilRecipes;
+import com.hbm.inventory.recipes.anvil.AnvilRecipes.AnvilConstructionRecipe;
+import com.hbm.inventory.recipes.anvil.AnvilRecipes.AnvilOutput;
 import com.hbm.lib.RefStrings;
-import com.hbm.packet.toserver.AnvilCraftPacket;
 import com.hbm.packet.PacketDispatcher;
+import com.hbm.packet.toserver.AnvilCraftPacket;
 import com.hbm.util.I18nUtil;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
@@ -125,11 +125,9 @@ public class GUIAnvil extends GuiContainer {
 		super.drawScreen(x, y, interp);
 		super.renderHoveredToolTip(x, y);
 
-		for(Object obj : this.inventorySlots.inventorySlots) {
-			Slot slot = (Slot) obj;
-
+		for(Slot obj : this.inventorySlots.inventorySlots) {
 			// if the mouse is over a slot, cancel
-			if(this.isPointInRegion(slot.xPos, slot.yPos, 16, 16, x, y) && slot.getHasStack()) {
+			if(this.isPointInRegion(obj.xPos, obj.yPos, 16, 16, x, y) && obj.getHasStack()) {
 				return;
 			}
 		}
@@ -142,6 +140,18 @@ public class GUIAnvil extends GuiContainer {
 				if(scroll < 0 && this.index < this.size) this.index++;
 			}
 		}
+	}
+	// Th3_Sl1ze: somehow using vanilla getSlotAtPosition never returns null even when it should..
+	private Slot getSlotAtPosition(int x, int y) {
+		for(int k = 0; k < this.inventorySlots.inventorySlots.size(); ++k) {
+			Slot slot = this.inventorySlots.inventorySlots.get(k);
+
+			if(this.isMouseOverSlot(slot, x, y)) {
+				return slot;
+			}
+		}
+
+		return null;
 	}
 	
 	@Override
@@ -256,8 +266,7 @@ public class GUIAnvil extends GuiContainer {
 				ItemStack input = ((ComparableStack) stack).toStack();
 				list.add(">" + input.getCount() + "x " + input.getDisplayName());
 				
-			} else if(stack instanceof OreDictStack) {
-				OreDictStack input = (OreDictStack) stack;
+			} else if(stack instanceof OreDictStack input) {
 				NonNullList<ItemStack> ores = OreDictionary.getOres(input.name);
 				
 				if(ores.size() > 0) {
@@ -294,8 +303,7 @@ public class GUIAnvil extends GuiContainer {
 				ItemStack input = ((ComparableStack) stack).toStack();
 				list.add(input.getDisplayName().toLowerCase());
 				
-			} else if(stack instanceof OreDictStack) {
-				OreDictStack input = (OreDictStack) stack;
+			} else if(stack instanceof OreDictStack input) {
 				NonNullList<ItemStack> ores = OreDictionary.getOres(input.name);
 				
 				if(ores.size() > 0) {
