@@ -35,6 +35,7 @@ import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -152,8 +153,12 @@ public class MachineCapacitor extends BlockContainer implements ILookOverlay, IP
     }
 
     @Override
-    public ArrayList<ItemStack> getDrops(IBlockAccess world, BlockPos blockPos, IBlockState state, int fortune) {
-        return IPersistentNBT.getDrops(world, blockPos, this);
+    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
+        return IPersistentNBT.getPickBlock(world, pos, state);
+    }
+
+    @Override
+    public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune) {
     }
 
     @Override
@@ -163,17 +168,25 @@ public class MachineCapacitor extends BlockContainer implements ILookOverlay, IP
 
     @Override
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        IPersistentNBT.restoreData(world, pos, stack);
+        IPersistentNBT.onBlockPlacedBy(world, pos, stack);
         world.setBlockState(pos, state.withProperty(FACING, EnumFacing.getDirectionFromEntityLiving(pos, placer)));
     }
 
     @Override
     public void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player) {
-        if(!player.capabilities.isCreativeMode) {
-            harvesters.set(player);
-            this.dropBlockAsItem(worldIn, pos, state, 0);
-            harvesters.set(null);
-        }
+//        if(!player.capabilities.isCreativeMode) {
+//            harvesters.set(player);
+//            this.dropBlockAsItem(worldIn, pos, state, 0);
+//            harvesters.set(null);
+//        }
+        // mlbv: wtf? why did you mutate harvesters?
+        IPersistentNBT.onBlockHarvested(worldIn, pos, player);
+    }
+
+    @Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+        IPersistentNBT.breakBlock(worldIn, pos, state);
+        super.breakBlock(worldIn, pos, state);
     }
 
     @Override
@@ -191,6 +204,7 @@ public class MachineCapacitor extends BlockContainer implements ILookOverlay, IP
         public long powerSent;
         public long lastPowerReceived;
         public long lastPowerSent;
+        private boolean destroyedByCreativePlayer = false;
 
         public TileEntityCapacitor() { }
 
@@ -306,6 +320,16 @@ public class MachineCapacitor extends BlockContainer implements ILookOverlay, IP
         @Override
         public boolean canConnect(ForgeDirection dir) {
             return dir == ForgeDirection.getOrientation(world.getBlockState(pos).getValue(FACING).getIndex());
+        }
+
+        @Override
+        public void setDestroyedByCreativePlayer() {
+            destroyedByCreativePlayer = true;
+        }
+
+        @Override
+        public boolean isDestroyedByCreativePlayer() {
+            return destroyedByCreativePlayer;
         }
 
         @Override

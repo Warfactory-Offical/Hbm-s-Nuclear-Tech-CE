@@ -2,15 +2,18 @@ package com.hbm.blocks.machine;
 
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.lib.ForgeDirection;
+import com.hbm.tileentity.IPersistentNBT;
 import com.hbm.tileentity.TileEntityProxyCombo;
 import com.hbm.tileentity.machine.oil.TileEntityMachineVacuumDistill;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 public class MachineVacuumDistill extends BlockDummyable {
@@ -39,6 +42,26 @@ public class MachineVacuumDistill extends BlockDummyable {
         this.makeExtra(world, x - dir.offsetX + 1, y, z - dir.offsetZ - 1);
         this.makeExtra(world, x - dir.offsetX - 1, y, z - dir.offsetZ + 1);
         this.makeExtra(world, x - dir.offsetX - 1, y, z - dir.offsetZ - 1);
+    }
+
+    @Override
+    public void onBlockHarvested(World world, BlockPos pos, IBlockState state, EntityPlayer player) {
+        IPersistentNBT.onBlockHarvested(world, pos, player);
+    }
+
+    @Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+        IPersistentNBT.breakBlock(worldIn, pos, state);
+        super.breakBlock(worldIn, pos, state);
+    }
+
+    @Override
+    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
+        return IPersistentNBT.getPickBlock(world, pos, state);
+    }
+
+    @Override
+    public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune) {
     }
 
     @Override

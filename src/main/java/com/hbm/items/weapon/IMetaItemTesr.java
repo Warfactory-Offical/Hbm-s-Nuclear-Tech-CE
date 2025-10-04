@@ -17,7 +17,8 @@ public interface IMetaItemTesr {
 
     int getSubitemCount();
 
-    String getName();
+    // mlbv: was getName(); renamed to prevent clash with IWorldNameable#getName
+    String getResourceLocationAsString();
 
     default void redirectModel() {
         for (int i = 1; i < getSubitemCount(); i++) {
@@ -29,7 +30,7 @@ public interface IMetaItemTesr {
 
             if(itemInsance == null)
                 return;
-            ModelLoader.setCustomModelResourceLocation(itemInsance, i, new ModelResourceLocation(getName(), "inventory"));
+            ModelLoader.setCustomModelResourceLocation(itemInsance, i, new ModelResourceLocation(getResourceLocationAsString(), "inventory"));
         }
     }
 

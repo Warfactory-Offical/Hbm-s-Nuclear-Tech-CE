@@ -79,7 +79,7 @@ public class ItemAmmoHIMARS extends Item implements IMetaItemTesr {
   }
 
   @Override
-  public String getName() {
+  public String getResourceLocationAsString() {
     return getRegistryName().toString();
   }
 

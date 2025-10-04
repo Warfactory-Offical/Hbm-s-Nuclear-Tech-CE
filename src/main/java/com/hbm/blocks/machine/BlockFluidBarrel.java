@@ -31,6 +31,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -39,15 +40,11 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
 public class BlockFluidBarrel extends BlockContainer implements ITooltipProvider, IPersistentInfoProvider, ICustomBlockItem {
-
-    private static final ThreadLocal<List<ItemStack>> HARVEST_DROPS = new ThreadLocal<>();
     public static boolean keepInventory;
     private int capacity;
 
@@ -162,33 +159,30 @@ public class BlockFluidBarrel extends BlockContainer implements ITooltipProvider
     }
 
     @Override
+    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
+        return IPersistentNBT.getPickBlock(world, pos, state);
+    }
+
+    @Override
+    public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune) {
+    }
+
+    @Override
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         if (!keepInventory)
             InventoryHelper.dropInventoryItems(worldIn, pos, worldIn.getTileEntity(pos));
+        IPersistentNBT.breakBlock(worldIn, pos, state);
         super.breakBlock(worldIn, pos, state);
     }
 
     @Override
-    public boolean removedByPlayer(@NotNull IBlockState state, World world, @NotNull BlockPos pos, @NotNull EntityPlayer player, boolean willHarvest) {
-        if (willHarvest) {
-            ArrayList<ItemStack> drops = IPersistentNBT.getDrops(world, pos, this);
-            HARVEST_DROPS.set(drops);
-        }
-        return super.removedByPlayer(state, world, pos, player, willHarvest);
-    }
-
-    @NotNull
-    @Override
-    public List<ItemStack> getDrops(@NotNull IBlockAccess world, @NotNull BlockPos pos, @NotNull IBlockState state, int fortune) {
-        List<ItemStack> drops = HARVEST_DROPS.get();
-        HARVEST_DROPS.remove();
-        return drops == null ? new ArrayList<>() : (ArrayList<ItemStack>) drops;
-    }
-
-    @Override
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack) {
-        super.onBlockPlacedBy(world, pos, state, player, stack);
-        IPersistentNBT.restoreData(world, pos, stack);
+        IPersistentNBT.onBlockPlacedBy(world, pos, stack);
+    }
+
+    @Override
+    public void onBlockHarvested(World world, BlockPos pos, IBlockState state, EntityPlayer player) {
+        IPersistentNBT.onBlockHarvested(world, pos, player);
     }
 
     @Override

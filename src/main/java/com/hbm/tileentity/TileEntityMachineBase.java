@@ -22,7 +22,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorldNameable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.FluidTank;
@@ -40,6 +39,7 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase impleme
     private boolean enablefluidWrapper = false;
     private boolean enableEnergyWrapper = false;
     private String customName;
+    private boolean destroyedByCreativePlayer = false;
 
     @Deprecated
     public TileEntityMachineBase(int scount) {
@@ -275,6 +275,14 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase impleme
                 block2.neighborChanged(world.getBlockState(offsetPos), world, offsetPos, this.getBlockType(), this.getPos());
             }
         }
+    }
+
+    public void setDestroyedByCreativePlayer() {
+        destroyedByCreativePlayer = true;
+    }
+
+    public boolean isDestroyedByCreativePlayer() {
+        return destroyedByCreativePlayer;
     }
 
     // TODO: Consume air from connected tanks if available
