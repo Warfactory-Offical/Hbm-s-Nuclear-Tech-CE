@@ -296,8 +296,8 @@ public class ModBlocks {
 
 	public static final Block deco_computer = new BlockDecoModel(Material.IRON, SoundType.METAL, "deco_computer", BlockEnums.DecoComputerEnum.class, true, false,
 			new ResourceLocation(RefStrings.MODID, "models/blocks/puter.obj")).setBlockBoundsTo(.125F, 0F, 0F, .875F, .875F, .625F).setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);
-	public static final Block filing_cabinet = new BlockDecoContainer(Material.IRON, SoundType.METAL, "filing_cabinet", BlockEnums.DecoCabinetEnum.class, true, false,
-			TileEntityFileCabinet.class).setBlockBoundsTo(.1875F, 0F, 0F, .8125F, 1F, .75F).setCreativeTab(MainRegistry.blockTab).setHardness(10.0F).setResistance(15.0F);
+	public static final Block filing_cabinet = new BlockDecoContainer<>(Material.IRON, SoundType.METAL, "filing_cabinet", BlockEnums.DecoCabinetEnum.class, true, false,
+            TileEntityFileCabinet::new).setBlockBoundsTo(.1875F, 0F, 0F, .8125F, 1F, .75F).setCreativeTab(MainRegistry.blockTab).setHardness(10.0F).setResistance(15.0F);
 
 	public static final Block brick_dungeon = new BlockBase(Material.ROCK, "brick_dungeon").setCreativeTab(MainRegistry.blockTab).setHardness(15.0F).setResistance(360.0F);
 	public static final Block brick_dungeon_flat = new BlockBase(Material.ROCK, "brick_dungeon_flat").setCreativeTab(MainRegistry.blockTab).setHardness(15.0F).setResistance(360.0F);
