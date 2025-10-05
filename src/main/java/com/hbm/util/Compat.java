@@ -61,4 +61,9 @@ public class Compat {
 
 		return stacks;
 	}
+
+    public static final class ModIds {
+        public static final String GROOVY_SCRIPT = "groovyscript";
+        public static final String OPEN_COMPUTERS = "opencomputers";
+    }
 }

@@ -54,10 +54,11 @@ dependencies {
     // in case anyone wants to run obfuscated client/server: comment the two lines below and uncomment the line above
     implementation rfg.deobf("curse.maven:inventory-bogosorter-632327:6717232")
     implementation("com.cleanroommc:modularui:2.5.0-rc5") { transitive false }
+    // if you saw "GroovyScript classes definition in runConfig is deprecated!", delete folder "groovy" in the working directory
+    implementation rfg.deobf("curse.maven:groovyscript-687577:6695118")
 
     // Don't forget to restore these if you tweaked the runtime mods for testing!
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:mixin-booter-419286:6344449")
-    runtimeOnlyNonPublishable rfg.deobf("curse.maven:groovyscript-687577:5562296")
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:flare-692142:6598523")
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:ctm-267602:2915363")
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:gregtech-ce-unofficial-557242:5519022")
