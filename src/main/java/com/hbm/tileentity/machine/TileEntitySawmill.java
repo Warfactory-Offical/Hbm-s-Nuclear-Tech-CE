@@ -15,8 +15,6 @@ import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.ItemStackUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import io.netty.buffer.ByteBuf;
-import java.util.HashMap;
-import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -36,6 +34,9 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.List;
 
 @AutoRegister
 public class TileEntitySawmill extends TileEntityMachineBase implements ITickable {
@@ -228,7 +229,7 @@ public class TileEntitySawmill extends TileEntityMachineBase implements ITickabl
 
     @Override
     public boolean isItemValidForSlot(int i, ItemStack stack) {
-        return i == 0 && inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(1).isEmpty() && inventory.getStackInSlot(2).isEmpty() && inventory.getStackInSlot(1).getCount() == 1 && getOutput(stack).isEmpty();
+        return stack != null && i == 0 && inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(1).isEmpty() && inventory.getStackInSlot(2).isEmpty() && stack.getCount() == 1 && getOutput(stack) != null;
     }
 
     @Override
@@ -258,7 +259,7 @@ public class TileEntitySawmill extends TileEntityMachineBase implements ITickabl
             for(IRecipe recipe : CraftingManager.REGISTRY) {
                 if(recipe.matches(craftingInventory, world)) {
                     ItemStack out = recipe.getCraftingResult(craftingInventory);
-                    if(out.isEmpty()) {
+                    if(!out.isEmpty()) {
                         out = out.copy(); //for good measure
                         out.setCount((int) (out.getCount() * 6 / 4)); //4 planks become 6
                         return out;

@@ -62,7 +62,7 @@ public class ModBlocks {
 	//Generic blocks
 	public static final Block asphalt = new BlockSpeedy(Material.ROCK, "asphalt", 1.5).setCreativeTab(MainRegistry.blockTab).setHardness(15.0F).setResistance(120.0F);
 	public static final Block asphalt_light = new BlockSpeedy(Material.ROCK, "asphalt_light", 1.5).setCreativeTab(MainRegistry.blockTab).setLightLevel(1F).setHardness(15.0F).setResistance(120.0F);
-	public static final Block reinforced_glass = new BlockNTMGlass(Material.GLASS, BlockRenderLayer.CUTOUT, false, true, "reinforced_glass").setCreativeTab(MainRegistry.blockTab).setLightOpacity(0).setHardness(15.0F).setResistance(25.0F);
+	public static final Block reinforced_glass = new BlockNTMGlass(Material.GLASS, BlockRenderLayer.CUTOUT, false, true, "reinforced_glass").setCreativeTab(MainRegistry.blockTab).setLightOpacity(0).setHardness(0.3F).setResistance(25.0F);
 	public static final Block reinforced_light = new BlockRadResistant(Material.ROCK, "reinforced_light").setCreativeTab(MainRegistry.blockTab).setLightOpacity(15).setLightLevel(1.0F).setHardness(15.0F).setResistance(80.0F);
 	public static final Block reinforced_lamp_off = new ReinforcedLamp(Material.ROCK, false, "reinforced_lamp_off").setCreativeTab(MainRegistry.blockTab).setHardness(15.0F).setResistance(80.0F);
 	public static final Block reinforced_lamp_on = new ReinforcedLamp(Material.ROCK, true, "reinforced_lamp_on").setCreativeTab(null).setHardness(15.0F).setResistance(80.0F);

@@ -9,6 +9,7 @@ import com.hbm.inventory.recipes.BlastFurnaceRecipes;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.RTGUtil;
+import com.hbm.util.Tuple;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
@@ -142,38 +143,63 @@ public class TileEntityDiFurnaceRTG extends TileEntityMachineBase implements ITi
     }
 
     public boolean canProcess() {
-        ItemStack recipeResult = BlastFurnaceRecipes.getOutput(inventory.getStackInSlot(0), inventory.getStackInSlot(1));
-        if (recipeResult.isEmpty()) return false;
+        ItemStack in0 = inventory.getStackInSlot(0);
+        ItemStack in1 = inventory.getStackInSlot(1);
+        if (in0.isEmpty() || in1.isEmpty()) return false;
+        if (!hasPower()) return false;
+
+        Tuple.Triplet<Integer, Integer, ItemStack> match = BlastFurnaceRecipes.getRequiredCounts(in0, in1);
+        if (match == null) return false;
+
+        int req0 = match.getX();
+        int req1 = match.getY();
+        if (in0.getCount() < req0 || in1.getCount() < req1) return false;
+
+        ItemStack recipeResult = match.getZ();
         ItemStack outputStack = inventory.getStackInSlot(2);
-        if (outputStack.isEmpty()) return true;
+        if (outputStack.isEmpty()) {
+            return recipeResult.getCount() <= inventory.getSlotLimit(2) && recipeResult.getCount() <= recipeResult.getMaxStackSize();
+        }
         if (!outputStack.isItemEqual(recipeResult)) return false;
         int newCount = outputStack.getCount() + recipeResult.getCount();
         return newCount <= inventory.getSlotLimit(2) && newCount <= outputStack.getMaxStackSize();
     }
 
     private void processItem() {
-        if (canProcess()) {
-            ItemStack recipeResult = BlastFurnaceRecipes.getOutput(inventory.getStackInSlot(0), inventory.getStackInSlot(1));
+        if (!canProcess()) return;
 
-            ItemStack outputStack = inventory.getStackInSlot(2);
-            if (outputStack.isEmpty()) {
-                inventory.setStackInSlot(2, recipeResult.copy());
-            } else if (outputStack.isItemEqual(recipeResult)) {
-                ItemStack newOutput = outputStack.copy();
-                newOutput.grow(recipeResult.getCount());
-                inventory.setStackInSlot(2, newOutput);
-            }
+        ItemStack in0 = inventory.getStackInSlot(0);
+        ItemStack in1 = inventory.getStackInSlot(1);
+        Tuple.Triplet<Integer, Integer, ItemStack> match = BlastFurnaceRecipes.getRequiredCounts(in0, in1);
+        if (match == null) return;
 
-            for (int i = 0; i < 2; i++) {
-                ItemStack inputStack = inventory.getStackInSlot(i);
-                if (!inputStack.isEmpty()) {
-                    ItemStack newInput = inputStack.copy();
-                    newInput.shrink(1);
-                    inventory.setStackInSlot(i, newInput);
-                }
-            }
-            this.markDirty();
+        int req0 = match.getX();
+        int req1 = match.getY();
+        ItemStack recipeResult = match.getZ();
+
+        ItemStack outputStack = inventory.getStackInSlot(2);
+        if (outputStack.isEmpty()) {
+            inventory.setStackInSlot(2, recipeResult.copy());
+        } else if (outputStack.isItemEqual(recipeResult)) {
+            ItemStack newOutput = outputStack.copy();
+            newOutput.grow(recipeResult.getCount());
+            inventory.setStackInSlot(2, newOutput);
         }
+
+        if (!in0.isEmpty()) {
+            ItemStack new0 = in0.copy();
+            new0.shrink(req0);
+            if (new0.getCount() <= 0) new0 = ItemStack.EMPTY;
+            inventory.setStackInSlot(0, new0);
+        }
+        if (!in1.isEmpty()) {
+            ItemStack new1 = in1.copy();
+            new1.shrink(req1);
+            if (new1.getCount() <= 0) new1 = ItemStack.EMPTY;
+            inventory.setStackInSlot(1, new1);
+        }
+
+        this.markDirty();
     }
 
     public boolean hasPower() {

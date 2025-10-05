@@ -183,9 +183,9 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_difurnace_off), ALLOY);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_difurnace_rtg_off), ALLOY);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_sawmill), SAWMILL);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_boiler), BOILER);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_solar_boiler), BOILER);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_industrial_boiler), BOILER);
-        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_boiler), BOILER);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.rbmk_heater), BOILER);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_reactor_breeding), BREEDER);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_centrifuge), CENTRIFUGE);

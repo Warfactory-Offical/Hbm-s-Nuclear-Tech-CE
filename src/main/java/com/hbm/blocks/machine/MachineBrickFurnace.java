@@ -58,31 +58,15 @@ public class MachineBrickFurnace extends BlockContainerBakeable {
     @Override
     public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
         super.onBlockAdded(worldIn, pos, state);
-        if (!keepInventory) {
-            this.setDefaultDirection(worldIn, pos, state);
-        }
+    }
+
+    @Override
+    public Item getItemDropped(IBlockState state, Random rand, int fortune) {
+        return Item.getItemFromBlock(ModBlocks.machine_furnace_brick_off);
     }
     @Override
     public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
         return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
-    }
-
-    private void setDefaultDirection(World world, BlockPos pos, IBlockState state) {
-        if (!world.isRemote) {
-            IBlockState nZ = world.getBlockState(pos.north());
-            IBlockState pZ = world.getBlockState(pos.south());
-            IBlockState nX = world.getBlockState(pos.west());
-            IBlockState pX = world.getBlockState(pos.east());
-
-            EnumFacing facing = state.getValue(FACING);
-
-            if (nZ.isFullBlock() && !pZ.isFullBlock()) facing = EnumFacing.SOUTH;
-            if (pZ.isFullBlock() && !nZ.isFullBlock()) facing = EnumFacing.NORTH;
-            if (nX.isFullBlock() && !pX.isFullBlock()) facing = EnumFacing.EAST;
-            if (pX.isFullBlock() && !nX.isFullBlock()) facing = EnumFacing.WEST;
-
-            world.setBlockState(pos, state.withProperty(FACING, facing), 2);
-        }
     }
 
     @Override

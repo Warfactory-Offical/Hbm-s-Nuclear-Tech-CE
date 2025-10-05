@@ -75,15 +75,9 @@ public class ContainerMachinePress extends Container {
     @SideOnly(Side.CLIENT)
     public void updateProgressBar(int id, int data) {
         switch (id) {
-            case 0:
-                this.press.speed = data;
-                break;
-            case 1:
-                this.press.burnTime = data;
-                break;
-            case 2:
-                this.press.progress = data;
-                break;
+            case 0 -> this.press.speed = data;
+            case 1 -> this.press.burnTime = data;
+            case 2 -> this.press.progress = data;
         }
     }
 
@@ -102,30 +96,30 @@ public class ContainerMachinePress extends Container {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (index < machineSlots) { // From machine to player
+            if (index < machineSlots) {
                 if (!this.mergeItemStack(itemstack1, machineSlots, this.inventorySlots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
                 slot.onSlotChange(itemstack1, itemstack);
             } else {
-                if (this.press.isItemValidForSlot(0, itemstack1)) { // Fuel
-                    if (!this.mergeItemStack(itemstack1, 0, 1, false)) {
+                boolean moved = this.press.isItemValidForSlot(0, itemstack1) && this.mergeItemStack(itemstack1, 0, 1, false);
+
+                if (!itemstack1.isEmpty() && this.press.isItemValidForSlot(1, itemstack1) && this.mergeItemStack(itemstack1, 1, 2, false)) {
+                    moved = true;
+                }
+
+                if (!itemstack1.isEmpty() && this.press.isItemValidForSlot(2, itemstack1) && this.mergeItemStack(itemstack1, 2, 3, false)) {
+                    moved = true;
+                }
+
+                if (!moved) {
+                    if (index < machineSlots + 27) {
+                        if (!this.mergeItemStack(itemstack1, machineSlots + 27, machineSlots + 36, false)) {
+                            return ItemStack.EMPTY;
+                        }
+                    } else if (index < machineSlots + 36 && !this.mergeItemStack(itemstack1, machineSlots, machineSlots + 27, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (this.press.isItemValidForSlot(1, itemstack1)) { // Stamp
-                    if (!this.mergeItemStack(itemstack1, 1, 2, false)) {
-                        return ItemStack.EMPTY;
-                    }
-                } else if (this.press.isItemValidForSlot(2, itemstack1)) { // Input
-                    if (!this.mergeItemStack(itemstack1, 2, 3, false)) {
-                        return ItemStack.EMPTY;
-                    }
-                } else if (index < machineSlots + 27) {
-                    if (!this.mergeItemStack(itemstack1, machineSlots + 27, machineSlots + 36, false)) {
-                        return ItemStack.EMPTY;
-                    }
-                } else if (index < machineSlots + 36 && !this.mergeItemStack(itemstack1, machineSlots, machineSlots + 27, false)) {
-                    return ItemStack.EMPTY;
                 }
             }
 

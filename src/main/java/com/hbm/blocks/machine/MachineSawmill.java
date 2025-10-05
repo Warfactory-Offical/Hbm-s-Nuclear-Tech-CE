@@ -118,7 +118,7 @@ public class MachineSawmill extends BlockDummyable implements ILookOverlay, IToo
                 return true;
 
             } else {
-                if(sawmill.inventory.getStackInSlot(0).isEmpty() && !player.getHeldItem(hand).isEmpty() && sawmill.getOutput(player.getHeldItem(hand)) != null) {
+                if(sawmill.inventory.getStackInSlot(0).isEmpty() && !player.getHeldItem(hand).isEmpty() && !(sawmill.getOutput(player.getHeldItem(hand)).isEmpty())) {
                     sawmill.inventory.setStackInSlot(0, player.getHeldItem(hand).copy());
                     sawmill.inventory.getStackInSlot(0).setCount(1);
                     player.getHeldItem(hand).shrink(1);
