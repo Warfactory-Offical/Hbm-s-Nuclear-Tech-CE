@@ -303,8 +303,8 @@ public class TileEntityMachineBattery extends TileEntityMachineBase implements I
 	@Override
 	public long getMaxPower() {
 
-		if(bufferedMax == 0) {
-			bufferedMax = ((MachineBattery)world.getBlockState(pos).getBlock()).getMaxPower();
+		if(bufferedMax == 0 && world.getBlockState(pos).getBlock() instanceof MachineBattery battery) {
+			bufferedMax = battery.getMaxPower();
 		}
 
 		return bufferedMax;
