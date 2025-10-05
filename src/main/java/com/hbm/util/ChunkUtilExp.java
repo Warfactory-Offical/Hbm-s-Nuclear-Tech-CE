@@ -491,10 +491,8 @@ public final class ChunkUtilExp implements IWorldEventListener {
     @ThreadSafeMethod
     public static void copyEBS(boolean hasSky, @NotNull ExtendedBlockStorage src, @NotNull ExtendedBlockStorage dst) {
         dst.data = copyOf(src.getData());
-        if (!(src instanceof SubChunkSnapshot)) {
-            dst.blockLight = new NibbleArray(src.getBlockLight().getData().clone());
-            dst.skyLight = hasSky ? new NibbleArray(src.getSkyLight().getData().clone()) : null;
-        }
+        dst.blockLight = new NibbleArray(src.getBlockLight().getData().clone());
+        dst.skyLight = hasSky ? new NibbleArray(src.getSkyLight().getData().clone()) : null;
         dst.blockRefCount = src.blockRefCount;
         dst.tickRefCount = src.tickRefCount;
     }

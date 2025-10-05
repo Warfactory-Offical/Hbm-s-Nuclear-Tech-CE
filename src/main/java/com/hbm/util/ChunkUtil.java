@@ -494,12 +494,10 @@ public final class ChunkUtil {
      * Internal helper: copy block/skylight nibble arrays, palette+storage and ref counts from
      * {@code src} to {@code dst}.
      */
-    private static void copyEBS(boolean hasSky, @NotNull ExtendedBlockStorage src, @NotNull ExtendedBlockStorage dst) {
+    public static void copyEBS(boolean hasSky, @NotNull ExtendedBlockStorage src, @NotNull ExtendedBlockStorage dst) {
         dst.data = copyOf(src.getData());
-        if (!(src instanceof SubChunkSnapshot)) {
-            dst.blockLight = new NibbleArray(src.getBlockLight().getData().clone());
-            dst.skyLight = hasSky ? new NibbleArray(src.getSkyLight().getData().clone()) : null;
-        }
+        dst.blockLight = new NibbleArray(src.getBlockLight().getData().clone());
+        dst.skyLight = hasSky ? new NibbleArray(src.getSkyLight().getData().clone()) : null;
         dst.blockRefCount = src.blockRefCount;
         dst.tickRefCount = src.tickRefCount;
     }
