@@ -32,7 +32,7 @@ public class MachineCondenserPowered extends BlockDummyable implements ILookOver
 			return new TileEntityCondenserPowered();
 
 		if(meta >= 8)
-			return new TileEntityProxyCombo(false, false, true);
+			return new TileEntityProxyCombo(false, true, true);
 
 		return null;
 	}
