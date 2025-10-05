@@ -45,7 +45,12 @@ public class HazardData {
 		this.mutexBits = mutex;
 		return this;
 	}
-	
+
+	public HazardData setOverride(final boolean override) {
+		this.doesOverride = override;
+		return this;
+	}
+
 	public int getMutex() {
 		return mutexBits;
 	}

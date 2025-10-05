@@ -2,6 +2,7 @@ package com.hbm.integration.groovy;
 
 import com.cleanroommc.groovyscript.api.GroovyPlugin;
 import com.cleanroommc.groovyscript.compat.mods.GroovyContainer;
+import com.cleanroommc.groovyscript.compat.mods.GroovyPropertyContainer;
 import com.hbm.lib.RefStrings;
 import com.hbm.util.Compat;
 import net.minecraftforge.fml.common.Optional;
@@ -20,7 +21,11 @@ public class GroovyScriptModule implements GroovyPlugin {
     }
 
     @Override
-    public void onCompatLoaded(GroovyContainer<?> groovyContainer) {
+    public GroovyPropertyContainer createGroovyPropertyContainer() {
+        return new HbmGroovyPropertyContainer();
+    }
 
+    @Override
+    public void onCompatLoaded(GroovyContainer<?> groovyContainer) {
     }
 }

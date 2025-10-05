@@ -24,6 +24,7 @@ import com.hbm.entity.projectile.EntityBurningFOEQ;
 import com.hbm.events.CheckLadderEvent;
 import com.hbm.events.InventoryChangedEvent;
 import com.hbm.handler.*;
+import com.hbm.integration.groovy.HbmGroovyPropertyContainer;
 import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.hazard.HazardSystem;
@@ -113,6 +114,7 @@ import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.event.terraingen.OreGenEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -1277,6 +1279,10 @@ public class ModEventHandler {
                 if(hasSent) {
                     PacketDispatcher.wrapper.sendTo(new SerializableRecipePacket(true), player);
                 }
+            }
+
+            if (Loader.isModLoaded(Compat.ModIds.GROOVY_SCRIPT)) {
+                HbmGroovyPropertyContainer.sendRecipeOverridesToPlayer(player);
             }
         }
     }
