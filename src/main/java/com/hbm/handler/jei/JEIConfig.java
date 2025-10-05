@@ -330,7 +330,7 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeClickArea(GUIPASource.class, 75, 35, 82-75, 43-35, PA);
         registry.addRecipeClickArea(GUIMachineExposureChamber.class, 36, 40, 76-36, 48-40, EXPOSURE);
         registry.addRecipeClickArea(GUIRadiolysis.class, 71, 35, 99-71, 50-35, RADIOLYSIS);
-        registry.addRecipeClickArea(GUIFurnaceCombo.class, 49, 44, 18, 18, JEIConfig.COMBINATION);
+        registry.addRecipeClickArea(GUIFurnaceCombo.class, 54, 55, 17, 17, JEIConfig.COMBINATION);
 
         IRecipeTransferRegistry transferRegistry = registry.getRecipeTransferRegistry();
         transferRegistry.addRecipeTransferHandler(new ExposureChamberTransferInfo());
