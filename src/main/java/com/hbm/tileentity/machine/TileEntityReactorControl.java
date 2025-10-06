@@ -30,7 +30,7 @@ import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")})
+@Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
 @AutoRegister
 public class TileEntityReactorControl extends TileEntityMachineBase implements IControlReceiver, IGUIProvider, ITickable, SimpleComponent, CompatHandler.OCComponent {
 
@@ -245,25 +245,25 @@ public class TileEntityReactorControl extends TileEntityMachineBase implements I
 
     // do some opencomputer stuff
     @Override
-    @Optional.Method(modid = "OpenComputers")
+    @Optional.Method(modid = "opencomputers")
     public String getComponentName() {
         return "reactor_control";
     }
 
     @Callback(direct = true)
-    @Optional.Method(modid = "OpenComputers")
+    @Optional.Method(modid = "opencomputers")
     public Object[] isLinked(Context context, Arguments args) {
         return new Object[] {isLinked};
     }
 
     @Callback(direct = true)
-    @Optional.Method(modid = "OpenComputers")
+    @Optional.Method(modid = "opencomputers")
     public Object[] getReactor(Context context, Arguments args) {
         return new Object[] {getDisplayData()};
     }
 
     @Callback(direct = true, limit = 4)
-    @Optional.Method(modid = "OpenComputers")
+    @Optional.Method(modid = "opencomputers")
     public Object[] setParams(Context context, Arguments args) { //i hate my life
         int newFunction = args.checkInteger(0);
         double newMaxHeat = args.checkDouble(1);
@@ -279,7 +279,7 @@ public class TileEntityReactorControl extends TileEntityMachineBase implements I
     }
 
     @Callback(direct = true)
-    @Optional.Method(modid = "OpenComputers")
+    @Optional.Method(modid = "opencomputers")
     public Object[] getParams(Context context, Arguments args) {
         return new Object[] {function.ordinal(), heatUpper, heatLower, levelUpper, levelLower};
     }

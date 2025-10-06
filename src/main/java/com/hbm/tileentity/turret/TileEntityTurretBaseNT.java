@@ -971,28 +971,28 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 	// This is a large compat, so I have to leave comments to know what I'm doing
 
 	@Override
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public String getComponentName() {
 		return "ntm_turret";
 	}
 
 	// On/Off
 	@Callback(direct = true, limit = 4)
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] setActive(Context context, Arguments args) {
 		this.isOn = args.checkBoolean(0);
 		return new Object[] {};
 	}
 
 	@Callback(direct = true)
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] isActive(Context context, Arguments args) {
 		return new Object[] {this.isOn};
 	}
 
 	// Energy information
 	@Callback(direct = true)
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] getEnergyInfo(Context context, Arguments args) {
 		return new Object[] {this.getPower(), this.getMaxPower()};
 	}
@@ -1001,7 +1001,7 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 	// Whitelist Control //
 	///////////////////////
 	@Callback(direct = true)
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] getWhitelisted(Context context, Arguments args) {
 		if(inventory.getStackInSlot(0).getItem() == ModItems.turret_chip) {
 			String[] array = ItemTurretBiometry.getNames(inventory.getStackInSlot(0));
@@ -1011,7 +1011,7 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 	}
 
 	@Callback(direct = true)
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] addWhitelist(Context context, Arguments args) {
 		if(this.getWhitelist() != null) {
 			List<String> names = this.getWhitelist();
@@ -1023,7 +1023,7 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 	}
 
 	@Callback(direct = true)
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] removeWhitelist(Context context, Arguments args) {
 		List<String> names = this.getWhitelist();
 		if(!names.contains(args.checkString(0)))
@@ -1036,7 +1036,7 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 	// Targeting Control //
 	///////////////////////
 	@Callback(direct = true, limit = 4)
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] setTargeting(Context context, Arguments args) {
 		this.targetPlayers = args.checkBoolean(0);
 		this.targetAnimals = args.checkBoolean(1);
@@ -1046,13 +1046,13 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 	}
 
 	@Callback(direct = true)
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] getTargeting(Context context, Arguments args) {
 		return new Object[] {this.targetPlayers, this.targetAnimals, this.targetMobs, this.targetMachines};
 	}
 
 	@Callback(direct = true)
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] hasTarget(Context context, Arguments args) {
 		return new Object[] {this.target != null};
 	}
@@ -1062,25 +1062,25 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 	///////////////////
 
 	@Callback(direct = true)
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] getAngle(Context context, Arguments args) {
 		return new Object[] {Math.toDegrees(this.rotationPitch), Math.toDegrees(this.rotationYaw)};
 	}
 
 	@Callback(direct = true)
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] isAligned(Context context, Arguments args) {
 		return new Object[] {this.aligned};
 	}
 
 	@Override
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public boolean canConnectNode(EnumFacing side) {
 		return side == EnumFacing.DOWN;
 	}
 
 	@Override
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public String[] methods() { // :vomit:
 		return new String[] {
 				"setActive",
@@ -1098,7 +1098,7 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 	}
 
 	@Override
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] invoke(String method, Context context, Arguments args) throws Exception {
 		switch (method) {
 			case "setActive":

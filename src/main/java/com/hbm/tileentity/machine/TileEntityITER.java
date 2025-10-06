@@ -48,7 +48,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-@Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")})
+@Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
 @AutoRegister
 public class TileEntityITER extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IFluidStandardTransceiver, IGUIProvider, IFluidCopiable, CompatHandler.OCComponent {
 
@@ -516,32 +516,32 @@ public class TileEntityITER extends TileEntityMachineBase implements ITickable, 
 	}
 
 	@Override
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public String getComponentName() {
 		return "ntm_fusion";
 	}
 
 	@Callback(direct = true)
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] getEnergyInfo(Context context, Arguments args) {
 		return new Object[] {getPower(), getMaxPower()};
 	}
 
 	@Callback(direct = true)
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] isActive(Context context, Arguments args) {
 		return new Object[] {isOn};
 	}
 
 	@Callback(direct = true, limit = 4)
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] setActive(Context context, Arguments args) {
 		isOn = args.checkBoolean(0);
 		return new Object[] {};
 	}
 
 	@Callback(direct = true)
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] getFluid(Context context, Arguments args) {
 		return new Object[] {
 				tanks[0].getFill(), tanks[0].getMaxFill(),
@@ -551,13 +551,13 @@ public class TileEntityITER extends TileEntityMachineBase implements ITickable, 
 	}
 
 	@Callback(direct = true)
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] getPlasmaTemp(Context context, Arguments args) {
 		return new Object[] {plasma.getTankType().temperature};
 	}
 
 	@Callback(direct = true)
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] getMaxTemp(Context context, Arguments args) {
 		if (!inventory.getStackInSlot(3).isEmpty() && (inventory.getStackInSlot(3).getItem() instanceof ItemFusionShield))
 			return new Object[] {((ItemFusionShield) inventory.getStackInSlot(3).getItem()).maxTemp};
@@ -565,7 +565,7 @@ public class TileEntityITER extends TileEntityMachineBase implements ITickable, 
 	}
 
 	@Callback(direct = true)
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] getBlanketDamage(Context context, Arguments args) {
 		if (!inventory.getStackInSlot(3).isEmpty() && (inventory.getStackInSlot(3).getItem() instanceof ItemFusionShield))
 			return new Object[]{ItemFusionShield.getShieldDamage(inventory.getStackInSlot(3)), ((ItemFusionShield)inventory.getStackInSlot(3).getItem()).maxDamage};
@@ -573,7 +573,7 @@ public class TileEntityITER extends TileEntityMachineBase implements ITickable, 
 	}
 
 	@Override
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public String[] methods() {
 		return new String[] {
 				"getEnergyInfo",
@@ -587,7 +587,7 @@ public class TileEntityITER extends TileEntityMachineBase implements ITickable, 
 	}
 
 	@Override
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] invoke(String method, Context context, Arguments args) throws Exception {
 		switch (method) {
 			case ("getEnergyInfo"):

@@ -363,41 +363,41 @@ public class MachineCapacitor extends BlockContainer implements ILookOverlay, IP
 
         // opencomputer
         @Override
-        @Optional.Method(modid = "OpenComputers")
+        @Optional.Method(modid = "opencomputers")
         public String getComponentName() {
             return "capacitor";
         }
 
         @Callback(direct = true)
-        @Optional.Method(modid = "OpenComputers")
+        @Optional.Method(modid = "opencomputers")
         public Object[] getEnergy(Context context, Arguments args) {
             return new Object[] {power};
         }
 
         @Callback(direct = true)
-        @Optional.Method(modid = "OpenComputers")
+        @Optional.Method(modid = "opencomputers")
         public Object[] getMaxEnergy(Context context, Arguments args) {
             return new Object[] {maxPower};
         }
 
         @Callback(direct = true)
-        @Optional.Method(modid = "OpenComputers")
+        @Optional.Method(modid = "opencomputers")
         public Object[] getEnergySent(Context context, Arguments args) {
             return new Object[] {lastPowerReceived};
         }
 
         @Callback(direct = true)
-        @Optional.Method(modid = "OpenComputers")
+        @Optional.Method(modid = "opencomputers")
         public Object[] getEnergyReceived(Context context, Arguments args) { return new Object[] {lastPowerSent}; }
 
         @Callback(direct = true)
-        @Optional.Method(modid = "OpenComputers")
+        @Optional.Method(modid = "opencomputers")
         public Object[] getInfo(Context context, Arguments args) {
             return new Object[] {power, maxPower, lastPowerReceived, lastPowerSent};
         }
 
         @Override
-        @Optional.Method(modid = "OpenComputers")
+        @Optional.Method(modid = "opencomputers")
         public String[] methods() {
             return new String[] {
                     "getEnergy",
@@ -408,7 +408,7 @@ public class MachineCapacitor extends BlockContainer implements ILookOverlay, IP
             };
         }
         @Override
-        @Optional.Method(modid = "OpenComputers")
+        @Optional.Method(modid = "opencomputers")
         public Object[] invoke(String method, Context context, Arguments args) throws Exception {
             switch(method) {
                 case ("getEnergy"):
