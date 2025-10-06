@@ -11,7 +11,7 @@ public class NTMLinkGenerator extends BasicLinkGenerator {
 
     @Override
     protected String version() {
-        return "v"+ Tags.MOD_ID;
+        return "v2.0.3";
     }
 
     @Override

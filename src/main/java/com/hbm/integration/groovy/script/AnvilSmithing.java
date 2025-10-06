@@ -15,7 +15,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
-@RegistryDescription(linkGenerator = Tags.MOD_ID)
+@RegistryDescription(linkGenerator = "hbm")
 public class AnvilSmithing extends StandardListRegistry<AnvilSmithingRecipe> {
 
     @Override

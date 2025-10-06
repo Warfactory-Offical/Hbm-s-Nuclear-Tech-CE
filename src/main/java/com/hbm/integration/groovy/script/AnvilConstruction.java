@@ -16,7 +16,7 @@ import net.minecraft.item.ItemStack;
 import javax.annotation.Nullable;
 import java.util.*;
 
-@RegistryDescription(linkGenerator = Tags.MOD_ID)
+@RegistryDescription(linkGenerator = "hbm")
 public class AnvilConstruction extends StandardListRegistry<AnvilRecipes.AnvilConstructionRecipe> {
     @Override
     public Collection<AnvilRecipes.AnvilConstructionRecipe> getRecipes() {
