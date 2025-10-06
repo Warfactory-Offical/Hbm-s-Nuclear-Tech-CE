@@ -103,4 +103,38 @@ public final class BakedModelTransforms {
 
         return new ItemCameraTransforms(thirdPerson, thirdPerson, firstPerson, firstPerson, head, gui, ground, fixed);
     }
+
+    public static ItemCameraTransforms defaultItemTransforms() {
+        ItemTransformVec3f thirdPerson = new ItemTransformVec3f(
+                new Vector3f(0, 0, 0),
+                new Vector3f(0, 3f / 16f, 1f / 16f),
+                new Vector3f(0.55f, 0.55f, 0.55f)
+        );
+
+        ItemTransformVec3f firstPerson = new ItemTransformVec3f(
+                new Vector3f(0, -90, 25),
+                new Vector3f(1.13f / 16f, 3.2f / 16f, 1.13f / 16f),
+                new Vector3f(0.68f, 0.68f, 0.68f)
+        );
+
+        ItemTransformVec3f ground = new ItemTransformVec3f(
+                new Vector3f(0, 0, 0),
+                new Vector3f(0, 2f / 16f, 0),
+                new Vector3f(0.5f, 0.5f, 0.5f)
+        );
+
+        ItemTransformVec3f head = new ItemTransformVec3f(
+                new Vector3f(0, 180, 0),
+                new Vector3f(0, 13f / 16f, 7f / 16f),
+                new Vector3f(1, 1, 1)
+        );
+
+        ItemTransformVec3f fixed = new ItemTransformVec3f(
+                new Vector3f(0, 180, 0),
+                new Vector3f(0, 0, 0),
+                new Vector3f(1, 1, 1)
+        );
+
+        return new ItemCameraTransforms(thirdPerson, thirdPerson, firstPerson, firstPerson, head, ItemTransformVec3f.DEFAULT, ground, fixed);
+    }
 }

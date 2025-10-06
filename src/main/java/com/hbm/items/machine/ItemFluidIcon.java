@@ -37,7 +37,9 @@ public class ItemFluidIcon extends ItemBakedBase {
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
 		FluidType[] order = Fluids.getInNiceOrder();
-		if(tab == this.getCreativeTab()){
+		// Th3_Sl1ze: yes I know it makes fluid icon searchable in creative gui
+		// it fixes shit with jei and it being searchable in gm1 isn't that big of a deal imo
+		if(tab == CreativeTabs.SEARCH || this.isInCreativeTab(tab)) {
 			for(int i = 1; i < order.length; ++i) {
 				items.add(new ItemStack(this, 1, order[i].getID()));
 			}

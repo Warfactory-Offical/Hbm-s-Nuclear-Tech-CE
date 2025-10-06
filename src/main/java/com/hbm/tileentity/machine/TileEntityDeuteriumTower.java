@@ -2,11 +2,14 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.interfaces.AutoRegister;
+import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -24,6 +27,22 @@ public class TileEntityDeuteriumTower extends TileEntityDeuteriumExtractor {
 
 		for(DirPos pos : getConPos()) {
 			this.trySubscribe(world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
+		}
+	}
+
+	@Override
+	public void subscribeToAllAround(FluidType type, World world, int x, int y, int z) {
+
+		for(DirPos pos : getConPos()) {
+			this.trySubscribe(type, world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
+		}
+	}
+
+	@Override
+	public void sendFluidToAll(FluidTankNTM tank, TileEntity te) {
+
+		for(DirPos pos : getConPos()) {
+			this.sendFluid(tank, world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
 		}
 	}
 
