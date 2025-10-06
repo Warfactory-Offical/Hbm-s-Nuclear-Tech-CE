@@ -2,6 +2,7 @@ package com.hbm.tileentity.turret;
 
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.lib.ForgeDirection;
+import com.hbm.tileentity.IRadarCommandReceiver;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
@@ -12,15 +13,17 @@ import net.minecraftforge.fml.common.Optional;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class TileEntityTurretBaseArtillery extends TileEntityTurretBaseNT {
+public abstract class TileEntityTurretBaseArtillery extends TileEntityTurretBaseNT implements IRadarCommandReceiver {
 
     protected List<Vec3d> targetQueue = new ArrayList();
 
+    @Override
     public boolean sendCommandPosition(int x, int y, int z) {
         this.enqueueTarget(x + 0.5, y, z + 0.5);
         return true;
     }
 
+    @Override
     public boolean sendCommandEntity(Entity target) {
         this.enqueueTarget(target.posX, target.posY, target.posZ);
         return true;
