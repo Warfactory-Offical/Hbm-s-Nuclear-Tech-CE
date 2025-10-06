@@ -63,6 +63,16 @@ public final class BakedModelTransforms {
 
         return new ItemCameraTransforms(thirdPerson, thirdPerson, firstPerson, firstPerson, head, gui, ground, fixed);
     }
+    static ItemCameraTransforms forDeco(ItemCameraTransforms standardBlock) {
+        ItemTransformVec3f gui = new ItemTransformVec3f(
+                new Vector3f(30, -45, 0),
+                new Vector3f(0, 0, 0),
+                new Vector3f(0.625f, 0.625f, 0.625f)
+        );
+
+        return new ItemCameraTransforms(standardBlock.thirdperson_left, standardBlock.thirdperson_right, standardBlock.firstperson_left,
+                standardBlock.firstperson_right, standardBlock.head, gui, standardBlock.ground, standardBlock.fixed);
+    }
 
     private static ItemCameraTransforms buildPipeItem() {
         ItemTransformVec3f gui = new ItemTransformVec3f(
