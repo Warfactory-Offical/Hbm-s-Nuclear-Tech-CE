@@ -79,7 +79,7 @@ public class AssemblerRecipes extends SerializableRecipe {
 		}
 	}
 
-	private static void makeRecipe(ComparableStack out, AStack[] in, int duration, Item... folder) {
+	public static void makeRecipe(ComparableStack out, AStack[] in, int duration, Item... folder) {
 		if (out == null || Item.REGISTRY.getNameForObject(out.item) == null) {
 			MainRegistry.logger.error("Canceling assembler registration, item was null!");
 			return;

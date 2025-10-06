@@ -9,6 +9,7 @@ import com.hbm.items.ModItems;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Tuple;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ public class BobmazonOfferFactory {
 
 	public static List<Offer> standard = new ArrayList<>();
 	public static List<Offer> special = new ArrayList<>();
+    public static List<Tuple<OfferCategory, Offer>> custom = new ArrayList<>();
 
 	public static void init() {
 
@@ -97,6 +99,18 @@ public class BobmazonOfferFactory {
 		special.add(new Offer(new ItemStack(ModItems.mysteryshovel, 1), Requirement.HIDDEN, 16));
 		special.add(new Offer(new ItemStack(ModBlocks.ntm_dirt, 1), Requirement.HIDDEN, 16));
 		special.add(new Offer(new ItemStack(ModItems.euphemium_kit, 1), Requirement.HIDDEN, 64));
+
+        for(Tuple<OfferCategory, Offer> offercustom: custom){
+            switch (offercustom.getFirst()){
+                case NORMAL:
+                    standard.add(offercustom.getSecond());
+                    break;
+                case HIDDEN:
+                    special.add(offercustom.getSecond());
+                    break;
+            }
+        }
+
 		// TODO ItemKitCustom
 		/*special.add(new Offer(ItemKitCustom.create("Fusion Man", "For the nuclear physicist on the go", 0xff00ff, 0x800080,
 				new ItemStack(ModBlocks.iter),
@@ -168,4 +182,7 @@ public class BobmazonOfferFactory {
 		return null;
 	}
 
+    public enum OfferCategory {
+        HIDDEN, NORMAL
+    }
 }

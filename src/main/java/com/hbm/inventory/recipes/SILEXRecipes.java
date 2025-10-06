@@ -22,7 +22,7 @@ import static com.hbm.inventory.OreDictManager.*;
 
 public class SILEXRecipes {
 
-	private static LinkedHashMap<Object, SILEXRecipe> recipes = new LinkedHashMap<>();
+	public static LinkedHashMap<Object, SILEXRecipe> recipes = new LinkedHashMap<>();
 	private static HashMap<ComparableStack, ComparableStack> itemTranslation = new HashMap<>();
 	private static HashMap<String, String> dictTranslation = new HashMap<>();
 
@@ -799,5 +799,10 @@ public class SILEXRecipes {
 			outputs.add(entry);
 			return this;
 		}
-	}
+
+        public SILEXRecipe addOutAll(List<WeightedRandomObject> outputs) {
+            outputs.forEach(this::addOut);
+            return this;
+        }
+    }
 }

@@ -17,22 +17,21 @@ import java.util.Map;
 
 public class BreederRecipes extends SerializableRecipe {
 
-	private static HashMap<ComparableStack, BreederRecipe> recipes = new HashMap();
-	@Override
-	public void registerDefaults() {
-		setRecipe(ItemBreedingRod.BreedingRodType.LITHIUM, ItemBreedingRod.BreedingRodType.TRITIUM, 200);
-		setRecipe(ItemBreedingRod.BreedingRodType.CO, ItemBreedingRod.BreedingRodType.CO60, 100);
-		setRecipe(ItemBreedingRod.BreedingRodType.RA226, ItemBreedingRod.BreedingRodType.AC227, 300);
-		setRecipe(ItemBreedingRod.BreedingRodType.TH232, ItemBreedingRod.BreedingRodType.THF, 500);
-		setRecipe(ItemBreedingRod.BreedingRodType.U235, ItemBreedingRod.BreedingRodType.NP237, 300);
-		setRecipe(ItemBreedingRod.BreedingRodType.NP237, ItemBreedingRod.BreedingRodType.PU238, 200);
-		setRecipe(ItemBreedingRod.BreedingRodType.PU238, ItemBreedingRod.BreedingRodType.PU239, 1000);
-		setRecipe(ItemBreedingRod.BreedingRodType.U238, ItemBreedingRod.BreedingRodType.RGP, 300);
-		setRecipe(ItemBreedingRod.BreedingRodType.URANIUM, ItemBreedingRod.BreedingRodType.RGP, 200);
-		setRecipe(ItemBreedingRod.BreedingRodType.RGP, ItemBreedingRod.BreedingRodType.WASTE, 200);
+	private static final HashMap<ComparableStack, BreederRecipe> recipes = new HashMap<>();
 
-		recipes.put(new ComparableStack(ModItems.meteorite_sword_etched), new BreederRecipe(new ItemStack(ModItems.meteorite_sword_bred), 1000));
-	}
+    public static void removeRecipe(ComparableStack key) {
+        recipes.remove(key);
+
+    }
+
+    public static void addRecipe(ComparableStack key, ItemStack output, int flux) {
+        recipes.put(key, new BreederRecipe(output, flux));
+    }
+
+    @Override
+    public void registerDefaults() {
+
+    }
 
 	public static void setRecipe(ItemBreedingRod.BreedingRodType inputType, ItemBreedingRod.BreedingRodType outputType, int flux) {
 		recipes.put(new ComparableStack(new ItemStack(ModItems.rod, 1, inputType.ordinal())), new BreederRecipe(new ItemStack(ModItems.rod, 1, outputType.ordinal()), flux));

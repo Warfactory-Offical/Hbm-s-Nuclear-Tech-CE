@@ -29,9 +29,9 @@ import static com.hbm.inventory.OreDictManager.*;
 
 public class BlastFurnaceRecipes extends SerializableRecipe {
 
-    private static final ArrayList<Tuple.Triplet<Object, Object, ItemStack>> blastFurnaceRecipes = new ArrayList<>();
-    private static final ArrayList<RecipesCommon.ComparableStack> hiddenRecipes = new ArrayList<>();
-    private static final LinkedHashMap<RecipesCommon.AStack, Integer> diFuels = new LinkedHashMap<>();
+    public static final ArrayList<Tuple.Triplet<Object, Object, ItemStack>> blastFurnaceRecipes = new ArrayList<>();
+    public static final ArrayList<RecipesCommon.ComparableStack> hiddenRecipes = new ArrayList<>();
+    public static final LinkedHashMap<RecipesCommon.AStack, Integer> diFuels = new LinkedHashMap<>();
 
     @Override
     public void registerDefaults() {
@@ -93,7 +93,7 @@ public class BlastFurnaceRecipes extends SerializableRecipe {
         addFuel(new RecipesCommon.ComparableStack(ModItems.solid_fuel_presto), 800);
         addFuel(new RecipesCommon.ComparableStack(ModItems.solid_fuel_presto_triplet), 2400);
     }
-    private static void addFuel(RecipesCommon.AStack fuel, int power) {
+    public static void addFuel(RecipesCommon.AStack fuel, int power) {
         diFuels.put(fuel, power);
     }
 
@@ -136,7 +136,7 @@ public class BlastFurnaceRecipes extends SerializableRecipe {
         return fuels;
     }
 
-    private static void addRecipe(Object in1, Object in2, ItemStack out) {
+    public static void addRecipe(Object in1, Object in2, ItemStack out) {
 
         if (in1 instanceof Item) in1 = new RecipesCommon.ComparableStack((Item) in1);
         if (in1 instanceof Block) in1 = new RecipesCommon.ComparableStack((Block) in1);
