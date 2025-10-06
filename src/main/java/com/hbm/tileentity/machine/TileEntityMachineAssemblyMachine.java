@@ -303,7 +303,7 @@ public class TileEntityMachineAssemblyMachine extends TileEntityMachineBase impl
     @Override public FluidTankNTM[] getSendingTanks() { return new FluidTankNTM[] {outputTank}; }
     @Override public FluidTankNTM[] getAllTanks() { return new FluidTankNTM[] {inputTank, outputTank}; }
 
-    @Override public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) { return new ContainerMachineAssemblyMachine(player.inventory, this.inventory); }
+    @Override public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) { return new ContainerMachineAssemblyMachine(player.inventory, getCheckedInventory()); }
     @Override @SideOnly(Side.CLIENT) public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) { return new GUIMachineAssemblyMachine(player.inventory, this); }
 
     @Override public boolean hasPermission(EntityPlayer player) { return this.isUseableByPlayer(player); }

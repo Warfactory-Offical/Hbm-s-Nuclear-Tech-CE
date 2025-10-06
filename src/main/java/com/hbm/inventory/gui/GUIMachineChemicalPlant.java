@@ -23,7 +23,7 @@ public class GUIMachineChemicalPlant extends GuiInfoContainer {
     private TileEntityMachineChemicalPlant chemplant;
 
     public GUIMachineChemicalPlant(InventoryPlayer invPlayer, TileEntityMachineChemicalPlant tedf) {
-        super(new ContainerMachineChemicalPlant(invPlayer, tedf.inventory));
+        super(new ContainerMachineChemicalPlant(invPlayer, tedf.getCheckedInventory()));
         chemplant = tedf;
 
         this.xSize = 176;

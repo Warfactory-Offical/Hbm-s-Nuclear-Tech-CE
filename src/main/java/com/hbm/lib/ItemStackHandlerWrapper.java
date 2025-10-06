@@ -4,9 +4,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
+import javax.annotation.Nonnull;
+
 public class ItemStackHandlerWrapper implements IItemHandlerModifiable {
 
-	private ItemStackHandler handle;
+	protected ItemStackHandler handle;
 	private int[] validSlots;
 	
 	public ItemStackHandlerWrapper(ItemStackHandler handle) {
@@ -55,4 +57,11 @@ public class ItemStackHandlerWrapper implements IItemHandlerModifiable {
 		handle.setStackInSlot(slot, stack);
 	}
 
+    @Override
+    public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+        for(int i : validSlots)
+            if(i == slot)
+                return handle.isItemValid(slot, stack);
+        return false;
+    }
 }

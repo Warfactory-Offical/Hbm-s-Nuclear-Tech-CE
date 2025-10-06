@@ -23,7 +23,7 @@ public class GUIMachineAssemblyMachine extends GuiInfoContainer {
     private TileEntityMachineAssemblyMachine assembler;
 
     public GUIMachineAssemblyMachine(InventoryPlayer invPlayer, TileEntityMachineAssemblyMachine tedf) {
-        super(new ContainerMachineAssemblyMachine(invPlayer, tedf.inventory));
+        super(new ContainerMachineAssemblyMachine(invPlayer, tedf.getCheckedInventory()));
         assembler = tedf;
 
         this.xSize = 176;

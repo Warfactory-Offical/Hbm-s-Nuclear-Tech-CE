@@ -27,6 +27,7 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,7 +35,11 @@ import java.util.List;
 
 @Spaghetti("Not spaghetti in itself, but for the love of god please use this base class for all machines")
 public abstract class TileEntityMachineBase extends TileEntityLoadedBase implements IWorldRenameable {
-
+    /**
+     * Internal inventory. All operations are unchecked.
+     * Use {@link #getCheckedInventory()} for Container/External classes.
+     * Consider making this protected in the future.
+     */
     public ItemStackHandler inventory;
     private boolean enablefluidWrapper = false;
     private boolean enableEnergyWrapper = false;
@@ -208,6 +213,31 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase impleme
         float volume = 1 - (countMufflers() / (float) toSilence);
 
         return Math.max(volume, 0);
+    }
+
+    public IItemHandlerModifiable getCheckedInventory() {
+        return new ItemStackHandlerWrapper(inventory) {
+            @Override
+            public boolean isItemValid(int slot, ItemStack stack) {
+                return isItemValidForSlot(slot, stack);
+            }
+
+            @Override
+            public ItemStack extractItem(int slot, int amount, boolean simulate) {
+                if (canExtractItem(slot, inventory.getStackInSlot(slot), amount)) {
+                    return handle.extractItem(slot, amount, simulate);
+                }
+                return ItemStack.EMPTY;
+            }
+
+            @Override
+            public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+                if (canInsertItem(slot, stack)) {
+                    return handle.insertItem(slot, stack, simulate);
+                }
+                return stack;
+            }
+        };
     }
 
     @Override
