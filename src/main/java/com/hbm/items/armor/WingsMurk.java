@@ -4,8 +4,7 @@ import com.hbm.capability.HbmCapability;
 import com.hbm.capability.HbmCapability.IHBMData;
 import com.hbm.handler.ArmorUtil;
 import com.hbm.items.ModItems;
-import com.hbm.lib.RefStrings;
-import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.main.ResourceManager;
 import com.hbm.render.model.ModelArmorWings;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
@@ -13,6 +12,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -38,8 +38,7 @@ public class WingsMurk extends JetpackBase {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type){
-		//Drillgon200: Unused, just so forge doesn't yell in the log
-		return RefStrings.MODID + ":textures/armor/steel_1.png";
+		return ResourceManager.wings_murk.toString();
 	}
 	
 	public void onArmorTick(World world, EntityPlayer player, ItemStack stack) {
@@ -64,14 +63,12 @@ public class WingsMurk extends JetpackBase {
 					double mo = player.motionY * -0.2;
 					player.motionY += mo;
 
-					Vec3 vec = new Vec3(player.getLookVec());
-					vec.xCoord *= mo;
-					vec.yCoord *= mo;
-					vec.zCoord *= mo;
+					Vec3d vec = player.getLookVec();
+                    vec = vec.scale(mo);
 
-					player.motionX += vec.xCoord;
-					player.motionY += vec.yCoord;
-					player.motionZ += vec.zCoord;
+					player.motionX += vec.x;
+					player.motionY += vec.y;
+					player.motionZ += vec.z;
 				}
 			}
 		}
@@ -99,19 +96,19 @@ public class WingsMurk extends JetpackBase {
 			
 			if(props.getEnableBackpack()) {
 				
-				Vec3 orig = new Vec3(player.getLookVec());
-				Vec3 look = Vec3.createVectorHelper(orig.xCoord, 0, orig.zCoord).normalize();
+				Vec3d orig = player.getLookVec();
+				Vec3d look = new Vec3d(orig.x, 0, orig.z).normalize();
 				double mod = player.isSneaking() ? 0.25D : 1D;
 				
 				if(player.moveForward != 0) {
-					player.motionX += look.xCoord * 0.35 * player.moveForward * mod;
-					player.motionZ += look.zCoord * 0.35 * player.moveForward * mod;
+					player.motionX += look.x * 0.35 * player.moveForward * mod;
+					player.motionZ += look.z * 0.35 * player.moveForward * mod;
 				}
 				
 				if(player.moveStrafing != 0) {
-					look.rotateAroundY((float) Math.PI * 0.5F);
-					player.motionX += look.xCoord * 0.15 * player.moveStrafing * mod;
-					player.motionZ += look.zCoord * 0.15 * player.moveStrafing * mod;
+					look = look.rotateYaw((float) Math.PI * 0.5F);
+					player.motionX += look.x * 0.15 * player.moveStrafing * mod;
+					player.motionZ += look.z * 0.15 * player.moveStrafing * mod;
 				}
 			}
 		}
