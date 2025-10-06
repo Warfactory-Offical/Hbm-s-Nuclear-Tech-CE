@@ -354,10 +354,8 @@ public final class ChunkUtil {
                                                               @NotNull LongCollection teRemovals, @NotNull LongCollection edgeOut) {
         ExtendedBlockStorage src = getEbsVolatile(srcs, subY);
         if (src == null || src.isEmpty()) return null;
-        final boolean hasSky = world.provider.hasSkyLight();
         final int height = world.getHeight();
-        final ExtendedBlockStorage dst = new ExtendedBlockStorage(src.getYLocation(), hasSky);
-        copyEBS(hasSky, src, dst);
+        final ExtendedBlockStorage dst = copyOf(src);
         ExtendedBlockStorage[] storagesNegX = null, storagesPosX = null, storagesNegZ = null, storagesPosZ = null;
         final int startBit = (height - 1 - ((subY << 4) + 15)) << 8;
         final int endBit = ((height - 1 - (subY << 4)) << 8) | 0xFF;
@@ -491,15 +489,32 @@ public final class ChunkUtil {
     }
 
     /**
-     * Internal helper: copy block/skylight nibble arrays, palette+storage and ref counts from
-     * {@code src} to {@code dst}.
+     * Copy block/skylight nibble arrays, palette+storage and ref counts from
+     * {@code src} to {@code dst}. Does not copy {@link ExtendedBlockStorage#yBase}.
+     * <p>
+     * Intended for cross-dimension copying.
      */
     public static void copyEBS(boolean hasSky, @NotNull ExtendedBlockStorage src, @NotNull ExtendedBlockStorage dst) {
         dst.data = copyOf(src.getData());
         dst.blockLight = new NibbleArray(src.getBlockLight().getData().clone());
-        dst.skyLight = hasSky ? new NibbleArray(src.getSkyLight().getData().clone()) : null;
+        dst.skyLight = hasSky ? src.skyLight != null ? new NibbleArray(src.skyLight.getData().clone()) : new NibbleArray() : null;
         dst.blockRefCount = src.blockRefCount;
         dst.tickRefCount = src.tickRefCount;
+    }
+
+    /**
+     * @return a deep copy of {@code src}
+     */
+    @Contract(value = "_ -> new", pure = true)
+    public static @NotNull ExtendedBlockStorage copyOf(@NotNull ExtendedBlockStorage src) {
+        ExtendedBlockStorage dst = UnsafeHolder.allocateInstance(ExtendedBlockStorage.class);
+        dst.yBase = src.yBase;
+        dst.data = copyOf(src.getData());
+        dst.blockLight = new NibbleArray(src.getBlockLight().getData().clone());
+        dst.skyLight = src.skyLight != null ? new NibbleArray(src.skyLight.getData().clone()) : null;
+        dst.blockRefCount = src.blockRefCount;
+        dst.tickRefCount = src.tickRefCount;
+        return dst;
     }
 
     /**
@@ -594,8 +609,7 @@ public final class ChunkUtil {
 
                         if (working == null) {
                             if (src != null && !src.isEmpty()) {
-                                working = new ExtendedBlockStorage(src.getYLocation(), hasSky);
-                                copyEBS(hasSky, src, working);
+                                working = copyOf(src);
                             } else {
                                 if (ns.getBlock() == Blocks.AIR) continue;
                                 working = new ExtendedBlockStorage(yBase, hasSky);
@@ -648,8 +662,7 @@ public final class ChunkUtil {
                             if (src == null || src.isEmpty()) {
                                 working = new ExtendedBlockStorage(subY << 4, hasSky);
                             } else {
-                                working = new ExtendedBlockStorage(src.getYLocation(), hasSky);
-                                copyEBS(hasSky, src, working);
+                                working = copyOf(src);
                             }
                         }
 
@@ -718,8 +731,7 @@ public final class ChunkUtil {
 
             if (dst == null) {
                 if (src != null && !src.isEmpty()) {
-                    dst = new ExtendedBlockStorage(src.getYLocation(), hasSky);
-                    copyEBS(hasSky, src, dst);
+                    dst = copyOf(src);
                 } else {
                     if (newState.getBlock() == Blocks.AIR) continue;
                     dst = new ExtendedBlockStorage(yBase, hasSky);
