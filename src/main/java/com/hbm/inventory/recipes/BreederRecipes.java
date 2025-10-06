@@ -30,7 +30,18 @@ public class BreederRecipes extends SerializableRecipe {
 
     @Override
     public void registerDefaults() {
+        setRecipe(ItemBreedingRod.BreedingRodType.LITHIUM, ItemBreedingRod.BreedingRodType.TRITIUM, 200);
+        setRecipe(ItemBreedingRod.BreedingRodType.CO, ItemBreedingRod.BreedingRodType.CO60, 100);
+        setRecipe(ItemBreedingRod.BreedingRodType.RA226, ItemBreedingRod.BreedingRodType.AC227, 300);
+        setRecipe(ItemBreedingRod.BreedingRodType.TH232, ItemBreedingRod.BreedingRodType.THF, 500);
+        setRecipe(ItemBreedingRod.BreedingRodType.U235, ItemBreedingRod.BreedingRodType.NP237, 300);
+        setRecipe(ItemBreedingRod.BreedingRodType.NP237, ItemBreedingRod.BreedingRodType.PU238, 200);
+        setRecipe(ItemBreedingRod.BreedingRodType.PU238, ItemBreedingRod.BreedingRodType.PU239, 1000);
+        setRecipe(ItemBreedingRod.BreedingRodType.U238, ItemBreedingRod.BreedingRodType.RGP, 300);
+        setRecipe(ItemBreedingRod.BreedingRodType.URANIUM, ItemBreedingRod.BreedingRodType.RGP, 200);
+        setRecipe(ItemBreedingRod.BreedingRodType.RGP, ItemBreedingRod.BreedingRodType.WASTE, 200);
 
+        recipes.put(new ComparableStack(ModItems.meteorite_sword_etched), new BreederRecipe(new ItemStack(ModItems.meteorite_sword_bred), 1000));
     }
 
 	public static void setRecipe(ItemBreedingRod.BreedingRodType inputType, ItemBreedingRod.BreedingRodType outputType, int flux) {
