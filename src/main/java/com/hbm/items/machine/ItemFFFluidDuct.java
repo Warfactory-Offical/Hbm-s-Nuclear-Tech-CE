@@ -34,6 +34,7 @@ public class ItemFFFluidDuct extends Item {
 	public ItemFFFluidDuct(String s) {
 		this.setTranslationKey(s);
 		this.setRegistryName(s);
+		this.setHasSubtypes(true);
 		
 		ModItems.ALL_ITEMS.add(this);
 

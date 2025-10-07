@@ -1115,7 +1115,7 @@ public class OreDictManager {
         }
 
         public DictFrame crystal(Object... crystal) {
-            hazMult = HazardRegistry.gem;
+            hazMult = HazardRegistry.crystal;
             return makeObject(CRYSTAL, crystal);
         }
 

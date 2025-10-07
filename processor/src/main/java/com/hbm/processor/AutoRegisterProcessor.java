@@ -91,7 +91,6 @@ public class AutoRegisterProcessor extends AbstractProcessor {
         if (isSubtypeByString(annotatedElement, TESR_FQN)) {
             String tileEntityClassName = getClassNameFromAnnotation(annotation, "tileentity");
             if (tileEntityClassName.equals(DEFAULT_CLASS_FQN)) {
-//                messager.printMessage(Diagnostic.Kind.NOTE, "Inferring TileEntity for " + annotatedFqn, annotatedElement);
                 tileEntityClassName = getGenericSupertypeFqn(annotatedElement, TESR_FQN);
 
                 if (tileEntityClassName == null) {
@@ -105,7 +104,6 @@ public class AutoRegisterProcessor extends AbstractProcessor {
         } else if (isSubtypeByString(annotatedElement, RENDER_FQN)) {
             String entityClassName = getClassNameFromAnnotation(annotation, "entity");
             if (entityClassName.equals(DEFAULT_CLASS_FQN)) {
-//                messager.printMessage(Diagnostic.Kind.NOTE, "Inferring Entity for " + annotatedFqn, annotatedElement);
                 entityClassName = getGenericSupertypeFqn(annotatedElement, RENDER_FQN);
 
                 if (entityClassName == null) {
@@ -124,9 +122,14 @@ public class AutoRegisterProcessor extends AbstractProcessor {
             }
             boolean hasArrayArgs = annotation.constructorArgs().length > 0;
             boolean hasStringArgs = !annotation.constructorArgsString().isEmpty();
+            boolean hasInstanceField = !annotation.instanceField().isEmpty();
 
             if (hasArrayArgs && hasStringArgs) {
                 messager.printMessage(Diagnostic.Kind.ERROR, "Cannot use both 'constructorArgs' and 'constructorArgsString'. Please use only one.", annotatedElement);
+                return;
+            }
+            if (hasInstanceField && (hasArrayArgs || hasStringArgs)) {
+                messager.printMessage(Diagnostic.Kind.ERROR, "Cannot use constructor args when 'instanceField' is set. Please use only one approach.", annotatedElement);
                 return;
             }
 
@@ -136,7 +139,7 @@ public class AutoRegisterProcessor extends AbstractProcessor {
             } else {
                 finalArgs = String.join(", ", annotation.constructorArgs());
             }
-            itemRenderers.add(new TeisrInfo(annotatedFqn, annotation.item(), finalArgs));
+            itemRenderers.add(new TeisrInfo(annotatedFqn, annotation.item(), finalArgs, annotation.instanceField()));
 
         } else if (isSubtypeOf(annotatedElement, TE_FQN)) {
             String regId = annotation.name().trim().isEmpty() ? generateRegistrationId(annotatedElement.getSimpleName().toString()) :
@@ -241,8 +244,13 @@ public class AutoRegisterProcessor extends AbstractProcessor {
                     .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                     .addAnnotation(AnnotationSpec.builder(SIDE_ONLY).addMember("value", "$T.CLIENT", SIDE).build());
             for (TeisrInfo info : itemRenderers) {
-                method.addStatement("$T.$L.setTileEntityItemStackRenderer(new $T(" + info.constructorArgs + "))",
-                        MOD_ITEMS, info.itemFieldName, ClassName.bestGuess(info.rendererFqn));
+                if (info.instanceFieldName.isEmpty()) {
+                    method.addStatement("$T.$L.setTileEntityItemStackRenderer(new $T(" + info.constructorArgs + "))",
+                            MOD_ITEMS, info.itemFieldName, ClassName.bestGuess(info.rendererFqn));
+                } else {
+                    method.addStatement("$T.$L.setTileEntityItemStackRenderer($T.$L)",
+                            MOD_ITEMS, info.itemFieldName, ClassName.bestGuess(info.rendererFqn), info.instanceFieldName);
+                }
             }
             registrarBuilder.addMethod(method.build());
         }
@@ -368,11 +376,13 @@ public class AutoRegisterProcessor extends AbstractProcessor {
         final String rendererFqn;
         final String itemFieldName;
         final String constructorArgs;
+        final String instanceFieldName;
 
-        TeisrInfo(String rendererFqn, String itemFieldName, String constructorArgs) {
+        TeisrInfo(String rendererFqn, String itemFieldName, String constructorArgs, String instanceFieldName) {
             this.rendererFqn = rendererFqn;
             this.itemFieldName = itemFieldName;
             this.constructorArgs = constructorArgs;
+            this.instanceFieldName = instanceFieldName;
         }
     }
 }

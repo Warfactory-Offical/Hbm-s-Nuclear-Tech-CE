@@ -139,4 +139,10 @@ public @interface AutoRegister {
      * @see #constructorArgs()
      */
     String constructorArgsString() default "";
+
+    /**
+     * For TEISR: name of a public static field on the renderer class to use instead of calling its constructor,
+     * e.g. "INSTANCE". If empty, a new instance will be created using constructor args.
+     */
+    String instanceField() default "";
 }
