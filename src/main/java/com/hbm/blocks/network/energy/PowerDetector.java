@@ -42,14 +42,8 @@ public class PowerDetector extends BlockContainer {
 	}
 
 	public static void updateBlockState(boolean isOn, World world, BlockPos pos){
-		IBlockState i = world.getBlockState(pos);
-		TileEntity entity = world.getTileEntity(pos);
-		if(i.getBlock() == ModBlocks.machine_detector){
+		if(world.getBlockState(pos).getBlock() == ModBlocks.machine_detector){
 			world.setBlockState(pos, world.getBlockState(pos).withProperty(PowerDetector.IS_ON, isOn));
-		}
-		if (entity != null) {
-			entity.validate();
-			world.setTileEntity(pos, entity);
 		}
 	}
 
