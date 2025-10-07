@@ -1,0 +1,47 @@
+package com.hbm.blocks.fluid;
+
+import com.hbm.lib.RefStrings;
+import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+@Mod.EventBusSubscriber(modid = RefStrings.MODID)
+public class ModFluids {
+    public static Fluid toxic_fluid = new ToxicFluid().setDensity(2500).setViscosity(2000).setTemperature(70+273);
+    public static Fluid mud_fluid = new MudFluid().setDensity(2500).setViscosity(3000).setLuminosity(5).setTemperature(1773);
+    public static Fluid acid_fluid = new AcidFluid().setDensity(2500).setViscosity(1500).setLuminosity(5).setTemperature(2773);
+    public static Fluid schrabidic_fluid = new SchrabidicFluid().setDensity(31200).setViscosity(500);
+	public static Fluid corium_fluid = new CoriumFluid().setDensity(31200).setViscosity(2000).setTemperature(3000);
+	public static Fluid volcanic_lava_fluid = new VolcanicFluid().setLuminosity(15).setDensity(3000).setViscosity(3000).setTemperature(1300);
+    public static Fluid bromine_fluid = new BromineFluid().setDensity(3000).setViscosity(3000).setTemperature(273);
+    public static Fluid sulfuric_acid_fluid = new SulfuricAcidFluid().setDensity(1840).setViscosity(1000).setTemperature(273);
+
+    public static void init() {
+        FluidRegistry.registerFluid(toxic_fluid);
+		FluidRegistry.registerFluid(mud_fluid);
+        FluidRegistry.registerFluid(acid_fluid);
+		FluidRegistry.registerFluid(schrabidic_fluid);
+		FluidRegistry.registerFluid(corium_fluid);
+		FluidRegistry.registerFluid(volcanic_lava_fluid);
+		FluidRegistry.registerFluid(bromine_fluid);
+		FluidRegistry.registerFluid(sulfuric_acid_fluid);
+    }
+
+    @SubscribeEvent
+	public static void worldLoad(WorldEvent.Load evt) {
+		setFromRegistry();
+	}
+
+    public static void setFromRegistry() {
+		toxic_fluid = FluidRegistry.getFluid("toxic_fluid");
+		mud_fluid = FluidRegistry.getFluid("mud_fluid");
+        acid_fluid = FluidRegistry.getFluid("acid_fluid");
+		schrabidic_fluid = FluidRegistry.getFluid("schrabidic_fluid");
+        corium_fluid = FluidRegistry.getFluid("corium_fluid");
+        volcanic_lava_fluid = FluidRegistry.getFluid("volcanic_lava_fluid");
+        bromine_fluid = FluidRegistry.getFluid("bromine_fluid");
+		sulfuric_acid_fluid = FluidRegistry.getFluid("sulfuric_acid_fluid");
+	}
+}

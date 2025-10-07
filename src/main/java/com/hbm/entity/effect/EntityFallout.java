@@ -2,8 +2,6 @@ package com.hbm.entity.effect;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockMeta;
-import com.hbm.blocks.generic.BlockSellafield;
-import com.hbm.blocks.generic.BlockSellafieldSlaked;
 import com.hbm.blocks.generic.WasteLog;
 import com.hbm.config.VersatileConfig;
 import com.hbm.entity.logic.IChunkLoader;

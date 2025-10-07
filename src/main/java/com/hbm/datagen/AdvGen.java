@@ -1,7 +1,7 @@
 package com.hbm.datagen;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.forgefluid.ModForgeFluids;
+import com.hbm.blocks.fluid.ModFluids;
 import com.hbm.inventory.OreDictManager.DictFrame;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ItemEnums.EnumAchievementType;
@@ -403,7 +403,7 @@ public class AdvGen {
                 "hbm:achwatz",
                 new Display()
                         .key("watzBoom")
-                        .icon(FluidUtil.getFilledBucket(new FluidStack(ModForgeFluids.mud_fluid, 1000)))
+                        .icon(FluidUtil.getFilledBucket(new FluidStack(ModFluids.mud_fluid, 1000)))
                         .toast(true)
                         .announce(true)
                         .frame(FrameType.CHALLENGE),

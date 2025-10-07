@@ -1,7 +1,7 @@
 package com.hbm.crafting;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.forgefluid.ModForgeFluids;
+import com.hbm.blocks.fluid.ModFluids;
 import com.hbm.inventory.OreDictManager;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.material.Mats;
@@ -154,7 +154,7 @@ public class WeaponRecipes {
 
         //Missiles
         // TODO: ik modforgefluids is deprecated, I'm lazy to deal with it now
-        CraftingManager.addShapelessAuto(new ItemStack(ModItems.missile_taint, 1), ModItems.missile_assembly, new CraftingManager.IngredientContainsTag(FluidUtil.getFilledBucket(new FluidStack(ModForgeFluids.mud_fluid, 1000))), ModItems.powder_spark_mix, ModItems.powder_magic );
+        CraftingManager.addShapelessAuto(new ItemStack(ModItems.missile_taint, 1), ModItems.missile_assembly, new CraftingManager.IngredientContainsTag(FluidUtil.getFilledBucket(new FluidStack(ModFluids.mud_fluid, 1000))), ModItems.powder_spark_mix, ModItems.powder_magic );
         CraftingManager.addShapelessAuto(new ItemStack(ModItems.missile_micro, 1), ModItems.missile_assembly, ModItems.ducttape, DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.NUKE_HIGH) );
         CraftingManager.addShapelessAuto(new ItemStack(ModItems.missile_bhole, 1), ModItems.missile_assembly, ModItems.ducttape, ModItems.grenade_black_hole );
         CraftingManager.addShapelessAuto(new ItemStack(ModItems.missile_schrabidium, 1), ModItems.missile_assembly, ModItems.ducttape, ItemCell.getFullCell(Fluids.AMAT), ANY_HARDPLASTIC.ingot() );

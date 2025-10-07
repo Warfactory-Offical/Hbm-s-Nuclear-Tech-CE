@@ -10,7 +10,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntityMobSpawner;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 public class TestDungeonRoom3 extends CellularDungeonRoom {
 

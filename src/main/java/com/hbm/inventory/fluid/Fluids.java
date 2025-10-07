@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
+import com.hbm.blocks.fluid.FluidNTM;
 import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.inventory.fluid.trait.*;
 import com.hbm.inventory.fluid.trait.FT_Combustible.FuelGrade;
@@ -1247,7 +1248,7 @@ public class Fluids {
                 color = fluid.getColor();
             }
 
-            Fluid compatFluid = new ForgeFluidNTM(fluid.getFFName(),
+            Fluid compatFluid = new FluidNTM(fluid.getFFName(),
                     textureStill, textureFlowing, color)
                     .setTemperature(fluid.temperature)
                     .setColor(fluid.getColor())
@@ -1264,7 +1265,7 @@ public class Fluids {
             }
 
             FluidRegistry.registerFluid(compatFluid);
-            FluidRegistry.addBucketForFluid(compatFluid);
+            // EOS: I don't know why there is a bucket registration for each liquid.
         }
     }
 

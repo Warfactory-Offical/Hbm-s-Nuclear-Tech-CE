@@ -34,6 +34,7 @@ public class CoriumFinite extends BlockFluidFinite {
         this.tickRate = 30;
         this.setTickRandomly(true);
         displacements.put(this, false);
+
         ModBlocks.ALL_BLOCKS.add(this);
     }
 

@@ -1,6 +1,7 @@
 package com.hbm.blocks;
 
 import com.hbm.blocks.bomb.*;
+import com.hbm.blocks.fluid.*;
 import com.hbm.blocks.gas.*;
 import com.hbm.blocks.generic.*;
 import com.hbm.blocks.generic.BlockHazard.ExtDisplayEffect;
@@ -16,6 +17,7 @@ import com.hbm.blocks.test.TestRender;
 import com.hbm.blocks.turret.*;
 import com.hbm.hazard.HazardRegistry;
 import com.hbm.hazard.HazardSystem;
+import com.hbm.lib.ModDamageSource;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.render.block.BlockBakeFrame;
@@ -1317,16 +1319,12 @@ public class ModBlocks {
 
 	//Fluids
 	public static final Material fluidtoxic = new MaterialLiquid(MapColor.BLACK).setReplaceable();
-	public static Block toxic_block;
-
-	public static final Material fluidradwater = new MaterialLiquid(MapColor.GREEN).setReplaceable();
-	public static Block radwater_block;
 
 	public static final Material fluidmud = (new MaterialLiquid(MapColor.ADOBE).setReplaceable());
-	public static Block mud_block;
 
 	public static final Material fluidschrabidic = (new MaterialLiquid(MapColor.CYAN));
-	public static Block schrabidic_block;
+
+    public static final Material fluidacid = (new MaterialLiquid(MapColor.PURPLE));
 
 	public static final Material fluidcorium = (new MaterialLiquid(MapColor.BROWN) {
 
@@ -1341,13 +1339,9 @@ public class ModBlocks {
 		}
 
 	}.setImmovableMobility());
-	public static Block corium_block;
 	public static final Material fluidvolcanic = (new MaterialLiquid(MapColor.RED));
-	public static Block volcanic_lava_block;
 
 	public static Block mercury_block;
-	public static Block bromine_block;
-	public static Block sulfuric_acid_block;
 
 	//Weird stuff
 	public static final Block boxcar = new DecoBlock(Material.IRON, "boxcar").setSoundType(SoundType.METAL).setHardness(10.0F).setResistance(10.0F).setCreativeTab(MainRegistry.blockTab);
@@ -1396,10 +1390,21 @@ public class ModBlocks {
 
 	public static final Block orbital_station = new BlockOrbitalStation(Material.IRON, "orbital_station").setBlockUnbreakable().setResistance(Float.POSITIVE_INFINITY).setCreativeTab(null);
 
+    public static final Block toxic_block = new ToxicBlock(ModFluids.toxic_fluid, ModBlocks.fluidtoxic, ModDamageSource.radiation, "toxic_block").setResistance(500F);
+    public static final Block mud_block = new MudBlock(ModFluids.mud_fluid, ModBlocks.fluidmud, ModDamageSource.mudPoisoning, "mud_block").setResistance(500F);
+    public static final Block acid_block = new AcidBlock(ModFluids.acid_fluid, fluidacid.setReplaceable(), ModDamageSource.acid, "acid_block").setResistance(500F);
+    public static final Block schrabidic_block = new SchrabidicBlock(ModFluids.schrabidic_fluid, ModBlocks.fluidschrabidic.setReplaceable(), ModDamageSource.radiation, "schrabidic_block").setResistance(500F);
+    public static final Block corium_block = new CoriumFinite(ModFluids.corium_fluid, ModBlocks.fluidcorium, "corium_block").setResistance(500F);
+    public static final Block volcanic_lava_block = new VolcanicBlock(ModFluids.volcanic_lava_fluid, ModBlocks.fluidvolcanic, "volcanic_lava_block").setResistance(500F);
+    public static final Block bromine_block = new BromineBlock(ModFluids.bromine_fluid, Material.WATER).setResistance(500F);
+    public static final Block sulfuric_acid_block = new SulfuricAcidBlock(ModFluids.sulfuric_acid_fluid, Material.WATER, "sulfuric_acid_block").setDamage(ModDamageSource.acid, 5F).setResistance(500F);
+
 	public static void preInit(){
 		for(Block block : ALL_BLOCKS){
 			ForgeRegistries.BLOCKS.register(block);
 		}
+
+        registerFluidBlocks();
 	}
 
 	public static void init(){
@@ -1415,7 +1420,16 @@ public class ModBlocks {
 		BlockTallPlant.initPlacables();
 		BlockDeadPlant.initPlacables();
 		BlockFlowerPlant.initPlacables();
-
-
 	}
+
+    private static void registerFluidBlocks() {
+        ModFluids.toxic_fluid.setBlock(ModBlocks.toxic_block);
+        ModFluids.mud_fluid.setBlock(ModBlocks.mud_block);
+        ModFluids.acid_fluid.setBlock(ModBlocks.acid_block);
+        ModFluids.schrabidic_fluid.setBlock(ModBlocks.schrabidic_block);
+        ModFluids.corium_fluid.setBlock(ModBlocks.corium_block);
+        ModFluids.volcanic_lava_fluid.setBlock(ModBlocks.volcanic_lava_block);
+        ModFluids.bromine_fluid.setBlock(ModBlocks.bromine_block);
+        ModFluids.sulfuric_acid_fluid.setBlock(ModBlocks.sulfuric_acid_block);
+    }
 }
