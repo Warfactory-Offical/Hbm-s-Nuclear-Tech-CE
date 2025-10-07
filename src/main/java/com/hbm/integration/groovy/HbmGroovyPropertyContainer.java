@@ -13,6 +13,7 @@ import com.hbm.hazard.HazardRegistry;
 import com.hbm.hazard.HazardSystem;
 import com.hbm.hazard.modifier.*;
 import com.hbm.hazard.type.HazardTypeBase;
+import com.hbm.integration.groovy.script.*;
 import com.hbm.inventory.recipes.loader.SerializableRecipe;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.SerializableRecipePacket;
@@ -35,10 +36,28 @@ import java.util.function.Function;
 
 public class HbmGroovyPropertyContainer extends GroovyPropertyContainer {
 
+    private static final ArrayList<VirtualizedRegistry<?>> properties = new ArrayList<>();
+
+    public static final AnvilSmithing ANVILSMITHING = createProperty(new AnvilSmithing());
+    public static final AnvilConstruction ANVILCONSTRUCTION = createProperty(new AnvilConstruction());
+    public static final Assembler ASSEMBLER = createProperty(new Assembler());
+    public static final Press PRESS = createProperty(new Press());
+    public static final BlastFurnaceFuel BLASTFURNACEFUEL = createProperty(new BlastFurnaceFuel());
+    public static final BlastFurnace BLASTFURNACE = createProperty(new BlastFurnace());
+    public static final Shredder SHREDDER = createProperty(new Shredder());
+    public static final Bobmazon BOBMAZON = createProperty(new Bobmazon());
+    public static final BreedingReactor BREEDINGREACTOR = createProperty(new BreedingReactor());
+    public static final Centrifuge CENTRIFUGE = createProperty(new Centrifuge());
+    public static final DFC DFC = createProperty(new DFC());
+    public static final SILEX SILEX = createProperty(new SILEX());
+    public static final IrradiationChannel IRRADIATIONCHANNEL = createProperty(new IrradiationChannel());
+    public static final WasteDrum WASTEDRUM = createProperty(new WasteDrum());
+
     private static RecipeOverrideManager activeRecipeOverrides;
 
     private final RecipeOverrideManager recipeOverrides;
     private final HazardBinding hazards;
+
 
     public HbmGroovyPropertyContainer() {
         ensureRecipeHandlersRegistered();
@@ -48,8 +67,16 @@ public class HbmGroovyPropertyContainer extends GroovyPropertyContainer {
         for (RecipeFileBinding binding : this.recipeOverrides.createBindings()) {
             addProperty(binding);
         }
+        for(VirtualizedRegistry<?> entry:properties){
+            addProperty(entry);
+        }
         this.hazards = new HazardBinding();
         addProperty(this.hazards);
+    }
+
+    private static <T extends VirtualizedRegistry<?>> T createProperty(T entry){
+        properties.add(entry);
+        return entry;
     }
 
     public static void sendRecipeOverridesToPlayer(EntityPlayerMP player) {
