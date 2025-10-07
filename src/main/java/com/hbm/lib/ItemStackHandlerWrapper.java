@@ -7,61 +7,60 @@ import net.minecraftforge.items.ItemStackHandler;
 import javax.annotation.Nonnull;
 
 public class ItemStackHandlerWrapper implements IItemHandlerModifiable {
+    protected final ItemStackHandler handle;
+    private final int[] validSlots;
 
-	protected ItemStackHandler handle;
-	private int[] validSlots;
-	
-	public ItemStackHandlerWrapper(ItemStackHandler handle) {
-		this.handle = handle;
-		validSlots = new int[]{};
-	}
-	
-	public ItemStackHandlerWrapper(ItemStackHandler handle, int[] validSlots) {
-		this.handle = handle;
-		this.validSlots = validSlots;
-	}
-	
-	@Override
-	public int getSlots() {
-		return handle.getSlots();
-	}
+    public ItemStackHandlerWrapper(ItemStackHandler handle) {
+        this.handle = handle;
+        this.validSlots = null;
+    }
 
-	@Override
-	public ItemStack getStackInSlot(int slot) {
-		return handle.getStackInSlot(slot);
-	}
+    public ItemStackHandlerWrapper(ItemStackHandler handle, int[] validSlots) {
+        this.handle = handle;
+        this.validSlots = validSlots;
+    }
 
-	@Override
-	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-		for(int i : validSlots)
-			if(i == slot)
-				return handle.insertItem(slot, stack, simulate);
-		return stack;
-	}
+    @Override
+    public int getSlots() {
+        return handle.getSlots();
+    }
 
-	@Override
-	public ItemStack extractItem(int slot, int amount, boolean simulate) {
-		for(int i : validSlots)
-			if(i == slot)
-				return handle.extractItem(slot, amount, simulate);
-		return ItemStack.EMPTY;
-	}
+    @Override
+    public ItemStack getStackInSlot(int slot) {
+        return handle.getStackInSlot(slot);
+    }
 
-	@Override
-	public int getSlotLimit(int slot) {
-		return handle.getSlotLimit(slot);
-	}
+    @Override
+    public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+        if (validSlots == null) return handle.insertItem(slot, stack, simulate);
+        for (int i : validSlots)
+            if (i == slot) return handle.insertItem(slot, stack, simulate);
+        return stack;
+    }
 
-	@Override
-	public void setStackInSlot(int slot, ItemStack stack) {
-		handle.setStackInSlot(slot, stack);
-	}
+    @Override
+    public ItemStack extractItem(int slot, int amount, boolean simulate) {
+        if (validSlots == null) return handle.extractItem(slot, amount, simulate);
+        for (int i : validSlots)
+            if (i == slot) return handle.extractItem(slot, amount, simulate);
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    public int getSlotLimit(int slot) {
+        return handle.getSlotLimit(slot);
+    }
+
+    @Override
+    public void setStackInSlot(int slot, ItemStack stack) {
+        handle.setStackInSlot(slot, stack);
+    }
 
     @Override
     public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-        for(int i : validSlots)
-            if(i == slot)
-                return handle.isItemValid(slot, stack);
+        if (validSlots == null) return handle.isItemValid(slot, stack);
+        for (int i : validSlots)
+            if (i == slot) return handle.isItemValid(slot, stack);
         return false;
     }
 }

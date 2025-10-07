@@ -1,5 +1,6 @@
 package com.hbm.itempool;
 
+import com.hbm.api.tile.ILootContainerModifiable;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
 import com.hbm.handler.WeightedRandomFrom1710;
 import com.hbm.items.ModItems;
@@ -7,6 +8,10 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityLockableLoot;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.storage.loot.ILootContainer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -83,4 +88,16 @@ public class ItemPool {
             weighted(ModItems.scrap, 0, 1, 3, 10),
             weighted(ModItems.dust, 0, 2, 5, 5)
     };
+
+    public static boolean writeLootTable(TileEntity tile, ResourceLocation table, long seed) {
+        if (!(tile instanceof ILootContainer)) return false;
+        if (tile instanceof ILootContainerModifiable modifiable) {
+            modifiable.setLootTable(table, seed);
+            return true;
+        } else if (tile instanceof TileEntityLockableLoot loot){
+            loot.setLootTable(table, seed);
+            return true;
+        }
+        return false;
+    }
 }

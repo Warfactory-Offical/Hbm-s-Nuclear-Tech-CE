@@ -1,8 +1,6 @@
 package com.hbm.tileentity.machine;
 
-import com.hbm.api.tile.IWorldRenameable;
 import com.hbm.config.MachineConfig;
-import com.hbm.handler.threading.PacketThreading;
 import com.hbm.hazard.HazardSystem;
 import com.hbm.items.ModItems;
 import com.hbm.items.tool.ItemKeyPin;
@@ -10,22 +8,16 @@ import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.InventoryHelper;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
-import com.hbm.packet.toclient.BufPacket;
-import com.hbm.tileentity.IBufPacketReceiver;
 import com.hbm.tileentity.IGUIProvider;
+import com.hbm.tileentity.machine.storage.TileEntityCrateBase;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.world.IWorldNameable;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,38 +26,46 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 // mlbv: I tried overriding markDirty to calculate the changes but somehow it always delays by one operation.
 // also, implementing ITickable is a bad idea, remove it if you can find a better way.
-public abstract class TileEntityCrateBase extends TileEntityLockableBase implements IGUIProvider, IBufPacketReceiver, ITickable, IWorldRenameable {
+public abstract class TileEntityCrate extends TileEntityCrateBase implements IGUIProvider, ITickable {
 
     private final AtomicBoolean isCheckScheduled = new AtomicBoolean(false);
-    public ItemStackHandler inventory;
     public float fillPercentage = 0.0F;
-    protected String customName;
     protected String name;
     boolean needsUpdate = false;
     private boolean needsSync = false;
 
-    public TileEntityCrateBase(int scount, String name) {
-        inventory = new ItemStackHandler(scount) {
-            @Override
-            protected void onContentsChanged(int slot) {
-                markDirty();
-                needsUpdate = true;
-            }
-        };
+    public TileEntityCrate(int scount, String name) {
+        super(scount);
         this.name = name;
     }
 
-    public void openInventory(EntityPlayer player) {
-        if (!world.isRemote) {
-            // mlbv: i know how terrible this looks, change it if you can find a more elegant solution
-            PacketThreading.createSendToThreadedPacket(new BufPacket(pos.getX(), pos.getY(), pos.getZ(), this),
-                    (EntityPlayerMP) ((WorldServer) world).getEntityFromUuid(player.getPersistentID()));
-        }
-        player.world.playSound(player.posX, player.posY, player.posZ, HBMSoundHandler.crateOpen, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
-    }
+    @Override
+    protected ItemStackHandler getNewInventory(int scount, int slotlimit){
+        return new ItemStackHandler(scount){
+            @Override
+            public ItemStack getStackInSlot(int slot) {
+                ensureFilled();
+                return super.getStackInSlot(slot);
+            }
 
-    public void closeInventory(EntityPlayer player) {
-        player.world.playSound(player.posX, player.posY, player.posZ, HBMSoundHandler.crateClose, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+            @Override
+            public void setStackInSlot(int slot, ItemStack stack) {
+                ensureFilled();
+                super.setStackInSlot(slot, stack);
+            }
+
+            @Override
+            protected void onContentsChanged(int slot) {
+                super.onContentsChanged(slot);
+                markDirty();
+                needsUpdate = true;
+            }
+
+            @Override
+            public int getSlotLimit(int slot) {
+                return slotlimit;
+            }
+        };
     }
 
     @Override
@@ -163,62 +163,30 @@ public abstract class TileEntityCrateBase extends TileEntityLockableBase impleme
     }
 
     @Override
-    public boolean hasCustomName() {
-        return this.customName != null && !this.customName.isEmpty();
-    }
-
-    @Override
-    public void setCustomName(String name) {
-        this.customName = name;
-    }
-
-    public boolean isUseableByPlayer(EntityPlayer player) {
-        if (world.getTileEntity(pos) != this) {
-            return false;
-        } else {
-            return player.getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) <= 64;
-        }
-    }
-
-    @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        if (compound.hasKey("inventory")) {
-            inventory.deserializeNBT(compound.getCompoundTag("inventory"));
-        }
         fillPercentage = compound.getFloat("fill");
     }
 
     @Override
     public @NotNull NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
-        compound.setTag("inventory", inventory.serializeNBT());
         compound.setFloat("fill", fillPercentage);
         return compound;
     }
 
-    public void networkPackNT(int range) {
-        if (!world.isRemote)
-            PacketThreading.createAllAroundThreadedPacket(new BufPacket(pos.getX(), pos.getY(), pos.getZ(), this),
-                    new NetworkRegistry.TargetPoint(this.world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), range));
-    }
-
+    @Override
     public void serialize(ByteBuf buf) {
         buf.writeFloat(this.fillPercentage);
     }
 
+    @Override
     public void deserialize(ByteBuf buf) {
         this.fillPercentage = buf.readFloat();
     }
 
     @Override
-    public boolean hasCapability(@NotNull Capability<?> capability, EnumFacing facing) {
-        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && !isLocked() || super.hasCapability(capability, facing);
-    }
-
-    @Override
-    public <T> T getCapability(@NotNull Capability<T> capability, EnumFacing facing) {
-        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && !isLocked() ?
-                CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(inventory) : super.getCapability(capability, facing);
+    protected boolean checkLock(EnumFacing facing){
+        return facing == null || !isLocked();
     }
 }

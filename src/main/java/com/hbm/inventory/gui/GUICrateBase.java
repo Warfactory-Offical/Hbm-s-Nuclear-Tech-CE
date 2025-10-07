@@ -1,6 +1,6 @@
 package com.hbm.inventory.gui;
 
-import com.hbm.tileentity.machine.TileEntityCrateBase;
+import com.hbm.tileentity.machine.TileEntityCrate;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -9,7 +9,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 
-public class GUICrateBase<T extends TileEntityCrateBase, C extends Container> extends GuiContainer {
+public class GUICrateBase<T extends TileEntityCrate, C extends Container> extends GuiContainer {
 
     protected final T diFurnace;
     private final ResourceLocation texture;
