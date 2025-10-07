@@ -2,16 +2,17 @@ package com.hbm.integration.groovy;
 
 import com.cleanroommc.groovyscript.documentation.linkgenerator.BasicLinkGenerator;
 import com.hbm.Tags;
+import com.hbm.lib.RefStrings;
 
 public class NTMLinkGenerator extends BasicLinkGenerator {
     @Override
     public String id() {
-        return "hbm";
+        return RefStrings.MODID;
     }
 
     @Override
     protected String version() {
-        return "v2.0.3";
+        return RefStrings.VERSION;
     }
 
     @Override

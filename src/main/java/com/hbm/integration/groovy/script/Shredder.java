@@ -3,7 +3,7 @@ package com.hbm.integration.groovy.script;
 import com.cleanroommc.groovyscript.api.GroovyLog;
 import com.cleanroommc.groovyscript.helper.recipe.AbstractRecipeBuilder;
 import com.cleanroommc.groovyscript.registry.VirtualizedRegistry;
-import com.hbm.integration.groovy.GroovyScriptModule;
+import com.hbm.integration.groovy.HbmGroovyPropertyContainer;
 import com.hbm.integration.groovy.util.IngredientUtils;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.util.Tuple;
@@ -65,7 +65,7 @@ public class Shredder extends VirtualizedRegistry<Tuple.Pair<RecipesCommon.Compa
                 return null;
             }
             Tuple.Pair<RecipesCommon.ComparableStack, ItemStack> recipe = new Tuple.Pair<>(IngredientUtils.convertIngredient2ComparableStack(this.input.get(0)), this.output.get(0));
-            GroovyScriptModule.SHREDDER.addRecipe(recipe);
+            HbmGroovyPropertyContainer.SHREDDER.addRecipe(recipe);
             return recipe;
         }
     }

@@ -4,7 +4,7 @@ import com.cleanroommc.groovyscript.api.GroovyLog;
 import com.cleanroommc.groovyscript.api.IIngredient;
 import com.cleanroommc.groovyscript.helper.recipe.AbstractRecipeBuilder;
 import com.cleanroommc.groovyscript.registry.VirtualizedRegistry;
-import com.hbm.integration.groovy.GroovyScriptModule;
+import com.hbm.integration.groovy.HbmGroovyPropertyContainer;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.recipes.SILEXRecipes;
 import com.hbm.items.machine.ItemFELCrystal;
@@ -127,7 +127,7 @@ public class SILEX extends VirtualizedRegistry<Tuple.Pair<Object, SILEXRecipes.S
             }
 
             Tuple.Pair<Object, SILEXRecipes.SILEXRecipe> recipe = new Tuple.Pair<>(this.input.get(0), new SILEXRecipes.SILEXRecipe(this.fluidProduced, this.fluidConsumed, this.laserStrength).addOutAll(this.outputs));
-            GroovyScriptModule.SILEX.addRecipe(recipe);
+            HbmGroovyPropertyContainer.SILEX.addRecipe(recipe);
             return recipe;
         }
     }

@@ -3,12 +3,9 @@ package com.hbm.integration.groovy.script;
 import com.cleanroommc.groovyscript.api.GroovyLog;
 import com.cleanroommc.groovyscript.api.IIngredient;
 import com.cleanroommc.groovyscript.api.documentation.annotations.*;
-import com.cleanroommc.groovyscript.helper.SimpleObjectStream;
 import com.cleanroommc.groovyscript.helper.recipe.AbstractRecipeBuilder;
 import com.cleanroommc.groovyscript.registry.StandardListRegistry;
-import com.cleanroommc.groovyscript.registry.VirtualizedRegistry;
-import com.hbm.Tags;
-import com.hbm.integration.groovy.GroovyScriptModule;
+import com.hbm.integration.groovy.HbmGroovyPropertyContainer;
 import com.hbm.integration.groovy.script.recipes.GroovyAnvilConstructionRecipe;
 import com.hbm.inventory.recipes.anvil.AnvilRecipes;
 import net.minecraft.item.ItemStack;
@@ -287,7 +284,7 @@ public class AnvilConstruction extends StandardListRegistry<AnvilRecipes.AnvilCo
             }
 
             GroovyAnvilConstructionRecipe recipe = new GroovyAnvilConstructionRecipe(this.input, outputs.toArray(new AnvilRecipes.AnvilOutput[0]), this.overlayType, this.minTier, this.maxTier);
-            GroovyScriptModule.ANVILCONSTRUCTION.add(recipe);
+            HbmGroovyPropertyContainer.ANVILCONSTRUCTION.add(recipe);
             return recipe;
         }
     }

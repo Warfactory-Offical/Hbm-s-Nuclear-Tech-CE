@@ -4,7 +4,7 @@ import com.cleanroommc.groovyscript.api.GroovyLog;
 import com.cleanroommc.groovyscript.api.IIngredient;
 import com.cleanroommc.groovyscript.helper.recipe.AbstractRecipeBuilder;
 import com.cleanroommc.groovyscript.registry.VirtualizedRegistry;
-import com.hbm.integration.groovy.GroovyScriptModule;
+import com.hbm.integration.groovy.HbmGroovyPropertyContainer;
 import com.hbm.inventory.recipes.BreederRecipes;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.util.Tuple;
@@ -73,7 +73,7 @@ public class BreedingReactor extends VirtualizedRegistry<Tuple.Pair<RecipesCommo
         @Override
         public Tuple.Pair<RecipesCommon.ComparableStack, BreederRecipes.BreederRecipe> register() {
             Tuple.Pair<RecipesCommon.ComparableStack, BreederRecipes.BreederRecipe> recipe = new Tuple.Pair<>(new RecipesCommon.ComparableStack(this.input.get(0).getMatchingStacks()[0]), new BreederRecipes.BreederRecipe(this.output.get(0),this.heatLvl));
-            GroovyScriptModule.BREEDINGREACTOR.addRecipe(recipe);
+            HbmGroovyPropertyContainer.BREEDINGREACTOR.addRecipe(recipe);
             return recipe;
         }
     }

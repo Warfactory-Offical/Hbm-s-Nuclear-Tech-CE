@@ -4,8 +4,7 @@ import com.cleanroommc.groovyscript.api.GroovyLog;
 import com.cleanroommc.groovyscript.api.documentation.annotations.*;
 import com.cleanroommc.groovyscript.helper.recipe.AbstractRecipeBuilder;
 import com.cleanroommc.groovyscript.registry.StandardListRegistry;
-import com.hbm.Tags;
-import com.hbm.integration.groovy.GroovyScriptModule;
+import com.hbm.integration.groovy.HbmGroovyPropertyContainer;
 import com.hbm.integration.groovy.script.recipes.GroovyAnvilSmithingRecipes;
 import com.hbm.inventory.recipes.anvil.AnvilRecipes;
 import com.hbm.inventory.recipes.anvil.AnvilSmithingRecipe;
@@ -120,7 +119,7 @@ public class AnvilSmithing extends StandardListRegistry<AnvilSmithingRecipe> {
                 return null;
             }
             GroovyAnvilSmithingRecipes recipe = new GroovyAnvilSmithingRecipes(this.tier, this.output.get(0), this.input);
-            GroovyScriptModule.ANVILSMITHING.add(recipe);
+            HbmGroovyPropertyContainer.ANVILSMITHING.add(recipe);
             return recipe;
         }
     }

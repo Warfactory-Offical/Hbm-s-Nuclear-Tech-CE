@@ -3,9 +3,8 @@ package com.hbm.integration.groovy.script;
 import com.cleanroommc.groovyscript.api.GroovyLog;
 import com.cleanroommc.groovyscript.helper.recipe.AbstractRecipeBuilder;
 import com.cleanroommc.groovyscript.registry.VirtualizedRegistry;
-import com.hbm.integration.groovy.GroovyScriptModule;
+import com.hbm.integration.groovy.HbmGroovyPropertyContainer;
 import com.hbm.integration.groovy.util.IngredientUtils;
-import com.hbm.inventory.recipes.PressRecipes;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.items.machine.ItemStamp;
 import com.hbm.util.Tuple;
@@ -108,7 +107,7 @@ public class Press extends VirtualizedRegistry<Tuple.Pair<Tuple.Pair<RecipesComm
                 return null;
             }
             Tuple.Pair<Tuple.Pair<RecipesCommon.AStack, ItemStamp.StampType>, ItemStack> recipe = new Tuple.Pair<>(new Tuple.Pair<>(IngredientUtils.convertIngredient2Astack(this.input.get(0)), this.type), this.output.get(0));
-            GroovyScriptModule.PRESS.addRecipe(recipe);
+            HbmGroovyPropertyContainer.PRESS.addRecipe(recipe);
             return recipe;
         }
     }

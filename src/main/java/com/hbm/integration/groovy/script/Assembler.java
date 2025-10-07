@@ -4,7 +4,7 @@ import com.cleanroommc.groovyscript.api.GroovyLog;
 import com.cleanroommc.groovyscript.api.IIngredient;
 import com.cleanroommc.groovyscript.helper.recipe.AbstractRecipeBuilder;
 import com.cleanroommc.groovyscript.registry.VirtualizedRegistry;
-import com.hbm.integration.groovy.GroovyScriptModule;
+import com.hbm.integration.groovy.HbmGroovyPropertyContainer;
 import com.hbm.integration.groovy.util.IngredientUtils;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.util.Tuple;
@@ -79,7 +79,7 @@ public class Assembler extends VirtualizedRegistry<Tuple.Triplet<RecipesCommon.C
                 list.add(IngredientUtils.convertIngredient2Astack(ingredient));
             }
             Tuple.Triplet<RecipesCommon.ComparableStack, RecipesCommon.AStack[], Integer> recipe = new Tuple.Triplet<>(new RecipesCommon.ComparableStack(this.output.get(0)),  list.toArray(new RecipesCommon.AStack[0]), this.time);
-            GroovyScriptModule.ASSEMBLER.addRecipe(recipe);
+            HbmGroovyPropertyContainer.ASSEMBLER.addRecipe(recipe);
             return recipe;
         }
     }

@@ -3,16 +3,12 @@ package com.hbm.integration.groovy.script;
 import com.cleanroommc.groovyscript.api.GroovyLog;
 import com.cleanroommc.groovyscript.helper.recipe.AbstractRecipeBuilder;
 import com.cleanroommc.groovyscript.registry.StandardListRegistry;
-import com.cleanroommc.groovyscript.registry.VirtualizedRegistry;
-import com.hbm.integration.groovy.GroovyScriptModule;
+import com.hbm.integration.groovy.HbmGroovyPropertyContainer;
 import com.hbm.integration.groovy.util.IngredientUtils;
-import com.hbm.inventory.recipes.BlastFurnaceRecipes;
-import com.hbm.inventory.RecipesCommon;
 import com.hbm.util.Tuple;
 import net.minecraft.item.ItemStack;
 
 import java.util.Collection;
-import java.util.List;
 
 import static com.hbm.inventory.recipes.BlastFurnaceRecipes.blastFurnaceRecipes;
 
@@ -40,7 +36,7 @@ public class BlastFurnace extends StandardListRegistry<Tuple.Triplet<Object, Obj
                 return null;
             }
             Tuple.Triplet<Object, Object, ItemStack> recipe = new Tuple.Triplet<>(IngredientUtils.convertIngredient2Astack(this.input.get(0)), IngredientUtils.convertIngredient2Astack(this.input.get(1)), this.output.get(0));
-            GroovyScriptModule.BLASTFURNACE.add(recipe);
+            HbmGroovyPropertyContainer.BLASTFURNACE.add(recipe);
             return recipe;
         }
     }

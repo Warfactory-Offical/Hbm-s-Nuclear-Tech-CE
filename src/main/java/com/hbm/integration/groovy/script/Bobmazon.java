@@ -7,7 +7,7 @@ import com.cleanroommc.groovyscript.api.documentation.annotations.RecipeBuilderM
 import com.cleanroommc.groovyscript.api.documentation.annotations.RecipeBuilderRegistrationMethod;
 import com.cleanroommc.groovyscript.helper.recipe.AbstractRecipeBuilder;
 import com.cleanroommc.groovyscript.registry.StandardListRegistry;
-import com.hbm.integration.groovy.GroovyScriptModule;
+import com.hbm.integration.groovy.HbmGroovyPropertyContainer;
 import com.hbm.inventory.gui.GUIScreenBobmazon;
 import net.minecraft.util.Tuple;
 
@@ -119,7 +119,7 @@ public class Bobmazon extends StandardListRegistry<Tuple<OfferCategory, GUIScree
                 return null;
             }
             GUIScreenBobmazon.Offer recipe = new GUIScreenBobmazon.Offer(this.output.get(0), this.requirement, this.cost, this.rating, this.comment, this.author);
-            GroovyScriptModule.BOBMAZON.add(new Tuple<>(this.category, recipe));
+            HbmGroovyPropertyContainer.BOBMAZON.add(new Tuple<>(this.category, recipe));
             return recipe;
         }
     }

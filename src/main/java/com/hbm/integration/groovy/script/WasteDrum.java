@@ -2,12 +2,10 @@ package com.hbm.integration.groovy.script;
 
 import com.cleanroommc.groovyscript.api.IIngredient;
 import com.cleanroommc.groovyscript.registry.VirtualizedRegistry;
-import com.hbm.integration.groovy.GroovyScriptModule;
+import com.hbm.integration.groovy.HbmGroovyPropertyContainer;
 import com.hbm.inventory.RecipesCommon;
-import com.hbm.inventory.recipes.FluidCombustionRecipes;
 import com.hbm.inventory.recipes.WasteDrumRecipes;
 import com.hbm.util.Tuple;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import static com.hbm.inventory.recipes.StorageDrumRecipes.outputs;
@@ -42,7 +40,7 @@ public class WasteDrum extends VirtualizedRegistry<Tuple.Pair<RecipesCommon.Comp
 
     public void addRecipe(IIngredient ingredient, ItemStack output){
         for(ItemStack stack:ingredient.getMatchingStacks()) {
-            GroovyScriptModule.WASTEDRUM.addRecipe(new Tuple.Pair<>(new RecipesCommon.ComparableStack(stack), output));
+            HbmGroovyPropertyContainer.WASTEDRUM.addRecipe(new Tuple.Pair<>(new RecipesCommon.ComparableStack(stack), output));
         }
     }
 
