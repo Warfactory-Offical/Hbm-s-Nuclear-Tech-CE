@@ -85,7 +85,7 @@ public class ShredderRecipes extends SerializableRecipe {
                 if (comp == null) continue;
 
                 ItemStack in = comp.toStack();
-                if (in == null || in.isEmpty()) continue;
+                if (in.isEmpty()) continue;
 
                 ItemStack out = entry.getValue();
                 if (out == null || out.isEmpty()) continue;
@@ -120,9 +120,7 @@ public class ShredderRecipes extends SerializableRecipe {
 
         String[] names = OreDictionary.getOreNames();
 
-        for (int i = 0; i < names.length; i++) {
-
-            String name = names[i];
+        for (String name : names) {
 
             //if the dict contains invalid names, skip
             if (name == null || name.isEmpty())
@@ -134,60 +132,60 @@ public class ShredderRecipes extends SerializableRecipe {
             if (matches == null || matches.isEmpty())
                 continue;
 
-            if (name.length() > 5 && name.substring(0, 5).equals("ingot")) {
+            if (name.length() > 5 && name.startsWith("ingot")) {
                 ItemStack dust = getDustByName(name.substring(5));
 
-                if (dust != null && dust.getItem() != ModItems.scrap) {
+                if (dust.getItem() != ModItems.scrap) {
 
                     for (ItemStack stack : matches) {
-                        shredderRecipes.put(new ComparableStack(stack), dust);
+                        setRecipe(new ComparableStack(stack), dust);
                     }
                 }
-            } else if (name.length() > 6 && name.substring(0, 6).equals("nugget")) {
+            } else if (name.length() > 6 && name.startsWith("nugget")) {
                 ItemStack dust = getTinyDustByName(name.substring(6));
 
-                if (dust != null && dust.getItem() != ModItems.scrap) {
+                if (dust.getItem() != ModItems.scrap) {
 
                     for (ItemStack stack : matches) {
-                        shredderRecipes.put(new ComparableStack(stack), dust);
+                        setRecipe(new ComparableStack(stack), dust);
                     }
                 }
-            } else if (name.length() > 3 && name.substring(0, 3).equals("ore")) {
+            } else if (name.length() > 3 && name.startsWith("ore")) {
                 ItemStack dust = getDustByName(name.substring(3));
 
-                if (dust != null && dust.getItem() != ModItems.scrap) {
+                if (dust.getItem() != ModItems.scrap) {
 
                     dust.setCount(2);
 
                     for (ItemStack stack : matches) {
-                        shredderRecipes.put(new ComparableStack(stack), dust);
+                        setRecipe(new ComparableStack(stack), dust);
                     }
                 }
-            } else if (name.length() > 5 && name.substring(0, 5).equals("block")) {
+            } else if (name.length() > 5 && name.startsWith("block")) {
                 ItemStack dust = getDustByName(name.substring(5));
 
-                if (dust != null && dust.getItem() != ModItems.scrap) {
+                if (dust.getItem() != ModItems.scrap) {
 
                     dust.setCount(9);
 
                     for (ItemStack stack : matches) {
-                        shredderRecipes.put(new ComparableStack(stack), dust);
+                        setRecipe(new ComparableStack(stack), dust);
                     }
                 }
-            } else if (name.length() > 3 && name.substring(0, 3).equals("gem")) {
+            } else if (name.length() > 3 && name.startsWith("gem")) {
                 ItemStack dust = getDustByName(name.substring(3));
 
-                if (dust != null && dust.getItem() != ModItems.scrap) {
+                if (dust.getItem() != ModItems.scrap) {
 
                     for (ItemStack stack : matches) {
-                        shredderRecipes.put(new ComparableStack(stack), dust);
+                        setRecipe(new ComparableStack(stack), dust);
                     }
                 }
-            } else if (name.length() > 3 && name.substring(0, 4).equals("dust")) {
+            } else if (name.startsWith("dust")) {
 
                 for (ItemStack stack : matches) {
                     if (stack != null && !stack.isEmpty() && Item.REGISTRY.getNameForObject(stack.getItem()) != null)
-                        shredderRecipes.put(new ComparableStack(stack), new ItemStack(ModItems.dust));
+                        setRecipe(new ComparableStack(stack), new ItemStack(ModItems.dust));
                 }
             }
         }
