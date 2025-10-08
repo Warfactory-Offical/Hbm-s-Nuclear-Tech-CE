@@ -4,21 +4,28 @@ about: Suggest an idea for this project
 title: "[FEATURE]"
 labels: enhancement
 assignees: ''
-
 ---
 
-> IMPORTANT Remove the default block quotes (Just like this line) while filling in the report. Failing to do so may result in closing with no warning
-**Is your feature request related to a problem? Please describe.**
-> A clear and concise description of what the problem is.
+<!--
+IMPORTANT: Fill out each section clearly and completely.
+Do NOT delete section headings. Use concise, actionable details.
+-->
 
-**Describe the solution you'd like**
-> A clear and concise description of what you want to happen. 
-> In case of a compatibility request, add the appropriate label
+### Is your feature request related to a problem?
+<!-- Describe the problem and why it matters. If this is a compatibility request, name the other mod(s). -->
 
+### Describe the solution you'd like
+<!-- What should happen? Describe desired behavior. For compatibility requests, also add the appropriate label. -->
 
-**Have you notified the upstream (Original mod) with this feature request**
-> Have you made a request for this feature in the original mod? If so, was it accepted? This highly increases the chance for your request to be accepted. If this is a compatibility request for a mod, skip this. 
+### Alternatives you've considered
+<!-- List alternative solutions or features you’ve thought about and why they’re not ideal. -->
 
+### Upstream status (original mod)
+<!-- If applicable: Have you requested this in the original mod? Link to their issue/PR and note the outcome.
+If this is a compatibility request for another mod, you can skip this. -->
 
-**Additional context**
-> Add any other context or screenshots about the feature request here.
+### Impact & considerations
+<!-- Optional but helpful: performance implications, balance concerns, config options, save/world compatibility, migration notes. -->
+
+### Additional context
+<!-- Any other context, screenshots, mockups, references, or links. -->
