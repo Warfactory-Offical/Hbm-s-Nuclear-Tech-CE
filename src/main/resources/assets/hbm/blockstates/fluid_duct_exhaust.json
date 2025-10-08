@@ -1,0 +1,5 @@
+{
+	"variants": {
+		"normal": { "model": "hbm:fluid_duct_exhaust" }
+	}
+}
