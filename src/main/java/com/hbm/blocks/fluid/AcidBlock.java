@@ -75,11 +75,8 @@ public class AcidBlock extends BlockFluidClassic {
     }
 
     public void reactToBlocks(World world, BlockPos pos) {
-        if (world.getBlockState(pos).getMaterial() != ModBlocks.fluidacid) {
-            IBlockState blockState = world.getBlockState(pos);
-            if (blockState.getMaterial().isLiquid()) {
-                world.setBlockToAir(pos);
-            }
+        if (world.getBlockState(pos).getBlock() != ModBlocks.acid_block) {
+            world.setBlockToAir(pos);
         }
     }
 
