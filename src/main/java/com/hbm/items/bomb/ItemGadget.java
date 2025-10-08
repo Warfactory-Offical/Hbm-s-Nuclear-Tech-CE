@@ -21,7 +21,7 @@ public class ItemGadget extends ItemBase {
 	public void addInformation(ItemStack stack, World world, List<String> list, ITooltipFlag flagIn) {
 		list.add(I18nUtil.resolveKey("desc.usedin"));
 		list.add(" "+ I18nUtil.resolveKey("tile.nuke_gadget.name"));
-		if(this == ModItems.gadget_explosive8)
+		if(this == ModItems.early_explosive_lenses)
 			list.add(" "+ I18nUtil.resolveKey("tile.nuke_man.name"));
 		super.addInformation(stack, world, list, flagIn);
 	}

@@ -152,7 +152,6 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.furnace_iron), VanillaRecipeCategoryUid.SMELTING);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.furnace_steel), VanillaRecipeCategoryUid.SMELTING);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_microwave), VanillaRecipeCategoryUid.SMELTING);
-        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_nuke_furnace_off), VanillaRecipeCategoryUid.SMELTING);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_rtg_furnace_off), VanillaRecipeCategoryUid.SMELTING);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.crate_tungsten), VanillaRecipeCategoryUid.SMELTING);
 
@@ -347,7 +346,6 @@ public class JEIConfig implements IModPlugin {
 
         blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.machine_electric_furnace_on));
         blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.machine_difurnace_on));
-        blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.machine_nuke_furnace_on));
         blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.machine_rtg_furnace_on));
         blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.reinforced_lamp_on));
         blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.statue_elb));

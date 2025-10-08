@@ -2,7 +2,7 @@ package com.hbm.world;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.DecoPoleSatelliteReceiver;
-import com.hbm.blocks.machine.MachineNukeFurnace;
+import com.hbm.blocks.machine.MachineDiFurnaceRTG;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
 import com.hbm.itempool.ItemPool;
 import com.hbm.itempool.ItemPoolsLegacy;
@@ -26,7 +26,7 @@ public class DesertAtom002
 	Block Block7 = ModBlocks.deco_tungsten;
 	Block Block8 = ModBlocks.steel_poles;
 	Block Block9 = ModBlocks.tape_recorder;
-	Block Block10 = ModBlocks.machine_nuke_furnace_off;
+	Block Block10 = ModBlocks.machine_difurnace_rtg_off;
 	Block Block11 = ModBlocks.reinforced_glass;
 	Block Block12 = ModBlocks.reinforced_lamp_off;
 	Block Block13 = ModBlocks.pole_satellite_receiver;
@@ -1252,7 +1252,7 @@ public class DesertAtom002
 		world.setBlockState(pos.setPos(x + 19, y + 0, z + 16), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 20, y + 0, z + 16), Blocks.VINE.getDefaultState().withProperty(BlockVine.WEST, true), 3);
 		world.setBlockState(pos.setPos(x + 21, y + 0, z + 16), Blocks.WEB.getDefaultState(), 3);
-		world.setBlockState(pos.setPos(x + 22, y + 0, z + 16), Block10.getDefaultState().withProperty(MachineNukeFurnace.FACING, EnumFacing.WEST), 3);
+		world.setBlockState(pos.setPos(x + 22, y + 0, z + 16), Block10.getDefaultState().withProperty(MachineDiFurnaceRTG.FACING, EnumFacing.WEST), 3);
 		world.setBlockState(pos.setPos(x + 23, y + 0, z + 16), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 24, y + 0, z + 16), Block5.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 29, y + 0, z + 16), Blocks.WOODEN_SLAB.getDefaultState().withProperty(BlockHalfWoodSlab.HALF, BlockSlab.EnumBlockHalf.TOP).withProperty(BlockHalfWoodSlab.VARIANT, BlockPlanks.EnumType.OAK), 3);
