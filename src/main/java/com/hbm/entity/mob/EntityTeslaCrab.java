@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
-@AutoRegister(name = "entity_tesla_crab")
+@AutoRegister(name = "entity_tesla_crab",  eggColors = {0xAAAAAA, 0x440000})
 public class EntityTeslaCrab extends EntityCyberCrab {
 	
 	public List<double[]> targets = new ArrayList<double[]>();

@@ -155,7 +155,7 @@ public class AutoRegisterProcessor extends AbstractProcessor {
                 return;
             }
             entities.add(new EntityInfo(annotatedFqn, annotation.name(), annotation.trackingRange(), annotation.updateFrequency(),
-                    annotation.sendVelocityUpdates()));
+                    annotation.sendVelocityUpdates(), annotation.eggColors()));
 
         } else {
             messager.printMessage(Diagnostic.Kind.ERROR, "Class is not a valid type for @AutoRegister. Must extend Entity, TileEntity, or a valid " +
@@ -204,6 +204,11 @@ public class AutoRegisterProcessor extends AbstractProcessor {
                 method.addStatement("$T.registerModEntity(new $T($T.MODID, $S), $T.class, $S, currentId++, $T.instance, $L, $L, $L)",
                         ENTITY_REGISTRY, RESOURCE_LOCATION, REF_STRINGS, info.name, ClassName.bestGuess(info.fqn), info.name, MAIN_REGISTRY,
                         info.trackingRange, info.updateFrequency, info.sendVelocityUpdates);
+            }
+            for(EntityInfo info : entities) {
+                if(info.eggColors[0] + info.eggColors[1] != 0x0) {
+                    method.addStatement("$T.registerEgg(new $T($T.MODID, $S), $L, $L)", ENTITY_REGISTRY, RESOURCE_LOCATION, REF_STRINGS, info.name, info.eggColors[0], info.eggColors[1]);
+                }
             }
             method.addStatement("return currentId");
             registrarBuilder.addMethod(method.build());
@@ -352,13 +357,15 @@ public class AutoRegisterProcessor extends AbstractProcessor {
         final String fqn, name;
         final int trackingRange, updateFrequency;
         final boolean sendVelocityUpdates;
+        final int[] eggColors;
 
-        EntityInfo(String fqn, String name, int r, int u, boolean v) {
+        EntityInfo(String fqn, String name, int r, int u, boolean v, int[] eggColors) {
             this.fqn = fqn;
             this.name = name;
             this.trackingRange = r;
             this.updateFrequency = u;
             this.sendVelocityUpdates = v;
+            this.eggColors = eggColors;
         }
     }
 

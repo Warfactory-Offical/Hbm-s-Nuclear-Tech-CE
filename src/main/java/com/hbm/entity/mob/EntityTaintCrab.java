@@ -21,7 +21,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 
 import java.util.ArrayList;
 import java.util.List;
-@AutoRegister(name = "entity_taint_crab")
+@AutoRegister(name = "entity_taint_crab", eggColors = {0xAAAAAA, 0xFF00FF})
 public class EntityTaintCrab extends EntityCyberCrab {
 
 	public List<double[]> targets = new ArrayList<double[]>();

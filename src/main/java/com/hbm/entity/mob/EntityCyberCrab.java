@@ -17,7 +17,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
-@AutoRegister(name = "entity_cyber_crab")
+@AutoRegister(name = "entity_cyber_crab", eggColors = {0xAAAAAA, 0x444444})
 public class EntityCyberCrab extends EntityMob implements IRangedAttackMob, IRadiationImmune {
 
 	private static final Predicate<EntityLiving> selector = new Predicate<EntityLiving>(){

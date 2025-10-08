@@ -35,7 +35,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 //Drillgon200: This whole thing is messed up and janky and I don't know what to about it.
-@AutoRegister(name = "entity_hunter_chopper", trackingRange = 1000)
+@AutoRegister(name = "entity_hunter_chopper", trackingRange = 1000, eggColors = {0x000020, 0x2D2D72})
 public class EntityHunterChopper extends EntityFlying implements IMob, IRadiationImmune {
 
 	public static final DataParameter<Boolean> DYING = EntityDataManager.createKey(EntityHunterChopper.class, DataSerializers.BOOLEAN);

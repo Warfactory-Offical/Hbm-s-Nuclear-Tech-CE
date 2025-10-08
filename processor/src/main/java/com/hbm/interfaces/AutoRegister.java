@@ -145,4 +145,11 @@ public @interface AutoRegister {
      * e.g. "INSTANCE". If empty, a new instance will be created using constructor args.
      */
     String instanceField() default "";
+
+    /**
+     * This parameter is used only for mob entities to recolor the egg.
+     * The primary and secondary colors are used.
+     */
+
+    int[] eggColors() default {0, 0};
 }

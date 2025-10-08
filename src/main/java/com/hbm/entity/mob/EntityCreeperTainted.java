@@ -13,7 +13,7 @@ import net.minecraft.entity.passive.EntityOcelot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-@AutoRegister(name = "entity_tainted_creeper", trackingRange = 80)
+@AutoRegister(name = "entity_tainted_creeper", trackingRange = 80, eggColors = {0x813b9b, 0xd71fdd})
 public class EntityCreeperTainted extends EntityCreeper implements IRadiationImmune {
 
     public EntityCreeperTainted(World world) {
