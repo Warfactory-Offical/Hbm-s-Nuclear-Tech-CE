@@ -4,7 +4,6 @@ import com.hbm.api.tile.IWorldRenameable;
 import com.hbm.util.CompatExternal;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,7 +19,6 @@ import net.minecraft.world.World;
  * <p>For blocks implementing this feature, the following methods <strong>must</strong> be overridden:
  * <ul>
  *   <li>{@link Block#breakBlock}</li>
- *   <li>{@link Block#getPickBlock}</li>
  *   <li>{@link Block#dropBlockAsItemWithChance} (made empty)</li>
  *   <li>{@link Block#onBlockHarvested}</li>
  *   <li>{@link Block#onBlockPlacedBy} (unnecessary for subclasses of {@link com.hbm.blocks.BlockDummyable BlockDummyable})</li>
@@ -53,21 +51,6 @@ public interface IPersistentNBT {
         if (state.hasComparatorInputOverride()) {
             worldIn.updateComparatorOutputLevel(pos, state.getBlock());
         }
-    }
-
-    static ItemStack getPickBlock(World worldIn, BlockPos pos, IBlockState state) {
-        ItemStack stack = new ItemStack(Item.getItemFromBlock(state.getBlock()), 1, state.getBlock().damageDropped(state));
-
-        if(!GuiScreen.isCtrlKeyDown()) {
-            return stack;
-        }
-
-        if (CompatExternal.getCoreFromPos(worldIn, pos) instanceof IPersistentNBT persistentTE) {
-            NBTTagCompound data = new NBTTagCompound();
-            persistentTE.writeNBT(data);
-            if (!data.isEmpty()) stack.setTagCompound(data);
-        }
-        return stack;
     }
 
     static void onBlockPlacedBy(World worldIn, BlockPos pos, ItemStack stack) {

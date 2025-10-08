@@ -26,6 +26,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 // mlbv: I tried overriding markDirty to calculate the changes but somehow it always delays by one operation.
 // also, implementing ITickable is a bad idea, remove it if you can find a better way.
+// TODO: hook onto IPersistentNBT
 public abstract class TileEntityCrate extends TileEntityCrateBase implements IGUIProvider, ITickable {
 
     private final AtomicBoolean isCheckScheduled = new AtomicBoolean(false);

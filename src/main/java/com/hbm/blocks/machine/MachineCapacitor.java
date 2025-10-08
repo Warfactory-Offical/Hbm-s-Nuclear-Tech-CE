@@ -35,7 +35,6 @@ import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -150,11 +149,6 @@ public class MachineCapacitor extends BlockContainer implements ILookOverlay, IP
                     ChatFormatting.YELLOW + "" + ChatFormatting.ITALIC + "LSHIFT" +
                     ChatFormatting.DARK_GRAY + "" + ChatFormatting.ITALIC + "> to display more info");
         }
-    }
-
-    @Override
-    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
-        return IPersistentNBT.getPickBlock(world, pos, state);
     }
 
     @Override
