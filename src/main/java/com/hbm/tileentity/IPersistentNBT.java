@@ -4,6 +4,7 @@ import com.hbm.api.tile.IWorldRenameable;
 import com.hbm.util.CompatExternal;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -56,6 +57,11 @@ public interface IPersistentNBT {
 
     static ItemStack getPickBlock(World worldIn, BlockPos pos, IBlockState state) {
         ItemStack stack = new ItemStack(Item.getItemFromBlock(state.getBlock()), 1, state.getBlock().damageDropped(state));
+
+        if(!GuiScreen.isCtrlKeyDown()) {
+            return stack;
+        }
+
         if (CompatExternal.getCoreFromPos(worldIn, pos) instanceof IPersistentNBT persistentTE) {
             NBTTagCompound data = new NBTTagCompound();
             persistentTE.writeNBT(data);
