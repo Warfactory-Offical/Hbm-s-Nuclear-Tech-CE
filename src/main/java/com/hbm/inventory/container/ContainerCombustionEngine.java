@@ -1,6 +1,7 @@
 package com.hbm.inventory.container;
 
 import com.hbm.api.energymk2.IBatteryItem;
+import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.IItemFluidIdentifier;
@@ -24,7 +25,7 @@ public class ContainerCombustionEngine extends Container {
     this.addSlotToContainer(new SlotItemHandler(tile.inventory, 0, 17, 17));
     this.addSlotToContainer(new SlotTakeOnly(tile.inventory, 1, 17, 53));
     this.addSlotToContainer(new SlotItemHandler(tile.inventory, 2, 88, 71));
-    this.addSlotToContainer(new SlotItemHandler(tile.inventory, 3, 143, 71));
+    this.addSlotToContainer(new SlotBattery(tile.inventory, 3, 143, 71));
     this.addSlotToContainer(new SlotItemHandler(tile.inventory, 4, 35, 71));
 
     for (int i = 0; i < 3; i++) {

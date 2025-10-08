@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.tileentity.bomb.TileEntityLaunchPad;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -19,7 +20,7 @@ private TileEntityLaunchPad diFurnace;
 		
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 0, 26, 17));
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 1, 80, 17));
-		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 2, 134, 17));
+		this.addSlotToContainer(new SlotBattery(tedf.inventory, 2, 134, 17));
 		
 		for(int i = 0; i < 3; i++)
 		{

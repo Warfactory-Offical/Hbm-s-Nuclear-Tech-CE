@@ -1,10 +1,10 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.items.machine.IItemFluidIdentifier;
+import com.hbm.lib.Library;
 import com.hbm.tileentity.machine.TileEntityMachineWoodBurner;
-
-import com.hbm.api.energymk2.IBatteryItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -31,7 +31,7 @@ public class ContainerMachineWoodBurner extends Container {
 		this.addSlotToContainer(new SlotItemHandler(burner.inventory, 3, 98, 18));
 		this.addSlotToContainer(new SlotTakeOnly(burner.inventory, 4, 98, 36));
 		//Battery
-		this.addSlotToContainer(new SlotItemHandler(burner.inventory, 5, 143, 54));
+		this.addSlotToContainer(new SlotBattery(burner.inventory, 5, 143, 54));
 		
 		for(int i = 0; i < 3; i++) {
 			for(int j = 0; j < 9; j++) {
@@ -62,7 +62,7 @@ public class ContainerMachineWoodBurner extends Container {
 				
 			} else {
 				
-				if(stack.getItem() instanceof IBatteryItem) {
+				if(Library.isItemBattery(stack)) {
 					if(!this.mergeItemStack(originalStack, 5, 6, false)) {
 						return ItemStack.EMPTY;
 					}

@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.lib.Library;
@@ -22,7 +23,7 @@ public class ContainerMachineExposureChamber extends Container {
         this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 2, 8, 54));
         this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 3, 80, 36));
         this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 4, 116, 36));
-        this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 5, 152, 54));
+        this.addSlotToContainer(new SlotBattery(tedf.inventory, 5, 152, 54));
         this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 6, 44, 54));
         this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 7, 62, 54));
 

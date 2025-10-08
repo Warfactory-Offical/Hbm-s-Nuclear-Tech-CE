@@ -1,6 +1,7 @@
 package com.hbm.inventory.container;
 
 import com.hbm.api.energymk2.IBatteryItem;
+import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemMachineUpgrade;
@@ -20,7 +21,7 @@ public class ContainerElectrolyserMetal extends Container {
         electrolyser = tedf;
 
         //Battery
-        this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 0, 186, 109));
+        this.addSlotToContainer(new SlotBattery(tedf.inventory, 0, 186, 109));
         //Upgrades
         this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 1, 186, 140));
         this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 2, 186, 158));

@@ -2,6 +2,7 @@ package com.hbm.inventory.container;
 
 import com.hbm.api.item.IDesignatorItem;
 import com.hbm.inventory.FluidContainerRegistry;
+import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.items.ModItems;
 import com.hbm.lib.Library;
@@ -26,7 +27,7 @@ public class ContainerLaunchPadLarge extends Container {
 		//Designator
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 1, 26, 72));
 		//Battery
-		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 2, 107, 90));
+		this.addSlotToContainer(new SlotBattery(tedf.inventory, 2, 107, 90));
 		//Fuel in
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 3, 125, 90));
 		//Fuel out

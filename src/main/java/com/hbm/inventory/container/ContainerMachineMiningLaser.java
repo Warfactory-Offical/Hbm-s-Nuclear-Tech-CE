@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotUpgrade;
 import com.hbm.tileentity.machine.TileEntityMachineMiningLaser;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,7 +18,7 @@ public class ContainerMachineMiningLaser extends Container {
 		diFurnace = tedf;
 
 		//Battery
-		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 0, 8, 108));
+		this.addSlotToContainer(new SlotBattery(tedf.inventory, 0, 8, 108));
 		//Upgrades
 		for(int i = 0; i < 2; i++)
 			for(int j = 0; j < 4; j++)

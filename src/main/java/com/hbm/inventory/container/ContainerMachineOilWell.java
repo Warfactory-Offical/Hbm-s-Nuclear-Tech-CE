@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.tileentity.machine.oil.TileEntityOilDrillBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,7 +18,7 @@ public class ContainerMachineOilWell extends Container {
 		testNuke = tedf;
 
 		// Battery
-		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 0, 8, 53));
+		this.addSlotToContainer(new SlotBattery(tedf.inventory, 0, 8, 53));
 		// Canister Input
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 1, 80, 17));
 		// Canister Output

@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.tileentity.bomb.TileEntityRailgun;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -17,7 +18,7 @@ public class ContainerRailgun extends Container {
 		diFurnace = tedf;
 
 		//battery
-		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 0, 17, 17));
+		this.addSlotToContainer(new SlotBattery(tedf.inventory, 0, 17, 17));
 		//targeter
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 1, 53, 17));
 		//ammo

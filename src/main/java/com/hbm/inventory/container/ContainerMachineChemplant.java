@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.tileentity.machine.TileEntityMachineChemplant;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,7 +23,7 @@ public class ContainerMachineChemplant extends Container {
 		nukeBoy = tedf;
 
 		//Battery
-		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 0, 80, 18));
+		this.addSlotToContainer(new SlotBattery(tedf.inventory, 0, 80, 18));
 		//Upgrades
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 1, 116, 18));
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 2, 116, 36));

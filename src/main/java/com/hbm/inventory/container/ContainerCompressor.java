@@ -1,10 +1,9 @@
 package com.hbm.inventory.container;
 
-import com.hbm.api.energymk2.IBatteryItem;
+import com.hbm.inventory.SlotBattery;
 import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.machine.TileEntityMachineCompressorBase;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -22,7 +21,7 @@ public class ContainerCompressor extends Container {
         //Fluid ID
         this.addSlotToContainer(new SlotItemHandler(tile.inventory, 0, 17, 72));
         //Battery
-        this.addSlotToContainer(new SlotItemHandler(tile.inventory, 1, 152, 72));
+        this.addSlotToContainer(new SlotBattery(tile.inventory, 1, 152, 72));
         //Upgrades
         this.addSlotToContainer(new SlotItemHandler(tile.inventory, 2, 52, 72));
         this.addSlotToContainer(new SlotItemHandler(tile.inventory, 3, 70, 72));

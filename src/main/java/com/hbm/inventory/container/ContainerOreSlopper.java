@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.items.machine.ItemMachineUpgrade;
@@ -20,7 +21,7 @@ public class ContainerOreSlopper extends Container {
         this.slopper = slopper;
 
         //Battery
-        this.addSlotToContainer(new SlotItemHandler(slopper.inventory, 0, 8, 72));
+        this.addSlotToContainer(new SlotBattery(slopper.inventory, 0, 8, 72));
         //Fluid ID
         this.addSlotToContainer(new SlotItemHandler(slopper.inventory, 1, 26, 72));
         //Input

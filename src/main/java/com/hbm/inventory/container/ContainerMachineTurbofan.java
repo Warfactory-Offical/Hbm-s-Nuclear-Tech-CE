@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.items.machine.ItemMachineUpgrade;
@@ -27,7 +28,7 @@ public class ContainerMachineTurbofan extends Container {
         this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 0, 17, 17));
         this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 1, 17, 53));
         this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 2, 98, 71));
-        this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 3, 143, 71));
+        this.addSlotToContainer(new SlotBattery(tedf.inventory, 3, 143, 71));
         this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 4, 44, 71));
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {

@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.inventory.SlotUpgrade;
 import com.hbm.items.machine.IItemFluidIdentifier;
@@ -31,7 +32,7 @@ public class ContainerMachineGasCent extends Container {
     }
 
     // Battery
-    this.addSlotToContainer(new SlotItemHandler(gasCent.inventory, 4, 182, 71));
+    this.addSlotToContainer(new SlotBattery(gasCent.inventory, 4, 182, 71));
 
     // Fluid ID IO
     this.addSlotToContainer(new SlotItemHandler(gasCent.inventory, 5, 91, 15));

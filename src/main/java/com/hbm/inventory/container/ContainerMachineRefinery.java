@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.tileentity.machine.oil.TileEntityMachineRefinery;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,7 +19,7 @@ private TileEntityMachineRefinery testNuke;
 		testNuke = tedf;
 
 		//Battery
-		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 0, 186, 72));
+		this.addSlotToContainer(new SlotBattery(tedf.inventory, 0, 186, 72));
 		//Canister Input
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 1, 8, 99));
 		//Canister Output

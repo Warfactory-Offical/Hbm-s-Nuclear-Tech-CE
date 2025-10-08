@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.tileentity.machine.TileEntityMachineSchrabidiumTransmutator;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,7 +10,8 @@ import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
-
+// Th3_Sl1ze: it was deleted on 1.7, I'll mark it for deletion
+@Deprecated
 public class ContainerMachineSchrabidiumTransmutator extends Container {
 
 private TileEntityMachineSchrabidiumTransmutator nukeBoy;
@@ -21,7 +23,7 @@ private TileEntityMachineSchrabidiumTransmutator nukeBoy;
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 0, 44, 63));
 		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 1, 134, 63));
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 2, 26, 18));
-		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 3, 8, 108));
+		this.addSlotToContainer(new SlotBattery(tedf.inventory, 3, 8, 108));
 		
 		for(int i = 0; i < 3; i++)
 		{

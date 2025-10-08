@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.machine.TileEntityMachineRadarNT;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,7 +20,7 @@ public class ContainerMachineRadarNT extends Container {
         for(int i = 0; i < 8; i++) this.addSlotToContainer(new SlotItemHandler(tedf.inventory, i, 26 + i * 18, 17));
 
         this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 8, 26, 44));
-        this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 9, 152, 44));
+        this.addSlotToContainer(new SlotBattery(tedf.inventory, 9, 152, 44));
 
         for(int i = 0; i < 3; i++) {
             for(int j = 0; j < 9; j++) {

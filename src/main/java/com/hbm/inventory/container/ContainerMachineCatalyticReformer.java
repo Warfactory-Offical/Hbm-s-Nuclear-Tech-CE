@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.IItemFluidIdentifier;
@@ -21,7 +22,7 @@ public class ContainerMachineCatalyticReformer extends Container {
         reformer = tedf;
 
         //Battery
-        this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 0, 17, 90));
+        this.addSlotToContainer(new SlotBattery(tedf.inventory, 0, 17, 90));
         //Canister Input
         this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 1, 35, 90));
         //Canister Output

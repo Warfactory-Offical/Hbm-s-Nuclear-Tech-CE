@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotCraftingOutput;
 import com.hbm.inventory.SlotUpgrade;
 import com.hbm.items.ModItems;
@@ -33,7 +34,7 @@ public class ContainerMachineCyclotron extends Container {
 		this.addSlotToContainer(new SlotCraftingOutput(invPlayer.player, tile.inventory, 7, 131, 36));
 		this.addSlotToContainer(new SlotCraftingOutput(invPlayer.player, tile.inventory, 8, 131, 54));
 		//Battery
-		this.addSlotToContainer(new SlotItemHandler(tile.inventory, 9, 168, 83));
+		this.addSlotToContainer(new SlotBattery(tile.inventory, 9, 168, 83));
 		//Upgrades
 		this.addSlotToContainer(new SlotUpgrade(tile.inventory, 10, 60, 81));
 		this.addSlotToContainer(new SlotUpgrade(tile.inventory, 11, 78, 81));

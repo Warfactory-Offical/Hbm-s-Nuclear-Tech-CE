@@ -1,6 +1,7 @@
 package com.hbm.inventory.container;
 
 import com.hbm.api.energymk2.IBatteryItem;
+import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotNonRetarded;
 import com.hbm.inventory.recipes.ArcFurnaceRecipes;
 import com.hbm.items.ModItems;
@@ -25,7 +26,7 @@ public class ContainerMachineArcFurnaceLarge extends Container {
         //Electrodes
         for(int i = 0; i < 3; i++) this.addSlotToContainer(new SlotNonRetarded(tile.inventory, i, 62 + i * 18, 22));
         //Battery
-        this.addSlotToContainer(new SlotItemHandler(tile.inventory, 3, 8, 108));
+        this.addSlotToContainer(new SlotBattery(tile.inventory, 3, 8, 108));
         //Upgrade
         this.addSlotToContainer(new SlotItemHandler(tile.inventory, 4, 152, 108));
         //Inputs

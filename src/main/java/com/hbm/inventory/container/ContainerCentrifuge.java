@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.inventory.SlotUpgrade;
 import com.hbm.tileentity.machine.TileEntityMachineCentrifuge;
@@ -19,7 +20,7 @@ public class ContainerCentrifuge extends Container {
 		diFurnace = tedf;
 		
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 0, 36, 50));
-		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 1, 9, 50));
+		this.addSlotToContainer(new SlotBattery(tedf.inventory, 1, 9, 50));
 		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 2, 63, 50));
 		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 3, 83, 50));
 		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 4, 103, 50));

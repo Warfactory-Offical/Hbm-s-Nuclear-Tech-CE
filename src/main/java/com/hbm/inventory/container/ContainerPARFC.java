@@ -1,12 +1,12 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.tileentity.machine.albion.TileEntityPARFC;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.SlotItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 public class ContainerPARFC extends Container {
@@ -17,7 +17,7 @@ public class ContainerPARFC extends Container {
         rfc = tile;
 
         //Battery
-        this.addSlotToContainer(new SlotItemHandler(tile.inventory, 0, 53, 72));
+        this.addSlotToContainer(new SlotBattery(tile.inventory, 0, 53, 72));
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {

@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.tileentity.machine.TileEntityMachineTurbine;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,7 +27,7 @@ private TileEntityMachineTurbine diFurnace;
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 2, 44, 17));
 		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 3, 44, 53));
 		//Battery
-		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 4, 98, 53));
+		this.addSlotToContainer(new SlotBattery(tedf.inventory, 4, 98, 53));
 		//Output IO
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 5, 152, 17));
 		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 6, 152, 53));
