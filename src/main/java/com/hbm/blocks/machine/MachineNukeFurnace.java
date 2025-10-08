@@ -125,10 +125,17 @@ public class MachineNukeFurnace extends BlockContainer {
 	
 	public static void updateBlockState(boolean isProcessing, World world, BlockPos pos) {
 		IBlockState state = world.getBlockState(pos);
+		TileEntity entity = world.getTileEntity(pos);
 		keepInventory = true;
 		IBlockState newState = Library.changeBlockState(ModBlocks.machine_nuke_furnace_on, ModBlocks.machine_nuke_furnace_off, state, FACING, isProcessing);
         if (newState != null) world.setBlockState(pos, newState, 3);
+		
 		keepInventory = false;
+		
+		if(entity != null) {
+			entity.validate();
+			world.setTileEntity(pos, entity);
+		}
 	}
 	
 	@Override

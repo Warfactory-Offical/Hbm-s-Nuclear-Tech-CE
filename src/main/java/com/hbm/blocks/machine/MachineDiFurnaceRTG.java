@@ -166,6 +166,7 @@ public class MachineDiFurnaceRTG extends BlockContainer {
 
 	public static void updateBlockState(boolean isProcessing, World world, BlockPos pos) {
 		IBlockState cur = world.getBlockState(pos);
+		TileEntity entity = world.getTileEntity(pos);
 		keepInventory = true;
 		IBlockState newState =
 				Library.changeBlockState(ModBlocks.machine_difurnace_rtg_on, ModBlocks.machine_difurnace_rtg_off, cur, FACING, isProcessing);
@@ -173,6 +174,10 @@ public class MachineDiFurnaceRTG extends BlockContainer {
 			world.setBlockState(pos, newState, 2);
 		}
 		keepInventory = false;
+		if (entity != null) {
+			entity.validate();
+			world.setTileEntity(pos, entity);
+		}
 	}
 	
 	@Override

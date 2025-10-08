@@ -94,10 +94,16 @@ public class MachineBrickFurnace extends BlockContainerBakeable {
 
     public static void updateBlockState(boolean isProcessing, World world, BlockPos pos) {
         IBlockState state = world.getBlockState(pos);
+        TileEntity entity = world.getTileEntity(pos);
         keepInventory = true;
         IBlockState newState = Library.changeBlockState(ModBlocks.machine_furnace_brick_on, ModBlocks.machine_furnace_brick_off, state, FACING, isProcessing);
         if (newState != null) world.setBlockState(pos, newState, 3);
         keepInventory = false;
+
+        if (entity != null) {
+            entity.validate();
+            world.setTileEntity(pos, entity);
+        }
     }
 
     @Override
