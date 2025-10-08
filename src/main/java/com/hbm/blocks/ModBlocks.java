@@ -827,16 +827,12 @@ public class ModBlocks {
 	public static final Block machine_steam_engine = new MachineSteamEngine(Material.IRON, "machine_steam_engine").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 
 
-	public static final Block machine_battery_potato = new MachineBattery(Material.IRON, 100000L, "machine_battery_potato").setHardness(1.0F).setResistance(1.0F).setCreativeTab(MainRegistry.machineTab);
-	public static final Block machine_battery = new MachineBattery(Material.IRON, 10000000L, "machine_battery").setHardness(2.0F).setResistance(4.0F).setCreativeTab(MainRegistry.machineTab);
-	public static final Block machine_lithium_battery = new MachineBattery(Material.IRON, 100000000L, "machine_lithium_battery").setHardness(4.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
-	public static final Block machine_desh_battery = new MachineBattery(Material.IRON, 1000000000L, "machine_desh_battery").setHardness(6.0F).setResistance(100.0F).setCreativeTab(MainRegistry.machineTab);
-	public static final Block machine_saturnite_battery = new MachineBattery(Material.IRON, 10000000000L, "machine_saturnite_battery").setHardness(5.0F).setResistance(20.0F).setCreativeTab(MainRegistry.machineTab);
-	public static final Block machine_schrabidium_battery = new MachineBattery(Material.IRON, 100000000000L, "machine_schrabidium_battery").setHardness(8.0F).setResistance(500.0F).setCreativeTab(MainRegistry.machineTab);
-	public static final Block machine_euphemium_battery = new MachineBattery(Material.IRON, 1000000000000L, "machine_euphemium_battery").setHardness(10.0F).setResistance(4000.0F).setCreativeTab(MainRegistry.machineTab);
-	public static final Block machine_dineutronium_battery = new MachineBattery(Material.IRON, 100000000000000L, "machine_dineutronium_battery").setHardness(14.0F).setResistance(600000.0F).setCreativeTab(MainRegistry.machineTab);
-	public static final Block machine_electronium_battery = new MachineBattery(Material.IRON, 1000000000000000L, "machine_electronium_battery").setHardness(16.0F).setResistance(7000000.0F).setCreativeTab(MainRegistry.machineTab);
-	public static final Block machine_fensu = new MachineFENSU(Material.IRON, "machine_fensu").setHardness(5.0F).setResistance(10000000.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block machine_battery_potato = new MachineBattery(Material.IRON, 10_000, "machine_battery_potato").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block machine_battery = new MachineBattery(Material.IRON, 1_000_000, "machine_battery").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block machine_lithium_battery = new MachineBattery(Material.IRON, 50_000_000, "machine_lithium_battery").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block machine_schrabidium_battery = new MachineBattery(Material.IRON, 25_000_000_000L, "machine_schrabidium_battery").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block machine_dineutronium_battery = new MachineBattery(Material.IRON, 1_000_000_000_000L, "machine_dineutronium_battery").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+	public static final Block machine_fensu = new MachineFENSU(Material.IRON, "machine_fensu").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 
 	public static final Block machine_transformer = new BlockBase(Material.IRON, "machine_transformer").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block machine_transformer_20 = new BlockBase(Material.IRON, "machine_transformer_20").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);

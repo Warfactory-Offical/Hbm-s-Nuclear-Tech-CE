@@ -1,9 +1,9 @@
 package com.hbm.tileentity.machine;
 
-import com.hbm.api.block.ICrucibleAcceptor;
-import com.hbm.api.tile.IHeatSource;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
+import com.hbm.api.block.ICrucibleAcceptor;
+import com.hbm.api.tile.IHeatSource;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.handler.threading.PacketThreading;
@@ -37,6 +37,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -158,8 +159,12 @@ public class TileEntityCrucible extends TileEntityMachineBase implements IGUIPro
             if(!this.wasteStack.isEmpty()) {
 
                 ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset).getOpposite();
-                Vec3d impact = new Vec3d(0, 0, 0);
-                Mats.MaterialStack didPour = CrucibleUtil.pourFullStack(world, pos.getX() + 0.5D + dir.offsetX * 1.875D, pos.getY() + 0.25D, pos.getZ() + 0.5D + dir.offsetZ * 1.875D, 6, true, this.wasteStack, MaterialShapes.NUGGET.q(3), impact);
+                double sx = pos.getX() + 0.5D + dir.offsetX * 1.875D;
+                double sy = pos.getY() + 0.25D;
+                double sz = pos.getZ() + 0.5D + dir.offsetZ * 1.875D;
+                RayTraceResult[] mop = new RayTraceResult[1];
+                CrucibleUtil.getPouringTarget(world, new Vec3d(sx, sy, sz), new Vec3d(sx, sy - 4D, sz), mop);
+                Mats.MaterialStack didPour = CrucibleUtil.pourFullStack(world, sx, sy, sz, 6, true, this.wasteStack, MaterialShapes.NUGGET.q(3), new Vec3d(0, 0, 0));
 
                 if(didPour != null) {
                     NBTTagCompound data = new NBTTagCompound();
@@ -168,9 +173,9 @@ public class TileEntityCrucible extends TileEntityMachineBase implements IGUIPro
                     data.setByte("dir", (byte) dir.ordinal());
                     data.setFloat("off", 0.625F);
                     data.setFloat("base", 0.625F);
-                    data.setFloat("len", Math.max(1F, pos.getY() - (float) (Math.ceil(impact.y) - 0.875)));
-                    PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, pos.getX() + 0.5D + dir.offsetX * 1.875D, pos.getY(), pos.getZ() + 0.5D + dir.offsetZ * 1.875D), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 50));
-
+                    double hitY = mop[0] != null ? mop[0].getBlockPos().getY() + 1 : pos.getY();
+                    data.setFloat("len", Math.max(1F, pos.getY() - (float) (Math.ceil(hitY) - 0.875)));
+                    PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, sx, pos.getY(), sz), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 50));
                 }
 
                 PollutionHandler.incrementPollution(world, pos, PollutionHandler.PollutionType.SOOT, PollutionHandler.SOOT_PER_SECOND / 20F);
@@ -198,8 +203,12 @@ public class TileEntityCrucible extends TileEntityMachineBase implements IGUIPro
                     }
                 }
 
-                Vec3d impact = new Vec3d(0, 0, 0);
-                Mats.MaterialStack didPour = CrucibleUtil.pourFullStack(world, pos.getX() + 0.5D + dir.offsetX * 1.875D, pos.getY() + 0.25D, pos.getZ() + 0.5D + dir.offsetZ * 1.875D, 6, true, toCast, MaterialShapes.NUGGET.q(3), impact);
+                double sx = pos.getX() + 0.5D + dir.offsetX * 1.875D;
+                double sy = pos.getY() + 0.25D;
+                double sz = pos.getZ() + 0.5D + dir.offsetZ * 1.875D;
+                RayTraceResult[] mop = new RayTraceResult[1];
+                CrucibleUtil.getPouringTarget(world, new Vec3d(sx, sy, sz), new Vec3d(sx, sy - 4D, sz), mop);
+                Mats.MaterialStack didPour = CrucibleUtil.pourFullStack(world, sx, sy, sz, 6, true, toCast, MaterialShapes.NUGGET.q(3), new Vec3d(0, 0, 0));
 
                 if(didPour != null) {
                     NBTTagCompound data = new NBTTagCompound();
@@ -208,9 +217,9 @@ public class TileEntityCrucible extends TileEntityMachineBase implements IGUIPro
                     data.setByte("dir", (byte) dir.ordinal());
                     data.setFloat("off", 0.625F);
                     data.setFloat("base", 0.625F);
-                    data.setFloat("len", Math.max(1F, pos.getY() - (float) (impact.y - 0.875)));
-                    PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, pos.getX() + 0.5D + dir.offsetX * 1.875D, pos.getY(), pos.getZ() + 0.5D + dir.offsetZ * 1.875D), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 50));
-
+                    double hitY = mop[0] != null ? mop[0].getBlockPos().getY() + 1 : pos.getY();
+                    data.setFloat("len", Math.max(1F, pos.getY() - (float) (Math.ceil(hitY) - 0.875)));
+                    PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, sx, pos.getY(), sz), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 50));
                 }
 
                 PollutionHandler.incrementPollution(world, pos, PollutionHandler.PollutionType.SOOT, PollutionHandler.SOOT_PER_SECOND / 20F);

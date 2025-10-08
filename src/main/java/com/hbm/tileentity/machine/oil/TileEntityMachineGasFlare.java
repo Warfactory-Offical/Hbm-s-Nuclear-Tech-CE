@@ -325,4 +325,10 @@ public class TileEntityMachineGasFlare extends TileEntityMachineBase implements 
 		if(nbt.hasKey("isOn")) isOn = nbt.getBoolean("isOn");
 		if(nbt.hasKey("doesBurn")) doesBurn = nbt.getBoolean("doesBurn");
 	}
+
+	@Override
+	public boolean isUseableByPlayer(EntityPlayer player) {
+		if (this.world.getTileEntity(this.pos) != this) return false;
+		return player.getDistanceSq(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D) <= 1024.0D;
+	}
 }

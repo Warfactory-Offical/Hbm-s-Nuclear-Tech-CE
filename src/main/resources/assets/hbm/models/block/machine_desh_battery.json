@@ -1,8 +1,0 @@
-{
-	"parent": "block/orientable",
-	"textures": {
-		"top": "hbm:blocks/battery_desh_top",
-		"front": "hbm:blocks/battery_desh_front",
-		"side": "hbm:blocks/battery_desh_side"
-	}
-}

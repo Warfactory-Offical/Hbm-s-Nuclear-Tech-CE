@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotCraftingOutput;
 import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.tileentity.machine.oil.TileEntityMachineCoker;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,7 +19,7 @@ public class ContainerMachineCoker extends Container {
         coker = tedf;
 
         this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 0, 35, 72));
-        this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 1, 97, 27));
+        this.addSlotToContainer(new SlotCraftingOutput(invPlayer.player, tedf.inventory, 1, 97, 27));
 
         for(int i = 0; i < 3; i++) {
             for(int j = 0; j < 9; j++) {
@@ -34,7 +35,7 @@ public class ContainerMachineCoker extends Container {
     @Override
     public ItemStack transferStackInSlot(EntityPlayer p_82846_1_, int par2) {
         ItemStack var3 = ItemStack.EMPTY;
-        Slot var4 = (Slot) this.inventorySlots.get(par2);
+        Slot var4 = this.inventorySlots.get(par2);
 
         if(var4 != null && var4.getHasStack()) {
             ItemStack var5 = var4.getStack();
@@ -56,7 +57,7 @@ public class ContainerMachineCoker extends Container {
             }
 
             if(var5.getCount() == 0) {
-                var4.putStack((ItemStack) ItemStack.EMPTY);
+                var4.putStack(ItemStack.EMPTY);
             } else {
                 var4.onSlotChanged();
             }

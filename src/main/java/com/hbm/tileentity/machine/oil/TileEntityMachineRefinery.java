@@ -498,4 +498,10 @@ public class TileEntityMachineRefinery extends TileEntityMachineBase implements 
     public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
         return new GUIMachineRefinery(player.inventory, this);
     }
+
+    @Override
+    public boolean isUseableByPlayer(EntityPlayer player) {
+        if (this.world.getTileEntity(this.pos) != this) return false;
+        return player.getDistanceSq(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D) <= 1024.0D;
+    }
 }

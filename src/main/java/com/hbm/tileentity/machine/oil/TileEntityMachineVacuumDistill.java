@@ -312,4 +312,10 @@ public class TileEntityMachineVacuumDistill extends TileEntityMachineBase implem
     public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
         return new GUIMachineVacuumDistill(player.inventory, this);
     }
+    // Th3_Sl1ze: maybe I should just change the fucking value in TileEntityMachineBase..
+    @Override
+    public boolean isUseableByPlayer(EntityPlayer player) {
+        if (this.world.getTileEntity(this.pos) != this) return false;
+        return player.getDistanceSq(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D) <= 1024.0D;
+    }
 }

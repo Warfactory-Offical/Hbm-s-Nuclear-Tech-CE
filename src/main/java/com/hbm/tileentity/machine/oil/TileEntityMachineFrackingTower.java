@@ -253,4 +253,10 @@ public class TileEntityMachineFrackingTower extends TileEntityOilDrillBase {
     public double getMaxRenderDistanceSquared() {
         return 65536.0D;
     }
+
+    @Override
+    public boolean isUseableByPlayer(EntityPlayer player) {
+        if (this.world.getTileEntity(this.pos) != this) return false;
+        return player.getDistanceSq(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D) <= 1024.0D;
+    }
 }
