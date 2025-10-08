@@ -221,22 +221,6 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase impleme
             public boolean isItemValid(int slot, ItemStack stack) {
                 return isItemValidForSlot(slot, stack);
             }
-
-            @Override
-            public ItemStack extractItem(int slot, int amount, boolean simulate) {
-                if (canExtractItem(slot, inventory.getStackInSlot(slot), amount)) {
-                    return handle.extractItem(slot, amount, simulate);
-                }
-                return ItemStack.EMPTY;
-            }
-
-            @Override
-            public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-                if (canInsertItem(slot, stack)) {
-                    return handle.insertItem(slot, stack, simulate);
-                }
-                return stack;
-            }
         };
     }
 
