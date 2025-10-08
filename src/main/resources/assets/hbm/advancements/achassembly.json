@@ -2,7 +2,7 @@
   "parent": "hbm:achburnerpress",
   "display": {
     "icon": {
-      "item": "hbm:machine_assembler"
+      "item": "hbm:machine_assembly_machine"
     },
     "title": {
       "translate": "achievement.assembly"
@@ -16,6 +16,16 @@
     "hidden": false
   },
   "criteria": {
+    "crafting_hbm_machine_assembly_machine": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "hbm:machine_assembly_machine"
+          }
+        ]
+      }
+    },
     "crafting_hbm_machine_assembler": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
@@ -29,6 +39,7 @@
   },
   "requirements": [
     [
+      "crafting_hbm_machine_assembly_machine",
       "crafting_hbm_machine_assembler"
     ]
   ]

@@ -2,7 +2,7 @@
   "parent": "hbm:achwatz",
   "display": {
     "icon": {
-      "item": "forge:bucketfilled"
+      "item": "hbm:bucket_mud"
     },
     "title": {
       "translate": "achievement.watzBoom"
