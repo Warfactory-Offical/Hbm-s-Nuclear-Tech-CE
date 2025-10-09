@@ -26,27 +26,27 @@ public class ItemFilter extends Item {
 	
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
-		
+
 		ItemStack helmet = player.inventory.armorInventory.get(3);
 		ItemStack stack = player.getHeldItem(hand);
 		if(helmet == null || helmet.isEmpty())
 			return ActionResult.<ItemStack> newResult(EnumActionResult.PASS, player.getHeldItem(hand));
-		
+
 		if(!(helmet.getItem() instanceof IGasMask)) {
-			
+
 			if(ArmorModHandler.hasMods(helmet)) {
 				ItemStack[] mods = ArmorModHandler.pryMods(helmet);
-				
+
 				if(mods[ArmorModHandler.helmet_only] != null) {
 					ItemStack mask = mods[ArmorModHandler.helmet_only];
-					
+
 					ItemStack ret = installFilterOn(mask, stack, world, player);
 					ArmorModHandler.applyMod(helmet, mask);
 					return ActionResult.<ItemStack> newResult(EnumActionResult.SUCCESS, ret);
 				}
 			}
 		}
-		
+
 		return ActionResult.<ItemStack> newResult(EnumActionResult.SUCCESS, installFilterOn(helmet, stack, world, player));
 	}
 	
@@ -59,8 +59,9 @@ public class ItemFilter extends Item {
 		IGasMask mask = (IGasMask) helmet.getItem();
 		if(!mask.isFilterApplicable(helmet, filter))
 			return filter;
-		
+
 		ItemStack copy = filter.copy();
+		copy.setCount(1);
 		ItemStack current = ArmorUtil.getGasMaskFilter(helmet);
 		
 		if(current != null) {
