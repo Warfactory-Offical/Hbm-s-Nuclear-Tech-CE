@@ -43,8 +43,8 @@ public class EntityParachuteCrate extends Entity {
 
             if(!world.isRemote) {
 
-                world.setBlockState(pos, ModBlocks.crate_supply.getDefaultState());
-                BlockSupplyCrate.TileEntitySupplyCrate crate = (BlockSupplyCrate.TileEntitySupplyCrate) world.getTileEntity((new BlockPos((int) Math.floor(this.posX), (int) Math.floor(this.posY + 1), (int) Math.floor(this.posZ))));
+                world.setBlockState(pos.up(1), ModBlocks.crate_supply.getDefaultState());
+                BlockSupplyCrate.TileEntitySupplyCrate crate = (BlockSupplyCrate.TileEntitySupplyCrate) world.getTileEntity(pos.up(1));
                 if(crate != null) crate.items.addAll(this.items);
             }
         }
