@@ -30,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Random;
 
 @AutoRegister
-public class TileEntityCrateTungsten extends TileEntityCrateBase implements IBufPacketReceiver, ITickable, ILaserable, IGUIProvider {
+public class TileEntityCrateTungsten extends TileEntityCrate implements IBufPacketReceiver, ITickable, ILaserable, IGUIProvider {
     private final Random rand = new Random();
 
     public int heatTimer = 0;

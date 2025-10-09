@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotUpgrade;
 import com.hbm.tileentity.machine.TileEntityMachineMixer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,7 +18,7 @@ public class ContainerMixer extends Container {
 		this.mixer = mixer;
 
 		//Battery
-		this.addSlotToContainer(new SlotItemHandler(mixer.inventory, 0, 23, 77));
+		this.addSlotToContainer(new SlotBattery(mixer.inventory, 0, 23, 77));
 		//Item Input
 		this.addSlotToContainer(new SlotItemHandler(mixer.inventory, 1, 43, 77));
 		//Fluid ID

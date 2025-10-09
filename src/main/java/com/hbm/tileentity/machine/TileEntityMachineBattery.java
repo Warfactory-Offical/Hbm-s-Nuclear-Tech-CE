@@ -12,6 +12,7 @@ import com.hbm.inventory.gui.GUIMachineBattery;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.IGUIProvider;
+import com.hbm.tileentity.IPersistentNBT;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.uninos.UniNodespace;
 import io.netty.buffer.ByteBuf;
@@ -37,7 +38,7 @@ import org.jetbrains.annotations.NotNull;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
 @AutoRegister
-public class TileEntityMachineBattery extends TileEntityMachineBase implements ITickable, IEnergyConductorMK2, IEnergyProviderMK2, IEnergyReceiverMK2, SimpleComponent, IGUIProvider {
+public class TileEntityMachineBattery extends TileEntityMachineBase implements ITickable, IEnergyConductorMK2, IEnergyProviderMK2, IEnergyReceiverMK2, IPersistentNBT, SimpleComponent, IGUIProvider {
 
 	public long[] log = new long[20];
 	public long delta = 0;
@@ -59,9 +60,7 @@ public class TileEntityMachineBattery extends TileEntityMachineBase implements I
 	public ConnectionPriority priority = ConnectionPriority.LOW;
 
 	public byte lastRedstone = 0;
-	
-	private String customName;
-	
+
 	public TileEntityMachineBattery() {
 		super(4);
 	}
@@ -70,20 +69,8 @@ public class TileEntityMachineBattery extends TileEntityMachineBase implements I
 		return ForgeDirection.VALID_DIRECTIONS;
 	}
 	
-	public String getInventoryName() {
-		return this.hasCustomInventoryName() ? this.customName : "container.battery";
-	}
-
-	public boolean hasCustomInventoryName() {
-		return this.customName != null && this.customName.length() > 0;
-	}
-	
-	public void setCustomName(String name) {
-		this.customName = name;
-	}
-	
 	@Override
-	public String getName() {
+	public String getDefaultName() {
 		return "container.battery";
 	}
 	
@@ -125,26 +112,26 @@ public class TileEntityMachineBattery extends TileEntityMachineBase implements I
 		super.readFromNBT(compound);
 	}
 
+    @Override
+    public void writeNBT(NBTTagCompound nbt) {
+        NBTTagCompound data = new NBTTagCompound();
+        data.setLong("power", power);
+        data.setLong("prevPowerState", prevPowerState);
+        data.setShort("redLow", redLow);
+        data.setShort("redHigh", redHigh);
+        data.setInteger("priority", this.priority.ordinal());
+        nbt.setTag(NBT_PERSISTENT_KEY, data);
+    }
 
-	public void writeNBT(NBTTagCompound nbt) {
-		NBTTagCompound data = new NBTTagCompound();
-		data.setLong("power", power);
-		data.setLong("prevPowerState", prevPowerState);
-		data.setShort("redLow", redLow);
-		data.setShort("redHigh", redHigh);
-		data.setInteger("priority", this.priority.ordinal());
-		nbt.setTag("NBT_PERSISTENT_KEY", data);
-	}
-
-
-	public void readNBT(NBTTagCompound nbt) {
-		NBTTagCompound data = nbt.getCompoundTag("NBT_PERSISTENT_KEY");
-		this.power = data.getLong("power");
-		this.prevPowerState = data.getLong("prevPowerState");
-		this.redLow = data.getShort("redLow");
-		this.redHigh = data.getShort("redHigh");
-		this.priority = ConnectionPriority.values()[data.getInteger("priority")];
-	}
+    @Override
+    public void readNBT(NBTTagCompound nbt) {
+        NBTTagCompound data = nbt.getCompoundTag(NBT_PERSISTENT_KEY);
+        this.power = data.getLong("power");
+        this.prevPowerState = data.getLong("prevPowerState");
+        this.redLow = data.getShort("redLow");
+        this.redHigh = data.getShort("redHigh");
+        this.priority = ConnectionPriority.values()[data.getInteger("priority")];
+    }
 
 	@Override
 	public int[] getAccessibleSlotsFromSide(EnumFacing p_94128_1_) {
@@ -306,7 +293,7 @@ public class TileEntityMachineBattery extends TileEntityMachineBase implements I
 	private short modeCache = 0;
 	public short getRelevantMode(boolean useCache) {
 		if(useCache) return this.modeCache;
-		boolean isPowered = world.isBlockPowered(this.pos) || world.getStrongPower(this.pos) > 0;
+		boolean isPowered = world.isBlockPowered(this.pos);
 		this.modeCache = isPowered ? this.redHigh : this.redLow;
 		return this.modeCache;
 	}
@@ -316,8 +303,8 @@ public class TileEntityMachineBattery extends TileEntityMachineBase implements I
 	@Override
 	public long getMaxPower() {
 
-		if(bufferedMax == 0) {
-			bufferedMax = ((MachineBattery)world.getBlockState(pos).getBlock()).getMaxPower();
+		if(bufferedMax == 0 && world.getBlockState(pos).getBlock() instanceof MachineBattery battery) {
+			bufferedMax = battery.getMaxPower();
 		}
 
 		return bufferedMax;

@@ -120,7 +120,7 @@ public class TileEntityHeaterOilburner extends TileEntityMachinePolluting implem
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.heaterOilburner";
     }
 

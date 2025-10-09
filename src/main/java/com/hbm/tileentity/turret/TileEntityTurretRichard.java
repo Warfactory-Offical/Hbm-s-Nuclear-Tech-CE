@@ -38,7 +38,7 @@ public class TileEntityTurretRichard extends TileEntityTurretBaseNT implements I
 	}
 
 	@Override
-	public String getName(){
+	public String getDefaultName(){
 		return "container.turretRichard";
 	}
 

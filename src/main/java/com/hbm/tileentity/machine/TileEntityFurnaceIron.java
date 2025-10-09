@@ -52,7 +52,7 @@ public class TileEntityFurnaceIron extends TileEntityMachineBase implements IGUI
 	}
 
 	@Override
-	public String getName() {
+	public String getDefaultName() {
 		return "container.furnaceIron";
 	}
 

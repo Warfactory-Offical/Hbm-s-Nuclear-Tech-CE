@@ -8,7 +8,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.List;
 
@@ -53,7 +53,7 @@ public class GUIFirebox extends GuiInfoContainer {
 	
 	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
-		String name = this.firebox.hasCustomInventoryName() ? this.firebox.getInventoryName() : I18n.format(this.firebox.getInventoryName());
+		String name = this.firebox.hasCustomName() ? this.firebox.getName() : I18n.format(this.firebox.getName());
 
 		int color = firebox instanceof TileEntityHeaterOven ? 0xffffff : 4210752;
 

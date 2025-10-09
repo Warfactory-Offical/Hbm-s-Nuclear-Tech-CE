@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.machine.IItemFluidIdentifier;
@@ -22,7 +23,7 @@ public class ContainerMachineTurbineGas extends Container {
 		turbinegas = te;
 		
 		//Battery
-		this.addSlotToContainer(new SlotItemHandler(te.inventory, 0, 8, 109));
+		this.addSlotToContainer(new SlotBattery(te.inventory, 0, 8, 109));
 		//Fluid ID
 		this.addSlotToContainer(new SlotItemHandler(te.inventory, 1, 36, 17));
 		

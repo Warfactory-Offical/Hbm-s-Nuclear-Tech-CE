@@ -14,13 +14,14 @@ public class SlotNonRetarded extends SlotItemHandler {
         super(inventory, id, x, y);
     }
 
-    /**
-     * Dear mojang: Why wasn't that the standard to begin with? What do IInventories have isItemValidForSlot for when by default nothing fucking uses it?
-     */
-    @Override
-    public boolean isItemValid(ItemStack stack) {
-        return inventory.isItemValidForSlot(this.slotNumber, stack);
-    }
+    // mlbv: this is no longer necessary with SlotItemHandler
+//    /**
+//     * Dear mojang: Why wasn't that the standard to begin with? What do IInventories have isItemValidForSlot for when by default nothing fucking uses it?
+//     */
+//    @Override
+//    public boolean isItemValid(ItemStack stack) {
+//        return getItemHandler().isItemValid(this.slotNumber, stack);
+//    }
 
     /**
      * Because if slots have higher stacksizes than the maximum allowed by the tile, the display just stops working.
@@ -28,6 +29,6 @@ public class SlotNonRetarded extends SlotItemHandler {
      */
     @Override
     public int getSlotStackLimit() {
-        return Math.max(this.inventory.getInventoryStackLimit(), this.getHasStack() ? this.getStack().getCount() : 1);
+        return Math.max(super.getSlotStackLimit(), this.getHasStack() ? this.getStack().getCount() : 1);
     }
 }

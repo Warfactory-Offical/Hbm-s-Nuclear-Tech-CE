@@ -15,7 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 @AutoRegister
-public class TileEntitySafe extends TileEntityCrateBase implements IGUIProvider {
+public class TileEntitySafe extends TileEntityCrate implements IGUIProvider {
 
     public TileEntitySafe() {
         super(15, "container.safe");

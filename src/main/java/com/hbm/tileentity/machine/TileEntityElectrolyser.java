@@ -111,7 +111,7 @@ public class TileEntityElectrolyser extends TileEntityMachineBase implements IEn
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.machineElectrolyser";
     }
 

@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.items.ModItems;
 import com.hbm.tileentity.turret.TileEntityTurretBaseNT;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,7 +27,7 @@ public class ContainerTurretBase extends Container {
       }
     }
 
-    this.addSlotToContainer(new SlotItemHandler(te.inventory, 10, 152, 99));
+    this.addSlotToContainer(new SlotBattery(te.inventory, 10, 152, 99));
 
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 9; j++) {

@@ -86,7 +86,7 @@ public class TileEntityMachineOreSlopper extends TileEntityMachineBase implement
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.machineOreSlopper";
     }
 

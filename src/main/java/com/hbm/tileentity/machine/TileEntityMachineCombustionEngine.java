@@ -79,7 +79,7 @@ public class TileEntityMachineCombustionEngine extends TileEntityMachinePollutin
   }
 
   @Override
-  public String getName() {
+  public String getDefaultName() {
     return "container.combustionEngine";
   }
 

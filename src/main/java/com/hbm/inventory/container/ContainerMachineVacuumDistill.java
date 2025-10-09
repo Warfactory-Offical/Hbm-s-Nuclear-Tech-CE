@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.tileentity.machine.oil.TileEntityMachineVacuumDistill;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,7 +20,7 @@ public class ContainerMachineVacuumDistill extends Container {
         distill = tedf;
 
         //Battery
-        this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 0, 26, 90));
+        this.addSlotToContainer(new SlotBattery(tedf.inventory, 0, 26, 90));
         //Canister Input (removed, requires pressurization)
         // this.addSlotToContainer(new SlotDeprecated(tedf, 1, 44, 90));
         //Canister Output (same as above)

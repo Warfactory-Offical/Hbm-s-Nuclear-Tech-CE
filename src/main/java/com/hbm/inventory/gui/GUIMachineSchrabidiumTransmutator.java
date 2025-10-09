@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager;
 
 public class GUIMachineSchrabidiumTransmutator extends GuiInfoContainer {
 
@@ -32,7 +32,7 @@ public class GUIMachineSchrabidiumTransmutator extends GuiInfoContainer {
 	
 	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
-		String name = this.diFurnace.hasCustomInventoryName() ? this.diFurnace.getName() : I18n.format(this.diFurnace.getName());
+		String name = this.diFurnace.hasCustomName() ? this.diFurnace.getDefaultName() : I18n.format(this.diFurnace.getDefaultName());
 		
 		this.fontRenderer.drawString(name, this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2, 6, 4210752);
 		this.fontRenderer.drawString(I18n.format(String.valueOf(diFurnace.getPower()) + " HE"), this.xSize / 2 - this.fontRenderer.getStringWidth(String.valueOf(diFurnace.getPower()) + " HE") / 2, 16, 4210752);

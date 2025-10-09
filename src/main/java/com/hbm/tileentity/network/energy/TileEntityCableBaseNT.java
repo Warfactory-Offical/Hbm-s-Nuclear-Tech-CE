@@ -40,11 +40,11 @@ public class TileEntityCableBaseNT extends TileEntityLoadedBase implements IEner
 					}
 				}
 			}
-
-			if (this.node != null && this.node.hasValidNet()) {
-				PowerNetMK2 net = this.node.net;
-				this.handleFETransfers(net);
-			}
+            // mlbv: This is really laggy. Uncomment when we have a more performant approach.
+//			if (this.node != null && this.node.hasValidNet()) {
+//				PowerNetMK2 net = this.node.net;
+//				this.handleFETransfers(net);
+//			}
 		}
 	}
 
@@ -120,26 +120,26 @@ public class TileEntityCableBaseNT extends TileEntityLoadedBase implements IEner
 	public boolean canConnect(ForgeDirection dir) {
 		return dir != ForgeDirection.UNKNOWN;
 	}
-
-	@Override
-	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-		if (capability == CapabilityEnergy.ENERGY && facing != null) {
-			ForgeDirection dir = ForgeDirection.getOrientation(facing.getIndex());
-			if (canConnect(dir) && this.node != null && this.node.hasValidNet()) {
-				return true;
-			}
-		}
-		return super.hasCapability(capability, facing);
-	}
-
-	@Override
-	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-		if (capability == CapabilityEnergy.ENERGY && facing != null) {
-			ForgeDirection dir = ForgeDirection.getOrientation(facing.getIndex());
-			if (canConnect(dir) && this.node != null && this.node.hasValidNet()) {
-				return CapabilityEnergy.ENERGY.cast(new NTMCableEnergyCapabilityWrapper(this.node.net));
-			}
-		}
-		return super.getCapability(capability, facing);
-	}
+//
+//	@Override
+//	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+//		if (capability == CapabilityEnergy.ENERGY && facing != null) {
+//			ForgeDirection dir = ForgeDirection.getOrientation(facing.getIndex());
+//			if (canConnect(dir) && this.node != null && this.node.hasValidNet()) {
+//				return true;
+//			}
+//		}
+//		return super.hasCapability(capability, facing);
+//	}
+//
+//	@Override
+//	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+//		if (capability == CapabilityEnergy.ENERGY && facing != null) {
+//			ForgeDirection dir = ForgeDirection.getOrientation(facing.getIndex());
+//			if (canConnect(dir) && this.node != null && this.node.hasValidNet()) {
+//				return CapabilityEnergy.ENERGY.cast(new NTMCableEnergyCapabilityWrapper(this.node.net));
+//			}
+//		}
+//		return super.getCapability(capability, facing);
+//	}
 }

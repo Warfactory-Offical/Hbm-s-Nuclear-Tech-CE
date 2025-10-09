@@ -32,6 +32,7 @@ public class CasingCreator implements IParticleCreator {
 
     public static void composeEffect(World world, EntityPlayer player, double frontOffset, double heightOffset, double sideOffset, double frontMotion, double heightMotion, double sideMotion, double motionVariance, float mPitch, float mYaw, String casing, boolean smoking, int smokeLife, double smokeLift, int nodeLife) {
 
+        if(player == null || world == null) return;//Fixes crashes whenever mobs pickup weapons
         if(player.isSneaking()) heightOffset -= 0.075F;
 
         Vec3 offset = Vec3.createVectorHelper(sideOffset, heightOffset, frontOffset);

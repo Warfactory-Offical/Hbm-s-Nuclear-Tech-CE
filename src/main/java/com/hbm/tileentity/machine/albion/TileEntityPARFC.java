@@ -36,7 +36,7 @@ public class TileEntityPARFC extends TileEntityCooledBase implements IGUIProvide
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.paRFC";
     }
 
@@ -111,6 +111,7 @@ public class TileEntityPARFC extends TileEntityCooledBase implements IGUIProvide
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
         return new GUIPARFC(player.inventory, this);
     }

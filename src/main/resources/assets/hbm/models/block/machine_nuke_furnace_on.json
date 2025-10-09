@@ -1,8 +1,0 @@
-{
-	"parent": "block/orientable",
-	"textures": {
-		"top": "hbm:blocks/machine_nuke_furnace_base_alt",
-		"front": "hbm:blocks/machine_nuke_furnace_front_on_alt",
-		"side": "hbm:blocks/machine_nuke_furnace_side_alt"
-	}
-}

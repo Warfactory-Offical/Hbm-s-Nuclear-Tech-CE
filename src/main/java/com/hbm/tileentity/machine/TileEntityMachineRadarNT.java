@@ -6,6 +6,7 @@ import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.api.entity.IRadarDetectable;
 import com.hbm.api.entity.IRadarDetectableNT;
 import com.hbm.api.entity.RadarEntry;
+import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.HbmLivingProps;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.handler.CompatHandler;
@@ -134,7 +135,7 @@ public class TileEntityMachineRadarNT extends TileEntityMachineBase implements I
 	}
 
 	@Override
-	public String getName() {
+	public String getDefaultName() {
 		return "container.radar";
 	}
 
@@ -163,7 +164,10 @@ public class TileEntityMachineRadarNT extends TileEntityMachineBase implements I
 
 			if(this.lastPower != getRedPower()) {
 				this.markChanged();
-				this.world.notifyNeighborsOfStateChange(pos, getBlockType(), true);
+                if (this.getBlockType() == ModBlocks.machine_radar_large)
+                    for (DirPos dirPos : getConPos())
+                        this.world.notifyNeighborsOfStateChange(pos.offset(dirPos.getDir().toEnumFacing()), getBlockType(), true);
+                else this.world.notifyNeighborsOfStateChange(pos, getBlockType(), true);
 			}
 			lastPower = getRedPower();
 

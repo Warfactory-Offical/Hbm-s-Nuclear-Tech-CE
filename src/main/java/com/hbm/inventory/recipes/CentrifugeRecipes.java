@@ -32,9 +32,17 @@ import static com.hbm.inventory.OreDictManager.*;
 
 public class CentrifugeRecipes extends SerializableRecipe {
 
-	private static HashMap<RecipesCommon.AStack, ItemStack[]> recipes = new HashMap();
+	public static HashMap<RecipesCommon.AStack, ItemStack[]> recipes = new HashMap<>();
 
-	@Override
+    public static void removeRecipe(RecipesCommon.AStack key) {
+        recipes.remove(key);
+    }
+
+    public static void addRecipe(RecipesCommon.AStack key, ItemStack[] value) {
+        recipes.put(key, value);
+    }
+
+    @Override
 	public void registerDefaults() {
 
 		boolean lbs = GeneralConfig.enableLBSM && GeneralConfig.enableLBSMSimpleCentrifuge;

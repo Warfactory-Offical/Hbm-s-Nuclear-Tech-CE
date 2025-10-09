@@ -59,7 +59,7 @@ public abstract class TileEntityMachineCompressorBase extends TileEntityMachineB
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.machineCompressor";
     }
 

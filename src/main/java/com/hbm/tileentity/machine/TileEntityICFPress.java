@@ -47,7 +47,7 @@ public class TileEntityICFPress extends TileEntityMachineBase implements IFluidS
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.machineICFPress";
     }
 

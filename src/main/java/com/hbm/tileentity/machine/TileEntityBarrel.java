@@ -352,7 +352,7 @@ public class TileEntityBarrel extends TileEntityMachineBase implements
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.barrel";
     }
 

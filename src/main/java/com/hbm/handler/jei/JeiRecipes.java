@@ -60,7 +60,7 @@ public class JeiRecipes {
     private static List<ItemStack> blades = null;
 	private static List<ItemStack> alloyFuels = null;
 
-	public static final IIngredientType<FluidStack> NTMFLUID = () -> FluidStack.class;
+	public static final IIngredientType<FluidStack> FluidNTM = () -> FluidStack.class;
 	
 	
 	public static class ChemRecipe implements IRecipeWrapper {
@@ -132,8 +132,8 @@ public class JeiRecipes {
 
 		@Override
 		public void getIngredients(IIngredients ingredients) {
-			ingredients.setInput(NTMFLUID, input);
-			ingredients.setOutput(NTMFLUID, output);
+			ingredients.setInput(FluidNTM, input);
+			ingredients.setOutput(FluidNTM, output);
 		}
 	}
 	

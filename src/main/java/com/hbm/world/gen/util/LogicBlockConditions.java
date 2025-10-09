@@ -55,6 +55,15 @@ public class LogicBlockConditions {
 		return false;
 	};
 
+	public static Function<LogicBlock.TileEntityLogicBlock, Boolean> PLAYER_CUBE_3 = (tile) -> {
+		World world = tile.getWorld();
+		BlockPos pos = tile.getPos();
+		int x = pos.getX();
+		int y = pos.getY();
+		int z = pos.getZ();
+		return !world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(x, y, z, x + 1, y - 2, z + 1).expand(3, 3, 3)).isEmpty();
+	};
+
 	public static Function<LogicBlock.TileEntityLogicBlock, Boolean> PLAYER_CUBE_5 = (tile) -> {
 		World world = tile.getWorld();
 		BlockPos pos = tile.getPos();
@@ -65,6 +74,15 @@ public class LogicBlockConditions {
 				EntityPlayer.class,
 				new AxisAlignedBB(x, y, z, x + 1, y - 2, z + 1).grow(5, 5, 5)
 		).isEmpty();
+	};
+
+	public static Function<LogicBlock.TileEntityLogicBlock, Boolean> PLAYER_CUBE_25 = (tile) -> {
+		World world = tile.getWorld();
+		BlockPos pos = tile.getPos();
+		int x = pos.getX();
+		int y = pos.getY();
+		int z = pos.getZ();
+		return !world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(x, y, z, x + 1, y - 2, z + 1).expand(25, 25, 25)).isEmpty();
 	};
 
 	public static Function<LogicBlock.TileEntityLogicBlock, Boolean> REDSTONE = (tile) -> {
@@ -106,7 +124,9 @@ public class LogicBlockConditions {
 		// example conditions
 		conditions.put("EMPTY", EMPTY);
 		conditions.put("ABERRATOR", ABERRATOR);
+		conditions.put("PLAYER_CUBE_3", PLAYER_CUBE_3);
 		conditions.put("PLAYER_CUBE_5", PLAYER_CUBE_5);
+		conditions.put("PLAYER_CUBE_25", PLAYER_CUBE_25);
 		conditions.put("REDSTONE", REDSTONE);
 		conditions.put("PUZZLE_TEST", PUZZLE_TEST);
 	}

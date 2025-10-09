@@ -69,7 +69,7 @@ public class TileEntityReactorResearch extends TileEntityMachineBase implements 
         fuelMap.put(new RecipesCommon.ComparableStack(ModItems.plate_fuel_pu238be), new ItemStack(ModItems.waste_plate_pu238be, 1, 1));
     }
 
-    public String getName() {
+    public String getDefaultName() {
         return "container.reactorResearch";
     }
 

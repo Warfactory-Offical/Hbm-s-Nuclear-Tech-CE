@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.tileentity.machine.TileEntityHadron;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,7 +25,7 @@ public class ContainerHadron extends Container {
 		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 2, 125, 36));
 		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 3, 143, 36));
 		//Battery
-		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 4, 44, 108));
+		this.addSlotToContainer(new SlotBattery(tedf.inventory, 4, 44, 108));
 
 		for(int i = 0; i < 3; i++)
 		{

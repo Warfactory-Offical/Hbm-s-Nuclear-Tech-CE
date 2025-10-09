@@ -1,7 +1,7 @@
 package com.hbm.world;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.blocks.generic.BlockMeta;
+import com.hbm.blocks.fluid.ModFluids;
 import com.hbm.config.GeneralConfig;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
 import com.hbm.itempool.ItemPool;

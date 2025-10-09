@@ -424,7 +424,7 @@ public class TileEntityRBMKCraneConsole extends TileEntityMachineBase implements
 
 	@Override
 	@Optional.Method(modid = "opencomputers")
-	public String getName() {
+	public String getDefaultName() {
 		return "rbmk_crane";
 	}
 

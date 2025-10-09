@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.tileentity.machine.TileEntitySoyuzLauncher;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -33,7 +34,7 @@ public class ContainerSoyuzLauncher extends Container {
 		//Peroxide OUT
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 7, 26, 108));
 		//Battery
-		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 8, 44, 108));
+		this.addSlotToContainer(new SlotBattery(tedf.inventory, 8, 44, 108));
 		
 		for(int i = 0; i < 3; i++)
 		{

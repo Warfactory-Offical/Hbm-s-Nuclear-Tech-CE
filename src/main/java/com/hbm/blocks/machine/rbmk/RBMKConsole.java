@@ -49,7 +49,7 @@ public class RBMKConsole extends BlockDummyable implements ITooltipProvider {
 		super.neighborChanged(state, world, pos, blockIn, fromPos);
 		if(!world.isRemote){
 			if(state.getValue(META) >= offset){
-				int power = world.getStrongPower(pos);
+				int power = world.getRedstonePowerFromNeighbors(pos);
 				if(power > 0 && power <= 15){
 					TileEntityRBMKConsole console = (TileEntityRBMKConsole) world.getTileEntity(pos);
 					NBTTagCompound control = new NBTTagCompound();

@@ -2,6 +2,7 @@ package com.hbm.blocks.machine;
 
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.lib.ForgeDirection;
+import com.hbm.tileentity.IPersistentNBT;
 import com.hbm.tileentity.TileEntityProxyCombo;
 import com.hbm.tileentity.machine.oil.TileEntityMachineVacuumDistill;
 import net.minecraft.block.material.Material;
@@ -39,6 +40,21 @@ public class MachineVacuumDistill extends BlockDummyable {
         this.makeExtra(world, x - dir.offsetX + 1, y, z - dir.offsetZ - 1);
         this.makeExtra(world, x - dir.offsetX - 1, y, z - dir.offsetZ + 1);
         this.makeExtra(world, x - dir.offsetX - 1, y, z - dir.offsetZ - 1);
+    }
+
+    @Override
+    public void onBlockHarvested(World world, BlockPos pos, IBlockState state, EntityPlayer player) {
+        IPersistentNBT.onBlockHarvested(world, pos, player);
+    }
+
+    @Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+        IPersistentNBT.breakBlock(worldIn, pos, state);
+        super.breakBlock(worldIn, pos, state);
+    }
+
+    @Override
+    public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune) {
     }
 
     @Override

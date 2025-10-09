@@ -7,8 +7,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.config.GeneralConfig;
 import com.hbm.handler.imc.IMCBlastFurnace;
 import com.hbm.inventory.RecipesCommon;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.recipes.loader.SerializableRecipe;
 import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
@@ -27,9 +29,9 @@ import static com.hbm.inventory.OreDictManager.*;
 
 public class BlastFurnaceRecipes extends SerializableRecipe {
 
-    private static final ArrayList<Tuple.Triplet<Object, Object, ItemStack>> blastFurnaceRecipes = new ArrayList<>();
-    private static final ArrayList<RecipesCommon.ComparableStack> hiddenRecipes = new ArrayList<>();
-    private static final LinkedHashMap<RecipesCommon.AStack, Integer> diFuels = new LinkedHashMap<>();
+    public static final ArrayList<Tuple.Triplet<Object, Object, ItemStack>> blastFurnaceRecipes = new ArrayList<>();
+    public static final ArrayList<RecipesCommon.ComparableStack> hiddenRecipes = new ArrayList<>();
+    public static final LinkedHashMap<RecipesCommon.AStack, Integer> diFuels = new LinkedHashMap<>();
 
     @Override
     public void registerDefaults() {
@@ -45,8 +47,7 @@ public class BlastFurnaceRecipes extends SerializableRecipe {
         addRecipe(STEEL, MINGRADE, new ItemStack(ModItems.ingot_advanced_alloy, 2));
         addRecipe(W, COAL, new ItemStack(ModItems.neutron_reflector, 2));
         addRecipe(W, ANY_COKE, new ItemStack(ModItems.neutron_reflector, 2));
-        //addRecipe(new RecipesCommon.ComparableStack(ModItems.canister_full, 1, Fluids.GASOLINE.getID()), "slimeball",	new ItemStack(ModItems
-        // .canister_napalm));
+        addRecipe(new RecipesCommon.ComparableStack(ModItems.canister_full, 1, Fluids.GASOLINE.getID()), "slimeball", new ItemStack(ModItems.canister_napalm));
         addRecipe(W, SA326.nugget(), new ItemStack(ModItems.ingot_magnetized_tungsten));
         addRecipe(STEEL, TC99.nugget(), new ItemStack(ModItems.ingot_tcalloy));
         addRecipe(GOLD.plate(), ModItems.plate_mixed, new ItemStack(ModItems.plate_paa, 2));
@@ -55,9 +56,9 @@ public class BlastFurnaceRecipes extends SerializableRecipe {
         addRecipe(ModItems.meteorite_sword_hardened, CO, new ItemStack(ModItems.meteorite_sword_alloyed));
         addRecipe(ModBlocks.block_meteor, CO, new ItemStack(ModItems.ingot_meteorite));
 
-        /*if(GeneralConfig.enableLBSM && GeneralConfig.enableLBSMSimpleChemsitry) {
+        if(GeneralConfig.enableLBSM && GeneralConfig.enableLBSMSimpleChemsitry) {
             addRecipe(ModItems.canister_empty, COAL, new ItemStack(ModItems.canister_full, 1, Fluids.OIL.getID()));
-        }*/
+        }
 
         if (!IMCBlastFurnace.buffer.isEmpty()) {
             blastFurnaceRecipes.addAll(IMCBlastFurnace.buffer);
@@ -92,7 +93,7 @@ public class BlastFurnaceRecipes extends SerializableRecipe {
         addFuel(new RecipesCommon.ComparableStack(ModItems.solid_fuel_presto), 800);
         addFuel(new RecipesCommon.ComparableStack(ModItems.solid_fuel_presto_triplet), 2400);
     }
-    private static void addFuel(RecipesCommon.AStack fuel, int power) {
+    public static void addFuel(RecipesCommon.AStack fuel, int power) {
         diFuels.put(fuel, power);
     }
 
@@ -135,7 +136,7 @@ public class BlastFurnaceRecipes extends SerializableRecipe {
         return fuels;
     }
 
-    private static void addRecipe(Object in1, Object in2, ItemStack out) {
+    public static void addRecipe(Object in1, Object in2, ItemStack out) {
 
         if (in1 instanceof Item) in1 = new RecipesCommon.ComparableStack((Item) in1);
         if (in1 instanceof Block) in1 = new RecipesCommon.ComparableStack((Block) in1);
@@ -156,6 +157,54 @@ public class BlastFurnaceRecipes extends SerializableRecipe {
             }
         }
         return ItemStack.EMPTY;
+    }
+
+    public static Tuple.Triplet<Integer, Integer, ItemStack> getRequiredCounts(ItemStack in1, ItemStack in2) {
+        if (in1 == null || in1.isEmpty() || in2 == null || in2.isEmpty()) return null;
+        for (Tuple.Triplet<Object, Object, ItemStack> recipe : blastFurnaceRecipes) {
+            RecipesCommon.AStack[] a1 = getRecipeStacks(recipe.getX());
+            RecipesCommon.AStack[] a2 = getRecipeStacks(recipe.getY());
+
+            RecipesCommon.AStack m1 = findMatching(a1, in1);
+            RecipesCommon.AStack m2 = findMatching(a2, in2);
+            if (m1 != null && m2 != null) {
+                int c1 = requiredCountFor(m1, in1);
+                int c2 = requiredCountFor(m2, in2);
+                return new Tuple.Triplet<>(c1, c2, recipe.getZ().copy());
+            }
+
+            // swap inputs
+            m1 = findMatching(a1, in2);
+            m2 = findMatching(a2, in1);
+            if (m1 != null && m2 != null) {
+                int c1 = requiredCountFor(m2, in1);
+                int c2 = requiredCountFor(m1, in2);
+                return new Tuple.Triplet<>(c1, c2, recipe.getZ().copy());
+            }
+        }
+        return null;
+    }
+
+    private static RecipesCommon.AStack findMatching(RecipesCommon.AStack[] recipe, ItemStack in) {
+        if (in == null || in.isEmpty()) return null;
+        for (RecipesCommon.AStack a : recipe) {
+            if (a.matchesRecipe(in, true)) return a;
+        }
+        return null;
+    }
+
+    private static int requiredCountFor(RecipesCommon.AStack def, ItemStack in) {
+        if (def == null) return 0;
+        java.util.List<ItemStack> candidates = def.extractForJEI();
+        if (candidates.isEmpty()) return 1;
+        if (in != null && !in.isEmpty()) {
+            for (ItemStack cand : candidates) {
+                if (net.minecraftforge.oredict.OreDictionary.itemMatches(cand, in, false)) {
+                    return Math.max(1, cand.getCount());
+                }
+            }
+        }
+        return Math.max(1, candidates.get(0).getCount());
     }
 
     private static boolean doStacksMatch(RecipesCommon.AStack[] recipe, ItemStack in) {
@@ -183,13 +232,7 @@ public class BlastFurnaceRecipes extends SerializableRecipe {
         } else if (in instanceof String) {
             recipeItem1 = new RecipesCommon.AStack[]{new RecipesCommon.OreDictStack((String) in)};
 
-        }/* else if(in instanceof List<?>) {
-			List<?> oreList = (List<?>) in;
-			recipeItem1 = new AStack[oreList.size()];
-			for(int i = 0; i < oreList.size(); i++)
-				recipeItem1[i] = new OreDictStack((String) oreList.get(i));
-
-		}*/
+        }
 
         return recipeItem1;
     }

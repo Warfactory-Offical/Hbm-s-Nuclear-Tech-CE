@@ -1,6 +1,5 @@
 package com.hbm.items.food;
 
-import com.hbm.entity.effect.EntityVortex;
 import com.hbm.items.ModItems;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;

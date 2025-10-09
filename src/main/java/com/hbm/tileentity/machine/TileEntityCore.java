@@ -67,7 +67,7 @@ public class TileEntityCore extends TileEntityMachineBase implements ITickable, 
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.dfcCore";
     }
 

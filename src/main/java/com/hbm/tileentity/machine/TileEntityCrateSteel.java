@@ -11,7 +11,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @AutoRegister
-public class TileEntityCrateSteel extends TileEntityCrateBase {
+public class TileEntityCrateSteel extends TileEntityCrate {
 
     public TileEntityCrateSteel() {
         super(54, "container.crateSteel");

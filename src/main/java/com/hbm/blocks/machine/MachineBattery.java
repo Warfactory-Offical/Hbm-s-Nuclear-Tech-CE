@@ -5,6 +5,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.lib.InventoryHelper;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
+import com.hbm.tileentity.IPersistentNBT;
 import com.hbm.tileentity.machine.TileEntityMachineBattery;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockHorizontal;
@@ -15,7 +16,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -26,7 +26,6 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class MachineBattery extends BlockContainer implements ILookOverlay {
 
@@ -117,52 +116,15 @@ public class MachineBattery extends BlockContainer implements ILookOverlay {
 	}
 
 	@Override
-	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
-		return null;
-	}
-
-	@Override
-	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest){
-		if(!player.capabilities.isCreativeMode && !world.isRemote && willHarvest) {
-			
-			ItemStack drop = new ItemStack(this);
-			TileEntity te = world.getTileEntity(pos);
-			if (te instanceof TileEntityMachineBattery battery) {
-
-                NBTTagCompound nbt = new NBTTagCompound();
-				battery.writeNBT(nbt);
-
-				if(!nbt.isEmpty()) {
-					drop.setTagCompound(nbt);
-				}
-			}
-
-			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), drop);
-		}
-		return world.setBlockToAir(pos);
-	}
-
-	@Override
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
 		worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
-
-		TileEntity te = worldIn.getTileEntity(pos);
-		if(stack.hasTagCompound()){
-			if (te instanceof TileEntityMachineBattery battery) {
-                if(stack.hasDisplayName()) {
-					battery.setCustomName(stack.getDisplayName());
-				}
-				try {
-					NBTTagCompound stackNBT = stack.getTagCompound();
-					if(stackNBT.hasKey("NBT_PERSISTENT_KEY")){
-						battery.readNBT(stackNBT);
-					}
-				} catch(Exception ex) {
-					ex.printStackTrace();
-				}
-			}
-		}
+        IPersistentNBT.onBlockPlacedBy(worldIn, pos, stack);
 	}
+
+    @Override
+    public void onBlockHarvested(World world, BlockPos pos, IBlockState state, EntityPlayer player) {
+        IPersistentNBT.onBlockHarvested(world, pos, player);
+    }
 	
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
@@ -186,12 +148,17 @@ public class MachineBattery extends BlockContainer implements ILookOverlay {
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
 		TileEntity tileentity = worldIn.getTileEntity(pos);
 		if (tileentity instanceof TileEntityMachineBattery) {
+            IPersistentNBT.breakBlock(worldIn, pos, state);
 			InventoryHelper.dropInventoryItems(worldIn, pos, tileentity);
 			worldIn.updateComparatorOutputLevel(pos, this);
 		}
 
 		super.breakBlock(worldIn, pos, state);
 	}
+
+    @Override
+    public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune) {
+    }
 	
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state) {
@@ -220,8 +187,8 @@ public class MachineBattery extends BlockContainer implements ILookOverlay {
 		long charge = 0L;
 		if(stack.hasTagCompound()){
 			NBTTagCompound nbt = stack.getTagCompound();
-			if(nbt.hasKey("NBT_PERSISTENT_KEY")){
-				charge = nbt.getCompoundTag("NBT_PERSISTENT_KEY").getLong("power");
+			if(nbt.hasKey(IPersistentNBT.NBT_PERSISTENT_KEY)){
+				charge = nbt.getCompoundTag(IPersistentNBT.NBT_PERSISTENT_KEY).getLong("power");
 			}
 		}
 

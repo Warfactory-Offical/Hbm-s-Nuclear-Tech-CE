@@ -48,6 +48,7 @@ public class TileEntityStirling extends TileEntityLoadedBase implements IEnergyP
     private int warnCooldown = 0;
     private int overspeed = 0;
     private int syncHeat = 0;
+    private boolean destroyedByCreativePlayer = false;
 
     @Override
     public void update() {
@@ -249,6 +250,19 @@ public class TileEntityStirling extends TileEntityLoadedBase implements IEnergyP
         writer.name("I:maxHeatSteel").value(maxHeatSteel);
         writer.name("I:overspeedLimit").value(overspeedLimit);
     }
+
+    public void setDestroyedByCreativePlayer() {
+        destroyedByCreativePlayer = true;
+    }
+
+    public boolean isDestroyedByCreativePlayer() {
+        return destroyedByCreativePlayer;
+    }
+
+    public boolean shouldDrop() {
+        return !isDestroyedByCreativePlayer();
+    }
+
     @Override
     public boolean hasCapability(@NotNull Capability<?> capability, EnumFacing facing) {
         if (capability == CapabilityEnergy.ENERGY) {

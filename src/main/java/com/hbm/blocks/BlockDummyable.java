@@ -135,6 +135,13 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
     	return new BlockPos(p[0], p[1], p[2]);
     }
 
+    @Nullable
+    public TileEntity findCoreTE(IBlockAccess world, BlockPos pos) {
+    	BlockPos core = findCore(world, pos);
+    	if(core == null) return null;
+    	return world.getTileEntity(core);
+    }
+
 	public int @Nullable [] findCore(IBlockAccess world, int x, int y, int z) {
     	positions.clear();
     	return findCoreRec(world, x, y, z);
@@ -221,7 +228,7 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
 		if(!world.isRemote){
 			BlockPos cur = new BlockPos(x + dir.offsetX * o , y + dir.offsetY * o, z + dir.offsetZ * o);
 			world.setBlockState(cur, this.getDefaultState().withProperty(META, dir.ordinal() + offset), 3);
-			IPersistentNBT.restoreData(world, cur, itemStack);
+			IPersistentNBT.onBlockPlacedBy(world, cur, itemStack);
 			fillSpace(world, x, y, z, dir, o);
 		}
 		pos = new BlockPos(pos.getX(), pos.getY() - getHeightOffset(), pos.getZ());

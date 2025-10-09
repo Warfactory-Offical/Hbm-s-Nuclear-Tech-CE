@@ -59,7 +59,7 @@ public class TileEntityTurretFritz extends TileEntityTurretBaseNT implements IFl
 	}
 	
 	@Override
-	public String getName() {
+	public String getDefaultName() {
 		return "container.turretFritz";
 	}
 

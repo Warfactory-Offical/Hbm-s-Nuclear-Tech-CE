@@ -1,9 +1,6 @@
 package com.hbm.inventory.container;
 
-import com.hbm.inventory.RecipesCommon;
-import com.hbm.inventory.SlotTakeOnly;
-import com.hbm.inventory.SlotNonRetarded;
-import com.hbm.inventory.SlotUpgrade;
+import com.hbm.inventory.*;
 import com.hbm.inventory.recipes.SolderingRecipes;
 import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.items.machine.ItemMachineUpgrade;
@@ -32,7 +29,7 @@ public class ContainerMachineSolderingStation extends Container {
     // Output
     this.addSlotToContainer(new SlotTakeOnly(tile.inventory, 6, 107, 27));
     // Battery
-    this.addSlotToContainer(new SlotItemHandler(tile.inventory, 7, 152, 72));
+    this.addSlotToContainer(new SlotBattery(tile.inventory, 7, 152, 72));
     // Fluid ID
     this.addSlotToContainer(new SlotItemHandler(tile.inventory, 8, 17, 63));
     // Upgrades

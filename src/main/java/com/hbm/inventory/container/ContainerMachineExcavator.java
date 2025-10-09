@@ -1,11 +1,10 @@
 package com.hbm.inventory.container;
 
-import com.hbm.api.energymk2.IBatteryItem;
 import com.hbm.inventory.SlotTakeOnly;
-import com.hbm.items.ModItems;
 import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.items.machine.ItemDrillbit;
 import com.hbm.items.machine.ItemMachineUpgrade;
+import com.hbm.lib.Library;
 import com.hbm.tileentity.machine.TileEntityMachineExcavator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -64,7 +63,7 @@ public class ContainerMachineExcavator extends Container {
 				}
 			} else {
 
-				if(rStack.getItem() instanceof IBatteryItem || rStack.getItem() == ModItems.battery_creative) {
+				if(Library.isItemBattery(rStack)) {
 					if(!this.mergeItemStack(stack, 0, 1, false)) return ItemStack.EMPTY;
 				} else if(rStack.getItem() instanceof IItemFluidIdentifier) {
 					if(!this.mergeItemStack(stack, 1, 2, false)) return ItemStack.EMPTY;

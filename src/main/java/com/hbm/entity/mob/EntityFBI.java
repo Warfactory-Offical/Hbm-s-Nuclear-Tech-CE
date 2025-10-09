@@ -35,7 +35,7 @@ import net.minecraft.world.World;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-@AutoRegister(name = "entity_ntm_fbi", trackingRange = 1000)
+@AutoRegister(name = "entity_ntm_fbi", trackingRange = 1000, eggColors = {0x008000, 0x404040})
 public class EntityFBI extends EntityMob implements IRangedAttackMob {
 	
 	public EntityFBI(World world) {

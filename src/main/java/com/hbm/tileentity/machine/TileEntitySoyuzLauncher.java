@@ -67,7 +67,7 @@ public class TileEntitySoyuzLauncher extends TileEntityMachineBase implements IT
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.soyuzLauncher";
     }
 

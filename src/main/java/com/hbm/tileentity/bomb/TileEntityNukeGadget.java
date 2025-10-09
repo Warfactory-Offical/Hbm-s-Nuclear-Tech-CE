@@ -78,7 +78,7 @@ public class TileEntityNukeGadget extends TileEntity implements IGUIProvider {
 	}
 	
 	public boolean exp1() {
-		if(inventory.getStackInSlot(1).getItem() == ModItems.gadget_explosive8)
+		if(inventory.getStackInSlot(1).getItem() == ModItems.early_explosive_lenses)
 		{
 			return true;
 		}
@@ -87,7 +87,7 @@ public class TileEntityNukeGadget extends TileEntity implements IGUIProvider {
 	}
 	
 	public boolean exp2() {
-		if(inventory.getStackInSlot(2).getItem() == ModItems.gadget_explosive8)
+		if(inventory.getStackInSlot(2).getItem() == ModItems.early_explosive_lenses)
 		{
 			return true;
 		}
@@ -96,7 +96,7 @@ public class TileEntityNukeGadget extends TileEntity implements IGUIProvider {
 	}
 	
 	public boolean exp3() {
-		if(inventory.getStackInSlot(3).getItem() == ModItems.gadget_explosive8)
+		if(inventory.getStackInSlot(3).getItem() == ModItems.early_explosive_lenses)
 		{
 			return true;
 		}
@@ -105,7 +105,7 @@ public class TileEntityNukeGadget extends TileEntity implements IGUIProvider {
 	}
 	
 	public boolean exp4() {
-		if(inventory.getStackInSlot(4).getItem() == ModItems.gadget_explosive8)
+		if(inventory.getStackInSlot(4).getItem() == ModItems.early_explosive_lenses)
 		{
 			return true;
 		}

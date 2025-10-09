@@ -2,6 +2,7 @@ package com.hbm.tileentity.turret;
 
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.lib.ForgeDirection;
+import com.hbm.tileentity.IRadarCommandReceiver;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
@@ -12,15 +13,17 @@ import net.minecraftforge.fml.common.Optional;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class TileEntityTurretBaseArtillery extends TileEntityTurretBaseNT {
+public abstract class TileEntityTurretBaseArtillery extends TileEntityTurretBaseNT implements IRadarCommandReceiver {
 
     protected List<Vec3d> targetQueue = new ArrayList();
 
+    @Override
     public boolean sendCommandPosition(int x, int y, int z) {
         this.enqueueTarget(x + 0.5, y, z + 0.5);
         return true;
     }
 
+    @Override
     public boolean sendCommandEntity(Entity target) {
         this.enqueueTarget(target.posX, target.posY, target.posZ);
         return true;
@@ -77,19 +80,19 @@ public abstract class TileEntityTurretBaseArtillery extends TileEntityTurretBase
     }
 
     @Override
-    @Optional.Method(modid = "OpenComputers")
+    @Optional.Method(modid = "opencomputers")
     public String getComponentName() {
         return "ntm_artillery";
     }
 
     @Callback(direct = true)
-    @Optional.Method(modid = "OpenComputers")
+    @Optional.Method(modid = "opencomputers")
     public Object[] getCurrentTarget(Context context, Arguments args) {
         return new Object[] {targetQueue.get(0).x, targetQueue.get(0).y, targetQueue.get(0).z};
     }
 
     @Callback(direct = true)
-    @Optional.Method(modid = "OpenComputers")
+    @Optional.Method(modid = "opencomputers")
     public Object[] getTargetDistance(Context context, Arguments args) {
         return new Object[] {Math.sqrt(Math.pow(pos.getX() - args.checkDouble(0), 2)+Math.pow(pos.getY() - args.checkDouble(1), 2)+Math.pow(pos.getZ() - args.checkDouble(2), 2))};
     }

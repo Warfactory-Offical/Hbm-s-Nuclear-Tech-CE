@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotUpgrade;
 import com.hbm.tileentity.machine.TileEntityMachineChemfac;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,7 +18,7 @@ public class ContainerChemfac extends Container {
 	public ContainerChemfac(InventoryPlayer playerInv, TileEntityMachineChemfac tile) {
 		this.chemfac = tile;
 
-		this.addSlotToContainer(new SlotItemHandler(tile.inventory, 0, 234, 79));
+		this.addSlotToContainer(new SlotBattery(tile.inventory, 0, 234, 79));
 
 		for (int i = 0; i < 2; i++) {
 			for (int j = 0; j < 2; j++) {

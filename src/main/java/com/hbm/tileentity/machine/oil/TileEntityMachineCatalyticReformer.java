@@ -51,7 +51,7 @@ public class TileEntityMachineCatalyticReformer extends TileEntityMachineBase im
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.catalyticReformer";
     }
 

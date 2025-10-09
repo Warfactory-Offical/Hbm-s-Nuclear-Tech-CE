@@ -43,7 +43,7 @@ public class TileEntityNukeBalefire extends TileEntityMachineBase implements ITi
 	}
 
 	@Override
-	public String getName() {
+	public String getDefaultName() {
 		return "container.nukeFstbmb";
 	}
 

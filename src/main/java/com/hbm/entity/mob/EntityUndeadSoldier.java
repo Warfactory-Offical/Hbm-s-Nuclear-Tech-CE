@@ -22,7 +22,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
-@AutoRegister(name = "entity_ntm_undead_soldier", trackingRange = 1000)
+@AutoRegister(name = "entity_ntm_undead_soldier", trackingRange = 1000, eggColors = {0x749F30, 0x6C5B44})
 public class EntityUndeadSoldier extends EntityMob {
 
     public static final byte TYPE_ZOMBIE = 0;

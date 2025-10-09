@@ -13,7 +13,7 @@ import java.util.HashMap;
 public class BoilingHandler extends JEIUniversalHandler {
 
     public BoilingHandler(IGuiHelper helper) {
-        super(helper, JEIConfig.BOILER, ModBlocks.machine_boiler.getLocalizedName(), new ItemStack[] { new ItemStack(ModBlocks.machine_boiler), new ItemStack(ModBlocks.machine_industrial_boiler) }, generateRecipes());
+        super(helper, JEIConfig.BOILER, ModBlocks.machine_boiler.getTranslationKey(), new ItemStack[] { new ItemStack(ModBlocks.machine_boiler), new ItemStack(ModBlocks.machine_industrial_boiler) }, generateRecipes());
     }
 
     public static HashMap<Object, Object> cache;

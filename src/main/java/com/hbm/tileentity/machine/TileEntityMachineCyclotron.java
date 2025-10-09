@@ -80,7 +80,7 @@ public class TileEntityMachineCyclotron extends TileEntityMachineBase implements
 	}
 	
 	@Override
-	public String getName() {
+	public String getDefaultName() {
 		return "container.cyclotron";
 	}
 

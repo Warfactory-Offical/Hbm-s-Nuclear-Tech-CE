@@ -35,7 +35,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 //Drillgon200: This whole thing is messed up and janky and I don't know what to about it.
-@AutoRegister(name = "entity_hunter_chopper", trackingRange = 1000)
+@AutoRegister(name = "entity_hunter_chopper", trackingRange = 1000, eggColors = {0x000020, 0x2D2D72})
 public class EntityHunterChopper extends EntityFlying implements IMob, IRadiationImmune {
 
 	public static final DataParameter<Boolean> DYING = EntityDataManager.createKey(EntityHunterChopper.class, DataSerializers.BOOLEAN);
@@ -385,7 +385,7 @@ public class EntityHunterChopper extends EntityFlying implements IMob, IRadiatio
 
 		this.dropItem(ModItems.combine_scrap, rand.nextInt(8) + 1);
 		this.dropItem(ModItems.plate_combine_steel, rand.nextInt(5) + 1);
-		this.dropItem(new ItemStack(ModItems.wire_fine, 1, Mats.MAT_MAGTUNG.id).getItem(), rand.nextInt(3) + 1);
+		this.entityDropItem(new ItemStack(ModItems.wire_fine, 1, Mats.MAT_MAGTUNG.id), rand.nextInt(3) + 1);
 	}
 	
 	@Override
@@ -425,7 +425,7 @@ public class EntityHunterChopper extends EntityFlying implements IMob, IRadiatio
     	else if(i > 7)
 			this.dropItem(ModItems.plate_combine_steel, 1);
     	else
-			this.dropItem(new ItemStack(ModItems.wire_fine, 1, Mats.MAT_MAGTUNG.id).getItem(), 1);
+			this.entityDropItem(new ItemStack(ModItems.wire_fine, 1, Mats.MAT_MAGTUNG.id), 1);
     }
 
 	public void setIsDying(boolean b) {

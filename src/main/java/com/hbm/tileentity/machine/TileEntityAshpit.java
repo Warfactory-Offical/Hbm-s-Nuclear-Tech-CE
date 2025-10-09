@@ -75,7 +75,7 @@ public class TileEntityAshpit extends TileEntityMachineBase implements ITickable
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.ashpit";
     }
 

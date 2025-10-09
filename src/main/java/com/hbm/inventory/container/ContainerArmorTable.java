@@ -201,6 +201,11 @@ public class ContainerArmorTable extends Container {
 		}
 
 		@Override
+		public int getSlotStackLimit() {
+			return 1;
+		}
+
+		@Override
 		public boolean isItemValid(@NotNull ItemStack stack) {
 			if (armor.getStackInSlot(0).isEmpty() || !(stack.getItem() instanceof ItemArmorMod)) {
 				return false;

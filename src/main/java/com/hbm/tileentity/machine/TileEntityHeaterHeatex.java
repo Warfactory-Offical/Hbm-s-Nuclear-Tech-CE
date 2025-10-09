@@ -67,7 +67,7 @@ public class TileEntityHeaterHeatex extends TileEntityMachineBase implements IHe
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.heaterHeatex";
     }
 

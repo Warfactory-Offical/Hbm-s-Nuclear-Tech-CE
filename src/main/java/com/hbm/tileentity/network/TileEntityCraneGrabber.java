@@ -46,7 +46,7 @@ public class TileEntityCraneGrabber extends TileEntityCraneBase implements IGUIP
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.craneGrabber";
     }
 

@@ -2,18 +2,16 @@ package com.hbm.blocks.machine;
 
 import com.hbm.blocks.BlockDummyableMBB;
 import com.hbm.blocks.ILookOverlay;
-import com.hbm.blocks.ModBlocks;
 import com.hbm.lib.InventoryHelper;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
+import com.hbm.tileentity.IPersistentNBT;
 import com.hbm.tileentity.machine.TileEntityMachineFENSU;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumDyeColor;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -27,7 +25,6 @@ import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class MachineFENSU extends BlockDummyableMBB implements ILookOverlay {
 
@@ -50,40 +47,6 @@ public class MachineFENSU extends BlockDummyableMBB implements ILookOverlay {
 	@Override
 	public int getOffset() {
 		return 1;
-	}
-
-	@Override
-	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
-		return null;
-	}
-
-	@Override
-	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest){
-		if(!player.capabilities.isCreativeMode && !world.isRemote && willHarvest) {
-			
-			ItemStack drop = new ItemStack(this);
-			int[] posCore = this.findCore(world, pos.getX(), pos.getY(), pos.getZ());
-			TileEntity te;
-			if(posCore == null){
-				te = world.getTileEntity(pos);
-			}else{
-				te = world.getTileEntity(new BlockPos(posCore[0], posCore[1], posCore[2]));
-			}
-
-			if (te instanceof TileEntityMachineFENSU) {
-				TileEntityMachineFENSU battery = (TileEntityMachineFENSU) te;
-			
-				NBTTagCompound nbt = new NBTTagCompound();
-				battery.writeNBT(nbt);
-
-				if(!nbt.isEmpty()) {
-					drop.setTagCompound(nbt);
-				}
-			}
-
-			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), drop);
-		}
-		return world.setBlockToAir(pos);
 	}
 	
 	@Override
@@ -129,46 +92,25 @@ public class MachineFENSU extends BlockDummyableMBB implements ILookOverlay {
 			return false;
 		}
 	}
+    @Override
+    public void onBlockHarvested(World world, BlockPos pos, IBlockState state, EntityPlayer player) {
+        IPersistentNBT.onBlockHarvested(world, pos, player);
+    }
 
-	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-		super.onBlockPlacedBy(world, pos, state, placer, stack);
-		int[] posCore = this.findCore(world, pos.getX(), pos.getY(), pos.getZ());
-		TileEntity te;
-		if(posCore == null){
-			te = world.getTileEntity(pos);
-		}else{
-			te = world.getTileEntity(new BlockPos(posCore[0], posCore[1], posCore[2]));
-		}
-		if(stack.hasTagCompound()){
-			if (te instanceof TileEntityMachineFENSU) {
-				TileEntityMachineFENSU battery = (TileEntityMachineFENSU) te;
-				if(stack.hasDisplayName()) {
-					battery.setCustomName(stack.getDisplayName());
-				}
-				
-				try {
-					NBTTagCompound stackNBT = stack.getTagCompound();
-					if(stackNBT.hasKey("NBT_PERSISTENT_KEY")){
-						battery.readNBT(stackNBT);
-					}
-				} catch(Exception ex) {
-					ex.printStackTrace();
-				}
-			}
-		}
-	}
+    @Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+        TileEntity tileentity = worldIn.getTileEntity(pos);
+        if (tileentity instanceof TileEntityMachineFENSU) {
+            IPersistentNBT.breakBlock(worldIn, pos, state);
+            InventoryHelper.dropInventoryItems(worldIn, pos, tileentity);
+            worldIn.updateComparatorOutputLevel(pos, this);
+        }
+        super.breakBlock(worldIn, pos, state);
+    }
 
-	@Override
-	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
-		TileEntity tileentity = worldIn.getTileEntity(pos);
-		if (tileentity instanceof TileEntityMachineFENSU) {
-			InventoryHelper.dropInventoryItems(worldIn, pos, (TileEntityMachineFENSU) tileentity);
-			worldIn.updateComparatorOutputLevel(pos, this);
-		}
-
-		super.breakBlock(worldIn, pos, state);
-	}
+    @Override
+    public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune) {
+    }
 
 	@Override
 	public boolean hasComparatorInputOverride(IBlockState state){
@@ -194,8 +136,8 @@ public class MachineFENSU extends BlockDummyableMBB implements ILookOverlay {
 		long charge = 0L;
 		if(stack.hasTagCompound()){
 			NBTTagCompound nbt = stack.getTagCompound();
-			if(nbt.hasKey("NBT_PERSISTENT_KEY")){
-				charge = nbt.getCompoundTag("NBT_PERSISTENT_KEY").getLong("power");
+			if(nbt.hasKey(IPersistentNBT.NBT_PERSISTENT_KEY)){
+				charge = nbt.getCompoundTag(IPersistentNBT.NBT_PERSISTENT_KEY).getLong("power");
 			}
 		}
 

@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.tileentity.machine.TileEntityFEL;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -17,7 +18,7 @@ public class ContainerFEL extends Container {
 		fel = tedf;
 
 		//battery
-		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 0, 182, 144));
+		this.addSlotToContainer(new SlotBattery(tedf.inventory, 0, 182, 144));
 		//laser crystal
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 1, 141, 23));
 

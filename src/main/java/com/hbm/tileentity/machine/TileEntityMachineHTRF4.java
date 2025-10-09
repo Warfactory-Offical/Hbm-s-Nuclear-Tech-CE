@@ -342,7 +342,7 @@ public class TileEntityMachineHTRF4 extends TileEntityMachineBase implements ITi
 	}
 
 	@Override
-	public String getName() {
+	public String getDefaultName() {
 		return "container.htrf4";
 	}
 

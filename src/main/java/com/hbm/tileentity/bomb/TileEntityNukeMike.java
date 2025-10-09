@@ -79,10 +79,10 @@ public class TileEntityNukeMike extends TileEntity implements IGUIProvider {
 	
 public boolean isReady() {
 		
-			if(inventory.getStackInSlot(0).getItem() == ModItems.man_explosive8 && 
-			inventory.getStackInSlot(1).getItem() == ModItems.man_explosive8 && 
-			inventory.getStackInSlot(2).getItem() == ModItems.man_explosive8 && 
-			inventory.getStackInSlot(3).getItem() == ModItems.man_explosive8 && 
+			if(inventory.getStackInSlot(0).getItem() == ModItems.explosive_lenses &&
+			inventory.getStackInSlot(1).getItem() == ModItems.explosive_lenses &&
+			inventory.getStackInSlot(2).getItem() == ModItems.explosive_lenses &&
+			inventory.getStackInSlot(3).getItem() == ModItems.explosive_lenses &&
 			inventory.getStackInSlot(4).getItem() == ModItems.man_core)
 			{
 				return true;
@@ -93,10 +93,10 @@ public boolean isReady() {
 	
 	public boolean isFilled() {
 		
-			if(inventory.getStackInSlot(0).getItem() == ModItems.man_explosive8 && 
-			inventory.getStackInSlot(1).getItem() == ModItems.man_explosive8 && 
-			inventory.getStackInSlot(2).getItem() == ModItems.man_explosive8 && 
-			inventory.getStackInSlot(3).getItem() == ModItems.man_explosive8 && 
+			if(inventory.getStackInSlot(0).getItem() == ModItems.explosive_lenses &&
+			inventory.getStackInSlot(1).getItem() == ModItems.explosive_lenses &&
+			inventory.getStackInSlot(2).getItem() == ModItems.explosive_lenses &&
+			inventory.getStackInSlot(3).getItem() == ModItems.explosive_lenses &&
 			inventory.getStackInSlot(4).getItem() == ModItems.man_core && 
 			inventory.getStackInSlot(5).getItem() == ModItems.mike_core && 
 			inventory.getStackInSlot(6).getItem() == ModItems.mike_deut && 

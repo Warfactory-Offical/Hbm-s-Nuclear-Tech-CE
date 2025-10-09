@@ -1,6 +1,7 @@
 package com.hbm.inventory.container;
 
 import com.hbm.api.energymk2.IBatteryItem;
+import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.IItemFluidIdentifier;
@@ -21,7 +22,7 @@ public class ContainerPyroOven extends Container {
         pyro = tedf;
 
         //Battery
-        this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 0, 152, 72));
+        this.addSlotToContainer(new SlotBattery(tedf.inventory, 0, 152, 72));
         //Input
         this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 1, 35, 45));
         //Output

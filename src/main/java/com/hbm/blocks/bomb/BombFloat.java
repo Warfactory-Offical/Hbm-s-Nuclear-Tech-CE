@@ -27,7 +27,7 @@ public class BombFloat extends Block implements IBomb {
 	
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
-        if (worldIn.getStrongPower(pos) > 0)
+        if (worldIn.isBlockPowered(pos))
         {
         	explode(worldIn, pos, null);
         }

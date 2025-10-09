@@ -28,7 +28,7 @@ public class RenderCrashedBomb extends TileEntitySpecialRenderer<TileEntityCrash
         GlStateManager.disableCull();
         GlStateManager.enableLighting();
 
-        rand.setSeed(tile.getBlockMetadata());
+        rand.setSeed(tile.getPos().hashCode());
         double yaw = rand.nextDouble() * 360;
         double pitch = rand.nextDouble() * 45 + 45;
         double roll = rand.nextDouble() * 360;
@@ -42,29 +42,24 @@ public class RenderCrashedBomb extends TileEntitySpecialRenderer<TileEntityCrash
         EnumDudType type = EnumUtil.grabEnumSafely(EnumDudType.class, tile.getBlockMetadata());
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
         switch (type) {
-            case BALEFIRE: {
+            case BALEFIRE -> {
                 bindTexture(ResourceManager.dud_balefire_tex);
                 ResourceManager.dud_balefire.renderAll();
-                break;
             }
-            case CONVENTIONAL: {
+            case CONVENTIONAL -> {
                 bindTexture(ResourceManager.dud_conventional_tex);
                 ResourceManager.dud_conventional.renderAll();
-                break;
             }
-            case NUKE: {
+            case NUKE -> {
                 GlStateManager.translate(0, 0, 1.25);
                 bindTexture(ResourceManager.dud_nuke_tex);
                 ResourceManager.dud_nuke.renderAll();
-                break;
             }
-            case SALTED: {
+            case SALTED -> {
                 GlStateManager.translate(0, 0, 0.5);
                 bindTexture(ResourceManager.dud_salted_tex);
                 ResourceManager.dud_salted.renderAll();
-                break;
             }
-
         }
         GlStateManager.shadeModel(GL11.GL_FLAT);
         GlStateManager.enableCull();
@@ -91,30 +86,25 @@ public class RenderCrashedBomb extends TileEntitySpecialRenderer<TileEntityCrash
                 GlStateManager.rotate(90, 0, 1, 0);
                 GlStateManager.shadeModel(GL11.GL_SMOOTH);
                 switch (type) {
-                    case BALEFIRE: {
+                    case BALEFIRE -> {
                         bindTexture(ResourceManager.dud_balefire_tex);
                         ResourceManager.dud_balefire.renderAll();
-                        break;
                     }
-                    case CONVENTIONAL: {
+                    case CONVENTIONAL -> {
                         GlStateManager.translate(0, 0, -0.5);
                         bindTexture(ResourceManager.dud_conventional_tex);
                         ResourceManager.dud_conventional.renderAll();
-                        break;
                     }
-                    case NUKE: {
+                    case NUKE -> {
                         GlStateManager.translate(0, 0, 1.25);
                         bindTexture(ResourceManager.dud_nuke_tex);
                         ResourceManager.dud_nuke.renderAll();
-                        break;
                     }
-                    case SALTED: {
+                    case SALTED -> {
                         GlStateManager.translate(0, 0, 0.5);
                         bindTexture(ResourceManager.dud_salted_tex);
                         ResourceManager.dud_salted.renderAll();
-                        break;
                     }
-
                 }
                 GlStateManager.shadeModel(GL11.GL_FLAT);
             }

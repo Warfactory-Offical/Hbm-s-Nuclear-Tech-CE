@@ -55,7 +55,7 @@ public class TileEntityTurretSentry extends TileEntityTurretBaseNT implements IG
   }
 
   @Override
-  public String getName() {
+  public String getDefaultName() {
     return "container.turretSentry";
   }
 

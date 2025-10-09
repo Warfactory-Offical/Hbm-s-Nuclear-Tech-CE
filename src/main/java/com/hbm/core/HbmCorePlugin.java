@@ -1,5 +1,6 @@
 package com.hbm.core;
 
+import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,14 +13,43 @@ import java.util.Map;
 public class HbmCorePlugin implements IFMLLoadingPlugin {
 
     static final Logger coreLogger = LogManager.getLogger("HBM CoreMod");
+    private static final Brand brand;
     private static boolean runtimeDeobfEnabled = false;
     private static boolean hardCrash = true;
 
+    static {
+        if (Launch.classLoader.getResource("catserver/server/CatServer.class") != null) {
+            brand = Brand.CAT_SERVER;
+        } else if (Launch.classLoader.getResource("com/mohistmc/MohistMC.class") != null) {
+            brand = Brand.MOHIST;
+        } else if (Launch.classLoader.getResource("org/magmafoundation/magma/Magma.class") != null) {
+            brand = Brand.MAGMA;
+        } else if (Launch.classLoader.getResource("com/cleanroommc/boot/Main.class") != null) {
+            brand = Brand.CLEANROOM;
+        } else {
+            brand = Brand.FORGE;
+        }
+    }
+
+    static void fail(String className, Throwable t) {
+        coreLogger.fatal("Error transforming class {}. This is a coremod clash! Please report this on our issue tracker", className, t);
+        if (hardCrash) {
+            coreLogger.info("Crashing! To suppress the crash, launch Minecraft with -Dhbm.core.disablecrash");
+            throw new IllegalStateException("HBM CoreMod transformation failure: " + className, t);
+        }
+    }
+
+    public static boolean runtimeDeobfEnabled() {
+        return runtimeDeobfEnabled;
+    }
+
+    public static Brand getBrand() {
+        return brand;
+    }
+
     @Override
     public String[] getASMTransformerClass() {
-        return new String[]{GlStateManagerTransformer.class.getName(), ContainerTransformer.class.getName(),
-                InventoryPlayerTransformer.class.getName(), ForgeHooksTransformer.class.getName(), ChunkTransformer.class.getName(),
-                WorldTransformer.class.getName(), WorldServerTransformer.class.getName()};
+        return new String[]{GlStateManagerTransformer.class.getName(), ContainerTransformer.class.getName(), InventoryPlayerTransformer.class.getName(), ForgeHooksTransformer.class.getName(), ChunkTransformer.class.getName(), WorldTransformer.class.getName(), WorldServerTransformer.class.getName()};
     }
 
     @Override
@@ -42,20 +72,12 @@ public class HbmCorePlugin implements IFMLLoadingPlugin {
         }
     }
 
-    static void fail(String className, Throwable t) {
-        coreLogger.fatal("Error transforming class {}. This is a coremod clash! Please report this on our issue tracker", className, t);
-        if (hardCrash) {
-            coreLogger.info("Crashing! To suppress the crash, launch Minecraft with -Dhbm.core.disablecrash");
-            throw new IllegalStateException("HBM CoreMod transformation failure: " + className, t);
-        }
-    }
-
     @Override
     public String getAccessTransformerClass() {
         return null;
     }
 
-    public static boolean runtimeDeobfEnabled() {
-        return runtimeDeobfEnabled;
+    public enum Brand {
+        FORGE, CAT_SERVER, MOHIST, MAGMA, CLEANROOM
     }
 }

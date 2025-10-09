@@ -38,7 +38,7 @@ import java.util.function.BiConsumer;
 public class Orchestras {
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> DEBUG_ORCHESTRA = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -70,7 +70,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_PEPPERBOX = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -96,7 +96,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_ATLAS = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -124,7 +124,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_DANI = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -152,7 +152,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_HENRY = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -189,7 +189,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_GREASEGUN = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -225,7 +225,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_MARESLEG = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -260,7 +260,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_MARESLEG_SHORT = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -295,7 +295,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_MARESLEG_AKIMBO = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -315,7 +315,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_FLAREGUN = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -348,7 +348,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_NOPIP = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -380,7 +380,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_CARBINE = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -414,7 +414,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_AM180 = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -473,7 +473,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_LIBERATOR = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -516,7 +516,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_CONGOLAKE = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -539,7 +539,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_FLAMER = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
 
@@ -580,7 +580,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_FLAMER_DAYBREAKER = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -595,7 +595,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_LAG = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -625,7 +625,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_UZI = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -657,7 +657,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_UZI_AKIMBO = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -689,7 +689,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_SPAS = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -729,7 +729,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_PANERSCHRECK = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -740,7 +740,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_G3 = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -776,7 +776,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_STINGER = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
 
@@ -806,7 +806,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_CHEMTHROWER = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
 
@@ -888,7 +888,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_M2 = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -907,7 +907,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_SHREDDER = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -930,7 +930,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_SHREDDER_SEXY = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -955,7 +955,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_QUADRO = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -966,7 +966,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_MINIGUN = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -992,7 +992,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_MINIGUN_DUAL = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -1003,7 +1003,7 @@ public class Orchestras {
                 int rounds = WeaponModManager.hasUpgrade(stack, ctx.configIndex, WeaponModManager.ID_MINIGUN_SPEED) ? 3 : 1;
                 for(int i = 0; i < rounds; i++) {
                     SpentCasing casing = ctx.config.getReceivers(stack)[0].getMagazine(stack).getCasing(stack, ctx.inventory);
-                    if(casing != null) CasingCreator.composeEffect(entity.world, entity, 0.25, -0.25, -0.5D * index, 0, 0.18, -0.12 * index, 0.01, (float)entity.getRNG().nextGaussian() * 15F, (float)entity.getRNG().nextGaussian() * 15F, casing.getName());
+                    if(casing != null && entity instanceof EntityPlayer plr) CasingCreator.composeEffect(entity.world, plr, 0.25, -0.25, -0.5D * index, 0, 0.18, -0.12 * index, 0.01, (float)entity.getRNG().nextGaussian() * 15F, (float)entity.getRNG().nextGaussian() * 15F, casing.getName());
                 }
             }
             if(timer == (WeaponModManager.hasUpgrade(stack, 0, 207) ? 3 : 1)) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.revolverSpin, SoundCategory.PLAYERS, 1F, 0.75F);
@@ -1021,7 +1021,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_MISSILE_LAUNCHER = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -1042,7 +1042,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_TESLA = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -1060,7 +1060,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_LASER_PISTOL = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -1084,7 +1084,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_STG77 = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -1147,7 +1147,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_TAU = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
 
@@ -1223,7 +1223,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_FATMAN = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -1234,7 +1234,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_LASRIFLE = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -1264,7 +1264,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_COILGUN = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -1275,7 +1275,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_HANGMAN = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -1327,7 +1327,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_BOLTER = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -1347,7 +1347,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_FOLLY = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -1360,7 +1360,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_DOUBLE_BARREL = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -1389,7 +1389,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_ABERRATOR = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
@@ -1416,7 +1416,7 @@ public class Orchestras {
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_MAS36 = (stack, ctx) -> {
-        EntityPlayer entity = ctx.getPlayer();
+        EntityLivingBase entity = ctx.entity;
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);

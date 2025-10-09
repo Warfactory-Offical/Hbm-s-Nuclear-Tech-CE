@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.tileentity.machine.TileEntityMachineShredder;
 import net.minecraft.entity.player.EntityPlayer;
@@ -49,7 +50,7 @@ public class ContainerMachineShredder extends Container {
 		this.addSlotToContainer(new SlotTakeOnly(shredder.inventory, 26, 152, 108));
 		this.addSlotToContainer(new SlotItemHandler(shredder.inventory, 27, 44, 108));
 		this.addSlotToContainer(new SlotItemHandler(shredder.inventory, 28, 80, 108));
-		this.addSlotToContainer(new SlotItemHandler(shredder.inventory, 29, 8, 108));
+		this.addSlotToContainer(new SlotBattery(shredder.inventory, 29, 8, 108));
 		
 		for(int i = 0; i < 3; i++)
 		{

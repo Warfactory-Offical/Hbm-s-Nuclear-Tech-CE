@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.tileentity.bomb.TileEntityLaunchTable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -21,7 +22,7 @@ public class ContainerLaunchTable extends Container {
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 2, 116, 90-18));
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 3, 134, 90-18));
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 4, 152, 90));
-		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 5, 116, 108));
+		this.addSlotToContainer(new SlotBattery(tedf.inventory, 5, 116, 108));
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 6, 116, 90));
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 7, 134, 90));
 		

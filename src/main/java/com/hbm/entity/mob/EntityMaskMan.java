@@ -23,7 +23,7 @@ import net.minecraft.world.BossInfoServer;
 import net.minecraft.world.World;
 
 import java.util.List;
-@AutoRegister(name = "entity_mask_man", trackingRange = 1000)
+@AutoRegister(name = "entity_mask_man", trackingRange = 1000, eggColors = {0x818572, 0xC7C1B7})
 public class EntityMaskMan extends EntityMob implements IRadiationImmune {
 
 	private final BossInfoServer bossInfo = (BossInfoServer)(new BossInfoServer(this.getDisplayName(), BossInfo.Color.PURPLE, BossInfo.Overlay.PROGRESS));

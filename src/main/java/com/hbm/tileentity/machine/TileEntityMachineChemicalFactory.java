@@ -125,7 +125,7 @@ public class TileEntityMachineChemicalFactory extends TileEntityMachineBase impl
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.machineChemicalFactory";
     }
 

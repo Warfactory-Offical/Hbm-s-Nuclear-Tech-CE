@@ -1,5 +1,6 @@
 package com.hbm.tileentity;
 
+import com.hbm.api.tile.IWorldRenameable;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
@@ -26,18 +27,24 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 @Spaghetti("Not spaghetti in itself, but for the love of god please use this base class for all machines")
-public abstract class TileEntityMachineBase extends TileEntityLoadedBase {
-
+public abstract class TileEntityMachineBase extends TileEntityLoadedBase implements IWorldRenameable {
+    /**
+     * Internal inventory. All operations are unchecked.
+     * Use {@link #getCheckedInventory()} for Container/External classes.
+     * Consider making this protected in the future.
+     */
     public ItemStackHandler inventory;
     private boolean enablefluidWrapper = false;
     private boolean enableEnergyWrapper = false;
     private String customName;
+    private boolean destroyedByCreativePlayer = false;
 
     @Deprecated
     public TileEntityMachineBase(int scount) {
@@ -92,16 +99,19 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase {
         this.world.markChunkDirty(this.pos, this);
     }
 
-    public String getInventoryName() {
-        return this.hasCustomInventoryName() ? this.customName : getName();
+    @Override
+    public String getName() {
+        return this.hasCustomName() ? this.customName : getDefaultName();
     }
 
-    public abstract String getName();
+    public abstract String getDefaultName();
 
-    public boolean hasCustomInventoryName() {
+    @Override
+    public boolean hasCustomName() {
         return this.customName != null && !this.customName.isEmpty();
     }
 
+    @Override
     public void setCustomName(String name) {
         this.customName = name;
     }
@@ -205,6 +215,15 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase {
         return Math.max(volume, 0);
     }
 
+    public IItemHandlerModifiable getCheckedInventory() {
+        return new ItemStackHandlerWrapper(inventory) {
+            @Override
+            public boolean isItemValid(int slot, ItemStack stack) {
+                return isItemValidForSlot(slot, stack);
+            }
+        };
+    }
+
     @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && enablefluidWrapper) {
@@ -270,6 +289,14 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase {
                 block2.neighborChanged(world.getBlockState(offsetPos), world, offsetPos, this.getBlockType(), this.getPos());
             }
         }
+    }
+
+    public void setDestroyedByCreativePlayer() {
+        destroyedByCreativePlayer = true;
+    }
+
+    public boolean isDestroyedByCreativePlayer() {
+        return destroyedByCreativePlayer;
     }
 
     // TODO: Consume air from connected tanks if available

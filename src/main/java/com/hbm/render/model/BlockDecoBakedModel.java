@@ -22,7 +22,7 @@ public class BlockDecoBakedModel extends AbstractWavefrontBakedModel {
     private List<BakedQuad> itemQuads;
 
     public BlockDecoBakedModel(WavefrontObject model, TextureAtlasSprite sprite, boolean forBlock, float baseScale, float tx, float ty, float tz) {
-        super(model, DefaultVertexFormats.ITEM, baseScale, tx, ty, tz, BakedModelTransforms.standardBlock());
+        super(model, DefaultVertexFormats.ITEM, baseScale, tx, ty, tz, BakedModelTransforms.forDeco(BakedModelTransforms.standardBlock()));
         this.sprite = sprite;
         this.forBlock = forBlock;
     }

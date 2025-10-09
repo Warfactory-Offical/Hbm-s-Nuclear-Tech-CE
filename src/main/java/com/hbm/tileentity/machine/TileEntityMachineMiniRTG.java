@@ -21,7 +21,7 @@ public class TileEntityMachineMiniRTG extends TileEntityLoadedBase implements IT
 	public void update() {
 		if(!world.isRemote) {
 			for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-				this.tryProvide(world, pos.getX(), pos.getY(), pos.getZ(), dir);
+				this.tryProvide(world, pos.getX() + dir.offsetX, pos.getY() + dir.offsetY, pos.getZ() + dir.offsetZ, dir);
 			}
 			if(this.getBlockType() == ModBlocks.machine_powerrtg)
 				power += 2500;

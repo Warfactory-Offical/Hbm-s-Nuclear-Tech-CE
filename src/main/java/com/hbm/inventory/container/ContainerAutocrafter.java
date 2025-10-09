@@ -1,7 +1,7 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotPattern;
-import com.hbm.items.ModItems;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.machine.TileEntityMachineAutocrafter;
 import net.minecraft.entity.player.EntityPlayer;
@@ -37,7 +37,7 @@ public class ContainerAutocrafter extends Container {
         this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 19, 116, 104));
 
         //Battery
-        this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 20, 17, 99));
+        this.addSlotToContainer(new SlotBattery(tedf.inventory, 20, 17, 99));
 
         for(int i = 0; i < 3; i++) {
             for(int j = 0; j < 9; j++) {

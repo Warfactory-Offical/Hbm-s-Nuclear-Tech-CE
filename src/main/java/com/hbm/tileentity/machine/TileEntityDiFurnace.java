@@ -11,6 +11,7 @@ import com.hbm.inventory.gui.GUIDiFurnace;
 import com.hbm.inventory.recipes.BlastFurnaceRecipes;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.IGUIProvider;
+import com.hbm.util.Tuple;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
@@ -145,7 +146,7 @@ public class TileEntityDiFurnace extends TileEntityMachinePolluting implements I
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.diFurnace";
     }
 
@@ -200,25 +201,39 @@ public class TileEntityDiFurnace extends TileEntityMachinePolluting implements I
 
     public boolean canProcess() {
 
-        ItemStack inputA = inventory.extractItem(0, 1, true);
-        ItemStack inputB = inventory.extractItem(1, 1, true);
+        ItemStack inputA = inventory.getStackInSlot(0);
+        ItemStack inputB = inventory.getStackInSlot(1);
 
         if (inputA.isEmpty() || inputB.isEmpty()) return false;
         if (!this.hasPower()) return false;
 
-        ItemStack result = BlastFurnaceRecipes.getOutput(inputA, inputB);
-        if (result.isEmpty()) return false;
+        Tuple.Triplet<Integer, Integer, ItemStack> match = BlastFurnaceRecipes.getRequiredCounts(inputA, inputB);
+        if (match == null) return false;
+
+        int reqA = match.getX();
+        int reqB = match.getY();
+        ItemStack result = match.getZ();
+
+        ItemStack simA = inventory.extractItem(0, reqA, true);
+        if (simA.isEmpty() || simA.getCount() < reqA) return false;
+        ItemStack simB = inventory.extractItem(1, reqB, true);
+        if (simB.isEmpty() || simB.getCount() < reqB) return false;
 
         ItemStack remainder = inventory.insertItem(3, result.copy(), true);
         if (!remainder.isEmpty()) return false;
+
         ItemStack contA = inputA.getItem().getContainerItem(inputA);
         if (!contA.isEmpty()) {
-            ItemStack rA = inventory.insertItem(3, contA.copy(), true);
+            contA = contA.copy();
+            contA.setCount(contA.getCount() * reqA);
+            ItemStack rA = inventory.insertItem(3, contA, true);
             if (!rA.isEmpty()) return false;
         }
         ItemStack contB = inputB.getItem().getContainerItem(inputB);
         if (!contB.isEmpty()) {
-            ItemStack rB = inventory.insertItem(3, contB.copy(), true);
+            contB = contB.copy();
+            contB.setCount(contB.getCount() * reqB);
+            ItemStack rB = inventory.insertItem(3, contB, true);
             return rB.isEmpty();
         }
 
@@ -228,20 +243,32 @@ public class TileEntityDiFurnace extends TileEntityMachinePolluting implements I
     private void processItem() {
         if (!canProcess()) return;
 
-        ItemStack usedA = inventory.extractItem(0, 1, false);
-        ItemStack usedB = inventory.extractItem(1, 1, false);
+        ItemStack slotA = inventory.getStackInSlot(0);
+        ItemStack slotB = inventory.getStackInSlot(1);
+        Tuple.Triplet<Integer, Integer, ItemStack> match = BlastFurnaceRecipes.getRequiredCounts(slotA, slotB);
+        if (match == null) return;
 
-        ItemStack result = BlastFurnaceRecipes.getOutput(usedA, usedB);
+        int reqA = match.getX();
+        int reqB = match.getY();
+
+        ItemStack usedA = inventory.extractItem(0, reqA, false);
+        ItemStack usedB = inventory.extractItem(1, reqB, false);
+
+        ItemStack result = match.getZ();
         if (!result.isEmpty()) {
             inventory.insertItem(3, result.copy(), false);
         }
 
         ItemStack contA = usedA.getItem().getContainerItem(usedA);
         if (!contA.isEmpty()) {
+            contA = contA.copy();
+            contA.setCount(contA.getCount() * usedA.getCount());
             inventory.insertItem(3, contA, false);
         }
         ItemStack contB = usedB.getItem().getContainerItem(usedB);
         if (!contB.isEmpty()) {
+            contB = contB.copy();
+            contB.setCount(contB.getCount() * usedB.getCount());
             inventory.insertItem(3, contB, false);
         }
     }

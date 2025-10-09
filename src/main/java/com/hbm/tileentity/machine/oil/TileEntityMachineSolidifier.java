@@ -50,7 +50,7 @@ public class TileEntityMachineSolidifier extends TileEntityMachineBase implement
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.machineSolidifier";
     }
 

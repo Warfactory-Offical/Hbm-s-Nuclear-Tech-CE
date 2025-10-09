@@ -23,7 +23,7 @@ public class GUIMachineChemicalPlant extends GuiInfoContainer {
     private TileEntityMachineChemicalPlant chemplant;
 
     public GUIMachineChemicalPlant(InventoryPlayer invPlayer, TileEntityMachineChemicalPlant tedf) {
-        super(new ContainerMachineChemicalPlant(invPlayer, tedf.inventory));
+        super(new ContainerMachineChemicalPlant(invPlayer, tedf.getCheckedInventory()));
         chemplant = tedf;
 
         this.xSize = 176;
@@ -61,7 +61,7 @@ public class GUIMachineChemicalPlant extends GuiInfoContainer {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int i, int j) {
-        String name = this.chemplant.hasCustomInventoryName() ? this.chemplant.getInventoryName() : I18n.format(this.chemplant.getInventoryName());
+        String name = this.chemplant.hasCustomName() ? this.chemplant.getName() : I18n.format(this.chemplant.getName());
 
         this.fontRenderer.drawString(name, 70 - this.fontRenderer.getStringWidth(name) / 2, 6, 4210752);
         this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, 4210752);

@@ -17,7 +17,7 @@ public class GUICrateSteel extends GUICrateBase<TileEntityCrateSteel, ContainerC
 
     @Override
     protected void drawGuiContainerForegroundLayer(int i, int j) {
-        String name = this.diFurnace.hasCustomInventoryName() ? this.diFurnace.getInventoryName() : I18n.format(this.diFurnace.getInventoryName());
+        String name = this.diFurnace.hasCustomName() ? this.diFurnace.getName() : I18n.format(this.diFurnace.getName());
         float percent = this.diFurnace.fillPercentage;
         String title = combineTitle(name, percent);
         this.fontRenderer.drawString(title, this.xSize / 2 - this.fontRenderer.getStringWidth(title) / 2, 6, 0x1C1C1C);

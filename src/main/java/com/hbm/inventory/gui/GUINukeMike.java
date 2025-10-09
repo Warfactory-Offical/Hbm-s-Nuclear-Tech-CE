@@ -9,7 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager;
 
 
 public class GUINukeMike extends GuiInfoContainer {
@@ -73,7 +73,7 @@ public class GUINukeMike extends GuiInfoContainer {
 			drawTexturedModalRect(guiLeft + 140, guiTop + 30, 240, 88, 12, 26);
 		
 		for(int i = 0; i < 4; i++) {
-			if(testNuke.inventory.getStackInSlot(i) != null && testNuke.inventory.getStackInSlot(i).getItem() == ModItems.man_explosive8)
+			if(testNuke.inventory.getStackInSlot(i) != null && testNuke.inventory.getStackInSlot(i).getItem() == ModItems.explosive_lenses)
 				switch(i) {
 				case 0: drawTexturedModalRect(guiLeft + 24, guiTop + 20 , 209, 1, 23, 23); break;
 				case 2: drawTexturedModalRect(guiLeft + 47, guiTop + 20 , 232, 1, 23, 23); break;

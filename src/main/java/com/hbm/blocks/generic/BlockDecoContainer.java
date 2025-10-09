@@ -3,6 +3,7 @@ package com.hbm.blocks.generic;
 import com.google.common.collect.ImmutableMap;
 import com.hbm.items.ModItems;
 import com.hbm.items.tool.ItemLock;
+import com.hbm.lib.InventoryHelper;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.machine.TileEntityLockableBase;
 import net.minecraft.block.ITileEntityProvider;
@@ -33,14 +34,17 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 import java.util.Random;
+import java.util.function.Supplier;
 
-public class BlockDecoContainer extends BlockDecoModel implements ITileEntityProvider {
+// mlbv: I can't believe it actually (originally) used tile.newInstance(). Jesus Christ.
+public class BlockDecoContainer<T extends TileEntity> extends BlockDecoModel implements ITileEntityProvider {
 
-    Class<? extends TileEntity> tile;
+    private final Supplier<T> tile;
 
-    public BlockDecoContainer(Material mat, SoundType type, String registryName, Class<? extends Enum<?>> theEnum, boolean multiName, boolean multiTexture, Class<? extends TileEntity> tile) {
+    public BlockDecoContainer(Material mat, SoundType type, String registryName, Class<? extends Enum<?>> theEnum, boolean multiName, boolean multiTexture, Supplier<T> tile) {
         super(mat, type, registryName, theEnum, multiName, multiTexture);
         this.tile = tile;
     }
@@ -54,7 +58,7 @@ public class BlockDecoContainer extends BlockDecoModel implements ITileEntityPro
     @Override
     public TileEntity createTileEntity(World world, IBlockState state) {
         try {
-            return tile.newInstance();
+            return tile.get();
         } catch (Exception e) {
             MainRegistry.logger.error("BlockDecoContainer attempted to create a TE, but couldn't. How does that even happen?");
             return null;
@@ -64,7 +68,7 @@ public class BlockDecoContainer extends BlockDecoModel implements ITileEntityPro
     @Override
     public TileEntity createNewTileEntity(World world, int metadata) {
         try {
-            return tile.newInstance();
+            return tile.get();
         } catch (Exception e) {
             MainRegistry.logger.error("BlockDecoContainer attempted to create a TE, but couldn't. How does that even happen?");
             return null;
@@ -110,6 +114,7 @@ public class BlockDecoContainer extends BlockDecoModel implements ITileEntityPro
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
         TileEntity te = world.getTileEntity(pos);
+        // mlbv: IInventory? seriously?
         IInventory inventory = te instanceof IInventory ? (IInventory) te : null;
         Random rand = world.rand;
 
@@ -139,12 +144,12 @@ public class BlockDecoContainer extends BlockDecoModel implements ITileEntityPro
                         world.spawnEntity(entityitem);
                     }
                 }
-
-                world.updateComparatorOutputLevel(pos, this);
             }
-
-            super.breakBlock(world, pos, state);
+        } else if (te != null && te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)) {
+            InventoryHelper.dropInventoryItems(world, pos, te);
         }
+        world.updateComparatorOutputLevel(pos, this);
+        super.breakBlock(world, pos, state);
     }
 
     @Override

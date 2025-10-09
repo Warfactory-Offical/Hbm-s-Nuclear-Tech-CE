@@ -45,7 +45,7 @@ public class TileEntityTurretHoward extends TileEntityTurretBaseNT implements IG
 	}
 
 	@Override
-	public String getName(){
+	public String getDefaultName(){
 		return "container.turretHoward";
 	}
 

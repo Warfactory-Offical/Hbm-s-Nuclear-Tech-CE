@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformT
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-@AutoRegister(item = "redstone_sword")
+@AutoRegister(item = "redstone_sword", instanceField = "INSTANCE")
 public class ItemRedstoneSwordRender extends TileEntityItemStackRenderer {
 	
 	public static final ItemRedstoneSwordRender INSTANCE = new ItemRedstoneSwordRender();
@@ -42,7 +42,7 @@ public class ItemRedstoneSwordRender extends TileEntityItemStackRenderer {
 						GlStateManager.translate(0.25F, 0.0F, 0.0F);
 					}
 				}
-				Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation(RefStrings.MODID +":textures/models/weapons/ModelSwordRedstone.png"));
+				Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation(RefStrings.MODID +":textures/models/weapons/model_sword_redstone.png"));
 				GlStateManager.rotate(180.0F, 0.0F, 0.0F, 0.0F);
 				GlStateManager.rotate(90.0F, 0.0F, 1.0F, 0.0F);
 				GlStateManager.translate(0.5F, -0.2F, -0.5F);

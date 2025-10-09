@@ -98,7 +98,7 @@ public class GUIMachineBattery extends GuiInfoContainer {
 	
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		String name = this.battery.hasCustomInventoryName() ? this.battery.getInventoryName() : I18n.format(this.battery.getInventoryName());
+		String name = this.battery.hasCustomName() ? this.battery.getName() : I18n.format(this.battery.getName());
 		name += (" (" + Library.getShortNumber(battery.power) + " HE)");
 		
 		this.fontRenderer.drawString(name, this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2, 6, 4210752);

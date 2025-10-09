@@ -38,7 +38,7 @@ public class ItemGear extends ItemBase implements IMetaItemTesr {
     }
 
     @Override
-    public String getName() {
+    public String getResourceLocationAsString() {
         return getRegistryName().toString();
     }
 }

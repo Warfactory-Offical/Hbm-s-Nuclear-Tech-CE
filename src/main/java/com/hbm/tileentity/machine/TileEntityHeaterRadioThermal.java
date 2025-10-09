@@ -51,7 +51,7 @@ public class TileEntityHeaterRadioThermal extends TileEntityMachineBase implemen
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.heaterRadioThermal";
     }
 

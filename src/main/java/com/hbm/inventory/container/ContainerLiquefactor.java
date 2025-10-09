@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotUpgrade;
 import com.hbm.tileentity.machine.oil.TileEntityMachineLiquefactor;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,7 +20,7 @@ public class ContainerLiquefactor extends Container {
         //Input
         this.addSlotToContainer(new SlotItemHandler(tile.inventory, 0, 35, 54));
         //Battery
-        this.addSlotToContainer(new SlotItemHandler(tile.inventory, 1, 134, 72));
+        this.addSlotToContainer(new SlotBattery(tile.inventory, 1, 134, 72));
         //Upgrades
         this.addSlotToContainer(new SlotUpgrade(tile.inventory, 2, 98, 36));
         this.addSlotToContainer(new SlotUpgrade(tile.inventory, 3, 98, 54));

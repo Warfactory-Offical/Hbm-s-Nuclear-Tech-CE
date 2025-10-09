@@ -36,7 +36,7 @@ public class TileEntityWasteDrum extends TileEntityMachineBase implements ITicka
 	}
 	
 	@Override
-	public String getName() {
+	public String getDefaultName() {
 		return "container.wasteDrum";
 	}
 	

@@ -1,8 +1,0 @@
-{
-	"parent": "block/orientable",
-	"textures": {
-		"top": "hbm:blocks/battery_saturnite_top",
-		"front": "hbm:blocks/battery_saturnite_front",
-		"side": "hbm:blocks/battery_saturnite_side"
-	}
-}

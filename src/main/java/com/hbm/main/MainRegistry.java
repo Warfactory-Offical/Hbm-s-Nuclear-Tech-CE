@@ -5,6 +5,7 @@ package com.hbm.main;
 import com.google.common.collect.ImmutableList;
 import com.hbm.blocks.BlockEnums;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.fluid.ModFluids;
 import com.hbm.blocks.generic.BlockCrate;
 import com.hbm.capability.HbmCapability;
 import com.hbm.capability.HbmLivingCapability;
@@ -21,7 +22,6 @@ import com.hbm.dim.SolarSystem;
 import com.hbm.entity.logic.IChunkLoader;
 import com.hbm.entity.siege.SiegeTier;
 import com.hbm.explosion.ExplosionNukeGeneric;
-import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.handler.*;
 import com.hbm.handler.imc.IMCHandler;
 import com.hbm.handler.neutron.NeutronHandler;
@@ -60,6 +60,7 @@ import com.hbm.tileentity.machine.rbmk.RBMKDials;
 import com.hbm.util.ChunkUtil;
 import com.hbm.util.CrashHelper;
 import com.hbm.util.DamageResistanceHandler;
+import com.hbm.util.MobUtil;
 import com.hbm.world.ModBiomes;
 import com.hbm.world.PlanetGen;
 import com.hbm.world.feature.OreCave;
@@ -88,7 +89,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.EnumHelper;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -204,7 +204,6 @@ public class MainRegistry {
 
     static {
         HBMSoundHandler.init();
-        FluidRegistry.enableUniversalBucket();
     }
 
     Random rand = new Random();
@@ -304,7 +303,7 @@ public class MainRegistry {
         CapabilityManager.INSTANCE.register(HbmLivingCapability.IEntityHbmProps.class, new HbmLivingCapability.EntityHbmPropsStorage(), HbmLivingCapability.EntityHbmProps.FACTORY);
         CapabilityManager.INSTANCE.register(HbmCapability.IHBMData.class, new HbmCapability.HBMDataStorage(), HbmCapability.HBMData.FACTORY);
         Fluids.init();
-        ModForgeFluids.init();
+        ModFluids.init();
         ModItems.preInit();
         ModBlocks.preInit();
         BulletConfigSyncingUtil.loadConfigsForSync();
@@ -435,6 +434,8 @@ public class MainRegistry {
 
         ItemPoolConfigJSON.initialize();
 
+        MobUtil.intializeMobPools();
+
         //Drillgon200: expand the max entity radius for the hunter chopper
         if (World.MAX_ENTITY_RADIUS < 5)
             World.MAX_ENTITY_RADIUS = 5;
@@ -447,7 +448,6 @@ public class MainRegistry {
 
         if (event.getSide() == Side.CLIENT) {
             BedrockOreRegistry.registerOreColors();
-            ModForgeFluids.registerFluidColors();
         }
         proxy.postInit(event);
         AdvGen.generate();

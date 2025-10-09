@@ -52,7 +52,7 @@ public class TileEntityDroneCrate extends TileEntityMachineBase implements IGUIP
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.droneCrate";
     }
 

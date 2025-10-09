@@ -51,7 +51,7 @@ public class TileEntityMachineSchrabidiumTransmutator extends TileEntityMachineB
 	}
 	
 	@Override
-	public String getName() {
+	public String getDefaultName() {
 		return "container.machine_schrabidium_transmutator";
 	}
 	

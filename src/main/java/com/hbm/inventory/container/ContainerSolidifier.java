@@ -1,5 +1,7 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
+import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.inventory.SlotUpgrade;
 import com.hbm.tileentity.machine.oil.TileEntityMachineSolidifier;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,14 +18,14 @@ public class ContainerSolidifier extends Container {
     public ContainerSolidifier(InventoryPlayer playerInv, TileEntityMachineSolidifier tile) {
         solidifier = tile;
 
-        //Input
-        this.addSlotToContainer(new SlotItemHandler(tile.inventory, 0, 71, 45));
-        //Battery
-        this.addSlotToContainer(new SlotItemHandler(tile.inventory, 1, 134, 72));
-        //Upgrades
+        // Output
+        this.addSlotToContainer(new SlotTakeOnly(tile.inventory, 0, 71, 45));
+        // Battery
+        this.addSlotToContainer(new SlotBattery(tile.inventory, 1, 134, 72));
+        // Upgrades
         this.addSlotToContainer(new SlotUpgrade(tile.inventory, 2, 98, 36));
         this.addSlotToContainer(new SlotUpgrade(tile.inventory, 3, 98, 54));
-        //ID
+        // ID
         this.addSlotToContainer(new SlotItemHandler(tile.inventory, 4, 71, 72));
 
         for(int i = 0; i < 3; i++) {

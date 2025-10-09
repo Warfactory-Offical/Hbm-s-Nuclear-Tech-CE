@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.machine.albion.TileEntityPAQuadrupole;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,7 +18,7 @@ public class ContainerPAQuadrupole extends Container {
         quadrupole = tile;
 
         //Battery
-        this.addSlotToContainer(new SlotItemHandler(tile.inventory, 0, 26, 72));
+        this.addSlotToContainer(new SlotBattery(tile.inventory, 0, 26, 72));
         //Coil
         this.addSlotToContainer(new SlotItemHandler(tile.inventory, 1, 71, 36));
 

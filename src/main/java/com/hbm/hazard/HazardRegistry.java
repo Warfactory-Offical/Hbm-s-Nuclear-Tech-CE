@@ -470,7 +470,7 @@ public class HazardRegistry {
 		HazardSystem.register(block_yellowcake, makeData(RADIATION, yc * block * powder_mult));
 		HazardSystem.register(ModItems.fallout, makeData(RADIATION, fo * powder).addEntry(CONTAMINATING, fo));
 		HazardSystem.register(ModBlocks.fallout, makeData(RADIATION, fo * powder * 2));
-		HazardSystem.register(ModBlocks.block_fallout, makeData(RADIATION, yc * block * powder_mult));
+		HazardSystem.register(block_fallout, makeData(RADIATION, yc * block * powder_mult));
 		HazardSystem.register(powder_caesium, makeData().addEntry(HYDROACTIVE, 1F).addEntry(HOT, 3F));
 
 		HazardSystem.register(brick_asbestos, makeData(ASBESTOS, 1F));
@@ -478,14 +478,8 @@ public class HazardRegistry {
 		HazardSystem.register(powder_coltan_ore, makeData(ASBESTOS, 3F));
 
 		//crystals
-		HazardSystem.register(crystal_uranium, makeData(RADIATION, u * crystal));
-		HazardSystem.register(crystal_thorium, makeData(RADIATION, th232 * crystal));
-		HazardSystem.register(crystal_plutonium, makeData(RADIATION, pu * crystal));
-		HazardSystem.register(crystal_schraranium, makeData(RADIATION, sr * crystal));
-		HazardSystem.register(crystal_schrabidium, makeData(RADIATION, sa326 * crystal));
 		HazardSystem.register(crystal_phosphorus, makeData(HOT, 2F * crystal));
-		HazardSystem.register(crystal_lithium, makeData(HYDROACTIVE, 1F * crystal));
-		HazardSystem.register(ModItems.crystal_trixite, makeData(RADIATION, trx * crystal));
+		HazardSystem.register(crystal_trixite, makeData(RADIATION, trx * crystal));
 
 		//nuke parts
 		HazardSystem.register(boy_propellant, makeData(EXPLOSIVE, 2F));

@@ -28,17 +28,13 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.Explosion;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MachineOilWell extends BlockDummyable implements IPersistentInfoProvider {
-
-	private static final ThreadLocal<List<ItemStack>> HARVEST_DROPS = new ThreadLocal<>();
 
 	public MachineOilWell(Material materialIn, String s) {
 		super(materialIn, s);
@@ -99,22 +95,20 @@ public class MachineOilWell extends BlockDummyable implements IPersistentInfoPro
 		MultiblockHandlerXR.fillSpace(world, x - 1, y + 1, z - 1, new int[] {-1, 1, 0, 0, 0, 0}, this, dir);
 	}
 
-	@Override
-	public boolean removedByPlayer(@NotNull IBlockState state, World world, @NotNull BlockPos pos, @NotNull EntityPlayer player, boolean willHarvest) {
-		if (willHarvest) {
-			ArrayList<ItemStack> drops = IPersistentNBT.getDrops(world, pos, this);
-			HARVEST_DROPS.set(drops);
-		}
-		return super.removedByPlayer(state, world, pos, player, willHarvest);
-	}
+    @Override
+    public void onBlockHarvested(World world, BlockPos pos, IBlockState state, EntityPlayer player) {
+        IPersistentNBT.onBlockHarvested(world, pos, player);
+    }
 
-	@NotNull
-	@Override
-	public ArrayList<ItemStack> getDrops(@NotNull IBlockAccess world, @NotNull BlockPos pos, @NotNull IBlockState state, int fortune) {
-		List<ItemStack> drops = HARVEST_DROPS.get();
-		HARVEST_DROPS.remove();
-		return drops == null ? new ArrayList<>() : (ArrayList<ItemStack>) drops;
-	}
+    @Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+        IPersistentNBT.breakBlock(worldIn, pos, state);
+        super.breakBlock(worldIn, pos, state);
+    }
+
+    @Override
+    public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune) {
+    }
 
 	@Override
 	public void addInformation(ItemStack stack, NBTTagCompound persistentTag, EntityPlayer player, List list, boolean ext) {

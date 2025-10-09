@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.tileentity.machine.TileEntityMachineRadiolysis;
 
@@ -33,7 +34,7 @@ public class ContainerRadiolysis extends Container {
         this.addSlotToContainer(new SlotTakeOnly(tile.inventory, 13, 148, 53));
 
         //Battery
-        this.addSlotToContainer(new SlotItemHandler(tile.inventory, 14, 8, 53));
+        this.addSlotToContainer(new SlotBattery(tile.inventory, 14, 8, 53));
 
         for(int i = 0; i < 3; i++) {
             for(int j = 0; j < 9; j++) {

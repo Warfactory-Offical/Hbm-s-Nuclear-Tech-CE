@@ -1,15 +1,15 @@
 package com.hbm.inventory.gui;
 
-import com.hbm.inventory.recipes.anvil.AnvilRecipes;
-import com.hbm.inventory.recipes.anvil.AnvilRecipes.AnvilConstructionRecipe;
-import com.hbm.inventory.recipes.anvil.AnvilRecipes.AnvilOutput;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.RecipesCommon.OreDictStack;
 import com.hbm.inventory.container.ContainerAnvil;
+import com.hbm.inventory.recipes.anvil.AnvilRecipes;
+import com.hbm.inventory.recipes.anvil.AnvilRecipes.AnvilConstructionRecipe;
+import com.hbm.inventory.recipes.anvil.AnvilRecipes.AnvilOutput;
 import com.hbm.lib.RefStrings;
-import com.hbm.packet.toserver.AnvilCraftPacket;
 import com.hbm.packet.PacketDispatcher;
+import com.hbm.packet.toserver.AnvilCraftPacket;
 import com.hbm.util.I18nUtil;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
@@ -20,6 +20,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
@@ -27,6 +28,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.oredict.OreDictionary;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
@@ -116,6 +118,40 @@ public class GUIAnvil extends GuiContainer {
 		this.index = 0;
 		this.selection = -1;
 		this.size = Math.max(0, (int)Math.ceil((this.recipes.size() - 10) / 2D));
+	}
+
+	@Override
+	public void drawScreen(int x, int y, float interp) {
+		super.drawScreen(x, y, interp);
+		super.renderHoveredToolTip(x, y);
+
+		for(Slot obj : this.inventorySlots.inventorySlots) {
+			// if the mouse is over a slot, cancel
+			if(this.isPointInRegion(obj.xPos, obj.yPos, 16, 16, x, y) && obj.getHasStack()) {
+				return;
+			}
+		}
+
+		if(guiLeft <= x && guiLeft + xSize > x && guiTop < y && guiTop + ySize >= y && getSlotAtPosition(x, y) == null) {
+			if(!Mouse.isButtonDown(0) && !Mouse.isButtonDown(1) && Mouse.next()) {
+				int scroll = Mouse.getEventDWheel();
+
+				if(scroll > 0 && this.index > 0) this.index--;
+				if(scroll < 0 && this.index < this.size) this.index++;
+			}
+		}
+	}
+	// Th3_Sl1ze: somehow using vanilla getSlotAtPosition never returns null even when it should..
+	private Slot getSlotAtPosition(int x, int y) {
+		for(int k = 0; k < this.inventorySlots.inventorySlots.size(); ++k) {
+			Slot slot = this.inventorySlots.inventorySlots.get(k);
+
+			if(this.isMouseOverSlot(slot, x, y)) {
+				return slot;
+			}
+		}
+
+		return null;
 	}
 	
 	@Override
@@ -230,8 +266,7 @@ public class GUIAnvil extends GuiContainer {
 				ItemStack input = ((ComparableStack) stack).toStack();
 				list.add(">" + input.getCount() + "x " + input.getDisplayName());
 				
-			} else if(stack instanceof OreDictStack) {
-				OreDictStack input = (OreDictStack) stack;
+			} else if(stack instanceof OreDictStack input) {
 				NonNullList<ItemStack> ores = OreDictionary.getOres(input.name);
 				
 				if(ores.size() > 0) {
@@ -268,8 +303,7 @@ public class GUIAnvil extends GuiContainer {
 				ItemStack input = ((ComparableStack) stack).toStack();
 				list.add(input.getDisplayName().toLowerCase());
 				
-			} else if(stack instanceof OreDictStack) {
-				OreDictStack input = (OreDictStack) stack;
+			} else if(stack instanceof OreDictStack input) {
 				NonNullList<ItemStack> ores = OreDictionary.getOres(input.name);
 				
 				if(ores.size() > 0) {
@@ -286,12 +320,6 @@ public class GUIAnvil extends GuiContainer {
 		}
 		
 		return list;
-	}
-	
-	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks){
-		super.drawScreen(mouseX, mouseY, partialTicks);
-		super.renderHoveredToolTip(mouseX, mouseY);
 	}
 	
 	int lastSize = 1;

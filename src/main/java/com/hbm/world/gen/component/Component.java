@@ -121,7 +121,7 @@ abstract public class Component extends StructureComponent {
 	}
 
 	public int getCoordMode() {
-		return this.getCoordBaseMode().getIndex();
+		return this.getCoordBaseMode() != null ? this.getCoordBaseMode().getIndex() : 0;
 	}
 
 	/** Metadata for Decoration Methods **/

@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.tileentity.machine.TileEntityITER;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,7 +19,7 @@ private TileEntityITER iter;
 		iter = tedf;
 
 		//Battery
-		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 0, 107, 108));
+		this.addSlotToContainer(new SlotBattery(tedf.inventory, 0, 107, 108));
 		//Breeder In
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 1, 26, 18));
 		//Breeder Out

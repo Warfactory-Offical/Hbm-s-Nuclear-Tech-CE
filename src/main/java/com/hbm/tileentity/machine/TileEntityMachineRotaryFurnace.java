@@ -86,7 +86,7 @@ public class TileEntityMachineRotaryFurnace extends TileEntityMachinePolluting i
   }
 
   @Override
-  public @NotNull String getName() {
+  public @NotNull String getDefaultName() {
     return "container.machineRotaryFurnace";
   }
 

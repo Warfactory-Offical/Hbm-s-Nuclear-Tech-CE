@@ -50,7 +50,7 @@ public class TileEntityHeaterOven extends TileEntityFireboxBase implements IConf
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.heaterOven";
     }
 

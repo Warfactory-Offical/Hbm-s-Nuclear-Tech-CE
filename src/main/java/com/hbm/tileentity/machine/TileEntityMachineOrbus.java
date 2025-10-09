@@ -16,7 +16,7 @@ public class TileEntityMachineOrbus extends TileEntityBarrel {
 	}
 	
 	@Override
-	public String getName() {
+	public String getDefaultName() {
 		return "container.orbus";
 	}
 	

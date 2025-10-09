@@ -61,7 +61,7 @@ public class GUICompressor extends GuiInfoContainer {
     @Override
     protected void drawGuiContainerForegroundLayer(int i, int j) {
 
-        String name = this.compressor.hasCustomInventoryName() ? this.compressor.getInventoryName() : I18n.format(this.compressor.getInventoryName());
+        String name = this.compressor.hasCustomName() ? this.compressor.getName() : I18n.format(this.compressor.getName());
 
         this.fontRenderer.drawString(name, 70 - this.fontRenderer.getStringWidth(name) / 2, 6, 0xC7C1A3);
         this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, 4210752);

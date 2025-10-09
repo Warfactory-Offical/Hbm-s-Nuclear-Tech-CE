@@ -1,6 +1,8 @@
 package com.hbm.core;
 
 import net.minecraft.launchwrapper.IClassTransformer;
+import net.minecraft.launchwrapper.Launch;
+import net.minecraftforge.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.*;
@@ -11,6 +13,9 @@ import static org.objectweb.asm.Opcodes.*;
 
 public class ForgeHooksTransformer implements IClassTransformer {
     private static final ObfSafeName isSpectator = new ObfSafeName("isSpectator", "func_175149_v");
+    private static final ObfSafeName getTileEntity = new ObfSafeName("getTileEntity", "func_175625_s");
+    private static final ObfSafeName storeTEInStack = new ObfSafeName("storeTEInStack", "func_184119_a");
+    private static final ObfSafeName getMinecraft = new ObfSafeName("getMinecraft", "func_71410_x");
 
     private static AbstractInsnNode findAnchor(MethodNode method) {
         for (AbstractInsnNode n : method.instructions.toArray()) {
@@ -104,6 +109,67 @@ public class ForgeHooksTransformer implements IClassTransformer {
         else coreLogger.warn("A mod nuked isLivingOnLadder! Injected spectator check and CheckLadderEvent hook on isLivingOnLadder HEAD");
     }
 
+    private static boolean patchPickBlock(MethodNode method) {
+        boolean replacedGetTileEntity = false;
+        boolean injectedHook = false;
+
+        AbstractInsnNode[] insns = method.instructions.toArray();
+        for (AbstractInsnNode insn : insns) {
+            if (insn instanceof MethodInsnNode methodInsn) {
+                if (!replacedGetTileEntity && methodInsn.getOpcode() == INVOKEVIRTUAL && "net/minecraft/world/World".equals(methodInsn.owner) && getTileEntity.matches(methodInsn.name) && "(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/tileentity/TileEntity;".equals(methodInsn.desc)) {
+                    MethodInsnNode replacement = new MethodInsnNode(INVOKESTATIC, "com/hbm/util/CompatExternal", "getCoreFromPos", "(Lnet/minecraft/world/IBlockAccess;Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/tileentity/TileEntity;", false);
+                    method.instructions.set(methodInsn, replacement);
+                    replacedGetTileEntity = true;
+                    continue;
+                }
+
+                if (!injectedHook && "net/minecraft/client/Minecraft".equals(methodInsn.owner) && storeTEInStack.matches(methodInsn.name) && "(Lnet/minecraft/item/ItemStack;Lnet/minecraft/tileentity/TileEntity;)Lnet/minecraft/item/ItemStack;".equals(methodInsn.desc)) {
+
+                    AbstractInsnNode teLoadNode = methodInsn.getPrevious();
+                    if (!(teLoadNode instanceof VarInsnNode teVar) || teVar.getOpcode() != ALOAD) continue;
+
+                    AbstractInsnNode resultLoadNode = teLoadNode.getPrevious();
+                    if (!(resultLoadNode instanceof VarInsnNode resultVar) || resultVar.getOpcode() != ALOAD) continue;
+
+                    AbstractInsnNode getMinecraftCallCandidate = resultLoadNode.getPrevious();
+                    if (!(getMinecraftCallCandidate instanceof MethodInsnNode minecraftCall)) continue;
+                    if (minecraftCall.getOpcode() != INVOKESTATIC || !"net/minecraft/client/Minecraft".equals(minecraftCall.owner) || !getMinecraft.matches(minecraftCall.name) || !"()Lnet/minecraft/client/Minecraft;".equals(minecraftCall.desc)) {
+                        continue;
+                    }
+
+                    AbstractInsnNode popNode = methodInsn.getNext();
+                    if (!(popNode instanceof InsnNode) || popNode.getOpcode() != POP) {
+                        continue;
+                    }
+
+                    AbstractInsnNode afterPop = popNode.getNext();
+                    LabelNode afterStoreLabel;
+                    if (afterPop instanceof LabelNode labelNode) {
+                        afterStoreLabel = labelNode;
+                    } else {
+                        afterStoreLabel = new LabelNode();
+                        method.instructions.insert(popNode, afterStoreLabel);
+                    }
+
+                    LabelNode labelCallStore = new LabelNode();
+                    InsnList hook = new InsnList();
+                    hook.add(new VarInsnNode(ALOAD, resultVar.var)); // result
+                    hook.add(new VarInsnNode(ALOAD, 0)); // target
+                    hook.add(new VarInsnNode(ALOAD, 2)); // world
+                    hook.add(new VarInsnNode(ALOAD, teVar.var)); // tile entity
+                    hook.add(new MethodInsnNode(INVOKESTATIC, "com/hbm/core/ForgeHooksPickBlockHook", "handlePickBlock", "(Lnet/minecraft/item/ItemStack;Lnet/minecraft/util/math/RayTraceResult;Lnet/minecraft/world/World;Lnet/minecraft/tileentity/TileEntity;)Z", false));
+                    hook.add(new JumpInsnNode(IFEQ, labelCallStore));
+                    hook.add(new JumpInsnNode(GOTO, afterStoreLabel));
+                    hook.add(labelCallStore);
+
+                    method.instructions.insertBefore(minecraftCall, hook);
+                    injectedHook = true;
+                }
+            }
+        }
+        return replacedGetTileEntity && injectedHook;
+    }
+
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         if (basicClass == null || !"net.minecraftforge.common.ForgeHooks".equals(transformedName)) {
@@ -115,14 +181,11 @@ public class ForgeHooksTransformer implements IClassTransformer {
             ClassNode cn = new ClassNode();
             new ClassReader(basicClass).accept(cn, 0);
 
-            boolean patched = false;
+            boolean patchedLadder = false;
+            boolean patchedPickBlock = false;
             for (MethodNode mn : cn.methods) {
-                if ("isLivingOnLadder".equals(mn.name) &&
-                    ("(Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;" +
-                     "Lnet/minecraft/entity/EntityLivingBase;)Z").equals(mn.desc)) {
-                    coreLogger.info("Patching method: {}{}", "isLivingOnLadder",
-                            "(Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;" +
-                            "Lnet/minecraft/entity/EntityLivingBase;)Z");
+                if ("isLivingOnLadder".equals(mn.name) && ("(Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;" + "Lnet/minecraft/entity/EntityLivingBase;)Z").equals(mn.desc)) {
+                    coreLogger.info("Patching method: {}{}", "isLivingOnLadder", "(Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;" + "Lnet/minecraft/entity/EntityLivingBase;)Z");
 
                     AbstractInsnNode anchor = findAnchor(mn);
                     boolean headFallback = false;
@@ -131,19 +194,53 @@ public class ForgeHooksTransformer implements IClassTransformer {
                         headFallback = true;
                     }
                     injectHook(mn, anchor, headFallback);
-                    patched = true;
-                    break;
+                    patchedLadder = true;
+                } else if ("onPickBlock".equals(mn.name) && "(Lnet/minecraft/util/math/RayTraceResult;Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/world/World;)Z".equals(mn.desc)) {
+                    coreLogger.info("Patching method: {}{}", "onPickBlock", "(Lnet/minecraft/util/math/RayTraceResult;Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/world/World;)Z");
+                    if (patchPickBlock(mn)) {
+                        patchedPickBlock = true;
+                    }
                 }
             }
 
-            if (!patched) {
-                coreLogger.warn("Failed to find {}{}", "isLivingOnLadder",
-                        "(Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;" +
-                        "Lnet/minecraft/entity/EntityLivingBase;)Z");
-                return basicClass;
+            if (!patchedLadder) {
+                throw new IllegalStateException("Failed to patch isLivingOnLadder");
             }
 
-            ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+            if (!patchedPickBlock) {
+                throw new IllegalStateException("Failed to patch onPickBlock");
+            }
+
+            ClassWriter cw = HbmCorePlugin.getBrand() == HbmCorePlugin.Brand.CAT_SERVER ? new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES) {
+                private static String mapForLoad(String internalName) {
+                    String dotted = internalName.replace('/', '.');
+                    String unmapped = FMLDeobfuscatingRemapper.INSTANCE.unmap(dotted);
+                    return unmapped.replace('.', '/');
+                }
+
+                @Override
+                protected String getCommonSuperClass(String t1, String t2) {
+                    try {
+                        ClassLoader cl = Launch.classLoader;
+                        String n1 = mapForLoad(t1);
+                        String n2 = mapForLoad(t2);
+
+                        Class<?> c1 = Class.forName(n1.replace('/', '.'), false, cl);
+                        Class<?> c2 = Class.forName(n2.replace('/', '.'), false, cl);
+
+                        if (c1.isAssignableFrom(c2)) return t1;
+                        if (c2.isAssignableFrom(c1)) return t2;
+                        if (c1.isInterface() || c2.isInterface()) return "java/lang/Object";
+
+                        do {
+                            c1 = c1.getSuperclass();
+                        } while (!c1.isAssignableFrom(c2));
+                        return c1.getName().replace('.', '/');
+                    } catch (Throwable ex) {
+                        throw new RuntimeException("Failed to find common superclass", ex);
+                    }
+                }
+            } : new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
             cn.accept(cw);
             return cw.toByteArray();
         } catch (Throwable t) {

@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.tileentity.machine.TileEntityMachinePlasmaHeater;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,7 +19,7 @@ public class ContainerMachinePlasmaHeater extends Container {
 
         plasmaHeater = tedf;
 
-        this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 0, 8, 53));
+        this.addSlotToContainer(new SlotBattery(tedf.inventory, 0, 8, 53));
         this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 1, 44, 17));
         this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 2, 44, 53));
         this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 3, 152, 17));

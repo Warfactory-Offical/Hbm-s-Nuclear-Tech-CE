@@ -35,27 +35,14 @@ public class TileEntityRtgFurnace extends TileEntityMachineBase implements ITick
 	private static final int[] slots_bottom = new int[] {4};
 	private static final int[] slots_side = new int[] {1, 2, 3};
 
-	private String customName;
 
 	public TileEntityRtgFurnace() {
 		super(5);
 	}
 
 	@Override
-	public String getName() {
-		return this.hasCustomInventoryName() ? this.customName : "container.rtgFurnace";
-	}
-
-	public String getInventoryName() {
-		return this.hasCustomInventoryName() ? this.customName : "container.rtgFurnace";
-	}
-
-	public boolean hasCustomInventoryName() {
-		return this.customName != null && this.customName.length() > 0;
-	}
-
-	public void setCustomName(String name) {
-		this.customName = name;
+	public String getDefaultName() {
+		return "container.rtgFurnace";
 	}
 
 	public boolean isUseableByPlayer(EntityPlayer player) {

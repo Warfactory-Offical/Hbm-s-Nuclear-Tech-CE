@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotTakeOnly;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.machine.albion.TileEntityPADetector;
@@ -19,7 +20,7 @@ public class ContainerPADetector extends Container {
         detector = tile;
 
         //Battery
-        this.addSlotToContainer(new SlotItemHandler(tile.inventory, 0, 8, 72));
+        this.addSlotToContainer(new SlotBattery(tile.inventory, 0, 8, 72));
         //Containers
         this.addSlotToContainer(new SlotItemHandler(tile.inventory, 1, 62, 18));
         this.addSlotToContainer(new SlotItemHandler(tile.inventory, 2, 80, 18));

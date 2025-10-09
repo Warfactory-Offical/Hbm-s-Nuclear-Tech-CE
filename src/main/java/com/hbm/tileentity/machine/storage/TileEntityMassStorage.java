@@ -44,11 +44,10 @@ public class TileEntityMassStorage extends TileEntityCrateBase implements IBufPa
 		this();
 		this.capacity = capacity;
 	}
-
-	public String getInventoryName() {
-		return this.hasCustomInventoryName() ? this.customName : "container.massStorage";
+	@Override
+	public String getName() {
+		return this.hasCustomName() ? this.customName : "container.massStorage";
 	}
-
 
 	@Override
 	public void update() {

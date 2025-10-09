@@ -20,7 +20,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
 import java.util.List;
-@AutoRegister(name = "entity_nuclear_creeper", trackingRange = 80)
+@AutoRegister(name = "entity_nuclear_creeper", trackingRange = 80, eggColors = {0x204131, 0x75CE00})
 public class EntityCreeperNuclear extends EntityCreeper implements IRadiationImmune {
 
 	public EntityCreeperNuclear(World worldIn) {

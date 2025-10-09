@@ -42,7 +42,7 @@ import java.util.List;
 public class TileEntityTurretMaxwell extends TileEntityTurretBaseNT implements IGUIProvider, IUpgradeInfoProvider {
 
 	@Override
-	public String getName() {
+	public String getDefaultName() {
 		return "container.turretMaxwell";
 	}
 

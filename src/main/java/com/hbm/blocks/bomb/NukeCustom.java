@@ -86,7 +86,7 @@ public class NukeCustom extends BlockContainer implements IBomb {
 	
 	@Override
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
-		if (world.getStrongPower(pos) > 0 && !world.isRemote) {
+		if (world.isBlockPowered(pos) && !world.isRemote) {
 			this.explode(world, pos, null);
 		}
 	}

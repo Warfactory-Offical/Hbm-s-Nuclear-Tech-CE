@@ -509,7 +509,7 @@ public class TileEntityMachineChemplant extends TileEntityMachineBase implements
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.chemplant";
     }
 

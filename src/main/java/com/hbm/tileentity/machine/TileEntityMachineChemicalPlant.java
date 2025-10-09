@@ -79,7 +79,7 @@ public class TileEntityMachineChemicalPlant extends TileEntityMachineBase implem
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.machineChemicalPlant";
     }
 
@@ -99,9 +99,11 @@ public class TileEntityMachineChemicalPlant extends TileEntityMachineBase implem
             this.power = Library.chargeTEFromItems(inventory, 0, power, maxPower);
             upgradeManager.checkSlots(inventory, 2, 3);
 
-            inputTanks[0].loadTank(10, 13, inventory);
-            inputTanks[1].loadTank(11, 14, inventory);
-            inputTanks[2].loadTank(12, 15, inventory);
+            if(recipe != null && recipe.inputFluid != null) {
+                for(int i = 0; i < Math.min(3, recipe.inputFluid.length); i++) {
+                    inputTanks[i].loadTank(10 + i, 13 + i, inventory);
+                }
+            }
 
             outputTanks[0].unloadTank(16, 19, inventory);
             outputTanks[1].unloadTank(17, 20, inventory);
@@ -270,7 +272,7 @@ public class TileEntityMachineChemicalPlant extends TileEntityMachineBase implem
     @Override public FluidTankNTM[] getSendingTanks() { return outputTanks; }
     @Override public FluidTankNTM[] getAllTanks() { return new FluidTankNTM[] {inputTanks[0], inputTanks[1], inputTanks[2], outputTanks[0], outputTanks[1], outputTanks[2]}; }
 
-    @Override public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) { return new ContainerMachineChemicalPlant(player.inventory, this.inventory); }
+    @Override public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) { return new ContainerMachineChemicalPlant(player.inventory, getCheckedInventory()); }
     @Override @SideOnly(Side.CLIENT) public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) { return new GUIMachineChemicalPlant(player.inventory, this); }
 
     @Override public boolean hasPermission(EntityPlayer player) { return this.isUseableByPlayer(player); }

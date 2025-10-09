@@ -2,7 +2,6 @@ package com.hbm.items.tool;
 
 import com.hbm.items.ModItems;
 import com.hbm.util.I18nUtil;
-import com.hbm.world.ParticleAccelerator;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -68,14 +67,10 @@ public class ItemWandS extends Item {
 		if(!world.isRemote)
 		{
 			Random rand = new Random();
-			
-			switch(stack.getTagCompound().getInteger("building"))
-			{
-			case 0:
-				new ParticleAccelerator().generate(world, rand, new BlockPos(pos.getX(), up ? pos.getY()-5 : pos.getY(), pos.getZ()));
-				break;
+
+			if (stack.getTagCompound().getInteger("building") == 0) {
 			}
-			
+
 		}
 		
 		return EnumActionResult.SUCCESS;

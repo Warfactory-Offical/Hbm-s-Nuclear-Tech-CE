@@ -68,7 +68,7 @@ public class TileEntityMachineGasCent extends TileEntityMachineBase implements I
 		outputTank = new PseudoFluidTank(GasCentrifugeRecipes.PseudoFluidType.LEUF6, 8000);
 	}
 
-	public String getName() {
+	public String getDefaultName() {
 		return "container.gasCentrifuge";
 	}
 

@@ -34,8 +34,9 @@ public class TileEntityFileCabinet extends TileEntityCrateBase implements IGUIPr
         super(8);
     }
 
-    public String getInventoryName() {
-        return "container.fileCabinet";
+    @Override
+    public String getName() {
+        return this.hasCustomName() ? this.customName : "container.fileCabinet";
     }
 
     @Override

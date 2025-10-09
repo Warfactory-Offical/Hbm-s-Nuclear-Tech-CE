@@ -95,7 +95,7 @@ public class TileEntityMachineArcFurnaceLarge extends TileEntityMachineBase impl
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.machineArcFurnaceLarge";
     }
     public ItemStackHandler getNewInventory(int scount) {
@@ -358,10 +358,10 @@ public class TileEntityMachineArcFurnaceLarge extends TileEntityMachineBase impl
     public int[] getAccessibleSlotsFromSide(EnumFacing e) {
         return new int[] { 0, 1, 2, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
     }
-
+    // Th3_Sl1ze: original 1.7 behaviour implied that the lid should be actually open
+    // but bruh I can insert items by hand even with closed lid, why can't hoppers do the same thing?
     @Override
     public boolean canInsertItem(int slot, ItemStack stack) {
-        if(lid <= 0) return false;
         if(slot < 3) return stack.getItem() == ModItems.arc_electrode;
         if(slot > 4) {
             ArcFurnaceRecipe recipe = ArcFurnaceRecipes.getOutput(stack, this.liquidMode);

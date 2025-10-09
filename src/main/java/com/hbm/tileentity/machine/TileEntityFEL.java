@@ -70,7 +70,7 @@ public class TileEntityFEL extends TileEntityMachineBase implements ITickable, I
 	}
 
 	@Override
-	public String getName() {
+	public String getDefaultName() {
 		return "container.machineFEL";
 	}
 

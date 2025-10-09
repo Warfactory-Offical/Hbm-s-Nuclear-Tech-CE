@@ -4,11 +4,12 @@ import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import com.hbm.tileentity.machine.TileEntityTesla;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
-@AutoRegister(name = "entity_tesla_crab")
+@AutoRegister(name = "entity_tesla_crab",  eggColors = {0xAAAAAA, 0x440000})
 public class EntityTeslaCrab extends EntityCyberCrab {
 	
 	public List<double[]> targets = new ArrayList<double[]>();
@@ -33,9 +34,12 @@ public class EntityTeslaCrab extends EntityCyberCrab {
     	
         super.onLivingUpdate();
     }
-
-    protected void dropRareDrop(int p_70600_1_) {
-    	this.dropItem(ModItems.coil_copper, 1);
+    @Override
+    protected void dropLoot(boolean wasRecentlyHit, int lootingModifier, DamageSource source) {
+        super.dropLoot(wasRecentlyHit, lootingModifier, source);
+        if (this.rand.nextInt(200) == 0) {
+            this.dropItem(ModItems.coil_copper, 1);
+        }
     }
 
 }

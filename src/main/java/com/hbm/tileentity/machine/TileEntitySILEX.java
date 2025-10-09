@@ -60,7 +60,7 @@ public class TileEntitySILEX extends TileEntityMachineBase implements ITickable,
 
 
 	@Override
-	public String getName() {
+	public String getDefaultName() {
 		return "container.machineSILEX";
 	}
 

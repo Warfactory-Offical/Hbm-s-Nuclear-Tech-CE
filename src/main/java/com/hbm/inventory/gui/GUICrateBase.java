@@ -1,6 +1,6 @@
 package com.hbm.inventory.gui;
 
-import com.hbm.tileentity.machine.TileEntityCrateBase;
+import com.hbm.tileentity.machine.TileEntityCrate;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -9,7 +9,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 
-public class GUICrateBase<T extends TileEntityCrateBase, C extends Container> extends GuiContainer {
+public class GUICrateBase<T extends TileEntityCrate, C extends Container> extends GuiContainer {
 
     protected final T diFurnace;
     private final ResourceLocation texture;
@@ -61,7 +61,7 @@ public class GUICrateBase<T extends TileEntityCrateBase, C extends Container> ex
 
     @Override
     protected void drawGuiContainerForegroundLayer(int i, int j) {
-        String name = this.diFurnace.hasCustomInventoryName() ? this.diFurnace.getInventoryName() : I18n.format(this.diFurnace.getInventoryName());
+        String name = this.diFurnace.hasCustomName() ? this.diFurnace.getName() : I18n.format(this.diFurnace.getName());
         float percent = this.diFurnace.fillPercentage;
         String title = combineTitle(name, percent);
         this.fontRenderer.drawString(title, this.xSize / 2 - this.fontRenderer.getStringWidth(title) / 2, 6, 0x3F1515);

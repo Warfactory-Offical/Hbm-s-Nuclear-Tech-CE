@@ -29,6 +29,11 @@ public class SerializableRecipePacket implements IMessage {
         } catch(IOException ignored) {}
     }
 
+    public SerializableRecipePacket(String filename, byte[] fileBytes) {
+        this.filename = filename;
+        this.fileBytes = fileBytes == null ? new byte[0] : fileBytes.clone();
+    }
+
     public SerializableRecipePacket(boolean reinit) {
         this.reinit = reinit;
     }

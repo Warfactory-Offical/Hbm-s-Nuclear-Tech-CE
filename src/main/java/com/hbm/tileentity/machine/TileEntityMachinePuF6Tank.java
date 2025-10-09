@@ -34,7 +34,7 @@ public class TileEntityMachinePuF6Tank extends TileEntityMachineBase implements 
 	}
 
 	@Override
-	public String getName() {
+	public String getDefaultName() {
 		return "container.puf6_tank";
 	}
 

@@ -2,7 +2,6 @@ package com.hbm.blocks.machine;
 
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ILookOverlay;
-import com.hbm.forgefluid.ModForgeFluids;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
@@ -71,12 +70,10 @@ public class DeuteriumTower extends BlockDummyable implements ILookOverlay {
 
         TileEntity te = world.getTileEntity(new BlockPos(pos[0], pos[1], pos[2]));
 		
-		if(!(te instanceof TileEntityDeuteriumTower))
+		if(!(te instanceof TileEntityDeuteriumTower extractor))
 			return;
-		
-		TileEntityDeuteriumTower extractor = (TileEntityDeuteriumTower) te;
-		
-		List<String> text = new ArrayList();
+
+		List<String> text = new ArrayList<>();
 		text.add(Library.getShortNumber(extractor.power) + "/" + Library.getShortNumber(extractor.getMaxPower()) + " HE");
 		
 		if(extractor.tanks[0] != null)

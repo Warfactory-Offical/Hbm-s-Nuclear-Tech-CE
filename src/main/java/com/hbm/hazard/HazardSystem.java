@@ -20,6 +20,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
@@ -246,10 +247,46 @@ public class HazardSystem {
     public static void register(final Object o, final HazardData data) {
         if (o instanceof String) oreMap.put((String) o, data);
         if (o instanceof Item) itemMap.put((Item) o, data);
-        if (o instanceof ResourceLocation) retriveAndRegister((ResourceLocation) o,data);
+        if (o instanceof ResourceLocation) retriveAndRegister((ResourceLocation) o, data);
         if (o instanceof Block) itemMap.put(Item.getItemFromBlock((Block) o), data);
         if (o instanceof ItemStack) stackMap.put(ItemStackUtil.comparableStackFrom((ItemStack) o), data);
         if (o instanceof ComparableStack) stackMap.put((ComparableStack) o, data);
+    }
+
+    public static boolean unregister(final Object o) {
+        if (o instanceof Collection<?>) {
+            boolean removed = false;
+            for (Object element : (Collection<?>) o) {
+                removed |= unregister(element);
+            }
+            return removed;
+        }
+        if (o == null) return false;
+
+        boolean removed = false;
+        if (o instanceof String) {
+            removed |= oreMap.remove(o) != null;
+        } else if (o instanceof Item) {
+            removed |= itemMap.remove(o) != null;
+        } else if (o instanceof ResourceLocation) {
+            removed |= removeResourceLocation((ResourceLocation) o);
+        } else if (o instanceof Block) {
+            Item item = Item.getItemFromBlock((Block) o);
+            if (item != Items.AIR) {
+                removed |= itemMap.remove(item) != null;
+            }
+        } else if (o instanceof ItemStack) {
+            removed |= stackMap.remove(ItemStackUtil.comparableStackFrom((ItemStack) o)) != null;
+        } else if (o instanceof ComparableStack) {
+            removed |= stackMap.remove(o) != null;
+        } else if (o.getClass().isArray()) {
+            int length = java.lang.reflect.Array.getLength(o);
+            for (int i = 0; i < length; i++) {
+                Object element = java.lang.reflect.Array.get(o, i);
+                removed |= unregister(element);
+            }
+        }
+        return removed;
     }
 
 
@@ -266,12 +303,59 @@ public class HazardSystem {
 
     }
 
+    private static boolean removeResourceLocation(ResourceLocation loc) {
+        boolean removed = false;
+        IForgeRegistry<Item> registry = ForgeRegistries.ITEMS;
+        if (registry.containsKey(loc)) {
+            Item item = registry.getValue(loc);
+            if (item != null) {
+                removed |= itemMap.remove(item) != null;
+            }
+        }
+        Iterator<Tuple<ResourceLocation, HazardData>> iterator = locationRateRegisterList.iterator();
+        while (iterator.hasNext()) {
+            Tuple<ResourceLocation, HazardData> tuple = iterator.next();
+            if (loc.equals(tuple.getFirst())) {
+                iterator.remove();
+                removed = true;
+            }
+        }
+        return removed;
+    }
+
     /**
      * Prevents the stack from returning any HazardData
      */
     public static void blacklist(final Object o) {
         if (o instanceof ItemStack) stackBlacklist.add(ItemStackUtil.comparableStackFrom((ItemStack) o).makeSingular());
         else if (o instanceof String) dictBlacklist.add((String) o);
+    }
+
+    public static boolean unblacklist(final Object o) {
+        if (o instanceof Collection<?>) {
+            boolean removed = false;
+            for (Object element : (Collection<?>) o) {
+                removed |= unblacklist(element);
+            }
+            return removed;
+        }
+        if (o == null) return false;
+
+        boolean removed = false;
+        if (o instanceof ItemStack) {
+            removed |= stackBlacklist.remove(ItemStackUtil.comparableStackFrom((ItemStack) o).makeSingular());
+        } else if (o instanceof String) {
+            removed |= dictBlacklist.remove(o);
+        } else if (o instanceof ComparableStack) {
+            removed |= stackBlacklist.remove(((ComparableStack) o).makeSingular());
+        } else if (o.getClass().isArray()) {
+            int length = java.lang.reflect.Array.getLength(o);
+            for (int i = 0; i < length; i++) {
+                Object element = java.lang.reflect.Array.get(o, i);
+                removed |= unblacklist(element);
+            }
+        }
+        return removed;
     }
 
     public static boolean isItemBlacklisted(final ItemStack stack) {

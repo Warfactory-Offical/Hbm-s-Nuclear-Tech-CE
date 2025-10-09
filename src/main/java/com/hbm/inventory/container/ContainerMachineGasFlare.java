@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.inventory.SlotBattery;
 import com.hbm.tileentity.machine.oil.TileEntityMachineGasFlare;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -19,7 +20,7 @@ public class ContainerMachineGasFlare extends Container {
 		testNuke = tedf;
 
 		//Battery
-		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 0, 143, 71));
+		this.addSlotToContainer(new SlotBattery(tedf.inventory, 0, 143, 71));
 		//Fluid in
 		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 1, 17, 17));
 		//Fluid out

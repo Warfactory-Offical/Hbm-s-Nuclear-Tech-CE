@@ -2,11 +2,13 @@ package com.hbm.render.model;
 
 import com.hbm.main.ResourceManager;
 import com.hbm.render.loader.ModelRendererObj;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
+
+import static com.hbm.render.NTMRenderHelper.bindTexture;
 
 public class ModelArmorWings extends ModelArmorBase {
 
@@ -35,17 +37,15 @@ public class ModelArmorWings extends ModelArmorBase {
 	}
 
 	@Override
-	public void render(Entity entity, float par2, float par3, float par4, float par5, float par6, float par7) {
+	public void render(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 		
-		setRotationAngles(par2, par3, par4, par5, par6, par7, entity);
-		//body.copyTo(wingLB);
-		//body.copyTo(wingLT);
-		//body.copyTo(wingRB);
-		//body.copyTo(wingRT);
+		setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale, entity);
 		
 		GlStateManager.pushMatrix();
-		
-		Minecraft.getMinecraft().renderEngine.bindTexture(this.getTexture());
+
+        float yaw = entity instanceof EntityLivingBase living ? living.renderYawOffset : entity.rotationYaw;
+        GlStateManager.rotate(yaw - 180.0, 0.0F, 1.0F, 0.0F);
+		bindTexture(this.getTexture());
 		
 		double px = 0.0625D;
 
@@ -82,10 +82,8 @@ public class ModelArmorWings extends ModelArmorBase {
 		}
 		
 		if(this.type == 1) {
-			rot = 0;
-			rot2 = 10;
-			
-			if(entity.onGround) {
+
+            if(entity.onGround) {
 				rot = 30;
 				rot2 = -30;
 			} else if(entity.motionY < -0.1) {
@@ -113,14 +111,14 @@ public class ModelArmorWings extends ModelArmorBase {
 			GlStateManager.translate(pivotSideOffset * px, pivotFrontOffset * px, pivotZOffset * px);
 			GL11.glRotated(rot, 0, 0, 1);
 			GlStateManager.translate(-pivotSideOffset * px, -pivotFrontOffset * px, -pivotZOffset * px);
-			wingLB.render(par7);
+			wingLB.render(scale);
 			
 			GlStateManager.translate(tipSideOffset * px, pivotFrontOffset * px, tipZOffset * px);
 			GL11.glRotated(rot2, 0, 1, 0);
 			if(doesRotateZ())
 				GL11.glRotated(rot2 * 0.25 + 5, 0, 0, 1);
 			GlStateManager.translate(-tipSideOffset * px, -pivotFrontOffset * px, -tipZOffset * px);
-			wingLT.render(par7);
+			wingLT.render(scale);
 			
 		GlStateManager.popMatrix();
 		
@@ -137,14 +135,14 @@ public class ModelArmorWings extends ModelArmorBase {
 			GlStateManager.translate(-pivotSideOffset * px, pivotFrontOffset * px, pivotZOffset * px);
 			GL11.glRotated(-rot, 0, 0, 1);
 			GlStateManager.translate(pivotSideOffset * px, -pivotFrontOffset * px, -pivotZOffset * px);
-			wingRB.render(par7);
+			wingRB.render(scale);
 			
 			GlStateManager.translate(-tipSideOffset * px, pivotFrontOffset * px, tipZOffset * px);
 			GL11.glRotated(-rot2, 0, 1, 0);
 			if(doesRotateZ())
 				GL11.glRotated(-rot2 * 0.25 - 5, 0, 0, 1);
 			GlStateManager.translate(tipSideOffset * px, -pivotFrontOffset * px, -tipZOffset * px);
-			wingRT.render(par7);
+			wingRT.render(scale);
 			
 		GlStateManager.popMatrix();
 		GlStateManager.disableCull();

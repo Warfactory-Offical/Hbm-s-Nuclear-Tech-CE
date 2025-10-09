@@ -75,7 +75,7 @@ public class TileEntityMachineAmmoPress extends TileEntityMachineBase
   }
 
   @Override
-  public String getName() {
+  public String getDefaultName() {
     return "container.machineAmmoPress";
   }
 

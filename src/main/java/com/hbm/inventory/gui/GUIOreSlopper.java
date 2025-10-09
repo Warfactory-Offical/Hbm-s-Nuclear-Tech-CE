@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 public class GUIOreSlopper extends GuiInfoContainer {
 
@@ -36,7 +36,7 @@ public class GUIOreSlopper extends GuiInfoContainer {
     @Override
     protected void drawGuiContainerForegroundLayer( int i, int j) {
 
-        String name = this.slopper.hasCustomInventoryName() ? this.slopper.getInventoryName() : I18n.format(this.slopper.getInventoryName());
+        String name = this.slopper.hasCustomName() ? this.slopper.getName() : I18n.format(this.slopper.getName());
         this.fontRenderer.drawString(name, this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2 - 9, 6, 4210752);
         this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
     }

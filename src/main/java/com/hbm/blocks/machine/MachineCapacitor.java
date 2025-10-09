@@ -152,8 +152,7 @@ public class MachineCapacitor extends BlockContainer implements ILookOverlay, IP
     }
 
     @Override
-    public ArrayList<ItemStack> getDrops(IBlockAccess world, BlockPos blockPos, IBlockState state, int fortune) {
-        return IPersistentNBT.getDrops(world, blockPos, this);
+    public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune) {
     }
 
     @Override
@@ -163,17 +162,25 @@ public class MachineCapacitor extends BlockContainer implements ILookOverlay, IP
 
     @Override
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        IPersistentNBT.restoreData(world, pos, stack);
+        IPersistentNBT.onBlockPlacedBy(world, pos, stack);
         world.setBlockState(pos, state.withProperty(FACING, EnumFacing.getDirectionFromEntityLiving(pos, placer)));
     }
 
     @Override
     public void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player) {
-        if(!player.capabilities.isCreativeMode) {
-            harvesters.set(player);
-            this.dropBlockAsItem(worldIn, pos, state, 0);
-            harvesters.set(null);
-        }
+//        if(!player.capabilities.isCreativeMode) {
+//            harvesters.set(player);
+//            this.dropBlockAsItem(worldIn, pos, state, 0);
+//            harvesters.set(null);
+//        }
+        // mlbv: wtf? why did you mutate harvesters?
+        IPersistentNBT.onBlockHarvested(worldIn, pos, player);
+    }
+
+    @Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+        IPersistentNBT.breakBlock(worldIn, pos, state);
+        super.breakBlock(worldIn, pos, state);
     }
 
     @Override
@@ -191,6 +198,7 @@ public class MachineCapacitor extends BlockContainer implements ILookOverlay, IP
         public long powerSent;
         public long lastPowerReceived;
         public long lastPowerSent;
+        private boolean destroyedByCreativePlayer = false;
 
         public TileEntityCapacitor() { }
 
@@ -309,6 +317,16 @@ public class MachineCapacitor extends BlockContainer implements ILookOverlay, IP
         }
 
         @Override
+        public void setDestroyedByCreativePlayer() {
+            destroyedByCreativePlayer = true;
+        }
+
+        @Override
+        public boolean isDestroyedByCreativePlayer() {
+            return destroyedByCreativePlayer;
+        }
+
+        @Override
         public void writeNBT(NBTTagCompound nbt) {
             NBTTagCompound data = new NBTTagCompound();
             data.setLong("power", power);
@@ -339,41 +357,41 @@ public class MachineCapacitor extends BlockContainer implements ILookOverlay, IP
 
         // opencomputer
         @Override
-        @Optional.Method(modid = "OpenComputers")
+        @Optional.Method(modid = "opencomputers")
         public String getComponentName() {
             return "capacitor";
         }
 
         @Callback(direct = true)
-        @Optional.Method(modid = "OpenComputers")
+        @Optional.Method(modid = "opencomputers")
         public Object[] getEnergy(Context context, Arguments args) {
             return new Object[] {power};
         }
 
         @Callback(direct = true)
-        @Optional.Method(modid = "OpenComputers")
+        @Optional.Method(modid = "opencomputers")
         public Object[] getMaxEnergy(Context context, Arguments args) {
             return new Object[] {maxPower};
         }
 
         @Callback(direct = true)
-        @Optional.Method(modid = "OpenComputers")
+        @Optional.Method(modid = "opencomputers")
         public Object[] getEnergySent(Context context, Arguments args) {
             return new Object[] {lastPowerReceived};
         }
 
         @Callback(direct = true)
-        @Optional.Method(modid = "OpenComputers")
+        @Optional.Method(modid = "opencomputers")
         public Object[] getEnergyReceived(Context context, Arguments args) { return new Object[] {lastPowerSent}; }
 
         @Callback(direct = true)
-        @Optional.Method(modid = "OpenComputers")
+        @Optional.Method(modid = "opencomputers")
         public Object[] getInfo(Context context, Arguments args) {
             return new Object[] {power, maxPower, lastPowerReceived, lastPowerSent};
         }
 
         @Override
-        @Optional.Method(modid = "OpenComputers")
+        @Optional.Method(modid = "opencomputers")
         public String[] methods() {
             return new String[] {
                     "getEnergy",
@@ -384,7 +402,7 @@ public class MachineCapacitor extends BlockContainer implements ILookOverlay, IP
             };
         }
         @Override
-        @Optional.Method(modid = "OpenComputers")
+        @Optional.Method(modid = "opencomputers")
         public Object[] invoke(String method, Context context, Arguments args) throws Exception {
             switch(method) {
                 case ("getEnergy"):

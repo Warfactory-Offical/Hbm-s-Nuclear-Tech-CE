@@ -69,7 +69,7 @@ public class TileEntityPASource extends TileEntityCooledBase implements IGUIProv
     }
 
     @Override
-    public String getName() {
+    public String getDefaultName() {
         return "container.paSource";
     }
 
@@ -244,6 +244,7 @@ public class TileEntityPASource extends TileEntityCooledBase implements IGUIProv
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
         return new GUIPASource(player.inventory, this);
     }
