@@ -116,7 +116,7 @@ public class ItemPoolsPile {
                     weighted(ModItems.dust_tiny, 0, 1, 7, 40),
                     weighted(ModItems.powder_cement, 0, 1, 6, 40),
                     weighted(ModItems.nugget_lead, 0, 0, 3, 20),
-                    weighted(ModItems.wire_fine, 0, 0, 3, 20),
+                    weighted(ModItems.wire_fine, 30, 0, 3, 20),
                     weighted(ModItems.powder_ash, 0, 0, 1, 15),
                     weighted(ModItems.plate_lead, 0, 0, 1, 15),
                     weighted(Items.STRING, 0, 0, 1, 15),
