@@ -13,7 +13,7 @@ public class RadiationConfig {
 	public static int worldRadThreshold = 20;
 	public static boolean worldRadEffects = true;
 	public static boolean enableContamination = true;
-	public static boolean enableContaminationOnGround = true;
+	public static boolean enableContaminationOnGround = false;
 	public static int blocksFallCh = 100;
 	
 	//Drillgon200: Not sure why I put these here, but oh well.
@@ -73,7 +73,7 @@ public class RadiationConfig {
 		worldRadThreshold = CommonConfig.createConfigInt(config, CATEGORY_NUKE, "6.16_worldRadThreshold", "The least amount of RADs required for block modification to happen", 40);
 		worldRadEffects = CommonConfig.createConfigBool(config, CATEGORY_NUKE, "6.17_worldRadEffects", "Whether high radiation levels should perform changes in the world", true);
 		enableContamination = CommonConfig.createConfigBool(config, CATEGORY_NUKE, "6.18_enableContamination", "Toggles player contamination (and negative effects from radiation poisoning)", true);
-		enableContaminationOnGround = CommonConfig.createConfigBool(config, CATEGORY_NUKE, "6.18.1_enableContaminationOnGround", "Toggles contamination for items being on-ground", true);
+		enableContaminationOnGround = CommonConfig.createConfigBool(config, CATEGORY_NUKE, "6.18.1_enableContaminationOnGround", "Toggles contamination for items being on-ground", false);
 		blocksFallCh = CommonConfig.createConfigInt(config, CATEGORY_NUKE, "6.19_blocksFallingChance", "The chance (in percentage form) that a block with low blast resistance will fall down. -1 Disables falling", 100);
 		// railgun
 		Property railDamage = config.get(CATEGORY_NUKE, "6.20_railgunDamage", 1000);

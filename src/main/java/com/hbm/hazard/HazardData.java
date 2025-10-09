@@ -1,5 +1,6 @@
 package com.hbm.hazard;
 
+import com.hbm.config.RadiationConfig;
 import com.hbm.hazard.type.HazardTypeBase;
 
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ public class HazardData {
 	}
 	
 	public HazardData addEntry(final HazardTypeBase hazard, final float level) {
+		if(hazard == HazardRegistry.CONTAMINATING && !RadiationConfig.enableContaminationOnGround) return this;
 		return this.addEntry(hazard, level, false);
 	}
 	
