@@ -243,7 +243,7 @@ public class ArmorFSB extends ItemArmor {
                 // return;
             }
 
-            if (chestplate.fall != null && player.fallDistance > 0.25 && !player.isSneaking()) {
+            if (chestplate.fall != null && player.fallDistance > 0.25) {
                 player.playSound(chestplate.fall, 1.0F, 1.0F);
             }
         }
