@@ -5,6 +5,7 @@ import com.hbm.animloader.AnimationWrapper.EndType;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.bomb.DigammaMatter;
+import com.hbm.blocks.fluid.FluidFogHandler;
 import com.hbm.blocks.generic.BMPowerBox;
 import com.hbm.blocks.generic.BlockModDoor;
 import com.hbm.blocks.generic.TrappedBrick;
@@ -106,7 +107,6 @@ import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.IRegistry;
 import net.minecraft.world.World;
-import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.client.settings.KeyConflictContext;
@@ -129,8 +129,10 @@ import paulscode.sound.SoundSystemConfig;
 import java.awt.*;
 import java.io.File;
 import java.nio.FloatBuffer;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 public class ClientProxy extends ServerProxy {
 
@@ -166,6 +168,7 @@ public class ClientProxy extends ServerProxy {
 
     @Override
     public void init(FMLInitializationEvent evt) {
+        FluidFogHandler.init();
         // All previous color handler registrations here have been moved to ModEventHandlerClient#itemColorsEvent
         // and ModEventHandlerClient#blockColorsEvent
     }

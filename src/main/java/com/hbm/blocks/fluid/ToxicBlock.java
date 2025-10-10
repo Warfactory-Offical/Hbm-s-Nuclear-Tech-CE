@@ -21,9 +21,9 @@ import net.minecraftforge.fluids.Fluid;
 
 import java.util.Random;
 
-public class ToxicBlock extends BlockFluidClassic {
+public class ToxicBlock extends BlockFluidClassic implements IFluidFog {
 
-	private DamageSource damageSource;
+	private final DamageSource damageSource;
 	
 	public ToxicBlock(Fluid fluid, Material material, DamageSource source, String s) {
 		super(fluid, material);
@@ -103,4 +103,14 @@ public class ToxicBlock extends BlockFluidClassic {
 	public int tickRate(World world) {
 		return 15;
 	}
+
+    @Override
+    public float getFogDensity() {
+        return 2.0F;
+    }
+
+    @Override
+    public int getFogColor() {
+        return 0x503920;
+    }
 }

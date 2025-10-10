@@ -1385,12 +1385,12 @@ public class ModBlocks {
 
 	public static final Block orbital_station = new BlockOrbitalStation(Material.IRON, "orbital_station").setBlockUnbreakable().setResistance(Float.POSITIVE_INFINITY).setCreativeTab(null);
 
-    public static final Block toxic_block = new ToxicBlock(ModFluids.toxic_fluid, ModBlocks.fluidtoxic, ModDamageSource.radiation, "toxic_block").setResistance(500F);
-    public static final Block mud_block = new MudBlock(ModFluids.mud_fluid, ModBlocks.fluidmud, ModDamageSource.mudPoisoning, "mud_block").setResistance(500F);
+    public static final Block toxic_block = new ToxicBlock(ModFluids.toxic_fluid, fluidtoxic, ModDamageSource.radiation, "toxic_block").setResistance(500F);
+    public static final Block mud_block = new MudBlock(ModFluids.mud_fluid, fluidmud, ModDamageSource.mudPoisoning, "mud_block").setResistance(500F);
     public static final Block acid_block = new AcidBlock(ModFluids.acid_fluid, fluidacid.setReplaceable(), ModDamageSource.acid, "acid_block").setResistance(500F);
-    public static final Block schrabidic_block = new SchrabidicBlock(ModFluids.schrabidic_fluid, ModBlocks.fluidschrabidic.setReplaceable(), ModDamageSource.radiation, "schrabidic_block").setResistance(500F);
-    public static final Block corium_block = new CoriumFinite(ModFluids.corium_fluid, ModBlocks.fluidcorium, "corium_block").setResistance(500F);
-    public static final Block volcanic_lava_block = new VolcanicBlock(ModFluids.volcanic_lava_fluid, ModBlocks.fluidvolcanic, "volcanic_lava_block").setResistance(500F);
+    public static final Block schrabidic_block = new SchrabidicBlock(ModFluids.schrabidic_fluid, fluidschrabidic.setReplaceable(), ModDamageSource.radiation, "schrabidic_block").setResistance(500F);
+    public static final Block corium_block = new CoriumFinite(ModFluids.corium_fluid, fluidcorium, "corium_block").setResistance(500F);
+    public static final Block volcanic_lava_block = new VolcanicBlock(ModFluids.volcanic_lava_fluid, fluidvolcanic, "volcanic_lava_block").setResistance(500F);
     public static final Block bromine_block = new BromineBlock(ModFluids.bromine_fluid, Material.WATER).setResistance(500F);
     public static final Block sulfuric_acid_block = new SulfuricAcidBlock(ModFluids.sulfuric_acid_fluid, Material.WATER, "sulfuric_acid_block").setDamage(ModDamageSource.acid, 5F).setResistance(500F);
 

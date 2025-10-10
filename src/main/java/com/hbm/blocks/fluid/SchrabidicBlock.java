@@ -1,6 +1,7 @@
 package com.hbm.blocks.fluid;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.util.ContaminationUtil;
 import com.hbm.util.ContaminationUtil.ContaminationType;
 import com.hbm.util.ContaminationUtil.HazardType;
@@ -16,7 +17,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
 
-public class SchrabidicBlock extends BlockFluidClassic {
+public class SchrabidicBlock extends BlockFluidClassic implements IFluidFog {
 
 	public static DamageSource damageSource;
 	
@@ -89,4 +90,13 @@ public class SchrabidicBlock extends BlockFluidClassic {
 		return 15;
 	}
 
+    @Override
+    public float getFogDensity() {
+        return 2.0F;
+    }
+
+    @Override
+    public int getFogColor() {
+        return Fluids.SCHRABIDIC.getColor();
+    }
 }
