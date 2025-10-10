@@ -10,6 +10,14 @@ public class RenderUtil {
         return GlStateManager.alphaState.alphaTest.currentState;
     }
 
+    public static int getAlphaFunc() {
+        return GlStateManager.alphaState.func;
+    }
+
+    public static float getAlphaRef() {
+        return GlStateManager.alphaState.ref;
+    }
+
     public static boolean isBlendEnabled() {
         return GlStateManager.blendState.blend.currentState;
     }
