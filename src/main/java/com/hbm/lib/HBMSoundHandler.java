@@ -739,7 +739,7 @@ public final class HBMSoundHandler {
         assemblerCut = register("block.assemblerCut");
         tubeFwoomp = register("weapon.reload.tubeFwoomp");
 
-        geigerSounds = new SoundEvent[]{geiger1, geiger2, geiger3, geiger4, geiger5, geiger6, geiger7, geiger8};
+        geigerSounds = new SoundEvent[]{geiger1, geiger2, geiger3, geiger4, geiger5, geiger6};
         voiceSounds = new SoundEvent[]{voices1, voices2, voices3, voices4, voices5, voices6, voices7, voices8};
         boilerGroanSounds = new SoundEvent[]{boiler_groan1, boiler_groan2, boiler_groan3};
     }
