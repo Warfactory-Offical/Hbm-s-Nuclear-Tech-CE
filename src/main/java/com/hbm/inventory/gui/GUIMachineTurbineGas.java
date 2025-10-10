@@ -152,7 +152,6 @@ public class GUIMachineTurbineGas extends GuiInfoContainer {
     @Override
     protected void drawGuiContainerBackgroundLayer(float iinterpolation, int x, int y) {
         super.drawDefaultBackground();
-        GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
@@ -194,7 +193,6 @@ public class GUIMachineTurbineGas extends GuiInfoContainer {
         turbinegas.tanks[1].renderTank(guiLeft + 8, guiTop + 103, this.zLevel, 16, 32);
         turbinegas.tanks[2].renderTank(guiLeft + 147, guiTop + 98, this.zLevel, 16, 36);
         turbinegas.tanks[3].renderTank(guiLeft + 147, guiTop + 58, this.zLevel, 16, 36);
-        GL11.glPopAttrib();
     }
 
     private void displayStartup() {

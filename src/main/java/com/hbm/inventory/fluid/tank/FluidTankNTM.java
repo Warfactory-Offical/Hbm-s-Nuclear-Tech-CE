@@ -6,6 +6,7 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.gui.GuiInfoContainer;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.IItemFluidIdentifier;
+import com.hbm.util.RenderUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -226,8 +227,8 @@ public class FluidTankNTM implements IFluidHandler, IFluidTank, Cloneable {
     }
 
     public void renderTank(int x, int y, double z, int width, int height, int orientation) {
-
-        GlStateManager.enableBlend();
+        boolean wasBlendEnabled = RenderUtil.isBlendEnabled();
+        if (!wasBlendEnabled) GlStateManager.enableBlend();
 
         int color = type.getTint();
         double r = ((color & 0xff0000) >> 16) / 255D;
@@ -278,7 +279,7 @@ public class FluidTankNTM implements IFluidHandler, IFluidTank, Cloneable {
         tessellator.draw();
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        GlStateManager.disableBlend();
+        if (!wasBlendEnabled) GlStateManager.disableBlend();
     }
 
     public void renderTankInfo(@NotNull GuiInfoContainer gui, int mouseX, int mouseY, int x, int y, int width, int height) {

@@ -65,7 +65,6 @@ public class RenderXenonThruster extends TileEntitySpecialRenderer<TileEntityXen
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(
             GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
-        GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
         GlStateManager.depthMask(false);
 
@@ -77,7 +76,6 @@ public class RenderXenonThruster extends TileEntitySpecialRenderer<TileEntityXen
         ResourceManager.xenon_thruster.renderPart("Exhaust");
 
         GlStateManager.depthMask(true);
-        GL11.glPopAttrib();
         GlStateManager.enableLighting();
         GlStateManager.enableCull();
         GlStateManager.disableBlend();

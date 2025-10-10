@@ -44,7 +44,6 @@ public class GUIOreSlopper extends GuiInfoContainer {
     @Override
     protected void drawGuiContainerBackgroundLayer(float interp, int x, int y) {
         super.drawDefaultBackground();
-        GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
@@ -61,6 +60,5 @@ public class GUIOreSlopper extends GuiInfoContainer {
 
         slopper.tanks[0].renderTank(guiLeft + 26, guiTop + 70, this.zLevel, 16, 52);
         slopper.tanks[1].renderTank(guiLeft + 116, guiTop + 70, this.zLevel, 16, 52);
-        GL11.glPopAttrib();
     }
 }
