@@ -6,6 +6,7 @@ import com.hbm.items.weapon.sedna.ItemGunBaseNT.SmokeNode;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.item.TEISRBase;
 import com.hbm.render.util.ViewModelPositonDebugger;
+import com.hbm.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.*;
@@ -20,6 +21,8 @@ import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.Project;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.List;
 
 public abstract class ItemRenderWeaponBase extends TEISRBase {
@@ -46,11 +49,10 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
     @Override
     public void renderByItem(ItemStack stack, float partialTicks) {
         GlStateManager.pushMatrix();
-        GlStateManager.enableCull();
-        GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
+        final boolean prevCull = RenderUtil.isCullEnabled();
+        if (!prevCull) GlStateManager.enableCull();
 
         ItemCameraTransforms.TransformType currentType = this.type;
-
         if (currentType == null) {
             currentType = ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND;
         }
@@ -83,7 +85,7 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
                 }
             }
         }
-        GL11.glPopAttrib();
+        if (!prevCull) GlStateManager.disableCull();
         GlStateManager.popMatrix();
     }
 
@@ -104,7 +106,8 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
         GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
         GlStateManager.matrixMode(GL11.GL_PROJECTION);
         GlStateManager.loadIdentity();
-        Project.gluPerspective(this.getFOVModifier(interp, ClientConfig.GUN_MODEL_FOV.get()), (float) mc.displayWidth / (float) mc.displayHeight, 0.05F, farPlaneDistance * 2.0F);
+        Project.gluPerspective(this.getFOVModifier(interp, ClientConfig.GUN_MODEL_FOV.get()),
+                (float) mc.displayWidth / (float) mc.displayHeight, 0.05F, farPlaneDistance * 2.0F);
         GlStateManager.matrixMode(GL11.GL_MODELVIEW);
         GlStateManager.loadIdentity();
         GlStateManager.pushMatrix();
@@ -118,7 +121,7 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
             GlStateManager.popMatrix();
             this.type = prev; // ОБЯЗАТЕЛЬНО откатываем
         }
-        if(mc.gameSettings.thirdPersonView == 0) {
+        if (mc.gameSettings.thirdPersonView == 0) {
             entityRenderer.itemRenderer.renderOverlays(interp);
         }
     }
@@ -127,13 +130,14 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
         Minecraft mc = Minecraft.getMinecraft();
         EntityLivingBase entityplayer = (EntityLivingBase) mc.getRenderViewEntity();
         float fov = getBaseFOV(entityplayer.getHeldItemMainhand());
-        if(useFOVSetting) fov = mc.gameSettings.fovSetting;
-        if(entityplayer.getHealth() <= 0.0F) {
+        if (useFOVSetting) fov = mc.gameSettings.fovSetting;
+        if (entityplayer.getHealth() <= 0.0F) {
             float f2 = (float) entityplayer.deathTime + interp;
             fov /= (1.0F - 500.0F / (f2 + 500.0F)) * 2.0F + 1.0F;
         }
-        net.minecraft.block.state.IBlockState state = ActiveRenderInfo.getBlockStateAtEntityViewpoint(mc.world, entityplayer, interp);
-        if(state.getMaterial() == net.minecraft.block.material.Material.WATER) fov = fov * 60.0F / 70.0F;
+        net.minecraft.block.state.IBlockState state =
+                ActiveRenderInfo.getBlockStateAtEntityViewpoint(mc.world, entityplayer, interp);
+        if (state.getMaterial() == net.minecraft.block.material.Material.WATER) fov = fov * 60.0F / 70.0F;
         return fov;
     }
 
@@ -150,7 +154,7 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
         float swayPeriod = getSwayPeriod(stack);
         float turnMagnitude = getTurnMagnitude(stack);
 
-        //lighting setup (item lighting changes based on player rotation)
+        // lighting setup (item lighting changes based on player rotation)
         float pitch = player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * interp;
         float yaw = player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * interp;
         GlStateManager.pushMatrix();
@@ -159,20 +163,21 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
         RenderHelper.enableStandardItemLighting();
         GlStateManager.popMatrix();
 
-        //floppyness
+        // floppyness
         float armPitch = player.prevRenderArmPitch + (player.renderArmPitch - player.prevRenderArmPitch) * interp;
         float armYaw = player.prevRenderArmYaw + (player.renderArmYaw - player.prevRenderArmYaw) * interp;
         GlStateManager.rotate((player.rotationPitch - armPitch) * 0.1F * turnMagnitude, 1.0F, 0.0F, 0.0F);
         GlStateManager.rotate((player.rotationYaw - armYaw) * 0.1F * turnMagnitude, 0.0F, 1.0F, 0.0F);
 
-        //brightness setup
-        int brightness = mc.world.getCombinedLight(new net.minecraft.util.math.BlockPos(player.posX, player.posY, player.posZ), 0);
+        // brightness setup
+        int brightness = mc.world.getCombinedLight(
+                new net.minecraft.util.math.BlockPos(player.posX, player.posY, player.posZ), 0);
         int j = brightness % 65536;
         int k = brightness / 65536;
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) j, (float) k);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-        //color setup
+        // color setup
         int color = Minecraft.getMinecraft().getItemColors().colorMultiplier(stack, 0);
         float r = (float) (color >> 16 & 255) / 255.0F;
         float g = (float) (color >> 8 & 255) / 255.0F;
@@ -183,13 +188,17 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
         GlStateManager.enableRescaleNormal();
         GlStateManager.rotate(180, 0, 1, 0);
 
-        //viewbob
-        if(mc.getRenderViewEntity() instanceof EntityPlayer entityplayer) {
+        // viewbob
+        if (mc.getRenderViewEntity() instanceof EntityPlayer entityplayer) {
             float distanceDelta = entityplayer.distanceWalkedModified - entityplayer.prevDistanceWalkedModified;
             float distanceInterp = -(entityplayer.distanceWalkedModified + distanceDelta * interp);
             float camYaw = entityplayer.prevCameraYaw + (entityplayer.cameraYaw - entityplayer.prevCameraYaw) * interp;
             float camPitch = entityplayer.prevCameraPitch + (entityplayer.cameraPitch - entityplayer.prevCameraPitch) * interp;
-            GlStateManager.translate(MathHelper.sin(distanceInterp * (float) Math.PI * swayPeriod) * camYaw * 0.5F * swayMagnitude, -Math.abs(MathHelper.cos(distanceInterp * (float) Math.PI * swayPeriod) * camYaw) * swayMagnitude, 0.0F);
+            GlStateManager.translate(
+                    MathHelper.sin(distanceInterp * (float) Math.PI * swayPeriod) * camYaw * 0.5F * swayMagnitude,
+                    -Math.abs(MathHelper.cos(distanceInterp * (float) Math.PI * swayPeriod) * camYaw) * swayMagnitude,
+                    0.0F
+            );
             GlStateManager.rotate(MathHelper.sin(distanceInterp * (float) Math.PI * swayPeriod) * camYaw * 3.0F, 0.0F, 0.0F, 1.0F);
             GlStateManager.rotate(Math.abs(MathHelper.cos(distanceInterp * (float) Math.PI * swayPeriod - 0.2F) * camYaw) * 5.0F, 1.0F, 0.0F, 0.0F);
             GlStateManager.rotate(camPitch, 1.0F, 0.0F, 0.0F);
@@ -202,7 +211,7 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
 
     public void setupFirstPerson(ItemStack stack) {
         GlStateManager.translate(0, 0, 1);
-        if(Minecraft.getMinecraft().player.isSneaking()) {
+        if (Minecraft.getMinecraft().player.isSneaking()) {
             GlStateManager.translate(0, -3.875 / 8D, 0);
         } else {
             float offset = 0.8F;
@@ -270,14 +279,21 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
 
         BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 
-        GlStateManager.pushAttrib();
         GlStateManager.pushMatrix();
-
-        GlStateManager.disableLighting();
-        GlStateManager.enableBlend();
-        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-        GlStateManager.disableTexture2D();
-        GlStateManager.disableCull();
+        final boolean prevLighting = RenderUtil.isLightingEnabled();
+        final boolean prevBlend    = RenderUtil.isBlendEnabled();
+        final int prevSrc          = RenderUtil.getBlendSrcFactor();
+        final int prevDst          = RenderUtil.getBlendDstFactor();
+        final int prevSrcAlpha     = RenderUtil.getBlendSrcAlphaFactor();
+        final int prevDstAlpha     = RenderUtil.getBlendDstAlphaFactor();
+        final boolean prevTex2D    = RenderUtil.isTexture2DEnabled();
+        final boolean prevCull     = RenderUtil.isCullEnabled();
+        final boolean prevDepthMask= RenderUtil.isDepthMaskEnabled();
+        if (prevLighting) GlStateManager.disableLighting();
+        if (!prevBlend) GlStateManager.enableBlend();
+        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0); // SRC_ALPHA, ONE_MINUS_SRC_ALPHA, ONE, ZERO
+        if (prevTex2D) GlStateManager.disableTexture2D();
+        if (prevCull)  GlStateManager.disableCull();
         GlStateManager.depthMask(false);
         GlStateManager.alphaFunc(GL11.GL_GREATER, 0.02F);
 
@@ -302,16 +318,16 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
         }
         Tessellator.getInstance().draw();
 
-        GlStateManager.depthMask(true);
-        GlStateManager.enableCull();
-        GlStateManager.enableTexture2D();
-        GlStateManager.disableBlend();
-        GlStateManager.enableLighting();
+        GlStateManager.alphaFunc(GL11.GL_GEQUAL, 0.1F);
+        GlStateManager.depthMask(prevDepthMask);
+        if (prevCull)  GlStateManager.enableCull();
+        if (prevTex2D) GlStateManager.enableTexture2D();
+        GlStateManager.tryBlendFuncSeparate(prevSrc, prevDst, prevSrcAlpha, prevDstAlpha);
+        if (!prevBlend) GlStateManager.disableBlend();
+        if (prevLighting) GlStateManager.enableLighting();
 
         GlStateManager.popMatrix();
-        GlStateManager.popAttrib();
     }
-
 
     public static void renderMuzzleFlash(long lastShot) {
         renderMuzzleFlash(lastShot, 75, 15);
@@ -319,7 +335,7 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
 
     public static void renderMuzzleFlash(long lastShot, int duration, double l) {
         BufferBuilder buffer = Tessellator.getInstance().getBuffer();
-        if(System.currentTimeMillis() - lastShot < duration) {
+        if (System.currentTimeMillis() - lastShot < duration) {
 
             double fire = (System.currentTimeMillis() - lastShot) / (double) duration;
             double width = 6 * fire;
@@ -332,23 +348,23 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
             buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
             buffer.pos(0, -width, -inset).tex(1, 1).endVertex();
-            buffer.pos(0, width, -inset).tex(0, 1).endVertex();
+            buffer.pos(0,  width, -inset).tex(0, 1).endVertex();
             buffer.pos(0.1, width, length - inset).tex(0, 0).endVertex();
             buffer.pos(0.1, -width, length - inset).tex(1, 0).endVertex();
 
-            buffer.pos(0, width, inset).tex(0, 1).endVertex();
-            buffer.pos(0, -width, inset).tex(1, 1).endVertex();
+            buffer.pos(0,  width,  inset).tex(0, 1).endVertex();
+            buffer.pos(0, -width,  inset).tex(1, 1).endVertex();
             buffer.pos(0.1, -width, -length + inset).tex(1, 0).endVertex();
-            buffer.pos(0.1, width, -length + inset).tex(0, 0).endVertex();
+            buffer.pos(0.1,  width, -length + inset).tex(0, 0).endVertex();
 
-            buffer.pos(0, -inset, width).tex(0, 1).endVertex();
+            buffer.pos(0, -inset,  width).tex(0, 1).endVertex();
             buffer.pos(0, -inset, -width).tex(1, 1).endVertex();
             buffer.pos(0.1, length - inset, -width).tex(1, 0).endVertex();
-            buffer.pos(0.1, length - inset, width).tex(0, 0).endVertex();
+            buffer.pos(0.1, length - inset,  width).tex(0, 0).endVertex();
 
-            buffer.pos(0, inset, -width).tex(1, 1).endVertex();
-            buffer.pos(0, inset, width).tex(0, 1).endVertex();
-            buffer.pos(0.1, -length + inset, width).tex(0, 0).endVertex();
+            buffer.pos(0,  inset, -width).tex(1, 1).endVertex();
+            buffer.pos(0,  inset,  width).tex(0, 1).endVertex();
+            buffer.pos(0.1, -length + inset,  width).tex(0, 0).endVertex();
             buffer.pos(0.1, -length + inset, -width).tex(1, 0).endVertex();
 
             Tessellator.getInstance().draw();
@@ -360,7 +376,7 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
     public static void renderGapFlash(long lastShot) {
         BufferBuilder buffer = Tessellator.getInstance().getBuffer();
         int flash = 75;
-        if(System.currentTimeMillis() - lastShot < flash) {
+        if (System.currentTimeMillis() - lastShot < flash) {
 
             double fire = (System.currentTimeMillis() - lastShot) / (double) flash;
             double height = 4 * fire;
@@ -375,24 +391,24 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
             buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
             buffer.pos(0, -height, -offset).tex(1, 1).endVertex();
-            buffer.pos(0, height, -offset).tex(0, 1).endVertex();
-            buffer.pos(0, height + lift, length - offset).tex(0, 0).endVertex();
+            buffer.pos(0,  height, -offset).tex(0, 1).endVertex();
+            buffer.pos(0,  height + lift, length - offset).tex(0, 0).endVertex();
             buffer.pos(0, -height + lift, length - offset).tex(1, 0).endVertex();
 
-            buffer.pos(0, height, offset).tex(0, 1).endVertex();
-            buffer.pos(0, -height, offset).tex(1, 1).endVertex();
+            buffer.pos(0,  height,  offset).tex(0, 1).endVertex();
+            buffer.pos(0, -height,  offset).tex(1, 1).endVertex();
             buffer.pos(0, -height + lift, -length + offset).tex(1, 0).endVertex();
-            buffer.pos(0, height + lift, -length + offset).tex(0, 0).endVertex();
+            buffer.pos(0,  height + lift, -length + offset).tex(0, 0).endVertex();
 
             buffer.pos(0, -height, -offset).tex(1, 1).endVertex();
-            buffer.pos(0, height, -offset).tex(0, 1).endVertex();
-            buffer.pos(lengthOffset, height, length - offset).tex(0, 0).endVertex();
+            buffer.pos(0,  height, -offset).tex(0, 1).endVertex();
+            buffer.pos(lengthOffset,  height, length - offset).tex(0, 0).endVertex();
             buffer.pos(lengthOffset, -height, length - offset).tex(1, 0).endVertex();
 
-            buffer.pos(0, height, offset).tex(0, 1).endVertex();
-            buffer.pos(0, -height, offset).tex(1, 1).endVertex();
+            buffer.pos(0,  height,  offset).tex(0, 1).endVertex();
+            buffer.pos(0, -height,  offset).tex(1, 1).endVertex();
             buffer.pos(lengthOffset, -height, -length + offset).tex(1, 0).endVertex();
-            buffer.pos(lengthOffset, height, -length + offset).tex(0, 0).endVertex();
+            buffer.pos(lengthOffset,  height, -length + offset).tex(0, 0).endVertex();
 
             Tessellator.getInstance().draw();
 
@@ -430,30 +446,62 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
         }
     }
 
+    private static final ThreadLocal<Deque<FBState>> FB_STACK = ThreadLocal.withInitial(ArrayDeque::new);
+
+    private static final class FBState {
+        boolean blend, cull, lighting;
+        int src, dst, srcA, dstA;
+        boolean depthMask;
+        float r, g, b, a;
+    }
+
     public static void beginFullbrightAdditive() {
+        FBState s = new FBState();
+        s.blend     = RenderUtil.isBlendEnabled();
+        s.cull      = RenderUtil.isCullEnabled();
+        s.lighting  = RenderUtil.isLightingEnabled();
+        s.src       = RenderUtil.getBlendSrcFactor();
+        s.dst       = RenderUtil.getBlendDstFactor();
+        s.srcA      = RenderUtil.getBlendSrcAlphaFactor();
+        s.dstA      = RenderUtil.getBlendDstAlphaFactor();
+        s.depthMask = RenderUtil.isDepthMaskEnabled();
+        s.r         = RenderUtil.getColorMaskRed();
+        s.g         = RenderUtil.getColorMaskGreen();
+        s.b         = RenderUtil.getColorMaskBlue();
+        s.a         = RenderUtil.getColorMaskAlpha();
+        // mlbv: was pushAttrib; revert and change all references to GlStateManager to GL11 if it breaks.
+        FB_STACK.get().push(s);
         GlStateManager.pushMatrix();
-        GlStateManager.pushAttrib();
         GlStateManager.color(1F, 1F, 1F, 1F);
-
-        GlStateManager.enableBlend();
-        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
-
-        GlStateManager.disableCull();
-
-        GlStateManager.disableLighting();
-
+        if (!s.blend) GlStateManager.enableBlend();
+        GlStateManager.tryBlendFuncSeparate(
+                GlStateManager.SourceFactor.SRC_ALPHA.factor, GlStateManager.DestFactor.ONE.factor,
+                GlStateManager.SourceFactor.ONE.factor, GlStateManager.DestFactor.ZERO.factor
+        );
+        if (s.cull)     GlStateManager.disableCull();
+        if (s.lighting) GlStateManager.disableLighting();
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
-
         GlStateManager.alphaFunc(GL11.GL_GREATER, 0.0F);
     }
 
     public static void endFullbrightAdditive() {
+        // mlbv: was popAttrib
+        FBState s = FB_STACK.get().poll();
+        if (s == null) {
+            GlStateManager.alphaFunc(GL11.GL_GEQUAL, 0.1F);
+            GlStateManager.enableCull();
+            GlStateManager.disableBlend();
+            GlStateManager.enableLighting();
+            GlStateManager.popMatrix();
+            return;
+        }
         GlStateManager.alphaFunc(GL11.GL_GEQUAL, 0.1F);
-        GlStateManager.enableCull();
-        GlStateManager.disableBlend();
-        GlStateManager.enableLighting();
-        GlStateManager.popAttrib();
+        GlStateManager.color(s.r, s.g, s.b, s.a);
+        GlStateManager.depthMask(s.depthMask);
+        GlStateManager.tryBlendFuncSeparate(s.src, s.dst, s.srcA, s.dstA);
+        if (!s.blend)   GlStateManager.disableBlend();
+        if (s.cull)     GlStateManager.enableCull();
+        if (s.lighting) GlStateManager.enableLighting();
         GlStateManager.popMatrix();
-
     }
 }

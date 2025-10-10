@@ -2,8 +2,8 @@ package com.hbm.inventory.gui;
 
 import com.hbm.inventory.container.ContainerITER;
 import com.hbm.lib.RefStrings;
-import com.hbm.packet.toserver.AuxButtonPacket;
 import com.hbm.packet.PacketDispatcher;
+import com.hbm.packet.toserver.AuxButtonPacket;
 import com.hbm.tileentity.machine.TileEntityITER;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -67,7 +67,6 @@ public class GUIITER extends GuiInfoContainer {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
 		super.drawDefaultBackground();
-		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
@@ -93,6 +92,5 @@ public class GUIITER extends GuiInfoContainer {
 		}
 
 		iter.plasma.renderTank(guiLeft + 71, guiTop + 88, this.zLevel, 34, 34);
-		GL11.glPopAttrib();
 	}
 }

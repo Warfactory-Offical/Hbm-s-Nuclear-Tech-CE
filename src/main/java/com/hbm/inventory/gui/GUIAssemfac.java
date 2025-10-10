@@ -10,7 +10,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.items.ItemStackHandler;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 public class GUIAssemfac extends GuiInfoContainer {
 
@@ -70,7 +70,6 @@ public class GUIAssemfac extends GuiInfoContainer {
     @Override
     protected void drawGuiContainerBackgroundLayer(float interp, int mX, int mY) {
         super.drawDefaultBackground();
-        GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
@@ -95,7 +94,6 @@ public class GUIAssemfac extends GuiInfoContainer {
                 this.fontRenderer.drawStringWithShadow(s.getSlotIndex() + "", guiLeft + s.xPos + 2, guiTop + s.yPos + 8, 0xff8080);
             }
 
-        GL11.glPopAttrib();
     }
     public ItemStackHandler getInventory() {
         return assemfac.inventory;

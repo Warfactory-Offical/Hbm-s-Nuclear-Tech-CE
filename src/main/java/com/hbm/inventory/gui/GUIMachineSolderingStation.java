@@ -2,8 +2,8 @@ package com.hbm.inventory.gui;
 
 import com.hbm.inventory.container.ContainerMachineSolderingStation;
 import com.hbm.lib.RefStrings;
-import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.packet.PacketDispatcher;
+import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.machine.TileEntityMachineSolderingStation;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -12,7 +12,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -96,7 +96,6 @@ public class GUIMachineSolderingStation extends GuiInfoContainer {
   @Override
   protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
     super.drawDefaultBackground();
-    GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
     GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
     GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -115,7 +114,5 @@ public class GUIMachineSolderingStation extends GuiInfoContainer {
 
     this.drawInfoPanel(guiLeft + 78, guiTop + 67, 8, 8, 8);
     soldering_station.tank.renderTank(guiLeft + 35, guiTop + 79, this.zLevel, 34, 16, 1);
-
-    GlStateManager.popAttrib();
   }
 }

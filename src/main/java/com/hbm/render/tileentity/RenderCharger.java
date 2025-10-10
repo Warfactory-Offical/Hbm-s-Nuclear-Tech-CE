@@ -5,6 +5,7 @@ import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.item.ItemRenderBase;
 import com.hbm.tileentity.machine.TileEntityCharger;
+import com.hbm.util.RenderUtil;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -63,10 +64,10 @@ public class RenderCharger extends TileEntitySpecialRenderer<TileEntityCharger> 
 		GlStateManager.popMatrix();
 
 		GlStateManager.pushMatrix();
-		GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
+		boolean prevLighting = RenderUtil.isLightingEnabled();
 
 		GlStateManager.disableTexture2D();
-		GlStateManager.disableLighting();
+		if (prevLighting) GlStateManager.disableLighting();
 		GlStateManager.disableCull();
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
 
@@ -82,9 +83,8 @@ public class RenderCharger extends TileEntitySpecialRenderer<TileEntityCharger> 
 
 		ResourceManager.charger.renderPart("Slide");
 
-		GlStateManager.enableLighting();
+		if (prevLighting) GlStateManager.enableLighting();
 
-		GL11.glPopAttrib();
 		GlStateManager.popMatrix();
 
 		GlStateManager.shadeModel(GL11.GL_FLAT);

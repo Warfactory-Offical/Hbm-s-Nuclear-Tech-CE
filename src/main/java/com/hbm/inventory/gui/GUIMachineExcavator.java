@@ -2,8 +2,8 @@ package com.hbm.inventory.gui;
 
 import com.hbm.inventory.container.ContainerMachineExcavator;
 import com.hbm.lib.RefStrings;
-import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.packet.PacketDispatcher;
+import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.machine.TileEntityMachineExcavator;
 import com.hbm.util.I18nUtil;
 import net.minecraft.client.Minecraft;
@@ -85,7 +85,6 @@ public class GUIMachineExcavator extends GuiInfoContainer {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float interp, int x, int y) {
 		super.drawDefaultBackground();
-		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
@@ -139,6 +138,5 @@ public class GUIMachineExcavator extends GuiInfoContainer {
 		}
 
 		drill.tank.renderTank(guiLeft + 202, guiTop + 70, this.zLevel, 16, 52);
-		GL11.glPopAttrib();
 	}
 }

@@ -4,6 +4,7 @@ import com.hbm.inventory.container.ContainerMachineGasCent;
 import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.TileEntityMachineGasCent;
 import com.hbm.util.I18nUtil;
+import com.hbm.util.RenderUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -160,9 +161,8 @@ public class GUIMachineGasCent extends GuiInfoContainer {
   }
 
   public void renderTank(int x, int y, double z, int width, int height, int fluid, int maxFluid) {
-    GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
-
-    GlStateManager.enableBlend();
+    boolean wasBlendEnabled = RenderUtil.isBlendEnabled();
+    if (!wasBlendEnabled) GlStateManager.enableBlend();
     GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
     y += height;
@@ -189,6 +189,6 @@ public class GUIMachineGasCent extends GuiInfoContainer {
     buffer.pos(minX, minY, z).tex(minU, minV).endVertex();
     tessellator.draw();
 
-    GL11.glPopAttrib();
+    if (!wasBlendEnabled) GlStateManager.disableBlend();
   }
 }
