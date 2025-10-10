@@ -403,7 +403,7 @@ public class AdvGen {
                 "hbm:achwatz",
                 new Display()
                         .key("watzBoom")
-                        .icon(FluidUtil.getFilledBucket(new FluidStack(ModFluids.sulfuric_acid_fluid, 1000)))
+                        .icon(FluidUtil.getFilledBucket(new FluidStack(ModFluids.mud_fluid, 1000)))
                         .toast(true)
                         .announce(true)
                         .frame(FrameType.CHALLENGE),
