@@ -135,8 +135,6 @@ public final class HBMSoundHandler {
     public static SoundEvent geiger4;
     public static SoundEvent geiger5;
     public static SoundEvent geiger6;
-    public static SoundEvent geiger7;
-    public static SoundEvent geiger8;
     public static SoundEvent voices1;
     public static SoundEvent voices2;
     public static SoundEvent voices3;
@@ -529,8 +527,6 @@ public final class HBMSoundHandler {
         geiger4 = register("item.geiger4");
         geiger5 = register("item.geiger5");
         geiger6 = register("item.geiger6");
-        geiger7 = register("item.geiger7");
-        geiger8 = register("item.geiger8");
         voices1 = register("item.voices1");
         voices2 = register("item.voices2");
         voices3 = register("item.voices3");
