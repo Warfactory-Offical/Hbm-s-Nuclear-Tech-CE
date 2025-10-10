@@ -185,6 +185,12 @@ public class DamageResistanceHandler {
                 .addCategory(CATEGORY_EXPLOSION, 0F, 0.25F)
                 .addExact(DamageSource.FALL.getDamageType(), 4F, 0.5F)
                 .setOther(2F, 0.1F));
+        registerSet(ModItems.t51_helmet, ModItems.t51_plate, ModItems.t51_legs, ModItems.t51_boots, new ResistanceStats()
+                .addCategory(CATEGORY_PHYSICAL, 2F, 0.15F)
+                .addCategory(CATEGORY_FIRE, 0.5F, 0.35F)
+                .addCategory(CATEGORY_EXPLOSION, 5F, 0.25F)
+                .addExact(DamageSource.FALL.damageType, 0F, 1F)
+                .setOther(0F, 0.1F));
         registerSet(ModItems.trenchmaster_helmet, ModItems.trenchmaster_plate, ModItems.trenchmaster_legs, ModItems.trenchmaster_boots, new
         ResistanceStats()
                 .addCategory(CATEGORY_PHYSICAL, 5F, 0.5F)
