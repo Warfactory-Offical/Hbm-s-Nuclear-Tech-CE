@@ -19,14 +19,19 @@ public class ModFluids {
     public static Fluid sulfuric_acid_fluid = new SulfuricAcidFluid().setDensity(1840).setViscosity(1000).setTemperature(273);
 
     public static void init() {
-        FluidRegistry.registerFluid(toxic_fluid);
-		FluidRegistry.registerFluid(mud_fluid);
-        FluidRegistry.registerFluid(acid_fluid);
-		FluidRegistry.registerFluid(schrabidic_fluid);
-		FluidRegistry.registerFluid(corium_fluid);
-		FluidRegistry.registerFluid(volcanic_lava_fluid);
-		FluidRegistry.registerFluid(bromine_fluid);
-		FluidRegistry.registerFluid(sulfuric_acid_fluid);
+        registerFluid(toxic_fluid);
+		registerFluid(mud_fluid);
+        registerFluid(acid_fluid);
+		registerFluid(schrabidic_fluid);
+		registerFluid(corium_fluid);
+		registerFluid(volcanic_lava_fluid);
+		registerFluid(bromine_fluid);
+		registerFluid(sulfuric_acid_fluid);
+    }
+
+    private static void registerFluid(Fluid fluid) {
+        FluidRegistry.registerFluid(fluid);
+        FluidRegistry.addBucketForFluid(fluid);
     }
 
     @SubscribeEvent
@@ -42,6 +47,6 @@ public class ModFluids {
         corium_fluid = FluidRegistry.getFluid("corium_fluid");
         volcanic_lava_fluid = FluidRegistry.getFluid("volcanic_lava_fluid");
         bromine_fluid = FluidRegistry.getFluid("bromine_fluid");
-		sulfuric_acid_fluid = FluidRegistry.getFluid("sulfuric_acid_fluid");
+		sulfuric_acid_fluid = FluidRegistry.getFluid("sulfuric_acid");
 	}
 }

@@ -1,6 +1,7 @@
 package com.hbm.datagen;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.fluid.ModFluids;
 import com.hbm.inventory.OreDictManager.DictFrame;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ItemEnums.EnumAchievementType;
@@ -12,6 +13,8 @@ import com.hbm.datagen.dsl.AdvancementDSL.Templates;
 import net.minecraft.advancements.FrameType;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
 
 public class AdvGen {
     private static final boolean doGen = false;
@@ -400,7 +403,7 @@ public class AdvGen {
                 "hbm:achwatz",
                 new Display()
                         .key("watzBoom")
-                        .icon(ModItems.bucket_mud)
+                        .icon(FluidUtil.getFilledBucket(new FluidStack(ModFluids.sulfuric_acid_fluid, 1000)))
                         .toast(true)
                         .announce(true)
                         .frame(FrameType.CHALLENGE),

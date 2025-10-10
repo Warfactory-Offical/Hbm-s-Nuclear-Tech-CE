@@ -89,6 +89,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -204,6 +205,7 @@ public class MainRegistry {
 
     static {
         HBMSoundHandler.init();
+        FluidRegistry.enableUniversalBucket();
     }
 
     Random rand = new Random();

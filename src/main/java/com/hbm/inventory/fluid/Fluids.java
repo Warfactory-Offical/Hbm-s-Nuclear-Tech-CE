@@ -391,7 +391,7 @@ public class Fluids {
         PETROIL_LEADED = new FluidType("PETROIL_LEADED", 0x44413d, 1, 3, 0, EnumSymbol.NONE).addContainers(new CD_Canister(0x2331F6)).addTraits(new FT_Flammable(125_000), new FT_Combustible(FuelGrade.MEDIUM, 450_000), LIQUID, P_FUEL_LEADED);
         GASOLINE_LEADED = new FluidType("GASOLINE_LEADED", 0x445772, 1, 2, 0, EnumSymbol.NONE).addContainers(new CD_Canister(0x2F775A)).addTraits(new FT_Flammable(400_000), new FT_Combustible(FuelGrade.HIGH, 1_500_000), LIQUID, P_FUEL_LEADED);
         COALGAS_LEADED = new FluidType("COALGAS_LEADED", 0x445772, 1, 2, 0, EnumSymbol.NONE).addContainers(new CD_Canister(0x1E155F)).addTraits(new FT_Flammable(75_000), new FT_Combustible(FuelGrade.MEDIUM, 250_000), LIQUID, P_FUEL_LEADED);
-        SULFURIC_ACID = new FluidType("SULFURIC_ACID", 0xB0AA64, 3, 0, 2, EnumSymbol.ACID).addTraits(new FT_Corrosive(50), LIQUID);
+        SULFURIC_ACID = new FluidType("SULFURIC_ACID", 0xB0AA64, 3, 0, 2, EnumSymbol.ACID).setFFNameOverride("sulfuric_acid").addTraits(new FT_Corrosive(50), LIQUID);
         COOLANT_HOT = new FluidType("COOLANT_HOT", 0x99525E, 1, 0, 0, EnumSymbol.NONE).setTemp(600).addTraits(LIQUID);
         MUG = new FluidType("MUG", 0x4B2D28, 0, 0, 0, EnumSymbol.NONE).addTraits(DELICIOUS, LIQUID);
         MUG_HOT = new FluidType("MUG_HOT", 0x6B2A20, 0, 0, 0, EnumSymbol.NONE).setTemp(500).addTraits(DELICIOUS, LIQUID);
