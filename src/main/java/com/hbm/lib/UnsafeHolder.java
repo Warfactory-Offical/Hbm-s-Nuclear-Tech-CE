@@ -5,16 +5,19 @@ import com.hbm.main.MainRegistry;
 import org.jetbrains.annotations.ApiStatus;
 import sun.misc.Unsafe;
 
+import java.lang.invoke.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 
 @ApiStatus.Internal
 public class UnsafeHolder {
     public static final Unsafe U;
+    private static final Runnable SPIN_WAITER;
 
     static {
         MainRegistry.logger.info("Loading UnsafeHolder");
         U = getUnsafe();
+        SPIN_WAITER = initOnSpinWait();
     }
 
     private static Unsafe getUnsafe() {
@@ -40,6 +43,33 @@ public class UnsafeHolder {
             }
         }
         return instance;
+    }
+
+    private static Runnable initOnSpinWait() {
+        try {
+            MethodHandles.Lookup lookup = MethodHandles.publicLookup();
+            MethodHandle mh = lookup.findStatic(Thread.class, "onSpinWait", MethodType.methodType(void.class));
+            CallSite cs = LambdaMetafactory.metafactory(
+                    lookup,
+                    "run",
+                    MethodType.methodType(Runnable.class),
+                    MethodType.methodType(void.class),
+                    mh,
+                    MethodType.methodType(void.class)
+            );
+
+            Runnable r = (Runnable) cs.getTarget().invokeExact();
+            MainRegistry.logger.info("Java 9+ detected, using Thread.onSpinWait()");
+            return r;
+        } catch (Throwable t) {
+            return () -> {
+            };
+        }
+    }
+
+    // mlbv: remove and replace it with Thread.onSpinWait() if we ever migrate to Java 9+
+    public static void onSpinWait() {
+        SPIN_WAITER.run();
     }
 
     public static long fieldOffset(Class<?> clz, String fieldName) throws RuntimeException {

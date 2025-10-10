@@ -465,10 +465,10 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
         s.srcA      = RenderUtil.getBlendSrcAlphaFactor();
         s.dstA      = RenderUtil.getBlendDstAlphaFactor();
         s.depthMask = RenderUtil.isDepthMaskEnabled();
-        s.r         = RenderUtil.getColorMaskRed();
-        s.g         = RenderUtil.getColorMaskGreen();
-        s.b         = RenderUtil.getColorMaskBlue();
-        s.a         = RenderUtil.getColorMaskAlpha();
+        s.r         = RenderUtil.getCurrentColorRed();
+        s.g         = RenderUtil.getCurrentColorGreen();
+        s.b         = RenderUtil.getCurrentColorBlue();
+        s.a         = RenderUtil.getCurrentColorAlpha();
         // mlbv: was pushAttrib; revert and change all references to GlStateManager to GL11 if it breaks.
         FB_STACK.get().push(s);
         GlStateManager.pushMatrix();

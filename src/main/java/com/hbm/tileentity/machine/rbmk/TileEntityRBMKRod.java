@@ -5,6 +5,7 @@ import com.hbm.blocks.machine.rbmk.RBMKBase;
 import com.hbm.blocks.machine.rbmk.RBMKRod;
 import com.hbm.config.MobConfig;
 import com.hbm.entity.projectile.EntityRBMKDebris.DebrisType;
+import com.hbm.handler.CompatHandler;
 import com.hbm.handler.neutron.NeutronNodeWorld;
 import com.hbm.handler.neutron.NeutronStream;
 import com.hbm.handler.neutron.RBMKNeutronHandler;
@@ -23,6 +24,10 @@ import com.hbm.util.BufferUtil;
 import com.hbm.util.MutableVec3d;
 import com.hbm.util.ParticleUtil;
 import io.netty.buffer.ByteBuf;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -35,15 +40,17 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
+@Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
 @AutoRegister
-public class TileEntityRBMKRod extends TileEntityRBMKSlottedBase implements IRBMKFluxReceiver, IRBMKLoadable, IGUIProvider {
+public class TileEntityRBMKRod extends TileEntityRBMKSlottedBase implements IRBMKFluxReceiver, IRBMKLoadable, IGUIProvider, SimpleComponent, CompatHandler.OCComponent {
 
 	// New system!!
 	// Used for receiving flux (calculating outbound flux/burning rods)
@@ -424,6 +431,108 @@ public class TileEntityRBMKRod extends TileEntityRBMKSlottedBase implements IRBM
 			data.put("c_maxHeat", new DataValueFloat((float) rod.meltingPoint));
 		}
 		return data;
+	}
+
+	@Override
+	@Optional.Method(modid = "opencomputers")
+	public String getComponentName() {
+		return "rbmk_fuel_rod";
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "opencomputers")
+	public Object[] getHeat(Context context, Arguments args) {
+		return new Object[] {heat};
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "opencomputers")
+	public Object[] getFluxQuantity(Context context, Arguments args) {
+		return new Object[] {lastFluxQuantity};
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "opencomputers")
+	public Object[] getFluxRatio(Context context, Arguments args) {
+		return new Object[] {fluxFastRatio};
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "opencomputers")
+	public Object[] getDepletion(Context context, Arguments args) {
+		if(!inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(0).getItem() instanceof ItemRBMKRod) {
+			return new Object[] {ItemRBMKRod.getEnrichment(inventory.getStackInSlot(0))};
+		}
+		return new Object[] {"N/A"};
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "opencomputers")
+	public Object[] getXenonPoison(Context context, Arguments args) {
+		if(!inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(0).getItem() instanceof ItemRBMKRod) {
+			return new Object[] {ItemRBMKRod.getPoison(inventory.getStackInSlot(0))};
+		}
+		return new Object[] {"N/A"};
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "opencomputers")
+	public Object[] getCoreHeat(Context context, Arguments args) {
+		if(!inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(0).getItem() instanceof ItemRBMKRod) {
+			return new Object[] {ItemRBMKRod.getCoreHeat(inventory.getStackInSlot(0))};
+		}
+		return new Object[] {"N/A"};
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "opencomputers")
+	public Object[] getSkinHeat(Context context, Arguments args) {
+		if(!inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(0).getItem() instanceof ItemRBMKRod) {
+			return new Object[] {ItemRBMKRod.getHullHeat(inventory.getStackInSlot(0))};
+		}
+		return new Object[] {"N/A"};
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "opencomputers")
+	public Object[] getType(Context context, Arguments args) {
+		if(!inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(0).getItem() instanceof ItemRBMKRod) {
+			return new Object[] {inventory.getStackInSlot(0).getItem().getTranslationKey()};
+		}
+		return new Object[] {"N/A"};
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "opencomputers")
+	public Object[] getInfo(Context context, Arguments args) {
+		List<Object> returnValues = new ArrayList<>();
+		if(!inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(0).getItem() instanceof ItemRBMKRod) {
+			returnValues.add(ItemRBMKRod.getHullHeat(inventory.getStackInSlot(0)));
+			returnValues.add(ItemRBMKRod.getCoreHeat(inventory.getStackInSlot(0)));
+			returnValues.add(ItemRBMKRod.getEnrichment(inventory.getStackInSlot(0)));
+			returnValues.add(ItemRBMKRod.getPoison(inventory.getStackInSlot(0)));
+			returnValues.add(inventory.getStackInSlot(0).getItem().getTranslationKey());
+		} else {
+			for(int i = 0; i < 5; i++) returnValues.add("N/A");
+		}
+
+		return new Object[] {
+				heat, returnValues.get(0), returnValues.get(1),
+				fluxQuantity, fluxFastRatio, returnValues.get(2), returnValues.get(3), returnValues.get(4),
+				((RBMKRod)this.getBlockType()).moderated, pos.getX(), pos.getY(), pos.getZ()
+		};
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "opencomputers")
+	public Object[] getModerated(Context context, Arguments args) {
+		return new Object[] {((RBMKRod)this.getBlockType()).moderated};
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "opencomputers")
+	public Object[] getCoordinates(Context context, Arguments args) {
+		return new Object[] {pos.getX(), pos.getY(), pos.getZ()};
 	}
 
 	@Override

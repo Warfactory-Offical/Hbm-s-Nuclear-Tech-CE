@@ -45,10 +45,10 @@ public class ModelArmorEnvsuit extends ModelArmorBase {
 
                 final boolean prevLighting = RenderUtil.isLightingEnabled();
                 final boolean prevTex2D    = RenderUtil.isTexture2DEnabled();
-                final float prevR = RenderUtil.getColorMaskRed();
-                final float prevG = RenderUtil.getColorMaskGreen();
-                final float prevB = RenderUtil.getColorMaskBlue();
-                final float prevA = RenderUtil.getColorMaskAlpha();
+                final float prevR = RenderUtil.getCurrentColorRed();
+                final float prevG = RenderUtil.getCurrentColorGreen();
+                final float prevB = RenderUtil.getCurrentColorBlue();
+                final float prevA = RenderUtil.getCurrentColorAlpha();
 
                 OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
 
