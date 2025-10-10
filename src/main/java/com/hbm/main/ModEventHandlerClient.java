@@ -112,6 +112,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -123,6 +124,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.MovementInput;
 import net.minecraft.util.ResourceLocation;
@@ -556,9 +558,17 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
             swapModels(item, reg);
         }
 
-        for (Object renderer : TileEntityRendererDispatcher.instance.renderers.values()) {
+        for (TileEntitySpecialRenderer<? extends TileEntity> renderer : TileEntityRendererDispatcher.instance.renderers.values()) {
             if (renderer instanceof IItemRendererProvider prov) {
                 for (Item item : prov.getItemsForRenderer()) {
+                    swapModels(item, reg);
+                }
+            }
+        }
+
+        for (Item renderer : Item.REGISTRY) {
+            if (renderer instanceof IItemRendererProvider provider) {
+                for (Item item : provider.getItemsForRenderer()) {
                     swapModels(item, reg);
                 }
             }
