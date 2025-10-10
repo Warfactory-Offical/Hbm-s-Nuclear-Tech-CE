@@ -81,10 +81,10 @@ public class ItemRendererDetonatorLaser extends TEISRBase {
         final int prevDst = RenderUtil.getBlendDstFactor();
         final int prevSrcAlpha = RenderUtil.getBlendSrcAlphaFactor();
         final int prevDstAlpha = RenderUtil.getBlendDstAlphaFactor();
-        final float prevR = RenderUtil.getColorMaskRed();
-        final float prevG = RenderUtil.getColorMaskGreen();
-        final float prevB = RenderUtil.getColorMaskBlue();
-        final float prevA = RenderUtil.getColorMaskAlpha();
+        final float prevR = RenderUtil.getCurrentColorRed();
+        final float prevG = RenderUtil.getCurrentColorGreen();
+        final float prevB = RenderUtil.getCurrentColorBlue();
+        final float prevA = RenderUtil.getCurrentColorAlpha();
         if (prevLighting) GlStateManager.disableLighting();
         if (prevCull2) GlStateManager.disableCull();
         if (!prevBlend) GlStateManager.enableBlend();

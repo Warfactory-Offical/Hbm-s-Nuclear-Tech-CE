@@ -33,10 +33,10 @@ public class RenderFOEQ extends Render<EntityBurningFOEQ> {
         final int prevDst = RenderUtil.getBlendDstFactor();
         final int prevSrcAlpha = RenderUtil.getBlendSrcAlphaFactor();
         final int prevDstAlpha = RenderUtil.getBlendDstAlphaFactor();
-        final float prevR = RenderUtil.getColorMaskRed();
-        final float prevG = RenderUtil.getColorMaskGreen();
-        final float prevB = RenderUtil.getColorMaskBlue();
-        final float prevA = RenderUtil.getColorMaskAlpha();
+        final float prevR = RenderUtil.getCurrentColorRed();
+        final float prevG = RenderUtil.getCurrentColorGreen();
+        final float prevB = RenderUtil.getCurrentColorBlue();
+        final float prevA = RenderUtil.getCurrentColorAlpha();
 
         GlStateManager.translate((float) x, (float) y - 10F, (float) z);
         GlStateManager.rotate(e.prevRotationYaw + (e.rotationYaw - e.prevRotationYaw) * partialTicks - 90.0F, 0.0F, 1.0F, 0.0F);
