@@ -2,6 +2,7 @@ package com.hbm.inventory;
 
 import com.github.bsideup.jabel.Desugar;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.fluid.ModFluids;
 import com.hbm.capability.NTMFluidCapabilityHandler;
 import com.hbm.config.GeneralConfig;
 import com.hbm.inventory.fluid.FluidType;
@@ -31,9 +32,9 @@ public class FluidContainerRegistry {
         FluidContainerRegistry.registerContainer(new FluidContainer(new ItemStack(Items.POTIONITEM), new ItemStack(Items.GLASS_BOTTLE), Fluids.WATER, 250));
         FluidContainerRegistry.registerContainer(new FluidContainer(new ItemStack(Items.LAVA_BUCKET), new ItemStack(Items.BUCKET), Fluids.LAVA, 1000));
 
-        FluidContainerRegistry.registerContainer(new FluidContainer(new ItemStack(ModItems.bucket_mud), new ItemStack(Items.BUCKET), Fluids.WATZ, 1000));
-        FluidContainerRegistry.registerContainer(new FluidContainer(new ItemStack(ModItems.bucket_schrabidic_acid), new ItemStack(Items.BUCKET), Fluids.SCHRABIDIC, 1000));
-        FluidContainerRegistry.registerContainer(new FluidContainer(new ItemStack(ModItems.bucket_sulfuric_acid), new ItemStack(Items.BUCKET), Fluids.SULFURIC_ACID, 1000));
+        FluidContainerRegistry.registerContainer(new FluidContainer(new ItemStack(ModFluids.mud_fluid.getBlock()), new ItemStack(Items.BUCKET), Fluids.WATZ, 1000));
+        FluidContainerRegistry.registerContainer(new FluidContainer(new ItemStack(ModFluids.schrabidic_fluid.getBlock()), new ItemStack(Items.BUCKET), Fluids.SCHRABIDIC, 1000));
+        FluidContainerRegistry.registerContainer(new FluidContainer(new ItemStack(ModFluids.sulfuric_acid_fluid.getBlock()), new ItemStack(Items.BUCKET), Fluids.SULFURIC_ACID, 1000));
 
         FluidContainerRegistry.registerContainer(new FluidContainer(new ItemStack(ModBlocks.red_barrel), new ItemStack(ModItems.tank_steel), Fluids.DIESEL, 10000));
         FluidContainerRegistry.registerContainer(new FluidContainer(new ItemStack(ModBlocks.pink_barrel), new ItemStack(ModItems.tank_steel), Fluids.KEROSENE, 10000));

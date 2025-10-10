@@ -4,6 +4,7 @@ import com.hbm.api.fluid.IFluidStandardSender;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.entity.projectile.EntityRBMKDebris.DebrisType;
+import com.hbm.handler.CompatHandler;
 import com.hbm.handler.neutron.NeutronStream;
 import com.hbm.handler.neutron.RBMKNeutronHandler;
 import com.hbm.interfaces.AutoRegister;
@@ -22,6 +23,10 @@ import com.hbm.tileentity.machine.rbmk.TileEntityRBMKConsole.ColumnType;
 import com.hbm.util.ContaminationUtil;
 import com.hbm.util.Tuple;
 import io.netty.buffer.ByteBuf;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -31,15 +36,16 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.Map;
-
+@Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
 @AutoRegister
-public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implements IRBMKFluxReceiver, IFluidStandardSender, IRBMKLoadable, IGUIProvider {
+public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implements IRBMKFluxReceiver, IFluidStandardSender, SimpleComponent, CompatHandler.OCComponent, IRBMKLoadable, IGUIProvider {
 
 	public FluidTankNTM gas;
 	public double progress = 0;
@@ -299,6 +305,61 @@ public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implement
 			);
 		}
 		return super.getCapability(capability, facing);
+	}
+
+	@Override
+	@Optional.Method(modid = "opencomputers")
+	public String getComponentName() {
+		return "rbmk_outgasser";
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "opencomputers")
+	public Object[] getGas(Context context, Arguments args) {
+		return new Object[] {gas.getFill()};
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "opencomputers")
+	public Object[] getGasMax(Context context, Arguments args) {
+		return new Object[] {gas.getMaxFill()};
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "opencomputers")
+	public Object[] getGasType(Context context, Arguments args) {
+		return new Object[] {gas.getTankType().getName()};
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "opencomputers")
+	public Object[] getProgress(Context context, Arguments args) {
+		return new Object[] {progress};
+	}
+
+	@Callback(direct = true, doc = "Returns the unlocalized name and size of the stack that the outgasser is crafting (the input), or nil, nil if there is no stack")
+	@Optional.Method(modid = "opencomputers")
+	public Object[] getCrafting(Context context, Arguments args) {
+		if (inventory.getStackInSlot(0).isEmpty())
+			return new Object[] { "", 0 };
+		else
+			return new Object[]{inventory.getStackInSlot(0).getTranslationKey(), inventory.getStackInSlot(0).getCount() };
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "opencomputers")
+	public Object[] getCoordinates(Context context, Arguments args) {
+		return new Object[] {pos.getX(), pos.getY(), pos.getZ()};
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "opencomputers")
+	public Object[] getInfo(Context context, Arguments args) {
+		ItemStack input = inventory.getStackInSlot(0);
+		if (!input.isEmpty())
+			return new Object[] {gas.getFill(), gas.getMaxFill(), progress, gas.getTankType().getID(), pos.getX(), pos.getY(), pos.getZ(), input.getTranslationKey(), input.getCount() };
+		else
+			return new Object[] {gas.getFill(), gas.getMaxFill(), progress, gas.getTankType().getID(), pos.getX(), pos.getY(), pos.getZ(), "", 0 };
 	}
 
 	@Override

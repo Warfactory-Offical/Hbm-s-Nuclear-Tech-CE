@@ -41,10 +41,10 @@ public class RenderCloudRainbow extends Render<EntityCloudFleijaRainbow> {
         final int prevSrcAlpha = RenderUtil.getBlendSrcAlphaFactor();
         final int prevDstAlpha = RenderUtil.getBlendDstAlphaFactor();
         final boolean prevLighting = RenderUtil.isLightingEnabled();
-        final float prevR = RenderUtil.getColorMaskRed();
-        final float prevG = RenderUtil.getColorMaskGreen();
-        final float prevB = RenderUtil.getColorMaskBlue();
-        final float prevA = RenderUtil.getColorMaskAlpha();
+        final float prevR = RenderUtil.getCurrentColorRed();
+        final float prevG = RenderUtil.getCurrentColorGreen();
+        final float prevB = RenderUtil.getCurrentColorBlue();
+        final float prevA = RenderUtil.getCurrentColorAlpha();
         GlStateManager.translate(x, y, z);
         if (prevLighting) GlStateManager.disableLighting();
         if (!prevCull) GlStateManager.enableCull();

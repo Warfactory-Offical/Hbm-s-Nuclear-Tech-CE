@@ -175,10 +175,10 @@ public class BeamPronter {
         final int prevDstA = RenderUtil.getBlendDstAlphaFactor();
         final boolean prevCull = RenderUtil.isCullEnabled();
         final boolean prevTex2D = RenderUtil.isTexture2DEnabled();
-        final float prevR = RenderUtil.getColorMaskRed();
-        final float prevG = RenderUtil.getColorMaskGreen();
-        final float prevB = RenderUtil.getColorMaskBlue();
-        final float prevA = RenderUtil.getColorMaskAlpha();
+        final float prevR = RenderUtil.getCurrentColorRed();
+        final float prevG = RenderUtil.getCurrentColorGreen();
+        final float prevB = RenderUtil.getCurrentColorBlue();
+        final float prevA = RenderUtil.getCurrentColorAlpha();
 
         if (prevDepthMask) GlStateManager.depthMask(false);
         if (!prevBlend) GlStateManager.enableBlend();

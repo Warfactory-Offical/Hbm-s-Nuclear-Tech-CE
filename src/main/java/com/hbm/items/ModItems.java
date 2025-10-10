@@ -2859,12 +2859,6 @@ public class ModItems {
             .addAbility(IToolAreaAbility.HAMMER_FLAT, 3)
             .addAbility(IToolAreaAbility.RECURSION, 5);
 
-    public static final Item bucket_mud = new ItemModBucket("bucket_mud", () -> ModBlocks.mud_block).setContainerItem(Items.BUCKET).setCreativeTab(MainRegistry.blockTab);
-    public static final Item bucket_acid = new ItemModBucket("bucket_acid", () -> ModBlocks.acid_block).setContainerItem(Items.BUCKET).setCreativeTab(MainRegistry.blockTab);
-    public static final Item bucket_toxic = new ItemModBucket("bucket_toxic", () -> ModBlocks.toxic_block).setContainerItem(Items.BUCKET).setCreativeTab(MainRegistry.blockTab);
-    public static final Item bucket_schrabidic_acid = new ItemModBucket("bucket_schrabidic_acid", () -> ModBlocks.schrabidic_block).setContainerItem(Items.BUCKET).setCreativeTab(MainRegistry.blockTab);
-    public static final Item bucket_sulfuric_acid = new ItemModBucket("bucket_sulfuric_acid", () -> ModBlocks.sulfuric_acid_block).setContainerItem(Items.BUCKET).setCreativeTab(MainRegistry.blockTab);
-
     public static void preInit() {
         GunFactory.init();
         excludeNEI.add(item_secret);

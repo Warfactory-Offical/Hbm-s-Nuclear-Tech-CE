@@ -1,6 +1,7 @@
 package com.hbm.tileentity.machine.rbmk;
 
 import com.hbm.api.fluid.IFluidStandardReceiver;
+import com.hbm.handler.CompatHandler;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.control_panel.DataValue;
 import com.hbm.inventory.control_panel.DataValueFloat;
@@ -8,8 +9,10 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKConsole.ColumnType;
-import java.util.List;
-import java.util.Map;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,10 +20,14 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.fml.common.Optional;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+import java.util.Map;
+@Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
 @AutoRegister
-public class TileEntityRBMKCooler extends TileEntityRBMKBase implements IFluidStandardReceiver {
+public class TileEntityRBMKCooler extends TileEntityRBMKBase implements IFluidStandardReceiver, SimpleComponent, CompatHandler.OCComponent {
 
 	public FluidTankNTM tank;
 	int lastCooled;
@@ -160,5 +167,40 @@ public class TileEntityRBMKCooler extends TileEntityRBMKBase implements IFluidSt
 	@Override
 	public FluidTankNTM[] getAllTanks() {
 		return new FluidTankNTM[]{tank};
+	}
+
+	@Optional.Method(modid = "opencomputers")
+	public String getComponentName() {
+		return "rbmk_cooler";
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "opencomputers")
+	public Object[] getHeat(Context context, Arguments args) {
+		return new Object[]{heat};
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "opencomputers")
+	public Object[] getCryo(Context context, Arguments args) {
+		return new Object[]{tank.getFill()};
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "opencomputers")
+	public Object[] getCryoMax(Context context, Arguments args) {
+		return new Object[]{tank.getMaxFill()};
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "opencomputers")
+	public Object[] getCoordinates(Context context, Arguments args) {
+		return new Object[] {pos.getX(), pos.getY(), pos.getZ()};
+	}
+
+	@Callback(direct = true)
+	@Optional.Method(modid = "opencomputers")
+	public Object[] getInfo(Context context, Arguments args) {
+		return new Object[]{heat, tank.getFill(), tank.getMaxFill(), pos.getX(), pos.getY(), pos.getZ()};
 	}
 }
