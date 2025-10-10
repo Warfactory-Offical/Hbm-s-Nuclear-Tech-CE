@@ -60,8 +60,6 @@
     "item.geiger4": {"category": "player", "sounds": [{"name": "hbm:tool/geiger4", "stream": false}]},
     "item.geiger5": {"category": "player", "sounds": [{"name": "hbm:tool/geiger5", "stream": false}]},
     "item.geiger6": {"category": "player", "sounds": [{"name": "hbm:tool/geiger6", "stream": false}]},
-    "item.geiger7": {"category": "player", "sounds": [{"name": "hbm:tool/geiger7", "stream": false}]},
-    "item.geiger8": {"category": "player", "sounds": [{"name": "hbm:tool/geiger5", "stream": false}]},
     "item.voices1": {"category": "player", "sounds": [{"name": "hbm:tool/voices1", "stream": false}]},
     "item.voices2": {"category": "player", "sounds": [{"name": "hbm:tool/voices2", "stream": false}]},
     "item.voices3": {"category": "player", "sounds": [{"name": "hbm:tool/voices3", "stream": false}]},
