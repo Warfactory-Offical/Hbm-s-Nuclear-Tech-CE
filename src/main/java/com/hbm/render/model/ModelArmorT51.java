@@ -1,14 +1,13 @@
 package com.hbm.render.model;
 
-import com.hbm.items.ModItems;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.item.ItemRenderBase;
 import com.hbm.render.loader.ModelRendererObj;
 import com.hbm.render.tileentity.IItemRendererProvider;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
-import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
 
 import static com.hbm.render.NTMRenderHelper.bindTexture;
@@ -64,13 +63,36 @@ public class ModelArmorT51 extends ModelArmorBase implements IItemRendererProvid
     }
 
     @Override
-    protected void renderArmor(Entity entity, float scale) {
-
+    public void renderArmor(Entity par1Entity, float scale) {
+        switch (type) {
+            case 3 -> {
+                Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.t51_helmet);
+                head.render(scale * 1.001F);
+            }
+            case 2 -> {
+                Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.t51_chest);
+                body.render(scale);
+                Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.t51_arm);
+                leftArm.render(scale);
+                rightArm.render(scale);
+            }
+            case 1 -> {
+                Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.t51_leg);
+                leftLeg.render(scale);
+                rightLeg.render(scale);
+            }
+            case 0 -> {
+                Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.t51_leg);
+                leftFoot.render(scale);
+                rightFoot.render(scale);
+            }
+        }
     }
 
     @Override
     public Item getItemForRenderer() {
-        return Item.getItemById(Item.getIdFromItem(ModItems.t51_helmet));
+
+        return null;
     }
 
     @Override
@@ -91,11 +113,6 @@ public class ModelArmorT51 extends ModelArmorBase implements IItemRendererProvid
                 GlStateManager.enableCull();
             }
         };
-    }
-
-    @Override
-    public void correctRotation(TileEntity te) {
-        IItemRendererProvider.super.correctRotation(te);
     }
 }
 

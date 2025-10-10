@@ -1,5 +1,6 @@
 {
-  "variants": {
-    "normal": { "model": "hbm:armor_t51" }
-  }
+  "parent": "item/generated", "textures":
+{
+  "layer0": "hbm:items/t51_boots"
+}
 }
