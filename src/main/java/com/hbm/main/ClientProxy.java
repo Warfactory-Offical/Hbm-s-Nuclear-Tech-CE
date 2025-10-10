@@ -87,6 +87,7 @@ import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
@@ -98,12 +99,14 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.IRegistry;
 import net.minecraft.world.World;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.client.settings.KeyConflictContext;
@@ -126,10 +129,8 @@ import paulscode.sound.SoundSystemConfig;
 import java.awt.*;
 import java.io.File;
 import java.nio.FloatBuffer;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
 
 public class ClientProxy extends ServerProxy {
 
@@ -1712,10 +1713,19 @@ public class ClientProxy extends ServerProxy {
             entry.getKey().setTileEntityItemStackRenderer(entry.getValue());
         }
 
-        for (Object renderer : TileEntityRendererDispatcher.instance.renderers.values()) {
+        for (TileEntitySpecialRenderer<? extends TileEntity> renderer : TileEntityRendererDispatcher.instance.renderers.values()) {
             if (renderer instanceof IItemRendererProvider prov) {
                 for (Item item : prov.getItemsForRenderer()) {
                     item.setTileEntityItemStackRenderer(prov.getRenderer(item));
+                }
+            }
+        }
+
+        // same crap but for items directly because why invent a new solution when this shit works just fine
+        for (Item renderer : Item.REGISTRY) {
+            if (renderer instanceof IItemRendererProvider provider) {
+                for (Item item : provider.getItemsForRenderer()) {
+                    item.setTileEntityItemStackRenderer(provider.getRenderer(item));
                 }
             }
         }
