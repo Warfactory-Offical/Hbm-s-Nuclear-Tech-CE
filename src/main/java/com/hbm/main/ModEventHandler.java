@@ -3,6 +3,7 @@ package com.hbm.main;
 import com.google.common.collect.Multimap;
 import com.hbm.blocks.IStepTickReceiver;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.generic.BlockOutgas;
 import com.hbm.capability.HbmCapability;
 import com.hbm.capability.HbmCapability.IHBMData;
 import com.hbm.capability.HbmLivingCapability;
@@ -1228,7 +1229,7 @@ public class ModEventHandler {
 
         Block block = event.getState().getBlock();
 
-        if(block == ModBlocks.stone_gneiss && !AdvancementManager.hasAdvancement(playerMP, AdvancementManager.achStratum)) {
+        if (block == ModBlocks.stone_gneiss && !AdvancementManager.hasAdvancement(playerMP, AdvancementManager.achStratum)) {
             AdvancementManager.grantAchievement(playerMP, AdvancementManager.achStratum);
             event.setExpToDrop(500);
         }
@@ -1243,7 +1244,42 @@ public class ModEventHandler {
                 BlockPos bPos = new BlockPos(x, y, z);
 
                 if (event.getWorld().rand.nextInt(2) == 0 && event.getWorld().getBlockState(bPos).getBlock() == Blocks.AIR)
-                    event.getWorld().setBlockState(bPos, ModBlocks.gas_coal.getDefaultState());
+                    event.getWorld().setBlockState(bPos, ModBlocks.gas_coal.getDefaultState(), 3);
+            }
+        }
+
+        if (block instanceof BlockOutgas outgas) {
+            Block gas = outgas.getGas();
+
+            if (gas != Blocks.AIR) {
+                if (event.getWorld().getBlockState(event.getPos()).getBlock() == Blocks.AIR) {
+                    event.getWorld().setBlockState(event.getPos(), gas.getDefaultState(), 3);
+                }
+
+                if (outgas.isOnNeighbour()) {
+                    for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+                        BlockPos p = event.getPos().add(dir.offsetX, dir.offsetY, dir.offsetZ);
+                        if (event.getWorld().getBlockState(p).getBlock() == Blocks.AIR) {
+                            event.getWorld().setBlockState(p, gas.getDefaultState(), 3);
+                        }
+                    }
+                }
+
+                if (block == ModBlocks.ancient_scrap) {
+                    for (int ix = -2; ix <= 2; ix++) {
+                        for (int iy = -2; iy <= 2; iy++) {
+                            for (int iz = -2; iz <= 2; iz++) {
+
+                                if (Math.abs(ix + iy + iz) < 5 && Math.abs(ix + iy + iz) > 0) {
+                                    BlockPos p2 = event.getPos().add(ix, iy, iz);
+                                    if (event.getWorld().getBlockState(p2).getBlock() == Blocks.AIR) {
+                                        event.getWorld().setBlockState(p2, gas.getDefaultState(), 3);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
