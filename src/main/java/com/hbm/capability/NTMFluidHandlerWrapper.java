@@ -30,6 +30,9 @@ public class NTMFluidHandlerWrapper implements IFluidHandler {
     @Nullable
     private final BlockPos accessor;
 
+    /**
+     * @param pos The position of the accessor. Null -> Internal access.
+     */
     public NTMFluidHandlerWrapper(@NotNull TileEntity handler, @Nullable BlockPos pos) {
         if (handler instanceof IFluidProviderMK2 providerMK2) this.provider = providerMK2;
         else provider = null;
