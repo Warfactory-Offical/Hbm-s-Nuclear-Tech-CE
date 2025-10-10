@@ -234,60 +234,60 @@ public class TileEntityRBMKHeater extends TileEntityRBMKSlottedBase implements I
 	}
 
 	@Override
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public String getComponentName() {
 		return "rbmk_heater";
 	}
 
 	@Callback(direct = true)
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] getHeat(Context context, Arguments args) {
 		return new Object[] {heat};
 	}
 
 	@Callback(direct = true)
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] getFill(Context context, Arguments args) {
 		return new Object[] {feed.getFill()};
 	}
 
 	@Callback(direct = true)
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] getFillMax(Context context, Arguments args) {
 		return new Object[] {feed.getMaxFill()};
 	}
 	@Callback(direct = true)
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] getExport(Context context, Arguments args) {
 		return new Object[] {steam.getFill()};
 	}
 
 	@Callback(direct = true)
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] getExportMax(Context context, Arguments args) {
 		return new Object[] {steam.getMaxFill()};
 	}
 
 	@Callback(direct = true)
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] getFillType(Context context, Arguments args) {
 		return new Object[] {feed.getTankType().getName()};
 	}
 
 	@Callback(direct = true)
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] getExportType(Context context, Arguments args) {
 		return new Object[] {steam.getTankType().getName()};
 	}
 
 	@Callback(direct = true)
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] getInfo(Context context, Arguments args) {
 		return new Object[] {heat, feed.getFill(), feed.getMaxFill(), steam.getFill(), steam.getMaxFill(), feed.getTankType().getName(), steam.getTankType().getName(), pos.getX(), pos.getY(), pos.getZ()};
 	}
 
 	@Callback(direct = true)
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] getCoordinates(Context context, Arguments args) {
 		return new Object[] {pos.getX(), pos.getY(), pos.getZ()};
 	}

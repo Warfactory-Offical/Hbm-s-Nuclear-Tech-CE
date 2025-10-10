@@ -43,7 +43,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.Map;
-@Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")})
+@Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
 @AutoRegister
 public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implements IRBMKFluxReceiver, IFluidStandardSender, SimpleComponent, CompatHandler.OCComponent, IRBMKLoadable, IGUIProvider {
 
@@ -308,37 +308,37 @@ public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implement
 	}
 
 	@Override
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public String getComponentName() {
 		return "rbmk_outgasser";
 	}
 
 	@Callback(direct = true)
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] getGas(Context context, Arguments args) {
 		return new Object[] {gas.getFill()};
 	}
 
 	@Callback(direct = true)
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] getGasMax(Context context, Arguments args) {
 		return new Object[] {gas.getMaxFill()};
 	}
 
 	@Callback(direct = true)
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] getGasType(Context context, Arguments args) {
 		return new Object[] {gas.getTankType().getName()};
 	}
 
 	@Callback(direct = true)
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] getProgress(Context context, Arguments args) {
 		return new Object[] {progress};
 	}
 
 	@Callback(direct = true, doc = "Returns the unlocalized name and size of the stack that the outgasser is crafting (the input), or nil, nil if there is no stack")
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] getCrafting(Context context, Arguments args) {
 		if (inventory.getStackInSlot(0).isEmpty())
 			return new Object[] { "", 0 };
@@ -347,16 +347,16 @@ public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implement
 	}
 
 	@Callback(direct = true)
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] getCoordinates(Context context, Arguments args) {
 		return new Object[] {pos.getX(), pos.getY(), pos.getZ()};
 	}
 
 	@Callback(direct = true)
-	@Optional.Method(modid = "OpenComputers")
+	@Optional.Method(modid = "opencomputers")
 	public Object[] getInfo(Context context, Arguments args) {
 		ItemStack input = inventory.getStackInSlot(0);
-		if (input != null)
+		if (!input.isEmpty())
 			return new Object[] {gas.getFill(), gas.getMaxFill(), progress, gas.getTankType().getID(), pos.getX(), pos.getY(), pos.getZ(), input.getTranslationKey(), input.getCount() };
 		else
 			return new Object[] {gas.getFill(), gas.getMaxFill(), progress, gas.getTankType().getID(), pos.getX(), pos.getY(), pos.getZ(), "", 0 };

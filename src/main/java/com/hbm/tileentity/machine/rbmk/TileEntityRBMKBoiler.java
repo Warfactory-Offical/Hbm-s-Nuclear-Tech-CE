@@ -42,7 +42,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.Map;
-@Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")})
+@Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
 @AutoRegister
 public class TileEntityRBMKBoiler extends TileEntityRBMKSlottedBase implements IControlReceiver, IFluidStandardTransceiver, SimpleComponent, IGUIProvider {
 
@@ -303,60 +303,60 @@ public class TileEntityRBMKBoiler extends TileEntityRBMKSlottedBase implements I
 
     // do some opencomputer stuff
     @Override
-    @Optional.Method(modid = "OpenComputers")
+    @Optional.Method(modid = "opencomputers")
     public String getComponentName() {
         return "rbmk_boiler";
     }
 
     @Callback(direct = true)
-    @Optional.Method(modid = "OpenComputers")
+    @Optional.Method(modid = "opencomputers")
     public Object[] getHeat(Context context, Arguments args) {
         return new Object[] {heat};
     }
 
     @Callback(direct = true)
-    @Optional.Method(modid = "OpenComputers")
+    @Optional.Method(modid = "opencomputers")
     public Object[] getSteam(Context context, Arguments args) {
         return new Object[] {steam.getFill()};
     }
     @Callback(direct = true)
-    @Optional.Method(modid = "OpenComputers")
+    @Optional.Method(modid = "opencomputers")
     public Object[] getSteamMax(Context context, Arguments args) {
         return new Object[] {steam.getMaxFill()};
     }
 
     @Callback(direct = true)
-    @Optional.Method(modid = "OpenComputers")
+    @Optional.Method(modid = "opencomputers")
     public Object[] getWater(Context context, Arguments args) {
         return new Object[] {feed.getFill()};
     }
     @Callback(direct = true)
-    @Optional.Method(modid = "OpenComputers")
+    @Optional.Method(modid = "opencomputers")
     public Object[] getWaterMax(Context context, Arguments args) {
         return new Object[] {feed.getMaxFill()};
     }
 
     @Callback(direct = true)
-    @Optional.Method(modid = "OpenComputers")
+    @Optional.Method(modid = "opencomputers")
     public Object[] getCoordinates(Context context, Arguments args) {
         return new Object[] {pos.getX(), pos.getY(), pos.getZ()};
     }
 
     @Callback(direct = true)
-    @Optional.Method(modid = "OpenComputers")
+    @Optional.Method(modid = "opencomputers")
     public Object[] getInfo(Context context, Arguments args) {
         int type_1 = (int) CompatHandler.steamTypeToInt(steam.getTankType())[0];
         return new Object[] {heat, steam.getFill(), steam.getMaxFill(), feed.getFill(), feed.getMaxFill(), type_1, pos.getX(), pos.getY(), pos.getZ()};
     }
 
     @Callback(direct = true)
-    @Optional.Method(modid = "OpenComputers")
+    @Optional.Method(modid = "opencomputers")
     public Object[] getSteamType(Context context, Arguments args) {
         return CompatHandler.steamTypeToInt(steam.getTankType());
     }
 
     @Callback(direct = true, limit = 4)
-    @Optional.Method(modid = "OpenComputers")
+    @Optional.Method(modid = "opencomputers")
     public Object[] setSteamType(Context context, Arguments args) {
         int type = args.checkInteger(0);
         steam.setTankType(CompatHandler.intToSteamType(type));
