@@ -14,7 +14,7 @@ import java.util.List;
 public class TileEntityGeiger extends TileEntity implements ITickable {
 
 	int timer = 0;
-	int ticker = 0;
+    float ticker = 0;
 	
 	
 	@Override
@@ -24,28 +24,23 @@ public class TileEntityGeiger extends TileEntity implements ITickable {
 		if(timer == 10) {
 			timer = 0;
 			ticker = check();
+
+            // To update the adjacent comparators
+            world.updateComparatorOutputLevel(pos, blockType);
 		}
 		
 		if(timer % 5 == 0) {
 			if(ticker > 0) {
-				List<Integer> list = new ArrayList<Integer>();
+				List<Integer> list = new ArrayList<>();
 
-				if(ticker < 1)
-					list.add(0);
-				if(ticker < 5)
-					list.add(0);
-				if(ticker < 10)
-					list.add(1);
-				if(ticker > 5 && ticker < 15)
-					list.add(2);
-				if(ticker > 10 && ticker < 20)
-					list.add(3);
-				if(ticker > 15 && ticker < 25)
-					list.add(4);
-				if(ticker > 20 && ticker < 30)
-					list.add(5);
-				if(ticker > 25)
-					list.add(6);
+                if(ticker < 1) list.add(0);
+                if(ticker < 5) list.add(0);
+                if(ticker < 10) list.add(1);
+                if(ticker > 5 && ticker < 15) list.add(2);
+                if(ticker > 10 && ticker < 20) list.add(3);
+                if(ticker > 15 && ticker < 25) list.add(4);
+                if(ticker > 20 && ticker < 30) list.add(5);
+                if(ticker > 25) list.add(6);
 			
 				int r = list.get(world.rand.nextInt(list.size()));
 				
@@ -58,7 +53,7 @@ public class TileEntityGeiger extends TileEntity implements ITickable {
 		
 	}
 	
-	public int check() {
-        return (int)Math.ceil(ChunkRadiationManager.proxy.getRadiation(world, pos));
+	public float check() {
+        return ChunkRadiationManager.proxy.getRadiation(world, pos);
 	}
 }
