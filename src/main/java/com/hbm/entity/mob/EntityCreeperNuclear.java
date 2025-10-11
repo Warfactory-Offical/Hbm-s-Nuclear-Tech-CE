@@ -104,10 +104,10 @@ public class EntityCreeperNuclear extends EntityCreeper implements IRadiationImm
                 case 8 -> this.dropItem(ModItems.syringe_metal_stimpak, 1);
                 case 9 -> {
                     switch (rand.nextInt(4)) {
-                        case 0 -> this.dropItem(ModItems.t45_helmet, 1);
-                        case 1 -> this.dropItem(ModItems.t45_plate, 1);
-                        case 2 -> this.dropItem(ModItems.t45_legs, 1);
-                        case 3 -> this.dropItem(ModItems.t45_boots, 1);
+                        case 0 -> this.dropItem(ModItems.t51_helmet, 1);
+                        case 1 -> this.dropItem(ModItems.t51_plate, 1);
+                        case 2 -> this.dropItem(ModItems.t51_legs, 1);
+                        case 3 -> this.dropItem(ModItems.t51_boots, 1);
                     }
                     this.dropItem(ModItems.fusion_core, 1);
                 }

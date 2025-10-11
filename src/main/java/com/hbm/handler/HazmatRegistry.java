@@ -102,7 +102,6 @@ public class HazmatRegistry {
 		double paa = 3.0D; // 99.9%
 		
 
-		double t45 = 1D; // 90%
 		double t51 = 1D; // 90%
 		double ajr = 1.3D; // 95%
 		double hev = 1.6D; // 97.5%
@@ -135,11 +134,6 @@ public class HazmatRegistry {
 		HazmatRegistry.registerHazmat(ModItems.liquidator_plate, fixRounding(liquidator * chest));
 		HazmatRegistry.registerHazmat(ModItems.liquidator_legs, fixRounding(liquidator * legs));
 		HazmatRegistry.registerHazmat(ModItems.liquidator_boots, fixRounding(liquidator * boots));
-
-		HazmatRegistry.registerHazmat(ModItems.t45_helmet, fixRounding(t45 * helmet));
-		HazmatRegistry.registerHazmat(ModItems.t45_plate, fixRounding(t45 * chest));
-		HazmatRegistry.registerHazmat(ModItems.t45_legs, fixRounding(t45 * legs));
-		HazmatRegistry.registerHazmat(ModItems.t45_boots, fixRounding(t45 * boots));
 
 		HazmatRegistry.registerHazmat(ModItems.t51_helmet, fixRounding(t51 * helmet));
 		HazmatRegistry.registerHazmat(ModItems.t51_plate, fixRounding(t51 * chest));

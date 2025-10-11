@@ -148,7 +148,6 @@ public class MainRegistry {
     // Drillgon200: I have no idea what the two strings and the number at the
     // end are.
     public static ArmorMaterial enumArmorMaterialT51 = EnumHelper.addArmorMaterial(RefStrings.MODID + ":T51", RefStrings.MODID + ":T51", 150, new int[] {3, 8, 6, 3 }, 0, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
-    public static ArmorMaterial enumArmorMaterialT45 = EnumHelper.addArmorMaterial(RefStrings.MODID + ":T45", RefStrings.MODID + ":T45", 150, new int[]{3, 6, 8, 3}, 0, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
     public static ArmorMaterial aMatBJ = EnumHelper.addArmorMaterial(RefStrings.MODID + ":BLACKJACK", RefStrings.MODID + ":HBM_BLACKJACK", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
     public static ArmorMaterial aMatAJR = EnumHelper.addArmorMaterial(RefStrings.MODID + ":T45AJR", RefStrings.MODID + ":T45AJR", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
     public static ArmorMaterial aMatSteamsuit = EnumHelper.addArmorMaterial(RefStrings.MODID + ":Steamsuit", RefStrings.MODID + ":Steamsuit", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
@@ -328,7 +327,6 @@ public class MainRegistry {
         enumArmorMaterialHazmat.setRepairItem(new ItemStack(ModItems.hazmat_cloth));
         enumArmorMaterialHazmat2.setRepairItem(new ItemStack(ModItems.hazmat_cloth_red));
         enumArmorMaterialHazmat3.setRepairItem(new ItemStack(ModItems.hazmat_cloth_grey));
-        enumArmorMaterialT45.setRepairItem(new ItemStack(ModItems.plate_titanium));
         aMatBJ.setRepairItem(new ItemStack(ModItems.plate_armor_lunar));
         aMatAJR.setRepairItem(new ItemStack(ModItems.plate_armor_ajr));
         aMatHEV.setRepairItem(new ItemStack(ModItems.plate_armor_hev));
