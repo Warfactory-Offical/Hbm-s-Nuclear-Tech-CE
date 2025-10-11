@@ -1,14 +1,14 @@
 package com.hbm.blocks.network;
 
 import net.minecraftforge.common.property.IUnlistedProperty;
-
-public class UnlistedProperty<T> implements IUnlistedProperty<T> {
+// I do not appreciate llm making dozens of this fucking class so I'll put it here
+public class SimpleUnlistedProperty<T> implements IUnlistedProperty<T> {
     private final String name;
-    private final Class<T> klazz;
+    private final Class<T> type;
 
-    public UnlistedProperty(String name, Class<T> klazz) {
+    public SimpleUnlistedProperty(String name, Class<T> type) {
         this.name = name;
-        this.klazz = klazz;
+        this.type = type;
     }
 
     @Override
@@ -23,11 +23,11 @@ public class UnlistedProperty<T> implements IUnlistedProperty<T> {
 
     @Override
     public Class<T> getType() {
-        return klazz;
+        return type;
     }
 
     @Override
     public String valueToString(T value) {
-        return value.toString();
+        return String.valueOf(value);
     }
 }

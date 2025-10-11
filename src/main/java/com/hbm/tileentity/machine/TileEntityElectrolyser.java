@@ -75,6 +75,7 @@ public class TileEntityElectrolyser extends TileEntityMachineBase implements IEn
     public FluidTankNTM[] tanks;
 
     public UpgradeManagerNT upgradeManager = new UpgradeManagerNT(this);
+    private int lastSelectedGUI = 0;
 
     public TileEntityElectrolyser() {
         //0: Battery
@@ -258,6 +259,7 @@ public class TileEntityElectrolyser extends TileEntityMachineBase implements IEn
             buf.writeInt(rightStack.material.id);
             buf.writeInt(rightStack.amount);
         }
+        buf.writeInt(lastSelectedGUI);
     }
 
     @Override
@@ -279,6 +281,7 @@ public class TileEntityElectrolyser extends TileEntityMachineBase implements IEn
         if(right) {
             this.rightStack = new Mats.MaterialStack(Mats.matById.get(buf.readInt()), buf.readInt());
         }
+        this.lastSelectedGUI = buf.readInt();
     }
 
     public boolean canProcessFluid() {
@@ -433,6 +436,7 @@ public class TileEntityElectrolyser extends TileEntityMachineBase implements IEn
         if(nbt.hasKey("rightType")) this.rightStack = new Mats.MaterialStack(Mats.matById.get(nbt.getInteger("rightType")), nbt.getInteger("rightAmount"));
         else this.rightStack = null;
         for(int i = 0; i < 4; i++) tanks[i].readFromNBT(nbt, "t" + i);
+        this.lastSelectedGUI = nbt.getInteger("lastSelectedGUI");
     }
 
     @Override
@@ -451,6 +455,7 @@ public class TileEntityElectrolyser extends TileEntityMachineBase implements IEn
             nbt.setInteger("rightAmount", rightStack.amount);
         }
         for(int i = 0; i < 4; i++) tanks[i].writeToNBT(nbt, "t" + i);
+        nbt.setInteger("lastSelectedGUI", this.lastSelectedGUI);
         return super.writeToNBT(nbt);
     }
 
@@ -511,6 +516,7 @@ public class TileEntityElectrolyser extends TileEntityMachineBase implements IEn
 
     @Override
     public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
+        if(ID == -1) ID = lastSelectedGUI;
         if(ID == 0) return new ContainerElectrolyserFluid(player.inventory, this);
         return new ContainerElectrolyserMetal(player.inventory, this);
     }
@@ -518,6 +524,7 @@ public class TileEntityElectrolyser extends TileEntityMachineBase implements IEn
     @Override
     @SideOnly(Side.CLIENT)
     public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
+        if(ID == -1) ID = lastSelectedGUI;
         if(ID == 0) return new GUIElectrolyserFluid(player.inventory, this);
         return new GUIElectrolyserMetal(player.inventory, this);
     }
@@ -528,8 +535,10 @@ public class TileEntityElectrolyser extends TileEntityMachineBase implements IEn
     @Override
     public void receiveControl(EntityPlayerMP player, NBTTagCompound data) {
 
-        if(data.hasKey("sgm")) FMLNetworkHandler.openGui(player, MainRegistry.instance, 1, world, pos.getX(), pos.getY(), pos.getZ());
-        if(data.hasKey("sgf")) FMLNetworkHandler.openGui(player, MainRegistry.instance, 0, world, pos.getX(), pos.getY(), pos.getZ());
+        if(data.hasKey("sgm")) lastSelectedGUI = 1;
+        if(data.hasKey("sgf")) lastSelectedGUI = 0;
+
+        FMLNetworkHandler.openGui(player, MainRegistry.instance, lastSelectedGUI, world, pos.getX(), pos.getY(), pos.getZ());
     }
 
     @Override

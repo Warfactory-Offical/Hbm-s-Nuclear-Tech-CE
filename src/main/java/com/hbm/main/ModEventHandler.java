@@ -1,6 +1,7 @@
 package com.hbm.main;
 
 import com.google.common.collect.Multimap;
+import com.hbm.blocks.BlockEnums;
 import com.hbm.blocks.IStepTickReceiver;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockOutgas;
@@ -1245,6 +1246,21 @@ public class ModEventHandler {
 
                 if (event.getWorld().rand.nextInt(2) == 0 && event.getWorld().getBlockState(bPos).getBlock() == Blocks.AIR)
                     event.getWorld().setBlockState(bPos, ModBlocks.gas_coal.getDefaultState(), 3);
+            }
+        }
+
+        if (block == ModBlocks.stone_resource) {
+            int meta = block.getMetaFromState(event.getState());
+            if (meta == BlockEnums.EnumStoneType.ASBESTOS.ordinal()) {
+                if (!event.getWorld().isRemote) {
+                    final BlockPos p = event.getPos();
+                    final net.minecraft.world.World w = event.getWorld();
+                    ((net.minecraft.world.WorldServer) w).addScheduledTask(() -> {
+                        if (w.getBlockState(p).getBlock() == Blocks.AIR) {
+                            w.setBlockState(p, ModBlocks.gas_asbestos.getDefaultState(), 3);
+                        }
+                    });
+                }
             }
         }
 

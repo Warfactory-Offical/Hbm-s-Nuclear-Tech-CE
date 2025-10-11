@@ -2,7 +2,6 @@ package com.hbm.blocks.generic;
 
 import com.hbm.blocks.BlockEnumMeta;
 import com.hbm.blocks.BlockEnums;
-import com.hbm.blocks.ModBlocks;
 import com.hbm.items.ModItems;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -22,17 +21,6 @@ import static com.hbm.items.ItemEnums.EnumChunkType;
 public class BlockResourceStone extends BlockEnumMeta {
     public BlockResourceStone() {
         super(Material.ROCK, SoundType.STONE, "stone_resource", BlockEnums.EnumStoneType.class, true, true);
-    }
-
-    @Override
-    public void dropBlockAsItemWithChance(World world, BlockPos pos, IBlockState state, float chance, int fortune) {
-        int meta = state.getValue(META);
-
-        if (meta == BlockEnums.EnumStoneType.ASBESTOS.ordinal()) {
-            world.setBlockState(pos, ModBlocks.gas_asbestos.getDefaultState(), 3);
-        }
-
-        super.dropBlockAsItemWithChance(world, pos, state, chance, fortune);
     }
 
     @Override
