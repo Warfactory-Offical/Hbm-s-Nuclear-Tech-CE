@@ -1263,6 +1263,20 @@ public class ModEventHandler {
                 }
             }
         }
+        if (block == ModBlocks.basalt_ore) {
+            int meta = block.getMetaFromState(event.getState());
+            if (meta == BlockEnums.EnumBasaltOreType.ASBESTOS.ordinal()) {
+                if (!event.getWorld().isRemote) {
+                    final BlockPos p = event.getPos();
+                    final net.minecraft.world.World w = event.getWorld();
+                    ((net.minecraft.world.WorldServer) w).addScheduledTask(() -> {
+                        if (w.getBlockState(p).getBlock() == Blocks.AIR) {
+                            w.setBlockState(p, ModBlocks.gas_asbestos.getDefaultState(), 3);
+                        }
+                    });
+                }
+            }
+        }
 
         if (block instanceof BlockOutgas outgas) {
             Block gas = outgas.getGas();
