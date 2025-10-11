@@ -7,19 +7,18 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget.Sorter;
 import net.minecraft.entity.ai.EntityAITarget;
 
-import java.util.Collections;
 import java.util.List;
 
 public class EntityAINearestAttackableTargetNT extends EntityAITarget {
 	
-	private final Class targetClass;
+	private final Class<? extends Entity> targetClass;
 	private final int targetChance;
 	private final Sorter theNearestAttackableTargetSorter;
 	private final Predicate<Entity> targetEntitySelector;
 	private EntityLivingBase targetEntity;
 	private final double searchRange;
 
-	public EntityAINearestAttackableTargetNT(EntityCreature owner, Class targetClass, int targetChance, boolean shouldCheckSight, boolean nearbyOnly, final Predicate<Entity> selector, double range) {
+	public EntityAINearestAttackableTargetNT(EntityCreature owner, Class<? extends Entity> targetClass, int targetChance, boolean shouldCheckSight, boolean nearbyOnly, final Predicate<Entity> selector, double range) {
 		super(owner, shouldCheckSight, nearbyOnly);
 		this.targetClass = targetClass;
 		this.targetChance = targetChance;
@@ -27,9 +26,7 @@ public class EntityAINearestAttackableTargetNT extends EntityAITarget {
 		this.searchRange = range;
 		setMutexBits(1);
 
-		this.targetEntitySelector = entity -> {
-			return selector != null && !selector.apply(entity) ? false : !(entity instanceof EntityLivingBase) ? false : EntityAINearestAttackableTargetNT.this.isSuitableTarget((EntityLivingBase) entity, false);
-		};
+		this.targetEntitySelector = entity -> (selector == null || selector.apply(entity)) && (entity instanceof EntityLivingBase && EntityAINearestAttackableTargetNT.this.isSuitableTarget((EntityLivingBase) entity, false));
 	}
 
 	@Override
@@ -44,8 +41,8 @@ public class EntityAINearestAttackableTargetNT extends EntityAITarget {
 			return false;
 		}
 		double range = getTargetDistance();
-		List targets = this.taskOwner.world.getEntitiesWithinAABB(this.targetClass, this.taskOwner.getEntityBoundingBox().grow(range, range, range), this.targetEntitySelector);
-		Collections.sort(targets, this.theNearestAttackableTargetSorter);
+		List<Entity> targets = this.taskOwner.world.getEntitiesWithinAABB(this.targetClass, this.taskOwner.getEntityBoundingBox().grow(range, range, range), this.targetEntitySelector);
+		targets.sort(this.theNearestAttackableTargetSorter);
 
 		if(targets.isEmpty()) {
 			return false;

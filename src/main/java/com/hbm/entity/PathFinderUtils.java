@@ -1,6 +1,7 @@
 package com.hbm.entity;
 
 import com.hbm.render.amlfrom1710.Vec3;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.pathfinding.Path;
 import net.minecraft.pathfinding.PathFinder;
@@ -9,7 +10,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class PathFinderUtils {
-    public static Path getPathEntityToEntityPartial(World world, EntityLiving fromEntity, EntityLiving toEntity, float maxDist, boolean allowDoors, boolean allowWater, boolean allowOpenDoors) {
+    public static Path getPathEntityToEntityPartial(World world, EntityLiving fromEntity, Entity toEntity, float maxDist, boolean allowDoors, boolean allowWater, boolean allowOpenDoors) {
         world.profiler.startSection("pathfind");
 
         Vec3 vec = Vec3.createVectorHelper(toEntity.posX - fromEntity.posX, toEntity.posY - fromEntity.posY, toEntity.posZ - fromEntity.posZ);
