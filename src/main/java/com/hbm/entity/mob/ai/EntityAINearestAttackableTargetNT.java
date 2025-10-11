@@ -1,4 +1,4 @@
-package com.hbm.entity.mob;
+package com.hbm.entity.mob.ai;
 
 import com.google.common.base.Predicate;
 import net.minecraft.entity.Entity;

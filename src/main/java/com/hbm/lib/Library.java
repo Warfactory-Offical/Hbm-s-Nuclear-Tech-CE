@@ -42,10 +42,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EntitySelectors;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.WeightedRandom;
+import net.minecraft.util.*;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.world.Explosion;
@@ -953,6 +950,11 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
         worldIn.setBlockState(blockpos2, iblockstate.withProperty(BlockDoor.HALF, BlockDoor.EnumDoorHalf.UPPER), 2);
         worldIn.notifyNeighborsOfStateChange(pos, door, false);
         worldIn.notifyNeighborsOfStateChange(blockpos2, door, false);
+    }
+
+    public static ItemStack getMainHeldItem(EntityPlayer player) {
+        if (!player.getHeldItem(EnumHand.MAIN_HAND).isEmpty()) return player.getHeldItem(EnumHand.MAIN_HAND);
+        return player.getHeldItem(EnumHand.OFF_HAND);
     }
 	
 	public static boolean areItemStacksEqualIgnoreCount(ItemStack a, ItemStack b){

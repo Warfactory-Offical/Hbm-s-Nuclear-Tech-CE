@@ -1,5 +1,6 @@
 package com.hbm.lib;
 
+import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.BlockEnums;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockResourceStone;
@@ -8,22 +9,23 @@ import com.hbm.blocks.machine.PinkCloudBroadcaster;
 import com.hbm.blocks.machine.SoyuzCapsule;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.config.GeneralConfig;
+import com.hbm.config.MobConfig;
 import com.hbm.config.WorldConfig;
+import com.hbm.handler.MultiblockHandlerXR;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
 import com.hbm.itempool.ItemPool;
 import com.hbm.itempool.ItemPoolsSingle;
 import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
 import com.hbm.saveddata.TomSaveData;
+import com.hbm.tileentity.deco.TileEntityLanternBehemoth;
 import com.hbm.tileentity.machine.TileEntitySafe;
 import com.hbm.tileentity.machine.TileEntitySoyuzCapsule;
+import com.hbm.util.LootGenerator;
 import com.hbm.world.*;
 import com.hbm.world.dungeon.AncientTombStructure;
 import com.hbm.world.dungeon.ArcticVault;
-import com.hbm.world.feature.BedrockOre;
-import com.hbm.world.feature.DepthDeposit;
-import com.hbm.world.feature.NTMFlowers;
-import com.hbm.world.feature.OilSpot;
+import com.hbm.world.feature.*;
 import com.hbm.world.generator.CellularDungeonFactory;
 import com.hbm.world.generator.DungeonToolbox;
 import com.hbm.world.generator.JungleDungeonStructure;
@@ -348,6 +350,19 @@ public class HbmWorldGen implements IWorldGenerator {
             j += 8;
             Biome biome = world.getBiome(new BlockPos(i, 0, j));
 
+            if(MobConfig.enableHives && rand.nextInt(MobConfig.hiveSpawn) == 0) { //FIXME: this should probably use the phased structure system
+                int x = i + rand.nextInt(16) + 8;
+                int z = j + rand.nextInt(16) + 8;
+                int y = world.getHeight(x, z);
+
+                for(int k = 3; k >= -1; k--) {
+                    if(world.getBlockState(new BlockPos(x, y - 1 + k, z)).isNormalCube()) {
+                        GlyphidHive.generateSmall(world, x, y + k, z, rand, rand.nextInt(10) == 0, true);
+                        break;
+                    }
+                }
+            }
+
             if (biome.getDefaultTemperature() >= 0.8F && biome.getRainfall() > 0.7F) {
                 generateAStructure(world, rand, i, j, Radio01.INSTANCE, parseInt(CompatibilityConfig.radioStructure.get(dimID)));
             }
@@ -387,6 +402,32 @@ public class HbmWorldGen implements IWorldGenerator {
                         if (GeneralConfig.enableDebugMode)
                             MainRegistry.logger.info("[Debug] Successfully spawned landmine at x=" + x + " y=" + y + " z=" + z);
                     }
+                }
+            }
+
+            if(rand.nextInt(2000) == 0) {
+                int x = i + rand.nextInt(16);
+                int z = j + rand.nextInt(16);
+                int y = world.getHeight(x, z);
+
+                IBlockState state = world.getBlockState(new BlockPos(x, y - 1, z));
+
+                if(state.getBlock().canPlaceTorchOnTop(state, world, new BlockPos(x, y - 1, z)) &&
+                        world.getBlockState(new BlockPos(x, y, z)).getBlock().isReplaceable(world, new BlockPos(x, y, z))) {
+
+                    world.setBlockState(new BlockPos(x, y, z), ModBlocks.lantern_behemoth.getDefaultState().withProperty(BlockDummyable.META, 12), 3);
+                    MultiblockHandlerXR.fillSpace(world, x, y, z, new int[] {4, 0, 0, 0, 0, 0}, ModBlocks.lantern_behemoth, ForgeDirection.NORTH);
+
+                    TileEntityLanternBehemoth lantern = (TileEntityLanternBehemoth) world.getTileEntity(new BlockPos(x, y, z));
+                    lantern.isBroken = true;
+
+                    if(rand.nextInt(2) == 0) {
+                        LootGenerator.setBlock(world, x, y, z - 2);
+                        LootGenerator.lootBooklet(world, x, y, z - 2);
+                    }
+
+                    if(GeneralConfig.enableDebugMode)
+                        MainRegistry.logger.info("[Debug] Successfully spawned lantern at " + x + " " + (y) + " " + z);
                 }
             }
 

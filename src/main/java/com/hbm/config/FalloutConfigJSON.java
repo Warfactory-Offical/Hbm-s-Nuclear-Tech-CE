@@ -6,6 +6,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.*;
 import com.google.gson.stream.JsonWriter;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.generic.BlockGlyphid;
+import com.hbm.blocks.generic.BlockGlyphidSpawner;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.main.MainRegistry;
 import net.minecraft.block.Block;
@@ -188,6 +190,13 @@ public class FalloutConfigJSON {
                         new Tuple<>(ModBlocks.ore_nether_schrabidium.getDefaultState(), 1),
                         new Tuple<>(ModBlocks.ore_nether_uranium_scorched.getDefaultState(), 99)
                 ));
+
+        entries.add(new FalloutEntry()
+                .setBlockState(ModBlocks.glyphid_base)
+                .primaryStates(new Tuple<>(ModBlocks.glyphid_base.getDefaultState().withProperty(BlockGlyphid.TYPE, BlockGlyphid.Type.RAD), 1)));
+        entries.add(new FalloutEntry()
+                .setBlockState(ModBlocks.glyphid_spawner)
+                .primaryStates(new Tuple<>(ModBlocks.glyphid_spawner.getDefaultState().withProperty(BlockGlyphidSpawner.TYPE, BlockGlyphidSpawner.Type.RAD), 1)));
 
 
         for (int i = 1; i <= 10; i++) {
