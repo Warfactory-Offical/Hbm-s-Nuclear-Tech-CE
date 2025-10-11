@@ -25,7 +25,7 @@ public class ArmorT51 extends ArmorFSBPowered implements IItemRendererProvider {
 
     protected ViewModelPositonDebugger offsets = new ViewModelPositonDebugger()
             .get(ItemCameraTransforms.TransformType.GUI)
-            .setScale(5.60d).setPosition(-3.75, -1.00, 1.5).setRotation(325, 90, -135)
+            .setScale(1F).setPosition(-1.2, 0, 1.0).setRotation(255, -36, -143)
             .getHelper()
             .get(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND)
             .setPosition(-1.00, -31.30, -4.95).setRotation(-23, -139, 85)
@@ -34,16 +34,14 @@ public class ArmorT51 extends ArmorFSBPowered implements IItemRendererProvider {
             .setPosition(-0.5, 3, -2.75).setRotation(610, -115, -100)
             .getHelper()
             .get(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND)
-            .setScale(3.65d).setPosition(-6.5, -0.5, 0.25).setRotation(540, -125, 55)
+            .setScale(0.7F).setPosition(-0.25, -3.6, -1.25).setRotation(5, -90, 340)
             .getHelper()
             .get(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND)
-            .setScale(0.25d).setPosition(-8, -5.50, -1.00).setRotation(0, 330, 180)
+            .setPosition(-8, -5.50, -1.00).setRotation(0, 330, 180)
             .getHelper()
             .get(ItemCameraTransforms.TransformType.GROUND)
-            .setPosition(6.25, 0, 0.25).setRotation(455, -60, 55).setScale(5.40d)
+            .setScale(1F).setPosition(0, 1, 0).setRotation(0, 0, 180)
             .getHelper();
-    ViewModelPositonDebugger.offset corrections = new ViewModelPositonDebugger.offset(offsets)
-            .setRotation(0, 0, 0);
 
     @Override
     @SideOnly(Side.CLIENT)
@@ -78,7 +76,7 @@ public class ArmorT51 extends ArmorFSBPowered implements IItemRendererProvider {
 
             @Override
             public void renderCommon() {
-                offsets.apply(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND);
+                offsets.apply(type);
                 renderStandard(ResourceManager.armor_t51, armorType, ResourceManager.t51_helmet, ResourceManager.t51_chest, ResourceManager.t51_arm, ResourceManager.t51_leg, "Helmet", "Chest", "LeftArm", "RightArm", "LeftLeg", "RightLeg", "LeftBoot", "RightBoot");
             }
         };

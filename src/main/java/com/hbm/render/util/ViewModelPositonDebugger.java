@@ -96,7 +96,8 @@ public class ViewModelPositonDebugger {
                 Keyboard.isKeyDown(Keyboard.KEY_RIGHT),Keyboard.isKeyDown(Keyboard.KEY_I),Keyboard.isKeyDown(Keyboard.KEY_J),
                 Keyboard.isKeyDown(Keyboard.KEY_K),Keyboard.isKeyDown(Keyboard.KEY_L),Keyboard.isKeyDown(Keyboard.KEY_SPACE),
                 Keyboard.isKeyDown(Keyboard.KEY_RSHIFT),Keyboard.isKeyDown(Keyboard.KEY_RCONTROL),Keyboard.isKeyDown(Keyboard.KEY_LBRACKET),
-                Keyboard.isKeyDown(Keyboard.KEY_RBRACKET),Keyboard.isKeyDown(Keyboard.KEY_COMMA),Keyboard.isKeyDown(Keyboard.KEY_PERIOD)};
+                Keyboard.isKeyDown(Keyboard.KEY_RBRACKET),Keyboard.isKeyDown(Keyboard.KEY_COMMA),Keyboard.isKeyDown(Keyboard.KEY_PERIOD),
+                Keyboard.isKeyDown(Keyboard.KEY_O), Keyboard.isKeyDown(Keyboard.KEY_P)};
         boolean doUnblock = true;
         for (boolean input : inputs) {
             if (input) {
@@ -147,14 +148,21 @@ public class ViewModelPositonDebugger {
                     offset.position = offset.position.add(increment,0,0);
             }
             {
+                // I've changed this fucking mess of the debug rotation system
+                // I-O-P changes X-Y-Z rotation positively, and J-K-L - negatively
+                // pretty simple, huh?
                 if (inputs[4])
-                    offset.rotation = offset.rotation.add(incrementAngle,0,0);
-                if (inputs[6])
-                    offset.rotation = offset.rotation.add(-incrementAngle,0,0);
+                    offset.rotation = offset.rotation.add(incrementAngle,0,0); // I
                 if (inputs[5])
-                    offset.rotation = offset.rotation.add(0,damn ? 0 : -incrementAngle,damn ? incrementAngle : 0);
+                    offset.rotation = offset.rotation.add(-incrementAngle,0,0); // J
+                if (inputs[15])
+                    offset.rotation = offset.rotation.add(0,incrementAngle,0); // O
+                if (inputs[6])
+                    offset.rotation = offset.rotation.add(0,-incrementAngle,0); // K
+                if (inputs[16])
+                    offset.rotation = offset.rotation.add(0,0,incrementAngle); // P
                 if (inputs[7])
-                    offset.rotation = offset.rotation.add(0,damn ? 0 : incrementAngle,damn ? -incrementAngle : 0);
+                    offset.rotation = offset.rotation.add(0,0,-incrementAngle); // L
             }
             {
                 if (inputs[13])
