@@ -6,23 +6,18 @@ import com.hbm.entity.mob.glyphid.EntityGlyphidNuclear;
 import com.hbm.entity.mob.glyphid.EntityGlyphidScout;
 import com.hbm.main.MainRegistry;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.hbm.entity.mob.glyphid.EntityGlyphid.*;
 
-public class EntityWaypoint extends EntityLivingBase {
+public class EntityWaypoint extends Entity {
     public static final DataParameter<Byte> WAYPOINT_TYPE = EntityDataManager.createKey(EntityWaypoint.class, DataSerializers.BYTE);
 
     public EntityWaypoint(World world) {
@@ -130,24 +125,6 @@ public class EntityWaypoint extends EntityLivingBase {
     @Override
     public void readEntityFromNBT(NBTTagCompound nbt) {
         this.setWaypointType(nbt.getByte("type"));
-    }
-
-    @Override
-    public Iterable<ItemStack> getArmorInventoryList() {
-        return new ArrayList<>(0);
-    }
-
-    @Override
-    public ItemStack getItemStackFromSlot(EntityEquipmentSlot slotIn) {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public void setItemStackToSlot(EntityEquipmentSlot slotIn, ItemStack stack) {}
-
-    @Override
-    public EnumHandSide getPrimaryHand() {
-        return EnumHandSide.RIGHT;
     }
 
     @Override

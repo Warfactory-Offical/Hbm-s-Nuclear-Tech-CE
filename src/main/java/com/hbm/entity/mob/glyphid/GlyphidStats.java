@@ -60,15 +60,15 @@ public abstract class GlyphidStats {
     public static class GlyphidStats70K extends GlyphidStats {
 
         public GlyphidStats70K() {
-            this.statsGrunt =		new StatBundle(30D,		1D,		5D,		1F,		0.5F);
-            this.statsBombardier =	new StatBundle(20D,		1D,		5D,		1F,		0.5F);
-            this.statsBrawler =		new StatBundle(50D,		1D,		10D,	3F,		1F);
-            this.statsDigger =		new StatBundle(50D,		1D,		5D,		1F,		0.5F);
-            this.statsBlaster =		new StatBundle(50D,		1D,		10D,	2F,		1F);
-            this.statsBehemoth =	new StatBundle(130D,	0.8D,	25D,	4F,		2.5F);
-            this.statsBrenda =		new StatBundle(250D,	1.2D,	50D,	5F,		10F);
-            this.statsNuclear =		new StatBundle(100D,	0.8D,	50D,	5F,		10F);
-            this.statsScout =		new StatBundle(20D,		1.5D,	2D,		1F,		0.5F);
+            this.statsGrunt =		new StatBundle(30D,		0.4D,		5D,		1F,		0.5F);
+            this.statsBombardier =	new StatBundle(20D,		0.4D,		5D,		1F,		0.5F);
+            this.statsBrawler =		new StatBundle(50D,		0.4D,		10D,	3F,		1F);
+            this.statsDigger =		new StatBundle(50D,		0.4D,		5D,		1F,		0.5F);
+            this.statsBlaster =		new StatBundle(50D,		0.4D,		10D,	2F,		1F);
+            this.statsBehemoth =	new StatBundle(130D,	0.3D,	25D,	4F,		2.5F);
+            this.statsBrenda =		new StatBundle(250D,	0.45D,	50D,	5F,		10F);
+            this.statsNuclear =		new StatBundle(100D,	0.3D,	50D,	5F,		10F);
+            this.statsScout =		new StatBundle(20D,		0.5D,	2D,		1F,		0.5F);
         }
 
         @Override
@@ -116,15 +116,15 @@ public abstract class GlyphidStats {
     public static class GlyphidStatsNT extends GlyphidStats {
 
         public GlyphidStatsNT() {
-            this.statsGrunt =		new StatBundle(20D,		1D,		2D,		0.25F,	0F,		1F,		0.1F);
-            this.statsBombardier =	new StatBundle(15D,		1D,		2D,		0.25F,	0F,		1F,		0.1F);
-            this.statsBrawler =		new StatBundle(35D,		1D,		10D,	0.5F,	0.5F,	2F,		0.15F);
-            this.statsDigger =		new StatBundle(50D,		1D,		10D,	0.5F,	0.5F,	3F,		0.20F);
-            this.statsBlaster =		new StatBundle(35D,		1D,		10D,	0.5F,	0.5F,	2F,		0.15F);
-            this.statsBehemoth =	new StatBundle(125D,	0.8D,	25D,	1.5F,	2F,		5F,		0.35F);
-            this.statsBrenda =		new StatBundle(250D,	1.2D,	50D,	2.5F,	5F,		10F,	0.5F);
-            this.statsNuclear =		new StatBundle(100D,	0.8D,	50D,	2.5F,	5F,		10F,	0.5F);
-            this.statsScout =		new StatBundle(20D,		1.5D,	5D,		0.5F,	0F,		0.5F,	0.5F);
+            this.statsGrunt =		new StatBundle(20D,		0.4D,		2D,		0.25F,	0F,		1F,		0.1F);
+            this.statsBombardier =	new StatBundle(15D,		0.4D,		2D,		0.25F,	0F,		1F,		0.1F);
+            this.statsBrawler =		new StatBundle(35D,		0.4D,		10D,	0.5F,	0.5F,	2F,		0.15F);
+            this.statsDigger =		new StatBundle(50D,		0.4D,		10D,	0.5F,	0.5F,	3F,		0.20F);
+            this.statsBlaster =		new StatBundle(35D,		0.4D,		10D,	0.5F,	0.5F,	2F,		0.15F);
+            this.statsBehemoth =	new StatBundle(125D,	0.3D,	25D,	1.5F,	2F,		5F,		0.35F);
+            this.statsBrenda =		new StatBundle(250D,	0.45D,	50D,	2.5F,	5F,		10F,	0.5F);
+            this.statsNuclear =		new StatBundle(100D,	0.3D,	50D,	2.5F,	5F,		10F,	0.5F);
+            this.statsScout =		new StatBundle(20D,		0.5D,	5D,		0.5F,	0F,		0.5F,	0.5F);
         }
 
         @Override

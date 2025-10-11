@@ -7,6 +7,7 @@ import com.hbm.entity.PathFinderUtils;
 import com.hbm.entity.logic.EntityWaypoint;
 import com.hbm.entity.mob.EntityParasiteMaggot;
 import com.hbm.entity.mob.ai.EntityAIConditionalWander;
+import com.hbm.entity.mob.ai.EntityAINearestAttackableTargetNT;
 import com.hbm.entity.mob.glyphid.GlyphidStats.StatBundle;
 import com.hbm.explosion.vanillant.ExplosionVNT;
 import com.hbm.explosion.vanillant.standard.BlockAllocatorGlyphidDig;
@@ -73,7 +74,7 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider {
 
     // Tasks
 
-    /** Idle state, only makes glpyhids wander around randomly */
+    /** Idle state, only makes glyphids wander around randomly */
     public static final byte TASK_IDLE = 0;
     /** Causes the glyphid to walk to the waypoint, then communicate the FOLLOW task to nearby glyphids */
     public static final byte TASK_RETREAT_FOR_REINFORCEMENTS = 1;
@@ -85,7 +86,7 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider {
     public static final byte TASK_FOLLOW = 4;
     /** Causes nuclear glyphids to immediately self-destruct, also signaling nearby scouts to retreat */
     public static final byte TASK_TERRAFORM = 5;
-    /** If any task other than IDLE is interrupted by an obstacle, initiates digging behavior which is also communicated to nearby glyohids */
+    /** If any task other than IDLE is interrupted by an obstacle, initiates digging behavior which is also communicated to nearby glyphids */
     public static final byte TASK_DIG = 6;
 
     protected boolean hasWaypoint = false;
@@ -215,17 +216,26 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider {
 
     @Override
     public @Nullable EntityLivingBase getAttackTarget() {
-        if(this.isBlind()) return null;
+        if(this.isBlind()) setAttackTarget(null);
 
-        return this.world.getNearestAttackablePlayer(this, useExtendedTargeting() ? 128D : 16D, useExtendedTargeting() ? 64D : 8D);
+        return super.getAttackTarget();
     }
 
     @Override
     protected void initEntityAI() {
         this.tasks.addTask(1, new EntityAISwimming(this));
         this.tasks.addTask(1, new EntityAIPanic(this, 2.0D));
-        this.tasks.addTask(4, new EntityAIConditionalWander<EntityGlyphid>(this, 0.8D, glyphid -> glyphid.getCurrentTask() == TASK_IDLE));
+        this.tasks.addTask(2, new EntityAIAttackMelee(this, 1.0D, false));
+        this.tasks.addTask(4, new EntityAIConditionalWander<>(this, 0.8D, glyphid -> glyphid.getCurrentTask() == TASK_IDLE));
         this.tasks.addTask(5, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+        this.tasks.addTask(6, new EntityAILookIdle(this));
+
+        this.targetTasks.addTask(1, new EntityAINearestAttackableTargetNT(this, EntityPlayer.class, 10, true, false,
+                player -> {
+                    if (this.isBlind() || player == null) return false;
+                    double range = useExtendedTargeting() ? 128.0 : 16.0;
+                    return this.getDistance(player) <= range;
+                }, useExtendedTargeting() ? 128.0 : 16.0));
     }
 
     @Override
@@ -237,7 +247,7 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider {
 
                 // hell yeah!!
                 if(useExtendedTargeting() && this.getAttackTarget() != null) {
-                    this.getNavigator().setPath(PathFinderUtils.getPathEntityToEntityPartial(world, this, (EntityLiving) this.getAttackTarget(), 16F, true, true, false), 1.0D);
+                    this.getNavigator().setPath(PathFinderUtils.getPathEntityToEntityPartial(world, this, this.getAttackTarget(), 16F, true, true, false), 1.0D);
                 } else if (getCurrentTask() != TASK_IDLE) {
 
                     this.world.profiler.startSection("stroll");
@@ -251,7 +261,7 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider {
                             taskZ = (int) taskWaypoint.posZ;
 
                             if (taskWaypoint.highPriority) {
-                                setAttackTarget(taskWaypoint);
+                                this.getNavigator().setPath(PathFinderUtils.getPathEntityToEntityPartial(world, this, taskWaypoint, 16F, true, true, false), 1.5D);
                             }
 
                         }
@@ -358,8 +368,7 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider {
     @Override
     public boolean attackEntityFrom(DamageSource source, float amount) {
         if(source.getTrueSource() instanceof EntityGlyphid) return false;
-        boolean wasAttacked = GlyphidStats.getStats().handleAttack(this, source, amount);
-        return wasAttacked;
+        return GlyphidStats.getStats().handleAttack(this, source, amount);
     }
 
     /** Provides a direct entrypoint from outside to access the superclass' implementation because otherwise we end up with infinite recursion */
@@ -458,8 +467,8 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider {
 
     @Override
     public boolean attackEntityAsMob(Entity victim) {
-        if(this.isSwingInProgress) return false;
-        this.swingArm(EnumHand.MAIN_HAND);
+        if (!this.isSwingInProgress)
+            this.swingArm(EnumHand.MAIN_HAND);
 
         if(this.dataManager.get(SUBTYPE) == TYPE_INFECTED && victim instanceof EntityLivingBase) {
             ((EntityLivingBase) victim).addPotionEffect(new PotionEffect(Objects.requireNonNull(Potion.getPotionFromResourceLocation("poison")), 100, 2));
