@@ -14,6 +14,7 @@ import com.hbm.blocks.machine.rbmk.RBMKDebrisRadiating;
 import com.hbm.config.GeneralConfig;
 import com.hbm.entity.grenade.*;
 import com.hbm.entity.particle.*;
+import com.hbm.entity.projectile.EntityAcidBomb;
 import com.hbm.entity.projectile.EntityDischarge;
 import com.hbm.handler.*;
 import com.hbm.handler.HbmKeybinds.EnumKeybind;
@@ -95,6 +96,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -247,6 +249,7 @@ public class ClientProxy extends ServerProxy {
         registerGrenadeRenderer(EntityGrenadeIFHopwire.class, ModItems.grenade_if_hopwire);
         registerGrenadeRenderer(EntityGrenadeIFNull.class, ModItems.grenade_if_null);
         registerGrenadeRenderer(EntityGrenadeDynamite.class, ModItems.stick_dynamite);
+        registerGrenadeRenderer(EntityAcidBomb.class, Items.SLIME_BALL);
         registerMetaSensitiveGrenade(EntityDisperserCanister.class, ModItems.disperser_canister);
         registerMetaSensitiveGrenade(EntityDisperserCanister.class, ModItems.glyphid_gland);
 
@@ -779,6 +782,36 @@ public class ClientProxy extends ServerProxy {
                     }
                     default -> throw new IllegalStateException("Unexpected value: " + mode);
                 }
+            }
+            case "muke" -> {
+                ParticleMukeWave wave = new ParticleMukeWave(world, x, y, z);
+                Minecraft.getMinecraft().effectRenderer.addEffect(wave);
+
+                for(double d = 0.0D; d <= 1.6D; d += 0.1) {
+                    ParticleMukeCloud cloud = new ParticleMukeCloud(world, x, y, z, rand.nextGaussian() * 0.05, d + rand.nextGaussian() * 0.02, rand.nextGaussian() * 0.05);
+                    Minecraft.getMinecraft().effectRenderer.addEffect(cloud);
+                }
+                for(int i = 0; i < 50; i++) {
+                    ParticleMukeCloud cloud = new ParticleMukeCloud(world, x, y + 0.5, z, rand.nextGaussian() * 0.5, rand.nextInt(5) == 0 ? 0.02 : 0, rand.nextGaussian() * 0.5);
+                    Minecraft.getMinecraft().effectRenderer.addEffect(cloud);
+                }
+                for(int i = 0; i < 15; i++) {
+                    double ix = rand.nextGaussian() * 0.2;
+                    double iz = rand.nextGaussian() * 0.2;
+
+                    if(ix * ix + iz * iz > 0.75) {
+                        ix *= 0.5;
+                        iz *= 0.5;
+                    }
+
+                    double iy = 1.6 + (rand.nextDouble() * 2 - 1) * (0.75 - (ix * ix + iz * iz)) * 0.5;
+
+                    ParticleMukeCloud cloud = new ParticleMukeCloud(world, x, y, z, ix, iy + rand.nextGaussian() * 0.02, iz);
+                    Minecraft.getMinecraft().effectRenderer.addEffect(cloud);
+                }
+                player.hurtTime = 15;
+                player.maxHurtTime = 15;
+                player.attackedAtYaw = 0F;
             }
             case "ufo" -> {
                 if (GeneralConfig.instancedParticles) {

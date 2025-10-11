@@ -26,6 +26,10 @@ public final class HBMSoundHandler {
     public static SoundEvent b92Reload;
     public static SoundEvent techBleep;
     public static SoundEvent techBoop;
+    public static SoundEvent hornNearSingle;
+    public static SoundEvent hornNearDual;
+    public static SoundEvent hornFarSingle;
+    public static SoundEvent hornFarDual;
     public static SoundEvent reactorLoop;
     public static SoundEvent reactorStart;
     public static SoundEvent reactorStop;
@@ -415,6 +419,10 @@ public final class HBMSoundHandler {
         b92Reload = register("weapon.b92Reload");
         techBleep = register("item.techBleep");
         techBoop = register("item.techBoop");
+        hornNearSingle = register("block.hornNearSingle");
+        hornNearDual = register("block.hornNearDual");
+        hornFarSingle = register("block.hornFarSingle");
+        hornFarDual = register("block.hornFarDual");
         reactorLoop = register("block.reactorLoop");
         reactorStart = register("block.reactorStart");
         reactorStop = register("block.reactorStop");

@@ -635,6 +635,7 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         ItemAutogen.registerColorHandlers(evt);
         IDynamicModels.registerItemColorHandlers(evt);
         ItemChemicalDye.registerColorHandlers(evt);
+        ItemKitCustom.registerColorHandlers(evt);
     }
 
     @SubscribeEvent

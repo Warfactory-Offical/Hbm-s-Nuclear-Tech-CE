@@ -53,16 +53,14 @@ import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 import static com.hbm.items.ItemEnums.*;
 
@@ -1372,6 +1370,9 @@ public class ModItems {
     public static final Item quesadilla = new ItemLemon(8, 1F, false, "cheese_quesadilla").setCreativeTab(MainRegistry.consumableTab);
     public static final Item mucho_mango = new ItemMuchoMango(10, "mucho_mango").setCreativeTab(MainRegistry.consumableTab);
     public static final Item marshmallow_roasted = new ItemLemon(6, 6, false, "marshmallow_roasted").setMaxStackSize(1).setFull3D().setCreativeTab(MainRegistry.consumableTab);
+    public static final Item glyphid_meat = new ItemLemon(3, 0.5F, true, "glyphid_meat").setCreativeTab(MainRegistry.consumableTab);
+    public static final Item glyphid_meat_grilled = new ItemLemon(8, 0.75F, true, "glyphid_meat_grilled").setPotionEffect(new PotionEffect(Objects.requireNonNull(Potion.getPotionFromResourceLocation("strength")), 180, 1), 1F).setCreativeTab(MainRegistry.consumableTab);
+    public static final Item egg_glyphid = new ItemBase("egg_glyphid").setCreativeTab(MainRegistry.consumableTab);
     //Bongespob arcarmoni
     public static final Item spongebob_macaroni = new ItemLemon(5, 5, false, "spongebob_macaroni").setCreativeTab(MainRegistry.consumableTab);
     public static final ItemEnumMultiFood canned_conserve = (ItemEnumMultiFood) new ItemConserve().setCreativeTab(MainRegistry.consumableTab);
@@ -2413,6 +2414,9 @@ public class ModItems {
     public static final Item nuke_starter_kit = new ItemStarterKit("nuke_starter_kit").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
     public static final Item nuke_advanced_kit = new ItemStarterKit("nuke_advanced_kit").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
     public static final Item nuke_commercially_kit = new ItemStarterKit("nuke_commercially_kit").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
+    public static final Item kit_custom = new ItemKitCustom("kit_custom").setCreativeTab(MainRegistry.consumableTab);
+    public static final Item toolbox = new ItemToolBox("toolbox").setCreativeTab(MainRegistry.consumableTab);
+    public static final Item legacy_toolbox = new ItemKitNBT("toolbox_legacy").setContainerItem(toolbox).setCreativeTab(MainRegistry.consumableTab);
     public static final Item loot_10 = new ItemLootCrate("loot_10").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
     public static final Item loot_15 = new ItemLootCrate("loot_15").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
     public static final Item loot_misc = new ItemLootCrate("loot_misc").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);

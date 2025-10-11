@@ -147,26 +147,33 @@ public class ItemStackUtil {
 		stack.getTagCompound().setTag("items", tags);
 	}
 
-	public static ItemStack[] readStacksFromNBT(final ItemStack stack) {
+    public static ItemStack[] readStacksFromNBT(ItemStack stack, int count) {
 
-		if(!stack.hasTagCompound())
-			return null;
+        if(!stack.hasTagCompound())
+            return null;
 
-		final NBTTagList list = stack.getTagCompound().getTagList("items", 10);
-		final int count = list.tagCount();
+        NBTTagList list = stack.getTagCompound().getTagList("items", 10);
+        if(count == 0) {
+            count = list.tagCount();
+        }
 
-		final ItemStack[] stacks = new ItemStack[count];
+        ItemStack[] stacks = new ItemStack[count];
 
-		for(int i = 0; i < count; i++) {
-			final NBTTagCompound slotNBT = list.getCompoundTagAt(i);
-			final byte slot = slotNBT.getByte("slot");
-			if(slot >= 0 && slot < stacks.length) {
-				stacks[slot] = new ItemStack (slotNBT);
-			}
-		}
+        for(int i = 0; i < count; i++) {
+            NBTTagCompound slotNBT = list.getCompoundTagAt(i);
+            byte slot = slotNBT.getByte("slot");
+            ItemStack loadedStack = new ItemStack(slotNBT);
+            if(slot >= 0 && slot < stacks.length && !loadedStack.equals(ItemStack.EMPTY)) {
+                stacks[slot] = loadedStack;
+            }
+        }
 
-		return stacks;
-	}
+        return stacks;
+    }
+
+    public static ItemStack[] readStacksFromNBT(ItemStack stack) {
+        return readStacksFromNBT(stack, 0);
+    }
 
 	/**
 	 * Returns a List<String> of all ore dict names for this stack. Stack cannot be null, list is empty when there are no ore dict entries.

@@ -5834,6 +5834,7 @@ item.titanium_shovel.name=Titanium Shovel
 item.titanium_sword.name=Titanium Sword
 item.toolbox.name=Toolbox
 item.toolbox_legacy.name=Toolbox (LEGACY)
+item.toolbox.error_toolbox_toolbox=You can't toolbox a toolbox...
 item.toothpicks.name=Toothpicks
 item.train.cargo_tram.name=Electric Flat Bed Tram
 item.trenchmaster_boots.name=Trenchmaster's Boots

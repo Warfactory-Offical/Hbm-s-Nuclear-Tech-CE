@@ -412,6 +412,10 @@ public class ResourceManager {
 	public static final IModelCustom taintcrab = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/mobs/taintcrab.obj")).asVBO();
 	public static final IModelCustom maskman = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/mobs/maskman.obj")).asVBO();
 	public static final IModelCustom ufo = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/mobs/ufo.obj")).asVBO();
+    public static final IModelCustom glyphid = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/mobs/glyphid.obj")).asVBO();
+
+    //Lights
+    public static final IModelCustom lantern = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/trinkets/lantern.obj")).asVBO();
 
 	//ZIRNOX
 	public static final IModelCustom zirnox = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/zirnox.obj")).asVBO();
@@ -1253,7 +1257,11 @@ public class ResourceManager {
 	
 	//Silo hatch
 	public static final ResourceLocation hatch_tex = new ResourceLocation(RefStrings.MODID, "textures/models/doors/hatchtexture.png");
-	
+
+    //Lantern
+    public static final ResourceLocation lantern_tex = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/lantern.png");
+    public static final ResourceLocation lantern_rusty_tex = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/lantern_rusty.png");
+
 	//Tesla Coil
 	public static final ResourceLocation tesla_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/tesla.png");
 	public static final ResourceLocation teslacrab_tex = new ResourceLocation(RefStrings.MODID, "textures/entity/teslacrab.png");
@@ -1262,6 +1270,17 @@ public class ResourceManager {
 
 	public static final ResourceLocation iou = new ResourceLocation(RefStrings.MODID, "textures/entity/iou.png");
 	public static final ResourceLocation ufo_tex = new ResourceLocation(RefStrings.MODID, "textures/entity/ufo.png");
+
+    //Glyphids
+    public static final ResourceLocation glyphid_tex = new ResourceLocation(RefStrings.MODID, "textures/entity/glyphid.png");
+    public static final ResourceLocation glyphid_brawler_tex = new ResourceLocation(RefStrings.MODID, "textures/entity/glyphid_brawler.png");
+    public static final ResourceLocation glyphid_behemoth_tex = new ResourceLocation(RefStrings.MODID, "textures/entity/glyphid_behemoth.png");
+    public static final ResourceLocation glyphid_brenda_tex = new ResourceLocation(RefStrings.MODID, "textures/entity/glyphid_brenda.png");
+    public static final ResourceLocation glyphid_bombardier_tex = new ResourceLocation(RefStrings.MODID, "textures/entity/glyphid_bombardier.png");
+    public static final ResourceLocation glyphid_blaster_tex = new ResourceLocation(RefStrings.MODID, "textures/entity/glyphid_blaster.png");
+    public static final ResourceLocation glyphid_scout_tex = new ResourceLocation(RefStrings.MODID, "textures/entity/glyphid_scout.png");
+    public static final ResourceLocation glyphid_nuclear_tex = new ResourceLocation(RefStrings.MODID, "textures/entity/glyphid_nuclear.png");
+    public static final ResourceLocation glyphid_digger_tex = new ResourceLocation(RefStrings.MODID, "textures/entity/glyphid_digger.png");
 	
 	////Obj Items
 

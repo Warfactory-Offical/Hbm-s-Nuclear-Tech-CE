@@ -3,9 +3,15 @@ package com.hbm.handler;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.PlantEnums;
 import com.hbm.blocks.generic.BlockConcreteColoredExt;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.gui.GUIScreenBobmazon.Offer;
 import com.hbm.inventory.gui.GUIScreenBobmazon.Requirement;
 import com.hbm.items.ModItems;
+import com.hbm.items.food.ItemConserve;
+import com.hbm.items.machine.ItemBattery;
+import com.hbm.items.special.ItemKitCustom;
+import com.hbm.items.special.ItemKitNBT;
+import com.hbm.items.weapon.sedna.factory.GunFactory;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -111,8 +117,7 @@ public class BobmazonOfferFactory {
             }
         }
 
-		// TODO ItemKitCustom
-		/*special.add(new Offer(ItemKitCustom.create("Fusion Man", "For the nuclear physicist on the go", 0xff00ff, 0x800080,
+		special.add(new Offer(ItemKitCustom.create("Fusion Man", "For the nuclear physicist on the go", 0xff00ff, 0x800080,
 				new ItemStack(ModBlocks.iter),
 				new ItemStack(ModBlocks.plasma_heater),
 				new ItemStack(ModItems.fusion_shield_vaporwave),
@@ -128,7 +133,7 @@ public class BobmazonOfferFactory {
 				new ItemStack(ModBlocks.red_pylon_large, 8),
 				new ItemStack(ModBlocks.substation, 4),
 				new ItemStack(ModBlocks.red_pylon, 16),
-				new ItemStack(ModBlocks.red_connector, 64),
+				//new ItemStack(ModBlocks.red_connector, 64), TODO: red_connector
 				new ItemStack(ModItems.wiring_red_copper, 1),
 				new ItemStack(ModBlocks.machine_chungus, 1),
 				new ItemStack(ModBlocks.machine_large_turbine, 3),
@@ -168,7 +173,7 @@ public class BobmazonOfferFactory {
 				new ItemStack(ModItems.ammo_standard, 64, GunFactory.EnumAmmo.CAPACITOR_OVERCHARGE.ordinal()),
 				new ItemStack(ModItems.ammo_standard, 64, GunFactory.EnumAmmo.CAPACITOR_OVERCHARGE.ordinal()),
 				new ItemStack(ModItems.ammo_standard, 64, GunFactory.EnumAmmo.CAPACITOR_OVERCHARGE.ordinal())
-		).setStackDisplayName("Frenchie's Reward"), Requirement.HIDDEN, 32));*/
+		).setStackDisplayName("Frenchie's Reward"), Requirement.HIDDEN, 32));
 	}
 
 	public static List<Offer> getOffers(ItemStack stack) {
