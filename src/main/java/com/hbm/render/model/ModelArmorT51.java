@@ -1,18 +1,14 @@
 package com.hbm.render.model;
 
 import com.hbm.main.ResourceManager;
-import com.hbm.render.item.ItemRenderBase;
 import com.hbm.render.loader.ModelRendererObj;
-import com.hbm.render.tileentity.IItemRendererProvider;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.item.Item;
 import org.lwjgl.opengl.GL11;
 
 import static com.hbm.render.NTMRenderHelper.bindTexture;
 
-public class ModelArmorT51 extends ModelArmorBase implements IItemRendererProvider {
+public class ModelArmorT51 extends ModelArmorBase {
 
     public ModelArmorT51(int type) {
         super(type);
@@ -87,32 +83,6 @@ public class ModelArmorT51 extends ModelArmorBase implements IItemRendererProvid
                 rightFoot.render(scale);
             }
         }
-    }
-
-    @Override
-    public Item getItemForRenderer() {
-
-        return null;
-    }
-
-    @Override
-    public ItemRenderBase getRenderer(Item item) {
-        return new ItemRenderBase() {
-            public void renderInventory() {
-                GlStateManager.translate(0, -5, 0);
-                GlStateManager.scale(2.75, 2.75, 2.75);
-            }
-
-            public void renderCommon() {
-                GlStateManager.scale(0.25, 0.25, 0.25);
-                GlStateManager.disableCull();
-                GlStateManager.shadeModel(GL11.GL_SMOOTH);
-                bindTexture(ResourceManager.t51_helmet);
-                ResourceManager.armor_t51.renderAll();
-                GlStateManager.shadeModel(GL11.GL_FLAT);
-                GlStateManager.enableCull();
-            }
-        };
     }
 }
 
