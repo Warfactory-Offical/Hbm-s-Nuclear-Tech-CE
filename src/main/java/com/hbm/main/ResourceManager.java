@@ -297,6 +297,7 @@ public class ResourceManager {
 	public static final IModelCustom armor_steamsuit = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/armor/steamsuit.obj")).asVBO();
 	public static final IModelCustom armor_dieselsuit = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/armor/bnuuy.obj")).asVBO();
 	public static final IModelCustom armor_trenchmaster = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/armor/trenchmaster.obj")).asVBO();
+	public static final IModelCustom armor_t51 = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/armor/t51.obj")).asVBO();
 	public static final IModelCustom armor_taurun = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/armor/taurun.obj")).asVBO();
 	public static final IModelCustom armor_bismuth = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/armor/bismuth.obj")).asVBO();
 	public static final IModelCustom armor_envsuit = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/armor/envsuit.obj")).asVBO();
@@ -1431,6 +1432,11 @@ public class ResourceManager {
 	public static final ResourceLocation trenchmaster_leg = new ResourceLocation(RefStrings.MODID, "textures/armor/trenchmaster_leg.png");
 	public static final ResourceLocation trenchmaster_chest = new ResourceLocation(RefStrings.MODID, "textures/armor/trenchmaster_chest.png");
 	public static final ResourceLocation trenchmaster_arm = new ResourceLocation(RefStrings.MODID, "textures/armor/trenchmaster_arm.png");
+
+	public static final ResourceLocation t51_helmet = new ResourceLocation(RefStrings.MODID, "textures/armor/t51_helmet.png");
+	public static final ResourceLocation t51_leg = new ResourceLocation(RefStrings.MODID, "textures/armor/t51_leg.png");
+	public static final ResourceLocation t51_chest = new ResourceLocation(RefStrings.MODID, "textures/armor/t51_chest.png");
+	public static final ResourceLocation t51_arm = new ResourceLocation(RefStrings.MODID, "textures/armor/t51_arm.png");
 
 	public static final ResourceLocation taurun_helmet = new ResourceLocation(RefStrings.MODID, "textures/armor/taurun_helmet.png");
 	public static final ResourceLocation taurun_leg = new ResourceLocation(RefStrings.MODID, "textures/armor/taurun_leg.png");
