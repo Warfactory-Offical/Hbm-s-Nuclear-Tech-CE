@@ -1407,11 +1407,11 @@ public class ModBlocks {
 
 	public static void postInit(){
 
-		for(Block block : ALL_BLOCKS){
-			if(block instanceof BlockHazard){
-				((BlockHazard)block).addRadiation(HazardSystem.getRawRadsFromBlock(block));
-			}
-		}
+        for (Block block : ALL_BLOCKS) {
+            if (block instanceof BlockHazard) {
+                ((BlockHazard) block).addRadiation((float) HazardSystem.getRawRadsFromBlock(block));
+            }
+        }
 		BlockTallPlant.initPlacables();
 		BlockDeadPlant.initPlacables();
 		BlockFlowerPlant.initPlacables();

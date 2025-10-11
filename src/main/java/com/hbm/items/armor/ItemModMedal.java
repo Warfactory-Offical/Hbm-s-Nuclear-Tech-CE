@@ -39,10 +39,10 @@ public class ItemModMedal extends ItemArmorMod {
 	
 	@Override
 	public void modUpdate(EntityLivingBase entity, ItemStack armor) {
-		if(!entity.world.isRemote) {
-			float rad = HbmLivingProps.getRadiation(entity);
-			rad -= minusRads;
-			HbmLivingProps.setRadiation(entity, Math.max(rad, 0));
+        if (!entity.world.isRemote) {
+            double rad = HbmLivingProps.getRadiation(entity);
+            rad -= minusRads;
+            HbmLivingProps.setRadiation(entity, Math.max(rad, 0));
 
 			if(entity instanceof EntityPlayer){
 				ContaminationUtil.neutronActivateInventory((EntityPlayer)entity, 0.0F, this.decayRate);

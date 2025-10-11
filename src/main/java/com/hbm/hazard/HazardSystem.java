@@ -95,7 +95,7 @@ public class HazardSystem {
             new ThreadFactoryBuilder().setNameFormat("HBM-Hazard-Scanner-%d").setDaemon(true).build());
     private static final Queue<InventoryDelta> inventoryDeltas = new ConcurrentLinkedQueue<>();
     private static final Set<UUID> playersToUpdate = ConcurrentHashMap.newKeySet();
-    private static final float minRadRate = 0.000005F;
+    private static final double minRadRate = 0.000005D;
     private static CompletableFuture<Void> scanFuture = CompletableFuture.completedFuture(null);
     private static long tickCounter = 0;
 
@@ -460,19 +460,19 @@ public class HazardSystem {
         return Collections.unmodifiableList(entries);
     }
 
-    public static float getHazardLevelFromStack(ItemStack stack, HazardTypeBase hazard) {
-        return getHazardsFromStack(stack).stream().filter(entry -> entry.type == hazard).findFirst().map(entry -> HazardModifier.evalAllModifiers(stack, null, entry.baseLevel, entry.mods)).orElse(0F);
+    public static double getHazardLevelFromStack(ItemStack stack, HazardTypeBase hazard) {
+        return getHazardsFromStack(stack).stream().filter(entry -> entry.type == hazard).findFirst().map(entry -> HazardModifier.evalAllModifiers(stack, null, entry.baseLevel, entry.mods)).orElse(0D);
     }
 
-    public static float getRawRadsFromBlock(Block b) {
+    public static double getRawRadsFromBlock(Block b) {
         return getHazardLevelFromStack(new ItemStack(Item.getItemFromBlock(b)), HazardRegistry.RADIATION);
     }
 
-    public static float getRawRadsFromStack(ItemStack stack) {
+    public static double getRawRadsFromStack(ItemStack stack) {
         return getHazardLevelFromStack(stack, HazardRegistry.RADIATION);
     }
 
-    public static float getTotalRadsFromStack(ItemStack stack) {
+    public static double getTotalRadsFromStack(ItemStack stack) {
         return getHazardLevelFromStack(stack, HazardRegistry.RADIATION) + ContaminationUtil.getNeutronRads(stack);
     }
 

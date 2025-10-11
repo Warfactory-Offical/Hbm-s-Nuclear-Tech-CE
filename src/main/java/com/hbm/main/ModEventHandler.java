@@ -1080,7 +1080,7 @@ public class ModEventHandler {
                     }
 
                     //Shackles
-                    if (revive.getItem() instanceof ItemModShackles && HbmLivingProps.getRadiation(event.getEntityLiving()) < 1000F) {
+                    if (revive.getItem() instanceof ItemModShackles && HbmLivingProps.getRadiation(event.getEntityLiving()) < 1000D) {
 
                         revive.setItemDamage(revive.getItemDamage() + 1);
 

@@ -86,7 +86,7 @@ public class CommandRadiation extends CommandBase {
                     EntityPlayerMP player = getPlayer(server, args[1]);
                     if (player == null) throw new CommandException("commands.hbmrad.not_found_player", args[1]);
 
-                    float rads = 0.0F;
+                    double rads = 0.0D;
                     if (player.hasCapability(HbmLivingCapability.EntityHbmPropsProvider.ENT_HBM_PROPS_CAP, null)) {
                         rads = player.getCapability(HbmLivingCapability.EntityHbmPropsProvider.ENT_HBM_PROPS_CAP, null).getRads();
                     }
@@ -94,10 +94,10 @@ public class CommandRadiation extends CommandBase {
                 } else if (args.length == 3) {
                     EntityPlayerMP player = getPlayer(server, args[1]);
                     if (player == null) throw new CommandException("commands.hbmrad.not_found_player", args[1]);
-                    if (!isFloat(args[2])) throw new CommandException("commands.hbmrad.rad_not_int");
+                    if (!isDouble(args[2])) throw new CommandException("commands.hbmrad.rad_not_int");
 
-                    float newRads = Float.parseFloat(args[2]);
-                    if (newRads < 0.0F) newRads = 0.0F;
+                    double newRads = Double.parseDouble(args[2]);
+                    if (newRads < 0.0D) newRads = 0.0D;
 
                     if (player.hasCapability(HbmLivingCapability.EntityHbmPropsProvider.ENT_HBM_PROPS_CAP, null)) {
                         player.getCapability(HbmLivingCapability.EntityHbmPropsProvider.ENT_HBM_PROPS_CAP, null).setRads(newRads);
@@ -111,7 +111,7 @@ public class CommandRadiation extends CommandBase {
                 if (args.length != 1) throw new CommandException(this.getUsage(sender));
                 server.getPlayerList().getPlayers().forEach(player -> {
                     if (player.hasCapability(HbmLivingCapability.EntityHbmPropsProvider.ENT_HBM_PROPS_CAP, null)) {
-                        player.getCapability(HbmLivingCapability.EntityHbmPropsProvider.ENT_HBM_PROPS_CAP, null).setRads(0.0F);
+                        player.getCapability(HbmLivingCapability.EntityHbmPropsProvider.ENT_HBM_PROPS_CAP, null).setRads(0.0D);
                     }
                 });
                 sender.sendMessage(new TextComponentTranslation("commands.hbmrad.player_success"));
@@ -133,9 +133,9 @@ public class CommandRadiation extends CommandBase {
         }
     }
 
-    public boolean isFloat(String s) {
+    public boolean isDouble(String s) {
         try {
-            Float.parseFloat(s);
+            Double.parseDouble(s);
             return true;
         } catch (NumberFormatException e) {
             return false;

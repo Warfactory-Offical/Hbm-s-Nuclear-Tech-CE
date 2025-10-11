@@ -19,15 +19,15 @@ public class HazardTransformerRadiationME extends HazardTransformerBase {
 		final String name = stack.getItem().getClass().getName();
 		if(name.equals("appeng.items.storage.ItemBasicStorageCell") || name.equals("appeng.items.tools.powered.ToolPortableCell")) {
 			final List<ItemStack> stacks = Compat.scrapeItemFromME(stack);
-			float radiation = 0;
-			
-			for(final ItemStack held : stacks) {
-				radiation += HazardSystem.getHazardLevelFromStack(held, HazardRegistry.RADIATION) * held.getCount();
-			}
-			
-			if(radiation > 0) {
-				entries.add(new HazardEntry(HazardRegistry.RADIATION, radiation));
-			}
+            double radiation = 0D;
+
+            for (final ItemStack held : stacks) {
+                radiation += HazardSystem.getHazardLevelFromStack(held, HazardRegistry.RADIATION) * held.getCount();
+            }
+
+            if (radiation > 0) {
+                entries.add(new HazardEntry(HazardRegistry.RADIATION, radiation));
+            }
 		}
 	}
 }

@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Random;
 
 public class BlockStorageCrate extends BlockContainer {
-
+    public static final String CRATE_RAD_KEY = "cRads";
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 	private static boolean dropInv = true;
 
@@ -99,7 +99,7 @@ public class BlockStorageCrate extends BlockContainer {
 
 			NBTTagCompound nbt = new NBTTagCompound();
 
-			float rads = 0;
+            double rads = 0D;
 			if(te != null) {
 				IItemHandler inventory;
 				if(te instanceof TileEntitySafe){
@@ -116,14 +116,14 @@ public class BlockStorageCrate extends BlockContainer {
 					if(stack.isEmpty())
 						continue;
 
-					rads += HazardSystem.getTotalRadsFromStack(stack) * stack.getCount();
+                    rads += HazardSystem.getTotalRadsFromStack(stack) * stack.getCount();
 					NBTTagCompound slot = new NBTTagCompound();
 					stack.writeToNBT(slot);
 					nbt.setTag("slot" + i, slot);
 				}
-				if(rads > 0){
-					nbt.setFloat("cRads", rads);
-				}
+                if (rads > 0) {
+                    nbt.setDouble(CRATE_RAD_KEY, rads);
+                }
 				if(te instanceof TileEntityLockableBase lockable) {
 
                     if(lockable.isLocked()) {

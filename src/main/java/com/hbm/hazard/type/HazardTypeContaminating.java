@@ -23,16 +23,16 @@ public class HazardTypeContaminating extends HazardTypeBase {
 
     private static final int MAX_RADIUS = 500;
 
-    private static int computeRadius(float level) {
+    private static int computeRadius(double level) {
         return (int) Math.min(Math.sqrt(level) + 0.5D, MAX_RADIUS);
     }
 
     @Override
-    public void onUpdate(EntityLivingBase target, float level, ItemStack stack) {
+    public void onUpdate(EntityLivingBase target, double level, ItemStack stack) {
     }
 
     @Override
-    public void updateEntity(EntityItem item, float level) {
+    public void updateEntity(EntityItem item, double level) {
         if(!RadiationConfig.enableContaminationOnGround) return;
         if (item == null) return;
         World world = item.world;
@@ -56,7 +56,7 @@ public class HazardTypeContaminating extends HazardTypeBase {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addHazardInformation(EntityPlayer player, List list, float level, ItemStack stack, List<HazardModifier> modifiers) {
+    public void addHazardInformation(EntityPlayer player, List list, double level, ItemStack stack, List<HazardModifier> modifiers) {
         int radius = computeRadius(level);
         if (radius > 1) {
             list.add(TextFormatting.DARK_GREEN + "[" + I18nUtil.resolveKey("trait.contaminating") + "]");

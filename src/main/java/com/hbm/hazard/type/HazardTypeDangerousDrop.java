@@ -19,22 +19,22 @@ public class HazardTypeDangerousDrop extends HazardTypeBase {
 
 
     @Override
-    public void onUpdate(EntityLivingBase target, float level, ItemStack stack) {
+    public void onUpdate(EntityLivingBase target, double level, ItemStack stack) {
         //Nothing
     }
 
     @Override
-    public void updateEntity(EntityItem item, float level) {
+    public void updateEntity(EntityItem item, double level) {
         payload.updateEntity(item, level);
     }
 
     @Override
-    public void addHazardInformation(EntityPlayer player, List list, float level, ItemStack stack, List<HazardModifier> modifiers) {
+    public void addHazardInformation(EntityPlayer player, List list, double level, ItemStack stack, List<HazardModifier> modifiers) {
         list.add(TextFormatting.RED + "[" + I18nUtil.resolveKey("trait.drop") + "]");
     }
 
     @FunctionalInterface
     public interface IDropPayload {
-        void updateEntity(EntityItem item, float level);
+        void updateEntity(EntityItem item, double level);
     }
 }

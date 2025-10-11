@@ -7,7 +7,7 @@ import java.util.List;
 
 public abstract class HazardModifier {
 
-	public abstract float modify(ItemStack stack, EntityLivingBase holder, float level);
+    public abstract double modify(ItemStack stack, EntityLivingBase holder, double level);
 	
 	/**
 	 * Returns the level after applying all modifiers to it, in order.
@@ -17,12 +17,10 @@ public abstract class HazardModifier {
 	 * @param mods
 	 * @return
 	 */
-	public static float evalAllModifiers(final ItemStack stack, final EntityLivingBase entity, float level, final List<HazardModifier> mods) {
-		
+    public static double evalAllModifiers(final ItemStack stack, final EntityLivingBase entity, double level, final List<HazardModifier> mods) {
 		for(final HazardModifier mod : mods) {
 			level = mod.modify(stack, entity, level);
 		}
-		
 		return level;
 	}
 }

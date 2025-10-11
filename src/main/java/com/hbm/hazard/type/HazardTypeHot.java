@@ -17,25 +17,26 @@ import java.util.List;
 public class HazardTypeHot extends HazardTypeBase {
 
 	@Override
-	public void onUpdate(final EntityLivingBase target, final float level, final ItemStack stack) {
+    public void onUpdate(final EntityLivingBase target, final double level, final ItemStack stack) {
 
 		final boolean wetOrReacher = HazardHelper.isHoldingReacher(target) || target.isWet() ;
 		if(RadiationConfig.disableHot || wetOrReacher) return;
 		if(target instanceof EntityPlayer player && player.capabilities.isCreativeMode) return;
-		target.setFire((int) Math.ceil(level)*hazardRate);
-	}
+        target.setFire((int) Math.ceil(level) * hazardRate);
+    }
 
-	@Override
-	public void updateEntity(final EntityItem item, final float level) { }
+    @Override
+    public void updateEntity(final EntityItem item, final double level) {
+    }
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addHazardInformation(final EntityPlayer player, final List list, float level, final ItemStack stack, final List<HazardModifier> modifiers) {
-		
-		level = HazardModifier.evalAllModifiers(stack, player, level, modifiers);
-		
-		if(level > 0)
-			list.add(TextFormatting.GOLD + "[" + I18nUtil.resolveKey("trait.hot") + "]");
-	}
+    public void addHazardInformation(final EntityPlayer player, final List list, double level, final ItemStack stack, final List<HazardModifier> modifiers) {
+
+        level = HazardModifier.evalAllModifiers(stack, player, level, modifiers);
+
+        if (level > 0)
+            list.add(TextFormatting.GOLD + "[" + I18nUtil.resolveKey("trait.hot") + "]");
+    }
 
 }

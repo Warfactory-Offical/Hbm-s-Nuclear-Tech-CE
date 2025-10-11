@@ -77,7 +77,7 @@ public class EntityEffectHandler {
             if(entity.isWet()) radiation *= WorldConfig.craterBiomeWaterMult;
 
             if(radiation > 0) {
-                ContaminationUtil.contaminate(entity, HazardType.RADIATION, ContaminationType.CREATIVE, radiation / 20F);
+                ContaminationUtil.contaminate(entity, HazardType.RADIATION, ContaminationType.CREATIVE, (double) radiation / 20D);
             }
 			
 			if(entity instanceof EntityPlayerMP) {
@@ -157,15 +157,15 @@ public class EntityEffectHandler {
 			int iy = MathHelper.floor(entity.posY);
 			int iz = MathHelper.floor(entity.posZ);
 
-			BlockPos pos = new BlockPos(ix, iy, iz);
-			float offset = ChunkRadiationManager.proxy.getRadiation(world, pos);
+            BlockPos pos = new BlockPos(ix, iy, iz);
+            double offset = ChunkRadiationManager.proxy.getRadiation(world, pos);
 
 			Object v = CompatibilityConfig.dimensionRad.get(world.provider.getDimension());
-			float background = (v instanceof Number) ? ((Number) v).floatValue() : 0f;
-			float rad = Math.max(0F, offset + background);
-			if (rad > 0F) {
-				ContaminationUtil.contaminate(entity, HazardType.RADIATION, ContaminationType.CREATIVE, rad / 20F);
-			}
+            float background = (v instanceof Number) ? ((Number) v).floatValue() : 0f;
+            double radD = Math.max(0D, offset + background);
+            if (radD > 0D) {
+                ContaminationUtil.contaminate(entity, HazardType.RADIATION, ContaminationType.CREATIVE, (float) (radD / 20D));
+            }
 	
 			if(entity.world.isRaining() && RadiationConfig.cont > 0 && AuxSavedData.getThunder(entity.world) > 0 && entity.world.canBlockSeeSky(pos)) {
 				ContaminationUtil.contaminate(entity, HazardType.RADIATION, ContaminationType.CREATIVE, RadiationConfig.cont * 0.0005F);
@@ -217,7 +217,7 @@ public class EntityEffectHandler {
 			
 			}
 		} else {
-			float radiation = HbmLivingProps.getRadiation(entity);
+            double radiation = HbmLivingProps.getRadiation(entity);
 			
 			if(entity instanceof EntityPlayer && radiation > 600) {
 				
@@ -232,13 +232,13 @@ public class EntityEffectHandler {
 	private static void handleDigamma(EntityLivingBase entity) {
 		
 		if(!entity.world.isRemote) {
-			
-			float digamma = HbmLivingProps.getDigamma(entity);
+
+            double digamma = HbmLivingProps.getDigamma(entity);
 			
 			if(digamma < 0.01F)
 				return;
-			
-			int chance = Math.max(10 - (int)(digamma), 1);
+
+            int chance = Math.max(10 - (int) (digamma), 1);
 			
 			if(chance == 1 || entity.getRNG().nextInt(chance) == 0) {
 				

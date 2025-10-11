@@ -14,7 +14,7 @@ import java.util.List;
 public class TileEntityGeiger extends TileEntity implements ITickable {
 
 	int timer = 0;
-    float ticker = 0;
+    double ticker = 0;
 	
 	
 	@Override
@@ -52,8 +52,8 @@ public class TileEntityGeiger extends TileEntity implements ITickable {
 		}
 		
 	}
-	
-	public float check() {
+
+    public double check() {
         return ChunkRadiationManager.proxy.getRadiation(world, pos);
-	}
+    }
 }

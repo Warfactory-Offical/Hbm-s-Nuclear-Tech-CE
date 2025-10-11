@@ -11,7 +11,7 @@ import java.util.List;
 public class HazardEntry {
 
 	HazardTypeBase type;
-	float baseLevel;
+    double baseLevel;
 	
 	/*
 	 * Modifiers are evaluated in the order they're being applied to the entry.
@@ -19,10 +19,10 @@ public class HazardEntry {
 	List<HazardModifier> mods = new ArrayList();
 	
 	public HazardEntry(final HazardTypeBase type) {
-		this(type, 1F);
+        this(type, 1D);
 	}
-	
-	public HazardEntry(final HazardTypeBase type, final float level) {
+
+    public HazardEntry(final HazardTypeBase type, final double level) {
 		this.type = type;
 		this.baseLevel = level;
 	}
@@ -41,10 +41,10 @@ public class HazardEntry {
 	}
 	
 	public HazardEntry clone() {
-		return clone(1F);
+        return clone(1D);
 	}
-	
-	public HazardEntry clone(final float mult) {
+
+    public HazardEntry clone(final double mult) {
 		final HazardEntry clone = new HazardEntry(type, baseLevel * mult);
 		clone.mods = this.mods;
 		return clone;

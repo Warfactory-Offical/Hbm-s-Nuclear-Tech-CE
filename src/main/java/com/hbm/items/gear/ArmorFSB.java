@@ -256,7 +256,7 @@ public class ArmorFSB extends ItemArmor {
         if (!hasFSBArmor(entity) || !this.geigerSound) return;
         if(InventoryUtil.hasItem(entity, ModItems.geiger_counter) || InventoryUtil.hasItem(entity, ModItems.dosimeter)) return;
         if(world.getTotalWorldTime() % 5 == 0) {
-            float x = (float) ContaminationUtil.getActualPlayerRads(entity);
+            double x = ContaminationUtil.getActualPlayerRads(entity);
 
             if(x > 1e-5) {
                 IntArrayList list = new IntArrayList();
