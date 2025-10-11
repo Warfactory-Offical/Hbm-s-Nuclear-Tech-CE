@@ -16,7 +16,7 @@ public class RenderLantern extends TileEntitySpecialRenderer<TileEntityLantern> 
 
     @Override
     public void render(TileEntityLantern te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-        GlStateManager.pushAttrib();
+        GlStateManager.pushMatrix();
         GlStateManager.translate(x + 0.5D, y, z + 0.5D);
         GlStateManager.enableLighting();
         GlStateManager.disableCull();

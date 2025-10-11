@@ -4,8 +4,6 @@ import com.hbm.api.block.IToolable;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.capability.HbmCapability;
-import com.hbm.capability.HbmLivingCapability;
-import com.hbm.capability.HbmLivingProps;
 import com.hbm.tileentity.IRepairable;
 import com.hbm.tileentity.deco.TileEntityLanternBehemoth;
 import net.minecraft.block.material.Material;
@@ -51,7 +49,7 @@ public class BlockLanternBehemoth extends BlockDummyable implements IToolable, I
 
     @Override
     public boolean onScrew(World world, EntityPlayer player, int x, int y, int z, EnumFacing side, float fX, float fY, float fZ, EnumHand hand, ToolType tool) {
-        if(tool != ToolType.TORCH) return false;
+        if (tool != ToolType.TORCH) return false;
         boolean didRepair = IRepairable.tryRepairMultiblock(world, x, y, z, this, player);
 
         if(didRepair) {
@@ -66,5 +64,6 @@ public class BlockLanternBehemoth extends BlockDummyable implements IToolable, I
     @SideOnly(Side.CLIENT)
     public void printHook(RenderGameOverlayEvent.Pre event, World world, int x, int y, int z) {
         IRepairable.addGenericOverlay(event, world, x, y, z, this);
+        System.out.println("asdasd");
     }
 }

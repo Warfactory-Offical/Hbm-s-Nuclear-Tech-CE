@@ -1,4 +1,4 @@
-package com.hbm.render.entity;
+package com.hbm.render.entity.mob;
 
 import com.hbm.entity.mob.glyphid.*;
 import com.hbm.interfaces.AutoRegister;
