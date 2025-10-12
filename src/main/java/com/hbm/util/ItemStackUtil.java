@@ -148,23 +148,20 @@ public class ItemStackUtil {
 	}
 
     public static ItemStack[] readStacksFromNBT(ItemStack stack, int count) {
-
         if(!stack.hasTagCompound())
             return null;
 
-        NBTTagList list = stack.getTagCompound().getTagList("items", 10);
-        if(count == 0) {
+        final NBTTagList list = stack.getTagCompound().getTagList("items", 10);
+        if (count < 1)
             count = list.tagCount();
-        }
 
-        ItemStack[] stacks = new ItemStack[count];
+        final ItemStack[] stacks = new ItemStack[count];
 
         for(int i = 0; i < count; i++) {
-            NBTTagCompound slotNBT = list.getCompoundTagAt(i);
-            byte slot = slotNBT.getByte("slot");
-            ItemStack loadedStack = new ItemStack(slotNBT);
-            if(slot >= 0 && slot < stacks.length && !loadedStack.equals(ItemStack.EMPTY)) {
-                stacks[slot] = loadedStack;
+            final NBTTagCompound slotNBT = list.getCompoundTagAt(i);
+            final byte slot = slotNBT.getByte("slot");
+            if(slot >= 0 && slot < stacks.length) {
+                stacks[slot] = new ItemStack(slotNBT);
             }
         }
 

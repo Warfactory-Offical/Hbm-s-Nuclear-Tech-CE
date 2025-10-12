@@ -4,7 +4,6 @@ import com.hbm.inventory.container.ContainerToolBox;
 import com.hbm.inventory.gui.GUIToolBox;
 import com.hbm.items.ItemInventory;
 import com.hbm.items.ModItems;
-import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.util.ItemStackUtil;
@@ -73,7 +72,7 @@ public class ItemToolBox extends Item implements IGUIProvider {
         List<Integer> activeRows = new ArrayList<>();
         for (int row = 0; row < 3; row++) {
             for (int slot = 0; slot < 8; slot++) {
-                if(stacks[row * 8 + slot] != null) {
+                if(stacks[row * 8 + slot] != null && !stacks[row * 8 + slot].isEmpty()) {
                     activeRows.add(row);
                     break;
                 }
@@ -82,113 +81,80 @@ public class ItemToolBox extends Item implements IGUIProvider {
         return activeRows;
     }
 
-    // This function genuinely hurts my soul, but it works...
     public void moveRows(ItemStack box, EntityPlayer player) {
+        List<Integer> activeRows = getActiveRows(box);
+        List<List<Integer>> swaps = new ArrayList<>(8);
+        ItemStack[] boxInv = ItemStackUtil.readStacksFromNBT(box, 24);
+        if (boxInv == null || activeRows.isEmpty()) return;
 
-        // Move from hotbar into array in preparation for boxing.
-        ItemStack[] endingHotBar = new ItemStack[9];
-        ItemStack[] stacksToTransferToBox = new ItemStack[8];
+        boolean extraToolboxWarn = false;
+        int playerSlotIndex = -1;
+        for (int i = 0; i < 8; i++) { // Create swaps list
+            playerSlotIndex++;
+            if (i == player.inventory.currentItem) playerSlotIndex++;
 
-        boolean hasToolbox = false;
-        int extraToolboxes = 0;
-        for (int i = 0; i < 9; i++) { // Maximum allowed HotBar size is 9.
+            ItemStack hotbarStack = player.inventory.getStackInSlot(playerSlotIndex);
 
-            ItemStack slot = player.inventory.getStackInSlot(i);
-
-            if(slot != ItemStack.EMPTY && slot.getItem() == ModItems.toolbox && i != player.inventory.currentItem) {
-
-                extraToolboxes++;
-                player.dropItem(slot, true);
-                player.inventory.setInventorySlotContents(i, ItemStack.EMPTY);
-
-            } else if(i == player.inventory.currentItem) {
-                hasToolbox = true;
-                endingHotBar[i] = slot;
-            } else {
-                stacksToTransferToBox[i - (hasToolbox ? 1 : 0)] = slot;
+            if (hotbarStack.getItem() instanceof ItemToolBox) { // Warn if you're trying to toolbox a toolbox, and drop the extra toolbox
+                if (!extraToolboxWarn) player.sendMessage(new TextComponentString(I18n.format("item.toolbox.error_toolbox_toolbox")).setStyle(new Style().setColor(TextFormatting.RED)));
+                extraToolboxWarn = true;
+                player.dropItem(hotbarStack, true, true);
+                player.inventory.removeStackFromSlot(playerSlotIndex);
             }
+
+            List<Integer> swap = new ArrayList<>(activeRows.size() + 1);
+
+            swap.add(playerSlotIndex);
+
+            if (activeRows.contains(0)) swap.add(i);
+            if (activeRows.contains(1)) swap.add(i + 8);
+            if (activeRows.contains(2)) swap.add(i + 16);
+
+            swaps.add(swap);
         }
 
-        if(extraToolboxes > 0) {
-            if(extraToolboxes == 1)
-                player.sendMessage(new TextComponentString(I18n.format("item.toolbox.error_toolbox_toolbox")).setStyle(new Style().setColor(TextFormatting.RED)));
-            else
-                player.sendMessage(new TextComponentString(I18n.format("item.toolbox.error_toolbox_toolbox") + "(x" + extraToolboxes + ")").setStyle(new Style().setColor(TextFormatting.RED)));
-        }
+        ItemStack[] boxInvCopy = new ItemStack[24];
+        System.arraycopy(boxInv, 0, boxInvCopy, 0, boxInv.length);
 
-        // Move stacks around inside the box, mostly shifts rows to other rows and shifts the top row to the hotbar.
-        ItemStack[] stacks = ItemStackUtil.readStacksFromNBT(box, 24);
-        ItemStack[] endingStacks = new ItemStack[24];
+        for (List<Integer> swap : swaps) { // Swap hotbars
+            ItemStack[] buffer = new ItemStack[swap.size()]; // Create buffer [player|box1|box2|box3]
 
-        int lowestActiveIndex = Integer.MAX_VALUE; // Lowest active index to find which row to move *to* the hotbar.
-        int lowestInactiveIndex = Integer.MAX_VALUE; // Lowest *inactive* index to find which row to move the hotbar to.
+            buffer[0] = player.inventory.getStackInSlot(swap.get(0));
 
-        if(stacks != null) {
-            List<Integer> activeRows = getActiveRows(box);
+            for (int i = 1; i < swap.size(); i++) {
+                buffer[i] = boxInv[swap.get(i)];
+            }
 
-            { // despair
-                for (int i = 0; i < 3; i++) {
-                    if(activeRows.contains(i))
-                        lowestActiveIndex = Math.min(i, lowestActiveIndex);
-                    else
-                        lowestInactiveIndex = Math.min(i, lowestInactiveIndex);
+            for (int i = 0; i < swap.size(); i++) { // Actually swap items
+                if (i == 0) { // Put player hotbar in last row of toolbox
+                    boxInvCopy[swap.get(swap.size() - 1)] = buffer[0];
                 }
-
-                if(lowestInactiveIndex > 2) // No inactive rows...
-                    lowestInactiveIndex = 2; // Set to the last possible row; the items will be moved out of the way in time.
-                else
-                    lowestInactiveIndex = Math.max(0, lowestInactiveIndex - 1); // A little shittery to make items pop into the row that's *going* to be empty.
-            }
-
-            // This entire section sucks, but honestly it's not actually that bad; it works so....
-            for (Integer activeRowIndex : activeRows) {
-
-                int activeIndex = 8 * activeRowIndex;
-
-                if (activeRowIndex == lowestActiveIndex) { // Items to "flow" to the hotbar.
-                    hasToolbox = false;
-                    for (int i = 0; i < 9; i++) {
-                        if(i == player.inventory.currentItem) {
-                            hasToolbox = true;
-                            continue;
-                        }
-                        endingHotBar[i] = stacks[activeIndex + i - (hasToolbox ? 1 : 0)];
-                    }
-                    continue;
+                else if (i == 1) { // Put first row of toolbox in player hotbar
+                    if (buffer[1] == null || buffer[1].isEmpty()) player.inventory.removeStackFromSlot(swap.get(0));
+                    else player.inventory.setInventorySlotContents(swap.get(0), buffer[1]);
                 }
-
-                int targetIndex = 8 * (activeRowIndex - 1);
-
-                System.arraycopy(stacks, activeIndex, endingStacks, targetIndex, 8);
+                else { // Move other rows in toolbox up
+                    boxInvCopy[swap.get(i - 1)] = buffer[i];
+                }
             }
         }
 
-        if(stacks == null)
-            lowestInactiveIndex = 0; // Fix crash relating to a null NBT causing this value to be Integer.MAX_VALUE.
+        System.arraycopy(boxInvCopy, 0, boxInv, 0, boxInv.length);
 
-        // Finally, move all temporary arrays into their respective locations.
-        System.arraycopy(stacksToTransferToBox, 0, endingStacks, lowestInactiveIndex * 8, 8);
+        ItemStackUtil.addStacksToNBT(box, boxInv); // Update box inventory
 
-        for (int i = 0; i < endingHotBar.length; i++) {
-            player.inventory.setInventorySlotContents(i, endingHotBar[i]);
-        }
-
-        box.setTagCompound(new NBTTagCompound());
-        ItemStackUtil.addStacksToNBT(box, endingStacks);
-
-        NBTTagCompound nbt = box.getTagCompound();
-
-        if(nbt != null && !nbt.isEmpty()) {
+        NBTTagCompound nbt = box.getTagCompound(); // idk what this really is for but ill add it here just in case
+        if (nbt != null && !nbt.isEmpty()) {
             Random random = new Random();
 
             try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
                 CompressedStreamTools.writeCompressed(nbt, stream);
-                byte[] abyte = stream.toByteArray();
+                byte[] nbtBytes = stream.toByteArray();
 
-                if (abyte.length > 6000) {
-                    player.sendMessage(new TextComponentString(TextFormatting.RED + "Warning: Container NBT exceeds 6kB, contents will be ejected!"));
+                if (nbtBytes.length > 6000) {
+                    player.sendMessage(new TextComponentString(TextFormatting.DARK_RED + "Warning: Container NBT exceeds 6kB, contents will be ejected!"));
                     ItemStack[] stacks1 = ItemStackUtil.readStacksFromNBT(box, 24 /* Toolbox inv size. */);
-                    if(stacks1 == null)
+                    if (stacks1 == null)
                         return;
                     for (ItemStack itemstack : stacks1) {
 
@@ -228,9 +194,8 @@ public class ItemToolBox extends Item implements IGUIProvider {
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand handIn) {
-        ItemStack stack = Library.getMainHeldItem(player);
-        if (!stack.getItem().equals(player.getHeldItem(handIn).getItem()))
-            return new ActionResult<>(EnumActionResult.FAIL, stack);
+        if (handIn == EnumHand.OFF_HAND) return new ActionResult<>(EnumActionResult.FAIL, player.getHeldItemOffhand());
+        ItemStack stack = player.getHeldItemMainhand();
         if(!world.isRemote) {
             if (!player.isSneaking()) {
                 moveRows(stack, player);
@@ -247,13 +212,13 @@ public class ItemToolBox extends Item implements IGUIProvider {
 
     @Override
     public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        return new ContainerToolBox(player.inventory, new InventoryToolBox(player, Library.getMainHeldItem(player)));
+        return new ContainerToolBox(player.inventory, new InventoryToolBox(player, player.getHeldItemMainhand()));
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        return new GUIToolBox(player.inventory, new InventoryToolBox(player, Library.getMainHeldItem(player)));
+        return new GUIToolBox(player.inventory, new InventoryToolBox(player, player.getHeldItemMainhand()));
     }
 
     public static class InventoryToolBox extends ItemInventory {
@@ -293,7 +258,7 @@ public class ItemToolBox extends Item implements IGUIProvider {
 
         @Override
         public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-            return stack.getItem() != ModItems.toolbox;
+            return !(stack.getItem() instanceof ItemToolBox);
         }
     }
 }
