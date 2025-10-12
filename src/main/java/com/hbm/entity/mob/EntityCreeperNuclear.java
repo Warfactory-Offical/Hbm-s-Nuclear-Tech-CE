@@ -3,9 +3,13 @@ package com.hbm.entity.mob;
 import com.hbm.entity.effect.EntityNukeTorex;
 import com.hbm.entity.logic.EntityNukeExplosionMK5;
 import com.hbm.entity.mob.ai.EntityAINuclearCreeperSwell;
+import com.hbm.explosion.ExplosionNukeGeneric;
+import com.hbm.explosion.ExplosionNukeSmall;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IRadiationImmune;
+import com.hbm.inventory.OreDictManager;
 import com.hbm.items.ModItems;
+import com.hbm.items.weapon.sedna.factory.GunFactory;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.main.AdvancementManager;
 import com.hbm.util.ContaminationUtil;
@@ -16,8 +20,11 @@ import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.passive.EntityOcelot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
+import net.minecraftforge.event.ForgeEventFactory;
 
 import java.util.List;
 @AutoRegister(name = "entity_nuclear_creeper", trackingRange = 80, eggColors = {0x204131, 0x75CE00})
@@ -52,8 +59,11 @@ public class EntityCreeperNuclear extends EntityCreeper implements IRadiationImm
 
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount) {
+        // for some reason the nuclear explosion would damage the already dead entity, reviving it and forcing it to play the death animation
+        if(this.isDead) return false;
+
 		if (source == ModDamageSource.radiation || source == ModDamageSource.mudPoisoning) {
-			this.heal(amount);
+            if(this.isEntityAlive()) this.heal(amount);
 			return false;
 		}
 		return super.attackEntityFrom(source, amount);
@@ -70,6 +80,11 @@ public class EntityCreeperNuclear extends EntityCreeper implements IRadiationImm
 		}
 	}
 
+    @Override
+    protected Item getDropItem() {
+        return Item.getItemFromBlock(Blocks.TNT);
+    }
+
 	@Override
 	protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier) {
 		super.dropFewItems(wasRecentlyHit, lootingModifier);
@@ -82,59 +97,33 @@ public class EntityCreeperNuclear extends EntityCreeper implements IRadiationImm
 	public void onDeath(DamageSource cause) {
 		super.onDeath(cause);
 
-		List<EntityPlayer> players = world.getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(10, 10, 10));
+		List<EntityPlayer> players = world.getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(50, 50, 50));
 		for (EntityPlayer player : players) {
 			AdvancementManager.grantAchievement(player, AdvancementManager.bossCreeper);
 		}
-		if (cause.getTrueSource() instanceof EntitySkeleton || (cause.isProjectile() && cause.getImmediateSource() instanceof EntityArrow && ((EntityArrow) (cause.getImmediateSource())).shootingEntity == null)) {
-			int i = rand.nextInt(11);
-			int j = rand.nextInt(3);
-            switch (i) {
-                case 0 -> this.dropItem(ModItems.nugget_u235, j);
-                case 1 -> this.dropItem(ModItems.nugget_pu238, j);
-                case 2 -> this.dropItem(ModItems.nugget_pu239, j);
-                case 3 -> this.dropItem(ModItems.nugget_neptunium, j);
-                case 4 -> this.dropItem(ModItems.man_core, 1);
-                case 5 -> {
-                    this.dropItem(ModItems.sulfur, j * 2);
-                    this.dropItem(ModItems.niter, j * 2);
-                }
-                case 6 -> this.dropItem(ModItems.syringe_awesome, 1);
-                case 7 -> this.dropItem(ModItems.fusion_core, 1);
-                case 8 -> this.dropItem(ModItems.syringe_metal_stimpak, 1);
-                case 9 -> {
-                    switch (rand.nextInt(4)) {
-                        case 0 -> this.dropItem(ModItems.t51_helmet, 1);
-                        case 1 -> this.dropItem(ModItems.t51_plate, 1);
-                        case 2 -> this.dropItem(ModItems.t51_legs, 1);
-                        case 3 -> this.dropItem(ModItems.t51_boots, 1);
-                    }
-                    this.dropItem(ModItems.fusion_core, 1);
-                }
-                case 10 -> this.dropItem(ModItems.nothing, 1); //ammo_nuke
-            }
+		if (cause.getTrueSource() instanceof EntitySkeleton || (cause.isProjectile() && cause.getImmediateSource() instanceof EntityArrow arrow && arrow.shootingEntity == null)) {
+            this.entityDropItem(OreDictManager.DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.NUKE_STANDARD), 1);
 		}
 	}
 
 	@Override
 	public void explode() {
 		if (!this.world.isRemote) {
-			boolean flag = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this);
+			boolean flag = ForgeEventFactory.getMobGriefingEvent(this.world, this);
 
 			if (this.getPowered()) {
-				EntityNukeTorex.statFac(world, posX, posY, posZ, 70);
+				EntityNukeTorex.statFac(world, posX, posY, posZ, 50);
 				if (flag) {
-					world.spawnEntity(EntityNukeExplosionMK5.statFac(world, 70, posX, posY, posZ).setDetonator(this));
+					world.spawnEntity(EntityNukeExplosionMK5.statFac(world, 50, posX, posY, posZ).setDetonator(this));
 				} else {
-					ContaminationUtil.radiate(world, posX, posY + 0.5, posZ, 70, 1000, 0, 100, 500);
+                    ExplosionNukeGeneric.dealDamage(world, posX, posY + 0.5, posZ, 100);
 				}
 			} else {
-				EntityNukeTorex.statFac(world, posX, posY, posZ, 20);
 				if (flag) {
-					world.spawnEntity(EntityNukeExplosionMK5.statFacNoRad(world, 20, posX, posY, posZ).setDetonator(this));
+                    ExplosionNukeSmall.explode(world, posX, posY + 0.5, posZ, ExplosionNukeSmall.PARAMS_MEDIUM);
 				} else {
-					ContaminationUtil.radiate(world, posX, posY + 0.5, posZ, 20, 1000, 0, 100, 500);
-				}
+                    ExplosionNukeSmall.explode(world, posX, posY + 0.5, posZ, ExplosionNukeSmall.PARAMS_SAFE);
+                }
 			}
 
 			this.setDead();
