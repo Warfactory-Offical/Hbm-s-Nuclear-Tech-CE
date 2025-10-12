@@ -57,11 +57,13 @@ public class ArmorT51 extends ArmorFSBPowered implements IItemRendererProvider {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public Item getItemForRenderer() {
         return this;
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public ItemRenderBase getRenderer(Item item) {
         return new ItemRenderBase() {
             @Override
