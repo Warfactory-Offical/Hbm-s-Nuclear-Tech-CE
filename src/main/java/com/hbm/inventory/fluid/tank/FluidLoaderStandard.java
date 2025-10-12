@@ -15,7 +15,7 @@ public class FluidLoaderStandard implements IFluidLoadingHandler {
 		ItemStack inputStack = slots.getStackInSlot(in);
 		ItemStack outputStack = slots.getStackInSlot(out);
 		if(inputStack == ItemStack.EMPTY) return true;
-		if (!NTMFluidCapabilityHandler.isHbmFluidContainer(inputStack.getItem())) return false;
+        if (!NTMFluidCapabilityHandler.isNtmFluidContainer(inputStack.getItem())) return false;
 		FluidType type = tank.getTankType();
 		ItemStack full = FluidContainerRegistry.getFullContainer(inputStack, type);
 		

@@ -26,7 +26,7 @@ public class MachineOrbus extends BlockDummyable {
 	public TileEntity createNewTileEntity(World world, int meta) {
 		
 		if(meta >= 12) return new TileEntityMachineOrbus();
-		if(meta >= 6) return new TileEntityProxyCombo(false, false, true);
+		if(meta >= 6) return new TileEntityProxyCombo(true, false, true);
 		return null;
 	}
 

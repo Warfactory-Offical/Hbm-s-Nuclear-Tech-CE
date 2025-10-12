@@ -32,6 +32,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -435,22 +436,28 @@ public class TileEntityBarrel extends TileEntityMachineBase implements
 
     @Override
     public boolean isItemValidForSlot(int i, ItemStack stack) {
-        if (i == 0 && stack.getItem() instanceof IItemFluidIdentifier) {
-            return true;
-        }
-        return i == 2;
+        Item item = stack.getItem();
+        return switch (i) {
+            case 0, 1 -> item instanceof IItemFluidIdentifier;
+            case 2 -> Library.isStackDrainableForTank(stack, tankNew);
+            case 4 -> Library.isStackFillableForTank(stack, tankNew);
+            default -> true;
+        };
     }
 
     @Override
-    public boolean canInsertItem(int slot, ItemStack itemStack) {
-        return this.isItemValidForSlot(slot, itemStack);
-    }
-
-    @Override
-    public boolean canExtractItem(int slot, ItemStack itemStack, int amount) {
+    public boolean canInsertItem(int slot, ItemStack stack) {
         return switch (slot) {
-            case 1, 3 -> true;
-            default -> false;
+            case 1, 3, 5 -> false;
+            default -> isItemValidForSlot(slot, stack);
+        };
+    }
+
+    @Override
+    public boolean canExtractItem(int slot, ItemStack stack, int amount) {
+        return switch (slot) {
+            case 1, 3, 5 -> true;
+            default -> !isItemValidForSlot(slot, stack);
         };
     }
 

@@ -19,7 +19,7 @@ public class FluidLoaderForge implements IFluidLoadingHandler {
         }
         ItemStack inputStack = slots.getStackInSlot(in);
         FluidType tankFluidType = tank.getTankType();
-        if (inputStack.isEmpty() || NTMFluidCapabilityHandler.isHbmFluidContainer(inputStack.getItem()) || tank.getFill() <= 0 || tankFluidType == Fluids.NONE) {
+        if (inputStack.isEmpty() || NTMFluidCapabilityHandler.isNtmFluidContainer(inputStack.getItem()) || tank.getFill() <= 0 || tankFluidType == Fluids.NONE) {
             return false;
         }
         Fluid forgeFluid = tankFluidType.getFF();
@@ -62,7 +62,7 @@ public class FluidLoaderForge implements IFluidLoadingHandler {
     @Override
     public boolean emptyItem(IItemHandler slots, int in, int out, FluidTankNTM tank) {
         ItemStack inputStack = slots.getStackInSlot(in);
-        if (inputStack.isEmpty() || NTMFluidCapabilityHandler.isHbmFluidContainer(inputStack.getItem())) return false;
+        if (inputStack.isEmpty() || NTMFluidCapabilityHandler.isNtmFluidContainer(inputStack.getItem())) return false;
 
         ItemStack singleItemCopy = inputStack.copy();
         singleItemCopy.setCount(1);

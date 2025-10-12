@@ -68,7 +68,7 @@ public class ContainerMachineChemicalPlant extends ContainerBase {
                     boolean handled = false;
 
                     // NTM container detection
-                    boolean isHBM = NTMFluidCapabilityHandler.isHbmFluidContainer(slotOriginal.getItem());
+                    boolean isHBM = NTMFluidCapabilityHandler.isNtmFluidContainer(slotOriginal.getItem());
                     FluidType hbmType = isHBM ? FluidContainerRegistry.getFluidType(slotOriginal) : Fluids.NONE;
                     int hbmAmount = (isHBM && hbmType != Fluids.NONE) ? FluidContainerRegistry.getFluidContent(slotOriginal, hbmType) : 0;
 

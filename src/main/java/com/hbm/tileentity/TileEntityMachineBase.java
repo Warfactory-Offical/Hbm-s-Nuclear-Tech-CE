@@ -294,7 +294,7 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase impleme
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && inventory != null) {
             if (facing == null) return true;
             BlockPos accessorPos = CapabilityContextProvider.getAccessor(this.pos);
-            return getAccessibleSlotsFromSide(facing, accessorPos).length > 0;
+            return getAccessibleSlotsFromSide(facing, accessorPos) == null || getAccessibleSlotsFromSide(facing, accessorPos).length > 0;
         }
         return super.hasCapability(capability, facing);
     }
