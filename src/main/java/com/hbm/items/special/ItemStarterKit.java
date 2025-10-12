@@ -347,10 +347,10 @@ public class ItemStarterKit extends Item {
 
         if(this == ModItems.t45_kit)
         {
-            player.inventory.addItemStackToInventory(new ItemStack(ModItems.t45_helmet, 1));
-            player.inventory.addItemStackToInventory(new ItemStack(ModItems.t45_plate, 1));
-            player.inventory.addItemStackToInventory(new ItemStack(ModItems.t45_legs, 1));
-            player.inventory.addItemStackToInventory(new ItemStack(ModItems.t45_boots, 1));
+            player.inventory.addItemStackToInventory(new ItemStack(ModItems.t51_helmet, 1));
+            player.inventory.addItemStackToInventory(new ItemStack(ModItems.t51_plate, 1));
+            player.inventory.addItemStackToInventory(new ItemStack(ModItems.t51_legs, 1));
+            player.inventory.addItemStackToInventory(new ItemStack(ModItems.t51_boots, 1));
             player.inventory.addItemStackToInventory(ItemBattery.getFullBattery(ModItems.fusion_core));
             player.inventory.addItemStackToInventory(ItemBattery.getFullBattery(ModItems.fusion_core));
             player.inventory.addItemStackToInventory(ItemBattery.getFullBattery(ModItems.fusion_core));

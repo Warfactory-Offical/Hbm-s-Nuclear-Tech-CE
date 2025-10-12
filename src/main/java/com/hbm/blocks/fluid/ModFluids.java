@@ -46,7 +46,7 @@ public class ModFluids {
 		schrabidic_fluid = FluidRegistry.getFluid("schrabidic_fluid");
         corium_fluid = FluidRegistry.getFluid("corium_fluid");
         volcanic_lava_fluid = FluidRegistry.getFluid("volcanic_lava_fluid");
-        bromine_fluid = FluidRegistry.getFluid("bromine_fluid");
+        bromine_fluid = FluidRegistry.getFluid("bromine");
 		sulfuric_acid_fluid = FluidRegistry.getFluid("sulfuric_acid");
 	}
 }

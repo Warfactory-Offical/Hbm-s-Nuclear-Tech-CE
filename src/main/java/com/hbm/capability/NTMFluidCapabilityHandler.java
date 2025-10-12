@@ -4,6 +4,8 @@ import com.hbm.inventory.FluidContainerRegistry;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.main.MainRegistry;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -22,7 +24,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.OptionalInt;
+import java.util.Set;
 
 /**
  * Deal with fluid type conversions
@@ -32,9 +37,10 @@ import java.util.*;
 public class NTMFluidCapabilityHandler {
 
     public static final ResourceLocation HBM_FLUID_CAPABILITY = new ResourceLocation("hbm", "fluid_container_wrapper");
-
-    private static final Set<Item> HBM_FLUID_ITEMS = new HashSet<>();
-    private static final Map<String, FluidType> FF_TO_NTMF_MAP = new HashMap<>();
+    private static final Set<Item> NTM_CONTAINERS = new ObjectOpenHashSet<>();
+    private static final Set<Item> NTM_FULL_CONTAINERS = new ObjectOpenHashSet<>();
+    private static final Set<Item> NTM_EMPTY_CONTAINERS = new ObjectOpenHashSet<>();
+    private static final Map<String, FluidType> FF_TO_NTMF_MAP = new Object2ObjectOpenHashMap<>();
 
     public static void initialize() {
         for (FluidType type : Fluids.getAll()) {
@@ -51,14 +57,17 @@ public class NTMFluidCapabilityHandler {
         }
 
         for (FluidContainerRegistry.FluidContainer container : FluidContainerRegistry.allContainers) {
-            HBM_FLUID_ITEMS.add(container.fullContainer().getItem());
+            Item full = container.fullContainer().getItem();
+            NTM_CONTAINERS.add(full);
+            NTM_FULL_CONTAINERS.add(full);
             if (container.emptyContainer() != null && !container.emptyContainer().isEmpty()) {
-                HBM_FLUID_ITEMS.add(container.emptyContainer().getItem());
+                Item empty = container.emptyContainer().getItem();
+                NTM_CONTAINERS.add(empty);
+                NTM_EMPTY_CONTAINERS.add(empty);
             }
         }
-
         MinecraftForge.EVENT_BUS.register(new NTMFluidCapabilityHandler());
-        MainRegistry.logger.info("Initialization complete. Mapped {} ForgeFluids. Tracking {} items.", FF_TO_NTMF_MAP.size(), HBM_FLUID_ITEMS.size());
+        MainRegistry.logger.info("NTMFluidCapabilityHandler initialization complete. Mapped {} ForgeFluids. Tracking {} items.", FF_TO_NTMF_MAP.size(), NTM_CONTAINERS.size());
     }
 
     @Nullable
@@ -66,14 +75,22 @@ public class NTMFluidCapabilityHandler {
         return FF_TO_NTMF_MAP.get(forgeFluid.getName());
     }
 
-    public static boolean isHbmFluidContainer(@NotNull Item item) {
-        return HBM_FLUID_ITEMS.contains(item);
+    public static boolean isNtmFluidContainer(@NotNull Item item) {
+        return NTM_CONTAINERS.contains(item);
+    }
+
+    public static boolean isFullNtmFluidContainer(@NotNull Item item) {
+        return NTM_FULL_CONTAINERS.contains(item);
+    }
+
+    public static boolean isEmptyNtmFluidContainer(@NotNull Item item) {
+        return NTM_EMPTY_CONTAINERS.contains(item);
     }
 
     @SubscribeEvent
     public void onAttachCapabilities(AttachCapabilitiesEvent<ItemStack> event) {
         ItemStack stack = event.getObject();
-        if (stack.isEmpty() || !HBM_FLUID_ITEMS.contains(stack.getItem())) return;
+        if (stack.isEmpty() || !NTM_CONTAINERS.contains(stack.getItem())) return;
         event.addCapability(HBM_FLUID_CAPABILITY, new Wrapper(stack));
     }
 

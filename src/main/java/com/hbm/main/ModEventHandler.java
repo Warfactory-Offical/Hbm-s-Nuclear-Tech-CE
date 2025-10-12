@@ -1,8 +1,10 @@
 package com.hbm.main;
 
 import com.google.common.collect.Multimap;
+import com.hbm.blocks.BlockEnums;
 import com.hbm.blocks.IStepTickReceiver;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.generic.BlockOutgas;
 import com.hbm.capability.HbmCapability;
 import com.hbm.capability.HbmCapability.IHBMData;
 import com.hbm.capability.HbmLivingCapability;
@@ -32,9 +34,7 @@ import com.hbm.interfaces.IBomb;
 import com.hbm.inventory.recipes.loader.SerializableRecipe;
 import com.hbm.items.IEquipReceiver;
 import com.hbm.items.ModItems;
-import com.hbm.items.armor.ItemArmorMod;
-import com.hbm.items.armor.ItemModRevive;
-import com.hbm.items.armor.ItemModShackles;
+import com.hbm.items.armor.*;
 import com.hbm.items.food.ItemConserve;
 import com.hbm.items.gear.ArmorFSB;
 import com.hbm.items.special.ItemHot;
@@ -317,10 +317,10 @@ public class ModEventHandler {
                         entity.setItemStackToSlot(EntityEquipmentSlot.LEGS, new ItemStack(ModItems.ajr_legs, 1));
                         entity.setItemStackToSlot(EntityEquipmentSlot.FEET, new ItemStack(ModItems.ajr_boots, 1));
                     }*/ if (randomArmorNumber < 2 << 8) { //1:256
-                        entity.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(ModItems.t45_helmet, 1));
-                        entity.setItemStackToSlot(EntityEquipmentSlot.CHEST, new ItemStack(ModItems.t45_plate, 1));
-                        entity.setItemStackToSlot(EntityEquipmentSlot.LEGS, new ItemStack(ModItems.t45_legs, 1));
-                        entity.setItemStackToSlot(EntityEquipmentSlot.FEET, new ItemStack(ModItems.t45_boots, 1));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(ModItems.t51_helmet, 1));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.CHEST, new ItemStack(ModItems.t51_plate, 1));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.LEGS, new ItemStack(ModItems.t51_legs, 1));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.FEET, new ItemStack(ModItems.t51_boots, 1));
                     } else  if (randomArmorNumber < 2 << 10) { //1:64
                         entity.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(ModItems.security_helmet, 1, world.rand.nextInt(ModItems.titanium_helmet.getMaxDamage(ItemStack.EMPTY))));
                         entity.setItemStackToSlot(EntityEquipmentSlot.CHEST, new ItemStack(ModItems.security_plate, 1, world.rand.nextInt(ModItems.titanium_plate.getMaxDamage(ItemStack.EMPTY))));
@@ -742,12 +742,11 @@ public class ModEventHandler {
             if(player.getItemStackFromSlot(EntityEquipmentSlot.CHEST).getItem() instanceof ArmorFSB fsb)
                 fsb.handleHurt(event);
 
-            // TODO: port IDamageHandler
-//            for(ItemStack stack : player.inventory.armorInventory) {
-//                if(stack != null && stack.getItem() instanceof IDamageHandler) {
-//                    ((IDamageHandler)stack.getItem()).handleDamage(event, stack);
-//                }
-//            }
+            for(ItemStack stack : player.inventory.armorInventory) {
+                if(stack != null && stack.getItem() instanceof IDamageHandler) {
+                    ((IDamageHandler)stack.getItem()).handleDamage(event, stack);
+                }
+            }
         }
     }
 
@@ -765,12 +764,11 @@ public class ModEventHandler {
                 if (player.getItemStackFromSlot(EntityEquipmentSlot.CHEST).getItem() instanceof ArmorFSB fsb){
                     fsb.handleAttack(event);
                 }
-                // TODO: port IAttackHandler
-//                for(ItemStack stack : player.inventory.armorInventory) {
-//                    if(stack != null && stack.getItem() instanceof IAttackHandler) {
-//                        ((IAttackHandler)stack.getItem()).handleAttack(event, stack);
-//                    }
-//                }
+                for(ItemStack stack : player.inventory.armorInventory) {
+                    if(stack != null && stack.getItem() instanceof IAttackHandler) {
+                        ((IAttackHandler)stack.getItem()).handleAttack(event, stack);
+                    }
+                }
             }
         }
     }
@@ -1079,7 +1077,7 @@ public class ModEventHandler {
                     }
 
                     //Shackles
-                    if (revive.getItem() instanceof ItemModShackles && HbmLivingProps.getRadiation(event.getEntityLiving()) < 1000F) {
+                    if (revive.getItem() instanceof ItemModShackles && HbmLivingProps.getRadiation(event.getEntityLiving()) < 1000D) {
 
                         revive.setItemDamage(revive.getItemDamage() + 1);
 
@@ -1228,7 +1226,7 @@ public class ModEventHandler {
 
         Block block = event.getState().getBlock();
 
-        if(block == ModBlocks.stone_gneiss && !AdvancementManager.hasAdvancement(playerMP, AdvancementManager.achStratum)) {
+        if (block == ModBlocks.stone_gneiss && !AdvancementManager.hasAdvancement(playerMP, AdvancementManager.achStratum)) {
             AdvancementManager.grantAchievement(playerMP, AdvancementManager.achStratum);
             event.setExpToDrop(500);
         }
@@ -1243,7 +1241,71 @@ public class ModEventHandler {
                 BlockPos bPos = new BlockPos(x, y, z);
 
                 if (event.getWorld().rand.nextInt(2) == 0 && event.getWorld().getBlockState(bPos).getBlock() == Blocks.AIR)
-                    event.getWorld().setBlockState(bPos, ModBlocks.gas_coal.getDefaultState());
+                    event.getWorld().setBlockState(bPos, ModBlocks.gas_coal.getDefaultState(), 3);
+            }
+        }
+
+        if (block == ModBlocks.stone_resource) {
+            int meta = block.getMetaFromState(event.getState());
+            if (meta == BlockEnums.EnumStoneType.ASBESTOS.ordinal()) {
+                if (!event.getWorld().isRemote) {
+                    final BlockPos p = event.getPos();
+                    final net.minecraft.world.World w = event.getWorld();
+                    ((net.minecraft.world.WorldServer) w).addScheduledTask(() -> {
+                        if (w.getBlockState(p).getBlock() == Blocks.AIR) {
+                            w.setBlockState(p, ModBlocks.gas_asbestos.getDefaultState(), 3);
+                        }
+                    });
+                }
+            }
+        }
+        if (block == ModBlocks.basalt_ore) {
+            int meta = block.getMetaFromState(event.getState());
+            if (meta == BlockEnums.EnumBasaltOreType.ASBESTOS.ordinal()) {
+                if (!event.getWorld().isRemote) {
+                    final BlockPos p = event.getPos();
+                    final net.minecraft.world.World w = event.getWorld();
+                    ((net.minecraft.world.WorldServer) w).addScheduledTask(() -> {
+                        if (w.getBlockState(p).getBlock() == Blocks.AIR) {
+                            w.setBlockState(p, ModBlocks.gas_asbestos.getDefaultState(), 3);
+                        }
+                    });
+                }
+            }
+        }
+
+        if (block instanceof BlockOutgas outgas) {
+            Block gas = outgas.getGas();
+
+            if (gas != Blocks.AIR) {
+                if (event.getWorld().getBlockState(event.getPos()).getBlock() == Blocks.AIR) {
+                    event.getWorld().setBlockState(event.getPos(), gas.getDefaultState(), 3);
+                }
+
+                if (outgas.isOnNeighbour()) {
+                    for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+                        BlockPos p = event.getPos().add(dir.offsetX, dir.offsetY, dir.offsetZ);
+                        if (event.getWorld().getBlockState(p).getBlock() == Blocks.AIR) {
+                            event.getWorld().setBlockState(p, gas.getDefaultState(), 3);
+                        }
+                    }
+                }
+
+                if (block == ModBlocks.ancient_scrap) {
+                    for (int ix = -2; ix <= 2; ix++) {
+                        for (int iy = -2; iy <= 2; iy++) {
+                            for (int iz = -2; iz <= 2; iz++) {
+
+                                if (Math.abs(ix + iy + iz) < 5 && Math.abs(ix + iy + iz) > 0) {
+                                    BlockPos p2 = event.getPos().add(ix, iy, iz);
+                                    if (event.getWorld().getBlockState(p2).getBlock() == Blocks.AIR) {
+                                        event.getWorld().setBlockState(p2, gas.getDefaultState(), 3);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 

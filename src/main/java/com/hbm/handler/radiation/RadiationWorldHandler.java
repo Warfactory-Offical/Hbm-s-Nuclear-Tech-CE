@@ -12,7 +12,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
-import java.util.Collection;
+import java.util.Set;
 
 public class RadiationWorldHandler {
 
@@ -26,7 +26,7 @@ public class RadiationWorldHandler {
             MainRegistry.logger.info("[Debug] Starting advanced world destruction processing");
         }
 
-        Collection<RadPocket> activePockets = RadiationSystemNT.getActiveCollection(world);
+        Set<RadPocket> activePockets = RadiationSystemNT.getActiveSetView(world);
         if (activePockets.isEmpty()) {
             return;
         }

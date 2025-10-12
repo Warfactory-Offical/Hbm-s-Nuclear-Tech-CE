@@ -22,7 +22,7 @@ public class HazardTypeCold extends HazardTypeBase {
 
 
     @Override
-    public void onUpdate(final EntityLivingBase target, final float level, final ItemStack stack) {
+    public void onUpdate(final EntityLivingBase target, final double level, final ItemStack stack) {
         final boolean reacher = HazardHelper.isHoldingReacher(target);
         if (RadiationConfig.disableCold || reacher) return;
 
@@ -41,13 +41,13 @@ public class HazardTypeCold extends HazardTypeBase {
     }
 
     @Override
-    public void updateEntity(final EntityItem item, final float level) {
+    public void updateEntity(final EntityItem item, final double level) {
 
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addHazardInformation(final EntityPlayer player, final List list, final float level, final ItemStack stack, final List<HazardModifier> modifiers) {
+    public void addHazardInformation(final EntityPlayer player, final List list, final double level, final ItemStack stack, final List<HazardModifier> modifiers) {
         list.add(TextFormatting.AQUA + "[" + I18nUtil.resolveKey("trait.cryogenic") + "]");
 
     }

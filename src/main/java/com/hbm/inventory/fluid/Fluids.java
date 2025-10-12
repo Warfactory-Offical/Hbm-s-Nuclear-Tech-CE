@@ -1265,7 +1265,7 @@ public class Fluids {
             }
 
             FluidRegistry.registerFluid(compatFluid);
-            // EOS: I don't know why there is a bucket registration for each liquid.
+            FluidRegistry.addBucketForFluid(compatFluid);
         }
     }
 

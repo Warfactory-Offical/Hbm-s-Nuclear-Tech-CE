@@ -16,33 +16,33 @@ import java.util.List;
 public class HazardTypeHydroactive extends HazardTypeBase {
 
 	@Override
-	public void onUpdate(final EntityLivingBase target, final float level, final ItemStack stack) {
+    public void onUpdate(final EntityLivingBase target, final double level, final ItemStack stack) {
 
 		if(RadiationConfig.disableHydro) return;
 
 		final boolean playerIsWet = target.isWet() || (target.world.isRaining() && target.world.canSeeSky(target.getPosition()));
-		
-		if(playerIsWet && stack.getCount() > 0) {
-			stack.setCount(0);
-			target.world.newExplosion(null, target.posX, target.posY + target.getEyeHeight() - target.getYOffset(), target.posZ, level, false, true);
-		}
-	}
 
-	@Override
-	public void updateEntity(final EntityItem item, final float level) {
+        if (playerIsWet && stack.getCount() > 0) {
+            stack.setCount(0);
+            target.world.newExplosion(null, target.posX, target.posY + target.getEyeHeight() - target.getYOffset(), target.posZ, (float) level, false, true);
+        }
+    }
+
+    @Override
+    public void updateEntity(final EntityItem item, final double level) {
 		
 		if(RadiationConfig.disableHydro)
 			return;
-		
-		if(item.isWet()) {
-			item.setDead();
-			item.world.newExplosion(null, item.posX, item.posY + item.height * 0.5, item.posZ, level, false, true);
-		}
-	}
+
+        if (item.isWet()) {
+            item.setDead();
+            item.world.newExplosion(null, item.posX, item.posY + item.height * 0.5, item.posZ, (float) level, false, true);
+        }
+    }
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addHazardInformation(final EntityPlayer player, final List list, final float level, final ItemStack stack, final List<HazardModifier> modifiers) {
-		list.add(TextFormatting.RED + "[" + I18nUtil.resolveKey("trait.hydro") + "]");
-	}
+    public void addHazardInformation(final EntityPlayer player, final List list, final double level, final ItemStack stack, final List<HazardModifier> modifiers) {
+        list.add(TextFormatting.RED + "[" + I18nUtil.resolveKey("trait.hydro") + "]");
+    }
 }

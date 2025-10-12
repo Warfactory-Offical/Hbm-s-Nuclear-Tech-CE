@@ -12,14 +12,18 @@ import com.hbm.api.fluidmk2.IFluidConnectorMK2;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.HbmLivingCapability.EntityHbmPropsProvider;
 import com.hbm.capability.HbmLivingCapability.IEntityHbmProps;
+import com.hbm.capability.NTMFluidCapabilityHandler;
 import com.hbm.config.GeneralConfig;
 import com.hbm.entity.item.EntityMovingItem;
 import com.hbm.entity.mob.EntityHunterChopper;
 import com.hbm.entity.projectile.EntityChopperMine;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
 import com.hbm.interfaces.Spaghetti;
+import com.hbm.inventory.FluidContainerRegistry;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.fluid.FluidType;
+import com.hbm.inventory.fluid.Fluids;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.TileEntityMachineBase;
@@ -52,6 +56,9 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -1146,7 +1153,35 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 		return cap != null && cap.getEnergyStored() >= cap.getMaxEnergyStored();
 	}
 
-	private static int clampFeRequest(long feLong) {
+    @Contract(pure = true)
+    public static boolean isStackDrainableForTank(@NotNull ItemStack stack, @NotNull FluidTankNTM tank) {
+        Item item = stack.getItem();
+        if (tank.getFill() >= tank.getMaxFill()) return false;
+        if (NTMFluidCapabilityHandler.isNtmFluidContainer(item)) {
+            if (NTMFluidCapabilityHandler.isEmptyNtmFluidContainer(item)) return false;
+            return tank.getTankType() == Fluids.NONE || tank.getTankType() == FluidContainerRegistry.getFluidType(stack);
+        } else if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
+            IFluidHandlerItem handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
+            FluidStack test = handler.drain(1, false);
+            if (test == null) return false;
+            return tank.fill(test, false) > 0;
+        } else return false;
+    }
+
+    @Contract(pure = true)
+    public static boolean isStackFillableForTank(@NotNull ItemStack stack, @NotNull FluidTankNTM tank) {
+        Item item = stack.getItem();
+        if (tank.getTankType() == Fluids.NONE) return false;
+        if (NTMFluidCapabilityHandler.isNtmFluidContainer(item)) {
+            if (NTMFluidCapabilityHandler.isFullNtmFluidContainer(item)) return false;
+            return FluidContainerRegistry.getFillRecipe(stack, tank.getTankType()) != null;
+        } else if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
+            IFluidHandlerItem handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
+            return handler.fill(new FluidStack(tank.getTankTypeFF(), 1), false) > 0;
+        } else return false;
+    }
+
+    private static int clampFeRequest(long feLong) {
 		if (feLong <= 0) return 0;
 		return feLong > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) feLong;
 	}

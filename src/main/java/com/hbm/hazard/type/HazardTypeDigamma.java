@@ -14,25 +14,26 @@ import java.util.List;
 public class HazardTypeDigamma extends HazardTypeBase {
 
 	@Override
-	public void onUpdate(final EntityLivingBase target, final float level, final ItemStack stack) {
-		ContaminationUtil.applyDigammaData(target, (level / 20F)*hazardRate);
-	}
+    public void onUpdate(final EntityLivingBase target, final double level, final ItemStack stack) {
+        ContaminationUtil.applyDigammaData(target, (level / 20D) * hazardRate);
+    }
 
-	@Override
-	public void updateEntity(final EntityItem item, final float level) { }
+    @Override
+    public void updateEntity(final EntityItem item, final double level) {
+    }
 
-	@Override
-	public void addHazardInformation(final EntityPlayer player, final List list, float level, final ItemStack stack, final List<HazardModifier> modifiers) {
-		level = HazardModifier.evalAllModifiers(stack, player, level, modifiers);
+    @Override
+    public void addHazardInformation(final EntityPlayer player, final List list, double level, final ItemStack stack, final List<HazardModifier> modifiers) {
+        level = HazardModifier.evalAllModifiers(stack, player, level, modifiers);
 
-		final float displayLevel = Math.round(level * 10000F) / 10F;
-		list.add(TextFormatting.RED + "[" + I18nUtil.resolveKey("trait.digamma") + "]");
-		list.add(TextFormatting.DARK_RED + "" + displayLevel + "mDRX/s");
+        final double displayLevel = Math.round(level * 10000D) / 10D;
+        list.add(TextFormatting.RED + "[" + I18nUtil.resolveKey("trait.digamma") + "]");
+        list.add(TextFormatting.DARK_RED + "" + displayLevel + "mDRX/s");
 
-		if (stack.getCount() > 1) {
-			final float stackLevel = displayLevel * stack.getCount();
-			list.add(TextFormatting.DARK_RED + "Stack: " + stackLevel + "mDRX/s");
-		}
-	}
+        if (stack.getCount() > 1) {
+            final double stackLevel = displayLevel * stack.getCount();
+            list.add(TextFormatting.DARK_RED + "Stack: " + stackLevel + "mDRX/s");
+        }
+    }
 
 }

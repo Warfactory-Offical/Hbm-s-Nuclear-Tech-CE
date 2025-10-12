@@ -8,13 +8,21 @@ import com.hbm.interfaces.AutoRegister;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import org.jetbrains.annotations.Nullable;
+
 @AutoRegister(name = "entity_mob_flesh_creeper")
 public class EntityCreeperFlesh extends EntityCreeper {
 
     public EntityCreeperFlesh(World world) {
         super(world);
+    }
+
+    @Nullable
+    protected ResourceLocation getLootTable() {
+        return null;
     }
 
     @Override

@@ -503,7 +503,7 @@ public class HbmGroovyPropertyContainer extends GroovyPropertyContainer {
         @MethodDescription(type = MethodDescription.Type.QUERY)
         public float hazardLevel(ItemStack stack, HazardTypeBase type) {
             if (stack == null || stack.isEmpty() || type == null) return 0F;
-            return HazardSystem.getHazardLevelFromStack(stack, type);
+            return (float) HazardSystem.getHazardLevelFromStack(stack, type);
         }
 
         private int registerTargets(Object target, HazardData data) {

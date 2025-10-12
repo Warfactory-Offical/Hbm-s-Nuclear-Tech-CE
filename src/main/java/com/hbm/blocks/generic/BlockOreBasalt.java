@@ -52,14 +52,6 @@ public class BlockOreBasalt extends BlockEnumMeta {
         // No more BUD outgassing for you, mister
     }
 
-    @Override
-    public void dropBlockAsItemWithChance(World world, BlockPos pos, IBlockState state, float chance, int fortune) {
-        if (state.getBlock() == this && state.getValue(META) == EnumBasaltOreType.ASBESTOS.ordinal()) {
-            world.setBlockState(pos, ModBlocks.gas_asbestos.getDefaultState());
-        }
-        super.dropBlockAsItemWithChance(world, pos, state, chance, fortune);
-    }
-
 
     @Override
     public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {

@@ -291,12 +291,14 @@ public class ResourceManager {
 	public static final IModelCustom armor_bj = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/armor/BJ.obj")).asVBO();
 	public static final IModelCustom armor_hev = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/armor/hev.obj")).asVBO();
 	public static final IModelCustom armor_hat = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/armor/hat.obj")).asVBO();
+	public static final IModelCustom armor_no9 = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/armor/no9.obj")).asVBO();
 	public static final IModelCustom armor_goggles = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/armor/goggles.obj")).asVBO();
 	public static final IModelCustom armor_ajr = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/armor/AJR.obj")).asVBO();
 
 	public static final IModelCustom armor_steamsuit = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/armor/steamsuit.obj")).asVBO();
 	public static final IModelCustom armor_dieselsuit = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/armor/bnuuy.obj")).asVBO();
 	public static final IModelCustom armor_trenchmaster = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/armor/trenchmaster.obj")).asVBO();
+	public static final IModelCustom armor_t51 = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/armor/t51.obj")).asVBO();
 	public static final IModelCustom armor_taurun = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/armor/taurun.obj")).asVBO();
 	public static final IModelCustom armor_bismuth = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/armor/bismuth.obj")).asVBO();
 	public static final IModelCustom armor_envsuit = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/armor/envsuit.obj")).asVBO();
@@ -445,6 +447,7 @@ public class ResourceManager {
 
 	//Radgen
 	public static final IModelCustom radgen_body = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/radgen.obj")).asVBO();
+	public static final IModelCustom geiger = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/blocks/geiger_counter.obj")).asVBO();
 
 	//Pumpjack
 	public static final IModelCustom pumpjack = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/pumpjack.obj")).asVBO();
@@ -1155,6 +1158,7 @@ public class ResourceManager {
 
 	//Radgen
 	public static final ResourceLocation radgen_body_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/rad_gen_body.png");
+	public static final ResourceLocation geiger_tex = new ResourceLocation(RefStrings.MODID, "textures/blocks/geiger.png");
 
 	//Small Reactor
 	public static final ResourceLocation reactor_small_base_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/reactor_small_base.png");
@@ -1451,6 +1455,11 @@ public class ResourceManager {
 	public static final ResourceLocation trenchmaster_chest = new ResourceLocation(RefStrings.MODID, "textures/armor/trenchmaster_chest.png");
 	public static final ResourceLocation trenchmaster_arm = new ResourceLocation(RefStrings.MODID, "textures/armor/trenchmaster_arm.png");
 
+	public static final ResourceLocation t51_helmet = new ResourceLocation(RefStrings.MODID, "textures/armor/t51_helmet.png");
+	public static final ResourceLocation t51_leg = new ResourceLocation(RefStrings.MODID, "textures/armor/t51_leg.png");
+	public static final ResourceLocation t51_chest = new ResourceLocation(RefStrings.MODID, "textures/armor/t51_chest.png");
+	public static final ResourceLocation t51_arm = new ResourceLocation(RefStrings.MODID, "textures/armor/t51_arm.png");
+
 	public static final ResourceLocation taurun_helmet = new ResourceLocation(RefStrings.MODID, "textures/armor/taurun_helmet.png");
 	public static final ResourceLocation taurun_leg = new ResourceLocation(RefStrings.MODID, "textures/armor/taurun_leg.png");
 	public static final ResourceLocation taurun_chest = new ResourceLocation(RefStrings.MODID, "textures/armor/taurun_chest.png");
@@ -1492,6 +1501,8 @@ public class ResourceManager {
 	public static final ResourceLocation dnt_arm = new ResourceLocation(RefStrings.MODID, "textures/armor/dnt_arm.png");
 	
 	public static final ResourceLocation hat = new ResourceLocation(RefStrings.MODID, "textures/armor/hat.png");
+	public static final ResourceLocation no9 = new ResourceLocation(RefStrings.MODID, "textures/armor/no9.png");
+	public static final ResourceLocation no9_insignia = new ResourceLocation(RefStrings.MODID, "textures/armor/no9_insignia.png");
 	public static final ResourceLocation goggles = new ResourceLocation(RefStrings.MODID, "textures/armor/goggle_glasses.png");
 	public static final ResourceLocation mod_tesla = new ResourceLocation(RefStrings.MODID, "textures/armor/mod_tesla.png");
 	public static final ResourceLocation wings_murk = new ResourceLocation(RefStrings.MODID, "textures/armor/wings_murk.png");

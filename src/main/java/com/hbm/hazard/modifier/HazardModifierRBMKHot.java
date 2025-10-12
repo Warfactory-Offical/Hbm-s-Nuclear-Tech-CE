@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 public class HazardModifierRBMKHot extends HazardModifier {
 
 	@Override
-	public float modify(final ItemStack stack, final EntityLivingBase holder, float level) {
+    public double modify(final ItemStack stack, final EntityLivingBase holder, double level) {
 		
 		level = 0;
 		

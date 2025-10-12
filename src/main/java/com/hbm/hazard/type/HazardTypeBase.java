@@ -25,14 +25,14 @@ public abstract class HazardTypeBase {
 	 * @param target the holder
 	 * @param level the final level after calculating all the modifiers
 	 */
-	public abstract void onUpdate(EntityLivingBase target, float level, ItemStack stack);
+    public abstract void onUpdate(EntityLivingBase target, double level, ItemStack stack);
 
 	/**
 	 * Updates the hazard for dropped items. Used for things like explosive and hydroactive items.
 	 * @param item
 	 * @param level
 	 */
-	public abstract void updateEntity(EntityItem item, float level);
+    public abstract void updateEntity(EntityItem item, double level);
 	
 	/**
 	 * Adds item tooltip info. Called by Item.addInformation
@@ -43,5 +43,5 @@ public abstract class HazardTypeBase {
 	 * @param modifiers
 	 */
 	@SideOnly(Side.CLIENT)
-	public abstract void addHazardInformation(EntityPlayer player, List list, float level, ItemStack stack, List<HazardModifier> modifiers);
+    public abstract void addHazardInformation(EntityPlayer player, List list, double level, ItemStack stack, List<HazardModifier> modifiers);
 }

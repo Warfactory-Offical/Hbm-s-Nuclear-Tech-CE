@@ -21,7 +21,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.IRenderHandler;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 import java.util.Map;
@@ -682,15 +682,15 @@ public class SkyProviderCelestial extends IRenderHandler {
 
 			mc.getTextureManager().bindTexture(digammaStar);
 
-			float digamma = HbmLivingProps.getDigamma(Minecraft.getMinecraft().player);
-			float var12 = 1F * (1 + digamma * 0.25F);
-			double dist = 100D - digamma * 2.5;
+            double digamma = HbmLivingProps.getDigamma(Minecraft.getMinecraft().player);
+            double var12 = 1D + digamma * 0.25D;
+            double dist = 100D - digamma * 2.5D;
 
 			bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			bufferBuilder.pos(-var12, dist, -var12).tex(0.0D, 0.0D).endVertex();
-			bufferBuilder.pos(var12, dist, -var12).tex(0.0D, 1.0D).endVertex();
-			bufferBuilder.pos(var12, dist, var12).tex(1.0D, 1.0D).endVertex();
-			bufferBuilder.pos(-var12, dist, var12).tex(1.0D, 0.0D).endVertex();
+            bufferBuilder.pos(-var12, dist, -var12).tex(0.0D, 0.0D).endVertex();
+            bufferBuilder.pos(var12, dist, -var12).tex(0.0D, 1.0D).endVertex();
+            bufferBuilder.pos(var12, dist, var12).tex(1.0D, 1.0D).endVertex();
+            bufferBuilder.pos(-var12, dist, var12).tex(1.0D, 0.0D).endVertex();
 			tessellator.draw();
 		}
 		GlStateManager.popMatrix();

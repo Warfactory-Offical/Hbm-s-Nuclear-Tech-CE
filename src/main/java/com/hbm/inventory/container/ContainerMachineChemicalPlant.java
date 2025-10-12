@@ -1,7 +1,11 @@
 package com.hbm.inventory.container;
 
+import com.hbm.capability.NTMFluidCapabilityHandler;
+import com.hbm.inventory.FluidContainerRegistry;
 import com.hbm.inventory.SlotCraftingOutput;
 import com.hbm.inventory.SlotNonRetarded;
+import com.hbm.inventory.fluid.FluidType;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.machine.ItemBlueprints;
 import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.lib.Library;
@@ -46,13 +50,14 @@ public class ContainerMachineChemicalPlant extends ContainerBase {
             ItemStack slotStack = slot.getStack();
             slotOriginal = slotStack.copy();
 
-            if(index <= tile.getSlots() - 1) {
+            int tileSize = tile.getSlots();
+
+            if(index < tileSize) {
                 SlotCraftingOutput.checkAchievements(player, slotStack);
-                if(!this.mergeItemStack(slotStack, tile.getSlots(), this.inventorySlots.size(), true)) {
+                if(!this.mergeItemStack(slotStack, tileSize, this.inventorySlots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
             } else {
-
                 if(Library.isItemBattery(slotOriginal)) {
                     if(!this.mergeItemStack(slotStack, 0, 1, false)) return ItemStack.EMPTY;
                 } else if(slotOriginal.getItem() instanceof ItemBlueprints) {
@@ -60,7 +65,42 @@ public class ContainerMachineChemicalPlant extends ContainerBase {
                 } else if(slotOriginal.getItem() instanceof ItemMachineUpgrade) {
                     if(!this.mergeItemStack(slotStack, 2, 4, false)) return ItemStack.EMPTY;
                 } else {
-                    if(!InventoryUtil.mergeItemStack(this.inventorySlots, slotStack, 4, 7, false)) return ItemStack.EMPTY;
+                    boolean handled = false;
+
+                    // NTM container detection
+                    boolean isHBM = NTMFluidCapabilityHandler.isNtmFluidContainer(slotOriginal.getItem());
+                    FluidType hbmType = isHBM ? FluidContainerRegistry.getFluidType(slotOriginal) : Fluids.NONE;
+                    int hbmAmount = (isHBM && hbmType != Fluids.NONE) ? FluidContainerRegistry.getFluidContent(slotOriginal, hbmType) : 0;
+
+                    // Forge fluid capability detection
+                    int forgeAmount = 0;
+                    boolean hasForgeTank = false;
+                    net.minecraftforge.fluids.capability.IFluidHandlerItem fh = slotOriginal.hasCapability(net.minecraftforge.fluids.capability.CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)
+                            ? slotOriginal.getCapability(net.minecraftforge.fluids.capability.CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)
+                            : null;
+                    if (fh != null) {
+                        for (net.minecraftforge.fluids.capability.IFluidTankProperties prop : fh.getTankProperties()) {
+                            hasForgeTank = true;
+                            net.minecraftforge.fluids.FluidStack fs = prop.getContents();
+                            if (fs != null && fs.amount > 0) forgeAmount += fs.amount;
+                        }
+                    }
+
+                    boolean isFluidFull = (isHBM && hbmAmount > 0) || (hasForgeTank && forgeAmount > 0);
+                    boolean isFluidEmpty = (isHBM && (hbmType == Fluids.NONE || hbmAmount == 0)) || (hasForgeTank && forgeAmount == 0);
+
+                    if (isFluidFull) {
+                        if(!this.mergeItemStack(slotStack, 10, 13, false)) return ItemStack.EMPTY;
+                        handled = true;
+                    } else if (isFluidEmpty) {
+                        if(!this.mergeItemStack(slotStack, 16, 19, false)) return ItemStack.EMPTY;
+                        handled = true;
+                    }
+
+                    // Fallback to solid input if not a fluid container
+                    if(!handled) {
+                        if(!InventoryUtil.mergeItemStack(this.inventorySlots, slotStack, 4, 7, false)) return ItemStack.EMPTY;
+                    }
                 }
             }
 

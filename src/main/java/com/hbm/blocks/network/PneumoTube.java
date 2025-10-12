@@ -19,7 +19,6 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
@@ -45,11 +44,11 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -308,7 +307,7 @@ public class PneumoTube extends BlockContainer implements IToolable, ITooltipPro
         @Override public String valueToString(Boolean value) { return value.toString(); }
     }
 
-    private static boolean hasItemHandler(@NotNull TileEntity tile, @NotNull ForgeDirection tubeDir) {
+    public static boolean hasItemHandler(@NotNull TileEntity tile, @NotNull ForgeDirection tubeDir) {
         ForgeDirection dir = tubeDir != ForgeDirection.UNKNOWN ? tubeDir.getOpposite() : ForgeDirection.UNKNOWN;
         EnumFacing facing = dir != ForgeDirection.UNKNOWN ? dir.toEnumFacing() : null;
         if(facing != null && tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing)) {

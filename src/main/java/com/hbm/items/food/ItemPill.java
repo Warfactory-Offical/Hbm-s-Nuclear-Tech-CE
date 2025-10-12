@@ -78,21 +78,21 @@ public class ItemPill extends ItemFood {
 				player.addPotionEffect(eff);
 			}
 
-        	if(this == ModItems.xanax) {
-				float digamma = HbmLivingProps.getDigamma(player);
-				HbmLivingProps.setDigamma(player, Math.max(digamma - 0.5F, 0F));
-			}
+            if (this == ModItems.xanax) {
+                double digamma = HbmLivingProps.getDigamma(player);
+                HbmLivingProps.setDigamma(player, Math.max(digamma - 0.5D, 0D));
+            }
 
-			if(this == ModItems.fmn) {
-				float digamma = HbmLivingProps.getDigamma(player);
-				HbmLivingProps.setDigamma(player, Math.min(digamma, 2F));
-				player.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 60, 0));
-			}
+            if (this == ModItems.fmn) {
+                double digamma = HbmLivingProps.getDigamma(player);
+                HbmLivingProps.setDigamma(player, Math.min(digamma, 2D));
+                player.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 60, 0));
+            }
 
-			if(this == ModItems.five_htp) {
-				HbmLivingProps.setDigamma(player, 0);
-				player.addPotionEffect(new PotionEffect(HbmPotion.stability, 10 * 60 * 20, 0));
-			}
+            if (this == ModItems.five_htp) {
+                HbmLivingProps.setDigamma(player, 0D);
+                player.addPotionEffect(new PotionEffect(HbmPotion.stability, 10 * 60 * 20, 0));
+            }
         }
 	}
 	

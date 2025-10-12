@@ -31,6 +31,7 @@ import com.hbm.items.IDynamicModels;
 import com.hbm.items.IModelRegister;
 import com.hbm.items.ModItems;
 import com.hbm.items.RBMKItemRenderers;
+import com.hbm.items.armor.ArmorNo9;
 import com.hbm.items.armor.ItemArmorMod;
 import com.hbm.items.armor.JetpackBase;
 import com.hbm.items.gear.ArmorFSB;
@@ -971,6 +972,8 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
 
     @SubscribeEvent
     public void clientTick(ClientTickEvent e) {
+        Minecraft mc = Minecraft.getMinecraft();
+        ArmorNo9.updateWorldHook(mc.world);
         if (e.phase == Phase.END) {
             if (!firstPersonAuxParticles.isEmpty()) {
                 Iterator<ParticleFirstPerson> i = firstPersonAuxParticles.iterator();
@@ -1616,16 +1619,16 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
             if (!(ArmorFSB.hasFSBArmorHelmet(player) && ((ArmorFSB) player.inventory.armorInventory.get(3).getItem()).customGeiger)) {
                 if (Library.hasInventoryItem(player.inventory, ModItems.geiger_counter) || hasBauble(player, ModItems.geiger_counter)) {
 
-                    float rads = (float) Library.getEntRadCap(player).getRads();
+                    double rads = Library.getEntRadCap(player).getRads();
 
-                    RenderScreenOverlay.renderRadCounter(event.getResolution(), rads, Minecraft.getMinecraft().ingameGUI);
+                    RenderScreenOverlay.renderRadCounter(event.getResolution(), (float) rads, Minecraft.getMinecraft().ingameGUI);
                 }
             }
             if (Library.hasInventoryItem(player.inventory, ModItems.digamma_diagnostic) || hasBauble(player, ModItems.digamma_diagnostic)) {
 
-                float digamma = (float) Library.getEntRadCap(player).getDigamma();
+                double digamma = Library.getEntRadCap(player).getDigamma();
 
-                RenderScreenOverlay.renderDigCounter(event.getResolution(), digamma, Minecraft.getMinecraft().ingameGUI);
+                RenderScreenOverlay.renderDigCounter(event.getResolution(), (float) digamma, Minecraft.getMinecraft().ingameGUI);
             }
             if (JetpackHandler.hasJetpack(player)) {
                 JetpackHandler.renderHUD(player, event.getResolution());

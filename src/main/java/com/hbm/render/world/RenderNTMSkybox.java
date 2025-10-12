@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IRenderHandler;
 import net.minecraftforge.fml.client.FMLClientHandler;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 public class RenderNTMSkybox extends IRenderHandler { //why an abstract class uses the I-prefix is beyond me but ok, alright, whatever
 	
@@ -69,18 +69,18 @@ public class RenderNTMSkybox extends IRenderHandler { //why an abstract class us
 		GlStateManager.rotate(140.0F, 1.0F, 0.0F, 0.0F);
 		GlStateManager.rotate(-40.0F, 0.0F, 0.0F, 1.0F);
 		FMLClientHandler.instance().getClient().renderEngine.bindTexture(digammaStar);
-		
-		float digamma = HbmLivingProps.getDigamma(Minecraft.getMinecraft().player);
-		float var12 = 1F * (1 + digamma * 0.25F);
-		double dist = 100D - digamma * 2.5;
+
+        double digamma = HbmLivingProps.getDigamma(Minecraft.getMinecraft().player);
+        double var12 = (1D + digamma * 0.25D);
+        double dist = 100D - digamma * 2.5D;
 		
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buf = tessellator.getBuffer();
 		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		buf.pos(-var12, dist, -var12).tex(0, 0).endVertex();
-		buf.pos(var12, dist, -var12).tex(0, 1).endVertex();
-		buf.pos(var12, dist, var12).tex(1, 1).endVertex();
-		buf.pos(-var12, dist, var12).tex(1, 0).endVertex();
+        buf.pos(-var12, dist, -var12).tex(0, 0).endVertex();
+        buf.pos(var12, dist, -var12).tex(0, 1).endVertex();
+        buf.pos(var12, dist, var12).tex(1, 1).endVertex();
+        buf.pos(-var12, dist, var12).tex(1, 0).endVertex();
 		tessellator.draw();
 		GlStateManager.popMatrix();
 		

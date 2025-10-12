@@ -4,12 +4,14 @@ import com.hbm.capability.HbmLivingProps;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.items.ModItems;
 import com.hbm.lib.HBMSoundHandler;
+import com.hbm.main.AdvancementManager;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -69,11 +71,10 @@ public class ItemCigarette extends Item {
                 HbmLivingProps.incrementAsbestos(player, 2000);
                 HbmLivingProps.incrementRadiation(player, 100F);
 
-                //ItemStack helmet = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
-                // TODO: Add no9 item
-//                if(helmet.getItem() == ModItems.no9) {
-//                    AdvancementManager.grantAchievement(player, AdvancementManager.achNo9);
-//                }
+                ItemStack helmet = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+                if(helmet.getItem() == ModItems.no9) {
+                    AdvancementManager.grantAchievement(player, AdvancementManager.achNo9);
+                }
             }
 
             if (this == ModItems.crackpipe) {
