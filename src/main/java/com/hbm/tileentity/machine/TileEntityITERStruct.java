@@ -1,12 +1,12 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.blocks.BlockDummyable;
-import com.hbm.blocks.IStructTE;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.MachineITER;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.ForgeDirection;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -15,7 +15,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @AutoRegister
-public class TileEntityITERStruct extends TileEntity implements ITickable, IStructTE<TileEntityITERStruct> {
+public class TileEntityITERStruct extends TileEntity implements ITickable {
 
 	public static final int[][][] layout = new int[][][] {
 
@@ -154,13 +154,24 @@ public class TileEntityITERStruct extends TileEntity implements ITickable, IStru
 						continue;
 
 					int b = layout[ly][x][z];
-					Block block = world.getBlockState(new BlockPos(pos.getX() + x - width, pos.getY() + y, pos.getZ() + z - width)).getBlock();
-					switch(b) {
-					case 1: if(block != ModBlocks.fusion_conductor) { return; } break;
-					case 2: if(block != ModBlocks.fusion_center) { return; } break;
-					case 3: if(block != ModBlocks.fusion_motor) { return; } break;
-					case 4: if(block != ModBlocks.reinforced_glass) { return; } break;
-					}
+					IBlockState state = world.getBlockState(new BlockPos(pos.getX() + x - width, pos.getY() + y, pos.getZ() + z - width));
+                    Block block = state.getBlock();
+
+                    switch (b) {
+                        case 1 -> {
+                            int meta = block.getMetaFromState(state);
+                            if (block != ModBlocks.fusion_conductor || meta != 1) return;
+                        }
+                        case 2 -> {
+                            if (block != ModBlocks.fusion_center) return;
+                        }
+                        case 3 -> {
+                            if (block != ModBlocks.fusion_motor) return;
+                        }
+                        case 4 -> {
+                            if (block != ModBlocks.reinforced_glass) return;
+                        }
+                    }
 				}
 			}
 		}
@@ -185,10 +196,5 @@ public class TileEntityITERStruct extends TileEntity implements ITickable, IStru
 	@SideOnly(Side.CLIENT)
 	public double getMaxRenderDistanceSquared() {
 		return 65536.0D;
-	}
-
-	@Override
-	public TileEntityITERStruct newInstance() {
-		return this;
 	}
 }

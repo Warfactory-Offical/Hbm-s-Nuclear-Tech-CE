@@ -1,0 +1,7 @@
+{
+	"parent": "block/cube_column",
+	"textures": {
+		"end": "hbm:blocks/fusion_conductor_top_welded",
+		"side": "hbm:blocks/fusion_conductor_side_welded"
+	}
+}
