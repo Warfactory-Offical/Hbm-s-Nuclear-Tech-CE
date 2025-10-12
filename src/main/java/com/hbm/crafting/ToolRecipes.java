@@ -126,22 +126,20 @@ public class ToolRecipes {
         // TODO
         //CraftingManager.addRecipeAuto(new ItemStack(ModItems.sat_designator, 1), "RRD", "PIC", "  P", 'P', GOLD.plate(), 'R', Items.REDSTONE, 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.ADVANCED), 'D', ModItems.sat_chip, 'I', GOLD.ingot() );
         CraftingManager.addShapelessAuto(new ItemStack(ModItems.sat_relay), ModItems.sat_chip, ModItems.ducttape, ModItems.radar_linker );
-        // TODO
-        /*CraftingManager.addRecipeAuto(new ItemStack(ModItems.settings_tool), " P ", "PCP", "III", 'P', IRON.plate(), 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.ANALOG), 'I', ModItems.plate_polymer );
+        CraftingManager.addRecipeAuto(new ItemStack(ModItems.settings_tool), " P ", "PCP", "III", 'P', IRON.plate(), 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.ANALOG), 'I', ModItems.plate_polymer );
 
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.pipette, 1), "  L", " G ", "G  ", 'L', ANY_RUBBER.ingot(), 'G', KEY_CLEARGLASS);
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.pipette_boron, 1), "  P", " B ", "B  ", 'P', RUBBER.ingot(), 'B', ModBlocks.glass_boron);
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.pipette_laboratory, 1), "  C", " R ", "P  ", 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.CHIP), 'R', RUBBER.ingot(), 'P', ModItems.pipette_boron );
 
-        CraftingManager.addRecipeAuto(new ItemStack(ModItems.siphon, 1), " GR", " GR", " G ", 'G', KEY_CLEARGLASS, 'R', ANY_RUBBER.ingot());*/
+        CraftingManager.addRecipeAuto(new ItemStack(ModItems.siphon, 1), " GR", " GR", " G ", 'G', KEY_CLEARGLASS, 'R', ANY_RUBBER.ingot());
 
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.mirror_tool), " A ", " IA", "I  ", 'A', AL.ingot(), 'I', IRON.ingot() );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.rbmk_tool), " A ", " IA", "I  ", 'A', PB.ingot(), 'I', IRON.ingot() );
-        // TODO
-        /*CraftingManager.addRecipeAuto(new ItemStack(ModItems.power_net_tool), "WRW", " I ", " B ", 'W', MINGRADE.wireFine(), 'R', REDSTONE.dust(), 'I', IRON.ingot(), 'B', ModItems.battery_generic );
+        CraftingManager.addRecipeAuto(new ItemStack(ModItems.power_net_tool), "WRW", " I ", " B ", 'W', MINGRADE.wireFine(), 'R', REDSTONE.dust(), 'I', IRON.ingot(), 'B', ModItems.battery_generic );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.analysis_tool), "  G", " S ", "S  ", 'G', KEY_ANYPANE, 'S', STEEL.ingot() );
 
-        CraftingManager.addRecipeAuto(new ItemStack(ModItems.toolbox), "CCC", "CIC", 'C', CU.plate(), 'I', IRON.ingot() );*/
+        CraftingManager.addRecipeAuto(new ItemStack(ModItems.toolbox), "CCC", "CIC", 'C', CU.plate(), 'I', IRON.ingot() );
 
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.screwdriver, 1), "  I", " I ", "S  ", 'S', STEEL.ingot(), 'I', IRON.ingot() );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.screwdriver_desh, 1), "  I", " I ", "S  ", 'S', ANY_PLASTIC.ingot(), 'I', DESH.ingot() );
@@ -157,10 +155,6 @@ public class ToolRecipes {
 
         //Bobmazon
         CraftingManager.addShapelessAuto(new ItemStack(ModItems.bobmazon), Items.BOOK, Items.GOLD_NUGGET, Items.STRING, KEY_BLUE);
-
-        //Blueprints
-        //CraftingManager.addShapelessAuto(new ItemStack(ModItems.blueprint_folder, 1, 0), ModItems.blueprints, ModItems.blueprints, ModItems.blueprints );
-        //CraftingManager.addShapelessAuto(new ItemStack(ModItems.blueprint_folder, 1, 1), ModItems.blueprints, ModItems.blueprints, ModItems.blueprints, ModItems.blueprints, ModItems.blueprints, ModItems.fragment_meteorite );
 
         //Carts
         // TODO: ItemModMinecart
