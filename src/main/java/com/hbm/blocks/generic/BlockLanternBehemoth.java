@@ -64,6 +64,5 @@ public class BlockLanternBehemoth extends BlockDummyable implements IToolable, I
     @SideOnly(Side.CLIENT)
     public void printHook(RenderGameOverlayEvent.Pre event, World world, int x, int y, int z) {
         IRepairable.addGenericOverlay(event, world, x, y, z, this);
-        System.out.println("asdasd");
     }
 }

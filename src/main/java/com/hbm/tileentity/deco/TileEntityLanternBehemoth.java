@@ -52,7 +52,7 @@ public class TileEntityLanternBehemoth extends TileEntityLoadedBase implements I
                 EntityBobmazon shuttle = new EntityBobmazon(world);
                 shuttle.posX = pos.getX() + 0.5 + world.rand.nextGaussian() * 10;
                 shuttle.posY = 300;
-                shuttle.posZ = pos.getY() + 0.5 + world.rand.nextGaussian() * 10;
+                shuttle.posZ = pos.getZ() + 0.5 + world.rand.nextGaussian() * 10;
                 shuttle.payload = ItemKitCustom.create("Supplies", null, 0xffffff, 0x008000,
                         DictFrame.fromOne(ModItems.circuit, ItemEnums.EnumCircuitType.BASIC, 4 + world.rand.nextInt(4)),
                         DictFrame.fromOne(ModItems.circuit, ItemEnums.EnumCircuitType.ADVANCED, 4 + world.rand.nextInt(2)),
