@@ -31,6 +31,7 @@ import com.hbm.items.IDynamicModels;
 import com.hbm.items.IModelRegister;
 import com.hbm.items.ModItems;
 import com.hbm.items.RBMKItemRenderers;
+import com.hbm.items.armor.ArmorNo9;
 import com.hbm.items.armor.ItemArmorMod;
 import com.hbm.items.armor.JetpackBase;
 import com.hbm.items.gear.ArmorFSB;
@@ -970,6 +971,8 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
 
     @SubscribeEvent
     public void clientTick(ClientTickEvent e) {
+        Minecraft mc = Minecraft.getMinecraft();
+        ArmorNo9.updateWorldHook(mc.world);
         if (e.phase == Phase.END) {
             if (!firstPersonAuxParticles.isEmpty()) {
                 Iterator<ParticleFirstPerson> i = firstPersonAuxParticles.iterator();

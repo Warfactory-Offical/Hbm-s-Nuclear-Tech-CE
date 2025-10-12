@@ -28,6 +28,8 @@ import java.util.UUID;
 public class HbmLivingProps {
 
     public static final UUID digamma_UUID = UUID.fromString("2a3d8aec-5ab9-4218-9b8b-ca812bdf378b");
+    public static final int maxAsbestos = 60 * 60 * 20;
+    public static final int maxBlacklung = 2 * 60 * 60 * 20;
 
     public static IEntityHbmProps getData(EntityLivingBase entity) {
         return entity.hasCapability(HbmLivingCapability.EntityHbmPropsProvider.ENT_HBM_PROPS_CAP, null)

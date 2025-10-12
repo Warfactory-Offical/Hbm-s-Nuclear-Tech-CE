@@ -289,7 +289,7 @@ public class CommandHbm extends CommandBase {
             switch (args[1]) {
                 case "antenna" -> Antenna.INSTANCE.generate(world, rand, genPos, force);
                 case "relay" -> Relay.INSTANCE.generate(world, rand, genPos, force);
-                case "dud" -> new Dud().generate(world, rand, genPos, force);
+                case "dud" -> new Dud().generate(world, rand, genPos);
                 case "silo" -> Silo.INSTANCE.generate(world, rand, genPos, force);
                 case "barrel" -> Barrel.INSTANCE.generate(world, rand, genPos, force);
                 case "satellite" -> Satellite.INSTANCE.generate(world, rand, genPos, force);

@@ -34,9 +34,7 @@ import com.hbm.interfaces.IBomb;
 import com.hbm.inventory.recipes.loader.SerializableRecipe;
 import com.hbm.items.IEquipReceiver;
 import com.hbm.items.ModItems;
-import com.hbm.items.armor.ItemArmorMod;
-import com.hbm.items.armor.ItemModRevive;
-import com.hbm.items.armor.ItemModShackles;
+import com.hbm.items.armor.*;
 import com.hbm.items.food.ItemConserve;
 import com.hbm.items.gear.ArmorFSB;
 import com.hbm.items.special.ItemHot;
@@ -744,12 +742,11 @@ public class ModEventHandler {
             if(player.getItemStackFromSlot(EntityEquipmentSlot.CHEST).getItem() instanceof ArmorFSB fsb)
                 fsb.handleHurt(event);
 
-            // TODO: port IDamageHandler
-//            for(ItemStack stack : player.inventory.armorInventory) {
-//                if(stack != null && stack.getItem() instanceof IDamageHandler) {
-//                    ((IDamageHandler)stack.getItem()).handleDamage(event, stack);
-//                }
-//            }
+            for(ItemStack stack : player.inventory.armorInventory) {
+                if(stack != null && stack.getItem() instanceof IDamageHandler) {
+                    ((IDamageHandler)stack.getItem()).handleDamage(event, stack);
+                }
+            }
         }
     }
 
@@ -767,12 +764,11 @@ public class ModEventHandler {
                 if (player.getItemStackFromSlot(EntityEquipmentSlot.CHEST).getItem() instanceof ArmorFSB fsb){
                     fsb.handleAttack(event);
                 }
-                // TODO: port IAttackHandler
-//                for(ItemStack stack : player.inventory.armorInventory) {
-//                    if(stack != null && stack.getItem() instanceof IAttackHandler) {
-//                        ((IAttackHandler)stack.getItem()).handleAttack(event, stack);
-//                    }
-//                }
+                for(ItemStack stack : player.inventory.armorInventory) {
+                    if(stack != null && stack.getItem() instanceof IAttackHandler) {
+                        ((IAttackHandler)stack.getItem()).handleAttack(event, stack);
+                    }
+                }
             }
         }
     }

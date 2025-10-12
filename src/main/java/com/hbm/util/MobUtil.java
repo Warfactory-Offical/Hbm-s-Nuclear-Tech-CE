@@ -36,7 +36,7 @@ public class MobUtil {
     public static void intializeMobPools(){
         slotPoolCommon.put(4, createSlotPool(8000, new Object[][]{ //new slots, smooth, brushed, no wrinkles // old slots, wrinkled, rusty, not smooth
                 {ModItems.gas_mask_m65, 16}, {ModItems.gas_mask_olde, 12}, {ModItems.mask_of_infamy, 8},
-                {ModItems.gas_mask_mono, 8}, {ModItems.robes_helmet, 32}, /*{ModItems.no9, 16},*/ // TODO
+                {ModItems.gas_mask_mono, 8}, {ModItems.robes_helmet, 32}, {ModItems.no9, 16},
                 {ModItems.cobalt_helmet, 2}, {ModItems.rag_piss, 1}, {ModItems.hat, 1}, {ModItems.alloy_helmet, 2},
                 {ModItems.titanium_helmet, 4}, {ModItems.steel_helmet, 8}
         }));
@@ -62,7 +62,7 @@ public class MobUtil {
 
         slotPoolRanged.put(4, createSlotPool(12000, new Object[][]{
                 {ModItems.gas_mask_m65, 16}, {ModItems.gas_mask_olde, 12}, {ModItems.mask_of_infamy, 8},
-                {ModItems.gas_mask_mono, 8}, {ModItems.robes_helmet, 32}, /*{ModItems.no9, 16},*/
+                {ModItems.gas_mask_mono, 8}, {ModItems.robes_helmet, 32}, {ModItems.no9, 16},
                 {ModItems.rag_piss, 1}, {ModItems.goggles, 1}, {ModItems.alloy_helmet, 2},
                 {ModItems.titanium_helmet, 4}, {ModItems.steel_helmet, 8}
         }));
@@ -94,7 +94,7 @@ public class MobUtil {
 
         slotPoolAdv.put(4, createSlotPool(new Object[][]{
                 {ModItems.security_helmet, 10}, {ModItems.t51_helmet, 4}, {ModItems.asbestos_helmet, 12},
-                {ModItems.liquidator_helmet, 4}, /*{ModItems.no9, 12},*/
+                {ModItems.liquidator_helmet, 4}, {ModItems.no9, 12},
                 {ModItems.hazmat_helmet, 6}
         }));
         slotPoolAdv.put(3, createSlotPool(new Object[][]{
@@ -134,13 +134,13 @@ public class MobUtil {
         }));
 
         slotPoolMasks.put(4, createSlotPool(0, new Object[][]{
-                {ModItems.gas_mask_m65, 16}, {ModItems.gas_mask_mono, 8}, {ModItems.robes_helmet, 32}, /*{ModItems.no9, 16},*/
+                {ModItems.gas_mask_m65, 16}, {ModItems.gas_mask_mono, 8}, {ModItems.robes_helmet, 32}, {ModItems.no9, 16},
                 {ModItems.rag_piss, 4}, {ModItems.goggles, 12}
         }));
 
         slotPoolHelms.put(4, createSlotPool(0, new Object[][]{
                 {ModItems.gas_mask_m65, 16}, {ModItems.gas_mask_olde, 12}, {ModItems.mask_of_infamy, 8},
-                {ModItems.gas_mask_mono, 8}, {ModItems.robes_helmet, 32}, /*{ModItems.no9, 16},*/
+                {ModItems.gas_mask_mono, 8}, {ModItems.robes_helmet, 32}, {ModItems.no9, 16},
                 {ModItems.cobalt_helmet, 2}, {ModItems.hat, 1}, {ModItems.alloy_helmet, 2},
                 {ModItems.titanium_helmet, 4}, {ModItems.steel_helmet, 8}
         }));

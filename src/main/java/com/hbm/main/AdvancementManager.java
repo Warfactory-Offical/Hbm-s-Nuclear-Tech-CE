@@ -94,7 +94,7 @@ public class AdvancementManager {
         achStratum     = adv.getAdvancement(new ResourceLocation(RefStrings.MODID, "achstratum"));
         achOmega12     = adv.getAdvancement(new ResourceLocation(RefStrings.MODID, "achomega12"));
 
-//        achNo9         = adv.getAdvancement(new ResourceLocation(RefStrings.MODID, "achno9")); //TODO
+        achNo9         = adv.getAdvancement(new ResourceLocation(RefStrings.MODID, "achno9")); //TODO mov, make another .json
         achSlimeball   = adv.getAdvancement(new ResourceLocation(RefStrings.MODID, "achslimeball"));
         achSulfuric    = adv.getAdvancement(new ResourceLocation(RefStrings.MODID, "achsulfuric"));
         achInferno     = adv.getAdvancement(new ResourceLocation(RefStrings.MODID, "achinferno"));
