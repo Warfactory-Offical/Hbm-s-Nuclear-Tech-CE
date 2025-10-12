@@ -399,10 +399,12 @@ public class ModItems {
     public static final Item fluid_barrel_empty = new ItemBase("fluid_barrel_empty").setCreativeTab(MainRegistry.controlTab);
     public static final Item fluid_barrel_full = new ItemFluidTank("fluid_barrel_full", 16000).setCreativeTab(MainRegistry.controlTab);
     public static final Item fluid_barrel_infinite = new ItemFluidContainerInfinite(null, 1_000_000_000, "fluid_barrel_infinite").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
+    public static final Item pipette = new ItemPipette("pipette").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
+    public static final Item pipette_boron = new ItemPipette("pipette_boron").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
+    public static final Item pipette_laboratory = new ItemPipette("pipette_laboratory").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
+    public static final Item siphon = new ItemFluidSiphon("siphon").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
     public static final Item inf_water = new ItemFluidContainerInfinite(Fluids.WATER, 50, "inf_water").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
     public static final Item inf_water_mk2 = new ItemFluidContainerInfinite(Fluids.WATER, 500, "inf_water_mk2").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
-    public static final Item inf_water_mk3 = new ItemFluidContainerInfinite(Fluids.WATER, 5000, "inf_water_mk3").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
-    public static final Item inf_water_mk4 = new ItemFluidContainerInfinite(Fluids.WATER, 50000, "inf_water_mk4").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
 
     public static final Item disperser_canister_empty = new ItemBase("disperser_canister_empty").setCreativeTab(MainRegistry.weaponTab);
     public static final Item disperser_canister = new ItemDisperser("disperser_canister", 2000).setContainerItem(ModItems.disperser_canister_empty).setCreativeTab(MainRegistry.weaponTab);

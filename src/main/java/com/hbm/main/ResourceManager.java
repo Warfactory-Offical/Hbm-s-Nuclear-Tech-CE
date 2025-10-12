@@ -443,6 +443,7 @@ public class ResourceManager {
 
 	//Radgen
 	public static final IModelCustom radgen_body = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/radgen.obj")).asVBO();
+	public static final IModelCustom geiger = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/blocks/geiger_counter.obj")).asVBO();
 
 	//Pumpjack
 	public static final IModelCustom pumpjack = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/pumpjack.obj")).asVBO();
@@ -1153,6 +1154,7 @@ public class ResourceManager {
 
 	//Radgen
 	public static final ResourceLocation radgen_body_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/rad_gen_body.png");
+	public static final ResourceLocation geiger_tex = new ResourceLocation(RefStrings.MODID, "textures/blocks/geiger.png");
 
 	//Small Reactor
 	public static final ResourceLocation reactor_small_base_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/reactor_small_base.png");

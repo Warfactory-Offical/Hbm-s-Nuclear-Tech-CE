@@ -49,8 +49,6 @@ public class FluidTankNTM implements IFluidHandler, IFluidTank, Cloneable {
         noDualUnload.add(ModItems.fluid_barrel_infinite);
         noDualUnload.add(ModItems.inf_water);
         noDualUnload.add(ModItems.inf_water_mk2);
-        noDualUnload.add(ModItems.inf_water_mk3);
-        noDualUnload.add(ModItems.inf_water_mk4);
     }
 
     @Deprecated
