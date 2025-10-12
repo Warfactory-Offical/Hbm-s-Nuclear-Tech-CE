@@ -337,6 +337,7 @@ public class ResourceManager {
 	public static final IModelCustom pylon_large = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/network/pylon_large.obj")).asVBO();
 	public static final IModelCustom pylon_medium = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/network/pylon_medium.obj")).asVBO();
 	public static final IModelCustom substation = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/network/substation.obj")).asVBO();
+	public static final IModelCustom fluid_pump = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/network/fluid_diode.obj")).asVBO();
 
 	public static final IModelCustom conservecrate = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/blocks/conservecrate.obj")).asVBO();
 	//Pipe
@@ -967,6 +968,7 @@ public class ResourceManager {
 
 	public static final ResourceLocation wire_tex = new ResourceLocation(RefStrings.MODID, "textures/models/network/wire.png");
 	public static final ResourceLocation wire_greyscale_tex = new ResourceLocation(RefStrings.MODID, "textures/models/network/wire_greyscale.png");
+	public static final ResourceLocation fluid_pump_tex = new ResourceLocation(RefStrings.MODID, "textures/models/network/fluid_diode.png");
 
 	public static final ResourceLocation pylon_medium_tex = new ResourceLocation(RefStrings.MODID, "textures/models/network/pylon_medium.png");
 	public static final ResourceLocation pylon_medium_steel_tex = new ResourceLocation(RefStrings.MODID, "textures/models/network/pylon_medium_steel.png");

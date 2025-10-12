@@ -1681,6 +1681,7 @@ public class ClientProxy extends ServerProxy {
             case CRANE_LOAD -> HbmKeybinds.craneLoadKey.isKeyDown();
             case ABILITY_CYCLE -> HbmKeybinds.abilityCycle.isKeyDown();
             case ABILITY_ALT -> HbmKeybinds.abilityAlt.isKeyDown();
+            case TOOL_ALT -> HbmKeybinds.copyToolAlt.isKeyDown();
             case GUN_PRIMARY -> Mouse.isButtonDown(0);
             case GUN_SECONDARY -> HbmKeybinds.gunSecondaryKey.isKeyDown();
             case GUN_TERTIARY -> HbmKeybinds.gunTertiaryKey.isKeyDown();

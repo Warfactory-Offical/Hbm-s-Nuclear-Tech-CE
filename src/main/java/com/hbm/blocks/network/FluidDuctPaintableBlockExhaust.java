@@ -4,13 +4,13 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.hbm.api.block.IToolable;
 import com.hbm.blocks.ILookOverlay;
+import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.ModSoundTypes;
-import com.hbm.blocks.generic.BlockBakeBase;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.ICopiable;
 import com.hbm.inventory.fluid.Fluids;
+import com.hbm.items.IDynamicModels;
 import com.hbm.lib.RefStrings;
-import com.hbm.render.block.BlockBakeFrame;
 import com.hbm.render.model.BakedModelTransforms;
 import com.hbm.tileentity.network.TileEntityPipeExhaust;
 import com.hbm.util.I18nUtil;
@@ -24,6 +24,7 @@ import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -36,6 +37,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
@@ -50,7 +52,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class FluidDuctPaintableBlockExhaust extends BlockBakeBase implements IToolable, ILookOverlay {
+public class FluidDuctPaintableBlockExhaust extends FluidDuctBase implements IToolable, ILookOverlay, IDynamicModels {
 
     public static final IUnlistedProperty<IBlockState> DISGUISED_STATE = new SimpleUnlistedProperty<>("disguised_state", IBlockState.class);
 
@@ -60,10 +62,14 @@ public class FluidDuctPaintableBlockExhaust extends BlockBakeBase implements ITo
     private static TextureAtlasSprite overlaySprite;
 
     public FluidDuctPaintableBlockExhaust(String name) {
-        super(Material.IRON, name, new BlockBakeFrame("fluid_duct_paintable_block_exhaust"));
+        super(Material.IRON);
+        this.setRegistryName(RefStrings.MODID, name);
+        this.setTranslationKey(RefStrings.MODID + "." + name);
         this.setDefaultState(this.blockState.getBaseState());
         this.setSoundType(ModSoundTypes.pipe);
         this.useNeighborBrightness = true;
+        IDynamicModels.INSTANCES.add(this);
+        ModBlocks.ALL_BLOCKS.add(this);
     }
 
     @Override
@@ -78,6 +84,11 @@ public class FluidDuctPaintableBlockExhaust extends BlockBakeBase implements ITo
 
     @Override
     public TileEntity createTileEntity(World world, IBlockState state) {
+        return new TileEntityPipeExhaustPaintable();
+    }
+
+    @Override
+    public TileEntity createNewTileEntity(World worldIn, int meta) {
         return new TileEntityPipeExhaustPaintable();
     }
 
@@ -206,7 +217,6 @@ public class FluidDuctPaintableBlockExhaust extends BlockBakeBase implements ITo
     @Override
     @SideOnly(Side.CLIENT)
     public void registerSprite(TextureMap map) {
-        super.registerSprite(map);
         baseSprite = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/fluid_duct_paintable_block_exhaust"));
         overlaySprite = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/fluid_duct_paintable_overlay"));
     }
@@ -224,6 +234,14 @@ public class FluidDuctPaintableBlockExhaust extends BlockBakeBase implements ITo
         event.getModelRegistry().putObject(inventory, model);
         event.getModelRegistry().putObject(normal, model);
     }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerModel() {
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0,
+                new ModelResourceLocation(Objects.requireNonNull(getRegistryName()), "inventory"));
+    }
+
     @AutoRegister
     public static class TileEntityPipeExhaustPaintable extends TileEntityPipeExhaust implements ICopiable {
 

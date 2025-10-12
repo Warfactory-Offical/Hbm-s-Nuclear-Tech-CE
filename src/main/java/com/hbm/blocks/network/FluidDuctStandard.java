@@ -14,7 +14,6 @@ import com.hbm.render.amlfrom1710.WavefrontObject;
 import com.hbm.render.model.DuctNeoBakedModel;
 import com.hbm.tileentity.network.TileEntityPipeBaseNT;
 import com.hbm.util.I18nUtil;
-import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyInteger;
@@ -56,7 +55,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class FluidDuctStandard extends BlockContainer implements IDynamicModels, ILookOverlay {
+public class FluidDuctStandard extends FluidDuctBase implements IDynamicModels, ILookOverlay {
 
 	public static final PropertyInteger META = PropertyInteger.create("meta", 0, 2);
 	public static final PropertyBool POS_X = PropertyBool.create("posx");

@@ -13,7 +13,6 @@ import com.hbm.render.model.DuctBakedModel;
 import com.hbm.tileentity.network.TileEntityPipeBaseNT;
 import com.hbm.util.ColorUtil;
 import com.hbm.util.I18nUtil;
-import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
@@ -58,7 +57,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FluidDuctBox extends BlockContainer implements IDynamicModels, ILookOverlay {
+public class FluidDuctBox extends FluidDuctBase implements IDynamicModels, ILookOverlay {
 
     public static final PropertyInteger META = PropertyInteger.create("meta", 0, 14);
     public static final IUnlistedProperty<Boolean> CONN_NORTH = new ConnectionProperty("north");
