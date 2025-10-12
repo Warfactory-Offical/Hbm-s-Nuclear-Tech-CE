@@ -23,10 +23,13 @@ import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+
 @AutoRegister(name = "entity_nuclear_creeper", trackingRange = 80, eggColors = {0x204131, 0x75CE00})
 public class EntityCreeperNuclear extends EntityCreeper implements IRadiationImmune {
 
@@ -56,6 +59,11 @@ public class EntityCreeperNuclear extends EntityCreeper implements IRadiationImm
 		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(50.0D);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3D);
 	}
+
+    @Nullable
+    protected ResourceLocation getLootTable() {
+        return null;
+    }
 
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount) {

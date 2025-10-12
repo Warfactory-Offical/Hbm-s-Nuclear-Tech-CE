@@ -13,9 +13,11 @@ import net.minecraft.entity.passive.EntityOcelot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
+import org.jetbrains.annotations.Nullable;
 
 @AutoRegister(name = "entity_tainted_creeper", trackingRange = 80, eggColors = {0x813b9b, 0xd71fdd})
 public class EntityCreeperTainted extends EntityCreeper implements IRadiationImmune {
@@ -52,6 +54,11 @@ public class EntityCreeperTainted extends EntityCreeper implements IRadiationImm
         if (this.isEntityAlive() && this.getHealth() < this.getMaxHealth() && this.ticksExisted % 10 == 0) {
             this.heal(1.0F);
         }
+    }
+
+    @Nullable
+    protected ResourceLocation getLootTable() {
+        return null;
     }
 
     @Override
