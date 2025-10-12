@@ -40,6 +40,8 @@ public class Spaceship extends AbstractPhasedStructure {
 	Block Block8 = ModBlocks.fusion_hatch;
 	Block Block9 = ModBlocks.reinforced_light;
 	Block Block10 = ModBlocks.reinforced_glass;
+	Block Block11 = ModBlocks.fusion_conductor;
+	Block Block12 = ModBlocks.pwr_fuelrod;
 	
 	protected Block[] GetValidSpawnBlocks()
 	{
@@ -499,8 +501,10 @@ public class Spaceship extends AbstractPhasedStructure {
 		world.setBlockState(pos.setPos(x + 2, y + -2, z + 27), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 3, y + -2, z + 27), Block3.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 4, y + -2, z + 27), Block3.getDefaultState(), 3);
+		world.setBlockState(pos.setPos(x + 5, y + -2, z + 27), Block11.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 6, y + -2, z + 27), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + -2, z + 27), Blocks.AIR.getDefaultState(), 3);
+		world.setBlockState(pos.setPos(x + 8, y + -2, z + 27), Block11.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 9, y + -2, z + 27), Block3.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 10, y + -2, z + 27), Block3.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 11, y + -2, z + 27), Blocks.AIR.getDefaultState(), 3);
@@ -645,6 +649,8 @@ public class Spaceship extends AbstractPhasedStructure {
 		world.setBlockState(pos.setPos(x + 6, y + -2, z + 41), Block4.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + -2, z + 41), Block4.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 8, y + -2, z + 41), Block1.getDefaultState(), 3);
+		world.setBlockState(pos.setPos(x + 10, y + -2, z + 30), Block12.getDefaultState(), 3);
+		world.setBlockState(pos.setPos(x + 3, y + -2, z + 30), Block12.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 9, y + -2, z + 41), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 5, y + -2, z + 42), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 6, y + -2, z + 42), Block1.getDefaultState(), 3);
