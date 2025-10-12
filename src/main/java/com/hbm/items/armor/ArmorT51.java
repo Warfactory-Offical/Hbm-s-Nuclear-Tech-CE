@@ -23,25 +23,8 @@ public class ArmorT51 extends ArmorFSBPowered implements IItemRendererProvider {
         super(material, layer, slot, texture, maxPower, chargeRate, consumption, drain, s);
     }
 
-    protected ViewModelPositonDebugger offsets = new ViewModelPositonDebugger()
-            .get(ItemCameraTransforms.TransformType.GUI)
-            .setScale(1F).setPosition(-1.2, 0, 1.0).setRotation(255, -36, -143)
-            .getHelper()
-            .get(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND)
-            .setPosition(-1.00, -31.30, -4.95).setRotation(-23, -139, 85)
-            .getHelper()
-            .get(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND)
-            .setPosition(-0.5, 3, -2.75).setRotation(610, -115, -100)
-            .getHelper()
-            .get(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND)
-            .setScale(0.7F).setPosition(-0.25, -3.6, -1.25).setRotation(5, -90, 340)
-            .getHelper()
-            .get(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND)
-            .setPosition(-8, -5.50, -1.00).setRotation(0, 330, 180)
-            .getHelper()
-            .get(ItemCameraTransforms.TransformType.GROUND)
-            .setScale(1F).setPosition(0, 1, 0).setRotation(0, 0, 180)
-            .getHelper();
+    @SideOnly(Side.CLIENT)
+    protected ViewModelPositonDebugger offsets;
 
     @Override
     @SideOnly(Side.CLIENT)
@@ -57,7 +40,6 @@ public class ArmorT51 extends ArmorFSBPowered implements IItemRendererProvider {
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
     public Item getItemForRenderer() {
         return this;
     }
@@ -78,6 +60,26 @@ public class ArmorT51 extends ArmorFSBPowered implements IItemRendererProvider {
 
             @Override
             public void renderCommon() {
+                if (offsets == null)
+                    offsets = new ViewModelPositonDebugger()
+                            .get(ItemCameraTransforms.TransformType.GUI)
+                            .setScale(1F).setPosition(-1.2, 0, 1.0).setRotation(255, -36, -143)
+                            .getHelper()
+                            .get(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND)
+                            .setPosition(-1.00, -31.30, -4.95).setRotation(-23, -139, 85)
+                            .getHelper()
+                            .get(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND)
+                            .setPosition(-0.5, 3, -2.75).setRotation(610, -115, -100)
+                            .getHelper()
+                            .get(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND)
+                            .setScale(0.7F).setPosition(-0.25, -3.6, -1.25).setRotation(5, -90, 340)
+                            .getHelper()
+                            .get(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND)
+                            .setPosition(-8, -5.50, -1.00).setRotation(0, 330, 180)
+                            .getHelper()
+                            .get(ItemCameraTransforms.TransformType.GROUND)
+                            .setScale(1F).setPosition(0, 1, 0).setRotation(0, 0, 180)
+                            .getHelper();
                 offsets.apply(type);
                 renderStandard(ResourceManager.armor_t51, armorType, ResourceManager.t51_helmet, ResourceManager.t51_chest, ResourceManager.t51_arm, ResourceManager.t51_leg, "Helmet", "Chest", "LeftArm", "RightArm", "LeftLeg", "RightLeg", "LeftBoot", "RightBoot");
             }

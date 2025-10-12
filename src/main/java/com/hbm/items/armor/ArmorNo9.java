@@ -32,6 +32,7 @@ import java.util.*;
 
 public class ArmorNo9 extends ArmorModel implements IAttackHandler, IDamageHandler {
 
+    @SideOnly(Side.CLIENT)
     protected ModelNo9 model;
 
     public ArmorNo9(ArmorMaterial materialIn, int renderIndexIn, EntityEquipmentSlot equipmentSlotIn, String s) {
@@ -40,6 +41,7 @@ public class ArmorNo9 extends ArmorModel implements IAttackHandler, IDamageHandl
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void addInformation(ItemStack stack, World world, List<String> list, ITooltipFlag flagIn) {
         list.add(TextFormatting.BLUE + "+0.5 DT");
         list.add(TextFormatting.YELLOW + "Lets you breathe coal, neat!");
@@ -87,7 +89,7 @@ public class ArmorNo9 extends ArmorModel implements IAttackHandler, IDamageHandl
                 armor.setTagCompound(new NBTTagCompound());
             }
 
-            boolean turnOn = HbmCapability.getData(Minecraft.getMinecraft().player).getEnableHUD();
+            boolean turnOn = HbmCapability.getData(player).getEnableHUD();
             boolean wasOn = armor.getTagCompound().getBoolean("isOn");
             BlockPos pos = player.getPosition();
             if(turnOn && !wasOn) world.playSound(player, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.PLAYERS, 1F, 1.5F);

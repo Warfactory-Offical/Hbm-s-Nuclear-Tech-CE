@@ -8,6 +8,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
 import java.util.HashMap;
@@ -15,6 +17,7 @@ import java.util.Map;
 
 //Modified vesion of LeafiaGripOffsetHelper.java by abysschroma
 //https://github.com/abysschroma/NTM-but-uncomfortable/blob/main/src/main/java/com/leafia/dev/items/LeafiaGripOffsetHelper.java
+@SideOnly(Side.CLIENT)
 public class ViewModelPositonDebugger {
     static boolean debug = false;
     static boolean blockInput = false;

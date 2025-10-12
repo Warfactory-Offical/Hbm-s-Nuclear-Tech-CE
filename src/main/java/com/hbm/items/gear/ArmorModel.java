@@ -179,6 +179,7 @@ public class ArmorModel extends ItemArmor {
 	}
 	
 	@Override
+    @SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, World worldIn, List<String> list, ITooltipFlag flagIn) {
 		if (stack.getItem() == ModItems.cape_radiation) {
 			list.add("Avalible for everyone");
