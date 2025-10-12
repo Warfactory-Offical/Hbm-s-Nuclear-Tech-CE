@@ -1,6 +1,7 @@
 package com.hbm.inventory.container;
 
 import com.hbm.inventory.SlotNonRetarded;
+import com.hbm.items.tool.ItemToolBox;
 import com.hbm.items.tool.ItemToolBox.InventoryToolBox;
 import com.hbm.util.InventoryUtil;
 import net.minecraft.entity.player.EntityPlayer;
@@ -66,8 +67,7 @@ public class ContainerToolBox extends Container {
     @Override
     public ItemStack slotClick(int slotId, int dragType, ClickType mode, EntityPlayer player) {
         // prevents the player from moving around the currently open box
-        if(mode == ClickType.PICKUP && dragType == player.inventory.currentItem) return ItemStack.EMPTY;
-        if(slotId == player.inventory.currentItem + 51) return ItemStack.EMPTY;
+        if(mode == ClickType.PICKUP && slotId == player.inventory.currentItem && box.getStackInSlot(slotId).getItem() instanceof ItemToolBox) return ItemStack.EMPTY;
         return super.slotClick(slotId, dragType, mode, player);
     }
 
