@@ -120,12 +120,12 @@ public class HbmWorldGen implements IWorldGenerator {
         }
 
         int dimGasbubbleSpawn = parseInt(CompatibilityConfig.gasbubbleSpawn.get(dimID));
-        if (dimGasbubbleSpawn > 0 && rand.nextInt(dimGasbubbleSpawn) == 0) {
+        if (dimGasbubbleSpawn > 0 && rand.nextInt(dimGasbubbleSpawn) == 0 && GeneralConfig.enableFlammableGas) {
             DungeonToolbox.generateOre(world, rand, i, j, 4, 64, 20, 10, ModBlocks.gas_flammable, Blocks.AIR);
         }
 
         int dimExplosivebubbleSpawn = parseInt(CompatibilityConfig.explosivebubbleSpawn.get(dimID));
-        if (dimExplosivebubbleSpawn > 0 && rand.nextInt(dimExplosivebubbleSpawn) == 0) {
+        if (dimExplosivebubbleSpawn > 0 && rand.nextInt(dimExplosivebubbleSpawn) == 0 && GeneralConfig.enableExplosiveGas) {
             DungeonToolbox.generateOre(world, rand, i, j, 4, 64, 20, 10, ModBlocks.gas_explosive, Blocks.AIR);
         }
 

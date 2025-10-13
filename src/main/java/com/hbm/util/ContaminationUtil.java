@@ -421,7 +421,7 @@ public class ContaminationUtil {
 
 	public static void applyAsbestos(Entity e, int i, int dmg, int chance) {
 
-		if(!GeneralConfig.enableAsbestos)
+		if(!GeneralConfig.enableAsbestosDust)
 			return;
 
 		if(!(e instanceof EntityLivingBase entity))
@@ -455,7 +455,7 @@ public class ContaminationUtil {
 	/// COAL ///
 	public static void applyCoal(Entity e, int i, int dmg, int chance) {
 
-		if(!GeneralConfig.enableCoal)
+		if(!GeneralConfig.enableCoalGas)
 			return;
 
 		if(!(e instanceof EntityLivingBase entity))

@@ -2,6 +2,7 @@ package com.hbm.blocks.machine;
 
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.config.GeneralConfig;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ForgeDirection;
@@ -59,12 +60,12 @@ public class ZirnoxDestroyed extends BlockDummyable {
         Block block = world.getBlockState(pos.add(0, 1, 0)).getBlock();
 
         if(block == Blocks.AIR) {
-            if(rand.nextInt(10) == 0)
+            if(rand.nextInt(10) == 0 && GeneralConfig.enableMeltdownGas)
                 world.setBlockState(pos.add(0, 1, 0), ModBlocks.gas_meltdown.getDefaultState());
 
         } else if(block == ModBlocks.foam_layer || block == ModBlocks.block_foam) {
             if(rand.nextInt(25) == 0) {
-                int posC[] = this.findCore(world, pos.getX(), pos.getY(), pos.getZ());
+                int[] posC = this.findCore(world, pos.getX(), pos.getY(), pos.getZ());
 
                 if(posC != null) {
                     TileEntity te = world.getTileEntity(new BlockPos(posC[0], posC[1], posC[2]));
@@ -75,7 +76,7 @@ public class ZirnoxDestroyed extends BlockDummyable {
             }
         }
 
-        if(rand.nextInt(10) == 0 && world.getBlockState(pos.add(0, 1, 0)).getBlock() == Blocks.AIR)
+        if(rand.nextInt(10) == 0 && world.getBlockState(pos.add(0, 1, 0)).getBlock() == Blocks.AIR  && GeneralConfig.enableMeltdownGas)
             world.setBlockState(pos.add(0, 1, 0), ModBlocks.gas_meltdown.getDefaultState());
 
         super.updateTick(world, pos, state, rand);

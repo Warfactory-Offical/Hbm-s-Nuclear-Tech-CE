@@ -41,23 +41,27 @@ public class BlockOutgas extends BlockNTMOre {
 
     public Block getGas() {
 
-        if (this == ModBlocks.ore_uranium || this == ModBlocks.ore_uranium_scorched ||
-                this == ModBlocks.ore_gneiss_uranium || this == ModBlocks.ore_gneiss_uranium_scorched ||
-                this == ModBlocks.ore_nether_uranium || this == ModBlocks.ore_nether_uranium_scorched) {
-            return ModBlocks.gas_radon;
+        if (GeneralConfig.enableRadon) {
+            if (this == ModBlocks.ore_uranium || this == ModBlocks.ore_uranium_scorched ||
+                    this == ModBlocks.ore_gneiss_uranium || this == ModBlocks.ore_gneiss_uranium_scorched ||
+                    this == ModBlocks.ore_nether_uranium || this == ModBlocks.ore_nether_uranium_scorched) {
+                return ModBlocks.gas_radon;
+            }
+
+            if (this == ModBlocks.block_corium_cobble)
+                return ModBlocks.gas_radon_dense;
+
+            if (this == ModBlocks.ancient_scrap)
+                return ModBlocks.gas_radon_tomb;
         }
 
-        if (this == ModBlocks.block_corium_cobble)
-            return ModBlocks.gas_radon_dense;
-
-        if (this == ModBlocks.ancient_scrap)
-            return ModBlocks.gas_radon_tomb;
-
-        if (this == ModBlocks.ore_coal_oil_burning || this == ModBlocks.ore_nether_coal) {
-            return ModBlocks.gas_monoxide;
+        if (GeneralConfig.enableCarbonMonoxide) {
+            if (this == ModBlocks.ore_coal_oil_burning || this == ModBlocks.ore_nether_coal) {
+                return ModBlocks.gas_monoxide;
+            }
         }
 
-        if (GeneralConfig.enableAsbestos) {
+        if (GeneralConfig.enableAsbestosDust) {
             if (this == ModBlocks.ore_asbestos || this == ModBlocks.ore_gneiss_asbestos ||
                     this == ModBlocks.block_asbestos || this == ModBlocks.deco_asbestos ||
                     this == ModBlocks.brick_asbestos || this == ModBlocks.tile_lab ||

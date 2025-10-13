@@ -1,6 +1,7 @@
 package com.hbm.blocks.gas;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.config.GeneralConfig;
 import com.hbm.handler.ArmorUtil;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.potion.HbmPotion;
@@ -56,6 +57,11 @@ public class BlockGasRadonTomb extends BlockGasBase {
 
     @Override
     public void onEntityCollision(World worldIn, BlockPos pos, IBlockState state, Entity entity) {
+
+        if (!GeneralConfig.enableRadon) {
+            return;
+        }
+
         if (entity instanceof EntityLivingBase) {
 
 
@@ -90,6 +96,11 @@ public class BlockGasRadonTomb extends BlockGasBase {
     public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
 
         if (!world.isRemote) {
+
+            if (!GeneralConfig.enableRadon) {
+                world.setBlockToAir(pos);
+                return;
+            }
 
             if (rand.nextInt(10) == 0) {
                 IBlockState state2 = world.getBlockState(pos.down());
