@@ -1,6 +1,6 @@
 <div dir=rtl align=center>
 
-### [**English 🇺🇸**](README.md) / **Русский 🇷🇺**
+### [**English 🇺🇸**](README.md) / **Русский 🇷🇺** / [**简体中文 🇨🇳**](README_zh.md)
 </div>
 
 <p align="center"><img src="./github/icon.png" alt="Logo" width="300"></p>
@@ -9,7 +9,7 @@
 	<a href="https://www.curseforge.com/minecraft/mc-mods/hbm-nuclear-tech-mod-community-edition"><img src="http://cf.way2muchnoise.eu/1312314.svg" alt="CF"></a>
     <a href="https://modrinth.com/mod/ntm-ce"><img src="https://img.shields.io/modrinth/dt/ntm-ce?logo=modrinth&label=&suffix=%20&style=flat&color=242629&labelColor=5ca424&logoColor=1c1c1c" alt="Modrinth"></a>
 	<a href="https://discord.gg/eKFrH7P5ZR"><img src="https://img.shields.io/discord/1241479482964054057?color=5865f2&label=Discord&style=flat" alt="Discord"></a>
-    <br><br>
+    <br>
 </h1>
 
 Полноценный и наиболее завершённый порт мода HBM's Nuclear Tech Mod с версии 1.7.10 на 1.12.2. 

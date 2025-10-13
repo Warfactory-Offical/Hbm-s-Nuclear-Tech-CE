@@ -1,15 +1,15 @@
 <div dir=rtl align=center>
 
-### **English 🇺🇸** / [**Русский 🇷🇺**](README_ru.md)
+### **English 🇺🇸** / [**Русский 🇷🇺**](README_ru.md) / [**简体中文 🇨🇳**](README_zh.md)
 </div>
 
 <p align="center"><img src="./github/icon.png" alt="Logo" width="300"></p>
 
-<h1 align="center"> <u>HBM's Nuclear Tech Mod Community Edition</u>  <br>
+<h1 align="center"> HBM's Nuclear Tech Mod Community Edition  <br>
 	<a href="https://www.curseforge.com/minecraft/mc-mods/hbm-nuclear-tech-mod-community-edition"><img src="http://cf.way2muchnoise.eu/1312314.svg" alt="CF"></a>
     <a href="https://modrinth.com/mod/ntm-ce"><img src="https://img.shields.io/modrinth/dt/ntm-ce?logo=modrinth&label=&suffix=%20&style=flat&color=242629&labelColor=5ca424&logoColor=1c1c1c" alt="Modrinth"></a>
 	<a href="https://discord.gg/eKFrH7P5ZR"><img src="https://img.shields.io/discord/1241479482964054057?color=5865f2&label=Discord&style=flat" alt="Discord"></a>
-    <br><br>
+    <br>
 </h1>
 
 A definitive port of HBM's Nuclear Tech Mod from 1.7.10 to 1.12.2, the most completed one among others. Came from necessity as other developers have failed to update and maintain other forks.
@@ -77,7 +77,7 @@ our efforts on one version at a time.
 
 ## **For development Java 17/21 is used!**
 
-We have [Jabel](https://github.com/bsideup/jabel) to target Java 8 bytecode seamlessly (make sure you don't use APIs introduced in Java 9+)
+We have [Jabel](https://github.com/bsideup/jabel) to target Java 8 bytecode seamlessly while still using modern syntax (make sure you don't use APIs introduced in Java 9+)
 
 
 ### General quickstart
