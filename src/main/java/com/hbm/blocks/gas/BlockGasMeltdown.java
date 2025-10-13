@@ -32,7 +32,7 @@ public class BlockGasMeltdown extends BlockGasBase {
     @Override
     public void onEntityCollision(World world, BlockPos pos, IBlockState state, Entity entity) {
 
-        if (!(entity instanceof EntityLivingBase entityLiving) || !GeneralConfig.enableCarbonMonoxide)
+        if (!(entity instanceof EntityLivingBase entityLiving) || !GeneralConfig.enableMeltdownGas)
             return;
 
         ContaminationUtil.contaminate(entityLiving, ContaminationUtil.HazardType.RADIATION, ContaminationUtil.ContaminationType.CREATIVE, 0.5F);
@@ -71,6 +71,11 @@ public class BlockGasMeltdown extends BlockGasBase {
 
         if (!world.isRemote) {
 
+            if(!GeneralConfig.enableMeltdownGas){
+                world.setBlockToAir(pos);
+                return;
+            }
+
             ForgeDirection dir = ForgeDirection.getOrientation(rand.nextInt(6));
 
             if (rand.nextInt(7) == 0 && world.getBlockState(pos.add(dir.offsetX, dir.offsetY, dir.offsetZ)).getBlock() == Blocks.AIR) {
@@ -81,7 +86,7 @@ public class BlockGasMeltdown extends BlockGasBase {
                 ChunkRadiationManager.proxy.incrementRad(world, pos, 5F, 50F);
             }
 
-            if (rand.nextInt(350) == 0 || !GeneralConfig.enableCarbonMonoxide) {
+            if (rand.nextInt(350) == 0) {
                 world.setBlockToAir(pos);
                 return;
             }
