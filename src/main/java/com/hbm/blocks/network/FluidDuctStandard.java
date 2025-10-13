@@ -1,11 +1,15 @@
 package com.hbm.blocks.network;
 
+import com.hbm.blocks.ICustomBlockItem;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.ModSoundTypes;
+import com.hbm.interfaces.IBlockSpecialPlacementAABB;
 import com.hbm.inventory.fluid.FluidType;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.IDynamicModels;
 import com.hbm.items.ModItems;
+import com.hbm.items.block.ItemBlockSpecialAABB;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
 import com.hbm.lib.RefStrings;
@@ -32,6 +36,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
@@ -47,15 +52,17 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class FluidDuctStandard extends FluidDuctBase implements IDynamicModels, ILookOverlay {
+public class FluidDuctStandard extends FluidDuctBase implements IDynamicModels, ILookOverlay, ICustomBlockItem, IBlockSpecialPlacementAABB {
 
 	public static final PropertyInteger META = PropertyInteger.create("meta", 0, 2);
 	public static final PropertyBool POS_X = PropertyBool.create("posx");
@@ -186,37 +193,49 @@ public class FluidDuctStandard extends FluidDuctBase implements IDynamicModels, 
 		TileEntity te = source.getTileEntity(pos);
 		if (te instanceof TileEntityPipeBaseNT pipe) {
 			FluidType type = pipe.getType();
-
-			boolean nX = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), Library.NEG_X, type);
-			boolean pX = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), Library.POS_X, type);
-			boolean nY = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), Library.NEG_Y, type);
-			boolean pY = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), Library.POS_Y, type);
-			boolean nZ = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), Library.NEG_Z, type);
-			boolean pZ = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), Library.POS_Z, type);
-			int mask = (pX ? 32 : 0) + (nX ? 16 : 0) + (pY ? 8 : 0) + (nY ? 4 : 0) + (pZ ? 2 : 0) + (nZ ? 1 : 0);
-
-			if (mask == 0) {
-				return new AxisAlignedBB(0F, 0F, 0F, 1F, 1F, 1F);
-			} else if (mask == 0b100000 || mask == 0b010000 || mask == 0b110000) {
-				return new AxisAlignedBB(0F, 0.3125F, 0.3125F, 1F, 0.6875F, 0.6875F);
-			} else if (mask == 0b001000 || mask == 0b000100 || mask == 0b001100) {
-				return new AxisAlignedBB(0.3125F, 0F, 0.3125F, 0.6875F, 1F, 0.6875F);
-			} else if (mask == 0b000010 || mask == 0b000001 || mask == 0b000011) {
-				return new AxisAlignedBB(0.3125F, 0.3125F, 0F, 0.6875F, 0.6875F, 1F);
-			} else {
-				return new AxisAlignedBB(
-						nX ? 0F : 0.3125F,
-						nY ? 0F : 0.3125F,
-						nZ ? 0F : 0.3125F,
-						pX ? 1F : 0.6875F,
-						pY ? 1F : 0.6875F,
-						pZ ? 1F : 0.6875F);
-			}
-		}
+            return getCollisionAABB(source, pos, type);
+        }
 		return DUCT_BB;
 	}
 
-	@Override
+    @Override
+    public void registerItem() {
+        ItemBlock itemBlock = new ItemBlockSpecialAABB<>(this);
+        itemBlock.setRegistryName(this.getRegistryName());
+        ForgeRegistries.ITEMS.register(itemBlock);
+    }
+
+    @Override
+    public AxisAlignedBB getCollisionBoundingBoxForPlacement(World worldIn, BlockPos pos, ItemStack stack) {
+        return getCollisionAABB(worldIn, pos, Fluids.NONE);
+    }
+
+    @NotNull
+    private AxisAlignedBB getCollisionAABB(IBlockAccess source, BlockPos pos, FluidType type) {
+        boolean nX = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), Library.NEG_X, type);
+        boolean pX = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), Library.POS_X, type);
+        boolean nY = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), Library.NEG_Y, type);
+        boolean pY = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), Library.POS_Y, type);
+        boolean nZ = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), Library.NEG_Z, type);
+        boolean pZ = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), Library.POS_Z, type);
+        int mask = (pX ? 32 : 0) + (nX ? 16 : 0) + (pY ? 8 : 0) + (nY ? 4 : 0) + (pZ ? 2 : 0) + (nZ ? 1 : 0);
+
+        return switch (mask) {
+            case 0 -> new AxisAlignedBB(0F, 0F, 0F, 1F, 1F, 1F);
+            case 0b100000, 0b010000, 0b110000 -> new AxisAlignedBB(0F, 0.3125F, 0.3125F, 1F, 0.6875F, 0.6875F);
+            case 0b001000, 0b000100, 0b001100 -> new AxisAlignedBB(0.3125F, 0F, 0.3125F, 0.6875F, 1F, 0.6875F);
+            case 0b000010, 0b000001, 0b000011 -> new AxisAlignedBB(0.3125F, 0.3125F, 0F, 0.6875F, 0.6875F, 1F);
+            default -> new AxisAlignedBB(
+                    nX ? 0F : 0.3125F,
+                    nY ? 0F : 0.3125F,
+                    nZ ? 0F : 0.3125F,
+                    pX ? 1F : 0.6875F,
+                    pY ? 1F : 0.6875F,
+                    pZ ? 1F : 0.6875F);
+        };
+    }
+
+    @Override
 	public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos,
 									  AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes,
 									  @Nullable Entity entity, boolean isActualState) {
