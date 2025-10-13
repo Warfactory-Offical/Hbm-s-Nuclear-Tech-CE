@@ -20,7 +20,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
 
@@ -82,9 +85,8 @@ public class MachineCatalyticCracker extends BlockDummyable implements ILookOver
 				FluidType type = ((IItemFluidIdentifier) player.getHeldItem(hand).getItem()).getType(world, pos[0], pos[1], pos[2], player.getHeldItem(hand));
 				cracker.tanks[0].setTankType(type);
 				cracker.markDirty();
-				player.sendMessage(new TextComponentString("§eRecipe changed to §a"+type.getConditionalName()));
-				
-				return true;
+                player.sendMessage(new TextComponentString("Changed type to ").setStyle(new Style().setColor(TextFormatting.YELLOW)).appendSibling(new TextComponentTranslation(type.getConditionalName())).appendSibling(new TextComponentString("!")));
+                return true;
 			}
 			return false;
 			

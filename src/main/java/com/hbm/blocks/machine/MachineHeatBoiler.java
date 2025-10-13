@@ -25,7 +25,10 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
@@ -87,7 +90,7 @@ public class MachineHeatBoiler extends BlockDummyable implements ILookOverlay, I
                 FluidType type = identifier.getType(world, pos[0], pos[1], pos[2], player.getHeldItem(hand));
                 boiler.tanks[0].setTankType(type);
                 boiler.markDirty();
-                player.sendMessage(new TextComponentString("§eRecipe changed to §a"+type.getConditionalName()));
+                player.sendMessage(new TextComponentString("Changed type to ").setStyle(new Style().setColor(TextFormatting.YELLOW)).appendSibling(new TextComponentTranslation(type.getConditionalName())).appendSibling(new TextComponentString("!")));
 
                 return true;
             }
