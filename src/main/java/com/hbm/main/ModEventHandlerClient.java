@@ -271,27 +271,10 @@ public class ModEventHandlerClient {
         FluidType[] order = Fluids.getInNiceOrder();
         for (i = 0; i < order.length; i++) {
             if (!order[i].hasNoID()) {
-                ModelLoader.setCustomModelResourceLocation(ModItems.fluid_identifier, order[i].getID(),
-                        ItemForgeFluidIdentifier.identifierModel);
-                if (order[i].getContainer(Fluids.CD_Canister.class) != null) {
-//                    ModelLoader.setCustomModelResourceLocation(ModItems.canister_generic, order[i].getID(),
-//                            FluidCanisterRender.INSTANCE.setModelLocation(ItemCanister.getStackFromFluid(order[i])));
-                }
-
                 ModelLoader.setCustomModelResourceLocation(ModItems.fluid_duct, order[i].getID(), ItemFFFluidDuct.ductLoc);
                 if (order[i].getContainer(Fluids.CD_Gastank.class) != null) {
                     ModelLoader.setCustomModelResourceLocation(ModItems.gas_full, order[i].getID(), ItemGasCanister.gasCansiterFullModel);
                 }
-                ModelLoader.setCustomModelResourceLocation(ModItems.fluid_tank_lead_full, order[i].getID(),
-                        ItemFluidTank.fluidTankLeadFullModel);
-                ModelLoader.setCustomModelResourceLocation(ModItems.fluid_tank_full, order[i].getID(),
-                        ItemFluidTank.fluidTankModel);
-                ModelLoader.setCustomModelResourceLocation(ModItems.fluid_barrel_full, order[i].getID(),
-                        ItemFluidTank.fluidBarrelModel);
-                ModelLoader.setCustomModelResourceLocation(ModItems.disperser_canister, order[i].getID(),
-                        ItemDisperser.disperserModel);
-                ModelLoader.setCustomModelResourceLocation(ModItems.glyphid_gland, order[i].getID(),
-                        ItemDisperser.glyphidGlandModel);
             }
         }
         ModelLoader.setCustomModelResourceLocation(ModItems.canister_empty, 0, ItemCanister.fluidCanisterModel);
@@ -542,7 +525,6 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         swapModels(ModItems.detonator_laser, reg);
         swapModels(ModItems.boltgun, reg);
 
-        swapModels(ModItems.fluid_identifier, reg);
         swapModels(ModItems.fluid_barrel_full, reg);
         swapModels(ModItems.fluid_tank_full, reg);
         swapModels(ModItems.fluid_tank_lead_full, reg);
@@ -608,7 +590,6 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         evt.getItemColors().registerItemColorHandler(fluidMetaHandler, ModItems.fluid_tank_full);
         evt.getItemColors().registerItemColorHandler(fluidMetaHandler, ModItems.fluid_tank_lead_full);
         evt.getItemColors().registerItemColorHandler(fluidMetaHandler, ModItems.fluid_barrel_full);
-        evt.getItemColors().registerItemColorHandler(fluidMetaHandler, ModItems.fluid_identifier);
         evt.getItemColors().registerItemColorHandler(fluidMetaHandler, ModItems.disperser_canister);
         evt.getItemColors().registerItemColorHandler(fluidMetaHandler, ModItems.glyphid_gland);
         evt.getItemColors().registerItemColorHandler((stack, tintIndex) -> {

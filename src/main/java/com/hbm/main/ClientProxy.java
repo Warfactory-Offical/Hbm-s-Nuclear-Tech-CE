@@ -1828,7 +1828,6 @@ public class ClientProxy extends ServerProxy {
 
         ParticleRenderLayer.register();
         BobmazonOfferFactory.init();
-        ItemFluidIDMulti.registerItemColors();
     }
 
     @Override

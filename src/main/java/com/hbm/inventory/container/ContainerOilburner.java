@@ -1,6 +1,6 @@
 package com.hbm.inventory.container;
 
-import com.hbm.items.ModItems;
+import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.tileentity.machine.TileEntityHeaterOilburner;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -55,7 +55,7 @@ public class ContainerOilburner extends Container {
                 }
             } else {
 
-                if (stack.getItem() == ModItems.fluid_identifier) {
+                if (stack.getItem() instanceof IItemFluidIdentifier) {
                     if (!this.mergeItemStack(originalStack, 2, 3, false)) {
                         return ItemStack.EMPTY;
                     }

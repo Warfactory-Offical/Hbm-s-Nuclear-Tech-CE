@@ -6,7 +6,6 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemFluidTank;
 import com.hbm.lib.RefStrings;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,12 +17,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemDisperser extends ItemFluidTank {
-    public static final ModelResourceLocation disperserModel = new ModelResourceLocation(RefStrings.MODID + ":disperser_canister", "inventory");
-    public static final ModelResourceLocation glyphidGlandModel = new ModelResourceLocation(RefStrings.MODID + ":glyphid_gland", "inventory");
+import static com.hbm.items.ItemEnumMulti.ROOT_PATH;
 
+public class ItemDisperser extends ItemFluidTank {
     public ItemDisperser(String s, int cap) {
         super(s, cap);
+        if(this == ModItems.glyphid_gland) overlayTextureLocation = new ResourceLocation(RefStrings.MODID, ROOT_PATH + "fluid_identifier_overlay");
     }
 
     @Override
@@ -68,17 +67,6 @@ public class ItemDisperser extends ItemFluidTank {
 
         String s = I18n.format(getTranslationKey() + ".name").trim();
         String s1 = I18n.format(Fluids.fromID(stack.getItemDamage()).getTranslationKey()).trim();
-        s = this == ModItems.glyphid_gland ? s1 + " " + s : s + " " + s1;
-        return s;
-    }
-
-    @Override
-    public ModelResourceLocation getResourceLocation() {
-        if (this == ModItems.disperser_canister) {
-            return disperserModel;
-        } else if (this == ModItems.glyphid_gland) {
-            return glyphidGlandModel;
-        }
-        return null;
+        return s + " " + s1;
     }
 }
