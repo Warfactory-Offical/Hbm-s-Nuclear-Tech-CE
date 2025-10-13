@@ -24,8 +24,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.Nullable;
 
 public class ItemBlockSpecialAABB<T extends Block & IBlockSpecialPlacementAABB> extends ItemBlock {
+
     public ItemBlockSpecialAABB(T block) {
         super(block);
+        this.setHasSubtypes(true);
+        this.canRepair = false;
     }
 
     @Override

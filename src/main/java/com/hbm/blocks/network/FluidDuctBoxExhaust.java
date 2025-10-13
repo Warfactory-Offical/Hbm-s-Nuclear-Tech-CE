@@ -1,6 +1,7 @@
 package com.hbm.blocks.network;
 
 import com.hbm.blocks.ILookOverlay;
+import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
@@ -68,7 +69,7 @@ public class FluidDuctBoxExhaust extends FluidDuctBox {
     }
 
     @Override
-    public boolean canConnectTo(IBlockAccess world, int x, int y, int z, EnumFacing dir, TileEntity tile) {
+    public boolean canConnectTo(IBlockAccess world, int x, int y, int z, EnumFacing dir, FluidType type) {
         BlockPos pos = new BlockPos(x, y, z);
         BlockPos offset = pos.offset(dir);
         EnumFacing opposite = dir.getOpposite();
