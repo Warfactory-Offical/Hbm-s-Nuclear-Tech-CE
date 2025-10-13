@@ -1,6 +1,6 @@
 <div dir=rtl align=center>
 
-### [**English 🇺🇸**](README.md) / [**Русский 🇷🇺**](README_ru.md) / [**简体中文 🇨🇳**](README_zh.md) / **한국어 🇰🇷**
+### [**English 🇺🇸**](README.md) / [**Русский 🇷🇺**](README_ru.md) / [**简体中文 🇨🇳**](README_zh.md) / **한국어 🇰🇷** / [**Українська 🇺🇦**](README_ua.md)
 </div>
 
 <p align="center"><img src="./github/icon.png" alt="Logo" width="300"></p>
