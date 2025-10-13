@@ -1,4 +1,9 @@
-<p align="center"><img src="./icons/icon.png" alt="Logo" width="300"></p>
+<div dir=rtl align=center>
+
+### **English 🇺🇸** / [**Русский 🇷🇺**](github/README_ru.md)
+</div>
+
+<p align="center"><img src="./github/icon.png" alt="Logo" width="300"></p>
 
 <h1 align="center"> <u>HBM's Nuclear Tech Mod Community Edition</u>  <br>
 	<a href="https://www.curseforge.com/minecraft/mc-mods/hbm-nuclear-tech-mod-community-edition"><img src="http://cf.way2muchnoise.eu/1312314.svg" alt="CF"></a>
@@ -18,13 +23,20 @@ retroacitvely. Please respect our time and make sure issue reports are of qualit
 > This can be found at `config/Universal Tweaks - Tweaks.cfg`
 
 <br>
-<p align="center"><img src="./icons/faq.png" alt="Logo" width="700"></p>
+<p align="center"><img src="./github/faq.png" alt="NTM:CE FAQ" width="700"></p>
 <br>
 
 ### Is it survival ready?
 
 While there is still a lot of bugfixing to be done, the mod itself has been proven to be in a state where it can be played in
 survival without fatal crashes, though it still has many minor/substantial bugs to be fixed and some rather minor things to be ported.
+
+### Is the mod compatible with NTM: Extended edition addons/shaders?
+
+Sadly, no. Installing EE addons will most likely result in crashes, making the modpack unplayable; due to having the new gun system ported, shaders
+are also incompatible and will cause heavy visual artifacts when holding a gun. <br>
+Also shaders are incompatible with NTM skybox; this can be fixed in 'config/hbm -> hbm.cfg' by changing the line 'B:1.00_enableSkybox=true' to 'false'. <br>
+We're looking forward to fixing shader-related issues, though this will take time.
 
 ### How different is it from Extended edition?
 
@@ -35,7 +47,7 @@ track missing/added content.
 
 ### Why not improve the Extended edition?
 
-Alcater has not updated his version in close to a year, his version as many performance bottlenecks and weird approaches
+Alcater has not updated his version on Curseforge for more than 1.5 years, his version as many performance bottlenecks and weird approaches
 to implementation of some features. Not to mention his refusal to work with us, hence we decided to fork and work
 separately.
 
@@ -60,7 +72,7 @@ separate teams that worked on this mod, is what killed the mod's chance to be po
 our efforts on one version at a time.
 
 <br>
-<p align="center"><img src="./icons/dev_guide.png" alt="Logo" width="700"></p>
+<p align="center"><img src="./github/dev_guide.png" alt="Development Guide" width="700"></p>
 <br>
 
 ## **For development Java 17/21 is used!**
