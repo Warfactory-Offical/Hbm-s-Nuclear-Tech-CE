@@ -1238,14 +1238,12 @@ public class ModEventHandler {
         handleGneissBreak(block, playerMP, event);
         handleCoalBreak(block, world, pos);
         handleAsbestosBreak(block, event);
-        handleOutgasBreak(block, world, pos);
         handleLeadPollution(player, world, pos);
     }
 
     // Constants
     private static final int GNEISS_XP_REWARD = 500;
     private static final int COAL_GAS_SPAWN_CHANCE = 2;
-    private static final int ANCIENT_SCRAP_GAS_RADIUS = 2;
     private static final int LEAD_EFFECT_DURATION = 100;
     private static final float LEAD_LOW_THRESHOLD = 5.0f;
     private static final float LEAD_MID_THRESHOLD = 10.0f;
@@ -1307,60 +1305,6 @@ public class ModEventHandler {
                 world.setBlockState(pos, ModBlocks.gas_asbestos.getDefaultState(), 3);
             }
         });
-    }
-
-    private void handleOutgasBreak(Block block, World world, BlockPos pos) {
-        if (!(block instanceof BlockOutgas outgas)) {
-            return;
-        }
-
-        Block gas = outgas.getGas();
-
-        if (gas == Blocks.AIR) {
-            return;
-        }
-
-        // Spawn gas at broken block location
-        if (isAirBlock(world, pos)) {
-            world.setBlockState(pos, gas.getDefaultState(), 3);
-        }
-
-        // Spawn gas in neighboring blocks if applicable
-        if (outgas.isOnNeighbour()) {
-            spawnGasInAdjacentBlocks(world, pos, gas);
-        }
-
-        // Special handling for ancient scrap - larger radius
-        if (block == ModBlocks.ancient_scrap) {
-            spawnGasInRadius(world, pos, gas, ANCIENT_SCRAP_GAS_RADIUS);
-        }
-    }
-
-    private void spawnGasInAdjacentBlocks(World world, BlockPos pos, Block gas) {
-        for (EnumFacing dir : EnumFacing.values()) {
-            BlockPos adjacentPos = pos.offset(dir);
-            if (isAirBlock(world, adjacentPos)) {
-                world.setBlockState(adjacentPos, gas.getDefaultState(), 3);
-            }
-        }
-    }
-
-    private void spawnGasInRadius(World world, BlockPos center, Block gas, int radius) {
-        for (int x = -radius; x <= radius; x++) {
-            for (int y = -radius; y <= radius; y++) {
-                for (int z = -radius; z <= radius; z++) {
-                    int manhattan = Math.abs(x + y + z);
-
-                    // Skip center and blocks too far away
-                    if (manhattan > 0 && manhattan < 5) {
-                        BlockPos targetPos = center.add(x, y, z);
-                        if (isAirBlock(world, targetPos)) {
-                            world.setBlockState(targetPos, gas.getDefaultState(), 3);
-                        }
-                    }
-                }
-            }
-        }
     }
 
     private void handleLeadPollution(EntityPlayer player, World world, BlockPos pos) {

@@ -45,7 +45,11 @@ public class BlockGasMonoxide extends BlockGasBase {
     @Override
     public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
 
-        if (!world.isRemote && rand.nextInt(100) == 0 || !GeneralConfig.enableCarbonMonoxide) {
+        if(world.isRemote){
+            return;
+        }
+
+        if (rand.nextInt(100) == 0 || !GeneralConfig.enableCarbonMonoxide) {
             world.setBlockToAir(pos);
             return;
         }
