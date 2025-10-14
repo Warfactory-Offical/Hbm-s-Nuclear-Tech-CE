@@ -157,10 +157,9 @@ public class MachineFluidTank extends BlockDummyable implements IPersistentInfoP
 		int[] posC = this.findCore(world, pos.getX(), pos.getY(), pos.getZ());
 		if(posC == null) return;
 		TileEntity core = world.getTileEntity(new BlockPos(posC[0], posC[1], posC[2]));
-		if(!(core instanceof TileEntityMachineFluidTank)) return;
+		if(!(core instanceof TileEntityMachineFluidTank tank)) return;
 
-		TileEntityMachineFluidTank tank = (TileEntityMachineFluidTank) core;
-		if(tank.lastExplosion == explosion) return;
+        if(tank.lastExplosion == explosion) return;
 		tank.lastExplosion = explosion;
 
 		if(!tank.hasExploded) {
@@ -175,6 +174,7 @@ public class MachineFluidTank extends BlockDummyable implements IPersistentInfoP
 				for(EntityPlayer p : players) AdvancementManager.grantAchievement(p, AdvancementManager.achInferno);
 			}
 		} else {
+            tank.shouldDrop = false;
 			world.setBlockToAir(new BlockPos(posC[0], posC[1], posC[2]));
 		}
 	}

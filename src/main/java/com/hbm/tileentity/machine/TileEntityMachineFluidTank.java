@@ -69,6 +69,7 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 	public int age = 0;
 	public byte lastRedstone = 0;
 	public Explosion lastExplosion = null;
+    public boolean shouldDrop = true;
 
 	public TileEntityMachineFluidTank() {
 		super(6);
@@ -386,6 +387,11 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
 		}
 		markDirty();
 	}
+
+    @Override
+    public boolean shouldDrop() {
+        return IPersistentNBT.super.shouldDrop() && shouldDrop;
+    }
 
     /**
      * 0/1 -> Identifier I/O
