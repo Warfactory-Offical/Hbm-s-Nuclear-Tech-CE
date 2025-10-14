@@ -770,5 +770,16 @@ public class HbmWorldGen implements IWorldGenerator {
                 }
             }
         }
+
+        if(rand.nextInt(4) == 0) {
+            int x = i + rand.nextInt(16) + 8;
+            int y = 6 + rand.nextInt(13);
+            int z = j + rand.nextInt(16) + 8;
+            IBlockState state = world.getBlockState(new BlockPos(x, y, z));
+
+            if(state.getBlock().isReplaceableOreGen(state, world, new BlockPos(x, y, z), BlockMatcher.forBlock(Blocks.STONE))) {
+                world.setBlockState(new BlockPos(x, y, z), ModBlocks.stone_keyhole.getDefaultState());
+            }
+        }
     }
 }
