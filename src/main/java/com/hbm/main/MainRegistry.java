@@ -417,6 +417,7 @@ public class MainRegistry {
         AnvilRecipes.register();
         ClientConfig.initConfig();
         RefineryRecipes.registerRefinery();
+        ModFluids.setFromRegistry();
         FluidContainerRegistry.register();
         TileEntityNukeCustom.registerBombItems();
         ArmorUtil.register();
