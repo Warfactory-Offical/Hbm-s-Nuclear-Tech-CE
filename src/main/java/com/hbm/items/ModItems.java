@@ -727,7 +727,7 @@ public class ModItems {
     public static final Item hf_sword = new ItemSwordCutter(15F, 1F, MainRegistry.matCrucible, "hf_sword").setCreativeTab(MainRegistry.weaponTab);
 
     public static final Item stick_dynamite = new ItemGrenade(3, "stick_dynamite").setCreativeTab(MainRegistry.weaponTab);
-    //public static final Item stick_dynamite_fishing = new ItemGrenadeFishing(3, "stick_dynamite_fishing").setCreativeTab(MainRegistry.weaponTab); TODO
+    public static final Item stick_dynamite_fishing = new ItemGrenadeFishing(3, "stick_dynamite_fishing").setCreativeTab(MainRegistry.weaponTab);
     public static final Item stick_tnt = new ItemBakedBase("stick_tnt").setCreativeTab(MainRegistry.weaponTab);
     public static final Item stick_semtex = new ItemBakedBase("stick_semtex").setCreativeTab(MainRegistry.weaponTab);
     public static final Item stick_c4 = new ItemBakedBase("stick_c4").setCreativeTab(MainRegistry.weaponTab);
@@ -1958,6 +1958,7 @@ public class ModItems {
     public static final Item grenade_nuke = new ItemGrenade(-1, "grenade_nuke").setCreativeTab(MainRegistry.weaponTab);
     public static final Item grenade_lemon = new ItemGrenade(4, "grenade_lemon").setCreativeTab(MainRegistry.weaponTab);
     public static final Item grenade_gascan = new ItemGrenade(-1, "grenade_gascan").setCreativeTab(MainRegistry.weaponTab);
+    public static final Item grenade_kyiv = new ItemGrenadeKyiv(-1, "grenade_kyiv").setCreativeTab(MainRegistry.weaponTab);
     public static final Item grenade_mk2 = new ItemGrenade(5, "grenade_mk2").setCreativeTab(MainRegistry.weaponTab);
     public static final Item grenade_aschrab = new ItemGrenade(-1, "grenade_aschrab").setCreativeTab(MainRegistry.weaponTab);
     public static final Item grenade_nuclear = new ItemGrenade(7, "grenade_nuclear").setCreativeTab(MainRegistry.weaponTab);
