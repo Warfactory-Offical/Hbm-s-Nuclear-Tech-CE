@@ -363,6 +363,7 @@ public class ClientProxy extends ServerProxy {
         registerItemRenderer(ModItems.missile_endo, new ItemRenderMissileGeneric(RenderMissileType.TYPE_THERMAL), reg);
         registerItemRenderer(ModItems.missile_exo, new ItemRenderMissileGeneric(RenderMissileType.TYPE_THERMAL), reg);
         registerItemRenderer(ModItems.missile_doomsday, new ItemRenderMissileGeneric(RenderMissileType.TYPE_DOOMSDAY), reg);
+        registerItemRenderer(ModItems.missile_doomsday_rusted, new ItemRenderMissileGeneric(RenderMissileType.TYPE_DOOMSDAY), reg);
         registerItemRenderer(ModItems.missile_carrier, new ItemRenderMissileGeneric(RenderMissileType.TYPE_CARRIER), reg);
     }
 
@@ -696,6 +697,25 @@ public class ClientProxy extends ServerProxy {
                             }
 
                             vec = vec.rotateYaw(360F / count);
+                        }
+                    }
+                    case "foamSplash" -> {
+                        double strength = data.getDouble("range");
+
+                        Vec3d vec = new Vec3d(strength, 0, 0);
+
+                        for(int i = 0; i < count; i++) {
+
+                            vec = vec.rotateYaw((float) Math.toRadians(rand.nextFloat() * 360F));
+                            // TODO
+                            /*ParticleFoam fx = new ParticleFoam(man, world, x + vec.xCoord, y, z + vec.zCoord);
+                            fx.maxAge = 50;
+                            fx.motionY = 0;
+                            fx.motionX = 0;
+                            fx.motionZ = 0;
+                            Minecraft.getMinecraft().effectRenderer.addEffect(fx);
+
+                            vec.rotateAroundY(360 / count);*/
                         }
                     }
                     default -> throw new IllegalStateException("Unexpected value: " + mode);

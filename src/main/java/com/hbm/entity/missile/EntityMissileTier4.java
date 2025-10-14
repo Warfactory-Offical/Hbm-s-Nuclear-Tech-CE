@@ -128,8 +128,8 @@ public abstract class EntityMissileTier4 extends EntityMissileBaseNT {
 		@Override public String getTranslationKey() { return "radar.target.doomsday"; }
 		@Override public ItemStack getMissileItemForInfo() { return new ItemStack(ModItems.missile_doomsday); }
 	}
-	
-	/*public static class EntityMissileDoomsdayRusted extends EntityMissileDoomsday {
+	@AutoRegister(name = "entity_missile_doomsday_rusted", trackingRange = 1000)
+	public static class EntityMissileDoomsdayRusted extends EntityMissileDoomsday {
 		public EntityMissileDoomsdayRusted(World world) { super(world); }
 		public EntityMissileDoomsdayRusted(World world, float x, float y, float z, int a, int b) { super(world, x, y, z, a, b); }
 		@Override public void onImpact() {
@@ -137,7 +137,7 @@ public abstract class EntityMissileTier4 extends EntityMissileBaseNT {
 			EntityNukeTorex.statFac(world, posX, posY, posZ, BombConfig.missileRadius);
 		}
 		@Override public ItemStack getMissileItemForInfo() { return new ItemStack(ModItems.missile_doomsday_rusted); }
-	}*/
+	}
 	@AutoRegister(name = "entity_missile_n2", trackingRange = 1000)
 	public static class EntityMissileN2 extends EntityMissileTier4 {
 		public EntityMissileN2(World world) { super(world); }

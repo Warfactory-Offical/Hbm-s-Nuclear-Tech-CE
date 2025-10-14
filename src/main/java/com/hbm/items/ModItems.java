@@ -1804,12 +1804,10 @@ public class ModItems {
     public static final Item gem_rad = new ItemBakedBase("gem_rad").setCreativeTab(MainRegistry.partsTab);
     //TODO: Port ItemAlexandrite for color logic
     public static final Item gem_alexandrite = new ItemBase("gem_alexandrite").setCreativeTab(MainRegistry.partsTab);
-    //Circuits
     public static final Item upgrade_muffler = new ItemMuffler("upgrade_muffler").setCreativeTab(MainRegistry.partsTab);
     public static final Item upgrade_template = new ItemCustomLore("upgrade_template").setMaxStackSize(1).setCreativeTab(MainRegistry.partsTab);
     public static final Item deuterium_filter = new ItemBase("deuterium_filter").setCreativeTab(MainRegistry.partsTab);
     public static final Item parts_legendary = new ItemEnumMulti("parts_legendary", EnumLegendaryType.class, false, true).setCreativeTab(MainRegistry.partsTab);
-    // FIXME sawblade't have a proper render
     public static final Item sawblade = new ItemBase("sawblade").setCreativeTab(MainRegistry.partsTab);
     public static final Item gear_large = new ItemGear("gear_large").setCreativeTab(MainRegistry.partsTab);
     public static final Item crt_display = new ItemBakedBase("crt_display").setCreativeTab(MainRegistry.partsTab);
@@ -1834,9 +1832,6 @@ public class ModItems {
     public static final Item casing_50 = new ItemBase("casing_50").setCreativeTab(MainRegistry.partsTab);
     public static final Item casing_buckshot = new ItemBase("casing_buckshot").setCreativeTab(MainRegistry.partsTab);
     // Wires and things
-    // Th3_Sl1ze: the only reason why I'm even keeping old wires, plates and etc - I want to convert them to the new meta ones
-    // because why the fuck people should lose half of their resources?
-    // mlbv: no im having them deleted
     public static final Item coil_advanced_alloy = new ItemBase("coil_advanced_alloy").setCreativeTab(MainRegistry.partsTab);
     public static final Item coil_advanced_torus = new ItemBase("coil_advanced_torus").setCreativeTab(MainRegistry.partsTab);
     public static final Item coil_gold = new ItemBase("coil_gold").setCreativeTab(MainRegistry.partsTab);
@@ -1847,6 +1842,7 @@ public class ModItems {
     public static final Item coil_magnetized_tungsten = new ItemCustomLore("coil_magnetized_tungsten").setCreativeTab(MainRegistry.partsTab);
     //Gun ammo
     public static final Item assembly_nuke = new ItemBase("assembly_nuke").setCreativeTab(MainRegistry.partsTab);
+
     public static Item gun_debug;
 
     public static Item gun_pepperbox;
@@ -1925,7 +1921,6 @@ public class ModItems {
     public static final ItemEnumMulti ammo_shell = (ItemEnumMulti) new ItemAmmo("ammo_shell", ItemAmmoEnums.Ammo240Shell.class).setCreativeTab(MainRegistry.weaponTab);
     public static final Item ammo_dgk = new ItemCustomLore("ammo_dgk").setCreativeTab(MainRegistry.weaponTab);
     public static final ItemEnumMulti ammo_fireext = (ItemEnumMulti) new ItemAmmo("ammo_fireext", ItemAmmoEnums.AmmoFireExt.class).setCreativeTab(MainRegistry.weaponTab);
-    // FIXME why do the fuck we have this Bob, if we don't even USE it dammit
     public static final ItemEnumMulti ammo_misc = new ItemAmmo("ammo_misc", ItemAmmoEnums.AmmoMisc.class);
     public static final Item ammo_arty = new ItemAmmoArty("ammo_arty");
     public static final Item ammo_himars = new ItemAmmoHIMARS("ammo_himars");
@@ -1938,7 +1933,6 @@ public class ModItems {
     public static final Item grenade_strong = new ItemGrenade(5, "grenade_strong").setCreativeTab(MainRegistry.weaponTab);
     public static final Item grenade_frag = new ItemGrenade(4, "grenade_frag").setCreativeTab(MainRegistry.weaponTab);
     public static final Item grenade_fire = new ItemGrenade(4, "grenade_fire").setCreativeTab(MainRegistry.weaponTab);
-    //public static final Item ammo_secret = new ItemEnumMulti("ammo_secret", EnumAmmoSecret.class, true, true);
     public static final Item grenade_shrapnel = new ItemGrenade(4, "grenade_shrapnel").setCreativeTab(MainRegistry.weaponTab);
     public static final Item grenade_cluster = new ItemGrenade(5, "grenade_cluster").setCreativeTab(MainRegistry.weaponTab);
     public static final Item grenade_flare = new ItemGrenade(0, "grenade_flare").setCreativeTab(MainRegistry.weaponTab);
@@ -2469,6 +2463,7 @@ public class ModItems {
     public static final Item missile_endo = new ItemMissileStandard("missile_endo", ItemMissileStandard.MissileFormFactor.HUGE, ItemMissileStandard.MissileTier.TIER3).setCreativeTab(MainRegistry.missileTab);
     public static final Item missile_exo = new ItemMissileStandard("missile_exo", ItemMissileStandard.MissileFormFactor.HUGE, ItemMissileStandard.MissileTier.TIER3).setCreativeTab(MainRegistry.missileTab);
     public static final Item missile_doomsday = new ItemMissileStandard("missile_doomsday", ItemMissileStandard.MissileFormFactor.ATLAS, ItemMissileStandard.MissileTier.TIER4).setCreativeTab(MainRegistry.missileTab);
+    public static final Item missile_doomsday_rusted = new ItemMissileStandard("missile_doomsday_rusted", ItemMissileStandard.MissileFormFactor.ATLAS, ItemMissileStandard.MissileTier.TIER4).notLaunchable().setCreativeTab(MainRegistry.missileTab);
     public static final Item missile_taint = new ItemMissileStandard("missile_taint", ItemMissileStandard.MissileFormFactor.MICRO, ItemMissileStandard.MissileTier.TIER0).setCreativeTab(MainRegistry.missileTab);
     public static final Item missile_micro = new ItemMissileStandard("missile_micro", ItemMissileStandard.MissileFormFactor.MICRO, ItemMissileStandard.MissileTier.TIER0).setCreativeTab(MainRegistry.missileTab);
     public static final Item missile_bhole = new ItemMissileStandard("missile_bhole", ItemMissileStandard.MissileFormFactor.MICRO, ItemMissileStandard.MissileTier.TIER0).setCreativeTab(MainRegistry.missileTab);
@@ -2723,30 +2718,6 @@ public class ModItems {
     public static final Item entanglement_kit = new ItemCustomLore("entanglement_kit").setCreativeTab(MainRegistry.partsTab);
     //Dummy texture items; Note: Use EffectItem to autohide them from JEI
     public static final Item achievement_icon = new ItemEnumMulti("achievement_icon", ItemEnums.EnumAchievementType.class, true, true).setCreativeTab(null);
-    public static final Item smoke1 = new EffectItem("smoke1").setCreativeTab(null);
-    public static final Item smoke2 = new EffectItem("smoke2").setCreativeTab(null);
-    public static final Item smoke3 = new EffectItem("smoke3").setCreativeTab(null);
-    public static final Item smoke4 = new EffectItem("smoke4").setCreativeTab(null);
-    public static final Item smoke5 = new EffectItem("smoke5").setCreativeTab(null);
-    public static final Item smoke6 = new EffectItem("smoke6").setCreativeTab(null);
-    public static final Item smoke7 = new EffectItem("smoke7").setCreativeTab(null);
-    public static final Item smoke8 = new EffectItem("smoke8").setCreativeTab(null);
-    public static final Item b_smoke1 = new EffectItem("b_smoke1").setCreativeTab(null);
-    public static final Item b_smoke2 = new EffectItem("b_smoke2").setCreativeTab(null);
-    public static final Item b_smoke3 = new EffectItem("b_smoke3").setCreativeTab(null);
-    public static final Item b_smoke4 = new EffectItem("b_smoke4").setCreativeTab(null);
-    public static final Item b_smoke5 = new EffectItem("b_smoke5").setCreativeTab(null);
-    public static final Item b_smoke6 = new EffectItem("b_smoke6").setCreativeTab(null);
-    public static final Item b_smoke7 = new EffectItem("b_smoke7").setCreativeTab(null);
-    public static final Item b_smoke8 = new EffectItem("b_smoke8").setCreativeTab(null);
-    public static final Item d_smoke1 = new EffectItem("d_smoke1").setCreativeTab(null);
-    public static final Item d_smoke2 = new EffectItem("d_smoke2").setCreativeTab(null);
-    public static final Item d_smoke3 = new EffectItem("d_smoke3").setCreativeTab(null);
-    public static final Item d_smoke4 = new EffectItem("d_smoke4").setCreativeTab(null);
-    public static final Item d_smoke5 = new EffectItem("d_smoke5").setCreativeTab(null);
-    public static final Item d_smoke6 = new EffectItem("d_smoke6").setCreativeTab(null);
-    public static final Item d_smoke7 = new EffectItem("d_smoke7").setCreativeTab(null);
-    public static final Item d_smoke8 = new EffectItem("d_smoke8").setCreativeTab(null);
     public static final Item cloud1 = new EffectItem("cloud1").setCreativeTab(null);
     public static final Item cloud2 = new EffectItem("cloud2").setCreativeTab(null);
     public static final Item cloud3 = new EffectItem("cloud3").setCreativeTab(null);
@@ -2755,14 +2726,6 @@ public class ModItems {
     public static final Item cloud6 = new EffectItem("cloud6").setCreativeTab(null);
     public static final Item cloud7 = new EffectItem("cloud7").setCreativeTab(null);
     public static final Item cloud8 = new EffectItem("cloud8").setCreativeTab(null);
-    public static final Item gasflame1 = new EffectItem("gasflame1").setCreativeTab(null);
-    public static final Item gasflame2 = new EffectItem("gasflame2").setCreativeTab(null);
-    public static final Item gasflame3 = new EffectItem("gasflame3").setCreativeTab(null);
-    public static final Item gasflame4 = new EffectItem("gasflame4").setCreativeTab(null);
-    public static final Item gasflame5 = new EffectItem("gasflame5").setCreativeTab(null);
-    public static final Item gasflame6 = new EffectItem("gasflame6").setCreativeTab(null);
-    public static final Item gasflame7 = new EffectItem("gasflame7").setCreativeTab(null);
-    public static final Item gasflame8 = new EffectItem("gasflame8").setCreativeTab(null);
     public static final Item flame_1 = new EffectItem("flame_1").setCreativeTab(null);
     public static final Item flame_2 = new EffectItem("flame_2").setCreativeTab(null);
     public static final Item flame_3 = new EffectItem("flame_3").setCreativeTab(null);
@@ -2807,22 +2770,6 @@ public class ModItems {
     public static final Item ln2_8 = new EffectItem("ln2_8").setCreativeTab(null);
     public static final Item ln2_9 = new EffectItem("ln2_9").setCreativeTab(null);
     public static final Item ln2_10 = new EffectItem("ln2_10").setCreativeTab(null);
-    public static final Item gas1 = new EffectItem("gas1").setCreativeTab(null);
-    public static final Item gas2 = new EffectItem("gas2").setCreativeTab(null);
-    public static final Item gas3 = new EffectItem("gas3").setCreativeTab(null);
-    public static final Item gas4 = new EffectItem("gas4").setCreativeTab(null);
-    public static final Item gas5 = new EffectItem("gas5").setCreativeTab(null);
-    public static final Item gas6 = new EffectItem("gas6").setCreativeTab(null);
-    public static final Item gas7 = new EffectItem("gas7").setCreativeTab(null);
-    public static final Item gas8 = new EffectItem("gas8").setCreativeTab(null);
-    public static final Item spill1 = new EffectItem("spill1").setCreativeTab(null);
-    public static final Item spill2 = new EffectItem("spill2").setCreativeTab(null);
-    public static final Item spill3 = new EffectItem("spill3").setCreativeTab(null);
-    public static final Item spill4 = new EffectItem("spill4").setCreativeTab(null);
-    public static final Item spill5 = new EffectItem("spill5").setCreativeTab(null);
-    public static final Item spill6 = new EffectItem("spill6").setCreativeTab(null);
-    public static final Item spill7 = new EffectItem("spill7").setCreativeTab(null);
-    public static final Item spill8 = new EffectItem("spill8").setCreativeTab(null);
     public static final Item nothing = new EffectItem("nothing").setCreativeTab(null);
     public static final Item ducc = new ItemBase("ducc").setCreativeTab(MainRegistry.controlTab);
     public static final Item discharge = new EffectItem("discharge").setCreativeTab(null);

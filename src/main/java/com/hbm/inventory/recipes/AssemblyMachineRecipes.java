@@ -560,8 +560,8 @@ public class AssemblyMachineRecipes extends GenericRecipes<GenericRecipe> {
                 .inputItems(new RecipesCommon.OreDictStack(PB.nugget(), 6)));
 
         // bombs
-        /*this.register(new GenericRecipe("ass.minenaval").setup(300, 100).outputItems(new ItemStack(ModBlocks.mine_naval, 1))
-                .inputItems(new RecipesCommon.ComparableStack(ModItems.sphere_steel, 1), new RecipesCommon.OreDictStack(STEEL.pipe(), 3), new RecipesCommon.ComparableStack(ModItems.circuit, 1, EnumCircuitType.ADVANCED), new RecipesCommon.OreDictStack(ANY_PLASTICEXPLOSIVE.ingot(), 24)));*/ // TODO
+        this.register(new GenericRecipe("ass.minenaval").setup(300, 100).outputItems(new ItemStack(ModBlocks.mine_naval, 1))
+                .inputItems(new RecipesCommon.ComparableStack(ModItems.sphere_steel, 1), new RecipesCommon.OreDictStack(STEEL.pipe(), 3), new RecipesCommon.ComparableStack(ModItems.circuit, 1, EnumCircuitType.ADVANCED), new RecipesCommon.OreDictStack(ANY_PLASTICEXPLOSIVE.ingot(), 24)));
         this.register(new GenericRecipe("ass.gadget").setup(300, 100).outputItems(new ItemStack(ModBlocks.nuke_gadget, 1))
                 .inputItems(new RecipesCommon.ComparableStack(ModItems.sphere_steel, 1), new RecipesCommon.ComparableStack(ModItems.fins_flat, 2), new RecipesCommon.ComparableStack(ModItems.pedestal_steel, 1), new RecipesCommon.ComparableStack(ModItems.circuit, 3, EnumCircuitType.CONTROLLER), new RecipesCommon.OreDictStack(KEY_GRAY, 8)));
         this.register(new GenericRecipe("ass.littleboy").setup(300, 100).outputItems(new ItemStack(ModBlocks.nuke_boy, 1))
