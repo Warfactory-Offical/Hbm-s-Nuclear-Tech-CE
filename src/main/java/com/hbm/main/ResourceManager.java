@@ -414,6 +414,7 @@ public class ResourceManager {
 	public static final IModelCustom maskman = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/mobs/maskman.obj")).asVBO();
 	public static final IModelCustom ufo = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/mobs/ufo.obj")).asVBO();
     public static final IModelCustom glyphid = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/mobs/glyphid.obj")).asVBO();
+	public static final IModelCustom drone = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/mobs/quadcopter.obj")).asVBO();
 
     //Lights
     public static final IModelCustom lantern = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/trinkets/lantern.obj")).asVBO();
