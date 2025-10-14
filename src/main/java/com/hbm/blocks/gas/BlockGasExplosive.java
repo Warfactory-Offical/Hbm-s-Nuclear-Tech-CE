@@ -1,5 +1,6 @@
 package com.hbm.blocks.gas;
 
+import com.hbm.config.GeneralConfig;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -19,7 +20,7 @@ public class BlockGasExplosive extends BlockGasFlammable {
 
     @Override
     protected void combust(World world, BlockPos startPos) {
-        if (isCombusting.get()) return;
+        if (isCombusting.get() || !GeneralConfig.enableExplosiveGas) return;
         isCombusting.set(true);
         try {
             Queue<BlockPos> processQueue = new ArrayDeque<>();

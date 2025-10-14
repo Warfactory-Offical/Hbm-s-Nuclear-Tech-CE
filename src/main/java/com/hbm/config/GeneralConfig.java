@@ -39,8 +39,13 @@ public class GeneralConfig {
 	public static boolean enableBomberShortMode = false;
 	public static boolean enableVaults = true;
 	public static boolean enableRads = true;
-	public static boolean enableCoal = true;
-	public static boolean enableAsbestos = true;
+	public static boolean enableCoalGas = true;
+	public static boolean enableAsbestosDust = true;
+    public static boolean enableRadon = true;
+    public static boolean enableCarbonMonoxide = true;
+    public static boolean enableFlammableGas = true;
+    public static boolean enableExplosiveGas = true;
+    public static boolean enableMeltdownGas = true;
 	public static boolean advancedRadiation = true;
 	public static boolean enableCataclysm = false;
 	public static boolean enableExtendedLogging = false;
@@ -105,14 +110,6 @@ public class GeneralConfig {
 	public static boolean enableLBSMSafeMEDrives = true;
 	public static boolean enableLBSMIGen = true;
 
-	public static boolean disableAsbestos = false;
-	public static boolean disableBlinding = false;
-	public static boolean disableCoal = false;
-	public static boolean disableExplosive = false;
-	public static boolean disableHydro = false;
-	public static boolean disableHot = false;
-	public static boolean disableCold = false;
-
 	public static void loadFromConfig(Configuration config){
 		final String CATEGORY_GENERAL = "01_general";
 		enablePacketThreading = config.get(CATEGORY_GENERAL, "0.01_enablePacketThreading", true, "Enables creation of a separate thread to increase packet processing speed on servers. Disable this if you are having anomalous crashes related to memory connections.").getBoolean(true);
@@ -171,9 +168,13 @@ public class GeneralConfig {
 		callListModels = CommonConfig.createConfigBool(config, CATEGORY_GENERAL, "1.26_callListModels", "Enables call lists for a few models, making them render extremely fast", true);
 		enableReflectorCompat = config.get(CATEGORY_GENERAL, "1.24_enableReflectorCompat", false).getBoolean(false);
 		
-		enableCoal = config.get(CATEGORY_GENERAL, "1.26_enableCoalDust", true).getBoolean(true);
-		enableAsbestos = config.get(CATEGORY_GENERAL, "1.26_enableAsbestosDust", true).getBoolean(true);
-		
+		enableCoalGas = config.get(CATEGORY_GENERAL, "1.26_enableCoalDust", true).getBoolean(true);
+		enableAsbestosDust = config.get(CATEGORY_GENERAL, "1.26_enableAsbestosDust", true).getBoolean(true);
+        enableRadon = config.get(CATEGORY_GENERAL, "1.26_enableRadonGas", true).getBoolean(true);
+        enableCarbonMonoxide = config.get(CATEGORY_GENERAL, "1.26_enableCarbonMonoxide", true).getBoolean(true);
+        enableFlammableGas = config.get(CATEGORY_GENERAL, "1.26_enableFlammableGas", true).getBoolean(true);
+        enableExplosiveGas = config.get(CATEGORY_GENERAL, "1.26_enableExplosiveGas", true).getBoolean(true);
+        enableMeltdownGas = config.get(CATEGORY_GENERAL, "1.26_enableMeltdownGas", true).getBoolean(true);
 		enableReEval = config.get(CATEGORY_GENERAL, "1.27_enableReEval", true, "Allows re-evaluating power networks on link remove instead of destroying and recreating").getBoolean(true);
 		enableSteamParticles = config.get(CATEGORY_GENERAL, "1.27.1_enableSteamParticles", true, "If disabled, auxiliary cooling towers and large cooling towers will not emit steam particles when in use.").getBoolean(true);
 		
