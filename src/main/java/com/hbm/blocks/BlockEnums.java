@@ -56,6 +56,19 @@ public class BlockEnums {
 		STEEL
 	}
 
+    public enum DecoCRTEnum {
+        CLEAN,
+        BROKEN,
+        BLINKING,
+        BSOD
+    }
+
+    public enum DecoToasterEnum {
+        IRON,
+        STEEL,
+        WOOD
+    }
+
 	public static enum OreType {
 		EMERALD ("emerald",OreEnum.EMERALD),
 		DIAMOND ("diamond", OreEnum.DIAMOND),
@@ -125,3 +138,5 @@ public class BlockEnums {
 		}
 	}
 }
+
+
