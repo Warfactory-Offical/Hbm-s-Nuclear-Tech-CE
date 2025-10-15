@@ -1,7 +1,7 @@
 package com.hbm.blocks.bomb;
 
+import com.hbm.blocks.BlockBase;
 import com.hbm.blocks.ModBlocks;
-import com.hbm.blocks.generic.BlockBakeBase;
 import com.hbm.entity.mob.EntityCreeperTainted;
 import com.hbm.entity.mob.EntityTaintCrab;
 import com.hbm.entity.mob.EntityTeslaCrab;
@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class BlockTaint extends BlockBakeBase {
+public class BlockTaint extends BlockBase {
 
 	public static final PropertyInteger TEXTURE = PropertyInteger.create("taintage", 0, 15);
 	
