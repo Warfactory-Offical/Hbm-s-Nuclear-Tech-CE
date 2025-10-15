@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Random;
 
 public class BlockTaint extends BlockBase {
-
+    private static final AxisAlignedBB TAINT_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.75D, 1.0D);
 	public static final PropertyInteger TAINTAGE = PropertyInteger.create("taintage", 0, 15);
 	
 	public BlockTaint(Material m, String s) {
@@ -106,6 +106,11 @@ public class BlockTaint extends BlockBase {
                 world.spawnEntity(falling);
             }
         }
+    }
+
+    @Override
+    public AxisAlignedBB getCollisionBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
+        return TAINT_AABB;
     }
 
 	@Override
