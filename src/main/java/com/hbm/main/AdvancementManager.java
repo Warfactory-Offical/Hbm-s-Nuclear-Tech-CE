@@ -98,7 +98,7 @@ public class AdvancementManager {
         achSlimeball   = adv.getAdvancement(new ResourceLocation(RefStrings.MODID, "achslimeball"));
         achSulfuric    = adv.getAdvancement(new ResourceLocation(RefStrings.MODID, "achsulfuric"));
         achInferno     = adv.getAdvancement(new ResourceLocation(RefStrings.MODID, "achinferno"));
-        achRedRoom     = adv.getAdvancement(new ResourceLocation(RefStrings.MODID, "achredroom")); //TODO: implement keyhole
+        achRedRoom     = adv.getAdvancement(new ResourceLocation(RefStrings.MODID, "achredroom"));
 
         bobHidden      = adv.getAdvancement(new ResourceLocation(RefStrings.MODID, "bobhidden"));
 

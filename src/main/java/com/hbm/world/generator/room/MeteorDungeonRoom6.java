@@ -9,9 +9,9 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
-public class TestDungeonRoom6 extends CellularDungeonRoom {
+public class MeteorDungeonRoom6 extends CellularDungeonRoom {
 
-	public TestDungeonRoom6(CellularDungeon parent) {
+	public MeteorDungeonRoom6(CellularDungeon parent) {
 		super(parent);
 	}
 

@@ -79,7 +79,7 @@ public class ItemToolAbility extends ItemTool implements IDepthRockTool, IGUIPro
 	protected boolean rockBreaker = false;
     
 	
-	public static enum EnumToolType {
+	public enum EnumToolType {
 		
 		PICKAXE(
 				Sets.newHashSet(Material.IRON, Material.ANVIL, Material.ROCK),
@@ -222,8 +222,7 @@ public class ItemToolAbility extends ItemTool implements IDepthRockTool, IGUIPro
 		 *
 		 * Since keyholes aren't processable and exempt from silk touch anyway, we just default to the vanilla implementation in every case.
 		 */
-		// TODO: stone keyholes
-		//if(block == ModBlocks.stone_keyhole || block == ModBlocks.stone_keyhole_meta) return false;
+		if(block == ModBlocks.stone_keyhole || block == ModBlocks.stone_keyhole_meta) return false;
 
 		if(!world.isRemote && (canHarvestBlock(state, stack) || canShearBlock(block, stack, world, pos.getX(), pos.getY(), pos.getZ())) && canOperate(stack)) {
 			Configuration config = getConfiguration(stack);
@@ -344,8 +343,8 @@ public class ItemToolAbility extends ItemTool implements IDepthRockTool, IGUIPro
 		Block block = state.getBlock();
 		int meta = block.getMetaFromState(state);
 
-		if (!(canHarvestBlock(state, stack) || canShearBlock(block, stack, world, x, y, z)) || (state.getBlockHardness(world, pos) == -1.0F && state.getPlayerRelativeBlockHardness(player, world, pos) == 0.0F))
-				//|| block == ModBlocks.stone_keyhole)
+		if (!(canHarvestBlock(state, stack) || canShearBlock(block, stack, world, x, y, z)) || (state.getBlockHardness(world, pos) == -1.0F && state.getPlayerRelativeBlockHardness(player, world, pos) == 0.0F)
+				|| block == ModBlocks.stone_keyhole)
 			return;
 
 		BlockPos refPos = new BlockPos(refX, refY, refZ);

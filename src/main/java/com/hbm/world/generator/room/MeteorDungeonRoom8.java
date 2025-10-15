@@ -21,9 +21,9 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
-public class TestDungeonRoom8 extends CellularDungeonRoom {
+public class MeteorDungeonRoom8 extends CellularDungeonRoom {
 
-	public TestDungeonRoom8(CellularDungeon parent) {
+	public MeteorDungeonRoom8(CellularDungeon parent) {
 		super(parent);
 	}
 

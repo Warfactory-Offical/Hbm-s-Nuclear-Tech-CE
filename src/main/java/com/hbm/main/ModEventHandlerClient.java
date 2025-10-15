@@ -278,8 +278,12 @@ public class ModEventHandlerClient {
             }
         }
         ModelLoader.setCustomModelResourceLocation(ModItems.canister_empty, 0, ItemCanister.fluidCanisterModel);
-        ModelLoader.setCustomModelResourceLocation(ModItems.icf_pellet, 0, new ModelResourceLocation(ModItems.icf_pellet.getRegistryName(),
-"inventory"));
+        ModelLoader.setCustomModelResourceLocation(ModItems.icf_pellet, 0, new ModelResourceLocation(ModItems.icf_pellet.getRegistryName(), "inventory"));
+
+        ModelResourceLocation clayTabletModel = new ModelResourceLocation(ModItems.clay_tablet.getRegistryName(), "inventory");
+
+        ModelLoader.setCustomModelResourceLocation(ModItems.clay_tablet, 0, clayTabletModel);
+        ModelLoader.setCustomModelResourceLocation(ModItems.clay_tablet, 1, clayTabletModel);
 
         for (Item item : ModItems.ALL_ITEMS) {
             try {
@@ -1886,8 +1890,10 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         if (player.getHeldItem(EnumHand.MAIN_HAND) != null && player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof ItemGunBase ||
                 player.getHeldItem(EnumHand.MAIN_HAND) != null && player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof ItemGunBaseNT) {
 
-            if (event.getButton() >= 0 && event.getButton() <= 2)
-                event.setCanceled(true);
+            if (event.getButton() >= 0 && event.getButton() <= 2) {
+                BlockPos selected = Minecraft.getMinecraft().objectMouseOver.getBlockPos();
+                if (!(player.world.getBlockState(selected).getBlock() instanceof IGunClickable)) event.setCanceled(true);
+            }
             Item item = player.getHeldItem(EnumHand.MAIN_HAND).getItem();
             if(item instanceof ItemGunBase weapon) {
                 if (event.getButton() == 0 && !m1 && !m2) {
