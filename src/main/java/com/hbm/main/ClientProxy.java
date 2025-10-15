@@ -804,32 +804,13 @@ public class ClientProxy extends ServerProxy {
                     default -> throw new IllegalStateException("Unexpected value: " + mode);
                 }
             }
-            case "muke" -> { // FIXME: This doesn't look right
+            case "muke" -> { // muted nuke
                 ParticleMukeWave wave = new ParticleMukeWave(world, x, y, z);
+                ParticleMukeFlash flash = new ParticleMukeFlash(world, x, y, z, data.getBoolean("balefire"));
+
                 Minecraft.getMinecraft().effectRenderer.addEffect(wave);
+                Minecraft.getMinecraft().effectRenderer.addEffect(flash);
 
-                for(double d = 0.0D; d <= 1.6D; d += 0.1) {
-                    ParticleMukeCloud cloud = new ParticleMukeCloud(world, x, y, z, rand.nextGaussian() * 0.05, d + rand.nextGaussian() * 0.02, rand.nextGaussian() * 0.05);
-                    Minecraft.getMinecraft().effectRenderer.addEffect(cloud);
-                }
-                for(int i = 0; i < 50; i++) {
-                    ParticleMukeCloud cloud = new ParticleMukeCloud(world, x, y + 0.5, z, rand.nextGaussian() * 0.5, rand.nextInt(5) == 0 ? 0.02 : 0, rand.nextGaussian() * 0.5);
-                    Minecraft.getMinecraft().effectRenderer.addEffect(cloud);
-                }
-                for(int i = 0; i < 15; i++) {
-                    double ix = rand.nextGaussian() * 0.2;
-                    double iz = rand.nextGaussian() * 0.2;
-
-                    if(ix * ix + iz * iz > 0.75) {
-                        ix *= 0.5;
-                        iz *= 0.5;
-                    }
-
-                    double iy = 1.6 + (rand.nextDouble() * 2 - 1) * (0.75 - (ix * ix + iz * iz)) * 0.5;
-
-                    ParticleMukeCloud cloud = new ParticleMukeCloud(world, x, y, z, ix, iy + rand.nextGaussian() * 0.02, iz);
-                    Minecraft.getMinecraft().effectRenderer.addEffect(cloud);
-                }
                 player.hurtTime = 15;
                 player.maxHurtTime = 15;
                 player.attackedAtYaw = 0F;
