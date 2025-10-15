@@ -21,7 +21,6 @@ import com.hbm.handler.HbmKeybinds.EnumKeybind;
 import com.hbm.items.IAnimatedItem;
 import com.hbm.items.ModItems;
 import com.hbm.items.RBMKItemRenderers;
-import com.hbm.items.machine.ItemFluidIDMulti;
 import com.hbm.items.weapon.sedna.factory.GunFactoryClient;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.RecoilHandler;
@@ -250,6 +249,8 @@ public class ClientProxy extends ServerProxy {
         registerGrenadeRenderer(EntityGrenadeIFNull.class, ModItems.grenade_if_null);
         registerGrenadeRenderer(EntityGrenadeDynamite.class, ModItems.stick_dynamite);
         registerGrenadeRenderer(EntityAcidBomb.class, Items.SLIME_BALL);
+        registerGrenadeRenderer(EntityGrenadeBouncyGeneric.class, ModItems.stick_dynamite_fishing);
+        registerGrenadeRenderer(EntityGrenadeImpactGeneric.class, ModItems.grenade_kyiv);
         registerMetaSensitiveGrenade(EntityDisperserCanister.class, ModItems.disperser_canister);
         registerMetaSensitiveGrenade(EntityDisperserCanister.class, ModItems.glyphid_gland);
 
@@ -362,6 +363,7 @@ public class ClientProxy extends ServerProxy {
         registerItemRenderer(ModItems.missile_endo, new ItemRenderMissileGeneric(RenderMissileType.TYPE_THERMAL), reg);
         registerItemRenderer(ModItems.missile_exo, new ItemRenderMissileGeneric(RenderMissileType.TYPE_THERMAL), reg);
         registerItemRenderer(ModItems.missile_doomsday, new ItemRenderMissileGeneric(RenderMissileType.TYPE_DOOMSDAY), reg);
+        registerItemRenderer(ModItems.missile_doomsday_rusted, new ItemRenderMissileGeneric(RenderMissileType.TYPE_DOOMSDAY), reg);
         registerItemRenderer(ModItems.missile_carrier, new ItemRenderMissileGeneric(RenderMissileType.TYPE_CARRIER), reg);
     }
 
@@ -695,6 +697,25 @@ public class ClientProxy extends ServerProxy {
                             }
 
                             vec = vec.rotateYaw(360F / count);
+                        }
+                    }
+                    case "foamSplash" -> {
+                        double strength = data.getDouble("range");
+
+                        Vec3d vec = new Vec3d(strength, 0, 0);
+
+                        for(int i = 0; i < count; i++) {
+
+                            vec = vec.rotateYaw((float) Math.toRadians(rand.nextFloat() * 360F));
+                            // TODO
+                            /*ParticleFoam fx = new ParticleFoam(man, world, x + vec.xCoord, y, z + vec.zCoord);
+                            fx.maxAge = 50;
+                            fx.motionY = 0;
+                            fx.motionX = 0;
+                            fx.motionZ = 0;
+                            Minecraft.getMinecraft().effectRenderer.addEffect(fx);
+
+                            vec.rotateAroundY(360 / count);*/
                         }
                     }
                     default -> throw new IllegalStateException("Unexpected value: " + mode);
@@ -1828,7 +1849,6 @@ public class ClientProxy extends ServerProxy {
 
         ParticleRenderLayer.register();
         BobmazonOfferFactory.init();
-        ItemFluidIDMulti.registerItemColors();
     }
 
     @Override

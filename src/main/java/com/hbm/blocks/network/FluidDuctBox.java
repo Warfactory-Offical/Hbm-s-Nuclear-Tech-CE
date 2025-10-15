@@ -1,10 +1,14 @@
 package com.hbm.blocks.network;
 
+import com.hbm.blocks.ICustomBlockItem;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.ModSoundTypes;
+import com.hbm.interfaces.IBlockSpecialPlacementAABB;
 import com.hbm.inventory.fluid.FluidType;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.IDynamicModels;
+import com.hbm.items.block.ItemBlockSpecialAABB;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
 import com.hbm.lib.RefStrings;
@@ -31,6 +35,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
@@ -50,6 +55,7 @@ import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
@@ -57,7 +63,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FluidDuctBox extends FluidDuctBase implements IDynamicModels, ILookOverlay {
+public class FluidDuctBox extends FluidDuctBase implements IDynamicModels, ILookOverlay, ICustomBlockItem, IBlockSpecialPlacementAABB {
 
     public static final PropertyInteger META = PropertyInteger.create("meta", 0, 14);
     public static final IUnlistedProperty<Boolean> CONN_NORTH = new ConnectionProperty("north");
@@ -168,13 +174,18 @@ public class FluidDuctBox extends FluidDuctBase implements IDynamicModels, ILook
         worldIn.setBlockState(pos, this.getStateFromMeta(meta), 3);
     }
 
-    public boolean canConnectTo(IBlockAccess world, int x, int y, int z, EnumFacing dir, TileEntity tile) {
-        if (tile instanceof TileEntityPipeBaseNT) {
-            BlockPos pos = new BlockPos(x, y, z);
-            BlockPos offset = pos.offset(dir);
-            return Library.canConnectFluid(world, offset, ForgeDirection.getOrientation(dir.getOpposite()), ((TileEntityPipeBaseNT) tile).getType());
+    protected boolean canConnectTo(IBlockAccess world, int x, int y, int z, EnumFacing dir, TileEntity tile) {
+        if (tile instanceof TileEntityPipeBaseNT pipeBaseNT) {
+            FluidType type = pipeBaseNT.getType();
+            return canConnectTo(world, x, y, z, dir, type);
         }
         return false;
+    }
+
+    protected boolean canConnectTo(IBlockAccess world, int x, int y, int z, EnumFacing dir, FluidType type) {
+        BlockPos pos = new BlockPos(x, y, z);
+        BlockPos offset = pos.offset(dir);
+        return Library.canConnectFluid(world, offset, ForgeDirection.getOrientation(dir.getOpposite()), type);
     }
 
     @Override
@@ -288,7 +299,7 @@ public class FluidDuctBox extends FluidDuctBase implements IDynamicModels, ILook
         boolean nX = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), EnumFacing.WEST, te);
         boolean pX = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), EnumFacing.EAST, te);
         boolean nY = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), EnumFacing.DOWN, te);
-        boolean pY = canConnectTo(source, pos.getY(), pos.getY(), pos.getZ(), EnumFacing.UP, te);
+        boolean pY = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), EnumFacing.UP, te);
         boolean nZ = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), EnumFacing.NORTH, te);
         boolean pZ = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), EnumFacing.SOUTH, te);
 
@@ -371,6 +382,64 @@ public class FluidDuctBox extends FluidDuctBase implements IDynamicModels, ILook
                 return new ModelResourceLocation(loc, "meta=" + state.getValue(META));
             }
         };
+    }
+
+    @Override
+    public AxisAlignedBB getCollisionBoundingBoxForPlacement(World source, BlockPos pos, ItemStack stack) {
+        FluidType te = Fluids.NONE;
+        boolean nX = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), EnumFacing.WEST, te);
+        boolean pX = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), EnumFacing.EAST, te);
+        boolean nY = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), EnumFacing.DOWN, te);
+        boolean pY = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), EnumFacing.UP, te);
+        boolean nZ = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), EnumFacing.NORTH, te);
+        boolean pZ = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), EnumFacing.SOUTH, te);
+
+        int mask = (pX ? 32 : 0) + (nX ? 16 : 0) + (pY ? 8 : 0) + (nY ? 4 : 0) + (pZ ? 2 : 0) + (nZ ? 1 : 0);
+        int count = (pX ? 1 : 0) + (nX ? 1 : 0) + (pY ? 1 : 0) + (nY ? 1 : 0) + (pZ ? 1 : 0) + (nZ ? 1 : 0);
+
+        int meta = stack.getMetadata();
+        float lower = 0.125F;
+        float upper = 0.875F;
+        float jLower = 0.0625F;
+        float jUpper = 0.9375F;
+        for (int i = 2; i < 13; i += 3) {
+            if (meta > i) {
+                lower += 0.0625F;
+                upper -= 0.0625F;
+                jLower += 0.0625F;
+                jUpper -= 0.0625F;
+            }
+        }
+
+        switch (mask) {
+            case 0:
+                return new AxisAlignedBB(jLower, jLower, jLower, jUpper, jUpper, jUpper);
+            case 0b100000:
+            case 0b010000:
+            case 0b110000:
+                return new AxisAlignedBB(0F, lower, lower, 1F, upper, upper);
+            case 0b001000:
+            case 0b000100:
+            case 0b001100:
+                return new AxisAlignedBB(lower, 0F, lower, upper, 1F, upper);
+            case 0b000010:
+            case 0b000001:
+            case 0b000011:
+                return new AxisAlignedBB(lower, lower, 0F, upper, upper, 1F);
+            default:
+                if (count != 2) {
+                    return new AxisAlignedBB(nX ? 0F : jLower, nY ? 0F : jLower, nZ ? 0F : jLower, pX ? 1F : jUpper, pY ? 1F : jUpper, pZ ? 1F : jUpper);
+                } else {
+                    return new AxisAlignedBB(nX ? 0F : lower, nY ? 0F : lower, nZ ? 0F : lower, pX ? 1F : upper, pY ? 1F : upper, pZ ? 1F : upper);
+                }
+        }
+    }
+
+    @Override
+    public void registerItem() {
+        ItemBlock itemBlock = new ItemBlockSpecialAABB<>(this);
+        itemBlock.setRegistryName(this.getRegistryName());
+        ForgeRegistries.ITEMS.register(itemBlock);
     }
 
     public static class ConnectionProperty implements IUnlistedProperty<Boolean> {

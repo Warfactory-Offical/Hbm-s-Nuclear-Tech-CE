@@ -62,6 +62,7 @@ import com.hbm.uninos.UniNodespace;
 import com.hbm.util.*;
 import com.hbm.util.ArmorRegistry.HazardClass;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -94,6 +95,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.loot.*;
 import net.minecraft.world.storage.loot.conditions.LootCondition;
 import net.minecraft.world.storage.loot.conditions.RandomChanceWithLooting;
@@ -1122,7 +1124,7 @@ public class ModEventHandler {
 
                 ItemStack stack = player.inventory.getStackInSlot(i);
 
-                if (stack != null && stack.getItem() == ModItems.detonator_deadman) {
+                if (stack.getItem() == ModItems.detonator_deadman) {
 
                     if (stack.getTagCompound() != null) {
 
@@ -1218,113 +1220,128 @@ public class ModEventHandler {
 
     @SubscribeEvent
     public void blockBreak(BlockEvent.BreakEvent event) {
+        // Early validation checks
+        if (event.isCancelable() && event.isCanceled()) {
+            return;
+        }
+
         EntityPlayer player = event.getPlayer();
-        if (event.isCancelable() && event.isCanceled())
+        if (!(player instanceof EntityPlayerMP playerMP)) {
             return;
-        if (!(player instanceof EntityPlayerMP playerMP))
-            return;
+        }
 
         Block block = event.getState().getBlock();
+        World world = event.getWorld();
+        BlockPos pos = event.getPos();
 
-        if (block == ModBlocks.stone_gneiss && !AdvancementManager.hasAdvancement(playerMP, AdvancementManager.achStratum)) {
-            AdvancementManager.grantAchievement(playerMP, AdvancementManager.achStratum);
-            event.setExpToDrop(500);
+        // Handle different block types
+        handleGneissBreak(block, playerMP, event);
+        handleCoalBreak(block, world, pos);
+        handleAsbestosBreak(block, event);
+        handleLeadPollution(player, world, pos);
+    }
+
+    // Constants
+    private static final int GNEISS_XP_REWARD = 500;
+    private static final int COAL_GAS_SPAWN_CHANCE = 2;
+    private static final int LEAD_EFFECT_DURATION = 100;
+    private static final float LEAD_LOW_THRESHOLD = 5.0f;
+    private static final float LEAD_MID_THRESHOLD = 10.0f;
+    private static final float LEAD_HIGH_THRESHOLD = 25.0f;
+
+    private void handleGneissBreak(Block block, EntityPlayerMP player, BlockEvent.BreakEvent event) {
+        if (block == ModBlocks.stone_gneiss &&
+                !AdvancementManager.hasAdvancement(player, AdvancementManager.achStratum)) {
+            AdvancementManager.grantAchievement(player, AdvancementManager.achStratum);
+            event.setExpToDrop(GNEISS_XP_REWARD);
+        }
+    }
+
+    private void handleCoalBreak(Block block, World world, BlockPos pos) {
+        if (!GeneralConfig.enableCoalGas || (block != Blocks.COAL_ORE && block != Blocks.COAL_BLOCK && block != ModBlocks.ore_lignite)) {
+            return;
         }
 
-        if (block == Blocks.COAL_ORE || block == Blocks.COAL_BLOCK || block == ModBlocks.ore_lignite) {
-
-            for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-
-                int x = event.getPos().getX() + dir.offsetX;
-                int y = event.getPos().getY() + dir.offsetY;
-                int z = event.getPos().getZ() + dir.offsetZ;
-                BlockPos bPos = new BlockPos(x, y, z);
-
-                if (event.getWorld().rand.nextInt(2) == 0 && event.getWorld().getBlockState(bPos).getBlock() == Blocks.AIR)
-                    event.getWorld().setBlockState(bPos, ModBlocks.gas_coal.getDefaultState(), 3);
-            }
-        }
-
-        if (block == ModBlocks.stone_resource) {
-            int meta = block.getMetaFromState(event.getState());
-            if (meta == BlockEnums.EnumStoneType.ASBESTOS.ordinal()) {
-                if (!event.getWorld().isRemote) {
-                    final BlockPos p = event.getPos();
-                    final net.minecraft.world.World w = event.getWorld();
-                    ((net.minecraft.world.WorldServer) w).addScheduledTask(() -> {
-                        if (w.getBlockState(p).getBlock() == Blocks.AIR) {
-                            w.setBlockState(p, ModBlocks.gas_asbestos.getDefaultState(), 3);
-                        }
-                    });
+        // Spawn coal gas in adjacent air blocks
+        for (EnumFacing dir : EnumFacing.values()) {
+            if (world.rand.nextInt(COAL_GAS_SPAWN_CHANCE) == 0) {
+                BlockPos adjacentPos = pos.offset(dir);
+                if (isAirBlock(world, adjacentPos)) {
+                    world.setBlockState(adjacentPos, ModBlocks.gas_coal.getDefaultState(), 3);
                 }
             }
         }
-        if (block == ModBlocks.basalt_ore) {
-            int meta = block.getMetaFromState(event.getState());
-            if (meta == BlockEnums.EnumBasaltOreType.ASBESTOS.ordinal()) {
-                if (!event.getWorld().isRemote) {
-                    final BlockPos p = event.getPos();
-                    final net.minecraft.world.World w = event.getWorld();
-                    ((net.minecraft.world.WorldServer) w).addScheduledTask(() -> {
-                        if (w.getBlockState(p).getBlock() == Blocks.AIR) {
-                            w.setBlockState(p, ModBlocks.gas_asbestos.getDefaultState(), 3);
-                        }
-                    });
-                }
-            }
+    }
+
+    private void handleAsbestosBreak(Block block, BlockEvent.BreakEvent event) {
+        if (shouldSpawnAsbestosGas(block, event.getState())) {
+            scheduleAsbestosGasSpawn(event.getWorld(), event.getPos());
+        }
+    }
+
+    private boolean shouldSpawnAsbestosGas(Block block, IBlockState state) {
+        if(!GeneralConfig.enableAsbestosDust){
+            return false;
+        }
+        else if (block == ModBlocks.stone_resource) {
+            int meta = block.getMetaFromState(state);
+            return meta == BlockEnums.EnumStoneType.ASBESTOS.ordinal();
+        }
+        else if (block == ModBlocks.basalt_ore) {
+            int meta = block.getMetaFromState(state);
+            return meta == BlockEnums.EnumBasaltOreType.ASBESTOS.ordinal();
         }
 
-        if (block instanceof BlockOutgas outgas) {
-            Block gas = outgas.getGas();
+        return false;
+    }
 
-            if (gas != Blocks.AIR) {
-                if (event.getWorld().getBlockState(event.getPos()).getBlock() == Blocks.AIR) {
-                    event.getWorld().setBlockState(event.getPos(), gas.getDefaultState(), 3);
-                }
-
-                if (outgas.isOnNeighbour()) {
-                    for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-                        BlockPos p = event.getPos().add(dir.offsetX, dir.offsetY, dir.offsetZ);
-                        if (event.getWorld().getBlockState(p).getBlock() == Blocks.AIR) {
-                            event.getWorld().setBlockState(p, gas.getDefaultState(), 3);
-                        }
-                    }
-                }
-
-                if (block == ModBlocks.ancient_scrap) {
-                    for (int ix = -2; ix <= 2; ix++) {
-                        for (int iy = -2; iy <= 2; iy++) {
-                            for (int iz = -2; iz <= 2; iz++) {
-
-                                if (Math.abs(ix + iy + iz) < 5 && Math.abs(ix + iy + iz) > 0) {
-                                    BlockPos p2 = event.getPos().add(ix, iy, iz);
-                                    if (event.getWorld().getBlockState(p2).getBlock() == Blocks.AIR) {
-                                        event.getWorld().setBlockState(p2, gas.getDefaultState(), 3);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+    private void scheduleAsbestosGasSpawn(World world, BlockPos pos) {
+        if (world.isRemote) {
+            return;
         }
 
-        if (RadiationConfig.enablePollution && RadiationConfig.enableLeadFromBlocks) {
-            if (!ArmorRegistry.hasProtection(player, EntityEquipmentSlot.HEAD, HazardClass.PARTICLE_FINE)) {
-
-                float metal = PollutionHandler.getPollution(player.world, event.getPos(), PollutionHandler.PollutionType.HEAVYMETAL);
-
-                if (metal < 5) return;
-
-                if (metal < 10) {
-                    player.addPotionEffect(new PotionEffect(HbmPotion.lead, 100, 0));
-                } else if (metal < 25) {
-                    player.addPotionEffect(new PotionEffect(HbmPotion.lead, 100, 1));
-                } else {
-                    player.addPotionEffect(new PotionEffect(HbmPotion.lead, 100, 2));
-                }
+        ((WorldServer) world).addScheduledTask(() -> {
+            if (isAirBlock(world, pos)) {
+                world.setBlockState(pos, ModBlocks.gas_asbestos.getDefaultState(), 3);
             }
+        });
+    }
+
+    private void handleLeadPollution(EntityPlayer player, World world, BlockPos pos) {
+        if (!RadiationConfig.enablePollution || !RadiationConfig.enableLeadFromBlocks) {
+            return;
         }
+
+        if (ArmorRegistry.hasProtection(player, EntityEquipmentSlot.HEAD, HazardClass.PARTICLE_FINE)) {
+            return;
+        }
+
+        float metalPollution = PollutionHandler.getPollution(
+                world, pos, PollutionHandler.PollutionType.HEAVYMETAL
+        );
+
+        applyLeadEffect(player, metalPollution);
+    }
+
+    private void applyLeadEffect(EntityPlayer player, float metalPollution) {
+        if (metalPollution < LEAD_LOW_THRESHOLD) {
+            return;
+        }
+
+        int amplifier;
+        if (metalPollution < LEAD_MID_THRESHOLD) {
+            amplifier = 0;
+        } else if (metalPollution < LEAD_HIGH_THRESHOLD) {
+            amplifier = 1;
+        } else {
+            amplifier = 2;
+        }
+
+        player.addPotionEffect(new PotionEffect(HbmPotion.lead, LEAD_EFFECT_DURATION, amplifier));
+    }
+
+    private boolean isAirBlock(World world, BlockPos pos) {
+        return world.getBlockState(pos).getBlock() == Blocks.AIR;
     }
 
     @SubscribeEvent

@@ -1,7 +1,5 @@
 package com.hbm.inventory.gui;
 
-import com.hbm.inventory.fluid.FluidType;
-import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.recipes.AssemblerRecipes;
 import com.hbm.inventory.recipes.CrucibleRecipes;
 import com.hbm.items.ModItems;
@@ -66,18 +64,9 @@ public class GUIScreenTemplateFolder extends GuiScreen {
 			for (int i = 1; i < ItemCassette.TrackType.values().length; i++) {
 				allStacks.add(new ItemStack(ModItems.siren_track, 1, i));
 			}
-
-			// Fluid IDs
-			FluidType[] fluids = Fluids.getInNiceOrder();
-			for (FluidType fluid : fluids) {
-				if (fluid != null && !fluid.hasNoID()) {
-					allStacks.add(new ItemStack(ModItems.fluid_identifier, 1, fluid.getID()));
-				}
-			}
 		}
 
 		if (!this.isJournal) {
-
 			// Crucible Templates
 			CrucibleRecipes.recipes.forEach(recipe -> {
 				allStacks.add(new ItemStack(ModItems.crucible_template, 1, recipe.getId()));
@@ -105,12 +94,6 @@ public class GUIScreenTemplateFolder extends GuiScreen {
 				if (line.toLowerCase(Locale.US).contains(sub)) {
 					stacks.add(stack);
 					continue outer;
-				}
-			}
-			if (stack.getItem() == ModItems.fluid_identifier) {
-				FluidType fluid = Fluids.fromID(stack.getMetadata());
-				if (fluid != null && fluid.getLocalizedName().toLowerCase(Locale.US).contains(sub)) {
-					stacks.add(stack);
 				}
 			}
 		}

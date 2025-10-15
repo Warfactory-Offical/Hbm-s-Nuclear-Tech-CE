@@ -24,6 +24,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
@@ -155,6 +157,49 @@ public abstract class RBMKBase extends BlockDummyable implements IToolable, IToo
 		
 		super.breakBlock(world, pos, state);
 	}
+
+    @Override
+    @Nullable
+    public RayTraceResult collisionRayTrace(IBlockState state, World world, BlockPos pos, Vec3d start, Vec3d end) {
+        final double px = pos.getX(), py = pos.getY(), pz = pos.getZ();
+        final Vec3d s = start.subtract(px, py, pz);
+        final Vec3d e = end.subtract(px, py, pz);
+
+        final AxisAlignedBB bb = state.getBoundingBox(world, pos);
+        RayTraceResult local = bb.calculateIntercept(s, e);
+        if (local == null) return null;
+
+        Vec3d hitWorld = local.hitVec.add(px, py, pz);
+
+        final double EPS = 1.0e-7;
+        final double hx = local.hitVec.x;
+        final double hy = local.hitVec.y;
+        final double hz = local.hitVec.z;
+        EnumFacing face;
+        if (Math.abs(hy - bb.maxY) <= EPS) {
+            face = EnumFacing.UP;
+        } else if (Math.abs(hy - bb.minY) <= EPS) {
+            face = EnumFacing.DOWN;
+        } else if (Math.abs(hx - bb.maxX) <= EPS) {
+            face = EnumFacing.EAST;
+        } else if (Math.abs(hx - bb.minX) <= EPS) {
+            face = EnumFacing.WEST;
+        } else if (Math.abs(hz - bb.maxZ) <= EPS) {
+            face = EnumFacing.SOUTH;
+        } else if (Math.abs(hz - bb.minZ) <= EPS) {
+            face = EnumFacing.NORTH;
+        } else {
+            face = local.sideHit;
+        }
+        boolean goingDown = e.y < s.y;
+        boolean insideTallCap = s.x > bb.minX - EPS && s.x < bb.maxX + EPS && s.z > bb.minZ - EPS && s.z < bb.maxZ + EPS && s.y >= 1.0 - EPS && s.y <= bb.maxY + EPS;
+
+        if (face == EnumFacing.DOWN && goingDown && insideTallCap) {
+            face = EnumFacing.UP;
+            hitWorld = new Vec3d(hitWorld.x, py + Math.min(1.0, bb.maxY), hitWorld.z);
+        }
+        return new RayTraceResult(hitWorld, face, pos);
+    }
 	
 	@Override
 	public boolean onScrew(World world, EntityPlayer player, int x, int y, int z, EnumFacing side, float fX, float fY, float fZ, EnumHand hand, ToolType tool){

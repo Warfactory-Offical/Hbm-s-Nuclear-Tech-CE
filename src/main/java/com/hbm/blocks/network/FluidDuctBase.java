@@ -14,8 +14,9 @@ import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
+
 // Th3_Sl1ze: do I want to replace ItemFluidIDMulti with setting fluid here? well uhhhh.. not yet
-public class FluidDuctBase extends BlockContainer implements IAnalyzable {
+public abstract class FluidDuctBase extends BlockContainer implements IAnalyzable {
 
     public FluidDuctBase(Material mat) {
         super(mat);

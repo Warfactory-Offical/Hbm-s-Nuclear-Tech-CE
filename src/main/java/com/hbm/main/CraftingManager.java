@@ -19,10 +19,7 @@ import com.hbm.items.ItemEnums.EnumCircuitType;
 import com.hbm.items.ItemEnums.EnumPartType;
 import com.hbm.items.ItemEnums.ScrapType;
 import com.hbm.items.ModItems;
-import com.hbm.items.machine.ItemArcElectrode;
-import com.hbm.items.machine.ItemBattery;
-import com.hbm.items.machine.ItemBreedingRod;
-import com.hbm.items.machine.ItemFuelRod;
+import com.hbm.items.machine.*;
 import com.hbm.items.machine.ItemZirnoxRod.EnumZirnoxType;
 import com.hbm.items.tool.ItemConveyorWand;
 import com.hbm.items.tool.ItemDrone;
@@ -700,17 +697,23 @@ public class CraftingManager {
 		addShapelessAuto(new ItemStack(Items.SLIME_BALL, 16), new ItemStack(Items.DYE, 1, 15), new ItemStack(Items.DYE, 1, 15), new ItemStack(Items.DYE, 1, 15), new ItemStack(Items.DYE, 1, 15), Fluids.SULFURIC_ACID.getDict(1000) );
 
 		for(int i = 1; i < Fluids.getAll().length; ++i) {
-			addShapelessAuto(new ItemStack(ModItems.fluid_duct, 1, i), new ItemStack(ModBlocks.fluid_duct_neo, 1), new ItemStack(ModItems.fluid_identifier, 1, i) );
+			ItemStack id = new ItemStack(ModItems.fluid_identifier_multi, 1, i);
+			ItemFluidIDMulti.setType(id, Fluids.fromID(i), true);
 
-			addShapelessAuto(new ItemStack(ModItems.fluid_duct, 8, i), new ItemStack(ModBlocks.fluid_duct_neo, 1), new ItemStack(ModBlocks.fluid_duct_neo, 1),
+			addShapelessAuto(new ItemStack(ModItems.fluid_duct, 1, i), new ItemStack(ModBlocks.fluid_duct_neo, 1), id);
+
+			addShapelessAuto(new ItemStack(ModItems.fluid_duct, 8, i),
 					new ItemStack(ModBlocks.fluid_duct_neo, 1), new ItemStack(ModBlocks.fluid_duct_neo, 1), new ItemStack(ModBlocks.fluid_duct_neo, 1),
-					new ItemStack(ModBlocks.fluid_duct_neo, 1), new ItemStack(ModBlocks.fluid_duct_neo, 1), new ItemStack(ModBlocks.fluid_duct_neo, 1), new ItemStack(ModItems.fluid_identifier, 1, i) );
+					new ItemStack(ModBlocks.fluid_duct_neo, 1), new ItemStack(ModBlocks.fluid_duct_neo, 1), new ItemStack(ModBlocks.fluid_duct_neo, 1),
+					new ItemStack(ModBlocks.fluid_duct_neo, 1), new ItemStack(ModBlocks.fluid_duct_neo, 1), id);
 
-			addShapelessAuto(new ItemStack(ModItems.fluid_duct, 1, i), new ItemStack(ModItems.fluid_duct, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(ModItems.fluid_identifier, 1, i));
+			addShapelessAuto(new ItemStack(ModItems.fluid_duct, 1, i),
+					new ItemStack(ModItems.fluid_duct, 1, OreDictionary.WILDCARD_VALUE), id);
 
-			addShapelessAuto(new ItemStack(ModItems.fluid_duct, 8, i), new ItemStack(ModItems.fluid_duct, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(ModItems.fluid_duct, 1, OreDictionary.WILDCARD_VALUE),
+			addShapelessAuto(new ItemStack(ModItems.fluid_duct, 8, i),
+					new ItemStack(ModItems.fluid_duct, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(ModItems.fluid_duct, 1, OreDictionary.WILDCARD_VALUE),
 					new ItemStack(ModItems.fluid_duct, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(ModItems.fluid_duct, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(ModItems.fluid_duct, 1, OreDictionary.WILDCARD_VALUE),
-					new ItemStack(ModItems.fluid_duct, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(ModItems.fluid_duct, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(ModItems.fluid_duct, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(ModItems.fluid_identifier, 1, i));
+					new ItemStack(ModItems.fluid_duct, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(ModItems.fluid_duct, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(ModItems.fluid_duct, 1, OreDictionary.WILDCARD_VALUE), id);
 		}
 
 		addShapelessAuto(new ItemStack(ModBlocks.fluid_duct_neo, 1), new ItemStack(ModItems.fluid_duct, 1, OreDictionary.WILDCARD_VALUE) );

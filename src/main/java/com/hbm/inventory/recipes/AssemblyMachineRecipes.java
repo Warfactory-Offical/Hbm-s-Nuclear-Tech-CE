@@ -8,6 +8,7 @@ import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.RecipesCommon.OreDictStack;
 import com.hbm.inventory.fluid.FluidStack;
+import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.recipes.loader.GenericRecipe;
 import com.hbm.inventory.recipes.loader.GenericRecipes;
@@ -559,8 +560,8 @@ public class AssemblyMachineRecipes extends GenericRecipes<GenericRecipe> {
                 .inputItems(new RecipesCommon.OreDictStack(PB.nugget(), 6)));
 
         // bombs
-        /*this.register(new GenericRecipe("ass.minenaval").setup(300, 100).outputItems(new ItemStack(ModBlocks.mine_naval, 1))
-                .inputItems(new RecipesCommon.ComparableStack(ModItems.sphere_steel, 1), new RecipesCommon.OreDictStack(STEEL.pipe(), 3), new RecipesCommon.ComparableStack(ModItems.circuit, 1, EnumCircuitType.ADVANCED), new RecipesCommon.OreDictStack(ANY_PLASTICEXPLOSIVE.ingot(), 24)));*/ // TODO
+        this.register(new GenericRecipe("ass.minenaval").setup(300, 100).outputItems(new ItemStack(ModBlocks.mine_naval, 1))
+                .inputItems(new RecipesCommon.ComparableStack(ModItems.sphere_steel, 1), new RecipesCommon.OreDictStack(STEEL.pipe(), 3), new RecipesCommon.ComparableStack(ModItems.circuit, 1, EnumCircuitType.ADVANCED), new RecipesCommon.OreDictStack(ANY_PLASTICEXPLOSIVE.ingot(), 24)));
         this.register(new GenericRecipe("ass.gadget").setup(300, 100).outputItems(new ItemStack(ModBlocks.nuke_gadget, 1))
                 .inputItems(new RecipesCommon.ComparableStack(ModItems.sphere_steel, 1), new RecipesCommon.ComparableStack(ModItems.fins_flat, 2), new RecipesCommon.ComparableStack(ModItems.pedestal_steel, 1), new RecipesCommon.ComparableStack(ModItems.circuit, 3, EnumCircuitType.CONTROLLER), new RecipesCommon.OreDictStack(KEY_GRAY, 8)));
         this.register(new GenericRecipe("ass.littleboy").setup(300, 100).outputItems(new ItemStack(ModBlocks.nuke_boy, 1))
@@ -990,18 +991,17 @@ public class AssemblyMachineRecipes extends GenericRecipes<GenericRecipe> {
                         new ComparableStack(ModItems.part_generic, 64, EnumPartType.HDE),
                         new ComparableStack(ModItems.circuit, 64, EnumCircuitType.CONTROLLER_QUANTUM),
                         new ComparableStack(ModItems.coin_ufo, 1)).setPools(GenericRecipes.POOL_PREFIX_DISCOVER + "gerald"));
-        // TODO packaged fluids
-        /*this.register(new GenericRecipe("ass.emptypackage").setup(40, 100).outputItems(new ItemStack(ModItems.fluid_pack_empty, 1))
+        this.register(new GenericRecipe("ass.emptypackage").setup(40, 100).outputItems(new ItemStack(ModItems.fluid_pack_empty, 1))
                 .inputItems(new OreDictStack(TI.plate(), 4), new OreDictStack(ANY_PLASTIC.ingot(), 2)));
         FluidType[] order = Fluids.getInNiceOrder();
         for(int i = 1; i < order.length; ++i) {
             FluidType type = order[i];
             if(type.hasNoContainer()) continue;
-            this.register(new GenericRecipe("ass.package" + type.getUnlocalizedName()).setup(40, 100).outputItems(new ItemStack(ModItems.fluid_pack_full, 1, type.getID()))
+            this.register(new GenericRecipe("ass.package" + type.getTranslationKey()).setup(40, 100).outputItems(new ItemStack(ModItems.fluid_pack_full, 1, type.getID()))
                     .inputItems(new ComparableStack(ModItems.fluid_pack_empty)).inputFluids(new FluidStack(type, 32_000)));
-            this.register(new GenericRecipe("ass.unpackage" + type.getUnlocalizedName()).setup(40, 100).setIcon(ItemFluidIcon.make(type, 32_000)).outputItems(new ItemStack(ModItems.fluid_pack_empty))
+            this.register(new GenericRecipe("ass.unpackage" + type.getTranslationKey()).setup(40, 100).setIcon(ItemFluidIcon.make(type, 32_000)).outputItems(new ItemStack(ModItems.fluid_pack_empty))
                     .inputItems(new ComparableStack(ModItems.fluid_pack_full, 1, type.getID())).outputFluids(new FluidStack(type, 32_000)));
-        }*/
+        }
 
         /*if(GeneralConfig.enableMekanismChanges && Loader.isModLoaded("Mekanism")) {
             Block mb = (Block) Block.blockRegistry.getObject("Mekanism:MachineBlock");

@@ -37,6 +37,15 @@ public class ExplosionLarge {
 		PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, x, y, z),  new TargetPoint(world.provider.getDimension(), x, y, z, 250));
 	}
 
+	public static void spawnFoam(World world, double x, double y, double z, int count) {
+
+		NBTTagCompound data = new NBTTagCompound();
+		data.setString("type", "smoke");
+		data.setString("mode", "foamSplash");
+		data.setInteger("count", count);
+		PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, x, y, z),  new TargetPoint(world.provider.getDimension(), x, y, z, 250));
+	}
+
 	public static void spawnParticles(World world, double x, double y, double z, int count) {
 		NBTTagCompound data = new NBTTagCompound();
 		data.setString("type", "smoke");

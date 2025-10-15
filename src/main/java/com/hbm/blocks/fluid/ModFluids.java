@@ -1,13 +1,8 @@
 package com.hbm.blocks.fluid;
 
-import com.hbm.lib.RefStrings;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-@Mod.EventBusSubscriber(modid = RefStrings.MODID)
 public class ModFluids {
     public static Fluid toxic_fluid = new ToxicFluid().setDensity(2500).setViscosity(2000).setTemperature(70+273);
     public static Fluid mud_fluid = new MudFluid().setDensity(2500).setViscosity(3000).setLuminosity(5).setTemperature(1773);
@@ -33,11 +28,6 @@ public class ModFluids {
         FluidRegistry.registerFluid(fluid);
         FluidRegistry.addBucketForFluid(fluid);
     }
-
-    @SubscribeEvent
-	public static void worldLoad(WorldEvent.Load evt) {
-		setFromRegistry();
-	}
 
     public static void setFromRegistry() {
 		toxic_fluid = FluidRegistry.getFluid("toxic_fluid");

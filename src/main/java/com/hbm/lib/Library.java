@@ -1158,7 +1158,7 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
         Item item = stack.getItem();
         if (tank.getFill() >= tank.getMaxFill()) return false;
         if (NTMFluidCapabilityHandler.isNtmFluidContainer(item)) {
-            if (NTMFluidCapabilityHandler.isEmptyNtmFluidContainer(item)) return false;
+            if (!NTMFluidCapabilityHandler.isFullNtmFluidContainer(item)) return false;
             return tank.getTankType() == Fluids.NONE || tank.getTankType() == FluidContainerRegistry.getFluidType(stack);
         } else if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
             IFluidHandlerItem handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
@@ -1173,7 +1173,7 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
         Item item = stack.getItem();
         if (tank.getTankType() == Fluids.NONE) return false;
         if (NTMFluidCapabilityHandler.isNtmFluidContainer(item)) {
-            if (NTMFluidCapabilityHandler.isFullNtmFluidContainer(item)) return false;
+            if (!NTMFluidCapabilityHandler.isEmptyNtmFluidContainer(item)) return false;
             return FluidContainerRegistry.getFillRecipe(stack, tank.getTankType()) != null;
         } else if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
             IFluidHandlerItem handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);

@@ -40,7 +40,7 @@ public class RenderLaunchPadTier1 extends TileEntitySpecialRenderer<TileEntityLa
     GlStateManager.disableCull();
     GlStateManager.shadeModel(GL11.GL_SMOOTH);
     bindTexture(ResourceManager.missile_pad_tex);
-    ResourceManager.missile_pad.renderAll();
+    ResourceManager.missile_pad_old.renderAll();
 
     if (te.clearingTimer == 0) {
       ItemStack missileStack = te.toRender;
@@ -199,7 +199,7 @@ public class RenderLaunchPadTier1 extends TileEntitySpecialRenderer<TileEntityLa
 
       public void renderCommon() {
         bindTexture(ResourceManager.missile_pad_tex);
-        ResourceManager.missile_pad.renderAll();
+        ResourceManager.missile_pad_old.renderAll();
       }
     };
   }

@@ -4,6 +4,7 @@ import com.hbm.config.GeneralConfig;
 import com.hbm.config.MobConfig;
 import com.hbm.config.WorldConfig;
 import com.hbm.entity.mob.EntityFBI;
+import com.hbm.entity.mob.EntityFBIDrone;
 import com.hbm.entity.mob.EntityMaskMan;
 import com.hbm.entity.mob.EntityRADBeast;
 import com.hbm.entity.projectile.EntityMeteor;
@@ -37,7 +38,7 @@ public class BossSpawnHandler {
 
 				if(world.rand.nextInt(MobConfig.maskmanChance) == 0 && !world.playerEntities.isEmpty() && world.provider.isSurfaceWorld()) {	//33% chance only if there is a player online
 
-					EntityPlayer player = (EntityPlayer) world.playerEntities.get(world.rand.nextInt(world.playerEntities.size()));	//choose a random player
+					EntityPlayer player = world.playerEntities.get(world.rand.nextInt(world.playerEntities.size()));	//choose a random player
 					
 					
 					if(ContaminationUtil.getRads(player) >= MobConfig.maskmanMinRad && (world.getHeight((int)player.posX, (int)player.posZ) > player.posY + 3 || !MobConfig.maskmanUnderground)) {	//if the player has more than 50 RAD and is underground
@@ -59,7 +60,7 @@ public class BossSpawnHandler {
 
 				if(world.rand.nextInt(MobConfig.raidChance) == 0 && !world.playerEntities.isEmpty() && world.provider.isSurfaceWorld()) {
 
-					EntityPlayer player = (EntityPlayer) world.playerEntities.get(world.rand.nextInt(world.playerEntities.size()));
+					EntityPlayer player = world.playerEntities.get(world.rand.nextInt(world.playerEntities.size()));
 					player.sendMessage(new TextComponentString("FBI, OPEN UP!").setStyle(new Style().setColor(TextFormatting.RED)));
 					
 					Vec3 vec = Vec3.createVectorHelper(MobConfig.raidAttackDistance, 0, 0);
@@ -73,6 +74,15 @@ public class BossSpawnHandler {
 
 						trySpawn(world, (float)spawnX, (float)spawnY, (float)spawnZ, new EntityFBI(world));
 					}
+
+					for(int i = 0; i < MobConfig.raidDrones; i++) {
+
+						double spawnX = player.posX + vec.xCoord + world.rand.nextGaussian() * 5;
+						double spawnZ = player.posZ + vec.zCoord + world.rand.nextGaussian() * 5;
+						double spawnY = world.getHeight((int)spawnX, (int)spawnZ);
+
+						trySpawn(world, (float)spawnX, (float)spawnY + 10, (float)spawnZ, new EntityFBIDrone(world));
+					}
 				}
 			}
 		}
@@ -83,7 +93,7 @@ public class BossSpawnHandler {
 				
 				if(world.rand.nextInt(MobConfig.raidChance) == 0 && !world.playerEntities.isEmpty() && world.provider.isSurfaceWorld()) {
 					
-					EntityPlayer player = (EntityPlayer) world.playerEntities.get(world.rand.nextInt(world.playerEntities.size()));
+					EntityPlayer player = world.playerEntities.get(world.rand.nextInt(world.playerEntities.size()));
 					
 					if(player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getLong("fbiMark") < world.getTotalWorldTime()) {
 						player.sendMessage(new TextComponentString("FBI, OPEN UP!").setStyle(new Style().setColor(TextFormatting.RED)));
@@ -110,7 +120,7 @@ public class BossSpawnHandler {
 
 				if(world.rand.nextInt(MobConfig.elementalChance) == 0 && !world.playerEntities.isEmpty() && world.provider.isSurfaceWorld()) {
 
-					EntityPlayer player = (EntityPlayer) world.playerEntities.get(world.rand.nextInt(world.playerEntities.size()));
+					EntityPlayer player = world.playerEntities.get(world.rand.nextInt(world.playerEntities.size()));
 
 					if(player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getBoolean("radMark")) {
 
@@ -226,9 +236,4 @@ public class BossSpawnHandler {
 		player.world.spawnEntity(meteor);
 	}
 
-	private static int parseOInt(Object o){
-		if(o == null)
-			return 0;
-		return (int)o;
-	}
 }

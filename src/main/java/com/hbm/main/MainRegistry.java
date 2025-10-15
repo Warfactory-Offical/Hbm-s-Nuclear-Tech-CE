@@ -19,6 +19,7 @@ import com.hbm.creativetabs.*;
 import com.hbm.datagen.AdvGen;
 import com.hbm.dim.CommandSpaceTP;
 import com.hbm.dim.SolarSystem;
+import com.hbm.entity.EntityMappings;
 import com.hbm.entity.logic.IChunkLoader;
 import com.hbm.entity.siege.SiegeTier;
 import com.hbm.explosion.ExplosionNukeGeneric;
@@ -378,6 +379,8 @@ public class MainRegistry {
         TileEntityLaunchPadBase.registerLaunchables();
         TileEntityMachineRadarNT.registerEntityClasses();
         TileEntityMachineRadarNT.registerConverters();
+
+        EntityMappings.writeSpawns();
     }
 
     @EventHandler
@@ -417,6 +420,7 @@ public class MainRegistry {
         AnvilRecipes.register();
         ClientConfig.initConfig();
         RefineryRecipes.registerRefinery();
+        ModFluids.setFromRegistry();
         FluidContainerRegistry.register();
         TileEntityNukeCustom.registerBombItems();
         ArmorUtil.register();

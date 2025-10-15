@@ -16,6 +16,8 @@ import net.minecraftforge.fml.client.registry.IRenderFactory;
 @AutoRegister(entity = EntityMissileTier4.EntityMissileNuclear.class, factory = "FACTORY")
 @AutoRegister(entity = EntityMissileTier4.EntityMissileMirv.class, factory = "FACTORY")
 @AutoRegister(entity = EntityMissileTier4.EntityMissileVolcano.class, factory = "FACTORY")
+@AutoRegister(entity = EntityMissileTier4.EntityMissileDoomsday.class, factory = "FACTORY")
+@AutoRegister(entity = EntityMissileTier4.EntityMissileDoomsdayRusted.class, factory = "FACTORY")
 public class RenderMissileNuclear extends Render<EntityMissileBaseNT> {
 
 	public static final IRenderFactory<EntityMissileBaseNT> FACTORY = (RenderManager man) -> {return new RenderMissileNuclear(man);};
@@ -44,6 +46,10 @@ public class RenderMissileNuclear extends Render<EntityMissileBaseNT> {
 			bindTexture(ResourceManager.missileNuclear_tex);
 		else if(missile instanceof EntityMissileTier4.EntityMissileMirv)
 			bindTexture(ResourceManager.missileMIRV_tex);
+		else if(missile instanceof EntityMissileTier4.EntityMissileDoomsdayRusted)
+			bindTexture(ResourceManager.missileDoomsdayRusted_tex);
+		else if(missile instanceof EntityMissileTier4.EntityMissileDoomsday)
+			bindTexture(ResourceManager.missileDoomsday_tex);
 		else
 			bindTexture(ResourceManager.missileN2_tex);
         ResourceManager.missileNuclear.renderAll();
