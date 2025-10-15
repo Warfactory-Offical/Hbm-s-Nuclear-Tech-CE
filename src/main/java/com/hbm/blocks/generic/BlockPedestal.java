@@ -3,6 +3,7 @@ package com.hbm.blocks.generic;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.HbmCapability;
 import com.hbm.interfaces.AutoRegister;
+import com.hbm.interfaces.IGunClickable;
 import com.hbm.inventory.recipes.PedestalRecipes;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.main.MainRegistry;
@@ -34,7 +35,7 @@ import java.util.List;
 
 @ParametersAreNonnullByDefault
 @SuppressWarnings("deprecation")
-public class BlockPedestal extends BlockContainer {
+public class BlockPedestal extends BlockContainer implements IGunClickable {
     public BlockPedestal(String s) {
         super(Material.ROCK);
         this.setRegistryName(s);
@@ -84,24 +85,24 @@ public class BlockPedestal extends BlockContainer {
 
         TileEntityPedestal pedestal = (TileEntityPedestal) world.getTileEntity(pos);
 
-        if(pedestal.item == ItemStack.EMPTY && player.getHeldItemMainhand() != ItemStack.EMPTY) {
+        if(pedestal.item == ItemStack.EMPTY && player.getHeldItem(hand) != ItemStack.EMPTY) {
             if(world.isRemote) return true;
-            pedestal.item = player.getHeldItemMainhand().copy();
-            player.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
+            pedestal.item = player.getHeldItem(hand).copy();
+            player.setHeldItem(hand, ItemStack.EMPTY);
             pedestal.markDirty();
             world.notifyBlockUpdate(pos, state, state, 3);
             return true;
-        } else if(pedestal.item != ItemStack.EMPTY && player.getHeldItemMainhand() == ItemStack.EMPTY) {
+        } else if(pedestal.item != ItemStack.EMPTY && player.getHeldItem(hand) == ItemStack.EMPTY) {
             if(world.isRemote) return true;
-            player.setHeldItem(EnumHand.MAIN_HAND, pedestal.item.copy());
+            player.setHeldItem(hand, pedestal.item.copy());
             pedestal.item = ItemStack.EMPTY;
             pedestal.markDirty();
             world.notifyBlockUpdate(pos, state, state, 3);
             return true;
-        } else if (pedestal.item != ItemStack.EMPTY && player.getHeldItemMainhand() != ItemStack.EMPTY) {
+        } else if (pedestal.item != ItemStack.EMPTY && player.getHeldItem(hand) != ItemStack.EMPTY) {
             if(world.isRemote) return true;
-            ItemStack temp = player.getHeldItemMainhand().copy();
-            player.setHeldItem(EnumHand.MAIN_HAND, pedestal.item.copy());
+            ItemStack temp = player.getHeldItem(hand).copy();
+            player.setHeldItem(hand, pedestal.item.copy());
             pedestal.item = temp;
             pedestal.markDirty();
             world.notifyBlockUpdate(pos, state, state, 3);

@@ -19,7 +19,7 @@ public class ItemClayTablet extends Item implements IGUIProvider {
     public ItemClayTablet(String s) {
         this.setRegistryName(s);
         this.setTranslationKey(s);
-        this.setMaxDamage(0);
+        this.setHasSubtypes(true);
         this.setMaxStackSize(1);
 
         ModItems.ALL_ITEMS.add(this);

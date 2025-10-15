@@ -5,11 +5,10 @@ import com.hbm.world.generator.CellularDungeon;
 import com.hbm.world.generator.CellularDungeonRoom;
 import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
-public class TestDungeonRoom2 extends CellularDungeonRoom {
+public class MeteorDungeonRoom2 extends CellularDungeonRoom {
 
-	public TestDungeonRoom2(CellularDungeon parent) {
+	public MeteorDungeonRoom2(CellularDungeon parent) {
 		super(parent);
 	}
 

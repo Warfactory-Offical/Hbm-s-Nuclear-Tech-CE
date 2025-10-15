@@ -1,6 +1,7 @@
 package com.hbm.items.weapon.sedna;
 
 import com.hbm.handler.HbmKeybinds;
+import com.hbm.interfaces.IGunClickable;
 import com.hbm.interfaces.IItemHUD;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.gui.GUIWeaponTable;
@@ -18,6 +19,7 @@ import com.hbm.render.misc.RenderScreenOverlay;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.util.BobMathUtil;
 import com.hbm.util.EnumUtil;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
@@ -30,6 +32,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -131,7 +135,7 @@ public class ItemGunBaseNT extends Item implements IKeybindReceiver, IEquipRecei
         this.lastShot = new long[cfg.length];
         for(int i = 0; i < cfg.length; i++) cfg[i].index = i;
         if(quality == WeaponQuality.A_SIDE || quality == WeaponQuality.SPECIAL || quality == WeaponQuality.UTILITY) this.setCreativeTab(MainRegistry.weaponTab);
-        if(quality == WeaponQuality.LEGENDARY || quality == WeaponQuality.SECRET) this.secrets.add(this);
+        if(quality == WeaponQuality.LEGENDARY || quality == WeaponQuality.SECRET) secrets.add(this);
         ModItems.ALL_ITEMS.add(this);
         INSTANCES.add(this);
     }
@@ -159,6 +163,7 @@ public class ItemGunBaseNT extends Item implements IKeybindReceiver, IEquipRecei
         return this;
     }
 
+    @Override
     public String getItemStackDisplayName(ItemStack stack) {
 
         if(this.LAMBDA_NAME_MUTATOR != null) {
@@ -194,7 +199,7 @@ public class ItemGunBaseNT extends Item implements IKeybindReceiver, IEquipRecei
             }
             float maxDura = config.getDurability(stack);
             if(maxDura > 0) {
-                int dura = MathHelper.clamp((int)((maxDura - this.getWear(stack, i)) * 100 / maxDura), 0, 100);
+                int dura = MathHelper.clamp((int)((maxDura - getWear(stack, i)) * 100 / maxDura), 0, 100);
                 tooltip.add("Condition: " + dura + "%");
             }
 
@@ -221,13 +226,10 @@ public class ItemGunBaseNT extends Item implements IKeybindReceiver, IEquipRecei
     }
 
     @Override
-    public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, EntityPlayer player)
-    {
-        return true;
-    }
+    public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, EntityPlayer player) { return true; }
 
     @Override
-    public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) { return true;}
+    public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) { return true; }
 
     @Override
     public boolean canHandleKeybind(EntityPlayer player, ItemStack stack, HbmKeybinds.EnumKeybind keybind) {
@@ -246,14 +248,14 @@ public class ItemGunBaseNT extends Item implements IKeybindReceiver, IEquipRecei
             GunConfig config = getConfig(stack, i);
             LambdaContext ctx = new LambdaContext(config, entity, inventory, i);
 
-            if(keybind == HbmKeybinds.EnumKeybind.GUN_PRIMARY &&	newState && !getPrimary(stack, i)) {	if(config.getPressPrimary(stack) != null)		config.getPressPrimary(stack).accept(stack, ctx);		this.setPrimary(stack, i, true);	continue; }
-            if(keybind == HbmKeybinds.EnumKeybind.GUN_PRIMARY &&	!newState && getPrimary(stack, i)) {	if(config.getReleasePrimary(stack) != null)		config.getReleasePrimary(stack).accept(stack, ctx);		this.setPrimary(stack, i, false);	continue; }
-            if(keybind == HbmKeybinds.EnumKeybind.GUN_SECONDARY &&	newState && !getSecondary(stack, i)) {	if(config.getPressSecondary(stack) != null)		config.getPressSecondary(stack).accept(stack, ctx);		this.setSecondary(stack, i, true);	continue; }
-            if(keybind == HbmKeybinds.EnumKeybind.GUN_SECONDARY &&	!newState && getSecondary(stack, i)) {	if(config.getReleaseSecondary(stack) != null)	config.getReleaseSecondary(stack).accept(stack, ctx);	this.setSecondary(stack, i, false);	continue; }
-            if(keybind == HbmKeybinds.EnumKeybind.GUN_TERTIARY &&	newState && !getTertiary(stack, i)) {	if(config.getPressTertiary(stack) != null)		config.getPressTertiary(stack).accept(stack, ctx);		this.setTertiary(stack, i, true);	continue; }
-            if(keybind == HbmKeybinds.EnumKeybind.GUN_TERTIARY &&	!newState && getTertiary(stack, i)) {	if(config.getReleaseTertiary(stack) != null)	config.getReleaseTertiary(stack).accept(stack, ctx);	this.setTertiary(stack, i, false);	continue; }
-            if(keybind == HbmKeybinds.EnumKeybind.RELOAD &&			newState && !getReloadKey(stack, i)) {	if(config.getPressReload(stack) != null)		config.getPressReload(stack).accept(stack, ctx);		this.setReloadKey(stack, i, true);	continue; }
-            if(keybind == HbmKeybinds.EnumKeybind.RELOAD &&			!newState && getReloadKey(stack, i)) {	if(config.getReleaseReload(stack) != null)		config.getReleaseReload(stack).accept(stack, ctx);		this.setReloadKey(stack, i, false);
+            if(keybind == HbmKeybinds.EnumKeybind.GUN_PRIMARY &&	newState && !getPrimary(stack, i)) {	if(config.getPressPrimary(stack) != null)		config.getPressPrimary(stack).accept(stack, ctx);		setPrimary(stack, i, true);	continue; }
+            if(keybind == HbmKeybinds.EnumKeybind.GUN_PRIMARY &&	!newState && getPrimary(stack, i)) {	if(config.getReleasePrimary(stack) != null)		config.getReleasePrimary(stack).accept(stack, ctx);		setPrimary(stack, i, false);	continue; }
+            if(keybind == HbmKeybinds.EnumKeybind.GUN_SECONDARY &&	newState && !getSecondary(stack, i)) {	if(config.getPressSecondary(stack) != null)		config.getPressSecondary(stack).accept(stack, ctx);		setSecondary(stack, i, true);	continue; }
+            if(keybind == HbmKeybinds.EnumKeybind.GUN_SECONDARY &&	!newState && getSecondary(stack, i)) {	if(config.getReleaseSecondary(stack) != null)	config.getReleaseSecondary(stack).accept(stack, ctx);	setSecondary(stack, i, false);	continue; }
+            if(keybind == HbmKeybinds.EnumKeybind.GUN_TERTIARY &&	newState && !getTertiary(stack, i)) {	if(config.getPressTertiary(stack) != null)		config.getPressTertiary(stack).accept(stack, ctx);		setTertiary(stack, i, true);	continue; }
+            if(keybind == HbmKeybinds.EnumKeybind.GUN_TERTIARY &&	!newState && getTertiary(stack, i)) {	if(config.getReleaseTertiary(stack) != null)	config.getReleaseTertiary(stack).accept(stack, ctx);	setTertiary(stack, i, false);	continue; }
+            if(keybind == HbmKeybinds.EnumKeybind.RELOAD &&			newState && !getReloadKey(stack, i)) {	if(config.getPressReload(stack) != null)		config.getPressReload(stack).accept(stack, ctx);		setReloadKey(stack, i, true);	continue; }
+            if(keybind == HbmKeybinds.EnumKeybind.RELOAD &&			!newState && getReloadKey(stack, i)) {	if(config.getReleaseReload(stack) != null)		config.getReleaseReload(stack).accept(stack, ctx);		setReloadKey(stack, i, false);
             }
         }
     }
@@ -262,10 +264,10 @@ public class ItemGunBaseNT extends Item implements IKeybindReceiver, IEquipRecei
     public void onEquip(EntityPlayer player, ItemStack stack) {
         for(int i = 0; i < this.configs_DNA.length; i++) {
             playAnimation(player, stack, HbmAnimationsSedna.AnimType.EQUIP, i);
-            this.setPrimary(stack, i, false);
-            this.setSecondary(stack, i, false);
-            this.setTertiary(stack, i, false);
-            this.setReloadKey(stack, i, false);
+            setPrimary(stack, i, false);
+            setSecondary(stack, i, false);
+            setTertiary(stack, i, false);
+            setReloadKey(stack, i, false);
         }
     }
 
@@ -302,7 +304,7 @@ public class ItemGunBaseNT extends Item implements IKeybindReceiver, IEquipRecei
 
                 /// AIMING ///
                 prevAimingProgress = aimingProgress;
-                boolean aiming = this.getIsAiming(stack);
+                boolean aiming = getIsAiming(stack);
                 float aimSpeed = 0.25F;
                 if(aiming && aimingProgress < 1F) aimingProgress += aimSpeed;
                 if(!aiming && aimingProgress > 0F) aimingProgress -= aimSpeed;
@@ -322,26 +324,26 @@ public class ItemGunBaseNT extends Item implements IKeybindReceiver, IEquipRecei
         }
 
         if(player != null) {
-            boolean wasHeld = this.getIsEquipped(stack);
+            boolean wasHeld = getIsEquipped(stack);
 
-            if(!wasHeld && isHeld && player != null) {
+            if(!wasHeld && isHeld) {
                 this.onEquip(player, stack);
             }
         }
-        this.setIsEquipped(stack, isHeld);
+        setIsEquipped(stack, isHeld);
 
         /// RESET WHEN NOT EQUIPPED ///
         if(!isHeld) {
             for(int i = 0; i < confNo; i++) {
-                GunState current = this.getState(stack, i);
+                GunState current = getState(stack, i);
                 if(current != GunState.JAMMED) {
-                    this.setState(stack, i, GunState.DRAWING);
-                    this.setTimer(stack, i, configs[i].getDrawDuration(stack));
+                    setState(stack, i, GunState.DRAWING);
+                    setTimer(stack, i, configs[i].getDrawDuration(stack));
                 }
-                this.setLastAnim(stack, i, HbmAnimationsSedna.AnimType.CYCLE); //prevents new guns from initializing with DRAWING, 0
+                setLastAnim(stack, i, HbmAnimationsSedna.AnimType.CYCLE); //prevents new guns from initializing with DRAWING, 0
             }
-            this.setIsAiming(stack, false);
-            this.setReloadCancel(stack, false);
+            setIsAiming(stack, false);
+            setReloadCancel(stack, false);
             return;
         }
 
@@ -351,9 +353,9 @@ public class ItemGunBaseNT extends Item implements IKeybindReceiver, IEquipRecei
 
             setAnimTimer(stack, i, getAnimTimer(stack, i) + 1);
 
-            /// STTATE MACHINE ///
-            int timer = this.getTimer(stack, i);
-            if(timer > 0) this.setTimer(stack, i, timer - 1);
+            /// STATE MACHINE ///
+            int timer = getTimer(stack, i);
+            if(timer > 0) setTimer(stack, i, timer - 1);
             if(timer <= 1) configs[i].getDecider(stack).accept(stack, ctx[i]);
         }
     }

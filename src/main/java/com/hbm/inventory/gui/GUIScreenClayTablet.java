@@ -60,6 +60,8 @@ public class GUIScreenClayTablet extends GuiScreen {
             if(recipe.extra == PedestalRecipes.PedestalExtraCondition.FULL_MOON) drawTexturedModalRect(guiLeft + 120, guiTop + 62, 142 + iconOffset, 32, 16, 16);
             if(recipe.extra == PedestalRecipes.PedestalExtraCondition.NEW_MOON) drawTexturedModalRect(guiLeft + 120, guiTop + 62, 142 + iconOffset, 48, 16, 16);
             if(recipe.extra == PedestalRecipes.PedestalExtraCondition.SUN) drawTexturedModalRect(guiLeft + 120, guiTop + 62, 142 + iconOffset, 64, 16, 16);
+            if(recipe.extra == PedestalRecipes.PedestalExtraCondition.GOOD_KARMA) drawTexturedModalRect(guiLeft + 120, guiTop + 62, 142 + iconOffset, 80, 16, 16);
+            if(recipe.extra == PedestalRecipes.PedestalExtraCondition.BAD_KARMA) drawTexturedModalRect(guiLeft + 120, guiTop + 62, 142 + iconOffset, 96, 16, 16);
 
             for(int l = 0; l < 3; l++) {
                 for(int r = 0; r < 3; r++) {

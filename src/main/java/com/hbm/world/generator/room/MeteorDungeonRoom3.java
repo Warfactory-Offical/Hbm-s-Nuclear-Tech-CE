@@ -11,9 +11,9 @@ import net.minecraft.tileentity.TileEntityMobSpawner;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 
-public class TestDungeonRoom3 extends CellularDungeonRoom {
+public class MeteorDungeonRoom3 extends CellularDungeonRoom {
 
-	public TestDungeonRoom3(CellularDungeon parent) {
+	public MeteorDungeonRoom3(CellularDungeon parent) {
 		super(parent);
 	}
 

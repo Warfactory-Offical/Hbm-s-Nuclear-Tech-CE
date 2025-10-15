@@ -120,14 +120,14 @@ public class BlockKeyhole extends Block {
         //Torches
         int torchDist = width - 1;
         int torchOff = torchDist - 1;
-        world.setBlockState(new BlockPos(x + torchDist, y + 2, z + torchOff), Blocks.TORCH.getDefaultState().withProperty(BlockTorch.FACING, EnumFacing.NORTH.getOpposite()));
-        world.setBlockState(new BlockPos(x + torchDist, y + 2, z - torchOff), Blocks.TORCH.getDefaultState().withProperty(BlockTorch.FACING, EnumFacing.NORTH.getOpposite()));
-        world.setBlockState(new BlockPos(x - torchDist, y + 2, z + torchOff), Blocks.TORCH.getDefaultState().withProperty(BlockTorch.FACING, EnumFacing.SOUTH.getOpposite()));
-        world.setBlockState(new BlockPos(x - torchDist, y + 2, z - torchOff), Blocks.TORCH.getDefaultState().withProperty(BlockTorch.FACING, EnumFacing.SOUTH.getOpposite()));
-        world.setBlockState(new BlockPos(x + torchOff, y + 2, z + torchDist), Blocks.TORCH.getDefaultState().withProperty(BlockTorch.FACING, EnumFacing.WEST.getOpposite()));
-        world.setBlockState(new BlockPos(x - torchOff, y + 2, z + torchDist), Blocks.TORCH.getDefaultState().withProperty(BlockTorch.FACING, EnumFacing.WEST.getOpposite()));
-        world.setBlockState(new BlockPos(x + torchOff, y + 2, z - torchDist), Blocks.TORCH.getDefaultState().withProperty(BlockTorch.FACING, EnumFacing.EAST.getOpposite()));
-        world.setBlockState(new BlockPos(x - torchOff, y + 2, z - torchDist), Blocks.TORCH.getDefaultState().withProperty(BlockTorch.FACING, EnumFacing.EAST.getOpposite()));
+        world.setBlockState(new BlockPos(x + torchDist, y + 2, z + torchOff), Blocks.TORCH.getDefaultState().withProperty(BlockTorch.FACING, EnumFacing.WEST));
+        world.setBlockState(new BlockPos(x + torchDist, y + 2, z - torchOff), Blocks.TORCH.getDefaultState().withProperty(BlockTorch.FACING, EnumFacing.WEST));
+        world.setBlockState(new BlockPos(x - torchDist, y + 2, z + torchOff), Blocks.TORCH.getDefaultState().withProperty(BlockTorch.FACING, EnumFacing.EAST));
+        world.setBlockState(new BlockPos(x - torchDist, y + 2, z - torchOff), Blocks.TORCH.getDefaultState().withProperty(BlockTorch.FACING, EnumFacing.EAST));
+        world.setBlockState(new BlockPos(x + torchOff, y + 2, z + torchDist), Blocks.TORCH.getDefaultState().withProperty(BlockTorch.FACING, EnumFacing.NORTH));
+        world.setBlockState(new BlockPos(x - torchOff, y + 2, z + torchDist), Blocks.TORCH.getDefaultState().withProperty(BlockTorch.FACING, EnumFacing.NORTH));
+        world.setBlockState(new BlockPos(x + torchOff, y + 2, z - torchDist), Blocks.TORCH.getDefaultState().withProperty(BlockTorch.FACING, EnumFacing.SOUTH));
+        world.setBlockState(new BlockPos(x - torchOff, y + 2, z - torchDist), Blocks.TORCH.getDefaultState().withProperty(BlockTorch.FACING, EnumFacing.SOUTH));
 
         //Cobwebs
         if(world.rand.nextInt(4) == 0) {
