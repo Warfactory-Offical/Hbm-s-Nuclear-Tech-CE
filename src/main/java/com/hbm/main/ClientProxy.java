@@ -804,7 +804,7 @@ public class ClientProxy extends ServerProxy {
                     default -> throw new IllegalStateException("Unexpected value: " + mode);
                 }
             }
-            case "muke" -> {
+            case "muke" -> { // FIXME: This doesn't look right
                 ParticleMukeWave wave = new ParticleMukeWave(world, x, y, z);
                 Minecraft.getMinecraft().effectRenderer.addEffect(wave);
 
