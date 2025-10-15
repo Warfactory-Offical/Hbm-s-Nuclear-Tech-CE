@@ -317,6 +317,7 @@ public class MainRegistry {
         ControlEvent.init();
         SiegeTier.registerTiers();
         HazardRegistry.registerItems();
+        HazardRegistry.registerTrafos();
         WeaponModManager.init();
 
         proxy.registerRenderInfo();

@@ -36,10 +36,6 @@ public class HazardEntry {
 		type.onUpdate(entity, HazardModifier.evalAllModifiers(stack, entity, baseLevel, mods), stack);
 	}
 	
-	public HazardTypeBase getType() {
-		return this.type;
-	}
-	
 	public HazardEntry clone() {
         return clone(1D);
 	}

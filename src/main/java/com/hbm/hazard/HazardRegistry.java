@@ -7,12 +7,14 @@ import com.hbm.hazard.modifier.HazardModifierFuelRadiation;
 import com.hbm.hazard.modifier.HazardModifierRBMKHot;
 import com.hbm.hazard.modifier.HazardModifierRBMKRadiation;
 import com.hbm.hazard.modifier.HazardModifierRTGRadiation;
+import com.hbm.hazard.transformer.HazardTransformerForgeFluid;
 import com.hbm.hazard.transformer.HazardTransformerRadiationContainer;
 import com.hbm.hazard.transformer.HazardTransformerRadiationME;
 import com.hbm.hazard.transformer.HazardTransformerRadiationNBT;
 import com.hbm.hazard.type.*;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.material.MaterialShapes;
+import com.hbm.items.ItemEnums.EnumDepletedRTGMaterial;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemBreedingRod;
 import com.hbm.items.machine.ItemWatzPellet;
@@ -22,12 +24,11 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import com.hbm.items.ItemEnums.EnumDepletedRTGMaterial;
 
 import static com.hbm.blocks.ModBlocks.*;
 import static com.hbm.inventory.OreDictManager.*;
 import static com.hbm.items.ModItems.*;
-import static com.hbm.items.machine.ItemPWRFuel.*;
+import static com.hbm.items.machine.ItemPWRFuel.EnumPWRFuel;
 import static com.hbm.items.machine.ItemZirnoxRodDepleted.EnumZirnoxTypeDepleted;
 
 @SuppressWarnings("unused") //shut the fuck up
@@ -523,6 +524,7 @@ public class HazardRegistry {
 
 	public static void registerTrafos() {
 		HazardSystem.trafos.add(new HazardTransformerRadiationNBT());
+		HazardSystem.trafos.add(new HazardTransformerForgeFluid());
 
 		if(!(GeneralConfig.enableLBSM && GeneralConfig.enableLBSMSafeCrates))	HazardSystem.trafos.add(new HazardTransformerRadiationContainer());
 		if(!(GeneralConfig.enableLBSM && GeneralConfig.enableLBSMSafeMEDrives))	HazardSystem.trafos.add(new HazardTransformerRadiationME());
