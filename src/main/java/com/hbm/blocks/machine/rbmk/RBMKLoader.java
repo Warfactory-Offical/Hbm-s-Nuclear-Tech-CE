@@ -24,7 +24,7 @@ public class RBMKLoader extends BlockBase implements IFluidConnectorBlock, ITool
 
     @Override
     public boolean canConnect(FluidType type, IBlockAccess world, int x, int y, int z, ForgeDirection dir) {
-        if (dir == ForgeDirection.UP) return type.hasTrait(FT_Heatable.class);
+        if (dir == ForgeDirection.DOWN) return type.hasTrait(FT_Heatable.class); //Norwood: For some odd fucking reason the rotations are flipped on this version...? I don'
         return type.hasTrait(FT_Coolable.class);
     }
 
