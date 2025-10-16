@@ -865,6 +865,16 @@ public final class Hazards extends VirtualizedRegistry<Hazards.HazardRecipe> {
             return entry(new HazardTypeUnstable(timer, info), level);
         }
 
+        @MethodDescription(type = MethodDescription.Type.QUERY, description = "Add a custom Unstable hazard without tooltip.")
+        public HazardDataBuilder unstable(double level, ObjObjDoubleConsumer<EntityLivingBase, ItemStack> onUpdate, ObjDoubleConsumer<EntityItem> onDrop) {
+            return entry(new HazardTypeUnstable(onUpdate, onDrop), level);
+        }
+
+        @MethodDescription(type = MethodDescription.Type.QUERY, description = "Add a custom Unstable hazard.")
+        public HazardDataBuilder unstable(double level, ObjObjDoubleConsumer<EntityLivingBase, ItemStack> onUpdate, ObjDoubleConsumer<EntityItem> onDrop, HazardTypeBase.HazardInfoConsumer customInfo) {
+            return entry(new HazardTypeUnstable(onUpdate, onDrop, customInfo), level);
+        }
+
         @MethodDescription(type = MethodDescription.Type.QUERY, description = "Add a hazard that acts when the item is dropped.")
         public HazardDataBuilder dangerousDrop(double level, ObjDoubleConsumer<EntityItem> onDrop) {
             return entry(new HazardTypeDangerousDrop(onDrop), level);

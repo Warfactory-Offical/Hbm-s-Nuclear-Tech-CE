@@ -12,9 +12,12 @@ import com.hbm.hazard.transformer.HazardTransformerForgeFluid;
 import com.hbm.hazard.type.HazardTypeBase;
 import com.hbm.hazard.type.HazardTypeDangerousDrop;
 import com.hbm.hazard.type.HazardTypeUnstable;
+import com.hbm.lib.ObjObjDoubleConsumer;
 import groovy.lang.Closure;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraftforge.fluids.Fluid;
@@ -284,6 +287,21 @@ public final class FluidHazards extends VirtualizedRegistry<Tuple<String, Hazard
         @MethodDescription(type = MethodDescription.Type.QUERY, description = "Add an Unstable hazard with a decay timer in ticks (server ticks).")
         public FluidHazardBuilder unstable(double level, int timer) {
             return entry(new HazardTypeUnstable(timer), level);
+        }
+
+        @MethodDescription(type = MethodDescription.Type.QUERY, description = "Add an Unstable hazard with a decay timer and custom tooltip info provider.")
+        public FluidHazardBuilder unstable(double level, int timer, HazardTypeBase.HazardInfoConsumer info) {
+            return entry(new HazardTypeUnstable(timer, info), level);
+        }
+
+        @MethodDescription(type = MethodDescription.Type.QUERY, description = "Add a custom Unstable hazard without tooltip.")
+        public FluidHazardBuilder unstable(double level, ObjObjDoubleConsumer<EntityLivingBase, ItemStack> onUpdate, ObjDoubleConsumer<EntityItem> onDrop) {
+            return entry(new HazardTypeUnstable(onUpdate, onDrop), level);
+        }
+
+        @MethodDescription(type = MethodDescription.Type.QUERY, description = "Add a custom Unstable hazard.")
+        public FluidHazardBuilder unstable(double level, ObjObjDoubleConsumer<EntityLivingBase, ItemStack> onUpdate, ObjDoubleConsumer<EntityItem> onDrop, HazardTypeBase.HazardInfoConsumer customInfo) {
+            return entry(new HazardTypeUnstable(onUpdate, onDrop, customInfo), level);
         }
 
         @MethodDescription(type = MethodDescription.Type.QUERY, description = "Add a hazard that only acts when the item containing this fluid is dropped.")
