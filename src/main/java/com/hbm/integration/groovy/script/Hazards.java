@@ -3,6 +3,7 @@ package com.hbm.integration.groovy.script;
 import com.cleanroommc.groovyscript.api.GroovyLog;
 import com.cleanroommc.groovyscript.api.IIngredient;
 import com.cleanroommc.groovyscript.api.documentation.annotations.MethodDescription;
+import com.cleanroommc.groovyscript.api.documentation.annotations.RegistryDescription;
 import com.cleanroommc.groovyscript.registry.AbstractReloadableStorage;
 import com.cleanroommc.groovyscript.registry.VirtualizedRegistry;
 import com.github.bsideup.jabel.Desugar;
@@ -41,6 +42,7 @@ import java.util.function.Function;
 import java.util.function.ObjDoubleConsumer;
 
 @SuppressWarnings("MethodMayBeStatic")
+@RegistryDescription(linkGenerator = "hbm")
 public final class Hazards extends VirtualizedRegistry<Hazards.HazardRecipe> {
 
     private final HazardTypeFacade types = new HazardTypeFacade();
@@ -124,7 +126,7 @@ public final class Hazards extends VirtualizedRegistry<Hazards.HazardRecipe> {
         return new HazardDataBuilder();
     }
 
-    @MethodDescription(description = "Register hazard data for a target (Item/ItemStack/Block/ore dict/ResourceLocation/IIngredient/Collection). Replaces existing data, backs up old mapping for reload.")
+    @MethodDescription(type = MethodDescription.Type.ADDITION, description = "Register hazard data for a target (Item/ItemStack/Block/ore dict/ResourceLocation/IIngredient/Collection). Replaces existing data, backs up old mapping for reload.")
     public HazardData register(Object target, HazardData data) {
         if (data == null) {
             GroovyLog.get().warn("HBM hazard register: data is null for target {}", target);
@@ -135,7 +137,7 @@ public final class Hazards extends VirtualizedRegistry<Hazards.HazardRecipe> {
         return data;
     }
 
-    @MethodDescription(description = "Register hazard data using a builder. Equivalent to register(target, builder.build()).")
+    @MethodDescription(type = MethodDescription.Type.ADDITION, description = "Register hazard data using a builder. Equivalent to register(target, builder.build()).")
     public HazardData register(Object target, HazardDataBuilder builder) {
         if (builder == null) {
             GroovyLog.get().warn("HBM hazard register: builder is null for target {}", target);
@@ -144,7 +146,7 @@ public final class Hazards extends VirtualizedRegistry<Hazards.HazardRecipe> {
         return register(target, builder.build());
     }
 
-    @MethodDescription(description = "Register hazard data using a Groovy closure DSL. The closure receives a HazardDataBuilder as its delegate.")
+    @MethodDescription(type = MethodDescription.Type.ADDITION, description = "Register hazard data using a Groovy closure DSL. The closure receives a HazardDataBuilder as its delegate.")
     public HazardData register(Object target, Closure<?> definition) {
         if (definition == null) {
             GroovyLog.get().warn("HBM hazard register: closure is null for target {}", target);
@@ -158,14 +160,14 @@ public final class Hazards extends VirtualizedRegistry<Hazards.HazardRecipe> {
         return register(target, builder.build());
     }
 
-    @MethodDescription(description = "Remove hazard mappings for a target (Item/Stack/etc.). Restores previous mapping on reload if one existed.")
+    @MethodDescription(type = MethodDescription.Type.REMOVAL, description = "Remove hazard mappings for a target (Item/Stack/etc.). Restores previous mapping on reload if one existed.")
     public boolean unregister(Object target) {
         int count = forEachTarget(target, this::unregisterObject, this::unregisterStack);
         refreshIfNeeded(count, "unregister", target);
         return count > 0;
     }
 
-    @MethodDescription(description = "Add a target to the hazard blacklist. The target won't be evaluated for hazards until unblacklisted.")
+    @MethodDescription(type = MethodDescription.Type.VALUE, description = "Add a target to the hazard blacklist. The target won't be evaluated for hazards until unblacklisted.")
     public void blacklist(Object target) {
         int count = forEachTarget(target, o -> {
             addScripted(new BlacklistEntry(HazardTarget.of(o)));
@@ -179,19 +181,19 @@ public final class Hazards extends VirtualizedRegistry<Hazards.HazardRecipe> {
         refreshIfNeeded(count, "blacklist", target);
     }
 
-    @MethodDescription(description = "Remove a target from the hazard blacklist. Returns true if an entry was removed.")
+    @MethodDescription(type = MethodDescription.Type.VALUE, description = "Remove a target from the hazard blacklist. Returns true if an entry was removed.")
     public boolean unblacklist(Object target) {
         int count = forEachTarget(target, this::unblacklistObject, this::unblacklistStack);
         refreshIfNeeded(count, "unblacklist", target);
         return count > 0;
     }
 
-    @MethodDescription(description = "Clear internal hazard caches without changing mappings. Use after bulk content changes.")
+    @MethodDescription(type = MethodDescription.Type.REMOVAL, description = "Clear internal hazard caches without changing mappings. Use after bulk content changes.")
     public void clearCaches() {
         HazardSystem.clearCaches();
     }
 
-    @MethodDescription(description = "Recompute cache and schedule updates for all online players. Called automatically by mutating methods.")
+    @MethodDescription(type = MethodDescription.Type.VALUE, description = "Recompute cache and schedule updates for all online players. Called automatically by mutating methods.")
     public void refresh() {
         HazardSystem.clearCaches();
         MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
@@ -213,7 +215,7 @@ public final class Hazards extends VirtualizedRegistry<Hazards.HazardRecipe> {
         return HazardSystem.getHazardLevelFromStack(stack, type);
     }
 
-    @MethodDescription(description = "Add a post-transformer for a specific Item or ItemStack. If respectNbt=true, only applies when sanitized NBT matches. Runs after built-in and fluid hazards. The transformer receives (stack, entries) and must return the new list.")
+    @MethodDescription(type = MethodDescription.Type.ADDITION, description = "Add a post-transformer for a specific Item or ItemStack. If respectNbt=true, only applies when sanitized NBT matches. Runs after built-in and fluid hazards. The transformer receives (stack, entries) and must return the new list.")
     public void postTransform(Object target, boolean respectNbt, BiFunction<ItemStack, List<HazardEntry>, List<HazardEntry>> transformer) {
         if (transformer == null || target == null) {
             GroovyLog.get().warn("HBM hazards postTransform: invalid args: target={}, transformer={}", target, transformer);
@@ -260,7 +262,7 @@ public final class Hazards extends VirtualizedRegistry<Hazards.HazardRecipe> {
         GroovyLog.get().warn("HBM hazards postTransform: unsupported target type {}", target.getClass().getName());
     }
 
-    @MethodDescription(description = "Multiply all computed hazard entries for an Item after fluid passes. Example: multiplyItemHazards('hbm:hot_ingot', 0.5D)")
+    @MethodDescription(type = MethodDescription.Type.ADDITION, description = "Multiply all computed hazard entries for an Item after fluid passes. Example: multiplyItemHazards('hbm:hot_ingot', 0.5D)")
     public void multiplyItemHazards(Object itemId, double hazardMultiplier) {
         Item item = resolveItem(itemId);
         if (item == null) {

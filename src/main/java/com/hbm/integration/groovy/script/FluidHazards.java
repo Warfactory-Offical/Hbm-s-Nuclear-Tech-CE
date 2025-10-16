@@ -2,6 +2,7 @@ package com.hbm.integration.groovy.script;
 
 import com.cleanroommc.groovyscript.api.GroovyLog;
 import com.cleanroommc.groovyscript.api.documentation.annotations.MethodDescription;
+import com.cleanroommc.groovyscript.api.documentation.annotations.RegistryDescription;
 import com.cleanroommc.groovyscript.registry.AbstractReloadableStorage;
 import com.cleanroommc.groovyscript.registry.VirtualizedRegistry;
 import com.hbm.hazard.HazardEntry;
@@ -23,6 +24,7 @@ import java.util.*;
 import java.util.function.ObjDoubleConsumer;
 
 @SuppressWarnings("MethodMayBeStatic")
+@RegistryDescription(linkGenerator = "hbm")
 public final class FluidHazards extends VirtualizedRegistry<Tuple<String, HazardEntry>> {
 
     private final Hazards.HazardTypeFacade types = new Hazards.HazardTypeFacade();
@@ -100,7 +102,7 @@ public final class FluidHazards extends VirtualizedRegistry<Tuple<String, Hazard
         }
     }
 
-    @MethodDescription(description = "Append a single HazardEntry to a fluid. fluidId may be String ('modid:fluid' or 'fluid'), ResourceLocation, or Fluid. Does not remove existing entries.")
+    @MethodDescription(type = MethodDescription.Type.ADDITION, description = "Append a single HazardEntry to a fluid. fluidId may be String ('modid:fluid' or 'fluid'), ResourceLocation, or Fluid. Does not remove existing entries.")
     public void add(Object fluidId, HazardEntry entry) {
         String name = normalizeFluidName(fluidId);
         warnIfEmpty(name, "add");
@@ -109,7 +111,7 @@ public final class FluidHazards extends VirtualizedRegistry<Tuple<String, Hazard
         HazardTransformerForgeFluid.FLUID_HAZARDS.computeIfAbsent(name, k -> new ObjectArrayList<>()).add(entry);
     }
 
-    @MethodDescription(description = "Append all entries produced by the builder to a fluid. fluidId may be String/ResourceLocation/Fluid. Existing entries remain.")
+    @MethodDescription(type = MethodDescription.Type.ADDITION, description = "Append all entries produced by the builder to a fluid. fluidId may be String/ResourceLocation/Fluid. Existing entries remain.")
     public void add(Object fluidId, FluidHazardBuilder builder) {
         String name = normalizeFluidName(fluidId);
         warnIfEmpty(name, "add");
@@ -122,7 +124,7 @@ public final class FluidHazards extends VirtualizedRegistry<Tuple<String, Hazard
         }
     }
 
-    @MethodDescription(description = "Groovy DSL variant of add(). The closure receives a FluidHazardBuilder as delegate. Existing entries remain.")
+    @MethodDescription(type = MethodDescription.Type.ADDITION, description = "Groovy DSL variant of add(). The closure receives a FluidHazardBuilder as delegate. Existing entries remain.")
     public void add(Object fluidId, Closure<?> definition) {
         if (definition == null) {
             GroovyLog.get().warn("HBM fluid hazard add: closure is null for {}", fluidId);
@@ -136,19 +138,19 @@ public final class FluidHazards extends VirtualizedRegistry<Tuple<String, Hazard
         add(fluidId, b);
     }
 
-    @MethodDescription(description = "Replace all existing hazards for a fluid with the builder's entries. Backs up previous entries for hot reload.")
+    @MethodDescription(type = MethodDescription.Type.VALUE, description = "Replace all existing hazards for a fluid with the builder's entries. Backs up previous entries for hot reload.")
     public void set(Object fluidId, FluidHazardBuilder builder) {
         clear(fluidId);
         add(fluidId, builder);
     }
 
-    @MethodDescription(description = "Groovy DSL variant of set(). Replaces all existing hazards for the fluid.")
+    @MethodDescription(type = MethodDescription.Type.VALUE, description = "Groovy DSL variant of set(). Replaces all existing hazards for the fluid.")
     public void set(Object fluidId, Closure<?> definition) {
         clear(fluidId);
         add(fluidId, definition);
     }
 
-    @MethodDescription(description = "Remove a specific HazardEntry instance from a fluid. Returns true if removed. Note: removal is identity-based on the entry object.")
+    @MethodDescription(type = MethodDescription.Type.REMOVAL, description = "Remove a specific HazardEntry instance from a fluid. Returns true if removed. Note: removal is identity-based on the entry object.")
     public boolean remove(Object fluidId, HazardEntry entry) {
         String name = normalizeFluidName(fluidId);
         warnIfEmpty(name, "remove");
@@ -165,7 +167,7 @@ public final class FluidHazards extends VirtualizedRegistry<Tuple<String, Hazard
         return removed;
     }
 
-    @MethodDescription(description = "Clear all hazard entries for a single fluid. Previous entries are backed up for reload; no-op if none present.")
+    @MethodDescription(type = MethodDescription.Type.REMOVAL, description = "Clear all hazard entries for a single fluid. Previous entries are backed up for reload; no-op if none present.")
     public void clear(Object fluidId) {
         String name = normalizeFluidName(fluidId);
         warnIfEmpty(name, "clear");
@@ -178,7 +180,7 @@ public final class FluidHazards extends VirtualizedRegistry<Tuple<String, Hazard
         }
     }
 
-    @MethodDescription(description = "Clear all fluids' hazard entries. Backs up everything for hot reload before clearing.")
+    @MethodDescription(type = MethodDescription.Type.REMOVAL, description = "Clear all fluids' hazard entries. Backs up everything for hot reload before clearing.")
     public void clearAll() {
         // Backup all entries before clearing for hot reload
         HazardTransformerForgeFluid.FLUID_HAZARDS.forEach((fluid, list) -> {
@@ -196,7 +198,7 @@ public final class FluidHazards extends VirtualizedRegistry<Tuple<String, Hazard
         return Collections.unmodifiableList(new ArrayList<>(list));
     }
 
-    @MethodDescription(description = "Toggle whether fluid hazards apply to NTM containers (filled items). Default true. Returns the new value.")
+    @MethodDescription(type = MethodDescription.Type.VALUE, description = "Toggle whether fluid hazards apply to NTM containers (filled items). Default true. Returns the new value.")
     public boolean setApplyToNTMContainer(boolean value) {
         return (HazardTransformerForgeFluid.applyToNTMContainer = value);
     }
