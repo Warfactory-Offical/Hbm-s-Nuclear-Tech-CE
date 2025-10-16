@@ -69,7 +69,12 @@ public class FluidDuctBoxExhaust extends FluidDuctBox {
     }
 
     @Override
-    public boolean canConnectTo(IBlockAccess world, int x, int y, int z, EnumFacing dir, FluidType type) {
+    protected boolean canConnectTo(IBlockAccess world, int x, int y, int z, EnumFacing dir, TileEntity tile) {
+        return canConnectTo(world, x, y, z, dir, (FluidType) null);
+    }
+
+    @Override
+    public boolean canConnectTo(IBlockAccess world, int x, int y, int z, EnumFacing dir, FluidType ignored) {
         BlockPos pos = new BlockPos(x, y, z);
         BlockPos offset = pos.offset(dir);
         EnumFacing opposite = dir.getOpposite();

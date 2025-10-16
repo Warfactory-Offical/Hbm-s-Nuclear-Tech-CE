@@ -300,8 +300,15 @@ public class ModBlocks {
 	public static final Block brick_jungle_glyph = new BlockGlyph(Material.ROCK, "brick_jungle_glyph").setCreativeTab(MainRegistry.blockTab).setHardness(15.0F).setResistance(360.0F);
 	public static final Block brick_jungle_circle = new BlockBallsSpawner(Material.ROCK, "brick_jungle_circle").setCreativeTab(MainRegistry.blockTab).setHardness(15.0F).setResistance(360.0F);
 
+    public static final Block stone_keyhole = new BlockKeyhole("stone_keyhole").setCreativeTab(null);
+    public static final Block stone_keyhole_meta = new BlockRedBrickKeyhole(Material.ROCK, "stone_keyhole_meta").setCreativeTab(null).setResistance(10_000);
+    public static final Block brick_red = new BlockRedBrick(Material.ROCK, "brick_red").setResistance(10_000);
+    public static final Block door_red = new BlockModDoor(Material.IRON, "door_red").setHardness(10.0F).setResistance(100.0F);
+
 	public static final Block deco_computer = new BlockDecoModel(Material.IRON, SoundType.METAL, "deco_computer", BlockEnums.DecoComputerEnum.class, true, false,
 			new ResourceLocation(RefStrings.MODID, "models/blocks/puter.obj")).setBlockBoundsTo(.125F, 0F, 0F, .875F, .875F, .625F).setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);
+    public static final Block deco_crt = new BlockDecoCRT(Material.IRON, SoundType.METAL, "deco_crt").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);
+    public static final Block deco_toaster = new BlockDecoToaster(Material.IRON, SoundType.METAL, "deco_toaster").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);
 	public static final Block filing_cabinet = new BlockDecoContainer<>(Material.IRON, SoundType.METAL, "filing_cabinet", BlockEnums.DecoCabinetEnum.class, true, false,
             TileEntityFileCabinet::new).setBlockBoundsTo(.1875F, 0F, 0F, .8125F, 1F, .75F).setCreativeTab(MainRegistry.blockTab).setHardness(10.0F).setResistance(15.0F);
 
@@ -406,6 +413,8 @@ public class ModBlocks {
 
 	public static final Block deco_loot = new BlockLoot("deco_loot").setCreativeTab(null).setHardness(0.0F).setResistance(0.0F);
 	public static final Block bobblehead = new BlockBobble("bobblehead").setCreativeTab(MainRegistry.blockTab).setHardness(0.0F).setResistance(0.0F);
+
+    public static final Block pedestal = new BlockPedestal("pedestal").setCreativeTab(null).setHardness(2.0F).setResistance(10.0F);
 
 	public static final Block spinny_light = new BlockSpinnyLight(Material.IRON, "spinny_light").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(5.0F);
 
@@ -627,6 +636,7 @@ public class ModBlocks {
 	public static final Block mine_he = new Landmine(Material.IRON, "mine_he", 2D, 5D).setCreativeTab(MainRegistry.nukeTab).setHardness(1.0F);
 	public static final Block mine_shrap = new Landmine(Material.IRON, "mine_shrap", 1.5D, 1D).setCreativeTab(MainRegistry.nukeTab).setHardness(1.0F);
 	public static final Block mine_fat = new Landmine(Material.IRON, "mine_fat", 2.5D, 1D).setCreativeTab(MainRegistry.nukeTab).setHardness(1.0F);
+	public static final Block mine_naval = new Landmine(Material.IRON, "mine_naval", 2.5D, 1D).setCreativeTab(MainRegistry.nukeTab).setHardness(1.0F);
 
 	public static final Block dynamite = new BlockDynamite("dynamite").setSoundType(SoundType.PLANT).setCreativeTab(MainRegistry.nukeTab).setHardness(0.0F);
 	public static final Block tnt = new BlockTNT("tnt_ntm").setSoundType(SoundType.PLANT).setCreativeTab(MainRegistry.nukeTab).setHardness(0.0F);
@@ -991,6 +1001,7 @@ public class ModBlocks {
 	public static final Block machine_rtg_furnace_on = new MachineRtgFurnace(true, "machine_rtg_furnace_on").setHardness(5.0F).setLightLevel(1.0F).setResistance(10.0F);
 
 	public static final Block launch_pad = new LaunchPad(Material.IRON, "launch_pad").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.missileTab);
+	public static final Block launch_pad_rusted = new LaunchPadRusted(Material.IRON, "launch_pad_rusted").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.missileTab);
 	public static final Block launch_pad_large = new LaunchPadLarge("launch_pad_large", Material.IRON).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.missileTab);
 
 	public static final Block machine_centrifuge = new MachineCentrifuge(Material.IRON, "machine_centrifuge").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
@@ -1279,7 +1290,7 @@ public class ModBlocks {
 
 	public static final Block railgun_plasma = new RailgunPlasma(Material.IRON, "railgun_plasma").setSoundType(SoundType.METAL).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.weaponTab);
 
-	public static final Block fluid_duct_paintable = new FluidDuctPaintable("fluid_duct_paintable").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);;
+	public static final Block fluid_duct_paintable = new FluidDuctPaintable("fluid_duct_paintable").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block fluid_pump = new FluidPump(Material.IRON, "fluid_pump").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block machine_drain = new MachineDrain(Material.IRON, "machine_drain").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block radio_torch_sender = new RadioTorchSender("radio_torch_sender").setHardness(0.1F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
@@ -1291,7 +1302,7 @@ public class ModBlocks {
 	public static final Block fluid_duct_neo = new FluidDuctStandard(Material.IRON, "fluid_duct_mk2").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.templateTab);
 	public static final Block fluid_duct_box = new FluidDuctBox( "fluid_duct_box").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block fluid_duct_exhaust = new FluidDuctBoxExhaust( "fluid_duct_exhaust").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
-	public static final Block fluid_duct_paintable_block_exhaust = new FluidDuctPaintableBlockExhaust("fluid_duct_paintable_block_exhaust").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);;
+	public static final Block fluid_duct_paintable_block_exhaust = new FluidDuctPaintableBlockExhaust("fluid_duct_paintable_block_exhaust").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	// 1.12.2 Exclusive solid pipes below. DO NOT REMOVE.
     public static final Block fluid_duct_solid = new BlockFluidPipeSolid(Material.IRON, "fluid_duct_solid").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.templateTab);
     public static final Block fluid_duct_solid_sealed = new BlockFluidPipeSolidRadResistant(Material.IRON, "fluid_duct_solid_sealed").setHardness(15.0F).setResistance(10000.0F).setCreativeTab(MainRegistry.templateTab);

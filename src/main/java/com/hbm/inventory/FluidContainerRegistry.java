@@ -2,7 +2,6 @@ package com.hbm.inventory;
 
 import com.github.bsideup.jabel.Desugar;
 import com.hbm.blocks.ModBlocks;
-import com.hbm.blocks.fluid.ModFluids;
 import com.hbm.capability.NTMFluidCapabilityHandler;
 import com.hbm.config.GeneralConfig;
 import com.hbm.forgefluid.SpecialContainerFillLists;
@@ -32,7 +31,10 @@ public class FluidContainerRegistry {
     private static final Reference2ObjectMap<Item, Int2ObjectOpenHashMap<Candidates>> emptyContainerMapByItem = new Reference2ObjectOpenHashMap<>();
 
     public static void register() {
+        // mlbv: I commented manual conversions out as they are now being handled by my capability wrapper
+
         // Vanilla buckets & bottles
+        /*
         registerContainer(new FluidContainer(new ItemStack(Items.WATER_BUCKET), new ItemStack(Items.BUCKET), Fluids.WATER, 1000));
         registerContainer(new FluidContainer(new ItemStack(Items.POTIONITEM), new ItemStack(Items.GLASS_BOTTLE), Fluids.WATER, 250));
         registerContainer(new FluidContainer(new ItemStack(Items.LAVA_BUCKET), new ItemStack(Items.BUCKET), Fluids.LAVA, 1000));
@@ -41,6 +43,7 @@ public class FluidContainerRegistry {
         registerContainer(new FluidContainer(new ItemStack(ModFluids.mud_fluid.getBlock()), new ItemStack(Items.BUCKET), Fluids.WATZ, 1000));
         registerContainer(new FluidContainer(new ItemStack(ModFluids.schrabidic_fluid.getBlock()), new ItemStack(Items.BUCKET), Fluids.SCHRABIDIC, 1000));
         registerContainer(new FluidContainer(new ItemStack(ModFluids.sulfuric_acid_fluid.getBlock()), new ItemStack(Items.BUCKET), Fluids.SULFURIC_ACID, 1000));
+        */
 
         // Barrels → tanks
         registerContainer(new FluidContainer(new ItemStack(ModBlocks.red_barrel), new ItemStack(ModItems.tank_steel), Fluids.DIESEL, 10000));

@@ -38,7 +38,7 @@ public class HazardTypeBlinding extends HazardTypeBase {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-    public void addHazardInformation(final EntityPlayer player, final List list, final double level, final ItemStack stack, final List<HazardModifier> modifiers) {
+    public void addHazardInformation(final EntityPlayer player, final List<String> list, final double level, final ItemStack stack, final List<HazardModifier> modifiers) {
         list.add(TextFormatting.DARK_AQUA + "[" + I18nUtil.resolveKey("trait.blinding") + "]");
     }
 

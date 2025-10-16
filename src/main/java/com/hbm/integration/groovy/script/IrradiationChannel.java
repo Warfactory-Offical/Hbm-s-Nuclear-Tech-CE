@@ -1,13 +1,10 @@
 package com.hbm.integration.groovy.script;
 
-import com.cleanroommc.groovyscript.api.GroovyLog;
 import com.cleanroommc.groovyscript.api.IIngredient;
-import com.cleanroommc.groovyscript.helper.recipe.AbstractRecipeBuilder;
+import com.cleanroommc.groovyscript.api.documentation.annotations.RegistryDescription;
 import com.cleanroommc.groovyscript.registry.VirtualizedRegistry;
-import com.hbm.integration.groovy.GroovyScriptModule;
-import com.hbm.inventory.fluid.FluidStack;
-import com.hbm.inventory.recipes.RBMKOutgasserRecipes;
 import com.hbm.inventory.RecipesCommon;
+import com.hbm.inventory.fluid.FluidStack;
 import com.hbm.util.Tuple;
 import net.minecraft.item.ItemStack;
 
@@ -15,6 +12,7 @@ import java.util.Iterator;
 
 import static com.hbm.inventory.recipes.RBMKOutgasserRecipes.recipes;
 
+@RegistryDescription(linkGenerator = "hbm", isFullyDocumented = false)
 public class IrradiationChannel extends VirtualizedRegistry<Tuple.Pair<RecipesCommon.AStack, Tuple.Pair<ItemStack, FluidStack>>> {
     @Override
     public void onReload() {

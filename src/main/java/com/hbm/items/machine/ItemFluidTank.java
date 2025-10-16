@@ -8,13 +8,13 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ItemBakedBase;
 import com.hbm.items.ModItems;
 import com.hbm.lib.RefStrings;
+import com.hbm.util.I18nUtil;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
@@ -140,18 +140,20 @@ public class ItemFluidTank extends ItemBakedBase {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public String getItemStackDisplayName(ItemStack stack) {
-		return I18n.format(getTranslationKey() + ".name").trim() + ' ' + I18n.format(Fluids.fromID(stack.getItemDamage()).getTranslationKey()).trim();
+		return I18nUtil.resolveKey(getTranslationKey()  + ".name", Fluids.fromID(stack.getItemDamage()).getLocalizedName());
 	}
 
 	@Override
 	public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-		FluidType f = Fluids.fromID(stack.getMetadata());
-		int fill = FluidContainerRegistry.getFluidContent(stack, f);
-		String s = (f == null ? "0" : fill) + "/" + cap + " mB";
-		if(stack.getCount() > 1)
-			s = stack.getCount() + "x " + s;
-		tooltip.add(s);
-
+		if(stack.getItem() == ModItems.fluid_pack_full) tooltip.add(stack.getCount() + "x " + "32000 mB");
+		else {
+			FluidType f = Fluids.fromID(stack.getMetadata());
+			int fill = FluidContainerRegistry.getFluidContent(stack, f);
+			String s = (f == null ? "0" : fill) + "/" + cap + " mB";
+			if (stack.getCount() > 1)
+				s = stack.getCount() + "x " + s;
+			tooltip.add(s);
+		}
 		Fluids.fromID(stack.getMetadata()).addInfoItemTanks(tooltip);
 	}
 }

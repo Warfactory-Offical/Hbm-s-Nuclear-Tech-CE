@@ -1,0 +1,106 @@
+name: Bug report
+description: File a bug report.
+type: Bug
+body:
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: Describe the bug
+      description: A clear and concise description of what the bug is. If it's a compatibility issue, specify the other mod(s) involved.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options:
+        - Game-breaking (crash on startup/world load)
+        - Major (causes crashes during gameplay)
+        - Substantial (progression breaking / game affecting, non-crashing)
+        - Minor (visual/UI issue, non-crashing)
+        - Compatibility (conflict with other mods)
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: game-context
+    attributes:
+      label: Game Context
+      description: Check all that apply.
+      options:
+        - label: Singleplayer
+        - label: Multiplayer (dedicated server)
+        - label: Creative
+        - label: Survival
+
+  - type: markdown
+    attributes:
+      value: |
+        ### Build tested
+        Please confirm that the problem can be reproduced on the **latest successful GitHub Actions build** (not Releases/Tags).
+
+        **Quick how-to:**
+        1) Open the repo's **Actions** tab and pick the most recent green run labeled **CI Build** or **Nightly Gradle Build**.  
+        2) On the run page, download the artifact (Summary → Artifacts), extract it, and put the `.jar` (no `-dev` / `-sources`) in your mods folder.  
+        3) Reproduce the issue and paste the run URL below. If updating fixes it, please close the report.
+
+  - type: input
+    id: actions-run-url
+    attributes:
+      label: Run URL
+      description: Paste the URL of the Actions run you tested with, e.g., `https://github.com/<owner>/<repo>/actions/runs/##########`
+      placeholder: "https://github.com/Warfactory-Offical/Hbm-s-Nuclear-Tech-CE/actions/runs/##########"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmed-latest
+    attributes:
+      label: Confirmation
+      options:
+        - label: I reproduced this on the latest successful GitHub Actions build.
+          required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: To Reproduce
+      description: Steps to reproduce the behavior. A minimal, reliable repro helps a lot.
+      value: |
+        1. 
+        2. 
+        3. 
+        4.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What you expected to happen.
+
+  - type: textarea
+    id: media-logs
+    attributes:
+      label: Screenshots, videos, crash report, logs
+      description: If applicable, add screenshots/videos and crash reports. For logs, please use https://mclo.gs/ and paste the link here.
+
+  - type: textarea
+    id: other-mods
+    attributes:
+      label: Are other mods present and is it a compatibility issue?
+      description: List any mods involved and describe the interaction if known.
+
+  - type: textarea
+    id: modlist
+    attributes:
+      label: Modlist
+      description: Copy and paste the mod list from your game log here (can be skipped if the log already contains it).
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Any other context—OS, Java version, Forge version, config changes, server type, etc.

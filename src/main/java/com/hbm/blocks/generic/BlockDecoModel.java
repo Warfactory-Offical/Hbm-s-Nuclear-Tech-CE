@@ -187,27 +187,14 @@ public class BlockDecoModel extends BlockEnumMeta implements INBTBlockTransforma
     @Override
     @SideOnly(Side.CLIENT)
     public void bakeModel(ModelBakeEvent event) {
-        WavefrontObject wavefront = null;
-        try {
-            wavefront = new WavefrontObject(objModelLocation);
-        } catch (Exception ignored) {}
-
-        if (wavefront == null) {
-            TextureAtlasSprite missing = Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
-            IBakedModel baked = BlockDecoBakedModel.forBlock(new WavefrontObject(new ResourceLocation("minecraft:empty")), missing);
-            for (int m = 0; m < 4; m++) {
-                ModelResourceLocation mrl = new ModelResourceLocation(getRegistryName(), "meta=" + m);
-                event.getModelRegistry().putObject(mrl, baked);
-            }
-        } else {
-            TextureAtlasSprite sprite = Minecraft.getMinecraft()
-                    .getTextureMapBlocks()
-                    .getAtlasSprite(new ResourceLocation("hbm", "blocks/deco_computer").toString());
-            IBakedModel baked = BlockDecoBakedModel.forBlock(wavefront, sprite);
-            for (int m = 0; m < 4; m++) {
-                ModelResourceLocation mrl = new ModelResourceLocation(getRegistryName(), "meta=" + m);
-                event.getModelRegistry().putObject(mrl, baked);
-            }
+        WavefrontObject wavefront = new WavefrontObject(objModelLocation);
+        TextureAtlasSprite sprite = Minecraft.getMinecraft()
+                .getTextureMapBlocks()
+                .getAtlasSprite(new ResourceLocation("hbm", "blocks/deco_computer").toString());
+        IBakedModel baked = BlockDecoBakedModel.forBlock(wavefront, sprite);
+        for (int m = 0; m < 4; m++) {
+            ModelResourceLocation mrl = new ModelResourceLocation(getRegistryName(), "meta=" + m);
+            event.getModelRegistry().putObject(mrl, baked);
         }
     }
 

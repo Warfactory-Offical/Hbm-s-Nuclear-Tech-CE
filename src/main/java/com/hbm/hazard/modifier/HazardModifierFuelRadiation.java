@@ -7,7 +7,7 @@ public class HazardModifierFuelRadiation extends HazardModifier {
 
     double target;
 	
-	public HazardModifierFuelRadiation(final float target) {
+	public HazardModifierFuelRadiation(final double target) {
 		this.target = target;
 	}
 

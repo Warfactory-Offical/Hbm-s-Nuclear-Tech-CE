@@ -21,7 +21,6 @@ import com.hbm.handler.HbmKeybinds.EnumKeybind;
 import com.hbm.items.IAnimatedItem;
 import com.hbm.items.ModItems;
 import com.hbm.items.RBMKItemRenderers;
-import com.hbm.items.machine.ItemFluidIDMulti;
 import com.hbm.items.weapon.sedna.factory.GunFactoryClient;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.RecoilHandler;
@@ -250,6 +249,8 @@ public class ClientProxy extends ServerProxy {
         registerGrenadeRenderer(EntityGrenadeIFNull.class, ModItems.grenade_if_null);
         registerGrenadeRenderer(EntityGrenadeDynamite.class, ModItems.stick_dynamite);
         registerGrenadeRenderer(EntityAcidBomb.class, Items.SLIME_BALL);
+        registerGrenadeRenderer(EntityGrenadeBouncyGeneric.class, ModItems.stick_dynamite_fishing);
+        registerGrenadeRenderer(EntityGrenadeImpactGeneric.class, ModItems.grenade_kyiv);
         registerMetaSensitiveGrenade(EntityDisperserCanister.class, ModItems.disperser_canister);
         registerMetaSensitiveGrenade(EntityDisperserCanister.class, ModItems.glyphid_gland);
 
@@ -258,6 +259,7 @@ public class ClientProxy extends ServerProxy {
         ModelLoader.setCustomStateMapper(ModBlocks.door_bunker, new StateMap.Builder().ignore(BlockModDoor.POWERED).build());
         ModelLoader.setCustomStateMapper(ModBlocks.door_metal, new StateMap.Builder().ignore(BlockModDoor.POWERED).build());
         ModelLoader.setCustomStateMapper(ModBlocks.door_office, new StateMap.Builder().ignore(BlockModDoor.POWERED).build());
+        ModelLoader.setCustomStateMapper(ModBlocks.door_red, new StateMap.Builder().ignore(BlockModDoor.POWERED).build());
 
         ModelLoader.setCustomStateMapper(ModBlocks.toxic_block, new StateMap.Builder().ignore(BlockFluidClassic.LEVEL).build());
         ModelLoader.setCustomStateMapper(ModBlocks.mud_block, new StateMap.Builder().ignore(BlockFluidClassic.LEVEL).build());
@@ -362,6 +364,7 @@ public class ClientProxy extends ServerProxy {
         registerItemRenderer(ModItems.missile_endo, new ItemRenderMissileGeneric(RenderMissileType.TYPE_THERMAL), reg);
         registerItemRenderer(ModItems.missile_exo, new ItemRenderMissileGeneric(RenderMissileType.TYPE_THERMAL), reg);
         registerItemRenderer(ModItems.missile_doomsday, new ItemRenderMissileGeneric(RenderMissileType.TYPE_DOOMSDAY), reg);
+        registerItemRenderer(ModItems.missile_doomsday_rusted, new ItemRenderMissileGeneric(RenderMissileType.TYPE_DOOMSDAY), reg);
         registerItemRenderer(ModItems.missile_carrier, new ItemRenderMissileGeneric(RenderMissileType.TYPE_CARRIER), reg);
     }
 
@@ -697,6 +700,25 @@ public class ClientProxy extends ServerProxy {
                             vec = vec.rotateYaw(360F / count);
                         }
                     }
+                    case "foamSplash" -> {
+                        double strength = data.getDouble("range");
+
+                        Vec3d vec = new Vec3d(strength, 0, 0);
+
+                        for(int i = 0; i < count; i++) {
+
+                            vec = vec.rotateYaw((float) Math.toRadians(rand.nextFloat() * 360F));
+                            // TODO
+                            /*ParticleFoam fx = new ParticleFoam(man, world, x + vec.xCoord, y, z + vec.zCoord);
+                            fx.maxAge = 50;
+                            fx.motionY = 0;
+                            fx.motionX = 0;
+                            fx.motionZ = 0;
+                            Minecraft.getMinecraft().effectRenderer.addEffect(fx);
+
+                            vec.rotateAroundY(360 / count);*/
+                        }
+                    }
                     default -> throw new IllegalStateException("Unexpected value: " + mode);
                 }
             }
@@ -783,32 +805,13 @@ public class ClientProxy extends ServerProxy {
                     default -> throw new IllegalStateException("Unexpected value: " + mode);
                 }
             }
-            case "muke" -> {
+            case "muke" -> { // muted nuke
                 ParticleMukeWave wave = new ParticleMukeWave(world, x, y, z);
+                ParticleMukeFlash flash = new ParticleMukeFlash(world, x, y, z, data.getBoolean("balefire"));
+
                 Minecraft.getMinecraft().effectRenderer.addEffect(wave);
+                Minecraft.getMinecraft().effectRenderer.addEffect(flash);
 
-                for(double d = 0.0D; d <= 1.6D; d += 0.1) {
-                    ParticleMukeCloud cloud = new ParticleMukeCloud(world, x, y, z, rand.nextGaussian() * 0.05, d + rand.nextGaussian() * 0.02, rand.nextGaussian() * 0.05);
-                    Minecraft.getMinecraft().effectRenderer.addEffect(cloud);
-                }
-                for(int i = 0; i < 50; i++) {
-                    ParticleMukeCloud cloud = new ParticleMukeCloud(world, x, y + 0.5, z, rand.nextGaussian() * 0.5, rand.nextInt(5) == 0 ? 0.02 : 0, rand.nextGaussian() * 0.5);
-                    Minecraft.getMinecraft().effectRenderer.addEffect(cloud);
-                }
-                for(int i = 0; i < 15; i++) {
-                    double ix = rand.nextGaussian() * 0.2;
-                    double iz = rand.nextGaussian() * 0.2;
-
-                    if(ix * ix + iz * iz > 0.75) {
-                        ix *= 0.5;
-                        iz *= 0.5;
-                    }
-
-                    double iy = 1.6 + (rand.nextDouble() * 2 - 1) * (0.75 - (ix * ix + iz * iz)) * 0.5;
-
-                    ParticleMukeCloud cloud = new ParticleMukeCloud(world, x, y, z, ix, iy + rand.nextGaussian() * 0.02, iz);
-                    Minecraft.getMinecraft().effectRenderer.addEffect(cloud);
-                }
                 player.hurtTime = 15;
                 player.maxHurtTime = 15;
                 player.attackedAtYaw = 0F;

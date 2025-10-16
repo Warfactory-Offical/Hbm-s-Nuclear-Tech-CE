@@ -19,6 +19,7 @@ import com.hbm.creativetabs.*;
 import com.hbm.datagen.AdvGen;
 import com.hbm.dim.CommandSpaceTP;
 import com.hbm.dim.SolarSystem;
+import com.hbm.entity.EntityMappings;
 import com.hbm.entity.logic.IChunkLoader;
 import com.hbm.entity.siege.SiegeTier;
 import com.hbm.explosion.ExplosionNukeGeneric;
@@ -316,6 +317,7 @@ public class MainRegistry {
         ControlEvent.init();
         SiegeTier.registerTiers();
         HazardRegistry.registerItems();
+        HazardRegistry.registerTrafos();
         WeaponModManager.init();
 
         proxy.registerRenderInfo();
@@ -378,11 +380,14 @@ public class MainRegistry {
         TileEntityLaunchPadBase.registerLaunchables();
         TileEntityMachineRadarNT.registerEntityClasses();
         TileEntityMachineRadarNT.registerConverters();
+
+        EntityMappings.writeSpawns();
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
         //RodRecipes.registerInit();
+        statLegendary = new StatBasic("stat.ntmLegendary", new TextComponentTranslation("stat.ntmLegendary")).registerStat();
         statMines = new StatBasic("stat.ntmMines", new TextComponentTranslation("stat.ntmMines")).registerStat();
         statBullets = new StatBasic("stat.ntmBullets", new TextComponentTranslation("stat.ntmBullets")).registerStat();
         ModItems.init();
@@ -417,6 +422,7 @@ public class MainRegistry {
         AnvilRecipes.register();
         ClientConfig.initConfig();
         RefineryRecipes.registerRefinery();
+        ModFluids.setFromRegistry();
         FluidContainerRegistry.register();
         TileEntityNukeCustom.registerBombItems();
         ArmorUtil.register();

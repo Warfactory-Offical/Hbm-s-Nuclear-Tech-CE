@@ -557,14 +557,13 @@ public class AnvilRecipes extends SerializableRecipe {
 		constructionRecipes.add(new AnvilConstructionRecipe(
 				new AStack[] {new ComparableStack(ModItems.plate_dineutronium, 4), new ComparableStack(ModItems.particle_sparkticle, 1), new ComparableStack(ModItems.plate_armor_fau, 6)},
 				new AnvilOutput(new ItemStack(ModItems.plate_armor_dnt))).setTier(7));
-		// TODO: rusted doomsday missile
-		/*constructionRecipes.add(new AnvilConstructionRecipe(
+		constructionRecipes.add(new AnvilConstructionRecipe(
 				new AStack[] {
 						new ComparableStack(ModItems.missile_doomsday_rusted, 1),
 						new OreDictStack(ANY_HARDPLASTIC.ingot(), 8),
 						new OreDictStack(AL.plateWelded(), 2),
 						new OreDictStack(PU239.billet(), 3)
-				}, new AnvilOutput(new ItemStack(ModItems.missile_doomsday))).setTier(5));*/
+				}, new AnvilOutput(new ItemStack(ModItems.missile_doomsday))).setTier(5));
 
 		constructionRecipes.add(new AnvilConstructionRecipe(new ComparableStack(ModItems.ingot_u233, 1), new AnvilOutput(new ItemStack(ModItems.plate_fuel_u233))).setTier(4));
 		constructionRecipes.add(new AnvilConstructionRecipe(new ComparableStack(ModItems.ingot_u235, 1), new AnvilOutput(new ItemStack(ModItems.plate_fuel_u235))).setTier(4));

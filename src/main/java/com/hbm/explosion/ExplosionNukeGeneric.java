@@ -3,8 +3,6 @@ package com.hbm.explosion;
 import cofh.redstoneflux.api.IEnergyProvider;
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.blocks.ModBlocks;
-import com.hbm.blocks.generic.BlockMeta;
-import com.hbm.blocks.generic.BlockSellafieldSlaked;
 import com.hbm.blocks.generic.WasteLog;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.config.VersatileConfig;
@@ -19,6 +17,8 @@ import com.hbm.items.ModItems;
 import com.hbm.lib.Library;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.main.MainRegistry;
+import com.hbm.util.MutableVec3d;
+import com.hbm.world.WorldUtil;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -34,7 +34,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -78,15 +77,20 @@ public class ExplosionNukeGeneric {
         }
     }
 
+    public static void dealDamage(World world, List<Entity> list, double x, double y, double z, double radius) {
+        dealDamage(world, list, x, y, z, radius, 250F);
+    }
+
+    /**
+     * @deprecated use the version above
+     */
+    @Deprecated
     public static void dealDamage(World world, double x, double y, double z, double radius) {
         dealDamage(world, x, y, z, radius, 250F);
     }
 
-    public static void dealDamage(World world, double x, double y, double z, double radius, float maxDamage) {
-
-        AxisAlignedBB aabb = new AxisAlignedBB(x, y, z, x, y, z).grow(radius);
-        List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(null, aabb);
-
+    public static void dealDamage(World world, List<Entity> list, double x, double y, double z, double radius, float maxDamage) {
+        MutableVec3d knock = new MutableVec3d();
         for (Entity e : list) {
             double dist = e.getDistance(x, y, z);
 
@@ -102,13 +106,22 @@ public class ExplosionNukeGeneric {
                     e.attackEntityFrom(ModDamageSource.nuclearBlast, (float) damage);
                     e.setFire(5);
 
-                    Vec3d knock = new Vec3d(e.posX - x, e.posY + e.getEyeHeight() - y, e.posZ - z).normalize();
+                    knock.set(e.posX - x, e.posY + e.getEyeHeight() - y, e.posZ - z).normalizeSelf();
                     e.motionX += knock.x * 0.2D;
                     e.motionY += knock.y * 0.2D;
                     e.motionZ += knock.z * 0.2D;
                 }
             }
         }
+    }
+
+    /**
+     * @deprecated use the version above
+     */
+    @Deprecated
+    public static void dealDamage(World world, double x, double y, double z, double radius, float maxDamage) {
+        List<Entity> list = WorldUtil.getEntitiesInRadius(world, x, y, z, radius);
+        dealDamage(world, list, x, y, z, radius, maxDamage);
     }
 
     @Spaghetti("just look at it") //mlbv: how about updating to jdk21 then use pattern matching for switch

@@ -63,6 +63,7 @@ public abstract class SerializableRecipe {
         recipeHandlers.add(new LiquefactionRecipes());
         recipeHandlers.add(new MatDistribution());
         recipeHandlers.add(new MixerRecipes());
+        recipeHandlers.add(new PedestalRecipes());
         recipeHandlers.add(new PressRecipes());
         recipeHandlers.add(new PyroOvenRecipes());
         recipeHandlers.add(new RBMKOutgasserRecipes());

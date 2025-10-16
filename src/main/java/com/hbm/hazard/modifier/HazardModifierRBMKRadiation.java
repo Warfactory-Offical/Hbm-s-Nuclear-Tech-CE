@@ -11,7 +11,7 @@ public class HazardModifierRBMKRadiation extends HazardModifier {
     double target;
 	boolean linear = false;
 	
-	public HazardModifierRBMKRadiation(final float target, final boolean linear) {
+	public HazardModifierRBMKRadiation(final double target, final boolean linear) {
 		this.target = target;
 		this.linear = linear;
 	}

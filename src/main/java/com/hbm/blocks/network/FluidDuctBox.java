@@ -174,7 +174,7 @@ public class FluidDuctBox extends FluidDuctBase implements IDynamicModels, ILook
         worldIn.setBlockState(pos, this.getStateFromMeta(meta), 3);
     }
 
-    public boolean canConnectTo(IBlockAccess world, int x, int y, int z, EnumFacing dir, TileEntity tile) {
+    protected boolean canConnectTo(IBlockAccess world, int x, int y, int z, EnumFacing dir, TileEntity tile) {
         if (tile instanceof TileEntityPipeBaseNT pipeBaseNT) {
             FluidType type = pipeBaseNT.getType();
             return canConnectTo(world, x, y, z, dir, type);
@@ -299,7 +299,7 @@ public class FluidDuctBox extends FluidDuctBase implements IDynamicModels, ILook
         boolean nX = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), EnumFacing.WEST, te);
         boolean pX = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), EnumFacing.EAST, te);
         boolean nY = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), EnumFacing.DOWN, te);
-        boolean pY = canConnectTo(source, pos.getY(), pos.getY(), pos.getZ(), EnumFacing.UP, te);
+        boolean pY = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), EnumFacing.UP, te);
         boolean nZ = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), EnumFacing.NORTH, te);
         boolean pZ = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), EnumFacing.SOUTH, te);
 
@@ -390,7 +390,7 @@ public class FluidDuctBox extends FluidDuctBase implements IDynamicModels, ILook
         boolean nX = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), EnumFacing.WEST, te);
         boolean pX = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), EnumFacing.EAST, te);
         boolean nY = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), EnumFacing.DOWN, te);
-        boolean pY = canConnectTo(source, pos.getY(), pos.getY(), pos.getZ(), EnumFacing.UP, te);
+        boolean pY = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), EnumFacing.UP, te);
         boolean nZ = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), EnumFacing.NORTH, te);
         boolean pZ = canConnectTo(source, pos.getX(), pos.getY(), pos.getZ(), EnumFacing.SOUTH, te);
 

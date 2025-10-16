@@ -8,7 +8,7 @@ public class HazardModifierRTGRadiation extends HazardModifier {
 
     double target;
 			
-	public HazardModifierRTGRadiation(final float target) {
+	public HazardModifierRTGRadiation(final double target) {
 			this.target = target;
 	}
 

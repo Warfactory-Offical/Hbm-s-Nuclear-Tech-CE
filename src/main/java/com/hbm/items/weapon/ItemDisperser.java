@@ -5,8 +5,7 @@ import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemFluidTank;
-import com.hbm.lib.RefStrings;
-import net.minecraft.client.resources.I18n;
+import com.hbm.util.I18nUtil;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -17,12 +16,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import static com.hbm.items.ItemEnumMulti.ROOT_PATH;
-
 public class ItemDisperser extends ItemFluidTank {
     public ItemDisperser(String s, int cap) {
         super(s, cap);
-        if(this == ModItems.glyphid_gland) overlayTextureLocation = new ResourceLocation(RefStrings.MODID, ROOT_PATH + "fluid_identifier_overlay");
+        // oh fuck it, I'll do a sprite copy
+        // if(this == ModItems.glyphid_gland) overlayTextureLocation = new ResourceLocation(RefStrings.MODID, ROOT_PATH + "fluid_identifier_overlay");
     }
 
     @Override
@@ -64,9 +62,6 @@ public class ItemDisperser extends ItemFluidTank {
     @Override
     @SideOnly(Side.CLIENT)
     public String getItemStackDisplayName(ItemStack stack) {
-
-        String s = I18n.format(getTranslationKey() + ".name").trim();
-        String s1 = I18n.format(Fluids.fromID(stack.getItemDamage()).getTranslationKey()).trim();
-        return s + " " + s1;
+        return I18nUtil.resolveKey(getTranslationKey() + ".name", Fluids.fromID(stack.getItemDamage()).getLocalizedName());
     }
 }

@@ -17,6 +17,7 @@ import com.hbm.items.weapon.ItemMissile.FuelType;
 import com.hbm.items.weapon.ItemMissile.PartSize;
 import com.hbm.items.weapon.ItemMissile.WarheadType;
 import com.hbm.main.MainRegistry;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -208,14 +209,15 @@ public class EntityMissileCustom extends EntityMissileBaseNT implements IChunkLo
 				break;
 			case TAINT:
 				int r = (int) strength;
+                BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 				for(int i = 0; i < r * 10; i++) {
 					int a = rand.nextInt(r) + (int) posX - (r / 2 - 1);
 					int b = rand.nextInt(r) + (int) posY - (r / 2 - 1);
 					int c = rand.nextInt(r) + (int) posZ - (r / 2 - 1);
-					BlockPos pos = new BlockPos(a, b, c);
-					if(world.getBlockState(pos).getMaterial().isReplaceable() && BlockTaint.hasPosNeightbour(world, pos)) {
-						world.setBlockState(pos, ModBlocks.taint.getStateFromMeta(rand.nextInt(3) + 4), 2);
-					}
+					pos.setPos(a, b, c);
+                    IBlockState state = world.getBlockState(pos);
+					if(state.isNormalCube() && !state.getBlock().isAir(state, world, pos))
+                        world.setBlockState(pos, ModBlocks.taint.getDefaultState().withProperty(BlockTaint.TAINTAGE, rand.nextInt(3) + 4), 2);
 				}
 				break;
 			case CLOUD:
