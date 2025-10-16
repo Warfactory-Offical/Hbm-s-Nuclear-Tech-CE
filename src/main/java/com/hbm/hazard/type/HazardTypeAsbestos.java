@@ -3,6 +3,7 @@ package com.hbm.hazard.type;
 import com.hbm.capability.HbmLivingProps;
 import com.hbm.config.RadiationConfig;
 import com.hbm.handler.ArmorUtil;
+import com.hbm.hazard.modifier.HazardModifier;
 import com.hbm.util.ArmorRegistry;
 import com.hbm.util.ArmorRegistry.HazardClass;
 import com.hbm.util.I18nUtil;
@@ -37,7 +38,7 @@ public class HazardTypeAsbestos extends HazardTypeBase {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-    public void addHazardInformation(final EntityPlayer player, final List list, final double level, final ItemStack stack, final List<com.hbm.hazard.modifier.HazardModifier> modifiers) {
+    public void addHazardInformation(final EntityPlayer player, final List<String> list, final double level, final ItemStack stack, final List<HazardModifier> modifiers) {
         list.add("§f[" + I18nUtil.resolveKey("trait.asbestos") + "]");
     }
 }

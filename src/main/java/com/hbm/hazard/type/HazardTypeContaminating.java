@@ -56,7 +56,7 @@ public class HazardTypeContaminating extends HazardTypeBase {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addHazardInformation(EntityPlayer player, List list, double level, ItemStack stack, List<HazardModifier> modifiers) {
+    public void addHazardInformation(EntityPlayer player, List<String> list, double level, ItemStack stack, List<HazardModifier> modifiers) {
         int radius = computeRadius(level);
         if (radius > 1) {
             list.add(TextFormatting.DARK_GREEN + "[" + I18nUtil.resolveKey("trait.contaminating") + "]");

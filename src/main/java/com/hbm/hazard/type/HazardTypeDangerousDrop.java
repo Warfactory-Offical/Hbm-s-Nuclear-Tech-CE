@@ -7,16 +7,19 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.function.ObjDoubleConsumer;
 
 public class HazardTypeDangerousDrop extends HazardTypeBase {
-    IDropPayload payload;
+    private final ObjDoubleConsumer<EntityItem> onDroppedItemUpdate;
 
-    public HazardTypeDangerousDrop(IDropPayload payload) {
-        this.payload = payload;
+    public HazardTypeDangerousDrop(@NotNull ObjDoubleConsumer<EntityItem> onDrop) {
+        this.onDroppedItemUpdate = onDrop;
     }
-
 
     @Override
     public void onUpdate(EntityLivingBase target, double level, ItemStack stack) {
@@ -25,16 +28,12 @@ public class HazardTypeDangerousDrop extends HazardTypeBase {
 
     @Override
     public void updateEntity(EntityItem item, double level) {
-        payload.updateEntity(item, level);
+        onDroppedItemUpdate.accept(item, level);
     }
 
     @Override
-    public void addHazardInformation(EntityPlayer player, List list, double level, ItemStack stack, List<HazardModifier> modifiers) {
+    @SideOnly(Side.CLIENT)
+    public void addHazardInformation(EntityPlayer player, List<String> list, double level, ItemStack stack, List<HazardModifier> modifiers) {
         list.add(TextFormatting.RED + "[" + I18nUtil.resolveKey("trait.drop") + "]");
-    }
-
-    @FunctionalInterface
-    public interface IDropPayload {
-        void updateEntity(EntityItem item, double level);
     }
 }

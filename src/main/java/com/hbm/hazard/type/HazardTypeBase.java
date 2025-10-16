@@ -43,5 +43,10 @@ public abstract class HazardTypeBase {
 	 * @param modifiers
 	 */
 	@SideOnly(Side.CLIENT)
-    public abstract void addHazardInformation(EntityPlayer player, List list, double level, ItemStack stack, List<HazardModifier> modifiers);
+    public abstract void addHazardInformation(EntityPlayer player, List<String> list, double level, ItemStack stack, List<HazardModifier> modifiers);
+
+    @FunctionalInterface
+    public interface HazardInfoConsumer {
+        void accept(EntityPlayer player, List<String> list, double level, ItemStack stack, List<HazardModifier> modifiers);
+    }
 }

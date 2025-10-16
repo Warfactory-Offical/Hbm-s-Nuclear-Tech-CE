@@ -16,7 +16,7 @@ public class HazardEntry {
 	/*
 	 * Modifiers are evaluated in the order they're being applied to the entry.
 	 */
-	List<HazardModifier> mods = new ArrayList();
+	List<HazardModifier> mods = new ArrayList<>();
 	
 	public HazardEntry(final HazardTypeBase type) {
         this(type, 1D);

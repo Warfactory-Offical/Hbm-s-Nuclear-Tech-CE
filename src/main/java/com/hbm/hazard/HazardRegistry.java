@@ -8,6 +8,7 @@ import com.hbm.hazard.modifier.HazardModifierRBMKHot;
 import com.hbm.hazard.modifier.HazardModifierRBMKRadiation;
 import com.hbm.hazard.modifier.HazardModifierRTGRadiation;
 import com.hbm.hazard.transformer.HazardTransformerForgeFluid;
+import com.hbm.hazard.transformer.HazardTransformerPostCustom;
 import com.hbm.hazard.transformer.HazardTransformerRadiationContainer;
 import com.hbm.hazard.transformer.HazardTransformerRadiationME;
 import com.hbm.hazard.transformer.HazardTransformerRadiationNBT;
@@ -514,13 +515,13 @@ public class HazardRegistry {
 	}
 
     private static void registerDangerousDrops(){
-        HazardSystem.register(demon_core_open, makeData().addEntry(new HazardTypeDangerousDrop((item, level) ->{
-            if(item.onGround) {
-                item.setItem(new ItemStack(ModItems.demon_core_closed));
-                item.world.spawnEntity(new EntityItem(item.world, item.posX, item.posY, item.posZ, new ItemStack(ModItems.screwdriver)));
+        HazardSystem.register(demon_core_open, makeData().addEntry(new HazardTypeDangerousDrop((entityItem, level) ->{
+            if(!entityItem.world.isRemote && entityItem.onGround) {
+                entityItem.setItem(new ItemStack(ModItems.demon_core_closed));
+                entityItem.world.spawnEntity(new EntityItem(entityItem.world, entityItem.posX, entityItem.posY, entityItem.posZ, new ItemStack(ModItems.screwdriver)));
             }
         } )));
-    };
+    }
 
 	public static void registerTrafos() {
 		HazardSystem.trafos.add(new HazardTransformerRadiationNBT());
@@ -528,6 +529,8 @@ public class HazardRegistry {
 
 		if(!(GeneralConfig.enableLBSM && GeneralConfig.enableLBSMSafeCrates))	HazardSystem.trafos.add(new HazardTransformerRadiationContainer());
 		if(!(GeneralConfig.enableLBSM && GeneralConfig.enableLBSMSafeMEDrives))	HazardSystem.trafos.add(new HazardTransformerRadiationME());
+		// Keep custom post transformer at the end
+		HazardSystem.trafos.add(new HazardTransformerPostCustom());
 	}
 
 	private static HazardData makeData() { return new HazardData(); }
