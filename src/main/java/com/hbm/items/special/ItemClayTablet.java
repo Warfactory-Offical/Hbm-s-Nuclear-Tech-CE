@@ -14,6 +14,8 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemClayTablet extends Item implements IGUIProvider {
     public ItemClayTablet(String s) {
@@ -43,6 +45,7 @@ public class ItemClayTablet extends Item implements IGUIProvider {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
         return new GUIScreenClayTablet();
     }
