@@ -8,6 +8,8 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -23,7 +25,8 @@ public class HazardTypeDigamma extends HazardTypeBase {
     }
 
     @Override
-    public void addHazardInformation(final EntityPlayer player, final List list, double level, final ItemStack stack, final List<HazardModifier> modifiers) {
+    @SideOnly(Side.CLIENT)
+    public void addHazardInformation(final EntityPlayer player, final List<String> list, double level, final ItemStack stack, final List<HazardModifier> modifiers) {
         level = HazardModifier.evalAllModifiers(stack, player, level, modifiers);
 
         final double displayLevel = Math.round(level * 10000D) / 10D;

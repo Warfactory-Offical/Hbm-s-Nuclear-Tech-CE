@@ -15,6 +15,7 @@ import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.particle.SpentCasing;
 import com.hbm.particle.helper.CasingCreator;
+import com.hbm.render.anim.HbmAnimations;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.util.EntityDamageUtil;
@@ -27,6 +28,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
@@ -1491,4 +1493,56 @@ public class Orchestras {
             if(timer == 40) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.boltClose, SoundCategory.PLAYERS, 1F, 1F);
         }
     };
+    public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> ORCHESTRA_DRILL = (stack, ctx) -> {
+        EntityLivingBase entity = ctx.entity;
+        HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
+        int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
+
+        if(entity.world.isRemote) {
+            double speed = HbmAnimationsSedna.getRelevantTransformation("SPEED")[0];
+
+            AudioWrapper runningAudio = ItemGunBaseNT.loopedSounds.get(entity);
+
+            if(speed > 0) {
+                //start sound
+                if(runningAudio == null || !runningAudio.isPlaying()) {
+                    boolean electric = WeaponModManager.hasUpgrade(stack, ctx.configIndex, WeaponModManager.ID_ENGINE_ELECTRIC);
+                    SoundEvent sound = electric ? HBMSoundHandler.largeTurbineRunning : HBMSoundHandler.engine;
+                    AudioWrapper audio = MainRegistry.proxy.getLoopedSound(
+                            sound, SoundCategory.BLOCKS,
+                            (float) entity.posX, (float) entity.posY, (float) entity.posZ,
+                            (float) speed, 15F, (float) speed, 25
+                    );
+                    ItemGunBaseNT.loopedSounds.put(entity, audio);
+                    audio.startSound();
+                    audio.attachTo(entity);
+                }
+                //keepalive
+                if(runningAudio != null && runningAudio.isPlaying()) {
+                    runningAudio.keepAlive();
+                    runningAudio.updateVolume((float) speed);
+                    runningAudio.updatePitch((float) speed);
+                }
+            } else {
+                //stop sound due to timeout
+                //if(runningAudio != null && runningAudio.isPlaying()) runningAudio.stopSound();
+                // for some reason this causes stutters, even though speed shouldn't be 0 then
+            }
+        }
+        //stop sound due to state change
+        if(type != HbmAnimationsSedna.AnimType.CYCLE && type != HbmAnimationsSedna.AnimType.CYCLE_DRY && entity.world.isRemote) {
+            AudioWrapper runningAudio = ItemGunBaseNT.loopedSounds.get(entity);
+            if(runningAudio != null && runningAudio.isPlaying()) runningAudio.stopSound();
+        }
+        if(entity.world.isRemote) return;
+
+        if(type == HbmAnimationsSedna.AnimType.RELOAD) {
+            if(timer == 15) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.openLatch, SoundCategory.PLAYERS, 1F, 1F);
+            if(timer == 35) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.impact, SoundCategory.PLAYERS, 0.5F, 1F);
+            if(timer == 60) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.revolverClose, SoundCategory.PLAYERS, 1F, 0.75F);
+            if(timer == 70) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.insertCanister, SoundCategory.PLAYERS, 1F, 1F);
+            if(timer == 85) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.pressureValve, SoundCategory.PLAYERS, 1F, 1F);
+        }
+    };
+
 }

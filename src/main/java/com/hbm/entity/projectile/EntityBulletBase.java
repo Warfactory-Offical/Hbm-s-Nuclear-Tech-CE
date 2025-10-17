@@ -1,6 +1,7 @@
 package com.hbm.entity.projectile;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.bomb.BlockDetonatable;
 import com.hbm.blocks.generic.RedBarrel;
 import com.hbm.config.BombConfig;
 import com.hbm.config.CompatibilityConfig;
@@ -591,8 +592,9 @@ public class EntityBulletBase extends Entity implements IProjectile {
 		} else if (config.doesBreakGlass && !world.isRemote) {
 			if (block == Blocks.GLASS || block == Blocks.GLASS_PANE || block == Blocks.STAINED_GLASS || block == Blocks.STAINED_GLASS_PANE)
 				world.destroyBlock(pos, false);
-			 if(block == ModBlocks.red_barrel)
-			 ((RedBarrel) ModBlocks.red_barrel).explode(world, pos.getX(), pos.getY(), pos.getZ());
+            if(block == ModBlocks.red_barrel)
+                ((RedBarrel) ModBlocks.red_barrel).explode(world, pos.getX(), pos.getY(), pos.getZ());
+            if(block instanceof BlockDetonatable detonatable) detonatable.onShot(world, pos);
 		}
 	}
 

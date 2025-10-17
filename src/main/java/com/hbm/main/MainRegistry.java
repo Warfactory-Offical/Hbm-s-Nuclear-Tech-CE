@@ -317,6 +317,7 @@ public class MainRegistry {
         ControlEvent.init();
         SiegeTier.registerTiers();
         HazardRegistry.registerItems();
+        HazardRegistry.registerTrafos();
         WeaponModManager.init();
 
         proxy.registerRenderInfo();
@@ -386,6 +387,7 @@ public class MainRegistry {
     @EventHandler
     public void init(FMLInitializationEvent event) {
         //RodRecipes.registerInit();
+        statLegendary = new StatBasic("stat.ntmLegendary", new TextComponentTranslation("stat.ntmLegendary")).registerStat();
         statMines = new StatBasic("stat.ntmMines", new TextComponentTranslation("stat.ntmMines")).registerStat();
         statBullets = new StatBasic("stat.ntmBullets", new TextComponentTranslation("stat.ntmBullets")).registerStat();
         ModItems.init();

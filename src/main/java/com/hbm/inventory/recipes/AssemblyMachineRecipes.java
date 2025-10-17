@@ -461,9 +461,9 @@ public class AssemblyMachineRecipes extends GenericRecipes<GenericRecipe> {
         this.register(new GenericRecipe("ass.rbmk").setup(100, 100).outputItems(new ItemStack(ModBlocks.rbmk_blank, 1))
                 .inputItems(new RecipesCommon.ComparableStack(ModBlocks.concrete_asbestos, 4), new RecipesCommon.OreDictStack(STEEL.plateCast(), 4), new RecipesCommon.OreDictStack(CU.plate(), 8), new RecipesCommon.ComparableStack(ModItems.plate_polymer, 4))
                 .inputItemsEx(new RecipesCommon.ComparableStack(ModBlocks.concrete_asbestos, 4), new RecipesCommon.ComparableStack(ModItems.item_expensive, 1, EnumExpensiveType.FERRO_PLATING), new RecipesCommon.OreDictStack(CU.plate(), 16)));
-        /*this.register(new GenericRecipe("ass.rbmkautoloader").setup(100, 100).outputItems(new ItemStack(ModBlocks.rbmk_autoloader, 1))
+        this.register(new GenericRecipe("ass.rbmkautoloader").setup(100, 100).outputItems(new ItemStack(ModBlocks.rbmk_autoloader, 1))
                 .inputItems(new RecipesCommon.OreDictStack(STEEL.plateWelded(), 4), new RecipesCommon.OreDictStack(PB.plateCast(), 4), new RecipesCommon.OreDictStack(B.ingot(), 4), new RecipesCommon.ComparableStack(ModItems.motor, 3))
-                .inputItemsEx(new RecipesCommon.ComparableStack(ModItems.item_expensive, 4, EnumExpensiveType.FERRO_PLATING), new RecipesCommon.ComparableStack(ModItems.motor_desh, 3)));*/ // TODO
+                .inputItemsEx(new RecipesCommon.ComparableStack(ModItems.item_expensive, 4, EnumExpensiveType.FERRO_PLATING), new RecipesCommon.ComparableStack(ModItems.motor_desh, 3)));
 
         // fusion reactor
         this.register(new GenericRecipe("ass.fusioncore").setup(600, 100).outputItems(new ItemStack(ModBlocks.struct_iter_core, 1))
@@ -597,10 +597,10 @@ public class AssemblyMachineRecipes extends GenericRecipes<GenericRecipe> {
 		*/
 
         // bomb parts
-        /*this.register(new GenericRecipe("ass.explosivelenses1").setup(400, 100).outputItems(new ItemStack(ModItems.early_explosive_lenses, 1))
+        this.register(new GenericRecipe("ass.explosivelenses1").setup(400, 100).outputItems(new ItemStack(ModItems.early_explosive_lenses, 1))
                 .inputItems(new RecipesCommon.OreDictStack(AL.plate(), 8), new RecipesCommon.OreDictStack(GOLD.wireFine(), 16), new RecipesCommon.ComparableStack(ModBlocks.det_cord, 8), new RecipesCommon.OreDictStack(CU.plate(), 2), new RecipesCommon.OreDictStack(ANY_HIGHEXPLOSIVE.ingot(), 20), new RecipesCommon.OreDictStack(ANY_PLASTIC.ingot(), 4)));
         this.register(new GenericRecipe("ass.explosivelenses2").setup(400, 100).outputItems(new ItemStack(ModItems.explosive_lenses, 1))
-                .inputItems(new RecipesCommon.OreDictStack(AL.plate(), 8), new RecipesCommon.OreDictStack(MINGRADE.wireFine(), 16), new RecipesCommon.OreDictStack(ANY_PLASTICEXPLOSIVE.ingot(), 4), new RecipesCommon.OreDictStack(CU.plate(), 2), new RecipesCommon.ComparableStack(ModItems.ball_tatb, 16), new RecipesCommon.OreDictStack(RUBBER.ingot(), 2)));*/
+                .inputItems(new RecipesCommon.OreDictStack(AL.plate(), 8), new RecipesCommon.OreDictStack(MINGRADE.wireFine(), 16), new RecipesCommon.OreDictStack(ANY_PLASTICEXPLOSIVE.ingot(), 4), new RecipesCommon.OreDictStack(CU.plate(), 2), new RecipesCommon.ComparableStack(ModItems.ball_tatb, 16), new RecipesCommon.OreDictStack(RUBBER.ingot(), 2)));
         this.register(new GenericRecipe("ass.wiring").setup(200, 100).outputItems(new ItemStack(ModItems.gadget_wireing, 1))
                 .inputItems(new RecipesCommon.OreDictStack(IRON.plate(), 1), new RecipesCommon.OreDictStack(GOLD.wireFine(), 12)));
         this.register(new GenericRecipe("ass.core1").setup(1_200, 100).outputItems(new ItemStack(ModItems.gadget_core, 1))

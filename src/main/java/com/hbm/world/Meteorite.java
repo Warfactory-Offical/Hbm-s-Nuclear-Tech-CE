@@ -123,7 +123,7 @@ public class Meteorite {
 					List<ItemStack> list10 = new ArrayList<>();
 					list10.add(new ItemStack(ModBlocks.block_meteor_broken));
 					generateSphere5x5(world, rand, x, y, z, list10);
-					world.setBlockState(new BlockPos(x, y, z), ModBlocks.taint.getDefaultState().withProperty(BlockTaint.TEXTURE, 9), 2);
+					world.setBlockState(new BlockPos(x, y, z), ModBlocks.taint.getDefaultState().withProperty(BlockTaint.TAINTAGE, 9), 2);
 					return;
 				}
 				case 11 -> {

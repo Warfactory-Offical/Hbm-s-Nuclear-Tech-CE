@@ -300,6 +300,11 @@ public class ModBlocks {
 	public static final Block brick_jungle_glyph = new BlockGlyph(Material.ROCK, "brick_jungle_glyph").setCreativeTab(MainRegistry.blockTab).setHardness(15.0F).setResistance(360.0F);
 	public static final Block brick_jungle_circle = new BlockBallsSpawner(Material.ROCK, "brick_jungle_circle").setCreativeTab(MainRegistry.blockTab).setHardness(15.0F).setResistance(360.0F);
 
+    public static final Block stone_keyhole = new BlockKeyhole("stone_keyhole").setCreativeTab(null);
+    public static final Block stone_keyhole_meta = new BlockRedBrickKeyhole(Material.ROCK, "stone_keyhole_meta").setCreativeTab(null).setResistance(10_000);
+    public static final Block brick_red = new BlockRedBrick(Material.ROCK, "brick_red").setResistance(10_000);
+    public static final Block door_red = new BlockModDoor(Material.IRON, "door_red").setHardness(10.0F).setResistance(100.0F);
+
 	public static final Block deco_computer = new BlockDecoModel(Material.IRON, SoundType.METAL, "deco_computer", BlockEnums.DecoComputerEnum.class, true, false,
 			new ResourceLocation(RefStrings.MODID, "models/blocks/puter.obj")).setBlockBoundsTo(.125F, 0F, 0F, .875F, .875F, .625F).setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);
     public static final Block deco_crt = new BlockDecoCRT(Material.IRON, SoundType.METAL, "deco_crt").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);
@@ -408,6 +413,8 @@ public class ModBlocks {
 
 	public static final Block deco_loot = new BlockLoot("deco_loot").setCreativeTab(null).setHardness(0.0F).setResistance(0.0F);
 	public static final Block bobblehead = new BlockBobble("bobblehead").setCreativeTab(MainRegistry.blockTab).setHardness(0.0F).setResistance(0.0F);
+
+    public static final Block pedestal = new BlockPedestal("pedestal").setCreativeTab(null).setHardness(2.0F).setResistance(10.0F);
 
 	public static final Block spinny_light = new BlockSpinnyLight(Material.IRON, "spinny_light").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(5.0F);
 

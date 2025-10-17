@@ -86,8 +86,7 @@ public class XFactoryCatapult {
 
         ExplosionVNT vnt = new ExplosionVNT(bullet.world, mop.hitVec.x, mop.hitVec.y, mop.hitVec.z, 10);
         vnt.setBlockAllocator(new BlockAllocatorStandard(64));
-        // TODO
-        //vnt.setBlockProcessor(new BlockProcessorStandard().withBlockEffect(new BlockMutatorBalefire()));
+        vnt.setBlockProcessor(new BlockProcessorStandard().withBlockEffect(new BlockMutatorBalefire()));
         vnt.setEntityProcessor(new EntityProcessorCrossSmooth(2, bullet.damage).withRangeMod(1.5F));
         vnt.setPlayerProcessor(new PlayerProcessorStandard());
         vnt.explode();

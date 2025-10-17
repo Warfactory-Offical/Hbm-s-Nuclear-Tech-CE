@@ -280,6 +280,7 @@ public class ResourceManager {
 	public static final IModelCustom aberrator = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/weapons/aberrator.obj")).asVBO();
 	public static final IModelCustom mas36 = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/weapons/mas36.obj")).asVBO();
 	public static final IModelCustom charge_thrower = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/weapons/charge_thrower.obj")).asVBO();
+	public static final IModelCustom drill = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/weapons/drill.obj")).asVBO();
 	public static IModelCustom egon_hose = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/weapons/egon_hose.obj")).asVBO();
 	public static IModelCustom egon_backpack = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/weapons/egon.obj")).asVBO();
 	
@@ -1394,6 +1395,7 @@ public class ResourceManager {
 	public static final ResourceLocation double_barrel_tex = new ResourceLocation(RefStrings.MODID, "textures/models/weapons/double_barrel.png");
 	public static final ResourceLocation double_barrel_sacred_dragon_tex = new ResourceLocation(RefStrings.MODID, "textures/models/weapons/double_barrel_sacred_dragon.png");
 	public static final ResourceLocation charge_thrower_tex = new ResourceLocation(RefStrings.MODID, "textures/models/weapons/charge_thrower.png");
+	public static final ResourceLocation drill_tex = new ResourceLocation(RefStrings.MODID, "textures/models/weapons/drill.png");
 	public static final ResourceLocation charge_thrower_hook_tex = new ResourceLocation(RefStrings.MODID, "textures/models/weapons/charge_thrower_hook.png");
 	public static final ResourceLocation charge_thrower_mortar_tex = new ResourceLocation(RefStrings.MODID, "textures/models/weapons/charge_thrower_mortar.png");
 	public static final ResourceLocation charge_thrower_rocket_tex = new ResourceLocation(RefStrings.MODID, "textures/models/weapons/charge_thrower_rocket.png");
@@ -1627,7 +1629,7 @@ public class ResourceManager {
 	public static final ResourceLocation missileMIRV_tex = new ResourceLocation(RefStrings.MODID, "textures/models/missiles/missile_atlas_thermo.png");
 	public static final ResourceLocation missileVolcano_tex = new ResourceLocation(RefStrings.MODID, "textures/models/missiles/missile_atlas_tectonic.png");
 	public static final ResourceLocation missileDoomsday_tex = new ResourceLocation(RefStrings.MODID, "textures/models/missiles/missile_atlas_doomsday.png");
-	public static final ResourceLocation missileDoomsdayRusted_tex = new ResourceLocation(RefStrings.MODID, "textures/models/missile/missile_atlas_doomsday_weathered.png");
+	public static final ResourceLocation missileDoomsdayRusted_tex = new ResourceLocation(RefStrings.MODID, "textures/models/missiles/missile_atlas_doomsday_weathered.png");
 	public static final ResourceLocation missileN2_tex = new ResourceLocation(RefStrings.MODID, "textures/models/missiles/missileN2.png");
 	public static final ResourceLocation missileEndo_tex = new ResourceLocation(RefStrings.MODID, "textures/models/missiles/missileEndo.png");
 	public static final ResourceLocation missileExo_tex = new ResourceLocation(RefStrings.MODID, "textures/models/missiles/missileExo.png");

@@ -80,7 +80,7 @@ public class HazardTypeToxic extends HazardTypeBase {
 
     @Override
 	@SideOnly(Side.CLIENT)
-    public void addHazardInformation(final EntityPlayer player, final List list, final double level, final ItemStack stack, final List<HazardModifier> modifiers) {
+    public void addHazardInformation(final EntityPlayer player, final List<String> list, final double level, final ItemStack stack, final List<HazardModifier> modifiers) {
         final String adjectiveKey;
 
         if (level > 16) {

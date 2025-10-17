@@ -5,6 +5,7 @@ import net.minecraft.item.ItemStack;
 
 import java.util.List;
 
+//mlbv: why isn't this an interface?
 public abstract class HazardTransformerBase {
 
 	public abstract void transformPre(ItemStack stack, List<HazardEntry> entries);

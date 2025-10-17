@@ -47,7 +47,7 @@ public class HazardTypeRadiation extends HazardTypeBase {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-    public void addHazardInformation(final EntityPlayer player, final List list, double level, final ItemStack stack, final List<HazardModifier> modifiers) {
+    public void addHazardInformation(final EntityPlayer player, final List<String> list, double level, final ItemStack stack, final List<HazardModifier> modifiers) {
 
         level = HazardModifier.evalAllModifiers(stack, player, level, modifiers);
 		if(level == 0) return;

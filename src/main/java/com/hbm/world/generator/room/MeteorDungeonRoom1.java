@@ -9,11 +9,10 @@ import net.minecraft.block.BlockRotatedPillar;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
-public class TestDungeonRoom1 extends CellularDungeonRoom {
+public class MeteorDungeonRoom1 extends CellularDungeonRoom {
 
-	public TestDungeonRoom1(CellularDungeon parent) {
+	public MeteorDungeonRoom1(CellularDungeon parent) {
 		super(parent);
 	}
 

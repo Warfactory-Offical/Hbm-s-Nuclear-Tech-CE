@@ -11,13 +11,13 @@ public class CellularDungeonFactory {
 	public static void init() {
 		
 		meteor = new TestDungeon(11, 7, 11, 11, 150, 3);
-		meteor.rooms.add(new TestDungeonRoom1(meteor));
-		meteor.rooms.add(new TestDungeonRoom2(meteor));
-		meteor.rooms.add(new TestDungeonRoom3(meteor));
-		meteor.rooms.add(new TestDungeonRoom4(meteor, new TestDungeonRoom5(meteor), EnumFacing.NORTH));
-		meteor.rooms.add(new TestDungeonRoom6(meteor));
-		meteor.rooms.add(new TestDungeonRoom7(meteor));
-		meteor.rooms.add(new TestDungeonRoom8(meteor));
+		meteor.rooms.add(new MeteorDungeonRoom1(meteor));
+		meteor.rooms.add(new MeteorDungeonRoom2(meteor));
+		meteor.rooms.add(new MeteorDungeonRoom3(meteor));
+		meteor.rooms.add(new MeteorDungeonRoom4(meteor, new MeteorDungeonRoom5(meteor), EnumFacing.NORTH));
+		meteor.rooms.add(new MeteorDungeonRoom6(meteor));
+		meteor.rooms.add(new MeteorDungeonRoom7(meteor));
+		meteor.rooms.add(new MeteorDungeonRoom8(meteor));
 
 		jungle = new JungleDungeon(5, 5, 25, 25, 700, 6);
 		for(int i = 0; i < 10; i++) jungle.rooms.add(new JungleDungeonRoom(jungle));

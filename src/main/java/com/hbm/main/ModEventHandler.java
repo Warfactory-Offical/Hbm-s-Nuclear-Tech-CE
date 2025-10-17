@@ -1038,6 +1038,8 @@ public class ModEventHandler {
 
                 if (event.getEntityLiving() instanceof IMob && event.getEntityLiving().getRNG().nextInt(1000) == 0) {
                     event.getEntityLiving().dropItem(ModItems.heart_piece, 1);
+                    if(event.getEntityLiving().getRNG().nextInt(250) == 0) event.getEntityLiving().dropItem(ModItems.key_red_cracked, 1);
+                    if(event.getEntityLiving().getRNG().nextInt(250) == 0) event.getEntityLiving().dropItem(ModItems.launch_code_piece, 1);
                 }
 
                 if (event.getEntityLiving() instanceof EntityCyberCrab && event.getEntityLiving().getRNG().nextInt(500) == 0) {

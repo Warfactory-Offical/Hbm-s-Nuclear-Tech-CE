@@ -6,6 +6,7 @@ import com.hbm.config.GeneralConfig;
 import com.hbm.entity.mob.ai.EntityAITaintedCreeperSwell;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IRadiationImmune;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.EntityCreeper;
@@ -82,11 +83,12 @@ public class EntityCreeperTainted extends EntityCreeper implements IRadiationImm
                         int b = this.rand.nextInt(15) + (int) this.posY - 7;
                         int c = this.rand.nextInt(15) + (int) this.posZ - 7;
                         pos.setPos(a, b, c);
-                        if (this.world.getBlockState(pos).getBlock().isReplaceable(this.world, pos) && BlockTaint.hasPosNeightbour(this.world, pos)) {
+                        IBlockState state = this.world.getBlockState(pos);
+                        if (state.isNormalCube() && !state.getBlock().isAir(state, world, pos)) {
                             if (GeneralConfig.enableHardcoreTaint)
-                                this.world.setBlockState(pos, ModBlocks.taint.getDefaultState().withProperty(BlockTaint.TEXTURE, this.rand.nextInt(3) + 5), 2);
+                                this.world.setBlockState(pos, ModBlocks.taint.getDefaultState().withProperty(BlockTaint.TAINTAGE, this.rand.nextInt(3) + 5), 2);
                             else
-                                this.world.setBlockState(pos, ModBlocks.taint.getDefaultState().withProperty(BlockTaint.TEXTURE, this.rand.nextInt(3)), 2);
+                                this.world.setBlockState(pos, ModBlocks.taint.getDefaultState().withProperty(BlockTaint.TAINTAGE, this.rand.nextInt(3)), 2);
                         }
                     }
                 } else {
@@ -95,11 +97,12 @@ public class EntityCreeperTainted extends EntityCreeper implements IRadiationImm
                         int b = this.rand.nextInt(7) + (int) this.posY - 3;
                         int c = this.rand.nextInt(7) + (int) this.posZ - 3;
                         pos.setPos(a, b, c);
-                        if (this.world.getBlockState(pos).getBlock().isReplaceable(this.world, pos) && BlockTaint.hasPosNeightbour(this.world, pos)) {
+                        IBlockState state = this.world.getBlockState(pos);
+                        if (state.isNormalCube() && !state.getBlock().isAir(state, world, pos)) {
                             if (GeneralConfig.enableHardcoreTaint)
-                                this.world.setBlockState(pos, ModBlocks.taint.getDefaultState().withProperty(BlockTaint.TEXTURE, this.rand.nextInt(6) + 10), 2);
+                                this.world.setBlockState(pos, ModBlocks.taint.getDefaultState().withProperty(BlockTaint.TAINTAGE, this.rand.nextInt(6) + 10), 2);
                             else
-                                this.world.setBlockState(pos, ModBlocks.taint.getDefaultState().withProperty(BlockTaint.TEXTURE, this.rand.nextInt(3) + 4), 2);
+                                this.world.setBlockState(pos, ModBlocks.taint.getDefaultState().withProperty(BlockTaint.TAINTAGE, this.rand.nextInt(3) + 4), 2);
                         }
                     }
                 }

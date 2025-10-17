@@ -1907,6 +1907,7 @@ public class ModItems {
     public static Item gun_double_barrel_sacred_dragon;
 
     public static Item gun_charge_thrower;
+    public static Item gun_drill;
     public static Item gun_fireext;
 
     public static Item weapon_mod_test;
@@ -2320,7 +2321,8 @@ public class ModItems {
     public static final Item pellet_coolant = new ItemBase("pellet_coolant").setMaxDamage(41400).setCreativeTab(null).setMaxStackSize(1);
     //Keys + locks
     public static final Item key = new ItemKey("key").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
-    public static final Item key_red = new ItemCustomLore("key_red").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
+    public static final Item key_red = new ItemCustomLore("key_red").setMaxStackSize(1).setCreativeTab(null);
+    public static final Item key_red_cracked = new ItemCustomLore("key_red_cracked").setMaxStackSize(1).setCreativeTab(null);
     public static final Item key_kit = new ItemCounterfitKeys("key_kit").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
     public static final Item key_fake = new ItemKey("key_fake").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
     public static final Item pin = new ItemCustomLore("pin").setMaxStackSize(8).setCreativeTab(MainRegistry.consumableTab);
@@ -2671,6 +2673,7 @@ public class ModItems {
     public static final Item door_metal = new ItemModDoor("door_metal").setCreativeTab(MainRegistry.blockTab);
     public static final Item door_office = new ItemModDoor("door_office").setCreativeTab(MainRegistry.blockTab);
     public static final Item door_bunker = new ItemModDoor("door_bunker").setCreativeTab(MainRegistry.blockTab);
+    public static final Item door_red = new ItemModDoor("door_red").setCreativeTab(MainRegistry.blockTab);
     //Music
     public static final Item record_lc = new ItemModRecord("lc", HBMSoundHandler.lambdaCore, "record_lc").setCreativeTab(CreativeTabs.MISC);
     public static final Item record_ss = new ItemModRecord("ss", HBMSoundHandler.sectorSweep, "record_ss").setCreativeTab(CreativeTabs.MISC);
@@ -2686,6 +2689,7 @@ public class ModItems {
     public static final Item burnt_bark = new ItemCustomLore("burnt_bark").setCreativeTab(MainRegistry.consumableTab);
     public static final Item letter = new ItemStarterKit("letter").setCreativeTab(MainRegistry.consumableTab);
     public static final Item book_secret = new ItemCustomLore("book_secret").setCreativeTab(MainRegistry.polaroidID == 11 ? MainRegistry.consumableTab : null);
+    public static final Item clay_tablet = new ItemClayTablet("clay_tablet").setCreativeTab(null);
     //Drillgon200: Shaking my head... just had to put "FOE" right on it.
     public static final Item book_of_ = new ItemBook("book_of_").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
     public static final Item book_lemegeton = new ItemBookLemegeton("book_lemegeton").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);

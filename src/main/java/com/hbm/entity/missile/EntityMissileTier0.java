@@ -1,7 +1,6 @@
 package com.hbm.entity.missile;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.blocks.bomb.BlockTaint;
 import com.hbm.config.BombConfig;
 import com.hbm.entity.effect.EntityBlackHole;
 import com.hbm.entity.effect.EntityCloudFleija;
@@ -14,6 +13,7 @@ import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.material.Mats;
 import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -111,12 +111,15 @@ public abstract class EntityMissileTier0 extends EntityMissileBaseNT {
 		public EntityMissileTaint(World world, float x, float y, float z, int a, int b) { super(world, x, y, z, a, b); }
 		@Override public void onImpact() {
 			this.world.createExplosion(this, this.posX, this.posY, this.posZ, 10.0F, true);
-			for(int i = 0; i < 100; i++) {
+            BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+            for(int i = 0; i < 100; i++) {
 				int a = rand.nextInt(11) + (int) this.posX - 5;
 				int b = rand.nextInt(11) + (int) this.posY - 5;
 				int c = rand.nextInt(11) + (int) this.posZ - 5;
-				BlockPos pos = new BlockPos(a, b, c);
-				if(world.getBlockState(pos).getBlock().isReplaceable(world, pos) && BlockTaint.hasPosNeightbour(world, pos)) world.setBlockState(pos, ModBlocks.taint.getDefaultState());
+				pos.setPos(a, b, c);
+                IBlockState state = world.getBlockState(pos);
+				if(state.isNormalCube() && !state.getBlock().isAir(state, world, pos))
+                    world.setBlockState(pos, ModBlocks.taint.getDefaultState(), 2);
 			}
 		}
 		@Override public ItemStack getDebrisRareDrop() { return new ItemStack(ModItems.powder_spark_mix, 1); }
