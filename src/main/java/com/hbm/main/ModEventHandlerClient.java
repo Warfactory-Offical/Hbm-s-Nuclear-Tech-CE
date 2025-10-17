@@ -1887,12 +1887,14 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
 
         boolean m1 = ItemGunBase.m1;
         boolean m2 = ItemGunBase.m2;
-        if (player.getHeldItem(EnumHand.MAIN_HAND) != null && player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof ItemGunBase ||
-                player.getHeldItem(EnumHand.MAIN_HAND) != null && player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof ItemGunBaseNT) {
+        if (!player.getHeldItem(EnumHand.MAIN_HAND).isEmpty() && (player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof ItemGunBase ||
+                player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof ItemGunBaseNT)) {
 
             if (event.getButton() >= 0 && event.getButton() <= 2) {
                 BlockPos selected = Minecraft.getMinecraft().objectMouseOver.getBlockPos();
-                if (!(player.world.getBlockState(selected).getBlock() instanceof IGunClickable)) event.setCanceled(true);
+                //mlbv: the suppression below has to be added to avoid IntelliJ thinking it's NotNull
+                //noinspection ConstantValue
+                if (selected != null && !(player.world.getBlockState(selected).getBlock() instanceof IGunClickable)) event.setCanceled(true);
             }
             Item item = player.getHeldItem(EnumHand.MAIN_HAND).getItem();
             if(item instanceof ItemGunBase weapon) {
