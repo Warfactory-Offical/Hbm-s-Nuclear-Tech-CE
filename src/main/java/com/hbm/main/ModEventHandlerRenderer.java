@@ -4,6 +4,8 @@ import com.hbm.blocks.ICustomBlockHighlight;
 import com.hbm.config.RadiationConfig;
 import com.hbm.dim.WorldProviderCelestial;
 import com.hbm.handler.pollution.PollutionHandler.PollutionType;
+import com.hbm.items.ModItems;
+import com.hbm.items.weapon.sedna.factory.XFactoryDrill;
 import com.hbm.packet.toclient.PermaSyncHandler;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.render.item.weapon.sedna.ItemRenderWeaponBase;
@@ -13,6 +15,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.client.settings.GameSettings;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -47,6 +50,14 @@ public class ModEventHandlerRenderer {
 					event.setCanceled(true);
 				}
 			}
+		}
+		EntityPlayer player = MainRegistry.proxy.me();
+		ItemStack held = player.getHeldItemMainhand();
+
+		if (!held.isEmpty() && held.getItem() == ModItems.gun_drill) {
+			XFactoryDrill.drawBlockHighlight(player, held, event.getPartialTicks());
+			event.setCanceled(true);
+			return;
 		}
 	}
 	
@@ -119,6 +130,7 @@ public class ModEventHandlerRenderer {
 			event.setBlue(event.getBlue() * (1 - interp) + sootColor * interp);
 		}
 	}
+
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public void onRenderHand(RenderHandEvent event) {
 
@@ -135,7 +147,8 @@ public class ModEventHandlerRenderer {
 			}
 		}
 	}
-	
+
+
 	private static boolean fogInit = false;
 	private static int fogX;
 	private static int fogZ;

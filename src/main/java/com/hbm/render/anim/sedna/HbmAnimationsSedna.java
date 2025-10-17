@@ -33,6 +33,11 @@ public class HbmAnimationsSedna {
         JAMMED			//animation for jammed weapons
     }
 
+    public static enum ToolAnimation {
+        SWING,
+        EQUIP,
+    }
+
     // A NOTE ON SHOTGUN STYLE RELOADS
     // Make sure the RELOAD and RELOAD_EMPTY adds shells, not just RELOAD_CYCLE, they all proc once for each loaded shell
 

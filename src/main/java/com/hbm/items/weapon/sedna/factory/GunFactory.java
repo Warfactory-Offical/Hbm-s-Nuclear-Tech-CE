@@ -63,6 +63,7 @@ public class GunFactory {
         XFactoryTurret.init();
         XFactoryTool.init();
         XFactory10ga.init();
+        XFactoryDrill.init();
         XFactory35800.init();
 
         ModItems.weapon_mod_test = new ItemEnumMulti("weapon_mod_test", EnumModTest.class, true, true).setMaxStackSize(1);
@@ -160,7 +161,10 @@ public class GunFactory {
         SPEEDUP, CHOKE, SPEEDLOADER,
         FURNITURE_GREEN, FURNITURE_BLACK, BAYONET,
         STACK_MAG, SKIN_SATURNITE, LAS_SHOTGUN,
-        LAS_CAPACITOR, LAS_AUTO
+        LAS_CAPACITOR, LAS_AUTO,
+        DRILL_HSS, DRILL_WEAPONSTEEL, DRILL_TCALLOY, DRILL_SATURNITE,
+        ENGINE_DIESEL, ENGINE_AVIATION, ENGINE_ELECTRIC, ENGINE_TURBO,
+        MAGNET, SIFTER, CANISTERS
     }
 
     public enum EnumModCaliber {

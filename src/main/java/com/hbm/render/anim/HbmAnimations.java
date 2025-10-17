@@ -24,7 +24,8 @@ public class HbmAnimations {
 		CYCLE,		//animation for every firing cycle
 		ALT_CYCLE,	//animation for alt fire cycles
 		SPINUP,		//animation for actionstart
-		SPINDOWN	//animation for actionend
+		SPINDOWN,	//animation for actionend
+		EQUIP,
 	}
 
 	public static class Animation {
