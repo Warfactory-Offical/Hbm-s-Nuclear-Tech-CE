@@ -53,6 +53,7 @@ public class RadiationConfig {
 		final String CATEGORY_NUKE = "06_explosions";
 		final String CATEGORY_RAD = "07_radiation";
 		final String CATEGORY_POL = "16_pollution";
+		final String CATEGORY_HAZ = "CE-0.3_hazard";
 		// afterrain duration
 		Property radRain = config.get(CATEGORY_NUKE, "6.12_falloutRainDuration", 2000);
 		radRain.setComment("Duration of the thunderstorm after fallout in ticks (only large explosions)");
@@ -99,6 +100,16 @@ public class RadiationConfig {
 		geigerY = CommonConfig.createConfigInt(config, CATEGORY_RAD, "7.03_geigerY", "Y Coordinate of the geiger counter gui (y=0 is on the bottom)", 2);
 		digammaX = CommonConfig.createConfigInt(config, CATEGORY_RAD, "7.04_digammaX", "X Coordinate of the digamma diagnostic gui (x=0 is on the right)", 16);
 		digammaY = CommonConfig.createConfigInt(config, CATEGORY_RAD, "7.05_digammaY", "Y Coordinate of the digamma diagnostic gui (y=0 is on the bottom)", 18);
+
+		hazardRate = CommonConfig.createConfigInt(config, CATEGORY_HAZ, "CE-0.3_hazardRate", "Ticks between application of effects for the hazards", 5);
+		disableAsbestos = CommonConfig.createConfigBool(config, CATEGORY_HAZ, "CE-0.3_disableAsbestos", "Setting it true makes Asbestos Hazard to do nothing", false);
+		disableBlinding = CommonConfig.createConfigBool(config, CATEGORY_HAZ, "CE-0.3_disableBlinding", "Setting it true makes Blinding Hazard to do nothing", false);
+		disableCoal = CommonConfig.createConfigBool(config, CATEGORY_HAZ, "CE-0.3_disableCoal", "Setting it true makes Coal Hazard to do nothing", false);;
+		disableExplosive = CommonConfig.createConfigBool(config, CATEGORY_HAZ, "CE-0.3_disableExplosive", "Setting it true makes Explosive Hazard to do nothing", false);
+		disableHydro = CommonConfig.createConfigBool(config, CATEGORY_HAZ, "CE-0.3_disableHydro", "Setting it true makes Hydro Hazard to do nothing", false);;
+		disableHot = CommonConfig.createConfigBool(config, CATEGORY_HAZ, "CE-0.3_disableHot", "Setting it true makes Hot Hazard to do nothing", false);
+		disableCold = CommonConfig.createConfigBool(config, CATEGORY_HAZ, "CE-0.3_disableCold", "Setting it true makes Cold Hazard to do nothing", false);
+		disableToxic = CommonConfig.createConfigBool(config, CATEGORY_HAZ, "CE-0.3_disableToxic", "Setting it true makes Toxic Hazard to do nothing", false);
 
 		enablePollution = CommonConfig.createConfigBool(config, CATEGORY_POL, "16.01_enablePollution", "If disabled, none of the polltuion related things will work", true);
 		enableLeadFromBlocks = CommonConfig.createConfigBool(config, CATEGORY_POL, "16.02_enableLeadFromBlocks", "Whether breaking blocks in heavy metal polluted areas will poison the player", true);
