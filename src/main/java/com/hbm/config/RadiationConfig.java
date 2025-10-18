@@ -53,7 +53,7 @@ public class RadiationConfig {
 		final String CATEGORY_NUKE = "06_explosions";
 		final String CATEGORY_RAD = "07_radiation";
 		final String CATEGORY_POL = "16_pollution";
-		final String CATEGORY_HAZ = "CE-0.3_hazard";
+		final String CATEGORY_HAZ = "CE-03_hazard";
 		// afterrain duration
 		Property radRain = config.get(CATEGORY_NUKE, "6.12_falloutRainDuration", 2000);
 		radRain.setComment("Duration of the thunderstorm after fallout in ticks (only large explosions)");
