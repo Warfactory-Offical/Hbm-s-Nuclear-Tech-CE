@@ -103,7 +103,9 @@ import java.io.File;
 import java.util.List;
 import java.util.Random;
 
-@Mod(modid = RefStrings.MODID, version = RefStrings.VERSION, name = RefStrings.NAME)
+@Mod(modid = RefStrings.MODID, version = RefStrings.VERSION, name = RefStrings.NAME,
+        dependencies = "required-after:ctm"
+)
 @Spaghetti("Total cluserfuck")
 public class MainRegistry {
 
