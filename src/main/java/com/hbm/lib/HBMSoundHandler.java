@@ -28,6 +28,8 @@ public final class HBMSoundHandler {
     public static SoundEvent techBoop;
     public static SoundEvent hornNearSingle;
     public static SoundEvent hornNearDual;
+    public static SoundEvent largeTurbineRunning;
+    public static SoundEvent engine;
     public static SoundEvent hornFarSingle;
     public static SoundEvent hornFarDual;
     public static SoundEvent reactorLoop;
@@ -420,6 +422,8 @@ public final class HBMSoundHandler {
         techBleep = register("item.techBleep");
         techBoop = register("item.techBoop");
         hornNearSingle = register("block.hornNearSingle");
+        largeTurbineRunning = register("block.largeTurbine");
+        engine = register("block.engine");
         hornNearDual = register("block.hornNearDual");
         hornFarSingle = register("block.hornFarSingle");
         hornFarDual = register("block.hornFarDual");
