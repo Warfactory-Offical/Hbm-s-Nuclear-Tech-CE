@@ -6,7 +6,6 @@ import com.hbm.items.ModItems;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.AdvancementManager;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
-import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,6 +20,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.relauncher.Side;
@@ -59,26 +59,23 @@ public class ItemCigarette extends Item {
 
     @Override
     public @NotNull ItemStack onItemUseFinish(ItemStack stack, @NotNull World worldIn, @NotNull EntityLivingBase entityLiving) {
-        if (!(entityLiving instanceof EntityPlayer) || !((EntityPlayer) entityLiving).isCreative())
-            stack.shrink(1);
-
-        if (!worldIn.isRemote) {
-
-            EntityPlayer player = (EntityPlayer) entityLiving;
-
+        if (!worldIn.isRemote && entityLiving instanceof EntityPlayer player) {
             if (this == ModItems.cigarette) {
-                HbmLivingProps.incrementBlackLung(player, 2000);
-                HbmLivingProps.incrementAsbestos(player, 2000);
-                HbmLivingProps.incrementRadiation(player, 100F);
-
+                if (!player.capabilities.isCreativeMode) {
+                    stack.shrink(1);
+                    HbmLivingProps.incrementBlackLung(player, 2000);
+                    HbmLivingProps.incrementAsbestos(player, 2000);
+                    HbmLivingProps.incrementRadiation(player, 100F);
+                }
                 ItemStack helmet = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
                 if(helmet.getItem() == ModItems.no9) {
                     AdvancementManager.grantAchievement(player, AdvancementManager.achNo9);
                 }
-            }
-
-            if (this == ModItems.crackpipe) {
-                HbmLivingProps.incrementBlackLung(player, 500);
+            } else if (this == ModItems.crackpipe) {
+                if (!player.capabilities.isCreativeMode) {
+                    stack.shrink(1);
+                    HbmLivingProps.incrementBlackLung(player, 500);
+                }
                 player.addPotionEffect(new PotionEffect(Objects.requireNonNull(MobEffects.NAUSEA), 200, 0));
                 player.heal(10F);
             }
@@ -101,20 +98,20 @@ public class ItemCigarette extends Item {
     public void addInformation(@NotNull ItemStack stack, @Nullable World worldIn, @NotNull List<String> tooltip, @NotNull ITooltipFlag flagIn) {
 
         if (this == ModItems.cigarette) {
-            tooltip.add(ChatFormatting.RED + "✓ Asbestos filter");
-            tooltip.add(ChatFormatting.RED + "✓ High in tar");
-            tooltip.add(ChatFormatting.RED + "✓ Tobacco contains 100% Polonium-210");
-            tooltip.add(ChatFormatting.RED + "✓ Yum");
+            tooltip.add(TextFormatting.RED + "✓ Asbestos filter");
+            tooltip.add(TextFormatting.RED + "✓ High in tar");
+            tooltip.add(TextFormatting.RED + "✓ Tobacco contains 100% Polonium-210");
+            tooltip.add(TextFormatting.RED + "✓ Yum");
         } else {
             String[] colors = new String[]{
-                    ChatFormatting.RED + "",
-                    ChatFormatting.GOLD + "",
-                    ChatFormatting.YELLOW + "",
-                    ChatFormatting.GREEN + "",
-                    ChatFormatting.AQUA + "",
-                    ChatFormatting.BLUE + "",
-                    ChatFormatting.DARK_PURPLE + "",
-                    ChatFormatting.LIGHT_PURPLE + "",
+                    TextFormatting.RED + "",
+                    TextFormatting.GOLD + "",
+                    TextFormatting.YELLOW + "",
+                    TextFormatting.GREEN + "",
+                    TextFormatting.AQUA + "",
+                    TextFormatting.BLUE + "",
+                    TextFormatting.DARK_PURPLE + "",
+                    TextFormatting.LIGHT_PURPLE + "",
             };
             int len = 2000;
             tooltip.add("This can't be good for me, but I feel " + colors[(int) (System.currentTimeMillis() % len * colors.length / len)] + "GREAT");
