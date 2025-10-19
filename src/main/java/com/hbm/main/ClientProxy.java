@@ -93,13 +93,11 @@ import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.EnumDyeColor;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
@@ -1061,6 +1059,10 @@ public class ClientProxy extends ServerProxy {
                             (float) mY, (float) mZ);
                     case "bluedust" -> new ParticleRedstone.Factory().createParticle(-1, world, x, y, z, 0.01F, 0.01F, 1F);
                     case "greendust" -> new ParticleRedstone.Factory().createParticle(-1, world, x, y, z, 0.01F, 0.5F, 0.1F);
+                    case "fireworks" -> {
+                        world.spawnParticle(EnumParticleTypes.FIREWORKS_SPARK, x, y, z, 0, 0, 0);
+                        yield null;
+                    }
                     case "largeexplode" -> {
                         Particle particle = new ParticleExplosionLarge.Factory().createParticle(-1, world, x, y, z, data.getFloat(
                                 "size"), 0.0F, 0.0F);
@@ -1103,14 +1105,15 @@ public class ClientProxy extends ServerProxy {
                     }
                     default -> throw new IllegalStateException("Unexpected value: " + mode);
                 };
+                if (fx != null) {
+                    fx.canCollide = !data.getBoolean("noclip");
 
-                fx.canCollide = !data.getBoolean("noclip");
+                    if (data.getInteger("overrideAge") > 0) {
+                        fx.setMaxAge(data.getInteger("overrideAge"));
+                    }
 
-                if(data.getInteger("overrideAge") > 0) {
-                    fx.setMaxAge(data.getInteger("overrideAge"));
+                    Minecraft.getMinecraft().effectRenderer.addEffect(fx);
                 }
-
-                Minecraft.getMinecraft().effectRenderer.addEffect(fx);
             }
             case "spark" -> {
                 String mode = data.getString("mode");
