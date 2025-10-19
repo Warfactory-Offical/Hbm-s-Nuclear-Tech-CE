@@ -90,9 +90,6 @@ public class HazardSystem {
             CacheBuilder.newBuilder().expireAfterWrite(VOLATILITY_WINDOW_SECONDS, TimeUnit.SECONDS).build();
     private static final Set<ComparableStack> volatileItemsBlacklist = ConcurrentHashMap.newKeySet();
     private static final ConcurrentHashMap<UUID, PlayerHazardData> playerHazardDataMap = new ConcurrentHashMap<>();
-    private static final ExecutorService hazardScanExecutor = Executors.newFixedThreadPool(Math.max(1,
-            Runtime.getRuntime().availableProcessors() - 1),
-            new ThreadFactoryBuilder().setNameFormat("HBM-Hazard-Scanner-%d").setDaemon(true).build());
     private static final Queue<InventoryDelta> inventoryDeltas = new ConcurrentLinkedQueue<>();
     private static final Set<UUID> playersToUpdate = ConcurrentHashMap.newKeySet();
     private static final double minRadRate = 0.000005D;
@@ -151,7 +148,7 @@ public class HazardSystem {
 
             if (!playersForFullScan.isEmpty() || !deltasForProcessing.isEmpty()) {
                 scanFuture =
-                        CompletableFuture.supplyAsync(() -> processHazardsAsync(playersForFullScan, deltasForProcessing), hazardScanExecutor).thenAcceptAsync(results -> {
+                        CompletableFuture.supplyAsync(() -> processHazardsAsync(playersForFullScan, deltasForProcessing)).thenAcceptAsync(results -> {
                     results.fullScanResults.forEach((uuid, result) -> {
                         PlayerHazardData phd = playerHazardDataMap.get(uuid);
                         if (phd != null) phd.setScanResult(result);
@@ -227,7 +224,7 @@ public class HazardSystem {
     }
 
     /**
-     * Call when doing hot reload. Currently unused.
+     * Call when doing hot reload.
      */
     public static void clearCaches() {
         MainRegistry.logger.info("Clearing HBM hazard calculation caches.");

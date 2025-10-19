@@ -101,7 +101,7 @@ public abstract class TileEntityCraneBase extends TileEntityMachineBase implemen
         if(oldSide == direction) direction = direction.getOpposite();
 
         boolean needSwapOutput = direction == getOutputSide();
-        world.setBlockState(pos, getBlockType().getDefaultState(), needSwapOutput ? 4 : 3);
+        world.setBlockState(pos, getBlockType().getDefaultState().withProperty(BlockHorizontal.FACING, direction), needSwapOutput ? 4 : 3);
 
         if(needSwapOutput)
             setOutputOverride(oldSide);
