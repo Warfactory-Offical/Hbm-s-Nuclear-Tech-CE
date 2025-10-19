@@ -65,6 +65,6 @@ public class Compat {
     public static final class ModIds {
         public static final String GROOVY_SCRIPT = "groovyscript";
         public static final String OPEN_COMPUTERS = "opencomputers";
-        public static final String CTM = "CTM";
+        public static final String CTM = "ctm";
     }
 }
