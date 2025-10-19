@@ -1250,7 +1250,7 @@ public class Fluids {
 
             Fluid compatFluid = new FluidNTM(fluid.getFFName(),
                     textureStill, textureFlowing, color)
-                    .setTemperature(fluid.temperature)
+                    .setTemperature(fluid.temperature + 273) // Fluid#setTemperature accepts Kelvin, not Celsius
                     .setColor(fluid.getColor())
                     .setDensity(1000)
                     .setViscosity(fluid.hasTrait(FT_Viscous.class) ? 6000 : 1000);
