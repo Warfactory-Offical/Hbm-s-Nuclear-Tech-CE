@@ -63,10 +63,7 @@ import com.hbm.sound.AudioWrapper;
 import com.hbm.sound.AudioWrapperClient;
 import com.hbm.sound.AudioWrapperClientStartStop;
 import com.hbm.sound.SoundLoopCrucible;
-import com.hbm.util.BobMathUtil;
-import com.hbm.util.ColorUtil;
-import com.hbm.util.I18nUtil;
-import com.hbm.util.Vec3dUtil;
+import com.hbm.util.*;
 import com.hbm.wiaj.cannery.Jars;
 import it.unimi.dsi.fastutil.ints.Int2LongOpenHashMap;
 import net.minecraft.block.Block;
@@ -114,7 +111,9 @@ import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.Level;
@@ -1869,5 +1868,10 @@ public class ClientProxy extends ServerProxy {
         } else color = ColorUtil.getAverageColorFromStack(stack);
         if(amplify) color = ColorUtil.amplifyColor(color);
         return color;
+    }
+
+
+    public void onLoadComplete(FMLLoadCompleteEvent event){
+        if (!Loader.isModLoaded(Compat.ModIds.CTM)) ModEventHandlerClient.ctmWarning = true;
     }
 }
