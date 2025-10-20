@@ -2,11 +2,12 @@ package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.GeneralConfig;
-import com.hbm.handler.radiation.ChunkRadiationManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -14,26 +15,27 @@ import java.util.Random;
 
 public class BlockOutgas extends BlockNTMOre {
 
-    boolean randomTick;
-    int rate;
-    boolean onNeighbour;
-    private static final int ANCIENT_SCRAP_GAS_RADIUS = 2;
+    private final boolean randomTick;
+    private final int rate;
+    private final boolean onBreak;
+    private final boolean onNeighbour;
 
-    public BlockOutgas(boolean randomTick, int rate, String s) {
+    public BlockOutgas(boolean randomTick, int rate, boolean onBreak, String s) {
         super(s, 1);
         this.setTickRandomly(randomTick);
         this.randomTick = randomTick;
         this.rate = rate;
+        this.onBreak = onBreak;
         this.onNeighbour = false;
     }
 
-    public BlockOutgas(boolean randomTick, int rate, boolean onNeighbour, String s) {
-        this(randomTick, rate, s);
+    public BlockOutgas(boolean randomTick, int rate, boolean onBreak, boolean onNeighbour, String s) {
+        super(s, 1);
+        this.setTickRandomly(randomTick);
+        this.randomTick = randomTick;
+        this.rate = rate;
+        this.onBreak = onBreak;
         this.onNeighbour = onNeighbour;
-    }
-
-    public boolean isOnNeighbour() {
-        return this.onNeighbour;
     }
 
     @Override
@@ -76,72 +78,67 @@ public class BlockOutgas extends BlockNTMOre {
     }
 
     @Override
-    public void breakBlock(World world, BlockPos pos, IBlockState state) {
-        super.breakBlock(world, pos, state);
+    public void onEntityWalk(World world, BlockPos pos, Entity entity) {
+        BlockPos up = pos.up();
+        if(this.randomTick && getGas() == ModBlocks.gas_asbestos) {
+            IBlockState upState = world.getBlockState(up);
+            if(upState.getBlock().isAir(upState, world, up)) {
 
-        Block block = state.getBlock();
+                if(world.rand.nextInt(10) == 0)
+                    world.setBlockState(up, ModBlocks.gas_asbestos.getDefaultState());
 
-        if (!(block instanceof BlockOutgas outgas)) {
-            return;
-        }
-
-        Block gas = outgas.getGas();
-
-        if (gas == Blocks.AIR) {
-            return;
-        }
-
-        // Spawn gas at broken block location
-        if (isAirBlock(world, pos)) {
-            world.setBlockState(pos, gas.getDefaultState(), 3);
-        }
-
-        // Spawn gas in neighboring blocks if applicable
-        if (outgas.isOnNeighbour()) {
-            spawnGasInAdjacentBlocks(world, pos, gas);
-        }
-
-        // Special handling for ancient scrap - larger radius
-        if (block == ModBlocks.ancient_scrap) {
-            spawnGasInRadius(world, pos, gas, ANCIENT_SCRAP_GAS_RADIUS);
-        }
-    }
-
-    private void spawnGasInAdjacentBlocks(World world, BlockPos pos, Block gas) {
-        for (EnumFacing dir : EnumFacing.values()) {
-            BlockPos adjacentPos = pos.offset(dir);
-            if (isAirBlock(world, adjacentPos)) {
-                world.setBlockState(adjacentPos, gas.getDefaultState(), 3);
+                for(int i = 0; i < 5; i++)
+                    world.spawnParticle(EnumParticleTypes.TOWN_AURA, pos.getX() + world.rand.nextFloat(), pos.getY() + 1.1, pos.getZ() + world.rand.nextFloat(), 0.0D, 0.0D, 0.0D);
             }
         }
     }
 
-    private void spawnGasInRadius(World world, BlockPos center, Block gas, int radius) {
-        for (int x = -radius; x <= radius; x++) {
-            for (int y = -radius; y <= radius; y++) {
-                for (int z = -radius; z <= radius; z++) {
-                    int manhattan = Math.abs(x + y + z);
+    @Override
+    public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune) {
+        if(onBreak) worldIn.setBlockState(pos, getGas().getDefaultState());
+        super.dropBlockAsItemWithChance(worldIn, pos, state, chance, fortune);
+    }
 
-                    // Skip center and blocks too far away
-                    if (manhattan > 0 && manhattan < 5) {
-                        BlockPos targetPos = center.add(x, y, z);
-                        if (isAirBlock(world, targetPos)) {
-                            world.setBlockState(targetPos, gas.getDefaultState(), 3);
-                        }
+    @Override
+    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
+        if(onNeighbour && !world.isRemote &&world.rand.nextInt(3) == 0) {
+            for(EnumFacing dir : EnumFacing.VALUES) {
+                BlockPos targetPos = pos.offset(dir);
+                IBlockState targetState = world.getBlockState(targetPos);
+                if(targetState.getBlock().isAir(targetState, world, targetPos)) {
+                    world.setBlockState(targetPos, getGas().getDefaultState(), 3);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void breakBlock(World world, BlockPos pos, IBlockState state) {
+        super.breakBlock(world, pos, state);
+        BlockOutgas block = (BlockOutgas) state.getBlock();
+        Block gas = block.getGas();
+        if (block == ModBlocks.ancient_scrap) {
+            for (int x = -2; x <= 2; x++) for (int y = -2; y <= 2; y++) for (int z = -2; z <= 2; z++) {
+                int manhattan = Math.abs(x + y + z);
+                if (manhattan > 0 && manhattan < 5) {
+                    BlockPos targetPos = pos.add(x, y, z);
+                    IBlockState state1 = world.getBlockState(targetPos);
+                    if (state1.getBlock().isAir(state1, world, targetPos)) {
+                        world.setBlockState(targetPos, gas.getDefaultState(), 3);
                     }
                 }
             }
         }
     }
 
-    private boolean isAirBlock(World world, BlockPos pos) {
-        return world.getBlockState(pos).getBlock() == Blocks.AIR;
-    }
-
-
     @Override
     public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
-        if (this == ModBlocks.block_corium_cobble) ChunkRadiationManager.proxy.incrementRad(world, pos, 1000F, 10000F);
-        if (this == ModBlocks.ancient_scrap) ChunkRadiationManager.proxy.incrementRad(world, pos, 150F, 1500F);
+        if (world.isRemote) return;
+        EnumFacing dir = EnumFacing.VALUES[rand.nextInt(6)];
+        BlockPos randomPos = pos.offset(dir);
+        IBlockState neighbourPos = world.getBlockState(randomPos);
+        if(neighbourPos.getBlock().isAir(neighbourPos, world, randomPos)) {
+            world.setBlockState(randomPos, getGas().getDefaultState(), 3);
+        }
     }
 }
