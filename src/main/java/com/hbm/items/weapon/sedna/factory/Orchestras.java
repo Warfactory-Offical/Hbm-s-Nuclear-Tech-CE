@@ -15,7 +15,6 @@ import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.particle.SpentCasing;
 import com.hbm.particle.helper.CasingCreator;
-import com.hbm.render.anim.HbmAnimations;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.util.EntityDamageUtil;
@@ -23,9 +22,11 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
@@ -936,10 +937,16 @@ public class Orchestras {
         if(entity.world.isRemote) return;
         HbmAnimationsSedna.AnimType type = ItemGunBaseNT.getLastAnim(stack, ctx.configIndex);
         int timer = ItemGunBaseNT.getAnimTimer(stack, ctx.configIndex);
+        boolean aiming = ItemGunBaseNT.getIsAiming(stack);
 
         if(type == HbmAnimationsSedna.AnimType.CYCLE) {
             if(timer == 0 && ctx.config.getReceivers(stack)[0].getMagazine(stack).getType(stack, null) == XFactory12ga.g12_equestrian_bj) {
                 ItemGunBaseNT.setTimer(stack, 0, 20);
+            }
+
+            if(timer == 2) {
+                SpentCasing casing = ctx.config.getReceivers(stack)[0].getMagazine(stack).getCasing(stack, ctx.inventory);
+                if(casing != null) CasingCreator.composeEffect(entity.world, ctx.getPlayer(), 0.375, aiming ? -0.0625 : -0.125, aiming ? -0.125 : -0.25D, 0, 0.18, -0.12, 0.01, -10F + (float)entity.getRNG().nextGaussian() * 2.5F, (float)entity.getRNG().nextGaussian() * -20F + 15F, casing.getName(), false, 60, 0.5D, 20);
             }
         }
 
@@ -947,12 +954,30 @@ public class Orchestras {
             if(timer == 0) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.dryFireClick, SoundCategory.PLAYERS, 1F, 1F);
         }
         if(type == HbmAnimationsSedna.AnimType.RELOAD) {
-            if(timer == 2) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.magRemove, SoundCategory.PLAYERS, 1F, 1F);
-            if(timer == 32) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.magInsert, SoundCategory.PLAYERS, 1F, 1F);
+            if(timer == 0) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.revolverCock, SoundCategory.PLAYERS, 1F, 1F);
+            if(timer == 4) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.revolverClose, SoundCategory.PLAYERS, 1F, 0.75F);
+            if(timer == 16) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.magSmallRemove, SoundCategory.PLAYERS, 1F, 1F);
+            if(timer == 30) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.magRemove, SoundCategory.PLAYERS, 1F, 1F);
+            if(timer == 55) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.impact, SoundCategory.PLAYERS, 0.5F, 1F);
+            if(timer == 65) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.magInsert, SoundCategory.PLAYERS, 1F, 1F);
+            if(timer == 74) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.magSmallInsert, SoundCategory.PLAYERS, 1F, 1F);
+            if(timer == 88) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.revolverClose, SoundCategory.PLAYERS, 1F, 0.75F);
+            if(timer == 100) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.revolverCock, SoundCategory.PLAYERS, 1F, 1F);
+
+            if(timer == 55) ctx.config.getReceivers(stack)[0].getMagazine(stack).reloadAction(stack, ctx.inventory);
         }
+
         if(type == HbmAnimationsSedna.AnimType.INSPECT) {
-            if(timer == 2) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.magRemove, SoundCategory.PLAYERS, 1F, 1F);
-            if(timer == 28) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.magInsert, SoundCategory.PLAYERS, 1F, 1F);
+            if(timer == 20) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.gulp, SoundCategory.PLAYERS, 1F, 1F);
+            if(timer == 25) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.gulp, SoundCategory.PLAYERS, 1F, 1F);
+            if(timer == 30) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.gulp, SoundCategory.PLAYERS, 1F, 1F);
+            if(timer == 35) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.gulp, SoundCategory.PLAYERS, 1F, 1F);
+            if(timer == 50) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.groan, SoundCategory.PLAYERS, 1F, 1F);
+            if(timer == 60) {
+                entity.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 30 * 20, 2));
+                entity.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 30 * 20, 2));
+                entity.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 10 * 20, 0)); // confusion is nausea, yeah?..
+            }
         }
     };
 

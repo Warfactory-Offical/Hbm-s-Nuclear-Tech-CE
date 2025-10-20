@@ -94,7 +94,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.model.ModelBiped;
@@ -142,8 +141,6 @@ import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -330,8 +327,10 @@ public class ModEventHandlerClient {
                 "inventory"));
         ModelLoader.setCustomModelResourceLocation(ModItems.conveyor_wand, 3, new ModelResourceLocation(ModBlocks.conveyor_triple.getRegistryName(),
                 "inventory"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ModBlocks.fence_metal), 1, new ModelResourceLocation("hbm:fence_metal_post", "inventory"));
 
         //FIXME: this is a dogshit solution
+        // now 2 dogshit solutions!
 
 
         for (ItemAutogen item : ItemAutogen.INSTANCES) {
@@ -1692,14 +1691,10 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
                 RenderScreenOverlay.renderScope(resolution, cfg.getScopeTexture(held));
             }
         }
-        Minecraft mc = Minecraft.getMinecraft();
+
         //prevents NBT changes (read: every fucking tick) on guns from bringing up the item's name over the hotbar
-        ItemStack highlightedItem = ObfuscationReflectionHelper.getPrivateValue(GuiIngame.class, mc.ingameGUI, "highlightingItemStack", "field_92016_l");
-        if (!held.isEmpty() && held.getItem() instanceof ItemGunBaseNT) {
-            if (highlightedItem != null && !highlightedItem.isEmpty()
-                    && highlightedItem.getItem() == held.getItem()) {
-                ObfuscationReflectionHelper.setPrivateValue(GuiIngame.class, mc.ingameGUI, held, "highlightingItemStack", "field_92016_l");
-            }
+        if(!held.isEmpty() && held.getItem() instanceof ItemGunBaseNT && !Minecraft.getMinecraft().ingameGUI.highlightingItemStack.isEmpty() && Minecraft.getMinecraft().ingameGUI.highlightingItemStack.getItem() == held.getItem()) {
+            Minecraft.getMinecraft().ingameGUI.highlightingItemStack = held;
         }
 
         /// HANDLE ANIMATION BUSES ///

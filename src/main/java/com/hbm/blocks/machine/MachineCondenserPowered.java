@@ -30,9 +30,9 @@ public class MachineCondenserPowered extends BlockDummyable implements ILookOver
 	public TileEntity createNewTileEntity(World p_149915_1_, int meta) {
 		if(meta >= 12)
 			return new TileEntityCondenserPowered();
-
-		if(meta >= 8)
-			return new TileEntityProxyCombo(false, true, true);
+		// go fuck yourself you two xd
+		// metallolom just WHY do you set the (meta >= 8) when it is (meta >= 6) dude it's just ctrl+c ctrl+v goddammit
+		if(meta >= 6) return new TileEntityProxyCombo().power().fluid();
 
 		return null;
 	}

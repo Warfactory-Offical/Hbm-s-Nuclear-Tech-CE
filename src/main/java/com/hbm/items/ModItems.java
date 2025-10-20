@@ -1350,8 +1350,6 @@ public class ModItems {
     public static final Item apple_schrabidium1 = new ItemFoodBase(10, 50, true, "apple_schrabidium1", "apple_schrabidium").setAlwaysEdible().setCreativeTab(MainRegistry.consumableTab);
     public static final Item apple_schrabidium2 = new ItemFoodBase(20, 100, true, "apple_schrabidium2", "apple_schrabidium").setAlwaysEdible().setCreativeTab(MainRegistry.consumableTab);
     public static final Item tem_flakes = new ItemTemFlakes(0, 0, false, "tem_flakes").setCreativeTab(MainRegistry.consumableTab);
-    public static final Item tem_flakes1 = new ItemTemFlakes(0, 0, false, "tem_flakes1").setCreativeTab(MainRegistry.consumableTab);
-    public static final Item tem_flakes2 = new ItemTemFlakes(0, 0, false, "tem_flakes2").setCreativeTab(MainRegistry.consumableTab);
     public static final Item glowing_stew = new ItemFoodSoup(6, "glowing_stew").setCreativeTab(MainRegistry.consumableTab);
     public static final Item balefire_scrambled = new ItemFoodSoup(30, "balefire_scrambled").setCreativeTab(MainRegistry.consumableTab);
     public static final Item balefire_and_ham = new ItemFoodSoup(60, "balefire_and_ham").setCreativeTab(MainRegistry.consumableTab);

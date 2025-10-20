@@ -269,6 +269,8 @@ public class ShredderRecipes extends SerializableRecipe {
         ShredderRecipes.setRecipe(Blocks.SAND, new ItemStack(ModItems.dust, 2));
         ShredderRecipes.setRecipe(ModBlocks.block_slag, new ItemStack(ModItems.powder_cement, 4));
         ShredderRecipes.setRecipe(ModBlocks.ore_aluminium, OreDictManager.DictFrame.fromOne(ModItems.chunk_ore, ItemEnums.EnumChunkType.CRYOLITE, 2));
+        ShredderRecipes.setRecipe(ModBlocks.block_bakelite, new ItemStack(ModItems.powder_bakelite, 9));
+        ShredderRecipes.setRecipe(ModItems.ingot_bakelite, new ItemStack(ModItems.powder_bakelite));
 
         List<ItemStack> logs = OreDictionary.getOres("logWood");
         List<ItemStack> planks = OreDictionary.getOres("plankWood");
