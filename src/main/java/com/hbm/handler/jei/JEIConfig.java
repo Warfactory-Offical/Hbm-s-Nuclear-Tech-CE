@@ -142,6 +142,7 @@ public class JEIConfig implements IModPlugin {
     private ShredderRecipeHandler shredderHandler;
     private VacuumRecipeHandler vacuumHandler;
     private ZirnoxRecipeHandler zirnoxHandler;
+    private PUREXRecipeHandler purexHandler;
 
     @Override
     public void register(@NotNull IModRegistry registry) {
@@ -233,6 +234,7 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_exposure_chamber), EXPOSURE);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_radiolysis), RADIOLYSIS);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.furnace_combination), COMBINATION);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_purex), PUREX);
 
         registry.addRecipes(assemblyMachineRecipeHandler.getRecipes(), ASSEMBLY_MACHINE);
         registry.addRecipes(JeiRecipes.getCyclotronRecipes(), CYCLOTRON);
@@ -298,6 +300,7 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipes(exposureChamberHandler.getRecipes(), EXPOSURE);
         registry.addRecipes(JeiRecipes.getRadiolysisRecipes(), RADIOLYSIS);
         registry.addRecipes(combinationHandler.getRecipes(), COMBINATION);
+        registry.addRecipes(purexHandler.getRecipes(), PUREX);
 
         registry.addRecipeClickArea(GUIMachineCoker.class, 60, 22, 32, 18, COKER);
 		registry.addRecipeClickArea(GUIMixer.class, 62, 36, 52, 44, MIXER);
@@ -466,6 +469,7 @@ public class JEIConfig implements IModPlugin {
                 sawmillHandler = new SawmillHandler(help),
                 vacuumHandler = new VacuumRecipeHandler(help),
                 zirnoxHandler = new ZirnoxRecipeHandler(help),
+                purexHandler = new PUREXRecipeHandler(help),
                 new GasCentrifugeRecipeHandler(help),
                 new BreederRecipeHandler(help),
                 new CyclotronRecipeHandler(help),
@@ -483,8 +487,7 @@ public class JEIConfig implements IModPlugin {
                 new FusionRecipeHandler(help),
                 new HadronRecipeHandler(help),
                 new DFCRecipeHandler(help),
-                new BookRecipeHandler(help),
-                new PUREXRecipeHandler(help));
+                new BookRecipeHandler(help));
     }
 
     private static final ISubtypeRegistry.ISubtypeInterpreter metadataFluidContainerInterpreter = stack -> {
