@@ -3,6 +3,8 @@ package com.hbm.tileentity.machine;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import com.hbm.api.fluid.IFluidStandardTransceiver;
+import com.hbm.capability.NTMCableEnergyCapabilityWrapper;
+import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.trait.CBT_Atmosphere;
@@ -19,6 +21,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import org.jetbrains.annotations.NotNull;
 
@@ -174,6 +177,8 @@ public class TileEntityCondenser extends TileEntityLoadedBase implements ITickab
 			return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(
 					new NTMFluidHandlerWrapper(this)
 			);
+		} else if (capability == CapabilityEnergy.ENERGY) {
+            return CapabilityEnergy.ENERGY.cast(new NTMEnergyCapabilityWrapper(this));
 		}
 		return super.getCapability(capability, facing);
 	}
