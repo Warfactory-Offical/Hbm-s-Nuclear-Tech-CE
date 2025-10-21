@@ -224,7 +224,7 @@ public class HbmWorldGen implements IWorldGenerator {
         //End ores
         DungeonToolbox.generateOre(world, rand, i, j, parseInt(CompatibilityConfig.endTixiteSpawn.get(dimID)), 6, 0, 127, ModBlocks.ore_tikite, Blocks.END_STONE);
 
-        if (dimID == 0 && GeneralConfig.enable528) {
+        if (dimID == 0) {
             Random colRand = new Random(world.getSeed() + 5);
             int colX = (int) (colRand.nextGaussian() * 1500);
             int colZ = (int) (colRand.nextGaussian() * 1500);
