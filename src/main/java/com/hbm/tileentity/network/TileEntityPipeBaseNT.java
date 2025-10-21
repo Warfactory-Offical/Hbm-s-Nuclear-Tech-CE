@@ -14,6 +14,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
+import net.minecraft.world.WorldServer;
 
 @AutoRegister
 public class TileEntityPipeBaseNT extends TileEntity implements IFluidPipeMK2, IFluidCopiable, ITickable {
@@ -52,7 +53,7 @@ public class TileEntityPipeBaseNT extends TileEntity implements IFluidPipeMK2, I
         this.type = type;
         this.markDirty();
 
-        if (!world.isRemote) {
+        if (world instanceof WorldServer) {
             IBlockState state = world.getBlockState(pos);
             world.notifyBlockUpdate(pos, state, state, 3);
             world.markBlockRangeForRenderUpdate(pos, pos);
