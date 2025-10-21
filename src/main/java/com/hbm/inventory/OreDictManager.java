@@ -83,15 +83,16 @@ public class OreDictManager {
     public static final String KEY_TOOL_SCREWDRIVER = "ntmscrewdriver";
     public static final String KEY_TOOL_HANDDRILL = "ntmhanddrill";
     public static final String KEY_TOOL_CHEMISTRYSET = "ntmchemistryset";
-    public static final String KEY_CIRCUIT_BISMUTH = "circuitVersatile";
-    public static final DictFrame WOOD = new DictFrame("Wood");
+    public static final String KEY_TOOL_TORCH = "ntmtorch";
 
+    public static final String KEY_GLYPHID_MEAT = "glyphidMeat";
     /*
      * MATERIALS
      */
     /*
      * VANILLA
      */
+    public static final DictFrame WOOD = new DictFrame("Wood");
     public static final DictFrame BONE = new DictFrame("Bone");
     public static final DictFrame COAL = new DictFrame("Coal");
     public static final DictFrame IRON = new DictFrame("Iron");
@@ -628,10 +629,14 @@ public class OreDictManager {
         OreDictionary.registerOre(KEY_TOOL_HANDDRILL, new ItemStack(hand_drill_desh, 1, OreDictionary.WILDCARD_VALUE));
         OreDictionary.registerOre(KEY_TOOL_CHEMISTRYSET, new ItemStack(chemistry_set, 1, OreDictionary.WILDCARD_VALUE));
         OreDictionary.registerOre(KEY_TOOL_CHEMISTRYSET, new ItemStack(chemistry_set_boron, 1, OreDictionary.WILDCARD_VALUE));
-        //TODO
-//		OreDictionary.registerOre(KEY_TOOL_TORCH, new ItemStack(blowtorch, 1, OreDictionary.WILDCARD_VALUE));
-//		OreDictionary.registerOre(KEY_TOOL_TORCH, new ItemStack(acetylene_torch, 1, OreDictionary.WILDCARD_VALUE));
+		OreDictionary.registerOre(KEY_TOOL_TORCH, new ItemStack(blowtorch, 1, OreDictionary.WILDCARD_VALUE));
+		OreDictionary.registerOre(KEY_TOOL_TORCH, new ItemStack(acetylene_torch, 1, OreDictionary.WILDCARD_VALUE));
 
+        /*
+         * GLYPHID M E A T
+         */
+        OreDictionary.registerOre(KEY_GLYPHID_MEAT, new ItemStack(glyphid_meat));
+        OreDictionary.registerOre(KEY_GLYPHID_MEAT, new ItemStack(glyphid_meat_grilled));
 
         for (NTMMaterial mat : Mats.orderedList) {
             if (mat.smeltable == NTMMaterial.SmeltingBehavior.SMELTABLE) {

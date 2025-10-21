@@ -49,8 +49,7 @@ public class ItemPoolsPile {
                     weighted(ModItems.bottle_nuka, 0, 1, 2, 20),
                     weighted(ModItems.bottle_quantum, 0, 1, 2, 1),
                     weighted(ModItems.definitelyfood, 0, 5, 12, 20),
-                    // TODO
-                    //weighted(ModItems.egg_glyphid, 0, 1, 3, 30),
+                    weighted(ModItems.egg_glyphid, 0, 1, 3, 30),
                     weighted(ModItems.syringe_metal_stimpak, 0, 1, 1, 5),
                     weighted(ModItems.iv_blood, 0, 1, 1, 10),
                     weighted(Items.EXPERIENCE_BOTTLE, 0, 1, 3, 5),

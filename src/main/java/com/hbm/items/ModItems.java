@@ -1331,6 +1331,7 @@ public class ModItems {
     public static final Item chocolate_milk = new ItemEnergy("chocolate_milk").setCreativeTab(MainRegistry.consumableTab);
     public static final Item coffee = new ItemEnergy("coffee").setCreativeTab(MainRegistry.consumableTab);
     public static final Item coffee_radium = new ItemEnergy("coffee_radium").setCreativeTab(MainRegistry.consumableTab);
+    public static final Item chocolate = new ItemPill(0, "chocolate").setCreativeTab(MainRegistry.consumableTab);
     public static final Item cap_nuka = new ItemBase("cap_nuka").setCreativeTab(MainRegistry.consumableTab);
     public static final Item cap_quantum = new ItemBase("cap_quantum").setCreativeTab(MainRegistry.consumableTab);
     public static final Item cap_sparkle = new ItemBase("cap_sparkle").setCreativeTab(MainRegistry.consumableTab);

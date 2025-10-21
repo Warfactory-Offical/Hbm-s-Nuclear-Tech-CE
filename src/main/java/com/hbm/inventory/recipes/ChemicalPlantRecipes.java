@@ -178,8 +178,8 @@ public class ChemicalPlantRecipes extends GenericRecipes<GenericRecipe> {
         this.register(new GenericRecipe("chem.kevlar").setup(60, 300)
                 .inputFluids(new FluidStack(Fluids.AROMATICS, 200), new FluidStack(Fluids.NITRIC_ACID, 100), new FluidStack(GeneralConfig.enable528 ? Fluids.PHOSGENE : Fluids.CHLORINE, 100))
                 .outputItems(new ItemStack(ModItems.plate_kevlar, 4)));
-        // TODO
-        /*this.register(new GenericRecipe("chem.meth").setup(60, 300)
+
+        this.register(new GenericRecipe("chem.meth").setup(60, 300)
                 .inputItems(new RecipesCommon.ComparableStack(Items.WHEAT), new RecipesCommon.ComparableStack(Items.DYE, 2, 3))
                 .inputFluids(new FluidStack(Fluids.LUBRICANT, 400), new FluidStack(Fluids.PEROXIDE, 500))
                 .outputItems(new ItemStack(ModItems.chocolate, 4)));
@@ -193,7 +193,7 @@ public class ChemicalPlantRecipes extends GenericRecipes<GenericRecipe> {
                 .inputItems(new RecipesCommon.OreDictStack(KEY_GLYPHID_MEAT, 3))
                 .inputFluids(new FluidStack(Fluids.WATER, 1_000))
                 .outputItems(new ItemStack(ModItems.sulfur, 4), new ItemStack(ModItems.niter, 3))
-                .outputFluids(new FluidStack(Fluids.SALIENT, 250)));*/
+                .outputFluids(new FluidStack(Fluids.SALIENT, 250)));
 
         this.register(new GenericRecipe("chem.rustysteel").setup(40, 100)
                 .inputItems(new RecipesCommon.ComparableStack(ModBlocks.deco_steel, 8))

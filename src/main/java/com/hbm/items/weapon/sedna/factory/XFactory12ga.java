@@ -1,6 +1,8 @@
 package com.hbm.items.weapon.sedna.factory;
 
+import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.bomb.BlockDetonatable;
+import com.hbm.blocks.generic.BlockMeta;
 import com.hbm.capability.HbmLivingCapability;
 import com.hbm.capability.HbmLivingProps;
 import com.hbm.entity.projectile.EntityBulletBaseMK4;
@@ -160,15 +162,12 @@ public class XFactory12ga {
                 bullet.setPosition(mop.hitVec.x, mop.hitVec.y, mop.hitVec.z);
                 return;
             }
-            if(b instanceof BlockDetonatable) {
-                ((BlockDetonatable) b).onShot(bullet.world, mop.getBlockPos());
+            if(b instanceof BlockDetonatable detonatable) {
+                detonatable.onShot(bullet.world, mop.getBlockPos());
             }
-            // TODO
-            /*if(b == ModBlocks.deco_crt) {
-                int meta = bullet.world.getBlockMetadata(mop.blockX, mop.blockY, mop.blockZ);
-                bullet.world.setBlockMetadataWithNotify(mop.blockX, mop.blockY, mop.blockZ, meta % 4 + 4, 3);
-            }*/
-
+            if (b == ModBlocks.deco_crt) {
+                bullet.world.setBlockState(mop.getBlockPos(), bs.withProperty(BlockMeta.META, b.getMetaFromState(bs) % 4 + 4));
+            }
             ForgeDirection dir = ForgeDirection.getOrientation(mop.sideHit);
             Vec3d face = new Vec3d(dir.offsetX, dir.offsetY, dir.offsetZ);
             Vec3d vel = new Vec3d(bullet.motionX, bullet.motionY, bullet.motionZ).normalize();

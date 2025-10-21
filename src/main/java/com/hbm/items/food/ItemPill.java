@@ -11,6 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumHand;
@@ -81,6 +82,15 @@ public class ItemPill extends ItemFood {
             if (this == ModItems.xanax) {
                 double digamma = HbmLivingProps.getDigamma(player);
                 HbmLivingProps.setDigamma(player, Math.max(digamma - 0.5D, 0D));
+            }
+
+            if(this == ModItems.chocolate) {
+                if(rand.nextInt(25) == 0) {
+                    player.attackEntityFrom(ModDamageSource.overdose, 1000); //mlbv: chocolate overdose? seriously?
+                }
+                player.addPotionEffect(new PotionEffect(MobEffects.HASTE, 60 * 20, 3));
+                player.addPotionEffect(new PotionEffect(MobEffects.SPEED, 60 * 20, 3));
+                player.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 60 * 20, 3));
             }
 
             if (this == ModItems.fmn) {

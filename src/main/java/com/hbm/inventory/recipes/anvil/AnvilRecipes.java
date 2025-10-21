@@ -729,7 +729,7 @@ public class AnvilRecipes extends SerializableRecipe {
 
 				}
 		).setTier(2));
-		/*constructionRecipes.add(new AnvilConstructionRecipe(
+		constructionRecipes.add(new AnvilConstructionRecipe(
 				new ComparableStack(ModBlocks.deco_crt, 1, OreDictionary.WILDCARD_VALUE),
 				new AnvilOutput[] {
 						new AnvilOutput(new ItemStack(ModItems.crt_display, 1)),
@@ -779,7 +779,7 @@ public class AnvilRecipes extends SerializableRecipe {
 						new AnvilOutput(new ItemStack(ModItems.flame_pony, 1), 0.01F)
 
 				}
-		).setTier(2));*/
+		).setTier(2));
 		constructionRecipes.add(new AnvilConstructionRecipe(
 				new ComparableStack(ModBlocks.filing_cabinet),
 				new AnvilOutput[] {
@@ -996,15 +996,13 @@ public class AnvilRecipes extends SerializableRecipe {
 				new AnvilOutput(new ItemStack(ModItems.plate_lead, 2)),
 				new AnvilOutput(new ItemStack(ModItems.nuclear_waste_vitrified, 10))
 		}).setTier(3));
-
-		// TODO: glyphids
-		/*constructionRecipes.add(new AnvilConstructionRecipe(
+		constructionRecipes.add(new AnvilConstructionRecipe(
 				new ComparableStack(ModItems.egg_glyphid), new AnvilOutput[] {
 				new AnvilOutput(new ItemStack(ModItems.glyphid_meat, 2)),
 				new AnvilOutput(new ItemStack(ModItems.glyphid_meat, 1), 0.5F),
 				new AnvilOutput(new ItemStack(Items.BONE, 1), 0.75F),
 				new AnvilOutput(new ItemStack(Items.EXPERIENCE_BOTTLE, 1), 0.5F)
-		}).setTier(1));*/
+		}).setTier(1));
 	}
 
 	public static void pullFromAssembler(ComparableStack result, int tier) {
