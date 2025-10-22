@@ -89,7 +89,7 @@ public class ConsumableRecipes {
         CraftingManager.addShapelessAuto(new ItemStack(ModItems.bottle2_fritz, 1),ModItems.bottle2_empty, Items.POTIONITEM, Items.SUGAR, W.dust() );
 
         //Syringes
-        CraftingManager.addRecipeAuto(new ItemStack(ModItems.syringe_empty, 6),"P", "C", "B", 'B', Item.getItemFromBlock(Blocks.IRON_BARS), 'C', ModItems.cell, 'P', IRON.plate() );
+        CraftingManager.addRecipeAuto(new ItemStack(ModItems.syringe_empty, 6),"P", "C", "B", 'B', Item.getItemFromBlock(Blocks.IRON_BARS), 'C', new ItemStack(ModItems.cell), 'P', IRON.plate() );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.syringe_antidote, 6),"SSS", "PMP", "SSS", 'S', ModItems.syringe_empty, 'P', Items.PUMPKIN_SEEDS, 'M', Items.MILK_BUCKET );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.syringe_antidote, 6),"SPS", "SMS", "SPS", 'S', ModItems.syringe_empty, 'P', Items.PUMPKIN_SEEDS, 'M', Items.MILK_BUCKET );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.syringe_antidote, 6),"SSS", "PMP", "SSS", 'S', ModItems.syringe_empty, 'P', Items.PUMPKIN_SEEDS, 'M', Items.REEDS );

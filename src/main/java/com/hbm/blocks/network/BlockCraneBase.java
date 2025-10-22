@@ -61,9 +61,9 @@ public abstract class BlockCraneBase extends BlockContainer implements IToolable
         if (tool != ToolType.SCREWDRIVER) return false;
         if (!(world.getTileEntity(new BlockPos(x, y, z)) instanceof TileEntityCraneBase craneTileEntity)) return false;
         if (player.isSneaking()) {
-            craneTileEntity.setOutputOverride(side);
+            craneTileEntity.setOutputOverride(player.getHorizontalFacing().getOpposite());
         } else {
-            craneTileEntity.setInput(side);
+            craneTileEntity.setInput(player.getHorizontalFacing().getOpposite());
         }
         return true;
     }

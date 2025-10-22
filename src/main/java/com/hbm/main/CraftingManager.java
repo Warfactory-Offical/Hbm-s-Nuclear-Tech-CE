@@ -151,11 +151,11 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModItems.crt_display, 4), " A ", "SGS", " T ", 'A', AL.dust(), 'S', STEEL.plate(), 'G', KEY_ANYPANE, 'T', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.VACUUM_TUBE) );
 
 		addRecipeAuto(new ItemStack(ModItems.cell, 6), " S ", "G G", " S ", 'S', STEEL.plate(), 'G', KEY_ANYPANE );
-		addRecipeAuto(new ItemStack(ModItems.cell, 8, Fluids.DEUTERIUM.getID()), "DDD", "DTD", "DDD", 'D', ModItems.cell, 'T', ModItems.mike_deut );
+		addRecipeAuto(new ItemStack(ModItems.cell, 8, Fluids.DEUTERIUM.getID()), "DDD", "DTD", "DDD", 'D', new ItemStack(ModItems.cell), 'T', ModItems.mike_deut );
 		addRecipeAuto(new ItemStack(ModItems.particle_empty, 2), "STS", "G G", "STS", 'S', PB.plateCast(), 'T', ModItems.coil_gold, 'G', KEY_ANYPANE );
 		addShapelessAuto(new ItemStack(ModItems.particle_copper, 1), ModItems.particle_empty, CU.dust(), ModItems.pellet_charged );
 		addShapelessAuto(new ItemStack(ModItems.particle_lead, 1), ModItems.particle_empty, PB.dust(), ModItems.pellet_charged );
-		addShapelessAuto(new ItemStack(ModItems.cell, 1, Fluids.AMAT.getID()), ModItems.particle_aproton, ModItems.particle_aelectron, ModItems.cell );
+		addShapelessAuto(new ItemStack(ModItems.cell, 1, Fluids.AMAT.getID()), ModItems.particle_aproton, ModItems.particle_aelectron, new ItemStack(ModItems.cell) );
 		addShapelessAuto(new ItemStack(ModItems.particle_amat, 1), ModItems.particle_aproton, ModItems.particle_aelectron, ModItems.particle_empty );
 
 		addRecipeAuto(new ItemStack(ModItems.canister_empty, 2), "S ", "AA", "AA", 'S', STEEL.plate(), 'A', AL.plate() );
