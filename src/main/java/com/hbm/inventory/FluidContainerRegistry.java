@@ -18,6 +18,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -133,6 +134,7 @@ public class FluidContainerRegistry {
     /**
      * @return amount of a specific fluid in the given full container stack.
      */
+    @Contract(pure = true)
     public static int getFluidContent(ItemStack stack, FluidType type) {
         if (stack == null || stack.isEmpty() || type == null) return 0;
         FluidContainer recipe = getFluidContainer(stack);
@@ -143,6 +145,7 @@ public class FluidContainerRegistry {
      * Gets the FluidType contained in a full container stack.
      */
     @NotNull
+    @Contract(pure = true, value = "_->!null")
     public static FluidType getFluidType(@Nullable ItemStack stack) {
         if (stack == null || stack.isEmpty()) return Fluids.NONE;
         FluidContainer recipe = getFluidContainer(stack);
@@ -150,9 +153,11 @@ public class FluidContainerRegistry {
     }
 
     /**
-     * Gets the full container item for a given empty container and fluid type.
+     * Gets the full container item for a given empty container and fluid type. Count insensitive.
+     * @return a copy of the full container item for the given empty container and fluid type, or null if none is found.
      */
     @Nullable
+    @Contract(pure = true, value = "null,_ -> null; _,null -> null")
     public static ItemStack getFullContainer(ItemStack stack, FluidType type) {
         if (stack == null || stack.isEmpty() || type == null) return null;
         FluidContainer recipe = getFillRecipe(stack, type);
@@ -161,8 +166,10 @@ public class FluidContainerRegistry {
 
     /**
      * Gets the empty container item for a given full container stack.
+     * @return a copy of the empty container item for the given full container stack, or null if none is found.
      */
     @Nullable
+    @Contract(pure = true, value = "null -> null")
     public static ItemStack getEmptyContainer(ItemStack stack) {
         if (stack == null || stack.isEmpty()) return null;
         FluidContainer recipe = getFluidContainer(stack);
@@ -174,6 +181,7 @@ public class FluidContainerRegistry {
      * @return the FluidContainer of the given full container stack, or null if none is found.
      */
     @Nullable
+    @Contract(pure = true)
     public static FluidContainer getFluidContainer(@NotNull ItemStack fullStack) {
         if (fullStack.isEmpty()) return null;
         Int2ObjectOpenHashMap<FluidContainer> metaMap = fullContainerMapByItem.get(fullStack.getItem());
@@ -188,6 +196,7 @@ public class FluidContainerRegistry {
      * @return the FluidContainer of the given empty container and FluidType, or null if none is found.
      */
     @Nullable
+    @Contract(pure = true, value = "_,null -> null")
     public static FluidContainer getFillRecipe(@NotNull ItemStack emptyStack, @Nullable FluidType type) {
         if (emptyStack.isEmpty() || type == null) return null;
         Int2ObjectOpenHashMap<Candidates> metaMap = emptyContainerMapByItem.get(emptyStack.getItem());
@@ -200,6 +209,7 @@ public class FluidContainerRegistry {
     }
 
     @Nullable
+    @Contract(pure = true)
     public static FluidContainer getFillRecipe(@NotNull ItemStack emptyStack, @NotNull FluidStack fluid) {
         return getFillRecipe(emptyStack, NTMFluidCapabilityHandler.getFluidType(fluid.getFluid()));
     }
@@ -211,6 +221,7 @@ public class FluidContainerRegistry {
      * @apiNote the returned List must not be modified.
      */
     @NotNull
+    @Contract(pure = true, value = "_->!null")
     public static List<FluidContainer> getFillRecipes(@NotNull ItemStack emptyStack) {
         if (emptyStack.isEmpty()) return Collections.emptyList();
         Int2ObjectOpenHashMap<Candidates> metaMap = emptyContainerMapByItem.get(emptyStack.getItem());
@@ -221,6 +232,7 @@ public class FluidContainerRegistry {
         return bucket != null ? bucket.asList : Collections.emptyList();
     }
 
+    @Contract(pure = true)
     public static int getMaxFillCapacity(@NotNull ItemStack emptyStack) {
         if (emptyStack.isEmpty()) return 0;
         Int2ObjectOpenHashMap<Candidates> metaMap = emptyContainerMapByItem.get(emptyStack.getItem());
