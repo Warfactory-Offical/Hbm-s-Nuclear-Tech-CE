@@ -110,7 +110,7 @@ public class TileEntityDiFurnace extends TileEntityMachinePolluting implements I
                 progress += extension ? 3 : 1;
 
                 if (this.progress >= TileEntityDiFurnace.processingSpeed) {
-                    this.progress = 0;
+                    this.progress -= TileEntityDiFurnace.processingSpeed;
                     this.processItem();
                     markDirty = true;
                 }
@@ -241,7 +241,6 @@ public class TileEntityDiFurnace extends TileEntityMachinePolluting implements I
     }
 
     private void processItem() {
-        if (!canProcess()) return;
 
         ItemStack slotA = inventory.getStackInSlot(0);
         ItemStack slotB = inventory.getStackInSlot(1);
