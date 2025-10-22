@@ -104,8 +104,10 @@ public class JetpackHandler {
 	public static float getSpeed(FluidType type){
 		if(type == null)
 			return 0;
-		if(type == Fluids.KEROSENE){
+		if(type == Fluids.KEROSENE) {
 			return 0.3F;
+		} else if(type == Fluids.KEROSENE_REFORM){ //side-note, the scaling for getSpeed is so bullshit. What the fuck Drillgon - Yeti
+			return 0.4F;
 		} else if(type == Fluids.NITAN){
 			return 0.5F;
 		} else if(type == Fluids.BALEFIRE){
@@ -114,23 +116,34 @@ public class JetpackHandler {
 		return 0;
 	}
 	
-	public static int getDrain(FluidType type){
-		if(type == null)
+	public static int getDrain(FluidType type) {
+		if (type == null)
 			return 0;
 		//Drain is already scaled by thrust, which is greater with the higher tier fuels
-		if(type == Fluids.KEROSENE){
+		if (type == Fluids.KEROSENE) {
 			return 1;
-		} else if(type == Fluids.NITAN){
+		} else if (type == Fluids.NITAN) {
 			return 1;
-		} else if(type == Fluids.BALEFIRE){
+		} else if (type == Fluids.BALEFIRE) {
 			return 1;
+		} else if (type == Fluids.KEROSENE_REFORM) {
+		    return 1;
 		}
 		return 0;
 	}
-	
+
+	/*
+	 * Each fuel defines:
+	 *  - A brightness color {R, G, B} for base emissive tint (0–1 range).
+	 *  - A ColorGradient made of keys {R, G, B, A, pos}, interpolated over 0–1.
+	 * The gradient controls color transitions, center → edge,
+	 * the brightness color applies a global emissive multiplier.
+	 */
+
 	private static final float[] keroseneColor = new float[]{1, 0.6F, 0.5F};
 	private static final float[] nitanColor = new float[]{1F, 0.5F, 1F};
 	private static final float[] bfColor = new float[]{0.4F, 1, 0.7F};
+	private static final float[] keroseneReformColor = new float[]{0.55F, 0.75F, 0.95F};
 	private static final ColorGradient keroseneGradient = new ColorGradient(
 			new float[]{1, 0.918F, 0.882F, 1, 0},
 			new float[]{0.887F, 1, 0, 1, 0.177F},
@@ -149,21 +162,32 @@ public class JetpackHandler {
 			new float[]{0.013F, 1F, 0.068F, 1, 0.389F},
 			new float[]{0.2F, 1F, 0.3F, 1, 0.891F},
 			new float[]{0, 1F, 0.4F, 0, 1});
+	private static final ColorGradient keroseneReformGradient = new ColorGradient(
+			new float[]{1F, 0.95F, 0.85F, 1, 0},
+			new float[]{0.55F, 0.75F, 1F, 1, 0.15F},
+			new float[]{0.25F, 0.55F, 0.9F, 1, 0.4F},
+			new float[]{0.15F, 0.3F, 0.7F, 1, 0.8F},
+			new float[]{0.1F, 0.05F, 0.2F, 0, 1}
+	);
 	
 	public static ColorGradient getGradientFromFuel(FluidType fuel){
 		if(fuel == Fluids.BALEFIRE){
 			return bfGradient;
 		} else if(fuel == Fluids.NITAN){
 			return nitanGradient;
+		} else if (fuel == Fluids.KEROSENE_REFORM){
+			return keroseneReformGradient;
 		}
 		return keroseneGradient;
 	}
-	
+
 	public static float[] getBrightnessColorFromFuel(FluidType fuel){
 		if(fuel == Fluids.BALEFIRE){
 			return bfColor;
 		} else if(fuel == Fluids.NITAN){
 			return nitanColor;
+		} else if(fuel == Fluids.KEROSENE_REFORM){
+			return keroseneReformColor;
 		}
 		return keroseneColor;
 	}
