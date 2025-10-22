@@ -245,7 +245,7 @@ public class TileEntityMachineRadGen extends TileEntityMachineBase implements IT
 			fuels.put(	new RecipesCommon.ComparableStack(ModItems.nuclear_waste_long_tiny, 1, i), new Tuple.Triplet<>(50, 12 * 60 * 20, new ItemStack(ModItems.nuclear_waste_long_depleted_tiny, 1, i)));
 		}
 
-		//fuels.put(		new RecipesCommon.ComparableStack(ModItems.scrap_nuclear),					new Tuple.Triplet<Integer, Integer, ItemStack>(50,		5 * 60 * 20,		null));
+		fuels.put(		new RecipesCommon.ComparableStack(ModItems.scrap_nuclear), new Tuple.Triplet<>(50, 5 * 60 * 20, null));
 		fuels.put(		new RecipesCommon.ComparableStack(ModItems.gem_rad), new Tuple.Triplet<>(25_000, 30 * 60 * 20, new ItemStack(Items.DIAMOND)));
 	}
 
