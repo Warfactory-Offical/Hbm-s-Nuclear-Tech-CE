@@ -1,6 +1,7 @@
 package com.hbm.main;
 
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import com.hbm.config.MachineDynConfig;
 import com.hbm.tileentity.IConfigurableMachine;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -56,11 +57,9 @@ public final class AutoRegistry {
             Field field = registrarClass.getField("CONFIGURABLE_MACHINES");
             //noinspection unchecked
             List<Class<? extends IConfigurableMachine>> foundClasses = (List<Class<? extends IConfigurableMachine>>) field.get(null);
-
-            configurableMachineClasses.clear();
             configurableMachineClasses.addAll(foundClasses);
-
-            MainRegistry.logger.debug("Successfully loaded " + configurableMachineClasses.size() + " configurable machine classes.");
+            MachineDynConfig.initialize();
+            MainRegistry.logger.debug("Successfully loaded {} configurable machine classes.", configurableMachineClasses.size());
         } catch (NoSuchFieldException e) {
             MainRegistry.logger.debug("Field 'CONFIGURABLE_MACHINES' not found. Skipping (this is normal if no machines are configurable).");
         } catch (ClassNotFoundException e) {
