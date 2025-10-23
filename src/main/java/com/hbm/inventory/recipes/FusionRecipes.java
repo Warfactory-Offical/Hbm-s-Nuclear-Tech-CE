@@ -12,10 +12,10 @@ public class FusionRecipes {
 
 	public static HashMap<FluidType, Integer> delays = new HashMap();
 	static {
-		delays.put(Fluids.PLASMA_DT, 1200);
+		delays.put(Fluids.PLASMA_DT, 900);
 		delays.put(Fluids.PLASMA_DH3, 600);
 		delays.put(Fluids.PLASMA_HD, 1200);
-		delays.put(Fluids.PLASMA_HT, 1200);
+		delays.put(Fluids.PLASMA_HT, 900);
 		delays.put(Fluids.PLASMA_XM, 1200);
 		delays.put(Fluids.PLASMA_BF, 150);
 	}
@@ -55,7 +55,7 @@ public class FusionRecipes {
 		return byproduct != null ? byproduct.copy() : null;
 	}
 
-	public static HashMap<FluidType, Integer> steamprod = new HashMap();
+	public static HashMap<FluidType, Integer> steamprod = new HashMap<>();
 	static {
 		steamprod.put(Fluids.PLASMA_DT, 30);
 		steamprod.put(Fluids.PLASMA_DH3, 50);
@@ -72,7 +72,7 @@ public class FusionRecipes {
 
 	public static HashMap<ItemStack, ItemStack> getRecipes() {
 
-		HashMap<ItemStack, ItemStack> map = new HashMap();
+		HashMap<ItemStack, ItemStack> map = new HashMap<>();
 		for(Map.Entry<FluidType, ItemStack> entry : byproducts.entrySet()) {
 			map.put(new ItemStack(ModItems.fluid_icon, 1, entry.getKey().getID()), entry.getValue().copy());
 		}
