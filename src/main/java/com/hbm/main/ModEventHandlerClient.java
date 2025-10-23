@@ -538,8 +538,6 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         swapModels(ModItems.meteorite_sword_irradiated, reg);
         swapModels(ModItems.meteorite_sword_fused, reg);
         swapModels(ModItems.meteorite_sword_baleful, reg);
-        swapModels(ModItems.meteorite_sword_warped, reg);
-        swapModels(ModItems.meteorite_sword_demonic, reg);
 
         swapModelsNoGui(ModItems.bedrock_ore, reg);
         swapModels(ModItems.detonator_laser, reg);
