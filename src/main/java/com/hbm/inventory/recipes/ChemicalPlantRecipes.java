@@ -9,6 +9,10 @@ import com.hbm.inventory.recipes.loader.GenericRecipe;
 import com.hbm.inventory.recipes.loader.GenericRecipes;
 import com.hbm.items.ItemEnums;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foods;
+import com.hbm.items.ModItems.Materials.Ingots;
+import com.hbm.items.ModItems.Materials.Nuggies;
+import com.hbm.items.ModItems.Materials.Powders;
 import com.hbm.items.machine.ItemFluidIcon;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -146,34 +150,34 @@ public class ChemicalPlantRecipes extends GenericRecipes<GenericRecipe> {
 
         /// SOLIDS ///
         this.register(new GenericRecipe("chem.desh").setup(100, 100)
-                .inputItems(new RecipesCommon.ComparableStack(ModItems.powder_desh_mix))
+                .inputItems(new RecipesCommon.ComparableStack(Powders.powder_desh_mix))
                 .inputFluids((GeneralConfig.enableLBSM && GeneralConfig.enableLBSMSimpleChemsitry) ?
                         new FluidStack[] {new FluidStack(Fluids.LIGHTOIL, 200)} :
                         new FluidStack[] {new FluidStack(Fluids.LIGHTOIL, 200), new FluidStack(Fluids.MERCURY, 200)})
-                .outputItems(new ItemStack(ModItems.ingot_desh)));
+                .outputItems(new ItemStack(Ingots.ingot_desh)));
 
         this.register(new GenericRecipe("chem.polymer").setup(100, 100)
                 .inputItems(new RecipesCommon.OreDictStack(COAL.dust(), 2), new RecipesCommon.OreDictStack(F.dust()))
                 .inputFluids(new FluidStack(Fluids.PETROLEUM, 500, GeneralConfig.enable528 ? 1 : 0))
-                .outputItems(new ItemStack(ModItems.ingot_polymer)));
+                .outputItems(new ItemStack(Ingots.ingot_polymer)));
 
         this.register(new GenericRecipe("chem.bakelite").setup(100, 100)
                 .inputFluids(new FluidStack(Fluids.AROMATICS, 500, GeneralConfig.enable528 ? 1 : 0), new FluidStack(Fluids.PETROLEUM, 500, GeneralConfig.enable528 ? 1 : 0))
-                .outputItems(new ItemStack(ModItems.ingot_bakelite)));
+                .outputItems(new ItemStack(Ingots.ingot_bakelite)));
 
         this.register(new GenericRecipe("chem.rubber").setup(100, 200)
                 .inputItems(new RecipesCommon.OreDictStack(S.dust()))
                 .inputFluids(new FluidStack(Fluids.UNSATURATEDS, 500, GeneralConfig.enable528 ? 2 : 0))
-                .outputItems(new ItemStack(ModItems.ingot_rubber)));
+                .outputItems(new ItemStack(Ingots.ingot_rubber)));
 
         this.register(new GenericRecipe("chem.hardplastic").setup(100, 1_000)
                 .inputFluids(new FluidStack(Fluids.XYLENE, 500, GeneralConfig.enable528 ? 2 : 0), new FluidStack(Fluids.PHOSGENE, 500, GeneralConfig.enable528 ? 2 : 0))
-                .outputItems(new ItemStack(ModItems.ingot_pc)));
+                .outputItems(new ItemStack(Ingots.ingot_pc)));
 
         this.register(new GenericRecipe("chem.pvc").setup(100, 1_000)
                 .inputItems(new RecipesCommon.OreDictStack(CD.dust()))
                 .inputFluids(new FluidStack(Fluids.UNSATURATEDS, 250, GeneralConfig.enable528 ? 2 : 0), new FluidStack(Fluids.CHLORINE, 250, GeneralConfig.enable528 ? 2 : 0))
-                .outputItems(new ItemStack(ModItems.ingot_pvc, 2)));
+                .outputItems(new ItemStack(Ingots.ingot_pvc, 2)));
 
         this.register(new GenericRecipe("chem.kevlar").setup(60, 300)
                 .inputFluids(new FluidStack(Fluids.AROMATICS, 200), new FluidStack(Fluids.NITRIC_ACID, 100), new FluidStack(GeneralConfig.enable528 ? Fluids.PHOSGENE : Fluids.CHLORINE, 100))
@@ -182,17 +186,17 @@ public class ChemicalPlantRecipes extends GenericRecipes<GenericRecipe> {
         this.register(new GenericRecipe("chem.meth").setup(60, 300)
                 .inputItems(new RecipesCommon.ComparableStack(Items.WHEAT), new RecipesCommon.ComparableStack(Items.DYE, 2, 3))
                 .inputFluids(new FluidStack(Fluids.LUBRICANT, 400), new FluidStack(Fluids.PEROXIDE, 500))
-                .outputItems(new ItemStack(ModItems.chocolate, 4)));
+                .outputItems(new ItemStack(Foods.chocolate, 4)));
 
         this.register(new GenericRecipe("chem.epearl").setup(100, 300)
                 .inputItems(new RecipesCommon.OreDictStack(DIAMOND.dust(), 1))
                 .inputFluids(new FluidStack(Fluids.XPJUICE, 500))
                 .outputFluids(new FluidStack(Fluids.ENDERJUICE, 100)));
 
-        this.register(new GenericRecipe("chem.meatprocessing").setupNamed(200, 200).setIcon(ModItems.glyphid_meat)
+        this.register(new GenericRecipe("chem.meatprocessing").setupNamed(200, 200).setIcon(Foods.glyphid_meat)
                 .inputItems(new RecipesCommon.OreDictStack(KEY_GLYPHID_MEAT, 3))
                 .inputFluids(new FluidStack(Fluids.WATER, 1_000))
-                .outputItems(new ItemStack(ModItems.sulfur, 4), new ItemStack(ModItems.niter, 3))
+                .outputItems(new ItemStack(Powders.sulfur, 4), new ItemStack(Powders.niter, 3))
                 .outputFluids(new FluidStack(Fluids.SALIENT, 250)));
 
         this.register(new GenericRecipe("chem.rustysteel").setup(40, 100)
@@ -227,17 +231,17 @@ public class ChemicalPlantRecipes extends GenericRecipes<GenericRecipe> {
         this.register(new GenericRecipe("chem.schrabidate").setup(150, 5_000)
                 .inputItems(new RecipesCommon.OreDictStack(IRON.dust()))
                 .inputFluids(new FluidStack(Fluids.SCHRABIDIC, 250))
-                .outputItems(new ItemStack(ModItems.powder_schrabidate)));
+                .outputItems(new ItemStack(Powders.powder_schrabidate)));
 
         /// COLTAN ///
         this.register(new GenericRecipe("chem.coltancleaning").setup(60, 100)
                 .inputItems(new RecipesCommon.OreDictStack(COLTAN.dust(), 2), new RecipesCommon.OreDictStack(COAL.dust()))
                 .inputFluids(new FluidStack(Fluids.PEROXIDE, 250), new FluidStack(Fluids.HYDROGEN, 500))
-                .outputItems(new ItemStack(ModItems.powder_coltan), new ItemStack(ModItems.powder_niobium), new ItemStack(ModItems.dust))
+                .outputItems(new ItemStack(Powders.powder_coltan), new ItemStack(Powders.powder_niobium), new ItemStack(ModItems.dust))
                 .outputFluids(new FluidStack(Fluids.WATER, 500)));
 
         this.register(new GenericRecipe("chem.coltanpain").setup(120, 100)
-                .inputItems(new RecipesCommon.ComparableStack(ModItems.powder_coltan), new RecipesCommon.OreDictStack(F.dust()))
+                .inputItems(new RecipesCommon.ComparableStack(Powders.powder_coltan), new RecipesCommon.OreDictStack(F.dust()))
                 .inputFluids(new FluidStack(Fluids.GAS, 1000), new FluidStack(Fluids.OXYGEN, 500))
                 .outputFluids(new FluidStack(Fluids.PAIN, 1000)));
 
@@ -248,7 +252,7 @@ public class ChemicalPlantRecipes extends GenericRecipes<GenericRecipe> {
 
         /// EXPLOSIVES ///
         this.register(new GenericRecipe("chem.cordite").setup(40, 100)
-                .inputItems(new RecipesCommon.OreDictStack(KNO.dust(), 2), new RecipesCommon.ComparableStack(ModItems.powder_sawdust, 2))
+                .inputItems(new RecipesCommon.OreDictStack(KNO.dust(), 2), new RecipesCommon.ComparableStack(Powders.powder_sawdust, 2))
                 .inputFluids((GeneralConfig.enableLBSM && GeneralConfig.enableLBSMSimpleChemsitry) ? new FluidStack(Fluids.HEATINGOIL, 200) : new FluidStack(Fluids.GAS, 200))
                 .outputItems(new ItemStack(ModItems.cordite, 4)));
 
@@ -274,7 +278,7 @@ public class ChemicalPlantRecipes extends GenericRecipes<GenericRecipe> {
         this.register(new GenericRecipe("chem.c4").setup(100, 1_000)
                 .inputItems(new RecipesCommon.OreDictStack(KNO.dust()))
                 .inputFluids(new FluidStack(Fluids.UNSATURATEDS, 500, GeneralConfig.enable528 ? 1 : 0))
-                .outputItems(new ItemStack(ModItems.ingot_c4, 4)));
+                .outputItems(new ItemStack(Ingots.ingot_c4, 4)));
 
         /// GLASS ///
         /*this.register(new GenericRecipe("chem.laminate").setup(20, 100)
@@ -291,12 +295,12 @@ public class ChemicalPlantRecipes extends GenericRecipes<GenericRecipe> {
         this.register(new GenericRecipe("chem.yellowcake").setup(250, 500)
                 .inputItems(new RecipesCommon.OreDictStack(U.billet(), 2), new RecipesCommon.OreDictStack(S.dust(), 2))
                 .inputFluids(new FluidStack(Fluids.PEROXIDE, 500))
-                .outputItems(new ItemStack(ModItems.powder_yellowcake)));
+                .outputItems(new ItemStack(Powders.powder_yellowcake)));
 
         this.register(new GenericRecipe("chem.uf6").setup(100, 500).setIcon(ModItems.fluid_icon, Fluids.UF6.getID())
-                .inputItems(new RecipesCommon.ComparableStack(ModItems.powder_yellowcake), new RecipesCommon.OreDictStack(F.dust(), 4))
+                .inputItems(new RecipesCommon.ComparableStack(Powders.powder_yellowcake), new RecipesCommon.OreDictStack(F.dust(), 4))
                 .inputFluids(new FluidStack(Fluids.WATER, 1_000))
-                .outputItems(new ItemStack(ModItems.sulfur, 2))
+                .outputItems(new ItemStack(Powders.sulfur, 2))
                 .outputFluids(new FluidStack(Fluids.UF6, 1_200)));
 
         this.register(new GenericRecipe("chem.puf6").setup(200, 500)
@@ -312,12 +316,12 @@ public class ChemicalPlantRecipes extends GenericRecipes<GenericRecipe> {
         this.register(new GenericRecipe("chem.balefire").setup(100, 10_000).setIcon(ModItems.fluid_icon, Fluids.BALEFIRE.getID())
                 .inputItems(new RecipesCommon.ComparableStack(ModItems.egg_balefire_shard))
                 .inputFluids(new FluidStack(Fluids.KEROSENE, 6_000))
-                .outputItems(new ItemStack(ModItems.powder_balefire))
+                .outputItems(new ItemStack(Powders.powder_balefire))
                 .outputFluids(new FluidStack(Fluids.BALEFIRE, 8_000)));
 
         /// OSMIRIDIUM ///
         this.register(new GenericRecipe("chem.osmiridiumdeath").setup(240, 1_000)
-                .inputItems(new RecipesCommon.ComparableStack(ModItems.powder_paleogenite), new RecipesCommon.OreDictStack(F.dust(), 8), new RecipesCommon.ComparableStack(ModItems.nugget_bismuth, 4))
+                .inputItems(new RecipesCommon.ComparableStack(Powders.powder_paleogenite), new RecipesCommon.OreDictStack(F.dust(), 8), new RecipesCommon.ComparableStack(Nuggies.nugget_bismuth, 4))
                 .inputFluids(new FluidStack(Fluids.PEROXIDE, 1_000, 5))
                 .outputFluids(new FluidStack(Fluids.DEATH, 1_000, 0)));
 

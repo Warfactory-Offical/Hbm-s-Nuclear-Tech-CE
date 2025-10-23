@@ -6,7 +6,7 @@ import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.handler.MultiblockHandlerXR;
 import com.hbm.inventory.material.Mats;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foundry;
 import com.hbm.items.machine.ItemScraps;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
@@ -134,7 +134,7 @@ public class MachineStrandCaster extends BlockDummyable implements ICrucibleAcce
       // insert mold
       ItemStack heldItem = player.getHeldItem(hand);
       if (!heldItem.isEmpty()
-          && heldItem.getItem() == ModItems.mold
+          && heldItem.getItem() == Foundry.mold
           && caster.inventory.getStackInSlot(0).isEmpty()) {
         caster.inventory.setStackInSlot(0, heldItem.copy());
         caster.inventory.getStackInSlot(0).setCount(1);
@@ -191,7 +191,7 @@ public class MachineStrandCaster extends BlockDummyable implements ICrucibleAcce
     if (caster != null) {
       if (caster.inventory.getStackInSlot(0).isEmpty()) {
         text.add(ChatFormatting.RED + I18nUtil.resolveKey("foundry.noCast"));
-      } else if (caster.inventory.getStackInSlot(0).getItem() == ModItems.mold) {
+      } else if (caster.inventory.getStackInSlot(0).getItem() == Foundry.mold) {
         text.add(ChatFormatting.BLUE + caster.getInstalledMold().getTitle());
       }
     }

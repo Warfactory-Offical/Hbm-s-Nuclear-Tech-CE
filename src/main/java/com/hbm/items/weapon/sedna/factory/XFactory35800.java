@@ -3,7 +3,7 @@ package com.hbm.items.weapon.sedna.factory;
 import com.hbm.capability.HbmCapability;
 import com.hbm.entity.effect.EntityFireLingering;
 import com.hbm.entity.projectile.EntityBulletBeamBase;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.GunConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
@@ -53,7 +53,7 @@ public class XFactory35800 {
         p35800_bl = new BulletConfig().setItem(GunFactory.EnumAmmoSecret.P35_800_BL).setArmorPiercing(0.5F).setThresholdNegation(50F).setBeam().setSpread(0.0F).setLife(3).setRenderRotations(false)
                 .setCasing(new SpentCasing(SpentCasing.CasingType.STRAIGHT).setColor(0xCEB78E).register("35-800")).setOnBeamImpact(LAMBDA_BLACK_IMPACT);
 
-        ModItems.gun_aberrator = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.SECRET, "gun_aberrator", new GunConfig()
+        Armory.gun_aberrator = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.SECRET, "gun_aberrator", new GunConfig()
                 .dura(2_000).draw(10).inspect(26).crosshair(Crosshair.CIRCLE).smoke(Lego.LAMBDA_STANDARD_SMOKE)
                 .rec(new Receiver(0)
                         .dmg(100F).delay(13).dry(21).reload(51).sound(HBMSoundHandler.fireAberrator, 1.0F, 1.0F)
@@ -64,7 +64,7 @@ public class XFactory35800 {
                 .anim(LAMBDA_ABERRATOR).orchestra(Orchestras.ORCHESTRA_ABERRATOR)
         );
 
-        ModItems.gun_aberrator_eott = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.SECRET, "gun_aberrator_eott",
+        Armory.gun_aberrator_eott = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.SECRET, "gun_aberrator_eott",
                 new GunConfig().dura(2_000).draw(10).inspect(26).crosshair(Crosshair.CIRCLE).smoke(Lego.LAMBDA_STANDARD_SMOKE)
                         .rec(new Receiver(0)
                                 .dmg(100F).spreadHipfire(0F).delay(13).dry(21).reload(51).sound(HBMSoundHandler.fireAberrator, 1.0F, 1.0F)

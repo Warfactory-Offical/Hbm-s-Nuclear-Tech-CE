@@ -2,6 +2,9 @@ package com.hbm.inventory.recipes;
 
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foods;
+import com.hbm.items.ModItems.Materials.Ingots;
+import com.hbm.items.ModItems.Materials.Powders;
 import com.hbm.tileentity.machine.TileEntityHadron.EnumHadronState;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -63,10 +66,10 @@ public class HadronRecipes {
 				));
 		recipes.add(new HadronRecipe(
 				new ItemStack(ModItems.particle_higgs),
-				new ItemStack(ModItems.ingot_australium),
+				new ItemStack(Ingots.ingot_australium),
 				10000,
 				new ItemStack(ModItems.particle_empty),
-				new ItemStack(ModItems.ingot_verticium),
+				new ItemStack(Ingots.ingot_verticium),
 				false
 				));
 		recipes.add(new HadronRecipe(
@@ -79,10 +82,10 @@ public class HadronRecipes {
 				));
 		recipes.add(new HadronRecipe(
 				new ItemStack(ModItems.particle_tachyon),
-				new ItemStack(ModItems.ingot_verticium),
+				new ItemStack(Ingots.ingot_verticium),
 				40000,
 				new ItemStack(ModItems.particle_empty),
-				new ItemStack(ModItems.ingot_unobtainium),
+				new ItemStack(Ingots.ingot_unobtainium),
 				false
 				));
 		recipes.add(new HadronRecipe(
@@ -103,7 +106,7 @@ public class HadronRecipes {
 				));
 		recipes.add(new HadronRecipe(
 				new ItemStack(ModItems.particle_strange),
-				new ItemStack(ModItems.powder_magic),
+				new ItemStack(Powders.powder_magic),
 				500000,
 				new ItemStack(ModItems.particle_sparkticle),
 				new ItemStack(ModItems.dust),
@@ -111,10 +114,10 @@ public class HadronRecipes {
 				));
 		recipes.add(new HadronRecipe(
 				new ItemStack(ModItems.particle_sparkticle),
-				new ItemStack(ModItems.ingot_unobtainium),
+				new ItemStack(Ingots.ingot_unobtainium),
 				600000,
 				new ItemStack(ModItems.particle_empty),
-				new ItemStack(ModItems.ingot_daffergon),
+				new ItemStack(Ingots.ingot_daffergon),
 				false
 				));
 		recipes.add(new HadronRecipe(
@@ -129,8 +132,8 @@ public class HadronRecipes {
 				new ItemStack(Items.CHICKEN),
 				new ItemStack(Items.CHICKEN),
 				100,
-				new ItemStack(ModItems.nugget),
-				new ItemStack(ModItems.nugget),
+				new ItemStack(Foods.nugget),
+				new ItemStack(Foods.nugget),
 				false
 				));
 	}

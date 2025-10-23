@@ -4,7 +4,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.entity.projectile.EntityBulletBaseMK4;
 import com.hbm.explosion.vanillant.ExplosionVNT;
 import com.hbm.explosion.vanillant.standard.*;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.GunConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
@@ -233,7 +233,7 @@ public class XFactoryTool {
     public static Consumer<Entity> LAMBDA_SET_HOOK = (entity) -> {
         EntityBulletBaseMK4 bullet = (EntityBulletBaseMK4) entity;
         if(!bullet.world.isRemote && bullet.ticksExisted < 2 && bullet.getThrower() instanceof EntityPlayer player) {
-            if(!player.getHeldItemMainhand().isEmpty() && player.getHeldItemMainhand().getItem() == ModItems.gun_charge_thrower) {
+            if(!player.getHeldItemMainhand().isEmpty() && player.getHeldItemMainhand().getItem() == Armory.gun_charge_thrower) {
                 ItemGunChargeThrower.setLastHook(player.getHeldItemMainhand(), bullet.getEntityId());
             }
         }
@@ -275,15 +275,15 @@ public class XFactoryTool {
 
     public static void init() {
 
-        fext_water = new BulletConfig().setItem(new ItemStack(ModItems.ammo_fireext, 1, 0)).setReloadCount(300).setLife(100).setVel(0.75F).setGrav(0.04D).setSpread(0.025F)
+        fext_water = new BulletConfig().setItem(new ItemStack(Armory.ammo_fireext, 1, 0)).setReloadCount(300).setLife(100).setVel(0.75F).setGrav(0.04D).setSpread(0.025F)
                 .setOnUpdate(LAMBDA_WATER_UPDATE)
                 .setOnEntityHit((bulletEntity, target) -> { if(target.entityHit != null) target.entityHit.extinguish(); })
                 .setOnRicochet(LAMBDA_WATER_HIT);
-        fext_foam = new BulletConfig().setItem(new ItemStack(ModItems.ammo_fireext, 1, 1)).setReloadCount(300).setLife(100).setVel(0.75F).setGrav(0.04D).setSpread(0.05F)
+        fext_foam = new BulletConfig().setItem(new ItemStack(Armory.ammo_fireext, 1, 1)).setReloadCount(300).setLife(100).setVel(0.75F).setGrav(0.04D).setSpread(0.05F)
                 .setOnUpdate(LAMBDA_FOAM_UPDATE)
                 .setOnEntityHit((bulletEntity, target) -> { if(target.entityHit != null) target.entityHit.extinguish(); })
                 .setOnRicochet(LAMBDA_FOAM_HIT);
-        fext_sand = new BulletConfig().setItem(new ItemStack(ModItems.ammo_fireext, 1, 2)).setReloadCount(300).setLife(100).setVel(0.75F).setGrav(0.04D).setSpread(0.05F)
+        fext_sand = new BulletConfig().setItem(new ItemStack(Armory.ammo_fireext, 1, 2)).setReloadCount(300).setLife(100).setVel(0.75F).setGrav(0.04D).setSpread(0.05F)
                 .setOnUpdate(LAMBDA_SAND_UPDATE)
                 .setOnEntityHit((bulletEntity, target) -> { if(target.entityHit != null) target.entityHit.extinguish(); })
                 .setOnRicochet(LAMBDA_SAND_HIT);
@@ -295,7 +295,7 @@ public class XFactoryTool {
         ct_mortar_charge = new BulletConfig().setItem(GunFactory.EnumAmmo.CT_MORTAR_CHARGE).setDamage(5F).setLife(200).setVel(3F).setGrav(0.035D)
                 .setOnImpact(LAMBDA_MORTAR_CHARGE);
 
-        ModItems.gun_fireext = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.UTILITY, "gun_fireext", new GunConfig()
+        Armory.gun_fireext = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.UTILITY, "gun_fireext", new GunConfig()
                 .dura(5_000).draw(10).inspect(55).reloadChangeType(true).hideCrosshair(false).crosshair(RenderScreenOverlay.Crosshair.L_CIRCLE)
                 .rec(new Receiver(0)
                         .dmg(0F).delay(1).dry(0).auto(true).spread(0F).spreadHipfire(0F).reload(20).jam(0).sound(HBMSoundHandler.fireExtinguisher, 1.0F, 1.0F)
@@ -306,7 +306,7 @@ public class XFactoryTool {
                 .orchestra(Orchestras.ORCHESTRA_FIREEXT)
         );
 
-        ModItems.gun_charge_thrower = new ItemGunChargeThrower(ItemGunBaseNT.WeaponQuality.UTILITY, "gun_charge_thrower", new GunConfig()
+        Armory.gun_charge_thrower = new ItemGunChargeThrower(ItemGunBaseNT.WeaponQuality.UTILITY, "gun_charge_thrower", new GunConfig()
                 .dura(3_000).draw(10).inspect(55).reloadChangeType(true).hideCrosshair(false).crosshair(RenderScreenOverlay.Crosshair.L_CIRCUMFLEX)
                 .rec(new Receiver(0)
                         .dmg(10F).delay(4).dry(10).auto(true).spread(0F).spreadHipfire(0F).reload(60).jam(0).sound(HBMSoundHandler.fireGrenade, 1.0F, 1.0F)

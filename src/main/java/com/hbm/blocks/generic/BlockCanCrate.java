@@ -1,7 +1,8 @@
 package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foods;
+import com.hbm.items.ModItems.ToolSets;
 import com.hbm.items.food.ItemConserve;
 import com.hbm.lib.HBMSoundHandler;
 import net.minecraft.block.Block;
@@ -31,7 +32,7 @@ public class BlockCanCrate extends Block {
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing,
                                     float hitX, float hitY, float hitZ) {
-        if (playerIn.getHeldItem(EnumHand.MAIN_HAND).getItem().equals(ModItems.crowbar)) {
+        if (playerIn.getHeldItem(EnumHand.MAIN_HAND).getItem().equals(ToolSets.crowbar)) {
             if (!worldIn.isRemote) {
                 dropContents(worldIn, pos);
                 worldIn.setBlockToAir(pos);
@@ -65,16 +66,16 @@ public class BlockCanCrate extends Block {
 
         List<ItemStack> items = new ArrayList();
         for (int a = 0; a < ItemConserve.EnumFoodType.values().length; a++)
-            items.add(new ItemStack(ModItems.canned_conserve, 1, a));
-        items.add(new ItemStack(ModItems.can_smart));
-        items.add(new ItemStack(ModItems.can_creature));
-        items.add(new ItemStack(ModItems.can_redbomb));
-        items.add(new ItemStack(ModItems.can_mrsugar));
-        items.add(new ItemStack(ModItems.can_overcharge));
-        items.add(new ItemStack(ModItems.can_luna));
-        items.add(new ItemStack(ModItems.can_breen));
-        items.add(new ItemStack(ModItems.can_bepis));
-        items.add(new ItemStack(ModItems.pudding));
+            items.add(new ItemStack(Foods.canned_conserve, 1, a));
+        items.add(new ItemStack(Foods.can_smart));
+        items.add(new ItemStack(Foods.can_creature));
+        items.add(new ItemStack(Foods.can_redbomb));
+        items.add(new ItemStack(Foods.can_mrsugar));
+        items.add(new ItemStack(Foods.can_overcharge));
+        items.add(new ItemStack(Foods.can_luna));
+        items.add(new ItemStack(Foods.can_breen));
+        items.add(new ItemStack(Foods.can_bepis));
+        items.add(new ItemStack(Foods.pudding));
 
         return items.get(rand.nextInt(items.size()));
     }

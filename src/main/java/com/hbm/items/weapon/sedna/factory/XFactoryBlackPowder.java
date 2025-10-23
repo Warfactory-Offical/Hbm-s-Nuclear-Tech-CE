@@ -1,6 +1,6 @@
 package com.hbm.items.weapon.sedna.factory;
 
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.GunConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
@@ -25,7 +25,7 @@ public class XFactoryBlackPowder {
 
     public static void init() {
 
-        ModItems.gun_pepperbox = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_pepperbox", new GunConfig()
+        Armory.gun_pepperbox = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_pepperbox", new GunConfig()
                 .dura(300).draw(4).inspect(23).crosshair(RenderScreenOverlay.Crosshair.CIRCLE).smoke(Lego.LAMBDA_STANDARD_SMOKE)
                 .rec(new Receiver(0)
                         .dmg(5F).delay(27).reload(67).jam(58).sound(HBMSoundHandler.fireBlackPowder, 1.0F, 1.0F)

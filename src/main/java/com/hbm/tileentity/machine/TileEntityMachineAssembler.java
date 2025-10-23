@@ -10,7 +10,8 @@ import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.container.ContainerMachineAssembler;
 import com.hbm.inventory.gui.GUIMachineAssembler;
 import com.hbm.inventory.recipes.AssemblerRecipes;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.ToolSets;
+import com.hbm.items.ModItems.Upgrades;
 import com.hbm.items.machine.ItemAssemblyTemplate;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
@@ -143,27 +144,27 @@ public class TileEntityMachineAssembler extends TileEntityMachineBase implements
                 ItemStack stack = inventory.getStackInSlot(i);
 
                 if (!stack.isEmpty()) {
-                    if (stack.getItem() == ModItems.upgrade_speed_1) {
+                    if (stack.getItem() == Upgrades.upgrade_speed_1) {
                         s *= 0.75;
                         c *= 3;
                     }
-                    if (stack.getItem() == ModItems.upgrade_speed_2) {
+                    if (stack.getItem() == Upgrades.upgrade_speed_2) {
                         s *= 0.65;
                         c *= 6;
                     }
-                    if (stack.getItem() == ModItems.upgrade_speed_3) {
+                    if (stack.getItem() == Upgrades.upgrade_speed_3) {
                         s *= 0.5;
                         c *= 9;
                     }
-                    if (stack.getItem() == ModItems.upgrade_power_1) {
+                    if (stack.getItem() == Upgrades.upgrade_power_1) {
                         c *= 0.8;
                         s *= 1.25;
                     }
-                    if (stack.getItem() == ModItems.upgrade_power_2) {
+                    if (stack.getItem() == Upgrades.upgrade_power_2) {
                         c *= 0.4;
                         s *= 1.5;
                     }
-                    if (stack.getItem() == ModItems.upgrade_power_3) {
+                    if (stack.getItem() == Upgrades.upgrade_power_3) {
                         c *= 0.2;
                         s *= 2;
                     }
@@ -195,8 +196,8 @@ public class TileEntityMachineAssembler extends TileEntityMachineBase implements
                                 }
 
                                 removeItems(AssemblerRecipes.getRecipeFromTempate(inventory.getStackInSlot(4)), inventory);
-                                if (inventory.getStackInSlot(0).getItem() == ModItems.meteorite_sword_alloyed)
-                                    inventory.setStackInSlot(0, new ItemStack(ModItems.meteorite_sword_machined));
+                                if (inventory.getStackInSlot(0).getItem() == ToolSets.meteorite_sword_alloyed)
+                                    inventory.setStackInSlot(0, new ItemStack(ToolSets.meteorite_sword_machined));
                             }
 
                             power -= consumption;

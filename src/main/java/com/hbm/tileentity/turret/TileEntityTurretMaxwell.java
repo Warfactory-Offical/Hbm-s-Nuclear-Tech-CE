@@ -5,7 +5,7 @@ import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerTurretBase;
 import com.hbm.inventory.gui.GUITurretMaxwell;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Upgrades;
 import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
@@ -59,23 +59,23 @@ public class TileEntityTurretMaxwell extends TileEntityTurretBaseNT implements I
 
 		ammoStacks = new ArrayList();
 
-		ammoStacks.add(new ItemStack(ModItems.upgrade_speed_1));
-		ammoStacks.add(new ItemStack(ModItems.upgrade_speed_2));
-		ammoStacks.add(new ItemStack(ModItems.upgrade_speed_3));
-		ammoStacks.add(new ItemStack(ModItems.upgrade_effect_1));
-		ammoStacks.add(new ItemStack(ModItems.upgrade_effect_2));
-		ammoStacks.add(new ItemStack(ModItems.upgrade_effect_3));
-		ammoStacks.add(new ItemStack(ModItems.upgrade_power_1));
-		ammoStacks.add(new ItemStack(ModItems.upgrade_power_2));
-		ammoStacks.add(new ItemStack(ModItems.upgrade_power_3));
-		ammoStacks.add(new ItemStack(ModItems.upgrade_afterburn_1));
-		ammoStacks.add(new ItemStack(ModItems.upgrade_afterburn_2));
-		ammoStacks.add(new ItemStack(ModItems.upgrade_afterburn_3));
-		ammoStacks.add(new ItemStack(ModItems.upgrade_overdrive_1));
-		ammoStacks.add(new ItemStack(ModItems.upgrade_overdrive_2));
-		ammoStacks.add(new ItemStack(ModItems.upgrade_overdrive_3));
-		ammoStacks.add(new ItemStack(ModItems.upgrade_5g));
-		ammoStacks.add(new ItemStack(ModItems.upgrade_screm));
+		ammoStacks.add(new ItemStack(Upgrades.upgrade_speed_1));
+		ammoStacks.add(new ItemStack(Upgrades.upgrade_speed_2));
+		ammoStacks.add(new ItemStack(Upgrades.upgrade_speed_3));
+		ammoStacks.add(new ItemStack(Upgrades.upgrade_effect_1));
+		ammoStacks.add(new ItemStack(Upgrades.upgrade_effect_2));
+		ammoStacks.add(new ItemStack(Upgrades.upgrade_effect_3));
+		ammoStacks.add(new ItemStack(Upgrades.upgrade_power_1));
+		ammoStacks.add(new ItemStack(Upgrades.upgrade_power_2));
+		ammoStacks.add(new ItemStack(Upgrades.upgrade_power_3));
+		ammoStacks.add(new ItemStack(Upgrades.upgrade_afterburn_1));
+		ammoStacks.add(new ItemStack(Upgrades.upgrade_afterburn_2));
+		ammoStacks.add(new ItemStack(Upgrades.upgrade_afterburn_3));
+		ammoStacks.add(new ItemStack(Upgrades.upgrade_overdrive_1));
+		ammoStacks.add(new ItemStack(Upgrades.upgrade_overdrive_2));
+		ammoStacks.add(new ItemStack(Upgrades.upgrade_overdrive_3));
+		ammoStacks.add(new ItemStack(Upgrades.upgrade_5g));
+		ammoStacks.add(new ItemStack(Upgrades.upgrade_screm));
 
 		return ammoStacks;
 	}
@@ -202,23 +202,23 @@ public class TileEntityTurretMaxwell extends TileEntityTurretBaseNT implements I
 					if(!inventory.getStackInSlot(i).isEmpty()) {
 						Item item = inventory.getStackInSlot(i).getItem();
 
-						if(item == ModItems.upgrade_speed_1) redLevel += 1;
-						if(item == ModItems.upgrade_speed_2) redLevel += 2;
-						if(item == ModItems.upgrade_speed_3) redLevel += 3;
-						if(item == ModItems.upgrade_effect_1) greenLevel += 1;
-						if(item == ModItems.upgrade_effect_2) greenLevel += 2;
-						if(item == ModItems.upgrade_effect_3) greenLevel += 3;
-						if(item == ModItems.upgrade_power_1) blueLevel += 1;
-						if(item == ModItems.upgrade_power_2) blueLevel += 2;
-						if(item == ModItems.upgrade_power_3) blueLevel += 3;
-						if(item == ModItems.upgrade_afterburn_1) pinkLevel += 1;
-						if(item == ModItems.upgrade_afterburn_2) pinkLevel += 2;
-						if(item == ModItems.upgrade_afterburn_3) pinkLevel += 3;
-						if(item == ModItems.upgrade_overdrive_1) blackLevel += 1;
-						if(item == ModItems.upgrade_overdrive_2) blackLevel += 2;
-						if(item == ModItems.upgrade_overdrive_3) blackLevel += 3;
-						if(item == ModItems.upgrade_5g) _5g = true;
-						if(item == ModItems.upgrade_screm) screm = true;
+						if(item == Upgrades.upgrade_speed_1) redLevel += 1;
+						if(item == Upgrades.upgrade_speed_2) redLevel += 2;
+						if(item == Upgrades.upgrade_speed_3) redLevel += 3;
+						if(item == Upgrades.upgrade_effect_1) greenLevel += 1;
+						if(item == Upgrades.upgrade_effect_2) greenLevel += 2;
+						if(item == Upgrades.upgrade_effect_3) greenLevel += 3;
+						if(item == Upgrades.upgrade_power_1) blueLevel += 1;
+						if(item == Upgrades.upgrade_power_2) blueLevel += 2;
+						if(item == Upgrades.upgrade_power_3) blueLevel += 3;
+						if(item == Upgrades.upgrade_afterburn_1) pinkLevel += 1;
+						if(item == Upgrades.upgrade_afterburn_2) pinkLevel += 2;
+						if(item == Upgrades.upgrade_afterburn_3) pinkLevel += 3;
+						if(item == Upgrades.upgrade_overdrive_1) blackLevel += 1;
+						if(item == Upgrades.upgrade_overdrive_2) blackLevel += 2;
+						if(item == Upgrades.upgrade_overdrive_3) blackLevel += 3;
+						if(item == Upgrades.upgrade_5g) _5g = true;
+						if(item == Upgrades.upgrade_screm) screm = true;
 					}
 				}
 			}

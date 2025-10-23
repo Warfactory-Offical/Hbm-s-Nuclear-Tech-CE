@@ -6,6 +6,7 @@ import com.hbm.inventory.recipes.CentrifugeRecipes;
 import com.hbm.inventory.recipes.CrystallizerRecipes;
 import com.hbm.inventory.recipes.ShredderRecipes;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Materials.Nuggies;
 import com.hbm.items.tool.ItemToolAbility;
 import com.hbm.util.EnchantmentUtil;
 import net.minecraft.block.Block;
@@ -320,7 +321,7 @@ public interface IToolHarvestAbility extends IBaseAbility {
             harvestBlock(doesConvert, world, x, y, z, player);
 
             if(doesConvert) {
-                world.spawnEntity(new EntityItem(world, ItemToolAbility.dropX + 0.5, ItemToolAbility.dropY + 0.5, ItemToolAbility.dropZ + 0.5, new ItemStack(ModItems.ingot_mercury, mercury)));
+                world.spawnEntity(new EntityItem(world, ItemToolAbility.dropX + 0.5, ItemToolAbility.dropY + 0.5, ItemToolAbility.dropZ + 0.5, new ItemStack(Nuggies.ingot_mercury, mercury)));
             }
         }
     };

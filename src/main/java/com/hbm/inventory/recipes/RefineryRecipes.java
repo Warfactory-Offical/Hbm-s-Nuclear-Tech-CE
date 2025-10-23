@@ -6,6 +6,7 @@ import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ItemEnums;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Materials.Powders;
 import com.hbm.items.machine.ItemFluidIcon;
 import com.hbm.util.ItemStackUtil;
 import com.hbm.util.Tuple;
@@ -89,7 +90,7 @@ public class RefineryRecipes {
 				new FluidStack(Fluids.NAPHTHA,		oil_frac_naph),
 				new FluidStack(Fluids.LIGHTOIL,		oil_frac_light),
 				new FluidStack(Fluids.PETROLEUM,	oil_frac_petro),
-				new ItemStack(ModItems.sulfur)
+				new ItemStack(Powders.sulfur)
 		));
 		refinery.put(Fluids.HOTCRACKOIL, new Tuple.Quintet(
 				new FluidStack(Fluids.NAPHTHA_CRACK,	crack_frac_naph),

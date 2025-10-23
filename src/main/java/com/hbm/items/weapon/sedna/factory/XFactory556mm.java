@@ -2,7 +2,7 @@ package com.hbm.items.weapon.sedna.factory;
 
 import com.hbm.config.ClientConfig;
 import com.hbm.items.ItemEnums;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.GunConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
@@ -50,7 +50,7 @@ public class XFactory556mm {
         r556_ap = new BulletConfig().setItem(GunFactory.EnumAmmo.R556_AP).setCasing(ItemEnums.EnumCasingType.SMALL_STEEL, 8).setDoesPenetrate(true).setDamageFalloffByPen(false).setDamage(1.5F).setThresholdNegation(10F).setArmorPiercing(0.15F)
                 .setCasing(casing556.clone().setColor(SpentCasing.COLOR_CASE_44).register("r556ap"));
 
-        ModItems.gun_g3 = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_g3", new GunConfig()
+        Armory.gun_g3 = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_g3", new GunConfig()
                 .dura(3_000).draw(10).inspect(33).crosshair(Crosshair.CIRCLE).smoke(LAMBDA_SMOKE)
                 .rec(new Receiver(0)
                         .dmg(5F).delay(2).auto(true).dry(15).spread(0.0F).reload(50).jam(47).sound(HBMSoundHandler.fireAssault, 1.0F, 1.0F)
@@ -60,7 +60,7 @@ public class XFactory556mm {
                 .setupStandardConfiguration().ps(Lego.LAMBDA_STANDARD_CLICK_SECONDARY)
                 .anim(LAMBDA_G3_ANIMS).orchestra(Orchestras.ORCHESTRA_G3)
         );
-        ModItems.gun_g3_zebra = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.B_SIDE, "gun_g3_zebra", new GunConfig()
+        Armory.gun_g3_zebra = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.B_SIDE, "gun_g3_zebra", new GunConfig()
                 .dura(6_000).draw(10).inspect(33).crosshair(Crosshair.CIRCLE).smoke(LAMBDA_SMOKE).scopeTexture(scope)
                 .rec(new Receiver(0)
                         .dmg(7.5F).delay(2).auto(true).dry(15).spreadHipfire(0.01F).reload(50).jam(47).sound(HBMSoundHandler.fireSilenced, 1.0F, 1.0F)
@@ -71,7 +71,7 @@ public class XFactory556mm {
                 .anim(LAMBDA_G3_ANIMS).orchestra(Orchestras.ORCHESTRA_G3)
         ).setNameMutator(LAMBDA_NAME_G3);
 
-        ModItems.gun_stg77 = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_stg77", new GunConfig()
+        Armory.gun_stg77 = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_stg77", new GunConfig()
                 .dura(3_000).draw(10).inspect(125).crosshair(Crosshair.CIRCLE).scopeTexture(scope).smoke(LAMBDA_SMOKE)
                 .rec(new Receiver(0)
                         .dmg(10F).delay(2).dry(15).auto(true).spread(0.0F).reload(46).jam(0).sound(HBMSoundHandler.fireAssault, 1.0F, 1.0F)

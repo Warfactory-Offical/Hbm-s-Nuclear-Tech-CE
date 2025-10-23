@@ -1,7 +1,7 @@
 package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.BlockItems;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.world.gen.nbt.INBTBlockTransformable;
 import net.minecraft.block.Block;
@@ -127,10 +127,10 @@ public class BlockModDoor extends BlockDoor implements INBTBlockTransformable {
     }
 
     private Item getItem() {
-        if (this == ModBlocks.door_metal) return ModItems.door_metal;
-        if (this == ModBlocks.door_office) return ModItems.door_office;
-        if (this == ModBlocks.door_red) return ModItems.door_red;
-        return ModItems.door_bunker;
+        if (this == ModBlocks.door_metal) return BlockItems.door_metal;
+        if (this == ModBlocks.door_office) return BlockItems.door_office;
+        if (this == ModBlocks.door_red) return BlockItems.door_red;
+        return BlockItems.door_bunker;
     }
 
     @Override

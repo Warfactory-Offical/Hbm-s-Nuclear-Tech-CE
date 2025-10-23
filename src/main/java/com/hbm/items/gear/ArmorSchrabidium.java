@@ -1,6 +1,7 @@
 package com.hbm.items.gear;
 
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.ArmorSets;
 import com.hbm.lib.RefStrings;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -29,10 +30,10 @@ public class ArmorSchrabidium extends ItemArmor implements ISpecialArmor {
 
 	@Override
 	public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
-		if(stack.getItem().equals(ModItems.schrabidium_helmet) || stack.getItem().equals(ModItems.schrabidium_plate) || stack.getItem().equals(ModItems.schrabidium_boots)) {
+		if(stack.getItem().equals(ArmorSets.schrabidium_helmet) || stack.getItem().equals(ArmorSets.schrabidium_plate) || stack.getItem().equals(ArmorSets.schrabidium_boots)) {
 			return (RefStrings.MODID + ":textures/armor/schrabidium_1.png");
 		}
-		if(stack.getItem().equals(ModItems.schrabidium_legs)) {
+		if(stack.getItem().equals(ArmorSets.schrabidium_legs)) {
 			return (RefStrings.MODID + ":textures/armor/schrabidium_2.png");
 		}
 		return null;
@@ -81,23 +82,23 @@ public class ArmorSchrabidium extends ItemArmor implements ISpecialArmor {
 	
 	@Override
 	public void onArmorTick(World world, EntityPlayer player, ItemStack armor) {
-		if(armor.getItem() == ModItems.schrabidium_helmet)
+		if(armor.getItem() == ArmorSets.schrabidium_helmet)
 		 {
 			 player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 5, 0, true, false));
 			 player.addPotionEffect(new PotionEffect(MobEffects.WATER_BREATHING, 5, 9, true, false));
 		 }
 		 
-		 if(armor.getItem() == ModItems.schrabidium_plate)
+		 if(armor.getItem() == ArmorSets.schrabidium_plate)
 		 {
 			 player.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 5, 0, true, false));
 		 }
 		 
-		 if(armor.getItem() == ModItems.schrabidium_legs)
+		 if(armor.getItem() == ArmorSets.schrabidium_legs)
 		 {
 			 player.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 5, 2, true, false));
 		 }
 		 
-		 if(armor.getItem() == ModItems.schrabidium_boots)
+		 if(armor.getItem() == ArmorSets.schrabidium_boots)
 		 {
 			 player.addPotionEffect(new PotionEffect(MobEffects.SPEED, 5, 2, true, false));
 		 }

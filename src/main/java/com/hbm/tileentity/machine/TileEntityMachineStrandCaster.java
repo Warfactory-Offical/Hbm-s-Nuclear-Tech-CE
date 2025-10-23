@@ -11,7 +11,7 @@ import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.gui.GUIMachineStrandCaster;
 import com.hbm.inventory.gui.GuiInfoContainer;
 import com.hbm.inventory.material.Mats;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foundry;
 import com.hbm.items.machine.ItemMold;
 import com.hbm.items.machine.ItemScraps;
 import com.hbm.lib.DirPos;
@@ -235,7 +235,7 @@ public class TileEntityMachineStrandCaster extends TileEntityFoundryCastingBase 
     ItemStack itemStack = inventory.getStackInSlot(0);
     if (itemStack.isEmpty()) return null;
 
-    if (itemStack.getItem() == ModItems.mold) {
+    if (itemStack.getItem() == Foundry.mold) {
       return ((ItemMold) itemStack.getItem()).getMold(itemStack);
     }
 
@@ -358,7 +358,7 @@ public class TileEntityMachineStrandCaster extends TileEntityFoundryCastingBase 
 
   @Override
   public boolean isItemValidForSlot(int i, @NotNull ItemStack stack) {
-    if (i == 0) return stack.getItem() == ModItems.mold;
+    if (i == 0) return stack.getItem() == Foundry.mold;
     return false;
   }
 

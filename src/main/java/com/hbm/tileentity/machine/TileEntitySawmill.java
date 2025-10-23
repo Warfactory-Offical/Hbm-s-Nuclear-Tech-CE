@@ -6,7 +6,7 @@ import com.hbm.entity.projectile.EntitySawblade;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.RecipesCommon;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Materials.Powders;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
@@ -83,10 +83,10 @@ public class TileEntitySawmill extends TileEntityMachineBase implements ITickabl
                             inventory.setStackInSlot(0, ItemStack.EMPTY);
                             inventory.setStackInSlot(1, result);
 
-                            if(result.getItem() != ModItems.powder_sawdust) {
+                            if(result.getItem() != Powders.powder_sawdust) {
                                 float chance = result.getItem() == Items.STICK ? 0.1F : 0.5F;
                                 if(world.rand.nextFloat() < chance) {
-                                    inventory.setStackInSlot(2, new ItemStack(ModItems.powder_sawdust));
+                                    inventory.setStackInSlot(2, new ItemStack(Powders.powder_sawdust));
                                 }
                             }
 
@@ -252,7 +252,7 @@ public class TileEntitySawmill extends TileEntityMachineBase implements ITickabl
         List<String> names = ItemStackUtil.getOreDictNames(input);
 
         if(names.contains("stickWood")) {
-            return new ItemStack(ModItems.powder_sawdust);
+            return new ItemStack(Powders.powder_sawdust);
         }
 
         if(names.contains("logWood")) {
@@ -283,10 +283,10 @@ public class TileEntitySawmill extends TileEntityMachineBase implements ITickabl
 
         HashMap<Object, Object[]> recipes = new HashMap<>();
 
-        recipes.put(new RecipesCommon.OreDictStack("logWood"), new ItemStack[] { new ItemStack(Blocks.PLANKS, 6), ItemStackUtil.addTooltipToStack(new ItemStack(ModItems.powder_sawdust), ChatFormatting.RED + "50%") });
-        recipes.put(new RecipesCommon.OreDictStack("plankWood"), new ItemStack[] { new ItemStack(Items.STICK, 6), ItemStackUtil.addTooltipToStack(new ItemStack(ModItems.powder_sawdust), ChatFormatting.RED + "10%") });
-        recipes.put(new RecipesCommon.OreDictStack("stickWood"), new ItemStack[] { new ItemStack(ModItems.powder_sawdust) });
-        recipes.put(new RecipesCommon.OreDictStack("treeSapling"), new ItemStack[] { new ItemStack(Items.STICK, 1), ItemStackUtil.addTooltipToStack(new ItemStack(ModItems.powder_sawdust), ChatFormatting.RED + "10%") });
+        recipes.put(new RecipesCommon.OreDictStack("logWood"), new ItemStack[] { new ItemStack(Blocks.PLANKS, 6), ItemStackUtil.addTooltipToStack(new ItemStack(Powders.powder_sawdust), ChatFormatting.RED + "50%") });
+        recipes.put(new RecipesCommon.OreDictStack("plankWood"), new ItemStack[] { new ItemStack(Items.STICK, 6), ItemStackUtil.addTooltipToStack(new ItemStack(Powders.powder_sawdust), ChatFormatting.RED + "10%") });
+        recipes.put(new RecipesCommon.OreDictStack("stickWood"), new ItemStack[] { new ItemStack(Powders.powder_sawdust) });
+        recipes.put(new RecipesCommon.OreDictStack("treeSapling"), new ItemStack[] { new ItemStack(Items.STICK, 1), ItemStackUtil.addTooltipToStack(new ItemStack(Powders.powder_sawdust), ChatFormatting.RED + "10%") });
 
         return recipes;
     }

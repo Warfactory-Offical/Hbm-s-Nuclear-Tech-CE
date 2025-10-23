@@ -1,6 +1,6 @@
 package com.hbm.entity.particle;
 
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.DummyTexs;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.ModFXCollidePacket;
 import net.minecraft.block.state.IBlockState;
@@ -19,8 +19,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class EntityCloudFX extends Particle {
 
 	private static final Item[] TEXTURE_ITEMS = new Item[]{
-			ModItems.cloud1, ModItems.cloud2, ModItems.cloud3, ModItems.cloud4,
-			ModItems.cloud5, ModItems.cloud6, ModItems.cloud7, ModItems.cloud8
+			DummyTexs.cloud1, DummyTexs.cloud2, DummyTexs.cloud3, DummyTexs.cloud4,
+			DummyTexs.cloud5, DummyTexs.cloud6, DummyTexs.cloud7, DummyTexs.cloud8
 	};
 
 	private final int meta;

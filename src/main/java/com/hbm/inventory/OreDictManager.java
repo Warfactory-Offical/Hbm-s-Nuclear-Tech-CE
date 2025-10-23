@@ -11,6 +11,7 @@ import com.hbm.inventory.material.Mats;
 import com.hbm.inventory.material.NTMMaterial;
 import com.hbm.items.ItemEnums.*;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Materials.*;
 import com.hbm.main.CraftingManager;
 import com.hbm.main.MainRegistry;
 import net.minecraft.block.Block;
@@ -419,120 +420,120 @@ public class OreDictManager {
     public static void registerOres() {
 
         //VANILLA - Fixed
-        COAL.gem(Items.COAL).dustSmall(powder_coal_tiny).dust(powder_coal);
-        IRON.crystal(crystal_iron).plate(plate_iron).dust(powder_iron).ore(ore_gneiss_iron);
-        GOLD.crystal(crystal_gold).plate(plate_gold).dust(powder_gold).ore(ore_gneiss_gold);
-        LAPIS.crystal(crystal_lapis).dust(powder_lapis);
-        NETHERQUARTZ.gem(Items.QUARTZ).dust(powder_quartz).ore(Blocks.QUARTZ_ORE);
-        QUARTZ.dust(powder_quartz);
-        DIAMOND.crystal(crystal_diamond).dust(powder_diamond).ore(gravel_diamond, ore_sellafield_diamond);
-        EMERALD.dust(powder_emerald).ore(ore_sellafield_emerald);
-        REDSTONE.crystal(crystal_redstone);
+        COAL.gem(Items.COAL).dustSmall(Powders.powder_coal_tiny).dust(Powders.powder_coal);
+        IRON.crystal(Crystals.crystal_iron).plate(plate_iron).dust(Powders.powder_iron).ore(ore_gneiss_iron);
+        GOLD.crystal(Crystals.crystal_gold).plate(plate_gold).dust(Powders.powder_gold).ore(ore_gneiss_gold);
+        LAPIS.crystal(Crystals.crystal_lapis).dust(Powders.powder_lapis);
+        NETHERQUARTZ.gem(Items.QUARTZ).dust(Powders.powder_quartz).ore(Blocks.QUARTZ_ORE);
+        QUARTZ.dust(Powders.powder_quartz);
+        DIAMOND.crystal(Crystals.crystal_diamond).dust(Powders.powder_diamond).ore(gravel_diamond, ore_sellafield_diamond);
+        EMERALD.dust(Powders.powder_emerald).ore(ore_sellafield_emerald);
+        REDSTONE.crystal(Crystals.crystal_redstone);
 
         /*
          * RADIOACTIVE
          */
-        U.rad(HazardRegistry.u).nugget(nugget_uranium).billet(billet_uranium).crystal(crystal_uranium).ingot(ingot_uranium).dust(powder_uranium).block(block_uranium).ore(ore_uranium, ore_uranium_scorched, ore_gneiss_uranium, ore_gneiss_uranium_scorched, ore_nether_uranium, ore_nether_uranium_scorched, ore_sellafield_uranium_scorched).oreNether(ore_nether_uranium, ore_nether_uranium_scorched);
-        U233.rad(HazardRegistry.u233).nugget(nugget_u233).billet(billet_u233).ingot(ingot_u233).block(block_u233);
-        U235.rad(HazardRegistry.u235).nugget(nugget_u235).billet(billet_u235).ingot(ingot_u235).block(block_u235);
-        U238.rad(HazardRegistry.u238).nugget(nugget_u238).billet(billet_u238).ingot(ingot_u238).block(block_u238);
-        TH232.rad(HazardRegistry.th232).nugget(nugget_th232).billet(billet_th232).crystal(crystal_thorium).ingot(ingot_th232).dust(powder_thorium).block(block_thorium).ore(ore_thorium);
-        PU.rad(HazardRegistry.pu).nugget(nugget_plutonium).billet(billet_plutonium).crystal(crystal_plutonium).ingot(ingot_plutonium).dust(powder_plutonium).block(block_plutonium).ore(ore_nether_plutonium).oreNether(ore_nether_plutonium);
-        PURG.rad(HazardRegistry.purg).nugget(nugget_pu_mix).billet(billet_pu_mix).ingot(ingot_pu_mix).block(block_pu_mix);
-        PU238.rad(HazardRegistry.pu238).hot(3F).nugget(nugget_pu238).billet(billet_pu238).ingot(ingot_pu238).block(block_pu238);
-        PU239.rad(HazardRegistry.pu239).nugget(nugget_pu239).billet(billet_pu239).ingot(ingot_pu239).block(block_pu239);
-        PU240.rad(HazardRegistry.pu240).nugget(nugget_pu240).billet(billet_pu240).ingot(ingot_pu240).block(block_pu240);
-        PU241.rad(HazardRegistry.pu241).nugget(nugget_pu241).billet(billet_pu241).ingot(ingot_pu241);                                                                //.block(block_pu241);
-        AM241.rad(HazardRegistry.am241).nugget(nugget_am241).billet(billet_am241).ingot(ingot_am241);
-        AM242.rad(HazardRegistry.am242).nugget(nugget_am242).billet(billet_am242).ingot(ingot_am242);
-        AMRG.rad(HazardRegistry.amrg).nugget(nugget_am_mix).billet(billet_am_mix).ingot(ingot_am_mix);
-        NP237.rad(HazardRegistry.np237).nugget(nugget_neptunium).billet(billet_neptunium).ingot(ingot_neptunium).dust(powder_neptunium).block(block_neptunium);
-        PO210.rad(HazardRegistry.po210).hot(3).nugget(nugget_polonium).billet(billet_polonium).ingot(ingot_polonium).dust(powder_polonium).block(block_polonium);
-        TC99.rad(HazardRegistry.tc99).nugget(nugget_technetium).billet(billet_technetium).ingot(ingot_technetium);
-        RA226.rad(HazardRegistry.ra226).nugget(nugget_ra226).billet(billet_ra226).ingot(ingot_ra226).dust(powder_ra226).block(block_ra226);
-        AC227.rad(HazardRegistry.ac227).nugget(nugget_actinium).billet(billet_ac227).ingot(ingot_actinium).dust(powder_actinium).block(block_actinium).dustSmall(powder_actinium_tiny);
-        CO60.rad(HazardRegistry.co60).hot(1).nugget(nugget_co60).billet(billet_co60).ingot(ingot_co60).dust(powder_co60);
-        AU198.rad(HazardRegistry.au198).hot(5).nugget(nugget_au198).billet(billet_au198).ingot(ingot_au198).dust(powder_au198);
-        PB209.rad(HazardRegistry.pb209).blinding(50F).hot(7).nugget(nugget_pb209).billet(billet_pb209).ingot(ingot_pb209);
-        SA326.rad(HazardRegistry.sa326).blinding(50F).nugget(nugget_schrabidium).billet(billet_schrabidium).crystal(crystal_schrabidium).ingot(ingot_schrabidium).dust(powder_schrabidium).plate(plate_schrabidium).plateCast(Mats.MAT_SCHRABIDIUM.make(plate_cast)).block(block_schrabidium).ore(ore_schrabidium, ore_gneiss_schrabidium, ore_nether_schrabidium, ore_sellafield_schrabidium).oreNether(ore_nether_schrabidium);
-        SA327.rad(HazardRegistry.sa327).blinding(50F).nugget(nugget_solinium).billet(billet_solinium).ingot(ingot_solinium).block(block_solinium);
-        SBD.rad(HazardRegistry.sb).blinding(50F).ingot(ingot_schrabidate).dust(powder_schrabidate).block(block_schrabidate);
-        SRN.rad(HazardRegistry.sr).blinding(50F).ingot(ingot_schraranium).block(block_schraranium).crystal(crystal_schraranium);
-        GH336.rad(HazardRegistry.gh336).nugget(nugget_gh336).billet(billet_gh336).ingot(ingot_gh336);
-        MUD.rad(HazardRegistry.mud).ingot(ingot_mud);
+        U.rad(HazardRegistry.u).nugget(Nuggies.nugget_uranium).billet(Billets.billet_uranium).crystal(Crystals.crystal_uranium).ingot(Ingots.ingot_uranium).dust(Powders.powder_uranium).block(block_uranium).ore(ore_uranium, ore_uranium_scorched, ore_gneiss_uranium, ore_gneiss_uranium_scorched, ore_nether_uranium, ore_nether_uranium_scorched, ore_sellafield_uranium_scorched).oreNether(ore_nether_uranium, ore_nether_uranium_scorched);
+        U233.rad(HazardRegistry.u233).nugget(Nuggies.nugget_u233).billet(Billets.billet_u233).ingot(Ingots.ingot_u233).block(block_u233);
+        U235.rad(HazardRegistry.u235).nugget(Nuggies.nugget_u235).billet(Billets.billet_u235).ingot(Ingots.ingot_u235).block(block_u235);
+        U238.rad(HazardRegistry.u238).nugget(Nuggies.nugget_u238).billet(Billets.billet_u238).ingot(Ingots.ingot_u238).block(block_u238);
+        TH232.rad(HazardRegistry.th232).nugget(Nuggies.nugget_th232).billet(Billets.billet_th232).crystal(Crystals.crystal_thorium).ingot(Ingots.ingot_th232).dust(Powders.powder_thorium).block(block_thorium).ore(ore_thorium);
+        PU.rad(HazardRegistry.pu).nugget(Nuggies.nugget_plutonium).billet(Billets.billet_plutonium).crystal(Crystals.crystal_plutonium).ingot(Ingots.ingot_plutonium).dust(Powders.powder_plutonium).block(block_plutonium).ore(ore_nether_plutonium).oreNether(ore_nether_plutonium);
+        PURG.rad(HazardRegistry.purg).nugget(Nuggies.nugget_pu_mix).billet(Billets.billet_pu_mix).ingot(Ingots.ingot_pu_mix).block(block_pu_mix);
+        PU238.rad(HazardRegistry.pu238).hot(3F).nugget(Nuggies.nugget_pu238).billet(Billets.billet_pu238).ingot(Ingots.ingot_pu238).block(block_pu238);
+        PU239.rad(HazardRegistry.pu239).nugget(Nuggies.nugget_pu239).billet(Billets.billet_pu239).ingot(Ingots.ingot_pu239).block(block_pu239);
+        PU240.rad(HazardRegistry.pu240).nugget(Nuggies.nugget_pu240).billet(Billets.billet_pu240).ingot(Ingots.ingot_pu240).block(block_pu240);
+        PU241.rad(HazardRegistry.pu241).nugget(Nuggies.nugget_pu241).billet(Billets.billet_pu241).ingot(Ingots.ingot_pu241);                                                                //.block(block_pu241);
+        AM241.rad(HazardRegistry.am241).nugget(Nuggies.nugget_am241).billet(Billets.billet_am241).ingot(Ingots.ingot_am241);
+        AM242.rad(HazardRegistry.am242).nugget(Nuggies.nugget_am242).billet(Billets.billet_am242).ingot(Ingots.ingot_am242);
+        AMRG.rad(HazardRegistry.amrg).nugget(Nuggies.nugget_am_mix).billet(Billets.billet_am_mix).ingot(Ingots.ingot_am_mix);
+        NP237.rad(HazardRegistry.np237).nugget(Nuggies.nugget_neptunium).billet(Billets.billet_neptunium).ingot(Ingots.ingot_neptunium).dust(Powders.powder_neptunium).block(block_neptunium);
+        PO210.rad(HazardRegistry.po210).hot(3).nugget(Nuggies.nugget_polonium).billet(Billets.billet_polonium).ingot(Ingots.ingot_polonium).dust(Powders.powder_polonium).block(block_polonium);
+        TC99.rad(HazardRegistry.tc99).nugget(Nuggies.nugget_technetium).billet(Billets.billet_technetium).ingot(Ingots.ingot_technetium);
+        RA226.rad(HazardRegistry.ra226).nugget(Nuggies.nugget_ra226).billet(Billets.billet_ra226).ingot(Ingots.ingot_ra226).dust(Powders.powder_ra226).block(block_ra226);
+        AC227.rad(HazardRegistry.ac227).nugget(Nuggies.nugget_actinium).billet(Billets.billet_ac227).ingot(Ingots.ingot_actinium).dust(Powders.powder_actinium).block(block_actinium).dustSmall(Powders.powder_actinium_tiny);
+        CO60.rad(HazardRegistry.co60).hot(1).nugget(Nuggies.nugget_co60).billet(Billets.billet_co60).ingot(Ingots.ingot_co60).dust(Powders.powder_co60);
+        AU198.rad(HazardRegistry.au198).hot(5).nugget(Nuggies.nugget_au198).billet(Billets.billet_au198).ingot(Ingots.ingot_au198).dust(Powders.powder_au198);
+        PB209.rad(HazardRegistry.pb209).blinding(50F).hot(7).nugget(Nuggies.nugget_pb209).billet(Billets.billet_pb209).ingot(Ingots.ingot_pb209);
+        SA326.rad(HazardRegistry.sa326).blinding(50F).nugget(Nuggies.nugget_schrabidium).billet(Billets.billet_schrabidium).crystal(Crystals.crystal_schrabidium).ingot(Ingots.ingot_schrabidium).dust(Powders.powder_schrabidium).plate(plate_schrabidium).plateCast(Mats.MAT_SCHRABIDIUM.make(plate_cast)).block(block_schrabidium).ore(ore_schrabidium, ore_gneiss_schrabidium, ore_nether_schrabidium, ore_sellafield_schrabidium).oreNether(ore_nether_schrabidium);
+        SA327.rad(HazardRegistry.sa327).blinding(50F).nugget(Nuggies.nugget_solinium).billet(Billets.billet_solinium).ingot(Ingots.ingot_solinium).block(block_solinium);
+        SBD.rad(HazardRegistry.sb).blinding(50F).ingot(Ingots.ingot_schrabidate).dust(Powders.powder_schrabidate).block(block_schrabidate);
+        SRN.rad(HazardRegistry.sr).blinding(50F).ingot(Ingots.ingot_schraranium).block(block_schraranium).crystal(Crystals.crystal_schraranium);
+        GH336.rad(HazardRegistry.gh336).nugget(Nuggies.nugget_gh336).billet(Billets.billet_gh336).ingot(Ingots.ingot_gh336);
+        MUD.rad(HazardRegistry.mud).ingot(Ingots.ingot_mud);
 
         /*
          * STABLE
          */
-        TI.ingot(ingot_titanium).crystal(crystal_titanium).dust(powder_titanium).plate(plate_titanium).block(block_titanium).ore(ore_titanium);
-        CU.ingot(ingot_copper).crystal(crystal_copper).dust(powder_copper).plate(plate_copper).block(block_copper).ore(ore_copper, ore_gneiss_copper);
-        MINGRADE.ingot(ingot_red_copper).dust(powder_red_copper).block(block_red_copper);
-        ALLOY.ingot(ingot_advanced_alloy).dust(powder_advanced_alloy).plate(plate_advanced_alloy).block(block_advanced_alloy);
-        W.ingot(ingot_tungsten).dust(powder_tungsten).crystal(crystal_tungsten).block(block_tungsten).ore(ore_tungsten, ore_nether_tungsten).oreNether(ore_nether_tungsten);
-        AL.ingot(ingot_aluminium).dust(powder_aluminium).crystal(crystal_aluminium).plate(plate_aluminium).block(block_aluminium).ore(ore_aluminium);
-        STEEL.ingot(ingot_steel).dustSmall(powder_steel_tiny).dust(powder_steel).plate(plate_steel).block(block_steel);
-        TCALLOY.ingot(ingot_tcalloy).dust(powder_tcalloy).block(block_tcalloy);
-        CDALLOY.ingot(ingot_cdalloy).block(block_cdalloy);
-        BBRONZE.ingot(ingot_bismuth_bronze);
-        ABRONZE.ingot(ingot_arsenic_bronze);
-        BSCCO.ingot(ingot_bscco);
-        PB.nugget(nugget_lead).ingot(ingot_lead).crystal(crystal_lead).dust(powder_lead).plate(plate_lead).block(block_lead).ore(ore_lead);
-        BI.nugget(nugget_bismuth).billet(billet_bismuth).ingot(ingot_bismuth).dust(powder_bismuth).block(block_bismuth);
-        AS.nugget(nugget_arsenic).ingot(ingot_arsenic);
-        CA.ingot(ingot_calcium).dust(powder_calcium);
-        CD.ingot(ingot_cadmium).dust(powder_cadmium).block(block_cadmium);
-        TA.nugget(nugget_tantalium).gem(gem_tantalium).ingot(ingot_tantalium).dust(powder_tantalium).block(block_tantalium);
-        COLTAN.ingot(fragment_coltan).dust(powder_coltan_ore).block(block_coltan).ore(ore_coltan);
-        NB.nugget(nugget_niobium, fragment_niobium).ingot(ingot_niobium).dustSmall(powder_niobium_tiny).dust(powder_niobium).block(block_niobium);
-        BE.nugget(nugget_beryllium).billet(billet_beryllium).crystal(crystal_beryllium).ingot(ingot_beryllium).dust(powder_beryllium).block(block_beryllium).ore(ore_beryllium);
-        CO.nugget(fragment_cobalt).nugget(nugget_cobalt).billet(billet_cobalt).crystal(crystal_cobalt).ingot(ingot_cobalt).dust(powder_cobalt).dustSmall(powder_cobalt_tiny).block(block_cobalt).ore(ore_cobalt, ore_nether_cobalt);
-        B.nugget(fragment_boron).ingot(ingot_boron).dustSmall(powder_boron_tiny).dust(powder_boron).block(block_boron);
-        SI.nugget(nugget_silicon).billet(billet_silicon).ingot(ingot_silicon);
-        GRAPHITE.ingot(ingot_graphite).block(block_graphite);
-        CARBON.ingot(ingot_graphite).block(block_graphite);
-        DURA.ingot(ingot_dura_steel).dust(powder_dura_steel).plate(plate_dura_steel).block(block_dura_steel);
-        POLYMER.ingot(ingot_polymer).dust(powder_polymer).block(block_polymer);
-        BAKELITE.ingot(ingot_bakelite).dust(powder_bakelite).block(block_bakelite);
-        LATEX.gem(ball_resin).ingot(ingot_biorubber);
-        RUBBER.ingot(ingot_rubber).block(block_rubber);
+        TI.ingot(Ingots.ingot_titanium).crystal(Crystals.crystal_titanium).dust(Powders.powder_titanium).plate(plate_titanium).block(block_titanium).ore(ore_titanium);
+        CU.ingot(Ingots.ingot_copper).crystal(Crystals.crystal_copper).dust(Powders.powder_copper).plate(plate_copper).block(block_copper).ore(ore_copper, ore_gneiss_copper);
+        MINGRADE.ingot(Ingots.ingot_red_copper).dust(Powders.powder_red_copper).block(block_red_copper);
+        ALLOY.ingot(Ingots.ingot_advanced_alloy).dust(Powders.powder_advanced_alloy).plate(plate_advanced_alloy).block(block_advanced_alloy);
+        W.ingot(Ingots.ingot_tungsten).dust(Powders.powder_tungsten).crystal(Crystals.crystal_tungsten).block(block_tungsten).ore(ore_tungsten, ore_nether_tungsten).oreNether(ore_nether_tungsten);
+        AL.ingot(Ingots.ingot_aluminium).dust(Powders.powder_aluminium).crystal(Crystals.crystal_aluminium).plate(plate_aluminium).block(block_aluminium).ore(ore_aluminium);
+        STEEL.ingot(Ingots.ingot_steel).dustSmall(Powders.powder_steel_tiny).dust(Powders.powder_steel).plate(plate_steel).block(block_steel);
+        TCALLOY.ingot(Ingots.ingot_tcalloy).dust(Powders.powder_tcalloy).block(block_tcalloy);
+        CDALLOY.ingot(Ingots.ingot_cdalloy).block(block_cdalloy);
+        BBRONZE.ingot(Ingots.ingot_bismuth_bronze);
+        ABRONZE.ingot(Ingots.ingot_arsenic_bronze);
+        BSCCO.ingot(Ingots.ingot_bscco);
+        PB.nugget(Nuggies.nugget_lead).ingot(Ingots.ingot_lead).crystal(Crystals.crystal_lead).dust(Powders.powder_lead).plate(plate_lead).block(block_lead).ore(ore_lead);
+        BI.nugget(Nuggies.nugget_bismuth).billet(Billets.billet_bismuth).ingot(Ingots.ingot_bismuth).dust(Powders.powder_bismuth).block(block_bismuth);
+        AS.nugget(Nuggies.nugget_arsenic).ingot(Ingots.ingot_arsenic);
+        CA.ingot(Ingots.ingot_calcium).dust(Powders.powder_calcium);
+        CD.ingot(Ingots.ingot_cadmium).dust(Powders.powder_cadmium).block(block_cadmium);
+        TA.nugget(Nuggies.nugget_tantalium).gem(gem_tantalium).ingot(Ingots.ingot_tantalium).dust(Powders.powder_tantalium).block(block_tantalium);
+        COLTAN.ingot(fragment_coltan).dust(Powders.powder_coltan_ore).block(block_coltan).ore(ore_coltan);
+        NB.nugget(Nuggies.nugget_niobium, fragment_niobium).ingot(Ingots.ingot_niobium).dustSmall(Powders.powder_niobium_tiny).dust(Powders.powder_niobium).block(block_niobium);
+        BE.nugget(Nuggies.nugget_beryllium).billet(Billets.billet_beryllium).crystal(Crystals.crystal_beryllium).ingot(Ingots.ingot_beryllium).dust(Powders.powder_beryllium).block(block_beryllium).ore(ore_beryllium);
+        CO.nugget(fragment_cobalt).nugget(Nuggies.nugget_cobalt).billet(Billets.billet_cobalt).crystal(Crystals.crystal_cobalt).ingot(Ingots.ingot_cobalt).dust(Powders.powder_cobalt).dustSmall(Powders.powder_cobalt_tiny).block(block_cobalt).ore(ore_cobalt, ore_nether_cobalt);
+        B.nugget(fragment_boron).ingot(Ingots.ingot_boron).dustSmall(Powders.powder_boron_tiny).dust(Powders.powder_boron).block(block_boron);
+        SI.nugget(Nuggies.nugget_silicon).billet(Billets.billet_silicon).ingot(Ingots.ingot_silicon);
+        GRAPHITE.ingot(Ingots.ingot_graphite).block(block_graphite);
+        CARBON.ingot(Ingots.ingot_graphite).block(block_graphite);
+        DURA.ingot(Ingots.ingot_dura_steel).dust(Powders.powder_dura_steel).plate(plate_dura_steel).block(block_dura_steel);
+        POLYMER.ingot(Ingots.ingot_polymer).dust(Powders.powder_polymer).block(block_polymer);
+        BAKELITE.ingot(Ingots.ingot_bakelite).dust(Powders.powder_bakelite).block(block_bakelite);
+        LATEX.gem(ball_resin).ingot(Ingots.ingot_biorubber);
+        RUBBER.ingot(Ingots.ingot_rubber).block(block_rubber);
         //PET																	.ingot(ingot_pet); Oh yeah this one was commented by HBM himself for some reason
-        PC.ingot(ingot_pc);
-        PVC.ingot(ingot_pvc);
-        MAGTUNG.ingot(ingot_magnetized_tungsten).dust(powder_magnetized_tungsten).block(block_magnetized_tungsten);
-        CMB.ingot(ingot_combine_steel).dust(powder_combine_steel).plate(plate_combine_steel).block(block_combine_steel);
-        DESH.nugget(nugget_desh).ingot(ingot_desh).dust(powder_desh).block(block_desh);
-        STAR.ingot(ingot_starmetal).block(block_starmetal).crystal(crystal_starmetal);
-        GUNMETAL.ingot(ingot_gunmetal).plate(plate_gunmetal);
-        WEAPONSTEEL.ingot(ingot_weaponsteel).plate(plate_weaponsteel);
-        BIGMT.ingot(ingot_saturnite).plate(plate_saturnite);
-        FERRO.ingot(ingot_ferrouranium);
-        EUPH.nugget(nugget_euphemium).ingot(ingot_euphemium).dust(powder_euphemium).block(block_euphemium);
-        DNT.nugget(nugget_dineutronium).ingot(ingot_dineutronium).dust(powder_dineutronium).block(block_dineutronium);
-        FIBER.ingot(ingot_fiberglass).block(block_fiberglass);
-        ASBESTOS.asbestos(1F).ingot(ingot_asbestos).crystal(crystal_asbestos).dust(powder_asbestos).block(block_asbestos).ore(ore_asbestos, ore_gneiss_asbestos, DictFrame.fromOne(basalt_ore, EnumBasaltOreType.ASBESTOS), DictFrame.fromOne(stone_resource, EnumStoneType.ASBESTOS));
-        OSMIRIDIUM.nugget(nugget_osmiridium).ingot(ingot_osmiridium).crystal(crystal_osmiridium);
+        PC.ingot(Ingots.ingot_pc);
+        PVC.ingot(Ingots.ingot_pvc);
+        MAGTUNG.ingot(Ingots.ingot_magnetized_tungsten).dust(Powders.powder_magnetized_tungsten).block(block_magnetized_tungsten);
+        CMB.ingot(Ingots.ingot_combine_steel).dust(Powders.powder_combine_steel).plate(plate_combine_steel).block(block_combine_steel);
+        DESH.nugget(Nuggies.nugget_desh).ingot(Ingots.ingot_desh).dust(Powders.powder_desh).block(block_desh);
+        STAR.ingot(Ingots.ingot_starmetal).block(block_starmetal).crystal(Crystals.crystal_starmetal);
+        GUNMETAL.ingot(Ingots.ingot_gunmetal).plate(plate_gunmetal);
+        WEAPONSTEEL.ingot(Ingots.ingot_weaponsteel).plate(plate_weaponsteel);
+        BIGMT.ingot(Ingots.ingot_saturnite).plate(plate_saturnite);
+        FERRO.ingot(Ingots.ingot_ferrouranium);
+        EUPH.nugget(Nuggies.nugget_euphemium).ingot(Ingots.ingot_euphemium).dust(Powders.powder_euphemium).block(block_euphemium);
+        DNT.nugget(Nuggies.nugget_dineutronium).ingot(Ingots.ingot_dineutronium).dust(Powders.powder_dineutronium).block(block_dineutronium);
+        FIBER.ingot(Ingots.ingot_fiberglass).block(block_fiberglass);
+        ASBESTOS.asbestos(1F).ingot(Ingots.ingot_asbestos).crystal(Crystals.crystal_asbestos).dust(Powders.powder_asbestos).block(block_asbestos).ore(ore_asbestos, ore_gneiss_asbestos, DictFrame.fromOne(basalt_ore, EnumBasaltOreType.ASBESTOS), DictFrame.fromOne(stone_resource, EnumStoneType.ASBESTOS));
+        OSMIRIDIUM.nugget(Nuggies.nugget_osmiridium).ingot(Ingots.ingot_osmiridium).crystal(Crystals.crystal_osmiridium);
 
         /*
          * DUST AND GEM ORES
          */
-        S.dust(sulfur).block(block_sulfur).crystal(crystal_sulfur).ore(ore_sulfur, ore_nether_sulfur ,DictFrame.fromOne(basalt_ore, EnumBasaltOreType.SULFUR), DictFrame.fromOne(stone_resource, EnumStoneType.SULFUR)).oreNether(ore_nether_sulfur);
-        KNO.dust(niter).block(block_niter).crystal(crystal_niter).ore(ore_niter);
-        F.dust(fluorite).block(block_fluorite).crystal(crystal_fluorite).ore(ore_fluorite, DictFrame.fromOne(basalt_ore, EnumBasaltOreType.FLUORITE));
-        LIGNITE.gem(lignite).dust(powder_lignite).ore(ore_lignite);
+        S.dust(Powders.sulfur).block(block_sulfur).crystal(Crystals.crystal_sulfur).ore(ore_sulfur, ore_nether_sulfur ,DictFrame.fromOne(basalt_ore, EnumBasaltOreType.SULFUR), DictFrame.fromOne(stone_resource, EnumStoneType.SULFUR)).oreNether(ore_nether_sulfur);
+        KNO.dust(Powders.niter).block(block_niter).crystal(Crystals.crystal_niter).ore(ore_niter);
+        F.dust(Ingots.fluorite).block(block_fluorite).crystal(Crystals.crystal_fluorite).ore(ore_fluorite, DictFrame.fromOne(basalt_ore, EnumBasaltOreType.FLUORITE));
+        LIGNITE.gem(lignite).dust(Powders.powder_lignite).ore(ore_lignite);
         COALCOKE.gem(fromOne(coke, EnumCokeType.COAL)).block(fromOne(block_coke, EnumCokeType.COAL));
         PETCOKE.gem(fromOne(coke, EnumCokeType.PETROLEUM)).block(fromOne(block_coke, EnumCokeType.PETROLEUM));
         LIGCOKE.gem(fromOne(coke, EnumCokeType.LIGNITE)).block(fromOne(block_coke, EnumCokeType.LIGNITE));
         CINNABAR.crystal(cinnabar).gem(cinnabar).ore(ore_cinnabar, ore_depth_cinnabar);
-        BORAX.dust(powder_borax).ore(ore_depth_borax);
-        CHLOROCALCITE.dust(powder_chlorocalcite);
-        MOLYSITE.dust(powder_molysite).ore(DictFrame.fromOne(basalt_ore, EnumBasaltOreType.MOLYSITE));
+        BORAX.dust(Powders.powder_borax).ore(ore_depth_borax);
+        CHLOROCALCITE.dust(Powders.powder_chlorocalcite);
+        MOLYSITE.dust(Powders.powder_molysite).ore(DictFrame.fromOne(basalt_ore, EnumBasaltOreType.MOLYSITE));
         SODALITE.gem(gem_sodalite);
         ALEXANDRITE.gem(gem_alexandrite);
 
         VOLCANIC.gem(gem_volcanic).ore(DictFrame.fromOne(basalt_ore, EnumBasaltOreType.GEM));
         HEMATITE.ore(fromOne(stone_resource, EnumStoneType.HEMATITE));
         MALACHITE.ingot(DictFrame.fromOne(chunk_ore, EnumChunkType.MALACHITE)).ore(fromOne(stone_resource, EnumStoneType.MALACHITE));
-        LIMESTONE.dust(powder_limestone).ore(fromOne(stone_resource, EnumStoneType.LIMESTONE));
+        LIMESTONE.dust(Powders.powder_limestone).ore(fromOne(stone_resource, EnumStoneType.LIMESTONE));
         BAUXITE.gem(fromOne(stone_resource, EnumStoneType.BAUXITE));
         CRYOLITE.crystal(fromOne(chunk_ore, EnumChunkType.CRYOLITE));
         SLAG.block(block_slag);
@@ -540,24 +541,24 @@ public class OreDictManager {
         /*
          * HAZARDS, MISC
          */
-        LI.hydro(1F).ingot(lithium).dustSmall(powder_lithium_tiny).dust(powder_lithium).crystal(crystal_lithium).block(block_lithium).ore(ore_gneiss_lithium);
-        NA.hydro(1F).hazIngot().dust(powder_sodium);
+        LI.hydro(1F).ingot(Ingots.lithium).dustSmall(Powders.powder_lithium_tiny).dust(Powders.powder_lithium).crystal(Crystals.crystal_lithium).block(block_lithium).ore(ore_gneiss_lithium);
+        NA.hydro(1F).hazIngot().dust(Powders.powder_sodium);
 
         /*
          * PHOSPHORUS
          */
-        P_WHITE.hot(5).ingot(ingot_phosphorus).block(block_white_phosphorus);
-        P_RED.dust(powder_fire).block(block_red_phosphorus).crystal(crystal_phosphorus);
+        P_WHITE.hot(5).ingot(Ingots.ingot_phosphorus).block(block_white_phosphorus);
+        P_RED.dust(Powders.powder_fire).block(block_red_phosphorus).crystal(Crystals.crystal_phosphorus);
 
         /*
          * RARE METALS
          */
-        AUSTRALIUM.nugget(nugget_australium).billet(billet_australium).ingot(ingot_australium).dust(powder_australium).block(block_australium).ore(ore_australium);
-        REIIUM.nugget(nugget_reiium).ingot(ingot_reiium).dust(powder_reiium).block(block_reiium).ore(ore_reiium);
-        WEIDANIUM.nugget(nugget_weidanium).ingot(ingot_weidanium).dust(powder_weidanium).block(block_weidanium).ore(ore_weidanium);
-        UNOBTAINIUM.nugget(nugget_unobtainium).billet(billet_unobtainium).ingot(ingot_unobtainium).dust(powder_unobtainium).block(block_unobtainium).ore(ore_unobtainium);
-        VERTICIUM.nugget(nugget_verticium).ingot(ingot_verticium).dust(powder_verticium).block(block_verticium).ore(ore_verticium);
-        DAFFERGON.nugget(nugget_daffergon).ingot(ingot_daffergon).dust(powder_daffergon);
+        AUSTRALIUM.nugget(Nuggies.nugget_australium).billet(Billets.billet_australium).ingot(Ingots.ingot_australium).dust(Powders.powder_australium).block(block_australium).ore(ore_australium);
+        REIIUM.nugget(Nuggies.nugget_reiium).ingot(Ingots.ingot_reiium).dust(Powders.powder_reiium).block(block_reiium).ore(ore_reiium);
+        WEIDANIUM.nugget(Nuggies.nugget_weidanium).ingot(Ingots.ingot_weidanium).dust(Powders.powder_weidanium).block(block_weidanium).ore(ore_weidanium);
+        UNOBTAINIUM.nugget(Nuggies.nugget_unobtainium).billet(Billets.billet_unobtainium).ingot(Ingots.ingot_unobtainium).dust(Powders.powder_unobtainium).block(block_unobtainium).ore(ore_unobtainium);
+        VERTICIUM.nugget(Nuggies.nugget_verticium).ingot(Ingots.ingot_verticium).dust(Powders.powder_verticium).block(block_verticium).ore(ore_verticium);
+        DAFFERGON.nugget(Nuggies.nugget_daffergon).ingot(Ingots.ingot_daffergon).dust(Powders.powder_daffergon);
 
         /*
          * RARE EARTHS
@@ -565,43 +566,43 @@ public class OreDictManager {
 
         RAREEARTH.ingot(DictFrame.fromOne(ModItems.chunk_ore, EnumChunkType.RARE)).ore(ore_rare, ore_gneiss_rare);
 
-        LA.nugget(fragment_lanthanium).ingot(ingot_lanthanium).dustSmall(powder_lanthanium_tiny).dust(powder_lanthanium).block(block_lanthanium);
-        ZR.nugget(nugget_zirconium).ingot(ingot_zirconium).billet(billet_zirconium).dust(powder_zirconium).block(block_zirconium).ore(ore_depth_zirconium);
-        ND.nugget(fragment_neodymium).dustSmall(powder_neodymium_tiny).dust(powder_neodymium).ore(ore_depth_nether_neodymium).oreNether(ore_depth_nether_neodymium);
-        CE.nugget(fragment_cerium).dustSmall(powder_cerium_tiny).dust(powder_cerium);
+        LA.nugget(fragment_lanthanium).ingot(Ingots.ingot_lanthanium).dustSmall(Powders.powder_lanthanium_tiny).dust(Powders.powder_lanthanium).block(block_lanthanium);
+        ZR.nugget(Nuggies.nugget_zirconium).ingot(Ingots.ingot_zirconium).billet(Billets.billet_zirconium).dust(Powders.powder_zirconium).block(block_zirconium).ore(ore_depth_zirconium);
+        ND.nugget(fragment_neodymium).dustSmall(Powders.powder_neodymium_tiny).dust(Powders.powder_neodymium).ore(ore_depth_nether_neodymium).oreNether(ore_depth_nether_neodymium);
+        CE.nugget(fragment_cerium).dustSmall(Powders.powder_cerium_tiny).dust(Powders.powder_cerium);
 
         /*
          * NITAN
          */
-        I.dust(powder_iodine);
-        AT.dust(powder_astatine);
-        CS.dust(powder_caesium);
-        SR.dust(powder_strontium);
-        BR.dust(powder_bromine);
-        TS.dust(powder_tennessine);
+        I.dust(Powders.powder_iodine);
+        AT.dust(Powders.powder_astatine);
+        CS.dust(Powders.powder_caesium);
+        SR.dust(Powders.powder_strontium);
+        BR.dust(Powders.powder_bromine);
+        TS.dust(Powders.powder_tennessine);
 
         /*
          * FISSION FRAGMENTS
          */
-        SR									.hot(1F)	.hydro(1F)	.hazIngot()						.dust(powder_strontium);
-        SR90.rad(HazardRegistry.sr90).hot(1F).hydro(1F).dustSmall(powder_sr90_tiny).dust(powder_sr90).ingot(ingot_sr90).billet(billet_sr90).nugget(nugget_sr90);
-        I131.rad(HazardRegistry.i131).hot(1F).dustSmall(powder_i131_tiny).dust(powder_i131);
-        XE135.rad(HazardRegistry.xe135).hot(10F).dustSmall(powder_xe135_tiny).dust(powder_xe135);
-        CS137.rad(HazardRegistry.cs137).hot(3F).hydro(3F).dustSmall(powder_cs137_tiny).dust(powder_cs137);
-        AT209.rad(HazardRegistry.at209).hot(20F).dust(powder_at209);
+        SR									.hot(1F)	.hydro(1F)	.hazIngot()						.dust(Powders.powder_strontium);
+        SR90.rad(HazardRegistry.sr90).hot(1F).hydro(1F).dustSmall(Powders.powder_sr90_tiny).dust(Powders.powder_sr90).ingot(Ingots.ingot_sr90).billet(Billets.billet_sr90).nugget(Nuggies.nugget_sr90);
+        I131.rad(HazardRegistry.i131).hot(1F).dustSmall(Powders.powder_i131_tiny).dust(Powders.powder_i131);
+        XE135.rad(HazardRegistry.xe135).hot(10F).dustSmall(Powders.powder_xe135_tiny).dust(Powders.powder_xe135);
+        CS137.rad(HazardRegistry.cs137).hot(3F).hydro(3F).dustSmall(Powders.powder_cs137_tiny).dust(Powders.powder_cs137);
+        AT209.rad(HazardRegistry.at209).hot(20F).dust(Powders.powder_at209);
 
         /*
          * COLLECTIONS
          */
         ANY_GUNPOWDER.dust(Items.GUNPOWDER, ballistite, cordite);
         ANY_SMOKELESS.dust(ballistite, cordite);
-        ANY_PLASTICEXPLOSIVE.ingot(ingot_semtex, ingot_c4);
+        ANY_PLASTICEXPLOSIVE.ingot(Ingots.ingot_semtex, Ingots.ingot_c4);
         ANY_HIGHEXPLOSIVE.ingot(ball_tnt).ingot(ball_tatb);
         ANY_CONCRETE.any(concrete, concrete_smooth, concrete_asbestos, ducrete, ducrete_smooth);
         for(int i = 0; i < 16; i++) { ANY_CONCRETE.any(new ItemStack(ModBlocks.concrete_colored, 1, i)); }
         for(int i = 0; i < 16; i++) { ANY_CONCRETE.any(new ItemStack(ModBlocks.concrete_colored_ext, 1, i)); }
         ANY_COKE.gem(fromAll(coke, EnumCokeType.class)).block(fromAll(block_coke, EnumCokeType.class));
-        ANY_BISMOID.ingot(ingot_bismuth, ingot_arsenic).nugget(nugget_bismuth, nugget_arsenic).block(block_bismuth);
+        ANY_BISMOID.ingot(Ingots.ingot_bismuth, Ingots.ingot_arsenic).nugget(Nuggies.nugget_bismuth, Nuggies.nugget_arsenic).block(block_bismuth);
         ANY_ASH.any(fromOne(ModItems.powder_ash, EnumAshType.WOOD), fromOne(ModItems.powder_ash, EnumAshType.COAL), fromOne(ModItems.powder_ash, EnumAshType.MISC), fromOne(ModItems.powder_ash, EnumAshType.FLY), fromOne(ModItems.powder_ash, EnumAshType.SOOT));
 
 
@@ -635,8 +636,8 @@ public class OreDictManager {
         /*
          * GLYPHID M E A T
          */
-        OreDictionary.registerOre(KEY_GLYPHID_MEAT, new ItemStack(glyphid_meat));
-        OreDictionary.registerOre(KEY_GLYPHID_MEAT, new ItemStack(glyphid_meat_grilled));
+        OreDictionary.registerOre(KEY_GLYPHID_MEAT, new ItemStack(Foods.glyphid_meat));
+        OreDictionary.registerOre(KEY_GLYPHID_MEAT, new ItemStack(Foods.glyphid_meat_grilled));
 
         for (NTMMaterial mat : Mats.orderedList) {
             if (mat.smeltable == NTMMaterial.SmeltingBehavior.SMELTABLE) {
@@ -678,7 +679,7 @@ public class OreDictManager {
                 OreDictionary.registerOre(MaterialShapes.GRIP.name() + name, new ItemStack(ModItems.part_grip, 1, mat.id));
         }
 
-        OreDictionary.registerOre("itemRubber", ingot_rubber);
+        OreDictionary.registerOre("itemRubber", Ingots.ingot_rubber);
 
         OreDictionary.registerOre("coalCoke", fromOne(coke, EnumCokeType.COAL));
 
@@ -718,18 +719,18 @@ public class OreDictManager {
 
         OreDictionary.registerOre("dyeRed", cinnabar);
         OreDictionary.registerOre("dye", cinnabar);
-        OreDictionary.registerOre("dyeYellow", sulfur);
-        OreDictionary.registerOre("dye", sulfur);
-        OreDictionary.registerOre("dyeBlack", powder_coal);
-        OreDictionary.registerOre("dye", powder_coal);
-        OreDictionary.registerOre("dyeBrown", powder_lignite);
-        OreDictionary.registerOre("dye", powder_lignite);
-        OreDictionary.registerOre("dyeLightGray", powder_titanium);
-        OreDictionary.registerOre("dye", powder_titanium);
-        OreDictionary.registerOre("dyeWhite", fluorite);
-        OreDictionary.registerOre("dye", fluorite);
-        OreDictionary.registerOre("dyeBlue", powder_lapis);
-        OreDictionary.registerOre("dye", powder_lapis);
+        OreDictionary.registerOre("dyeYellow", Powders.sulfur);
+        OreDictionary.registerOre("dye", Powders.sulfur);
+        OreDictionary.registerOre("dyeBlack", Powders.powder_coal);
+        OreDictionary.registerOre("dye", Powders.powder_coal);
+        OreDictionary.registerOre("dyeBrown", Powders.powder_lignite);
+        OreDictionary.registerOre("dye", Powders.powder_lignite);
+        OreDictionary.registerOre("dyeLightGray", Powders.powder_titanium);
+        OreDictionary.registerOre("dye", Powders.powder_titanium);
+        OreDictionary.registerOre("dyeWhite", Ingots.fluorite);
+        OreDictionary.registerOre("dye", Ingots.fluorite);
+        OreDictionary.registerOre("dyeBlue", Powders.powder_lapis);
+        OreDictionary.registerOre("dye", Powders.powder_lapis);
         OreDictionary.registerOre("dyeBlack", fromOne(oil_tar, EnumTarType.CRUDE));
         OreDictionary.registerOre("dyeBlack", fromOne(oil_tar, EnumTarType.CRACK));
         OreDictionary.registerOre("dyeGray", fromOne(oil_tar, EnumTarType.COAL));
@@ -737,8 +738,8 @@ public class OreDictManager {
         OreDictionary.registerOre("dyeCyan", fromOne(oil_tar, EnumTarType.WAX));
         OreDictionary.registerOre("dyeWhite", fromOne(oil_tar, EnumTarType.PARAFFIN));
         OreDictionary.registerOre("dye", new ItemStack(oil_tar, 1, OreDictionary.WILDCARD_VALUE));
-        OreDictionary.registerOre("dyeOrange", powder_cadmium);
-        OreDictionary.registerOre("dye", powder_cadmium);
+        OreDictionary.registerOre("dyeOrange", Powders.powder_cadmium);
+        OreDictionary.registerOre("dye", Powders.powder_cadmium);
         OreDictionary.registerOre("dyeLightGray", fromOne(powder_ash, EnumAshType.WOOD));
         OreDictionary.registerOre("dyeBlack", fromOne(powder_ash, EnumAshType.COAL));
         OreDictionary.registerOre("dyeGray", fromOne(powder_ash, EnumAshType.MISC));
@@ -758,8 +759,8 @@ public class OreDictManager {
         OreDictionary.registerOre("blockGlassRed", glass_polonium);
         OreDictionary.registerOre("blockGlassBlack", glass_ash);
 
-		OreDictionary.registerOre("container1000lubricant", bdcl);
-        OreDictionary.registerOre("itemSilicon", billet_silicon);
+		OreDictionary.registerOre("container1000lubricant", Inserts.bdcl);
+        OreDictionary.registerOre("itemSilicon", Billets.billet_silicon);
 
 		for(NTMMaterial mat : Mats.orderedList) {
 			if(mat.autogen.contains(MaterialShapes.FRAGMENT)) {
@@ -769,7 +770,7 @@ public class OreDictManager {
 				else if(!OreDictionary.getOres(MaterialShapes.CRYSTAL.name() + name).isEmpty()) CraftingManager.add9To1ForODM(mat.make(ModItems.bedrock_ore_fragment), OreDictionary.getOres(MaterialShapes.CRYSTAL.name() + name).get(0));
 				else if(!OreDictionary.getOres(MaterialShapes.INGOT.name() + name).isEmpty()) CraftingManager.add9To1ForODM(mat.make(ModItems.bedrock_ore_fragment), OreDictionary.getOres(MaterialShapes.INGOT.name() + name).get(0));
 				else if(!OreDictionary.getOres(MaterialShapes.BILLET.name() + name).isEmpty()) CraftingManager.addBilletFragmentForODM(OreDictionary.getOres(MaterialShapes.BILLET.name() + name).get(0), mat.make(ModItems.bedrock_ore_fragment));
-				else CraftingManager.add9To1ForODM(mat.make(ModItems.bedrock_ore_fragment), new ItemStack(ModItems.nothing));
+				else CraftingManager.add9To1ForODM(mat.make(ModItems.bedrock_ore_fragment), new ItemStack(DummyTexs.nothing));
 			}
 		}
 

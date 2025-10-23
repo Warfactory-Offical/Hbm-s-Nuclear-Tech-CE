@@ -2,6 +2,7 @@ package com.hbm.render.item;
 
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.ToolSets;
 import com.hbm.main.ResourceManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
@@ -23,11 +24,11 @@ public class ItemRenderShim extends TEISRBase {
 				Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.shimmer_sledge_tex);
 			if(stack.getItem() == ModItems.shimmer_axe)
 				Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.shimmer_axe_tex);
-			if(stack.getItem() == ModItems.stopsign)
+			if(stack.getItem() == ToolSets.stopsign)
 				Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.stopsign_tex);
-			if(stack.getItem() == ModItems.sopsign)
+			if(stack.getItem() == ToolSets.sopsign)
 				Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.sopsign_tex);
-			if(stack.getItem() == ModItems.chernobylsign)
+			if(stack.getItem() == ToolSets.chernobylsign)
 				Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.chernobylsign_tex);
 			if(stack.getItem() == ModItems.shimmer_sledge || stack.getItem() == ModItems.shimmer_axe) {
 				GlStateManager.scale(1.5F, 1.5F, 1.5F);
@@ -56,7 +57,7 @@ public class ItemRenderShim extends TEISRBase {
 				ResourceManager.shimmer_sledge.renderAll();
 			if(stack.getItem() == ModItems.shimmer_axe)
 				ResourceManager.shimmer_axe.renderAll();
-			if(stack.getItem() == ModItems.stopsign || stack.getItem() == ModItems.sopsign || stack.getItem() == ModItems.chernobylsign)
+			if(stack.getItem() == ToolSets.stopsign || stack.getItem() == ToolSets.sopsign || stack.getItem() == ToolSets.chernobylsign)
 				ResourceManager.stopsign.renderAll();
 			break;
 		case THIRD_PERSON_LEFT_HAND:
@@ -69,11 +70,11 @@ public class ItemRenderShim extends TEISRBase {
 				Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.shimmer_sledge_tex);
 			if(stack.getItem() == ModItems.shimmer_axe)
 				Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.shimmer_axe_tex);
-			if(stack.getItem() == ModItems.stopsign)
+			if(stack.getItem() == ToolSets.stopsign)
 				Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.stopsign_tex);
-			if(stack.getItem() == ModItems.sopsign)
+			if(stack.getItem() == ToolSets.sopsign)
 				Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.sopsign_tex);
-			if(stack.getItem() == ModItems.chernobylsign)
+			if(stack.getItem() == ToolSets.chernobylsign)
 				Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.chernobylsign_tex);
 			if(stack.getItem() == ModItems.shimmer_sledge || stack.getItem() == ModItems.shimmer_axe) {
 				GL11.glScaled(2.5, 2.5, 2.5);
@@ -87,7 +88,7 @@ public class ItemRenderShim extends TEISRBase {
 				ResourceManager.shimmer_sledge.renderAll();
 			if(stack.getItem() == ModItems.shimmer_axe)
 				ResourceManager.shimmer_axe.renderAll();
-			if(stack.getItem() == ModItems.stopsign || stack.getItem() == ModItems.sopsign || stack.getItem() == ModItems.chernobylsign)
+			if(stack.getItem() == ToolSets.stopsign || stack.getItem() == ToolSets.sopsign || stack.getItem() == ToolSets.chernobylsign)
 				ResourceManager.stopsign.renderAll();
 			break;
 		default:

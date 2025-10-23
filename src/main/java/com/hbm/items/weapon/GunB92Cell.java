@@ -1,6 +1,7 @@
 package com.hbm.items.weapon;
 
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -71,7 +72,7 @@ public class GunB92Cell extends Item {
 	}
 	
 	public static ItemStack getFullCell() {
-		ItemStack stack = new ItemStack(ModItems.gun_b92_ammo, 1, 0);
+		ItemStack stack = new ItemStack(Armory.gun_b92_ammo, 1, 0);
 		setPower(stack, 25);
 		return stack.copy();
 	}

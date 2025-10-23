@@ -13,7 +13,8 @@ import com.hbm.inventory.material.Mats;
 import com.hbm.inventory.material.Mats.MaterialStack;
 import com.hbm.inventory.material.NTMMaterial;
 import com.hbm.inventory.recipes.loader.SerializableRecipe;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foundry;
+import com.hbm.items.ModItems.Materials.Ingots;
 import com.hbm.items.machine.ItemMold;
 import com.hbm.items.machine.ItemScraps;
 import net.minecraft.init.Blocks;
@@ -43,7 +44,7 @@ public class CrucibleRecipes extends SerializableRecipe {
     int i = MaterialShapes.INGOT.q(1);
 
     recipes.add(
-        new CrucibleRecipe(0, "crucible.steel", 2, new ItemStack(ModItems.ingot_steel))
+        new CrucibleRecipe(0, "crucible.steel", 2, new ItemStack(Ingots.ingot_steel))
             .inputs(new MaterialStack(Mats.MAT_IRON, n * 2), new MaterialStack(Mats.MAT_CARBON, n))
             .outputs(new MaterialStack(Mats.MAT_STEEL, n * 2)));
 
@@ -89,17 +90,17 @@ public class CrucibleRecipes extends SerializableRecipe {
                 new MaterialStack(Mats.MAT_COPPER, i), new MaterialStack(Mats.MAT_SLAG, n * 3)));
 
     recipes.add(
-        new CrucibleRecipe(1, "crucible.redcopper", 2, new ItemStack(ModItems.ingot_red_copper))
+        new CrucibleRecipe(1, "crucible.redcopper", 2, new ItemStack(Ingots.ingot_red_copper))
             .inputs(new MaterialStack(Mats.MAT_COPPER, n), new MaterialStack(Mats.MAT_REDSTONE, n))
             .outputs(new MaterialStack(Mats.MAT_MINGRADE, n * 2)));
 
     recipes.add(
-        new CrucibleRecipe(2, "crucible.aa", 2, new ItemStack(ModItems.ingot_advanced_alloy))
+        new CrucibleRecipe(2, "crucible.aa", 2, new ItemStack(Ingots.ingot_advanced_alloy))
             .inputs(new MaterialStack(Mats.MAT_STEEL, n), new MaterialStack(Mats.MAT_MINGRADE, n))
             .outputs(new MaterialStack(Mats.MAT_ALLOY, n * 2)));
 
     recipes.add(
-        new CrucibleRecipe(3, "crucible.hss", 9, new ItemStack(ModItems.ingot_dura_steel))
+        new CrucibleRecipe(3, "crucible.hss", 9, new ItemStack(Ingots.ingot_dura_steel))
             .inputs(
                 new MaterialStack(Mats.MAT_STEEL, n * 5),
                 new MaterialStack(Mats.MAT_TUNGSTEN, n * 3),
@@ -107,24 +108,24 @@ public class CrucibleRecipes extends SerializableRecipe {
             .outputs(new MaterialStack(Mats.MAT_DURA, n * 9)));
 
     recipes.add(
-        new CrucibleRecipe(4, "crucible.ferro", 3, new ItemStack(ModItems.ingot_ferrouranium))
+        new CrucibleRecipe(4, "crucible.ferro", 3, new ItemStack(Ingots.ingot_ferrouranium))
             .inputs(new MaterialStack(Mats.MAT_STEEL, n * 2), new MaterialStack(Mats.MAT_U238, n))
             .outputs(new MaterialStack(Mats.MAT_FERRO, n * 3)));
 
     recipes.add(
-        new CrucibleRecipe(5, "crucible.tcalloy", 9, new ItemStack(ModItems.ingot_tcalloy))
+        new CrucibleRecipe(5, "crucible.tcalloy", 9, new ItemStack(Ingots.ingot_tcalloy))
             .inputs(
                 new MaterialStack(Mats.MAT_STEEL, n * 8), new MaterialStack(Mats.MAT_TECHNETIUM, n))
             .outputs(new MaterialStack(Mats.MAT_TCALLOY, i)));
 
     recipes.add(
-        new CrucibleRecipe(12, "crucible.cdalloy", 9, new ItemStack(ModItems.ingot_cdalloy))
+        new CrucibleRecipe(12, "crucible.cdalloy", 9, new ItemStack(Ingots.ingot_cdalloy))
             .inputs(
                 new MaterialStack(Mats.MAT_STEEL, n * 8), new MaterialStack(Mats.MAT_CADMIUM, n))
             .outputs(new MaterialStack(Mats.MAT_CDALLOY, i)));
 
     recipes.add(
-        new CrucibleRecipe(14, "crucible.bbronze", 9, new ItemStack(ModItems.ingot_bismuth_bronze))
+        new CrucibleRecipe(14, "crucible.bbronze", 9, new ItemStack(Ingots.ingot_bismuth_bronze))
             .inputs(
                 new MaterialStack(Mats.MAT_COPPER, n * 8),
                 new MaterialStack(Mats.MAT_BISMUTH, n),
@@ -133,7 +134,7 @@ public class CrucibleRecipes extends SerializableRecipe {
                 new MaterialStack(Mats.MAT_BBRONZE, i), new MaterialStack(Mats.MAT_SLAG, n * 3)));
 
     recipes.add(
-        new CrucibleRecipe(15, "crucible.abronze", 9, new ItemStack(ModItems.ingot_arsenic_bronze))
+        new CrucibleRecipe(15, "crucible.abronze", 9, new ItemStack(Ingots.ingot_arsenic_bronze))
             .inputs(
                 new MaterialStack(Mats.MAT_COPPER, n * 8),
                 new MaterialStack(Mats.MAT_ARSENIC, n),
@@ -142,21 +143,21 @@ public class CrucibleRecipes extends SerializableRecipe {
                 new MaterialStack(Mats.MAT_ABRONZE, i), new MaterialStack(Mats.MAT_SLAG, n * 3)));
 
     recipes.add(
-        new CrucibleRecipe(13, "crucible.cmb", 3, new ItemStack(ModItems.ingot_combine_steel))
+        new CrucibleRecipe(13, "crucible.cmb", 3, new ItemStack(Ingots.ingot_combine_steel))
             .inputs(
                 new MaterialStack(Mats.MAT_MAGTUNG, n * 6), new MaterialStack(Mats.MAT_MUD, n * 3))
             .outputs(new MaterialStack(Mats.MAT_CMB, i)));
 
     recipes.add(
         new CrucibleRecipe(
-                16, "crucible.magtung", 3, new ItemStack(ModItems.ingot_magnetized_tungsten))
+                16, "crucible.magtung", 3, new ItemStack(Ingots.ingot_magnetized_tungsten))
             .inputs(
                 new MaterialStack(Mats.MAT_TUNGSTEN, i),
                 new MaterialStack(Mats.MAT_SCHRABIDIUM, n * 1))
             .outputs(new MaterialStack(Mats.MAT_MAGTUNG, i)));
 
     recipes.add(
-        new CrucibleRecipe(17, "crucible.bscco", 3, new ItemStack(ModItems.ingot_bscco))
+        new CrucibleRecipe(17, "crucible.bscco", 3, new ItemStack(Ingots.ingot_bscco))
             .inputs(
                 new MaterialStack(Mats.MAT_BISMUTH, n * 2),
                 new MaterialStack(Mats.MAT_STRONTIUM, n * 2),
@@ -373,7 +374,7 @@ public class CrucibleRecipes extends SerializableRecipe {
         if (out != null && !out.isEmpty()) {
           ItemStack scrap =
               ItemScraps.create(new Mats.MaterialStack(material, mold.getCost()), true);
-          ItemStack shape = new ItemStack(ModItems.mold, 1, mold.id);
+          ItemStack shape = new ItemStack(Foundry.mold, 1, mold.id);
           ItemStack basin =
               new ItemStack(
                   mold.size == 0

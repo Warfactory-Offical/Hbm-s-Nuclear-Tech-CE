@@ -1,6 +1,6 @@
 package com.hbm.render.item.weapon.sedna;
 
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
@@ -134,14 +134,14 @@ public class ItemRenderLaserPistol extends ItemRenderWeaponBase {
     }
 
     public boolean hasCapacitors(ItemStack stack) {
-        return stack.getItem() == ModItems.gun_laser_pistol_pew_pew;
+        return stack.getItem() == Armory.gun_laser_pistol_pew_pew;
     }
 
     public boolean hasTape(ItemStack stack) {
-        return stack.getItem() == ModItems.gun_laser_pistol_pew_pew;
+        return stack.getItem() == Armory.gun_laser_pistol_pew_pew;
     }
 
     public boolean hasEmerald(ItemStack stack) {
-        return stack.getItem() == ModItems.gun_laser_pistol_morning_glory;
+        return stack.getItem() == Armory.gun_laser_pistol_morning_glory;
     }
 }

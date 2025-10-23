@@ -3,7 +3,7 @@ package com.hbm.entity.grenade;
 import com.hbm.entity.effect.EntityMist;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.ItemGrenade;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumHand;
@@ -44,7 +44,7 @@ public class EntityGrenadeGas extends EntityGrenadeBouncyBase {
 
 	@Override
 	protected int getMaxTimer() {
-		return ItemGrenade.getFuseTicks(ModItems.grenade_gas);
+		return ItemGrenade.getFuseTicks(Armory.grenade_gas);
 	}
 
 	@Override

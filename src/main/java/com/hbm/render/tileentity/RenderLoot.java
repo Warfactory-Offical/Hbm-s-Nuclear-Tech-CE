@@ -2,7 +2,8 @@ package com.hbm.render.tileentity;
 
 import com.hbm.blocks.generic.BlockLoot.TileEntityLoot;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.ArmorSets;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.armor.ArmorTrenchmaster;
 import com.hbm.items.weapon.sedna.factory.GunFactory.EnumAmmo;
 import com.hbm.main.ResourceManager;
@@ -34,9 +35,9 @@ public class RenderLoot extends TileEntitySpecialRenderer<TileEntityLoot> {
             GlStateManager.pushMatrix();
             GlStateManager.translate(item.getX(), item.getY(), item.getZ());
 
-            if (stack.getItem() == ModItems.ammo_standard && stack.getItemDamage() >= EnumAmmo.NUKE_STANDARD.ordinal() && stack.getItemDamage() <= EnumAmmo.NUKE_HIVE.ordinal()) {
+            if (stack.getItem() == Armory.ammo_standard && stack.getItemDamage() >= EnumAmmo.NUKE_STANDARD.ordinal() && stack.getItemDamage() <= EnumAmmo.NUKE_HIVE.ordinal()) {
                 renderNuke();
-            } else if (stack.getItem() == ModItems.gun_maresleg) {
+            } else if (stack.getItem() == Armory.gun_maresleg) {
                 renderShotgun();
             } else if (stack.getItem() instanceof ArmorTrenchmaster) {
                 renderTrenchmaster(stack);
@@ -56,7 +57,7 @@ public class RenderLoot extends TileEntitySpecialRenderer<TileEntityLoot> {
         GlStateManager.scale(0.0625, 0.0625, 0.0625);
         GlStateManager.rotate(180, 1, 0, 0);
         GlStateManager.enableRescaleNormal();
-        if (stack.getItem() == ModItems.trenchmaster_helmet) {
+        if (stack.getItem() == ArmorSets.trenchmaster_helmet) {
             bindTexture(ResourceManager.trenchmaster_helmet);
             GlStateManager.enableBlend();
             GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
@@ -70,7 +71,7 @@ public class RenderLoot extends TileEntitySpecialRenderer<TileEntityLoot> {
             GlStateManager.enableLighting();
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastX, lastY);
         }
-        if (stack.getItem() == ModItems.trenchmaster_plate) {
+        if (stack.getItem() == ArmorSets.trenchmaster_plate) {
             bindTexture(ResourceManager.trenchmaster_chest);
             ResourceManager.armor_trenchmaster.renderPart("Chest");
             bindTexture(ResourceManager.trenchmaster_arm);
@@ -80,7 +81,7 @@ public class RenderLoot extends TileEntitySpecialRenderer<TileEntityLoot> {
             ResourceManager.armor_trenchmaster.renderPart("RightArm");
             GlStateManager.popMatrix();
         }
-        if (stack.getItem() == ModItems.trenchmaster_legs) {
+        if (stack.getItem() == ArmorSets.trenchmaster_legs) {
             bindTexture(ResourceManager.trenchmaster_leg);
             ResourceManager.armor_trenchmaster.renderPart("LeftLeg");
             GlStateManager.pushMatrix();
@@ -88,7 +89,7 @@ public class RenderLoot extends TileEntitySpecialRenderer<TileEntityLoot> {
             ResourceManager.armor_trenchmaster.renderPart("RightLeg");
             GlStateManager.popMatrix();
         }
-        if (stack.getItem() == ModItems.trenchmaster_boots) {
+        if (stack.getItem() == ArmorSets.trenchmaster_boots) {
             bindTexture(ResourceManager.trenchmaster_leg);
             ResourceManager.armor_trenchmaster.renderPart("LeftBoot");
             GlStateManager.pushMatrix();

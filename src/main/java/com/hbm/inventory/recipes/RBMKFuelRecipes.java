@@ -1,6 +1,6 @@
 package com.hbm.inventory.recipes;
 
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.RBMKFuel;
 import com.hbm.items.machine.ItemRBMKRod;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
@@ -13,38 +13,38 @@ public class RBMKFuelRecipes {
 	public static LinkedHashMap<ItemStack, ItemStack> recipes = new LinkedHashMap<>();
 	
 	public static void registerRecipes() {
-		addRod(ModItems.rbmk_fuel_ueu);
-		addRod(ModItems.rbmk_fuel_meu);
-		addRod(ModItems.rbmk_fuel_heu233);
-		addRod(ModItems.rbmk_fuel_heu235);
-		addRod(ModItems.rbmk_fuel_thmeu);
-		addRod(ModItems.rbmk_fuel_lep);
-		addRod(ModItems.rbmk_fuel_mep);
-		addRod(ModItems.rbmk_fuel_hep239);
-		addRod(ModItems.rbmk_fuel_hep241);
-		addRod(ModItems.rbmk_fuel_lea);
-		addRod(ModItems.rbmk_fuel_mea);
-		addRod(ModItems.rbmk_fuel_hea241);
-		addRod(ModItems.rbmk_fuel_hea242);
-		addRod(ModItems.rbmk_fuel_men);
-		addRod(ModItems.rbmk_fuel_hen);
-		addRod(ModItems.rbmk_fuel_mox);
-		addRod(ModItems.rbmk_fuel_les);
-		addRod(ModItems.rbmk_fuel_mes);
-		addRod(ModItems.rbmk_fuel_hes);
-		addRod(ModItems.rbmk_fuel_leaus);
-		addRod(ModItems.rbmk_fuel_heaus);
-		addRod(ModItems.rbmk_fuel_unobtainium);
-		addRod(ModItems.rbmk_fuel_ra226be);
-		addRod(ModItems.rbmk_fuel_po210be);
-		addRod(ModItems.rbmk_fuel_pu238be);
-		addRod(ModItems.rbmk_fuel_balefire_gold);
-		addRod(ModItems.rbmk_fuel_flashlead);
-		addRod(ModItems.rbmk_fuel_zfb_bismuth);
-		addRod(ModItems.rbmk_fuel_zfb_pu241);
-		addRod(ModItems.rbmk_fuel_zfb_am_mix);
-		addRod(ModItems.rbmk_fuel_balefire);
-		addRod(ModItems.rbmk_fuel_drx);
+		addRod(RBMKFuel.rbmk_fuel_ueu);
+		addRod(RBMKFuel.rbmk_fuel_meu);
+		addRod(RBMKFuel.rbmk_fuel_heu233);
+		addRod(RBMKFuel.rbmk_fuel_heu235);
+		addRod(RBMKFuel.rbmk_fuel_thmeu);
+		addRod(RBMKFuel.rbmk_fuel_lep);
+		addRod(RBMKFuel.rbmk_fuel_mep);
+		addRod(RBMKFuel.rbmk_fuel_hep239);
+		addRod(RBMKFuel.rbmk_fuel_hep241);
+		addRod(RBMKFuel.rbmk_fuel_lea);
+		addRod(RBMKFuel.rbmk_fuel_mea);
+		addRod(RBMKFuel.rbmk_fuel_hea241);
+		addRod(RBMKFuel.rbmk_fuel_hea242);
+		addRod(RBMKFuel.rbmk_fuel_men);
+		addRod(RBMKFuel.rbmk_fuel_hen);
+		addRod(RBMKFuel.rbmk_fuel_mox);
+		addRod(RBMKFuel.rbmk_fuel_les);
+		addRod(RBMKFuel.rbmk_fuel_mes);
+		addRod(RBMKFuel.rbmk_fuel_hes);
+		addRod(RBMKFuel.rbmk_fuel_leaus);
+		addRod(RBMKFuel.rbmk_fuel_heaus);
+		addRod(RBMKFuel.rbmk_fuel_unobtainium);
+		addRod(RBMKFuel.rbmk_fuel_ra226be);
+		addRod(RBMKFuel.rbmk_fuel_po210be);
+		addRod(RBMKFuel.rbmk_fuel_pu238be);
+		addRod(RBMKFuel.rbmk_fuel_balefire_gold);
+		addRod(RBMKFuel.rbmk_fuel_flashlead);
+		addRod(RBMKFuel.rbmk_fuel_zfb_bismuth);
+		addRod(RBMKFuel.rbmk_fuel_zfb_pu241);
+		addRod(RBMKFuel.rbmk_fuel_zfb_am_mix);
+		addRod(RBMKFuel.rbmk_fuel_balefire);
+		addRod(RBMKFuel.rbmk_fuel_drx);
 	}
 
 	public static void addRod(ItemRBMKRod rod){

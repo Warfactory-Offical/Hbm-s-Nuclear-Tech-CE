@@ -1,6 +1,6 @@
 package com.hbm.entity.particle;
 
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.DummyTexs;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.ModFXCollidePacket;
 import net.minecraft.client.Minecraft;
@@ -18,8 +18,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class EntityChlorineFX extends Particle {
 
     private static final Item[] TEXTURE_ITEMS = new Item[]{
-            ModItems.chlorine1, ModItems.chlorine2, ModItems.chlorine3, ModItems.chlorine4,
-            ModItems.chlorine5, ModItems.chlorine6, ModItems.chlorine7, ModItems.chlorine8
+            DummyTexs.chlorine1, DummyTexs.chlorine2, DummyTexs.chlorine3, DummyTexs.chlorine4,
+            DummyTexs.chlorine5, DummyTexs.chlorine6, DummyTexs.chlorine7, DummyTexs.chlorine8
     };
     private final int meta;
     private int lastStage = -1;

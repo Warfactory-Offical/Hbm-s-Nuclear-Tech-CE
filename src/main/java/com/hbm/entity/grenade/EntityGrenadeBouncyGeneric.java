@@ -1,7 +1,7 @@
 package com.hbm.entity.grenade;
 
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.ItemGenericGrenade;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
@@ -33,7 +33,7 @@ public class EntityGrenadeBouncyGeneric extends EntityGrenadeBouncyBase implemen
     @Override
     public ItemGenericGrenade getGrenade() {
         ItemGenericGrenade grenade = (ItemGenericGrenade) Item.getItemById(this.dataManager.get(GRENADE_TYPE));
-        return grenade != null ? grenade : (ItemGenericGrenade) ModItems.grenade_kyiv;
+        return grenade != null ? grenade : (ItemGenericGrenade) Armory.grenade_kyiv;
     }
 
     @Override

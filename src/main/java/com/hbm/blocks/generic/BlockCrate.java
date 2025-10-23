@@ -3,6 +3,13 @@ package com.hbm.blocks.generic;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
+import com.hbm.items.ModItems.Batteries;
+import com.hbm.items.ModItems.Foods;
+import com.hbm.items.ModItems.Materials.Ingots;
+import com.hbm.items.ModItems.Materials.Nuggies;
+import com.hbm.items.ModItems.Materials.Powders;
+import com.hbm.items.ModItems.ToolSets;
 import com.hbm.items.special.ItemCell;
 import com.hbm.items.weapon.sedna.factory.GunFactory;
 import com.hbm.lib.HBMSoundHandler;
@@ -48,7 +55,7 @@ public class BlockCrate extends BlockFalling {
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (player.getHeldItemMainhand().getItem().equals(ModItems.crowbar)) {
+        if (player.getHeldItemMainhand().getItem().equals(ToolSets.crowbar)) {
             dropItems(world, pos.getX(), pos.getY(), pos.getZ());
             world.setBlockToAir(pos);
             world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.crateBreak, SoundCategory.BLOCKS, 0.5F, 1.0F);
@@ -73,38 +80,38 @@ public class BlockCrate extends BlockFalling {
         //Supply Crate
         BlockCrate.addToListWithWeight(crateList, ModItems.syringe_metal_stimpak, 10);
         BlockCrate.addToListWithWeight(crateList, ModItems.syringe_antidote, 5);
-        BlockCrate.addToListWithWeight(crateList, ModItems.grenade_generic, 8);
-        BlockCrate.addToListWithWeight(crateList, ModItems.grenade_strong, 6);
-        BlockCrate.addToListWithWeight(crateList, ModItems.grenade_mk2, 4);
-        BlockCrate.addToListWithWeight(crateList, ModItems.grenade_flare, 4);
-        BlockCrate.addToListWithWeight(crateList, ModItems.ammo_container, 2);
+        BlockCrate.addToListWithWeight(crateList, Armory.grenade_generic, 8);
+        BlockCrate.addToListWithWeight(crateList, Armory.grenade_strong, 6);
+        BlockCrate.addToListWithWeight(crateList, Armory.grenade_mk2, 4);
+        BlockCrate.addToListWithWeight(crateList, Armory.grenade_flare, 4);
+        BlockCrate.addToListWithWeight(crateList, Armory.ammo_container, 2);
 
         //Weapon Crate
-        BlockCrate.addToListWithWeight(weaponList, ModItems.gun_light_revolver, 10);
-        BlockCrate.addToListWithWeight(weaponList, ModItems.gun_maresleg, 7);
-        BlockCrate.addToListWithWeight(weaponList, ModItems.gun_heavy_revolver, 5);
-        BlockCrate.addToListWithWeight(weaponList, ModItems.gun_greasegun, 5);
-        BlockCrate.addToListWithWeight(weaponList, ModItems.gun_liberator, 2);
-        BlockCrate.addToListWithWeight(weaponList, ModItems.gun_flaregun, 8);
-        BlockCrate.addToListWithWeight(weaponList, ModItems.gun_panzerschreck, 1);
+        BlockCrate.addToListWithWeight(weaponList, Armory.gun_light_revolver, 10);
+        BlockCrate.addToListWithWeight(weaponList, Armory.gun_maresleg, 7);
+        BlockCrate.addToListWithWeight(weaponList, Armory.gun_heavy_revolver, 5);
+        BlockCrate.addToListWithWeight(weaponList, Armory.gun_greasegun, 5);
+        BlockCrate.addToListWithWeight(weaponList, Armory.gun_liberator, 2);
+        BlockCrate.addToListWithWeight(weaponList, Armory.gun_flaregun, 8);
+        BlockCrate.addToListWithWeight(weaponList, Armory.gun_panzerschreck, 1);
 
         //Lead Crate
-        BlockCrate.addToListWithWeight(leadList, ModItems.ingot_uranium, 10);
-        BlockCrate.addToListWithWeight(leadList, ModItems.ingot_u238, 8);
-        BlockCrate.addToListWithWeight(leadList, ModItems.ingot_plutonium, 7);
-        BlockCrate.addToListWithWeight(leadList, ModItems.ingot_pu240, 6);
-        BlockCrate.addToListWithWeight(leadList, ModItems.ingot_neptunium, 7);
-        BlockCrate.addToListWithWeight(leadList, ModItems.ingot_uranium_fuel, 8);
-        BlockCrate.addToListWithWeight(leadList, ModItems.ingot_plutonium_fuel, 7);
-        BlockCrate.addToListWithWeight(leadList, ModItems.ingot_mox_fuel, 6);
-        BlockCrate.addToListWithWeight(leadList, ModItems.nugget_uranium, 10);
-        BlockCrate.addToListWithWeight(leadList, ModItems.nugget_u238, 8);
-        BlockCrate.addToListWithWeight(leadList, ModItems.nugget_plutonium, 7);
-        BlockCrate.addToListWithWeight(leadList, ModItems.nugget_pu240, 6);
-        BlockCrate.addToListWithWeight(leadList, ModItems.nugget_neptunium, 7);
-        BlockCrate.addToListWithWeight(leadList, ModItems.nugget_uranium_fuel, 8);
-        BlockCrate.addToListWithWeight(leadList, ModItems.nugget_plutonium_fuel, 7);
-        BlockCrate.addToListWithWeight(leadList, ModItems.nugget_mox_fuel, 6);
+        BlockCrate.addToListWithWeight(leadList, Ingots.ingot_uranium, 10);
+        BlockCrate.addToListWithWeight(leadList, Ingots.ingot_u238, 8);
+        BlockCrate.addToListWithWeight(leadList, Ingots.ingot_plutonium, 7);
+        BlockCrate.addToListWithWeight(leadList, Ingots.ingot_pu240, 6);
+        BlockCrate.addToListWithWeight(leadList, Ingots.ingot_neptunium, 7);
+        BlockCrate.addToListWithWeight(leadList, Ingots.ingot_uranium_fuel, 8);
+        BlockCrate.addToListWithWeight(leadList, Ingots.ingot_plutonium_fuel, 7);
+        BlockCrate.addToListWithWeight(leadList, Ingots.ingot_mox_fuel, 6);
+        BlockCrate.addToListWithWeight(leadList, Nuggies.nugget_uranium, 10);
+        BlockCrate.addToListWithWeight(leadList, Nuggies.nugget_u238, 8);
+        BlockCrate.addToListWithWeight(leadList, Nuggies.nugget_plutonium, 7);
+        BlockCrate.addToListWithWeight(leadList, Nuggies.nugget_pu240, 6);
+        BlockCrate.addToListWithWeight(leadList, Nuggies.nugget_neptunium, 7);
+        BlockCrate.addToListWithWeight(leadList, Nuggies.nugget_uranium_fuel, 8);
+        BlockCrate.addToListWithWeight(leadList, Nuggies.nugget_plutonium_fuel, 7);
+        BlockCrate.addToListWithWeight(leadList, Nuggies.nugget_mox_fuel, 6);
         BlockCrate.addToListWithWeight(leadList, ItemCell.getFullCell(Fluids.DEUTERIUM), 8);
         BlockCrate.addToListWithWeight(leadList, ItemCell.getFullCell(Fluids.TRITIUM), 8);
         BlockCrate.addToListWithWeight(leadList, ItemCell.getFullCell(Fluids.UF6), 8);
@@ -112,7 +119,7 @@ public class BlockCrate extends BlockFalling {
         BlockCrate.addToListWithWeight(leadList, ModItems.pellet_rtg, 6);
         BlockCrate.addToListWithWeight(leadList, ModItems.pellet_rtg_weak, 7);
         BlockCrate.addToListWithWeight(leadList, ModItems.tritium_deuterium_cake, 5);
-        BlockCrate.addToListWithWeight(leadList, ModItems.powder_yellowcake, 10);
+        BlockCrate.addToListWithWeight(leadList, Powders.powder_yellowcake, 10);
 
         //Metal Crate
         BlockCrate.addToListWithWeight(metalList, Item.getItemFromBlock(ModBlocks.machine_press), 10);
@@ -137,15 +144,15 @@ public class BlockCrate extends BlockFalling {
 
         //Red Crate
         BlockCrate.addToListWithWeight(redList, ModItems.mysteryshovel, 1);
-        BlockCrate.addToListWithWeight(redList, ModItems.gun_heavy_revolver_lilmac, 1);
-        BlockCrate.addToListWithWeight(redList, ModItems.gun_autoshotgun_sexy, 1);
-        BlockCrate.addToListWithWeight(redList, ModItems.gun_maresleg_broken, 1);
-        BlockCrate.addToListWithWeight(redList, new ItemStack(ModItems.ammo_secret, 1, GunFactory.EnumAmmoSecret.M44_EQUESTRIAN.ordinal()), 1);
-        BlockCrate.addToListWithWeight(redList, new ItemStack(ModItems.ammo_secret, 1, GunFactory.EnumAmmoSecret.G12_EQUESTRIAN.ordinal()), 1);
-        BlockCrate.addToListWithWeight(redList, new ItemStack(ModItems.ammo_secret, 1, GunFactory.EnumAmmoSecret.BMG50_EQUESTRIAN.ordinal()), 1);
-        BlockCrate.addToListWithWeight(redList, ModItems.battery_spark, 1);
-        BlockCrate.addToListWithWeight(redList, ModItems.bottle_sparkle, 1);
-        BlockCrate.addToListWithWeight(redList, ModItems.bottle_rad, 1);
+        BlockCrate.addToListWithWeight(redList, Armory.gun_heavy_revolver_lilmac, 1);
+        BlockCrate.addToListWithWeight(redList, Armory.gun_autoshotgun_sexy, 1);
+        BlockCrate.addToListWithWeight(redList, Armory.gun_maresleg_broken, 1);
+        BlockCrate.addToListWithWeight(redList, new ItemStack(Armory.ammo_secret, 1, GunFactory.EnumAmmoSecret.M44_EQUESTRIAN.ordinal()), 1);
+        BlockCrate.addToListWithWeight(redList, new ItemStack(Armory.ammo_secret, 1, GunFactory.EnumAmmoSecret.G12_EQUESTRIAN.ordinal()), 1);
+        BlockCrate.addToListWithWeight(redList, new ItemStack(Armory.ammo_secret, 1, GunFactory.EnumAmmoSecret.BMG50_EQUESTRIAN.ordinal()), 1);
+        BlockCrate.addToListWithWeight(redList, Batteries.battery_spark, 1);
+        BlockCrate.addToListWithWeight(redList, Foods.bottle_sparkle, 1);
+        BlockCrate.addToListWithWeight(redList, Foods.bottle_rad, 1);
         BlockCrate.addToListWithWeight(redList, ModItems.ring_starmetal, 1);
         BlockCrate.addToListWithWeight(redList, ModItems.flame_pony, 1);
         BlockCrate.addToListWithWeight(redList, Item.getItemFromBlock(ModBlocks.ntm_dirt), 1);

@@ -1,7 +1,7 @@
 package com.hbm.crafting.handlers;
 
 import com.hbm.inventory.material.Mats;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foundry;
 import com.hbm.items.machine.ItemScraps;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -19,7 +19,7 @@ public class ScrapsCraftingHandler extends IForgeRegistryEntry.Impl<IRecipe> imp
             ItemStack stack = inventory.getStackInRowAndColumn(i % 3, i / 3);
 
             if (stack.isEmpty()) continue;
-            if (stack.getItem() != ModItems.scraps) return false;
+            if (stack.getItem() != Foundry.scraps) return false;
             if (mat != null) return false;
 
             mat = ItemScraps.getMats(stack);
@@ -36,7 +36,7 @@ public class ScrapsCraftingHandler extends IForgeRegistryEntry.Impl<IRecipe> imp
             ItemStack stack = inventory.getStackInRowAndColumn(i % 3, i / 3);
 
             if (stack.isEmpty()) continue;
-            if (stack.getItem() != ModItems.scraps) return ItemStack.EMPTY;
+            if (stack.getItem() != Foundry.scraps) return ItemStack.EMPTY;
             if (mat != null) return ItemStack.EMPTY;
 
             mat = ItemScraps.getMats(stack);
@@ -57,7 +57,7 @@ public class ScrapsCraftingHandler extends IForgeRegistryEntry.Impl<IRecipe> imp
 
     @Override
     public ItemStack getRecipeOutput() {
-        return new ItemStack(ModItems.scraps);
+        return new ItemStack(Foundry.scraps);
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.hbm.entity.effect.EntityNukeTorex;
 import com.hbm.entity.logic.EntityNukeExplosionMK5;
 import com.hbm.items.IDynamicModels;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foods;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.lib.RefStrings;
 import com.hbm.potion.HbmPotion;
@@ -89,29 +90,29 @@ public class ItemFoodBase extends ItemFood implements IDynamicModels {
 
 	@Override
 	public void addInformation(ItemStack stack, World world, List<String> list, ITooltipFlag flagIn){
-		if(this == ModItems.bomb_waffle) {
+		if(this == Foods.bomb_waffle) {
 			list.add("60s of Insanity");
 			list.add("§4[DEMON CORE]§r");
 		}
-		if(this == ModItems.cotton_candy) {
+		if(this == Foods.cotton_candy) {
 			list.add("Gives you a radioactive sugarshock");
 			list.add("§b[SPEED V]§r");
 		}
-		if(this == ModItems.schnitzel_vegan) {
+		if(this == Foods.schnitzel_vegan) {
 			list.add("Wasteschnitzel is all i need.");
 			list.add("§c[STRENGTH X]§r");
 		}
-		if(this == ModItems.apple_lead) {
+		if(this == Foods.apple_lead) {
 			list.add("Lead shields radiation right? So lets eat some of it!");
 			list.add("Might have some minor side effects");
 			list.add("§a[RAD-X (0.5) for 8min]§r");
 		}
-		if(this == ModItems.apple_lead1) {
+		if(this == Foods.apple_lead1) {
 			list.add("Lead shields radiation right? So lets eat a lot it!");
 			list.add("Are you sure about that?");
 			list.add("§a[RAD-X (1) for 4min]§r");
 		}
-		if(this == ModItems.apple_lead2) {
+		if(this == Foods.apple_lead2) {
 			list.add("Lead shields radiation right? So lets eat tons of it!");
 			list.add("I will survive it right?");
 			list.add("...");
@@ -124,7 +125,7 @@ public class ItemFoodBase extends ItemFood implements IDynamicModels {
 
 	@Override
 	protected void onFoodEaten(ItemStack stack, World worldIn, EntityPlayer player) {
-		if(stack.getItem() == ModItems.bomb_waffle){
+		if(stack.getItem() == Foods.bomb_waffle){
 			player.setFire(60 * 20);
 			player.motionY = -2;
 			player.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 60 * 20, 20));
@@ -136,14 +137,14 @@ public class ItemFoodBase extends ItemFood implements IDynamicModels {
 			worldIn.spawnEntity(EntityNukeExplosionMK5.statFac(worldIn, (int)(BombConfig.fatmanRadius * 1.5), player.posX, player.posY, player.posZ).setDetonator(player));
 			EntityNukeTorex.statFac(worldIn, player.posX, player.posY, player.posZ, (int)(BombConfig.fatmanRadius * 1.5));
 		}
-		if(stack.getItem() == ModItems.cotton_candy){
+		if(stack.getItem() == Foods.cotton_candy){
 			player.addPotionEffect(new PotionEffect(MobEffects.WITHER, 5 * 20, 0));
 			player.addPotionEffect(new PotionEffect(MobEffects.POISON, 15 * 20, 0));
 			player.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 25 * 20, 2));
 			player.addPotionEffect(new PotionEffect(MobEffects.SPEED, 25 * 20, 5));
 			player.addPotionEffect(new PotionEffect(MobEffects.HASTE, 25 * 20, 5));
 		}
-		if(stack.getItem() == ModItems.schnitzel_vegan){
+		if(stack.getItem() == Foods.schnitzel_vegan){
 			player.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 10 * 20, 0));
 			player.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 3 * 20, 0));
 			player.addPotionEffect(new PotionEffect(MobEffects.HUNGER, 3 * 60 * 20, 4));
@@ -153,14 +154,14 @@ public class ItemFoodBase extends ItemFood implements IDynamicModels {
 			player.setFire(5 * 20);
 			player.motionY = 2;
 		}
-		if(stack.getItem() == ModItems.apple_schrabidium){
+		if(stack.getItem() == Foods.apple_schrabidium){
 			player.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 10 * 20, 0));
 			player.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 3 * 20, 0));
 			player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 600, 4));
 			player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 600, 0));
 			player.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 600, 0));
 		}
-		if(stack.getItem() == ModItems.apple_schrabidium1){
+		if(stack.getItem() == Foods.apple_schrabidium1){
 			player.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 10 * 20, 0));
 			player.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 3 * 20, 0));
 			player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 1200, 4));
@@ -174,7 +175,7 @@ public class ItemFoodBase extends ItemFood implements IDynamicModels {
 			player.addPotionEffect(new PotionEffect(MobEffects.ABSORPTION, 1200, 4));
 			player.addPotionEffect(new PotionEffect(MobEffects.SATURATION, 1200, 9));
 		}
-		if(stack.getItem() == ModItems.apple_schrabidium2){
+		if(stack.getItem() == Foods.apple_schrabidium2){
 			player.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 10 * 20, 0));
 			player.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 3 * 20, 0));
 			player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 2147483647, 4));
@@ -188,7 +189,7 @@ public class ItemFoodBase extends ItemFood implements IDynamicModels {
 			player.addPotionEffect(new PotionEffect(MobEffects.ABSORPTION, 2147483647, 14));
 			player.addPotionEffect(new PotionEffect(MobEffects.SATURATION, 2147483647, 99));
 		}
-		if(stack.getItem() == ModItems.apple_lead){
+		if(stack.getItem() == Foods.apple_lead){
 			player.addPotionEffect(new PotionEffect(HbmPotion.radx, 8 * 60 * 20, 5));
 			player.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 5 * 60 * 20, 0));
 			player.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 30 * 20, 0));
@@ -196,7 +197,7 @@ public class ItemFoodBase extends ItemFood implements IDynamicModels {
 			player.addPotionEffect(new PotionEffect(HbmPotion.lead, 2 * 20, 0));
 			player.attackEntityFrom(ModDamageSource.lead, 1F);
 		}
-		if(stack.getItem() == ModItems.apple_lead1){
+		if(stack.getItem() == Foods.apple_lead1){
 			player.addPotionEffect(new PotionEffect(HbmPotion.radx, 4 * 60 * 20, 10));
 			player.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 10 * 60 * 20, 1));
 			player.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 60 * 20, 0));
@@ -204,7 +205,7 @@ public class ItemFoodBase extends ItemFood implements IDynamicModels {
 			player.addPotionEffect(new PotionEffect(HbmPotion.lead, 4 * 20, 1));
 			player.attackEntityFrom(ModDamageSource.lead, 10F);
 		}
-		if(stack.getItem() == ModItems.apple_lead2){
+		if(stack.getItem() == Foods.apple_lead2){
 			player.addPotionEffect(new PotionEffect(HbmPotion.radx, 1 * 60 * 20, 40));
 			player.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 15 * 60 * 20, 2));
 			player.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 2 * 60 * 20, 0));
@@ -216,15 +217,15 @@ public class ItemFoodBase extends ItemFood implements IDynamicModels {
 
 	@Override
 	public EnumRarity getRarity(ItemStack stack) {
-		if(stack.getItem() == ModItems.apple_schrabidium || stack.getItem() == ModItems.apple_lead){
+		if(stack.getItem() == Foods.apple_schrabidium || stack.getItem() == Foods.apple_lead){
 			return EnumRarity.UNCOMMON;
 		}
 
-		if(stack.getItem() == ModItems.apple_schrabidium1 || stack.getItem() == ModItems.apple_lead1){
+		if(stack.getItem() == Foods.apple_schrabidium1 || stack.getItem() == Foods.apple_lead1){
 			return EnumRarity.RARE;
 		}
 
-		if(stack.getItem() == ModItems.apple_schrabidium2 || stack.getItem() == ModItems.apple_lead2){
+		if(stack.getItem() == Foods.apple_schrabidium2 || stack.getItem() == Foods.apple_lead2){
 			return EnumRarity.EPIC;
 		}
 
@@ -234,6 +235,6 @@ public class ItemFoodBase extends ItemFood implements IDynamicModels {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean hasEffect(ItemStack stack) {
-		return stack.getItem() == ModItems.apple_schrabidium2 || stack.getItem() == ModItems.apple_lead2;
+		return stack.getItem() == Foods.apple_schrabidium2 || stack.getItem() == Foods.apple_lead2;
 	}
 }

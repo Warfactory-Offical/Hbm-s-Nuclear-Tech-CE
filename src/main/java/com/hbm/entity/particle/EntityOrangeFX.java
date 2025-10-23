@@ -1,6 +1,6 @@
 package com.hbm.entity.particle;
 
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.DummyTexs;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.ModFXCollidePacket;
 import net.minecraft.block.material.Material;
@@ -18,8 +18,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class EntityOrangeFX extends Particle {
 
 	private static final Item[] TEXTURE_ITEMS = new Item[]{
-			ModItems.orange1, ModItems.orange2, ModItems.orange3, ModItems.orange4,
-			ModItems.orange5, ModItems.orange6, ModItems.orange7, ModItems.orange8
+			DummyTexs.orange1, DummyTexs.orange2, DummyTexs.orange3, DummyTexs.orange4,
+			DummyTexs.orange5, DummyTexs.orange6, DummyTexs.orange7, DummyTexs.orange8
 	};
 
 	private final int meta;

@@ -1,8 +1,7 @@
 package com.hbm.handler.ability;
 
-import com.hbm.blocks.ModBlocks;
 import com.hbm.handler.threading.PacketThreading;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Materials.Powders;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.potion.HbmPotion;
@@ -253,7 +252,7 @@ public interface IWeaponAbility extends IBaseAbility {
                     int count = Math.min((int) Math.ceil(living.getMaxHealth() / divider), 250); // safeguard to prevent funnies from bosses with obscene  health
 
                     for(int i = 0; i < count; i++) {
-                        living.entityDropItem(new ItemStack(ModItems.nitra_small), 1);
+                        living.entityDropItem(new ItemStack(Powders.nitra_small), 1);
                         world.spawnEntity(new EntityXPOrb(world, living.posX, living.posY, living.posZ, 1));
                     }
 

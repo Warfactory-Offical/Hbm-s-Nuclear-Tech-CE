@@ -1,6 +1,6 @@
 package com.hbm.render.item.weapon.sedna;
 
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.items.weapon.sedna.mags.IMagazine;
 import com.hbm.main.MainRegistry;
@@ -128,7 +128,7 @@ public class ItemRenderFlamer extends ItemRenderWeaponBase {
 	}
 
 	public boolean hasShield(ItemStack stack) {
-		return stack.getItem() == ModItems.gun_flamer_daybreaker;
+		return stack.getItem() == Armory.gun_flamer_daybreaker;
 	}
 }
 

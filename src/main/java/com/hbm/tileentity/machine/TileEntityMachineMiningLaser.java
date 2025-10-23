@@ -17,6 +17,7 @@ import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.gui.GUIMachineMiningLaser;
 import com.hbm.inventory.recipes.CrystallizerRecipes;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Upgrades;
 import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
@@ -146,7 +147,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 						- (TileEntityMachineMiningLaser.consumption * Math.min(manager.getLevel(ItemMachineUpgrade.UpgradeType.POWER), 12) / 16)
 						+ (TileEntityMachineMiningLaser.consumption * Math.min(manager.getLevel(ItemMachineUpgrade.UpgradeType.SPEED), 12) / 16);
 
-				if(hasUpgrade(ModItems.upgrade_screm)){
+				if(hasUpgrade(Upgrades.upgrade_screm)){
 					cycles *= 4;
 					speed *= 4;
 					consumption *= 20;
@@ -186,7 +187,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 						}
 					}
 				}
-				if(beam && hasUpgrade(ModItems.upgrade_screm)) {
+				if(beam && hasUpgrade(Upgrades.upgrade_screm)) {
 					world.playSound(null, targetX + 0.5, targetY + 0.5, targetZ + 0.5, HBMSoundHandler.screm, SoundCategory.BLOCKS, 20.0F, 1.0F);
 				}
 			} else {
@@ -285,7 +286,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 		ItemStack stack = new ItemStack(b, 1, b.getMetaFromState(state));
 
 		if(!stack.isEmpty()) {
-			if(hasUpgrade(ModItems.upgrade_crystallizer)) {
+			if(hasUpgrade(Upgrades.upgrade_crystallizer)) {
 
 				CrystallizerRecipes.CrystallizerRecipe result = CrystallizerRecipes.getOutput(stack, Fluids.PEROXIDE);
 				if(result == null) result = CrystallizerRecipes.getOutput(stack, Fluids.SULFURIC_ACID);
@@ -294,7 +295,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 					normal = false;
 				}
 
-			} else if(hasUpgrade(ModItems.upgrade_centrifuge)) {
+			} else if(hasUpgrade(Upgrades.upgrade_centrifuge)) {
 
 				ItemStack[] result = CentrifugeRecipes.getOutput(stack);
 				if(result != null) {
@@ -307,7 +308,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 					}
 				}
 
-			} else if(hasUpgrade(ModItems.upgrade_shredder)) {
+			} else if(hasUpgrade(Upgrades.upgrade_shredder)) {
 
 				ItemStack result = ShredderRecipes.getShredderResult(stack);
 				if(!result.isEmpty() && result.getItem() != ModItems.scrap) {
@@ -315,7 +316,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 					normal = false;
 				}
 
-			} else if(hasUpgrade(ModItems.upgrade_smelter)) {
+			} else if(hasUpgrade(Upgrades.upgrade_smelter)) {
 
 				ItemStack result = FurnaceRecipes.instance().getSmeltingResult(stack);
 				if(!result.isEmpty()) {
@@ -353,7 +354,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 
 		int rangeHor = 3;
 		int rangeVer = 1;
-		boolean nullifier = hasUpgrade(ModItems.upgrade_nullifier);
+		boolean nullifier = hasUpgrade(Upgrades.upgrade_nullifier);
 
 		List<EntityItem> items = world.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(
 				targetX + 0.5 - rangeHor,
@@ -459,11 +460,11 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 
 			if(!inventory.getStackInSlot(i).isEmpty()) {
 
-				if(inventory.getStackInSlot(i).getItem() == ModItems.upgrade_effect_1)
+				if(inventory.getStackInSlot(i).getItem() == Upgrades.upgrade_effect_1)
 					range += 2;
-				else if(inventory.getStackInSlot(i).getItem() == ModItems.upgrade_effect_2)
+				else if(inventory.getStackInSlot(i).getItem() == Upgrades.upgrade_effect_2)
 					range += 4;
-				else if(inventory.getStackInSlot(i).getItem() == ModItems.upgrade_effect_3)
+				else if(inventory.getStackInSlot(i).getItem() == Upgrades.upgrade_effect_3)
 					range += 6;
 			}
 		}

@@ -2,8 +2,7 @@ package com.hbm.items.armor;
 
 import com.google.common.collect.Multimap;
 import com.hbm.handler.ArmorModHandler;
-import com.hbm.items.ModItems;
-import com.hbm.items.gear.ArmorFSB;
+import com.hbm.items.ModItems.ArmorSets;
 import com.hbm.render.model.ModelArmorEnvsuit;
 import com.hbm.util.Vec3NT;
 import net.minecraft.init.MobEffects;
@@ -51,7 +50,7 @@ public class ArmorEnvsuit extends ArmorFSBPowered {
 
 		super.onArmorTick(world, player, stack);
 
-		if(this != ModItems.envsuit_plate)
+		if(this != ArmorSets.envsuit_plate)
 			return;
 
 		/// SPEED ///

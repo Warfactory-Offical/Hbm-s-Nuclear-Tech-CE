@@ -4,7 +4,7 @@ import com.hbm.config.CompatibilityConfig;
 import com.hbm.entity.effect.EntityEMPBlast;
 import com.hbm.explosion.ExplosionNukeGeneric;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.DummyTexs;
 import com.hbm.lib.ModDamageSource;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -520,7 +520,7 @@ public class EntityDischarge extends Entity implements IProjectile {
         {
             boolean flag = this.canBePickedUp == 1 || this.canBePickedUp == 2 && p_70100_1_.capabilities.isCreativeMode;
 
-            if (this.canBePickedUp == 1 && !p_70100_1_.inventory.addItemStackToInventory(new ItemStack(ModItems.nothing, 1))) //ammo_fucking_rocket
+            if (this.canBePickedUp == 1 && !p_70100_1_.inventory.addItemStackToInventory(new ItemStack(DummyTexs.nothing, 1))) //ammo_fucking_rocket
             {
                 flag = false;
             }

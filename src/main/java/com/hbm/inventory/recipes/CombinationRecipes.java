@@ -15,6 +15,7 @@ import com.hbm.items.ItemEnums.EnumBriquetteType;
 import com.hbm.items.ItemEnums.EnumCokeType;
 import com.hbm.items.ItemEnums.EnumTarType;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Materials.Powders;
 import com.hbm.items.machine.ItemFluidIcon;
 import com.hbm.items.special.ItemBedrockOreNew;
 import com.hbm.items.special.ItemBedrockOreNew.BedrockOreGrade;
@@ -93,15 +94,15 @@ public class CombinationRecipes extends SerializableRecipe {
         recipes.put(new ComparableStack(DictFrame.fromOne(ModItems.briquette, EnumBriquetteType.LIGNITE)),
                 new Pair<>(DictFrame.fromOne(ModItems.coke, EnumCokeType.LIGNITE), new FluidStack(Fluids.COALCREOSOTE, 100)));
 
-        recipes.put(CHLOROCALCITE.dust(), new Pair<>(new ItemStack(ModItems.powder_calcium), new FluidStack(Fluids.CHLORINE, 250)));
+        recipes.put(CHLOROCALCITE.dust(), new Pair<>(new ItemStack(Powders.powder_calcium), new FluidStack(Fluids.CHLORINE, 250)));
         recipes.put(MOLYSITE.dust(), new Pair<>(new ItemStack(Items.IRON_INGOT), new FluidStack(Fluids.CHLORINE, 250)));
-        recipes.put(CINNABAR.crystal(), new Pair<>(new ItemStack(ModItems.sulfur), new FluidStack(Fluids.MERCURY, 100)));
-        recipes.put(new ComparableStack(Items.GLOWSTONE_DUST), new Pair<>(new ItemStack(ModItems.sulfur), new FluidStack(Fluids.CHLORINE, 100)));
-        recipes.put(SODALITE.gem(), new Pair<>(new ItemStack(ModItems.powder_sodium), new FluidStack(Fluids.CHLORINE, 100)));
+        recipes.put(CINNABAR.crystal(), new Pair<>(new ItemStack(Powders.sulfur), new FluidStack(Fluids.MERCURY, 100)));
+        recipes.put(new ComparableStack(Items.GLOWSTONE_DUST), new Pair<>(new ItemStack(Powders.sulfur), new FluidStack(Fluids.CHLORINE, 100)));
+        recipes.put(SODALITE.gem(), new Pair<>(new ItemStack(Powders.powder_sodium), new FluidStack(Fluids.CHLORINE, 100)));
         recipes.put(new ComparableStack(DictFrame.fromOne(ModItems.chunk_ore, ItemEnums.EnumChunkType.CRYOLITE)),
-                new Pair<>(new ItemStack(ModItems.powder_aluminium, 1), new FluidStack(Fluids.LYE, 150)));
+                new Pair<>(new ItemStack(Powders.powder_aluminium, 1), new FluidStack(Fluids.LYE, 150)));
         recipes.put(NA.dust(), new Pair<>(null, new FluidStack(Fluids.SODIUM, 100)));
-        recipes.put(LIMESTONE.dust(), new Pair<>(new ItemStack(ModItems.powder_calcium), new FluidStack(Fluids.CARBONDIOXIDE, 50)));
+        recipes.put(LIMESTONE.dust(), new Pair<>(new ItemStack(Powders.powder_calcium), new FluidStack(Fluids.CARBONDIOXIDE, 50)));
 
         recipes.put(KEY_LOG, new Pair<>(new ItemStack(Items.COAL, 1, 1), new FluidStack(Fluids.WOODOIL, 250)));
         recipes.put(KEY_SAPLING, new Pair<>(DictFrame.fromOne(ModItems.powder_ash, EnumAshType.WOOD), new FluidStack(Fluids.WOODOIL, 50)));

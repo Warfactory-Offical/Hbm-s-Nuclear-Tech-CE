@@ -4,7 +4,7 @@ import com.hbm.blocks.ICustomBlockHighlight;
 import com.hbm.config.RadiationConfig;
 import com.hbm.dim.WorldProviderCelestial;
 import com.hbm.handler.pollution.PollutionHandler.PollutionType;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.sedna.factory.XFactoryDrill;
 import com.hbm.packet.toclient.PermaSyncHandler;
 import com.hbm.render.amlfrom1710.Vec3;
@@ -54,7 +54,7 @@ public class ModEventHandlerRenderer {
 		EntityPlayer player = MainRegistry.proxy.me();
 		ItemStack held = player.getHeldItemMainhand();
 
-		if (!held.isEmpty() && held.getItem() == ModItems.gun_drill) {
+		if (!held.isEmpty() && held.getItem() == Armory.gun_drill) {
 			XFactoryDrill.drawBlockHighlight(player, held, event.getPartialTicks());
 			event.setCanceled(true);
 			return;

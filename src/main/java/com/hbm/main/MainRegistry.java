@@ -44,6 +44,7 @@ import com.hbm.inventory.recipes.*;
 import com.hbm.inventory.recipes.anvil.AnvilRecipes;
 import com.hbm.inventory.recipes.loader.SerializableRecipe;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Materials.Ingots;
 import com.hbm.items.weapon.GrenadeDispenserRegistry;
 import com.hbm.items.weapon.sedna.mods.WeaponModManager;
 import com.hbm.lib.HBMSoundHandler;
@@ -113,6 +114,22 @@ public class MainRegistry {
     @Mod.Instance(RefStrings.MODID)
     public static MainRegistry instance;
     public static Logger logger;
+
+    public static void _initMemberClasses(Class<?> c) {
+        for (Class<?> cl : c.getClasses()) { // stupid solution to initialize the stupid fields
+            try {
+                Class.forName(cl.getName());
+                System.out.println("Initialized member class "+cl.getSimpleName());
+            } catch (ClassNotFoundException exception) {
+                //LeafiaDevFlaw flaw = new LeafiaDevFlaw("Failed to initialize member class "+cl.getSimpleName());
+                //flaw.setStackTrace(exception.getStackTrace());
+                //throw flaw;
+                RuntimeException flaw = new RuntimeException("Failed to initialize member class "+cl.getSimpleName());
+                flaw.setStackTrace(exception.getStackTrace());
+                throw flaw;
+            }
+        }
+    }
     // Creative Tabs
     // ingots, nuggets, wires, machine parts
     public static CreativeTabs partsTab = new PartsTab(CreativeTabs.getNextID(), "tabParts");
@@ -326,29 +343,29 @@ public class MainRegistry {
         proxy.preInit(event);
         Library.initSuperusers();
 
-        enumArmorMaterialSchrabidium.setRepairItem(new ItemStack(ModItems.ingot_schrabidium));
+        enumArmorMaterialSchrabidium.setRepairItem(new ItemStack(Ingots.ingot_schrabidium));
         enumArmorMaterialHazmat.setRepairItem(new ItemStack(ModItems.hazmat_cloth));
         enumArmorMaterialHazmat2.setRepairItem(new ItemStack(ModItems.hazmat_cloth_red));
         enumArmorMaterialHazmat3.setRepairItem(new ItemStack(ModItems.hazmat_cloth_grey));
         aMatBJ.setRepairItem(new ItemStack(ModItems.plate_armor_lunar));
         aMatAJR.setRepairItem(new ItemStack(ModItems.plate_armor_ajr));
         aMatHEV.setRepairItem(new ItemStack(ModItems.plate_armor_hev));
-        enumArmorMaterialTitanium.setRepairItem(new ItemStack(ModItems.ingot_titanium));
-        enumArmorMaterialSteel.setRepairItem(new ItemStack(ModItems.ingot_steel));
-        enumArmorMaterialAlloy.setRepairItem(new ItemStack(ModItems.ingot_advanced_alloy));
+        enumArmorMaterialTitanium.setRepairItem(new ItemStack(Ingots.ingot_titanium));
+        enumArmorMaterialSteel.setRepairItem(new ItemStack(Ingots.ingot_steel));
+        enumArmorMaterialAlloy.setRepairItem(new ItemStack(Ingots.ingot_advanced_alloy));
         enumArmorMaterialPaa.setRepairItem(new ItemStack(ModItems.plate_paa));
-        enumArmorMaterialCmb.setRepairItem(new ItemStack(ModItems.ingot_combine_steel));
-        enumArmorMaterialAusIII.setRepairItem(new ItemStack(ModItems.ingot_australium));
+        enumArmorMaterialCmb.setRepairItem(new ItemStack(Ingots.ingot_combine_steel));
+        enumArmorMaterialAusIII.setRepairItem(new ItemStack(Ingots.ingot_australium));
         enumArmorMaterialSecurity.setRepairItem(new ItemStack(ModItems.plate_kevlar));
-        enumToolMaterialSchrabidium.setRepairItem(new ItemStack(ModItems.ingot_schrabidium));
+        enumToolMaterialSchrabidium.setRepairItem(new ItemStack(Ingots.ingot_schrabidium));
         enumToolMaterialHammer.setRepairItem(new ItemStack(Item.getItemFromBlock(ModBlocks.block_schrabidium)));
-        enumToolMaterialChainsaw.setRepairItem(new ItemStack(ModItems.ingot_steel));
-        enumToolMaterialTitanium.setRepairItem(new ItemStack(ModItems.ingot_titanium));
-        enumToolMaterialSteel.setRepairItem(new ItemStack(ModItems.ingot_steel));
-        enumToolMaterialAlloy.setRepairItem(new ItemStack(ModItems.ingot_advanced_alloy));
-        enumToolMaterialCmb.setRepairItem(new ItemStack(ModItems.ingot_combine_steel));
+        enumToolMaterialChainsaw.setRepairItem(new ItemStack(Ingots.ingot_steel));
+        enumToolMaterialTitanium.setRepairItem(new ItemStack(Ingots.ingot_titanium));
+        enumToolMaterialSteel.setRepairItem(new ItemStack(Ingots.ingot_steel));
+        enumToolMaterialAlloy.setRepairItem(new ItemStack(Ingots.ingot_advanced_alloy));
+        enumToolMaterialCmb.setRepairItem(new ItemStack(Ingots.ingot_combine_steel));
         enumToolMaterialBottleOpener.setRepairItem(new ItemStack(ModItems.plate_steel));
-        enumToolMaterialDesh.setRepairItem(new ItemStack(ModItems.ingot_desh));
+        enumToolMaterialDesh.setRepairItem(new ItemStack(Ingots.ingot_desh));
         enumArmorMaterialAsbestos.setRepairItem(new ItemStack(ModItems.asbestos_cloth));
         matMeteorite.setRepairItem(new ItemStack(ModItems.plate_paa));
         aMatLiquidator.setRepairItem(new ItemStack(ModItems.plate_lead));

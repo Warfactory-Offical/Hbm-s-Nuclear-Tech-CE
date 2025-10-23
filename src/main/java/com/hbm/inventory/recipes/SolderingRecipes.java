@@ -12,6 +12,7 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.recipes.loader.SerializableRecipe;
 import com.hbm.items.ItemEnums.EnumCircuitType;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Upgrades;
 import com.hbm.items.machine.ItemFluidIcon;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -139,7 +140,7 @@ public class SolderingRecipes extends SerializableRecipe {
             new AStack[] {
               new ComparableStack(
                   ModItems.circuit, 1, EnumCircuitType.CONTROLLER_CHASSIS),
-              new ComparableStack(ModItems.upgrade_speed_1)
+              new ComparableStack(Upgrades.upgrade_speed_1)
             },
             new AStack[] {new OreDictStack(PB.wireFine(), 16)}));
     recipes.add(
@@ -158,7 +159,7 @@ public class SolderingRecipes extends SerializableRecipe {
             new AStack[] {
               new ComparableStack(
                   ModItems.circuit, 1, EnumCircuitType.CONTROLLER_CHASSIS),
-              new ComparableStack(ModItems.upgrade_speed_3)
+              new ComparableStack(Upgrades.upgrade_speed_3)
             },
             new AStack[] {new OreDictStack(PB.wireFine(), 24)}));
     recipes.add(
@@ -178,7 +179,7 @@ public class SolderingRecipes extends SerializableRecipe {
             new AStack[] {
               new ComparableStack(
                   ModItems.circuit, 2, EnumCircuitType.CONTROLLER_ADVANCED),
-              new ComparableStack(ModItems.upgrade_overdrive_1)
+              new ComparableStack(Upgrades.upgrade_overdrive_1)
             },
             new AStack[] {new OreDictStack(PB.wireFine(), 32)}));
 
@@ -188,7 +189,7 @@ public class SolderingRecipes extends SerializableRecipe {
 
     recipes.add(
         new SolderingRecipe(
-            new ItemStack(ModItems.upgrade_speed_1),
+            new ItemStack(Upgrades.upgrade_speed_1),
             200,
             1_000,
             new AStack[] {
@@ -201,7 +202,7 @@ public class SolderingRecipes extends SerializableRecipe {
             new AStack[] {}));
     recipes.add(
         new SolderingRecipe(
-            new ItemStack(ModItems.upgrade_effect_1),
+            new ItemStack(Upgrades.upgrade_effect_1),
             200,
             1_000,
             new AStack[] {
@@ -214,7 +215,7 @@ public class SolderingRecipes extends SerializableRecipe {
             new AStack[] {}));
     recipes.add(
         new SolderingRecipe(
-            new ItemStack(ModItems.upgrade_power_1),
+            new ItemStack(Upgrades.upgrade_power_1),
             200,
             1_000,
             new AStack[] {
@@ -227,7 +228,7 @@ public class SolderingRecipes extends SerializableRecipe {
             new AStack[] {}));
     recipes.add(
         new SolderingRecipe(
-            new ItemStack(ModItems.upgrade_fortune_1),
+            new ItemStack(Upgrades.upgrade_fortune_1),
             200,
             1_000,
             new AStack[] {
@@ -240,7 +241,7 @@ public class SolderingRecipes extends SerializableRecipe {
             new AStack[] {}));
     recipes.add(
         new SolderingRecipe(
-            new ItemStack(ModItems.upgrade_afterburn_1),
+            new ItemStack(Upgrades.upgrade_afterburn_1),
             200,
             1_000,
             new AStack[] {
@@ -253,7 +254,7 @@ public class SolderingRecipes extends SerializableRecipe {
             new AStack[] {}));
     recipes.add(
         new SolderingRecipe(
-            new ItemStack(ModItems.upgrade_radius),
+            new ItemStack(Upgrades.upgrade_radius),
             200,
             1_000,
             new AStack[] {
@@ -266,7 +267,7 @@ public class SolderingRecipes extends SerializableRecipe {
             new AStack[] {}));
     recipes.add(
         new SolderingRecipe(
-            new ItemStack(ModItems.upgrade_health),
+            new ItemStack(Upgrades.upgrade_health),
             200,
             1_000,
             new AStack[] {
@@ -278,16 +279,16 @@ public class SolderingRecipes extends SerializableRecipe {
             },
             new AStack[] {}));
 
-    addFirstUpgrade(ModItems.upgrade_speed_1, ModItems.upgrade_speed_2);
-    addSecondUpgrade(ModItems.upgrade_speed_2, ModItems.upgrade_speed_3);
-    addFirstUpgrade(ModItems.upgrade_effect_1, ModItems.upgrade_effect_2);
-    addSecondUpgrade(ModItems.upgrade_effect_2, ModItems.upgrade_effect_3);
-    addFirstUpgrade(ModItems.upgrade_power_1, ModItems.upgrade_power_2);
-    addSecondUpgrade(ModItems.upgrade_power_2, ModItems.upgrade_power_3);
-    addFirstUpgrade(ModItems.upgrade_fortune_1, ModItems.upgrade_fortune_2);
-    addSecondUpgrade(ModItems.upgrade_fortune_2, ModItems.upgrade_fortune_3);
-    addFirstUpgrade(ModItems.upgrade_afterburn_1, ModItems.upgrade_afterburn_2);
-    addSecondUpgrade(ModItems.upgrade_afterburn_2, ModItems.upgrade_afterburn_3);
+    addFirstUpgrade(Upgrades.upgrade_speed_1, Upgrades.upgrade_speed_2);
+    addSecondUpgrade(Upgrades.upgrade_speed_2, Upgrades.upgrade_speed_3);
+    addFirstUpgrade(Upgrades.upgrade_effect_1, Upgrades.upgrade_effect_2);
+    addSecondUpgrade(Upgrades.upgrade_effect_2, Upgrades.upgrade_effect_3);
+    addFirstUpgrade(Upgrades.upgrade_power_1, Upgrades.upgrade_power_2);
+    addSecondUpgrade(Upgrades.upgrade_power_2, Upgrades.upgrade_power_3);
+    addFirstUpgrade(Upgrades.upgrade_fortune_1, Upgrades.upgrade_fortune_2);
+    addSecondUpgrade(Upgrades.upgrade_fortune_2, Upgrades.upgrade_fortune_3);
+    addFirstUpgrade(Upgrades.upgrade_afterburn_1, Upgrades.upgrade_afterburn_2);
+    addSecondUpgrade(Upgrades.upgrade_afterburn_2, Upgrades.upgrade_afterburn_3);
   }
 
   public static void addFirstUpgrade(Item lower, Item higher) {

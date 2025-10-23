@@ -3,6 +3,7 @@ package com.hbm.inventory.recipes;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Materials.Powders;
 import net.minecraft.item.ItemStack;
 
 import java.util.HashMap;
@@ -46,8 +47,8 @@ public class FusionRecipes {
 		byproducts.put(Fluids.PLASMA_DH3, new ItemStack(ModItems.pellet_charged));
 		byproducts.put(Fluids.PLASMA_HD, new ItemStack(ModItems.pellet_charged));
 		byproducts.put(Fluids.PLASMA_HT, new ItemStack(ModItems.pellet_charged));
-		byproducts.put(Fluids.PLASMA_XM, new ItemStack(ModItems.powder_chlorophyte));
-		byproducts.put(Fluids.PLASMA_BF, new ItemStack(ModItems.powder_balefire));
+		byproducts.put(Fluids.PLASMA_XM, new ItemStack(Powders.powder_chlorophyte));
+		byproducts.put(Fluids.PLASMA_BF, new ItemStack(Powders.powder_balefire));
 	}
 
 	public static ItemStack getByproduct(FluidType plasma) {

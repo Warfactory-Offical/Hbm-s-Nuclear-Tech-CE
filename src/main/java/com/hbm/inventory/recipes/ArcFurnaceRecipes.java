@@ -11,7 +11,9 @@ import com.hbm.inventory.material.MaterialShapes;
 import com.hbm.inventory.material.Mats;
 import com.hbm.inventory.material.NTMMaterial;
 import com.hbm.inventory.recipes.loader.SerializableRecipe;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foundry;
+import com.hbm.items.ModItems.Materials.Nuggies;
+import com.hbm.items.ModItems.Materials.Powders;
 import com.hbm.items.machine.ItemScraps;
 import com.hbm.items.special.ItemBedrockOreNew;
 import com.hbm.util.Tuple;
@@ -38,19 +40,19 @@ public class ArcFurnaceRecipes extends SerializableRecipe {
     @Override
     public void registerDefaults() {
 
-        register(new RecipesCommon.OreDictStack(KEY_SAND),			new ArcFurnaceRecipe().solid(new ItemStack(ModItems.nugget_silicon))		.fluid(new Mats.MaterialStack(Mats.MAT_SILICON, MaterialShapes.NUGGET.q(1))));
-        register(new RecipesCommon.ComparableStack(Items.FLINT),		new ArcFurnaceRecipe().solid(new ItemStack(ModItems.nugget_silicon, 4))		.fluid(new Mats.MaterialStack(Mats.MAT_SILICON, MaterialShapes.INGOT.q(1, 2))));
-        register(new RecipesCommon.OreDictStack(QUARTZ.gem()),		new ArcFurnaceRecipe().solid(new ItemStack(ModItems.nugget_silicon, 3))		.fluid(new Mats.MaterialStack(Mats.MAT_SILICON, MaterialShapes.NUGGET.q(3))));
-        register(new RecipesCommon.OreDictStack(QUARTZ.dust()),		new ArcFurnaceRecipe().solid(new ItemStack(ModItems.nugget_silicon, 3))		.fluid(new Mats.MaterialStack(Mats.MAT_SILICON, MaterialShapes.NUGGET.q(3))));
-        register(new RecipesCommon.OreDictStack(QUARTZ.block()),		new ArcFurnaceRecipe().solid(new ItemStack(ModItems.nugget_silicon, 12))	.fluid(new Mats.MaterialStack(Mats.MAT_SILICON, MaterialShapes.NUGGET.q(12))));
-        register(new RecipesCommon.OreDictStack(FIBER.ingot()),		new ArcFurnaceRecipe().solid(new ItemStack(ModItems.nugget_silicon, 4))		.fluid(new Mats.MaterialStack(Mats.MAT_SILICON, MaterialShapes.INGOT.q(1, 2))));
-        register(new RecipesCommon.OreDictStack(FIBER.block()),		new ArcFurnaceRecipe().solid(new ItemStack(ModItems.nugget_silicon, 40))	.fluid(new Mats.MaterialStack(Mats.MAT_SILICON, MaterialShapes.INGOT.q(9, 2))));
-        register(new RecipesCommon.OreDictStack(ASBESTOS.ingot()),	new ArcFurnaceRecipe().solid(new ItemStack(ModItems.nugget_silicon, 4))		.fluid(new Mats.MaterialStack(Mats.MAT_SILICON, MaterialShapes.INGOT.q(1, 2))));
-        register(new RecipesCommon.OreDictStack(ASBESTOS.dust()),		new ArcFurnaceRecipe().solid(new ItemStack(ModItems.nugget_silicon, 4))		.fluid(new Mats.MaterialStack(Mats.MAT_SILICON, MaterialShapes.INGOT.q(1, 2))));
-        register(new RecipesCommon.OreDictStack(ASBESTOS.block()),	new ArcFurnaceRecipe().solid(new ItemStack(ModItems.nugget_silicon, 40))	.fluid(new Mats.MaterialStack(Mats.MAT_SILICON, MaterialShapes.INGOT.q(9, 2))));
+        register(new RecipesCommon.OreDictStack(KEY_SAND),			new ArcFurnaceRecipe().solid(new ItemStack(Nuggies.nugget_silicon))		.fluid(new Mats.MaterialStack(Mats.MAT_SILICON, MaterialShapes.NUGGET.q(1))));
+        register(new RecipesCommon.ComparableStack(Items.FLINT),		new ArcFurnaceRecipe().solid(new ItemStack(Nuggies.nugget_silicon, 4))		.fluid(new Mats.MaterialStack(Mats.MAT_SILICON, MaterialShapes.INGOT.q(1, 2))));
+        register(new RecipesCommon.OreDictStack(QUARTZ.gem()),		new ArcFurnaceRecipe().solid(new ItemStack(Nuggies.nugget_silicon, 3))		.fluid(new Mats.MaterialStack(Mats.MAT_SILICON, MaterialShapes.NUGGET.q(3))));
+        register(new RecipesCommon.OreDictStack(QUARTZ.dust()),		new ArcFurnaceRecipe().solid(new ItemStack(Nuggies.nugget_silicon, 3))		.fluid(new Mats.MaterialStack(Mats.MAT_SILICON, MaterialShapes.NUGGET.q(3))));
+        register(new RecipesCommon.OreDictStack(QUARTZ.block()),		new ArcFurnaceRecipe().solid(new ItemStack(Nuggies.nugget_silicon, 12))	.fluid(new Mats.MaterialStack(Mats.MAT_SILICON, MaterialShapes.NUGGET.q(12))));
+        register(new RecipesCommon.OreDictStack(FIBER.ingot()),		new ArcFurnaceRecipe().solid(new ItemStack(Nuggies.nugget_silicon, 4))		.fluid(new Mats.MaterialStack(Mats.MAT_SILICON, MaterialShapes.INGOT.q(1, 2))));
+        register(new RecipesCommon.OreDictStack(FIBER.block()),		new ArcFurnaceRecipe().solid(new ItemStack(Nuggies.nugget_silicon, 40))	.fluid(new Mats.MaterialStack(Mats.MAT_SILICON, MaterialShapes.INGOT.q(9, 2))));
+        register(new RecipesCommon.OreDictStack(ASBESTOS.ingot()),	new ArcFurnaceRecipe().solid(new ItemStack(Nuggies.nugget_silicon, 4))		.fluid(new Mats.MaterialStack(Mats.MAT_SILICON, MaterialShapes.INGOT.q(1, 2))));
+        register(new RecipesCommon.OreDictStack(ASBESTOS.dust()),		new ArcFurnaceRecipe().solid(new ItemStack(Nuggies.nugget_silicon, 4))		.fluid(new Mats.MaterialStack(Mats.MAT_SILICON, MaterialShapes.INGOT.q(1, 2))));
+        register(new RecipesCommon.OreDictStack(ASBESTOS.block()),	new ArcFurnaceRecipe().solid(new ItemStack(Nuggies.nugget_silicon, 40))	.fluid(new Mats.MaterialStack(Mats.MAT_SILICON, MaterialShapes.INGOT.q(9, 2))));
 
         register(new RecipesCommon.ComparableStack(ModBlocks.sand_quartz), new ArcFurnaceRecipe().solid(new ItemStack(ModBlocks.glass_quartz)));
-        register(new RecipesCommon.OreDictStack(BORAX.dust()), new ArcFurnaceRecipe().solid(new ItemStack(ModItems.powder_boron_tiny, 3)).fluid(new Mats.MaterialStack(Mats.MAT_BORON, MaterialShapes.NUGGET.q(3))));
+        register(new RecipesCommon.OreDictStack(BORAX.dust()), new ArcFurnaceRecipe().solid(new ItemStack(Powders.powder_boron_tiny, 3)).fluid(new Mats.MaterialStack(Mats.MAT_BORON, MaterialShapes.NUGGET.q(3))));
 
         for(ItemBedrockOreNew.BedrockOreType type : ItemBedrockOreNew.BedrockOreType.values()) {
             register(new RecipesCommon.ComparableStack(ItemBedrockOreNew.make(ItemBedrockOreNew.BedrockOreGrade.SULFURIC_BYPRODUCT, type)), new ArcFurnaceRecipe().solid(ItemBedrockOreNew.make(ItemBedrockOreNew.BedrockOreGrade.SULFURIC_ARC, type, 2)));
@@ -149,7 +151,7 @@ public class ArcFurnaceRecipes extends SerializableRecipe {
 
         if(stack == null) return null;
 
-        if(stack.getItem() == ModItems.scraps && liquid) {
+        if(stack.getItem() == Foundry.scraps && liquid) {
             NTMMaterial mat = Mats.matById.get(stack.getItemDamage());
             if(mat == null) return null;
             Mats.MaterialStack mats = ItemScraps.getMats(stack);
@@ -198,7 +200,7 @@ public class ArcFurnaceRecipes extends SerializableRecipe {
         }
         for(NTMMaterial mat : Mats.orderedList) {
             if(mat.smeltable == NTMMaterial.SmeltingBehavior.SMELTABLE) {
-                recipes.put(new ItemStack(ModItems.scraps, 1, mat.id), ItemScraps.create(new Mats.MaterialStack(mat, MaterialShapes.INGOT.q(1)), true));
+                recipes.put(new ItemStack(Foundry.scraps, 1, mat.id), ItemScraps.create(new Mats.MaterialStack(mat, MaterialShapes.INGOT.q(1)), true));
             }
         }
         return recipes;

@@ -13,7 +13,7 @@ import com.hbm.entity.projectile.EntityBulletBaseNT;
 import com.hbm.entity.projectile.EntityExplosiveBeam;
 import com.hbm.handler.ArmorUtil;
 import com.hbm.interfaces.Spaghetti;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.ArmorSets;
 import com.hbm.lib.Library;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.main.MainRegistry;
@@ -133,7 +133,7 @@ public class ExplosionNukeGeneric {
             e instanceof EntityExplosiveBeam ||
             e instanceof EntityBulletBaseNT ||
             e instanceof EntityPlayer &&
-            ArmorUtil.checkArmor((EntityPlayer) e, ModItems.euphemium_helmet, ModItems.euphemium_plate, ModItems.euphemium_legs, ModItems.euphemium_boots)) {
+            ArmorUtil.checkArmor((EntityPlayer) e, ArmorSets.euphemium_helmet, ArmorSets.euphemium_plate, ArmorSets.euphemium_legs, ArmorSets.euphemium_boots)) {
             return true;
         }
 
@@ -172,8 +172,8 @@ public class ExplosionNukeGeneric {
                 d6 = entity.posY + entity.getEyeHeight() - y;
                 d7 = entity.posZ - z;
                 double d9 = MathHelper.sqrt(d5 * d5 + d6 * d6 + d7 * d7);
-                if (d9 < wat && !(entity instanceof EntityPlayer && ArmorUtil.checkArmor((EntityPlayer) entity, ModItems.euphemium_helmet,
-                        ModItems.euphemium_plate, ModItems.euphemium_legs, ModItems.euphemium_boots))) {
+                if (d9 < wat && !(entity instanceof EntityPlayer && ArmorUtil.checkArmor((EntityPlayer) entity, ArmorSets.euphemium_helmet,
+                        ArmorSets.euphemium_plate, ArmorSets.euphemium_legs, ArmorSets.euphemium_boots))) {
                     d5 /= d9;
                     d6 /= d9;
                     d7 /= d9;

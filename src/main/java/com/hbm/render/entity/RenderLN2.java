@@ -2,7 +2,7 @@ package com.hbm.render.entity;
 
 import com.hbm.entity.projectile.EntityLN2;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.DummyTexs;
 import com.hbm.render.NTMRenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -34,66 +34,66 @@ public class RenderLN2 extends Render<EntityLN2> {
 	@Override
 	public void doRender(EntityLN2 fx, double x, double y, double z, float entityYaw, float partialTicks) {
 		if(textures.isEmpty()){
-			textures.put(ModItems.ln2_1, Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(new ItemStack(ModItems.ln2_1, 1, 0), null, null).getParticleTexture());
-			textures.put(ModItems.ln2_2, Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(new ItemStack(ModItems.ln2_2, 1, 0), null, null).getParticleTexture());
-			textures.put(ModItems.ln2_3, Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(new ItemStack(ModItems.ln2_3, 1, 0), null, null).getParticleTexture());
-			textures.put(ModItems.ln2_4, Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(new ItemStack(ModItems.ln2_4, 1, 0), null, null).getParticleTexture());
-			textures.put(ModItems.ln2_5, Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(new ItemStack(ModItems.ln2_5, 1, 0), null, null).getParticleTexture());
-			textures.put(ModItems.ln2_6, Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(new ItemStack(ModItems.ln2_6, 1, 0), null, null).getParticleTexture());
-			textures.put(ModItems.ln2_7, Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(new ItemStack(ModItems.ln2_7, 1, 0), null, null).getParticleTexture());
-			textures.put(ModItems.ln2_8, Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(new ItemStack(ModItems.ln2_8, 1, 0), null, null).getParticleTexture());
-			textures.put(ModItems.ln2_9, Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(new ItemStack(ModItems.ln2_9, 1, 0), null, null).getParticleTexture());
-			textures.put(ModItems.ln2_10, Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(new ItemStack(ModItems.ln2_10, 1, 0), null, null).getParticleTexture());
+			textures.put(DummyTexs.ln2_1, Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(new ItemStack(DummyTexs.ln2_1, 1, 0), null, null).getParticleTexture());
+			textures.put(DummyTexs.ln2_2, Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(new ItemStack(DummyTexs.ln2_2, 1, 0), null, null).getParticleTexture());
+			textures.put(DummyTexs.ln2_3, Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(new ItemStack(DummyTexs.ln2_3, 1, 0), null, null).getParticleTexture());
+			textures.put(DummyTexs.ln2_4, Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(new ItemStack(DummyTexs.ln2_4, 1, 0), null, null).getParticleTexture());
+			textures.put(DummyTexs.ln2_5, Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(new ItemStack(DummyTexs.ln2_5, 1, 0), null, null).getParticleTexture());
+			textures.put(DummyTexs.ln2_6, Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(new ItemStack(DummyTexs.ln2_6, 1, 0), null, null).getParticleTexture());
+			textures.put(DummyTexs.ln2_7, Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(new ItemStack(DummyTexs.ln2_7, 1, 0), null, null).getParticleTexture());
+			textures.put(DummyTexs.ln2_8, Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(new ItemStack(DummyTexs.ln2_8, 1, 0), null, null).getParticleTexture());
+			textures.put(DummyTexs.ln2_9, Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(new ItemStack(DummyTexs.ln2_9, 1, 0), null, null).getParticleTexture());
+			textures.put(DummyTexs.ln2_10, Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(new ItemStack(DummyTexs.ln2_10, 1, 0), null, null).getParticleTexture());
 		}
-		TextureAtlasSprite tex = textures.get(ModItems.ln2_1);
+		TextureAtlasSprite tex = textures.get(DummyTexs.ln2_1);
 		if(fx.ticksExisted <= fx.maxAge && fx.ticksExisted >= fx.maxAge / 10 * 9)
 		{
-			tex = textures.get(ModItems.ln2_10);
+			tex = textures.get(DummyTexs.ln2_10);
 		}
 
 		if(fx.ticksExisted < fx.maxAge / 10 * 9 && fx.ticksExisted >= fx.maxAge / 10 * 8)
 		{
-			tex = textures.get(ModItems.ln2_9);
+			tex = textures.get(DummyTexs.ln2_9);
 		}
 
 		if(fx.ticksExisted < fx.maxAge / 10 * 8 && fx.ticksExisted >= fx.maxAge / 10 * 7)
 		{
-			tex = textures.get(ModItems.ln2_8);
+			tex = textures.get(DummyTexs.ln2_8);
 		}
 
 		if(fx.ticksExisted < fx.maxAge / 10 * 7 && fx.ticksExisted >= fx.maxAge / 10 * 6)
 		{
-			tex = textures.get(ModItems.ln2_7);
+			tex = textures.get(DummyTexs.ln2_7);
 		}
 
 		if(fx.ticksExisted < fx.maxAge / 10 * 6 && fx.ticksExisted >= fx.maxAge / 10 * 5)
 		{
-			tex = textures.get(ModItems.ln2_6);
+			tex = textures.get(DummyTexs.ln2_6);
 		}
 
 		if(fx.ticksExisted < fx.maxAge / 10 * 5 && fx.ticksExisted >= fx.maxAge / 10 * 4)
 		{
-			tex = textures.get(ModItems.ln2_5);
+			tex = textures.get(DummyTexs.ln2_5);
 		}
 
 		if(fx.ticksExisted < fx.maxAge / 10 * 4 && fx.ticksExisted >= fx.maxAge / 10 * 3)
 		{
-			tex = textures.get(ModItems.ln2_4);
+			tex = textures.get(DummyTexs.ln2_4);
 		}
 
 		if(fx.ticksExisted < fx.maxAge / 10 * 3 && fx.ticksExisted >= fx.maxAge / 10 * 2)
 		{
-			tex = textures.get(ModItems.ln2_3);
+			tex = textures.get(DummyTexs.ln2_3);
 		}
 
 		if(fx.ticksExisted < fx.maxAge / 10 * 2 && fx.ticksExisted >= fx.maxAge / 10 * 1)
 		{
-			tex = textures.get(ModItems.ln2_2);
+			tex = textures.get(DummyTexs.ln2_2);
 		}
 		
 		if(fx.ticksExisted < fx.maxAge / 10 && fx.ticksExisted >= 0 && !fx.isDead)
 		{
-			tex = textures.get(ModItems.ln2_1);
+			tex = textures.get(DummyTexs.ln2_1);
 		}
 		
 

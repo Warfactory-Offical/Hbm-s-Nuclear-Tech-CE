@@ -7,7 +7,7 @@ import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerForceField;
 import com.hbm.inventory.gui.GUIForceField;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Upgrades;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.packet.PacketDispatcher;
@@ -146,12 +146,12 @@ public class TileEntityForceField extends TileEntityLoadedBase implements ITicka
             radius = 16;
             maxHealth = 100;
 
-            if (inventory.getStackInSlot(1).getItem() == ModItems.upgrade_radius) {
+            if (inventory.getStackInSlot(1).getItem() == Upgrades.upgrade_radius) {
                 rStack = inventory.getStackInSlot(1).getCount();
                 radius += rStack * 16;
             }
 
-            if (inventory.getStackInSlot(2).getItem() == ModItems.upgrade_health) {
+            if (inventory.getStackInSlot(2).getItem() == Upgrades.upgrade_health) {
                 hStack = inventory.getStackInSlot(2).getCount();
                 maxHealth += hStack * 50;
             }

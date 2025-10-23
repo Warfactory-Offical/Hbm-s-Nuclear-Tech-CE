@@ -1,7 +1,8 @@
 package com.hbm.entity.mob;
 
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.ArmorSets;
+import com.hbm.items.ModItems.Armory;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.IEntityLivingData;
@@ -63,17 +64,17 @@ public class EntityUndeadSoldier extends EntityMob {
 
     @Override
     protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {
-        this.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(ModItems.taurun_helmet));
-        this.setItemStackToSlot(EntityEquipmentSlot.CHEST, new ItemStack(ModItems.taurun_plate));
-        this.setItemStackToSlot(EntityEquipmentSlot.LEGS, new ItemStack(ModItems.taurun_legs));
-        this.setItemStackToSlot(EntityEquipmentSlot.FEET, new ItemStack(ModItems.taurun_boots));
+        this.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(ArmorSets.taurun_helmet));
+        this.setItemStackToSlot(EntityEquipmentSlot.CHEST, new ItemStack(ArmorSets.taurun_plate));
+        this.setItemStackToSlot(EntityEquipmentSlot.LEGS, new ItemStack(ArmorSets.taurun_legs));
+        this.setItemStackToSlot(EntityEquipmentSlot.FEET, new ItemStack(ArmorSets.taurun_boots));
 
         int gun = rand.nextInt(5);
-        if (gun == 0) this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.gun_heavy_revolver));
-        if (gun == 1) this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.gun_light_revolver));
-        if (gun == 2) this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.gun_carbine));
-        if (gun == 3) this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.gun_maresleg));
-        if (gun == 4) this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.gun_greasegun));
+        if (gun == 0) this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Armory.gun_heavy_revolver));
+        if (gun == 1) this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Armory.gun_light_revolver));
+        if (gun == 2) this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Armory.gun_carbine));
+        if (gun == 3) this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Armory.gun_maresleg));
+        if (gun == 4) this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Armory.gun_greasegun));
     }
 
     @Override

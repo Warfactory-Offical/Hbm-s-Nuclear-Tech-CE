@@ -1,6 +1,7 @@
 package com.hbm.items.food;
 
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.ArmorSets;
 import com.hbm.items.gear.ArmorFSB;
 import com.hbm.lib.Library;
 import net.minecraft.client.util.ITooltipFlag;
@@ -37,7 +38,7 @@ public class ItemPancake extends ItemFood {
 	
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
-		if(ArmorFSB.hasFSBArmorIgnoreCharge(player) && player.inventory.armorInventory.get(3).getItem() == ModItems.bj_helmet) {
+		if(ArmorFSB.hasFSBArmorIgnoreCharge(player) && player.inventory.armorInventory.get(3).getItem() == ArmorSets.bj_helmet) {
         	return super.onItemRightClick(world, player, hand);
     	}
 

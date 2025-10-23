@@ -12,6 +12,7 @@ import com.hbm.inventory.material.Mats;
 import com.hbm.inventory.recipes.loader.SerializableRecipe;
 import com.hbm.items.ItemEnums.EnumPartType;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Materials.Ingots;
 import com.hbm.items.machine.ItemFluidIcon;
 import net.minecraft.item.ItemStack;
 
@@ -67,7 +68,7 @@ public class ArcWelderRecipes extends SerializableRecipe {
             new FluidStack(Fluids.STELLAR_FLUX, 4_000),
             new OreDictStack(ANY_BISMOIDBRONZE.plateCast(), 2),
             new OreDictStack(CMB.plateWelded(), 1),
-            new ComparableStack(ModItems.ingot_cft)));
+            new ComparableStack(Ingots.ingot_cft)));
 
     // Dense Wires
     recipes.add(

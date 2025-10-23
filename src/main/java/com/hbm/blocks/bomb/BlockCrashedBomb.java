@@ -12,6 +12,8 @@ import com.hbm.explosion.vanillant.standard.EntityProcessorCross;
 import com.hbm.explosion.vanillant.standard.PlayerProcessorStandard;
 import com.hbm.interfaces.IBomb;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Materials.Billets;
+import com.hbm.items.ModItems.Materials.Ingots;
 import com.hbm.particle.helper.ExplosionCreator;
 import com.hbm.tileentity.bomb.TileEntityCrashedBomb;
 import com.hbm.util.EnumUtil;
@@ -70,15 +72,15 @@ public class BlockCrashedBomb extends BlockEnumMeta implements IBomb, ITileEntit
                     world.spawnEntity(
                             new EntityItem(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, new ItemStack(ModItems.ball_tnt, 8)));
                     world.spawnEntity(
-                            new EntityItem(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, new ItemStack(ModItems.billet_plutonium, 4)));
+                            new EntityItem(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, new ItemStack(Billets.billet_plutonium, 4)));
                 }
                 case SALTED -> {
                     world.spawnEntity(
                             new EntityItem(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, new ItemStack(ModItems.ball_tnt, 8)));
                     world.spawnEntity(
-                            new EntityItem(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, new ItemStack(ModItems.billet_plutonium, 2)));
+                            new EntityItem(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, new ItemStack(Billets.billet_plutonium, 2)));
                     world.spawnEntity(new EntityItem(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5 + 0.5,
-                            new ItemStack(ModItems.ingot_cobalt, 12)));
+                            new ItemStack(Ingots.ingot_cobalt, 12)));
                 }
             }
             world.destroyBlock(pos, false);

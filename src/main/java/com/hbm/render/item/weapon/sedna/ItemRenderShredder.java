@@ -1,6 +1,6 @@
 package com.hbm.render.item.weapon.sedna;
 
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
@@ -74,7 +74,7 @@ public class ItemRenderShredder extends ItemRenderWeaponBase {
         final int prevShade = RenderUtil.getShadeModel();
         if (prevShade != GL11.GL_SMOOTH) GlStateManager.shadeModel(GL11.GL_SMOOTH);
 
-        boolean sexy = stack.getItem() == ModItems.gun_autoshotgun_sexy;
+        boolean sexy = stack.getItem() == Armory.gun_autoshotgun_sexy;
 
         if (sexy || (ItemGunBaseNT.prevAimingProgress >= 1F && ItemGunBaseNT.aimingProgress >= 1F)) {
             GlStateManager.pushMatrix();

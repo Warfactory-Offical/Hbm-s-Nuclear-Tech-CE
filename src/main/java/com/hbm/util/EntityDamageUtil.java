@@ -2,7 +2,7 @@ package com.hbm.util;
 
 import com.hbm.handler.ArmorModHandler;
 import com.hbm.interfaces.Untested;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Inserts;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -61,7 +61,7 @@ public class EntityDamageUtil {
                 if (!chestplate.isEmpty() && ArmorModHandler.hasMods(chestplate)) {
                     ItemStack[] mods = ArmorModHandler.pryMods(chestplate);
 
-                    if (mods[ArmorModHandler.extra] != null && mods[ArmorModHandler.extra].getItem() == ModItems.v1) {
+                    if (mods[ArmorModHandler.extra] != null && mods[ArmorModHandler.extra].getItem() == Inserts.v1) {
                         return true;
                     }
                 }

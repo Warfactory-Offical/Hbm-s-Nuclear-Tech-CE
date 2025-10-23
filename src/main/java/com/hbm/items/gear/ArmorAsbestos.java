@@ -1,12 +1,12 @@
 package com.hbm.items.gear;
 
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.ArmorSets;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.NTMRenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -21,7 +21,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ArmorAsbestos extends ItemArmor implements ISpecialArmor {
 
@@ -38,10 +37,10 @@ public class ArmorAsbestos extends ItemArmor implements ISpecialArmor {
 
 	@Override
 	public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
-		if(stack.getItem().equals(ModItems.asbestos_helmet) || stack.getItem().equals(ModItems.asbestos_plate) || stack.getItem().equals(ModItems.asbestos_boots)) {
+		if(stack.getItem().equals(ArmorSets.asbestos_helmet) || stack.getItem().equals(ArmorSets.asbestos_plate) || stack.getItem().equals(ArmorSets.asbestos_boots)) {
 			return (RefStrings.MODID + ":textures/armor/asbestos_1.png");
 		}
-		if(stack.getItem().equals(ModItems.asbestos_legs)) {
+		if(stack.getItem().equals(ArmorSets.asbestos_legs)) {
 			return (RefStrings.MODID + ":textures/armor/asbestos_2.png");
 		}
 		return null;
@@ -90,7 +89,7 @@ public class ArmorAsbestos extends ItemArmor implements ISpecialArmor {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void renderHelmetOverlay(ItemStack stack, EntityPlayer player, ScaledResolution resolution, float partialTicks) {
-		if(this != ModItems.asbestos_helmet)
+		if(this != ArmorSets.asbestos_helmet)
     		return;
     	
 

@@ -4,6 +4,7 @@ import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerBombMulti;
 import com.hbm.inventory.gui.GUIBombMulti;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Materials.Powders;
 import com.hbm.tileentity.IGUIProvider;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -105,12 +106,12 @@ public class TileEntityBombMulti extends TileEntity implements IGUIProvider {
 			return 3;
 		}
 		
-		if(inventory.getStackInSlot(2).getItem() == ModItems.powder_fire)
+		if(inventory.getStackInSlot(2).getItem() == Powders.powder_fire)
 		{
 			return 4;
 		}
 		
-		if(inventory.getStackInSlot(2).getItem() == ModItems.powder_poison)
+		if(inventory.getStackInSlot(2).getItem() == Powders.powder_poison)
 		{
 			return 5;
 		}
@@ -142,12 +143,12 @@ public class TileEntityBombMulti extends TileEntity implements IGUIProvider {
 			return 3;
 		}
 		
-		if(inventory.getStackInSlot(5).getItem() == ModItems.powder_fire)
+		if(inventory.getStackInSlot(5).getItem() == Powders.powder_fire)
 		{
 			return 4;
 		}
 		
-		if(inventory.getStackInSlot(5).getItem() == ModItems.powder_poison)
+		if(inventory.getStackInSlot(5).getItem() == Powders.powder_poison)
 		{
 			return 5;
 		}

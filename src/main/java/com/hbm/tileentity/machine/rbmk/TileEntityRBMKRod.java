@@ -15,7 +15,7 @@ import com.hbm.inventory.container.ContainerRBMKRod;
 import com.hbm.inventory.control_panel.DataValue;
 import com.hbm.inventory.control_panel.DataValueFloat;
 import com.hbm.inventory.gui.GUIRBMKRod;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.RBMKFuel;
 import com.hbm.items.machine.ItemRBMKRod;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.IGUIProvider;
@@ -322,7 +322,7 @@ public class TileEntityRBMKRod extends TileEntityRBMKSlottedBase implements IRBM
 		
 		boolean corium = inventory.getStackInSlot(0).getItem() instanceof ItemRBMKRod;
 		
-		if(corium && inventory.getStackInSlot(0).getItem() == ModItems.rbmk_fuel_drx) 
+		if(corium && inventory.getStackInSlot(0).getItem() == RBMKFuel.rbmk_fuel_drx)
 			RBMKBase.digamma = true;
 		
 		inventory.setStackInSlot(0, ItemStack.EMPTY);

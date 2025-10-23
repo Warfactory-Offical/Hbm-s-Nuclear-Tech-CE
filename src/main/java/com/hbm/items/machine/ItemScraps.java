@@ -4,7 +4,8 @@ import com.google.common.collect.ImmutableMap;
 import com.hbm.inventory.material.MaterialShapes;
 import com.hbm.inventory.material.Mats;
 import com.hbm.inventory.material.NTMMaterial;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.DummyTexs;
+import com.hbm.items.ModItems.Foundry;
 import com.hbm.items.special.ItemAutogen;
 import com.hbm.lib.RefStrings;
 import com.hbm.util.I18nUtil;
@@ -13,7 +14,6 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.model.ModelRotation;
-import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
@@ -158,7 +158,7 @@ public class ItemScraps extends ItemAutogen {
 
     public static Mats.MaterialStack getMats(ItemStack stack) {
 
-        if(stack.getItem() != ModItems.scraps) return null;
+        if(stack.getItem() != Foundry.scraps) return null;
 
         NTMMaterial mat = Mats.matById.get(stack.getItemDamage());
         if(mat == null) return null;
@@ -178,8 +178,8 @@ public class ItemScraps extends ItemAutogen {
 
     public static ItemStack create(Mats.MaterialStack stack, boolean liquid) {
         if(stack.material == null)
-            return new ItemStack(ModItems.nothing); //why do i bother adding checks for fucking everything when they don't work
-        ItemStack scrap = new ItemStack(ModItems.scraps, 1, stack.material.id);
+            return new ItemStack(DummyTexs.nothing); //why do i bother adding checks for fucking everything when they don't work
+        ItemStack scrap = new ItemStack(Foundry.scraps, 1, stack.material.id);
         scrap.setTagCompound(new NBTTagCompound());
         scrap.getTagCompound().setInteger("amount", stack.amount);
         if(liquid) scrap.getTagCompound().setBoolean("liquid", true);

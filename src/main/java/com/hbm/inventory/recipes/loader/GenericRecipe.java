@@ -6,7 +6,7 @@ import com.hbm.inventory.fluid.FluidStack;
 import com.hbm.inventory.recipes.loader.GenericRecipes.ChanceOutput;
 import com.hbm.inventory.recipes.loader.GenericRecipes.ChanceOutputMulti;
 import com.hbm.inventory.recipes.loader.GenericRecipes.IOutput;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.DummyTexs;
 import com.hbm.items.machine.ItemFluidIcon;
 import com.hbm.util.BobMathUtil;
 import com.hbm.util.I18nUtil;
@@ -95,7 +95,7 @@ public class GenericRecipe {
             }
         }
 
-        if(icon == null) icon = new ItemStack(ModItems.nothing);
+        if(icon == null) icon = new ItemStack(DummyTexs.nothing);
         return icon;
     }
 

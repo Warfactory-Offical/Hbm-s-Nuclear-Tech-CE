@@ -1,6 +1,9 @@
 package com.hbm.blocks;
 
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foods;
+import com.hbm.items.ModItems.Materials.Ingots;
+import com.hbm.items.ModItems.Materials.Powders;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
@@ -93,11 +96,11 @@ public class BlockEnums {
 
 
 	public static enum EnumBasaltOreType {
-		SULFUR (new ItemStack(ModItems.sulfur)),
-		FLUORITE(new ItemStack(ModItems.fluorite)),
-		ASBESTOS(new ItemStack(ModItems.ingot_asbestos)),
+		SULFUR (new ItemStack(Powders.sulfur)),
+		FLUORITE(new ItemStack(Ingots.fluorite)),
+		ASBESTOS(new ItemStack(Ingots.ingot_asbestos)),
 		GEM(new ItemStack(ModItems.gem_volcanic)),
-		MOLYSITE(new ItemStack(ModItems.powder_molysite));
+		MOLYSITE(new ItemStack(Powders.powder_molysite));
 
 		public final ItemStack drop;
 
@@ -114,14 +117,14 @@ public class BlockEnums {
     }
 
 	public static enum EnumBlockCapType {
-		NUKA (new ItemStack(ModItems.cap_nuka)),
-		QUANTUM (new ItemStack(ModItems.cap_quantum)),
-		RAD (new ItemStack(ModItems.cap_rad)),
-		SPARKLE (new ItemStack(ModItems.cap_sparkle)),
-		KORL (new ItemStack(ModItems.cap_korl)),
-		FRITZ (new ItemStack(ModItems.cap_fritz)),
-		SUNSET (new ItemStack(ModItems.cap_sunset)),
-		STAR (new ItemStack(ModItems.cap_star));
+		NUKA (new ItemStack(Foods.cap_nuka)),
+		QUANTUM (new ItemStack(Foods.cap_quantum)),
+		RAD (new ItemStack(Foods.cap_rad)),
+		SPARKLE (new ItemStack(Foods.cap_sparkle)),
+		KORL (new ItemStack(Foods.cap_korl)),
+		FRITZ (new ItemStack(Foods.cap_fritz)),
+		SUNSET (new ItemStack(Foods.cap_sunset)),
+		STAR (new ItemStack(Foods.cap_star));
 
 		public final ItemStack drop;
 

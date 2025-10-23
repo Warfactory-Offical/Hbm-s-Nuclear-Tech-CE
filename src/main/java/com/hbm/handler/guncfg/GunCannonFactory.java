@@ -5,14 +5,15 @@ import com.hbm.handler.BulletConfiguration;
 import com.hbm.interfaces.IBulletImpactBehavior;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.items.ItemAmmoEnums;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
+
 public class GunCannonFactory {
 
 public static BulletConfiguration getShellConfig() {
 		
 		BulletConfiguration bullet = BulletConfigFactory.standardShellConfig();
 		
-		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.ammo_shell);
+		bullet.ammo = new RecipesCommon.ComparableStack(Armory.ammo_shell);
 		bullet.dmgMin = 25;
 		bullet.dmgMax = 35;
 		bullet.explosive = 4F;
@@ -25,7 +26,7 @@ public static BulletConfiguration getShellConfig() {
 		
 		BulletConfiguration bullet = BulletConfigFactory.standardShellConfig();
 		
-		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.ammo_shell.stackFromEnum(1, ItemAmmoEnums.Ammo240Shell.EXPLOSIVE));
+		bullet.ammo = new RecipesCommon.ComparableStack(Armory.ammo_shell.stackFromEnum(1, ItemAmmoEnums.Ammo240Shell.EXPLOSIVE));
 		bullet.dmgMin = 35;
 		bullet.dmgMax = 45;
 		bullet.explosive = 4F;
@@ -38,7 +39,7 @@ public static BulletConfiguration getShellConfig() {
 		
 		BulletConfiguration bullet = BulletConfigFactory.standardShellConfig();
 		
-		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.ammo_shell.stackFromEnum(1, ItemAmmoEnums.Ammo240Shell.APFSDS_T));
+		bullet.ammo = new RecipesCommon.ComparableStack(Armory.ammo_shell.stackFromEnum(1, ItemAmmoEnums.Ammo240Shell.APFSDS_T));
 		bullet.dmgMin = 50;
 		bullet.dmgMax = 55;
 		bullet.doesPenetrate = true;
@@ -51,7 +52,7 @@ public static BulletConfiguration getShellConfig() {
 		
 		BulletConfiguration bullet = BulletConfigFactory.standardShellConfig();
 		
-		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.ammo_shell.stackFromEnum(1, ItemAmmoEnums.Ammo240Shell.APFSDS_DU));
+		bullet.ammo = new RecipesCommon.ComparableStack(Armory.ammo_shell.stackFromEnum(1, ItemAmmoEnums.Ammo240Shell.APFSDS_DU));
 		bullet.dmgMin = 70;
 		bullet.dmgMax = 80;
 		bullet.doesPenetrate = true;
@@ -64,7 +65,7 @@ public static BulletConfiguration getShellConfig() {
 		
 		BulletConfiguration bullet = BulletConfigFactory.standardShellConfig();
 		
-		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.ammo_shell.stackFromEnum(1, ItemAmmoEnums.Ammo240Shell.W9));
+		bullet.ammo = new RecipesCommon.ComparableStack(Armory.ammo_shell.stackFromEnum(1, ItemAmmoEnums.Ammo240Shell.W9));
 		bullet.dmgMin = 100;
 		bullet.dmgMax = 150;
 		

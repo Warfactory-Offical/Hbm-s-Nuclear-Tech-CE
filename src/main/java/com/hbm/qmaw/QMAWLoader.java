@@ -4,7 +4,7 @@ import com.google.gson.*;
 import com.hbm.interfaces.Spaghetti;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.recipes.loader.SerializableRecipe;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.DummyTexs;
 import com.hbm.main.MainRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.*;
@@ -240,7 +240,7 @@ public class QMAWLoader implements ISelectiveResourceReloadListener {
         for(JsonElement element : triggers) {
             ItemStack trigger = SerializableRecipe.readItemStack(element.getAsJsonArray());
             // items get renamed and removed all the time, so we add some more debug goodness for those cases
-            if(trigger == null || trigger.getItem() == ModItems.nothing) {
+            if(trigger == null || trigger.getItem() == DummyTexs.nothing) {
                 MainRegistry.logger.info("[QMAW] Manual " + file + " references nonexistant trigger " + element);
             } else {
                 QMAWLoader.triggers.put(new ComparableStack(trigger).makeSingular(), qmaw);

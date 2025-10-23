@@ -6,6 +6,7 @@ import com.hbm.blocks.ITooltipProvider;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Materials.Ingots;
 import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.TileEntityProxyCombo;
@@ -179,7 +180,7 @@ public class MachineHeatBoiler extends BlockDummyable implements ILookOverlay, I
             TileEntity te = world.getTileEntity(new BlockPos(core[0], core[1], core[2]));
             if (te instanceof TileEntityHeatBoiler boiler) {
                 if (boiler.hasExploded) {
-                    drops.add(new ItemStack(ModItems.ingot_steel, 4));
+                    drops.add(new ItemStack(Ingots.ingot_steel, 4));
                     drops.add(new ItemStack(ModItems.plate_copper, 8));
                     handled = true;
                 }

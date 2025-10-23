@@ -3,7 +3,7 @@ package com.hbm.items.armor;
 import com.google.common.collect.Multimap;
 import com.hbm.config.PotionConfig;
 import com.hbm.handler.ArmorModHandler;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Inserts;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -26,11 +26,11 @@ public class ItemModServos extends ItemArmorMod {
 	
 	@Override
 	public void addInformation(ItemStack stack, World worldIn, List<String> list, ITooltipFlag flagIn){
-		if(this == ModItems.servo_set) {
+		if(this == Inserts.servo_set) {
 			list.add(TextFormatting.DARK_PURPLE + "Chestplate: Haste I / Damage +50%");
 			list.add(TextFormatting.DARK_PURPLE + "Leggings: Speed +25% / Jump II");
 		}
-		if(this == ModItems.servo_set_desh) {
+		if(this == Inserts.servo_set_desh) {
 			list.add(TextFormatting.DARK_PURPLE + "Chestplate: Haste III / Damage +150%");
 			list.add(TextFormatting.DARK_PURPLE + "Leggings: Speed +50% / Jump III");
 		}
@@ -45,20 +45,20 @@ public class ItemModServos extends ItemArmorMod {
 		
 		if(item.armorType == EntityEquipmentSlot.CHEST) {
 
-			if(this == ModItems.servo_set) {
+			if(this == Inserts.servo_set) {
 				list.add(TextFormatting.DARK_PURPLE + "  " + stack.getDisplayName() + " (Haste I / Damage +50%)");
 			}
-			if(this == ModItems.servo_set_desh) {
+			if(this == Inserts.servo_set_desh) {
 				list.add(TextFormatting.DARK_PURPLE + "  " + stack.getDisplayName() + " (Haste III / Damage +150%)");
 			}
 		}
 		
 		if(item.armorType == EntityEquipmentSlot.LEGS) {
 
-			if(this == ModItems.servo_set) {
+			if(this == Inserts.servo_set) {
 				list.add(TextFormatting.DARK_PURPLE + "  " + stack.getDisplayName() + " (Speed +25% / Jump II)");
 			}
-			if(this == ModItems.servo_set_desh) {
+			if(this == Inserts.servo_set_desh) {
 				list.add(TextFormatting.DARK_PURPLE + "  " + stack.getDisplayName() + " (Speed +50% / Jump III)");
 			}
 		}
@@ -70,20 +70,20 @@ public class ItemModServos extends ItemArmorMod {
 		
 		if(item.armorType == EntityEquipmentSlot.CHEST) {
 
-			if(this == ModItems.servo_set) {
+			if(this == Inserts.servo_set) {
 				entity.addPotionEffect(new PotionEffect(MobEffects.HASTE, 65, 0, false, false));
 			}
-			if(this == ModItems.servo_set_desh) {
+			if(this == Inserts.servo_set_desh) {
 				entity.addPotionEffect(new PotionEffect(MobEffects.HASTE, 65, 2, false, false));
 			}
 		}
 		
 		if(PotionConfig.doJumpBoost && item.armorType == EntityEquipmentSlot.LEGS) {
 
-			if(this == ModItems.servo_set) {
+			if(this == Inserts.servo_set) {
 				entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 65, 1, false, false));
 			}
-			if(this == ModItems.servo_set_desh) {
+			if(this == Inserts.servo_set_desh) {
 				entity.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 65, 2, false, false));
 			}
 		}
@@ -96,21 +96,21 @@ public class ItemModServos extends ItemArmorMod {
 		ItemArmor item = (ItemArmor)armor.getItem();
 		
 		if(item.armorType == EntityEquipmentSlot.CHEST) {
-			if(this == ModItems.servo_set)
+			if(this == Inserts.servo_set)
 				multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(),
 						new AttributeModifier(ArmorModHandler.UUIDs[((ItemArmor)armor.getItem()).armorType.getIndex()], "NTM Armor Mod Servos", 0.5, 2));
 			
-			if(this == ModItems.servo_set_desh)
+			if(this == Inserts.servo_set_desh)
 				multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(),
 						new AttributeModifier(ArmorModHandler.UUIDs[((ItemArmor)armor.getItem()).armorType.getIndex()], "NTM Armor Mod Servos", 1.5, 2));
 		}
 		
 		if(item.armorType == EntityEquipmentSlot.LEGS) {
-			if(this == ModItems.servo_set)
+			if(this == Inserts.servo_set)
 				multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(),
 						new AttributeModifier(ArmorModHandler.UUIDs[((ItemArmor)armor.getItem()).armorType.getIndex()], "NTM Armor Mod Servos", 0.25, 2));
 			
-			if(this == ModItems.servo_set_desh)
+			if(this == Inserts.servo_set_desh)
 				multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(),
 						new AttributeModifier(ArmorModHandler.UUIDs[((ItemArmor)armor.getItem()).armorType.getIndex()], "NTM Armor Mod Servos", 0.5, 2));
 		}

@@ -1,7 +1,7 @@
 package com.hbm.blocks.machine;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Batteries;
 import com.hbm.items.machine.ItemBattery;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.tileentity.machine.TileEntityRadiobox;
@@ -63,7 +63,7 @@ public class Radiobox extends BlockContainer {
 			if(box != null)
 				wasInfinite = box.infinite;
 
-			if(player.getHeldItem(hand).getItem() == ModItems.battery_spark && !wasInfinite) {
+			if(player.getHeldItem(hand).getItem() == Batteries.battery_spark && !wasInfinite) {
 				player.getHeldItem(hand).shrink(1);
 				world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundHandler.upgradePlug, SoundCategory.BLOCKS, 1.5F, 1.0F);
 				box.infinite = true;
@@ -93,7 +93,7 @@ public class Radiobox extends BlockContainer {
 		TileEntityRadiobox box = (TileEntityRadiobox)world.getTileEntity(pos);
 
 		if(box != null && box.infinite) {
-			world.spawnEntity(new EntityItem(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, ItemBattery.getEmptyBattery(ModItems.battery_spark)));
+			world.spawnEntity(new EntityItem(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, ItemBattery.getEmptyBattery(Batteries.battery_spark)));
 		}
 		super.breakBlock(world, pos, state);
 	}

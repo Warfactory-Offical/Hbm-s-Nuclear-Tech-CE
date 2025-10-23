@@ -1,7 +1,7 @@
 package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Materials.Powders;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -38,7 +38,7 @@ public class BlockSmolder extends Block {
 
 	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
-		return ModItems.powder_fire;
+		return Powders.powder_fire;
 	}
 
 	@Override

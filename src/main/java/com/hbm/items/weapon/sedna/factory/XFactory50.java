@@ -3,7 +3,7 @@ package com.hbm.items.weapon.sedna.factory;
 import com.hbm.entity.projectile.EntityBuilding;
 import com.hbm.entity.projectile.EntityBulletBaseMK4;
 import com.hbm.items.ItemEnums;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.GunConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
@@ -75,7 +75,7 @@ public class XFactory50 {
         bmg50_equestrian = new BulletConfig().setItem(GunFactory.EnumAmmoSecret.BMG50_EQUESTRIAN).setDamage(0F).setOnImpact(LAMBDA_BUILDING)
                 .setCasing(casing50.clone().setColor(SpentCasing.COLOR_CASE_EQUESTRIAN).register("bmg50equestrian"));
 
-        ModItems.gun_amat = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_amat", new GunConfig()
+        Armory.gun_amat = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_amat", new GunConfig()
                 .dura(350).draw(20).inspect(50).crosshair(RenderScreenOverlay.Crosshair.CIRCLE).scopeTexture(scope).smoke(LAMBDA_SMOKE)
                 .rec(new Receiver(0)
                         .dmg(30F).delay(25).dry(25).spreadHipfire(0.05F).reload(51).jam(43).sound(HBMSoundHandler.fireAmat, 1.0F, 1.0F)
@@ -85,7 +85,7 @@ public class XFactory50 {
                 .setupStandardConfiguration()
                 .anim(LAMBDA_AMAT_ANIMS).orchestra(Orchestras.ORCHESTRA_AMAT)
         );
-        ModItems.gun_amat_subtlety = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.LEGENDARY, "gun_amat_subtlety", new GunConfig()
+        Armory.gun_amat_subtlety = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.LEGENDARY, "gun_amat_subtlety", new GunConfig()
                 .dura(1_000).draw(20).inspect(50).crosshair(RenderScreenOverlay.Crosshair.CIRCLE).scopeTexture(scope).smoke(LAMBDA_SMOKE)
                 .rec(new Receiver(0)
                         .dmg(50F).delay(25).dry(25).spreadHipfire(0.05F).reload(51).jam(43).sound(HBMSoundHandler.fireAmat, 1.0F, 1.0F)
@@ -95,7 +95,7 @@ public class XFactory50 {
                 .setupStandardConfiguration()
                 .anim(LAMBDA_AMAT_ANIMS).orchestra(Orchestras.ORCHESTRA_AMAT)
         );
-        ModItems.gun_amat_penance = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.LEGENDARY, "gun_amat_penance", new GunConfig()
+        Armory.gun_amat_penance = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.LEGENDARY, "gun_amat_penance", new GunConfig()
                 .dura(5_000).draw(20).inspect(50).crosshair(RenderScreenOverlay.Crosshair.CIRCLE).scopeTexture(scope_thermal).thermalSights(true).smoke(LAMBDA_SMOKE)
                 .rec(new Receiver(0)
                         .dmg(45F).delay(25).dry(25).spreadHipfire(0F).reload(51).jam(43).sound(HBMSoundHandler.silencerShoot, 1.0F, 1.0F)
@@ -106,7 +106,7 @@ public class XFactory50 {
                 .anim(LAMBDA_AMAT_ANIMS).orchestra(Orchestras.ORCHESTRA_AMAT)
         );
 
-        ModItems.gun_m2 = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_m2", new GunConfig()
+        Armory.gun_m2 = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_m2", new GunConfig()
                 .dura(3_000).draw(10).inspect(31).crosshair(RenderScreenOverlay.Crosshair.L_CIRCLE).smoke(LAMBDA_SMOKE)
                 .rec(new Receiver(0)
                         .dmg(7.5F).delay(2).dry(10).auto(true).spread(0.005F).sound(HBMSoundHandler.chekhov_fire, 1.0F, 1.0F)

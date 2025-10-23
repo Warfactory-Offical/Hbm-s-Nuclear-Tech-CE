@@ -25,6 +25,7 @@ import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Batteries;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.BobMathUtil;
@@ -286,7 +287,7 @@ public class Library {
 	// mlbv: refactored with brand new NTMBatteryCapabilityHandler helpers
 	public static long chargeTEFromItems(IItemHandlerModifiable inventory, int index, long power, long maxPower) {
 		ItemStack stack = inventory.getStackInSlot(index);
-		if (stack.getItem() == ModItems.battery_creative || stack.getItem() == ModItems.fusion_core_infinite) {
+		if (stack.getItem() == Batteries.battery_creative || stack.getItem() == ModItems.fusion_core_infinite) {
 			return maxPower;
 		}
 		long powerNeeded = maxPower - power;

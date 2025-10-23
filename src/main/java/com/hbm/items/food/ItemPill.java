@@ -4,6 +4,7 @@ import com.hbm.capability.HbmLivingCapability.EntityHbmProps;
 import com.hbm.capability.HbmLivingProps;
 import com.hbm.config.VersatileConfig;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foods;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.potion.HbmPotion;
 import net.minecraft.client.util.ITooltipFlag;
@@ -11,7 +12,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumHand;
@@ -84,7 +84,7 @@ public class ItemPill extends ItemFood {
                 HbmLivingProps.setDigamma(player, Math.max(digamma - 0.5D, 0D));
             }
 
-            if(this == ModItems.chocolate) {
+            if(this == Foods.chocolate) {
                 if(rand.nextInt(25) == 0) {
                     player.attackEntityFrom(ModDamageSource.overdose, 1000); //mlbv: chocolate overdose? seriously?
                 }

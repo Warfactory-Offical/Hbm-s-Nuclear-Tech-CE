@@ -11,7 +11,8 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.gui.GUIMachineGasCent;
 import com.hbm.inventory.recipes.GasCentrifugeRecipes;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Materials.Ingots;
+import com.hbm.items.ModItems.Materials.Nuggies;
 import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
@@ -200,7 +201,7 @@ public class TileEntityMachineGasCent extends TileEntityMachineBase implements I
 
 				//*AT THE MOMENT*, there's not really any need for a dedicated method for this. Yet.
 				if (!attemptTransfer(te) && this.inputTank.getTankType() == GasCentrifugeRecipes.PseudoFluidType.LEUF6) {
-					ItemStack[] converted = new ItemStack[]{new ItemStack(ModItems.nugget_uranium_fuel, 6), new ItemStack(ModItems.fluorite)};
+					ItemStack[] converted = new ItemStack[]{new ItemStack(Nuggies.nugget_uranium_fuel, 6), new ItemStack(Ingots.fluorite)};
 
 					if (this.outputTank.getFill() >= 600 && InventoryUtil.doesArrayHaveSpace(inventory, 0, 3, converted)) {
 						this.outputTank.setFill(this.outputTank.getFill() - 600);

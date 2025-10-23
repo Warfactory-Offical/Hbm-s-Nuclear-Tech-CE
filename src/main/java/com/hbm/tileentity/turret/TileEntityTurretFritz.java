@@ -16,6 +16,7 @@ import com.hbm.inventory.fluid.trait.FT_Flammable;
 import com.hbm.inventory.fluid.trait.FluidTraitSimple;
 import com.hbm.inventory.gui.GUITurretFritz;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.sedna.factory.GunFactory;
 import com.hbm.items.weapon.sedna.factory.XFactoryFlamer;
 import com.hbm.lib.ForgeDirection;
@@ -76,7 +77,7 @@ public class TileEntityTurretFritz extends TileEntityTurretBaseNT implements IFl
 
 		ammoStacks = new ArrayList();
 
-		ammoStacks.add(new ItemStack(ModItems.ammo_standard, 1, GunFactory.EnumAmmo.FLAME_DIESEL.ordinal()));
+		ammoStacks.add(new ItemStack(Armory.ammo_standard, 1, GunFactory.EnumAmmo.FLAME_DIESEL.ordinal()));
 
 		for(FluidType type : Fluids.getInNiceOrder()) {
 			if(type.hasTrait(FT_Combustible.class) && type.hasTrait(FluidTraitSimple.FT_Liquid.class)) {
@@ -159,7 +160,7 @@ public class TileEntityTurretFritz extends TileEntityTurretBaseNT implements IFl
 
 			for(int i = 1; i < 10; i++) {
 
-				if(!inventory.getStackInSlot(i).isEmpty() && inventory.getStackInSlot(i).getItem() == ModItems.ammo_standard && inventory.getStackInSlot(i).getItemDamage() == GunFactory.EnumAmmo.FLAME_DIESEL.ordinal()) { //ammo_fuel
+				if(!inventory.getStackInSlot(i).isEmpty() && inventory.getStackInSlot(i).getItem() == Armory.ammo_standard && inventory.getStackInSlot(i).getItemDamage() == GunFactory.EnumAmmo.FLAME_DIESEL.ordinal()) { //ammo_fuel
 					if(this.tank.getTankType() == Fluids.DIESEL && this.tank.getFill() + 1000 <= this.tank.getMaxFill()) {
 						this.tank.setFill(this.tank.getFill() + 1000);
 						this.inventory.getStackInSlot(i).shrink(1);

@@ -1,7 +1,7 @@
 package com.hbm.items.armor;
 
 import com.hbm.handler.ArmorModHandler;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Inserts;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
@@ -18,14 +18,14 @@ public class ItemModRevive extends ItemArmorMod {
 
 	@Override
 	public void addInformation(ItemStack stack, World worldIn, List<String> list, ITooltipFlag flagIn){
-		if(this == ModItems.scrumpy) {
+		if(this == Inserts.scrumpy) {
 			list.add(TextFormatting.GOLD + "But how did you survive?");
 			list.add(TextFormatting.RED + "I was drunk.");
 		}
-		if(this == ModItems.wild_p) {
+		if(this == Inserts.wild_p) {
 			list.add(TextFormatting.DARK_GRAY + "Explosive " + TextFormatting.RED + "Reactive " + TextFormatting.DARK_GRAY + "Plot " + TextFormatting.RED + "Armor");
 		}
-		if(this == ModItems.fabsols_vodka) {
+		if(this == Inserts.fabsols_vodka) {
 			list.add(TextFormatting.ITALIC + "In the news:");
 			list.add(TextFormatting.RED + "" + TextFormatting.BOLD + "Man literally too angry to die.");
 			list.add("");

@@ -3,7 +3,7 @@ package com.hbm.items.machine;
 import com.google.common.collect.Sets;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.items.ItemBakedBase;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Upgrades;
 import com.hbm.tileentity.IUpgradeInfoProvider;
 import com.hbm.util.I18nUtil;
 import net.minecraft.client.Minecraft;
@@ -45,26 +45,26 @@ public class ItemMachineUpgrade extends ItemBakedBase {
 	}
 
 	public int getSpeed(){
-		if(this == ModItems.upgrade_speed_1) return 1;
-		if(this == ModItems.upgrade_speed_2) return 2;
-		if(this == ModItems.upgrade_speed_3) return 3;
-		if(this == ModItems.upgrade_overdrive_1) return 4;
-		if(this == ModItems.upgrade_overdrive_2) return 6;
-		if(this == ModItems.upgrade_overdrive_3) return 8;
-		if(this == ModItems.upgrade_screm) return 10;
+		if(this == Upgrades.upgrade_speed_1) return 1;
+		if(this == Upgrades.upgrade_speed_2) return 2;
+		if(this == Upgrades.upgrade_speed_3) return 3;
+		if(this == Upgrades.upgrade_overdrive_1) return 4;
+		if(this == Upgrades.upgrade_overdrive_2) return 6;
+		if(this == Upgrades.upgrade_overdrive_3) return 8;
+		if(this == Upgrades.upgrade_screm) return 10;
 		return 0;
 	}
 
 	public static int getSpeed(ItemStack stack){
 		if(stack == null || stack.isEmpty()) return 0;
 		Item upgrade = stack.getItem();
-		if(upgrade == ModItems.upgrade_speed_1) return 1;
-		if(upgrade == ModItems.upgrade_speed_2) return 2;
-		if(upgrade == ModItems.upgrade_speed_3) return 3;
-		if(upgrade == ModItems.upgrade_overdrive_1) return 4;
-		if(upgrade == ModItems.upgrade_overdrive_2) return 6;
-		if(upgrade == ModItems.upgrade_overdrive_3) return 8;
-		if(upgrade == ModItems.upgrade_screm) return 10;
+		if(upgrade == Upgrades.upgrade_speed_1) return 1;
+		if(upgrade == Upgrades.upgrade_speed_2) return 2;
+		if(upgrade == Upgrades.upgrade_speed_3) return 3;
+		if(upgrade == Upgrades.upgrade_overdrive_1) return 4;
+		if(upgrade == Upgrades.upgrade_overdrive_2) return 6;
+		if(upgrade == Upgrades.upgrade_overdrive_3) return 8;
+		if(upgrade == Upgrades.upgrade_screm) return 10;
 		return 0;
 	}
 
@@ -97,7 +97,7 @@ public class ItemMachineUpgrade extends ItemBakedBase {
 			}
 		}
 
-		if(this == ModItems.upgrade_radius)
+		if(this == Upgrades.upgrade_radius)
 		{
 			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade7"));
 			list.add(" "+I18nUtil.resolveKey("desc.upgraderd"));
@@ -105,7 +105,7 @@ public class ItemMachineUpgrade extends ItemBakedBase {
 			list.add(" "+I18nUtil.resolveKey("desc.upgradestack"));
 		}
 
-		if(this == ModItems.upgrade_health)
+		if(this == Upgrades.upgrade_health)
 		{
 			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade8"));
 			list.add(" "+I18nUtil.resolveKey("desc.upgradeht"));
@@ -113,31 +113,31 @@ public class ItemMachineUpgrade extends ItemBakedBase {
 			list.add(" "+I18nUtil.resolveKey("desc.upgradestack"));
 		}
 		
-		if(this == ModItems.upgrade_smelter)
+		if(this == Upgrades.upgrade_smelter)
 		{
 			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade9"));
 			list.add(" "+I18nUtil.resolveKey("desc.upgrade12"));
 		}
 
-		if(this == ModItems.upgrade_shredder)
+		if(this == Upgrades.upgrade_shredder)
 		{
 			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade9"));
 			list.add(" "+I18nUtil.resolveKey("desc.upgrade13"));
 		}
 
-		if(this == ModItems.upgrade_centrifuge)
+		if(this == Upgrades.upgrade_centrifuge)
 		{
 			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade9"));
 			list.add(" "+I18nUtil.resolveKey("desc.upgrade21"));
 		}
 
-		if(this == ModItems.upgrade_crystallizer)
+		if(this == Upgrades.upgrade_crystallizer)
 		{
 			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade9"));
 			list.add(" "+I18nUtil.resolveKey("desc.upgrade14"));
 		}
 
-		if(this == ModItems.upgrade_screm)
+		if(this == Upgrades.upgrade_screm)
 		{
 			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade9"));
 			list.add(" "+I18nUtil.resolveKey("desc.upgrade15"));
@@ -148,13 +148,13 @@ public class ItemMachineUpgrade extends ItemBakedBase {
 			list.add(" "+I18nUtil.resolveKey("desc.upgrade18"));
 		}
 		
-		if(this == ModItems.upgrade_nullifier)
+		if(this == Upgrades.upgrade_nullifier)
 		{
 			list.add(TextFormatting.GOLD+I18nUtil.resolveKey("desc.upgrade10"));
 			list.add(" "+I18nUtil.resolveKey("desc.upgrade19"));
 		}
 		// I'm not translating this shit for now
-		if(this == ModItems.upgrade_gc_speed) {
+		if(this == Upgrades.upgrade_gc_speed) {
 			list.add(TextFormatting.RED + "Gas Centrifuge Upgrade");
 			list.add("Allows for total isotopic separation of HEUF6");
 			list.add(TextFormatting.YELLOW + "also your centrifuge goes sicko mode");

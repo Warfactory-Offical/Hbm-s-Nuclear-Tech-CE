@@ -4,7 +4,7 @@ import com.hbm.handler.BulletConfigSyncingUtil;
 import com.hbm.handler.BulletConfiguration;
 import com.hbm.handler.GunConfiguration;
 import com.hbm.inventory.RecipesCommon;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.DummyTexs;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.render.misc.RenderScreenOverlay.Crosshair;
 
@@ -57,7 +57,7 @@ public class GunRocketFactory {
 		
 		BulletConfiguration bullet = BulletConfigFactory.standardRocketConfig();
 		
-		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.nothing); //ammo_rocket
+		bullet.ammo = new RecipesCommon.ComparableStack(DummyTexs.nothing); //ammo_rocket
 		bullet.dmgMin = 10;
 		bullet.dmgMax = 15;
 		bullet.explosive = 4F;

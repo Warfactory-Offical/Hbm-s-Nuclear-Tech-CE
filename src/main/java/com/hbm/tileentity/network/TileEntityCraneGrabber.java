@@ -6,7 +6,7 @@ import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.container.ContainerCraneGrabber;
 import com.hbm.inventory.gui.GUICraneGrabber;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Upgrades;
 import com.hbm.lib.Library;
 import com.hbm.modules.ModulePatternMatcher;
 import com.hbm.tileentity.IGUIProvider;
@@ -60,21 +60,21 @@ public class TileEntityCraneGrabber extends TileEntityCraneBase implements IGUIP
                 tickCounter = 0;
                 int amount = 1;
                 if(inventory.getStackInSlot(9) != null && !inventory.getStackInSlot(9).isEmpty()){
-                    if(inventory.getStackInSlot(9).getItem() == ModItems.upgrade_stack_1) {
+                    if(inventory.getStackInSlot(9).getItem() == Upgrades.upgrade_stack_1) {
                         amount = 4;
-                    } else if(inventory.getStackInSlot(9).getItem() == ModItems.upgrade_stack_2){
+                    } else if(inventory.getStackInSlot(9).getItem() == Upgrades.upgrade_stack_2){
                         amount = 16;
-                    } else if(inventory.getStackInSlot(9).getItem() == ModItems.upgrade_stack_3){
+                    } else if(inventory.getStackInSlot(9).getItem() == Upgrades.upgrade_stack_3){
                         amount = 64;
                     }
                 }
                 this.delay = 20;
                 if(inventory.getStackInSlot(10) != null && !inventory.getStackInSlot(10).isEmpty()){
-                    if(inventory.getStackInSlot(10).getItem() == ModItems.upgrade_ejector_1) {
+                    if(inventory.getStackInSlot(10).getItem() == Upgrades.upgrade_ejector_1) {
                         this.delay = 10;
-                    } else if(inventory.getStackInSlot(10).getItem() == ModItems.upgrade_ejector_2){
+                    } else if(inventory.getStackInSlot(10).getItem() == Upgrades.upgrade_ejector_2){
                         this.delay = 5;
-                    } else if(inventory.getStackInSlot(10).getItem() == ModItems.upgrade_ejector_3){
+                    } else if(inventory.getStackInSlot(10).getItem() == Upgrades.upgrade_ejector_3){
                         this.delay = 2;
                     }
                 }

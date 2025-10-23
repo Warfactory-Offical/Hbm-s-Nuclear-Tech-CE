@@ -2,7 +2,7 @@ package com.hbm.wiaj.cannery;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Materials.Nuggies;
 import com.hbm.main.ResourceManager;
 import com.hbm.tileentity.network.TileEntityPipeBaseNT;
 import com.hbm.util.I18nUtil;
@@ -123,7 +123,7 @@ public class CanneryCentrifuge extends CanneryBase {
 		scene1.add(new ActionWait(60));
 		scene1.add(new ActionRemoveActor(4));
 
-		scene1.add(new ActionCreateActor(4, new ActorFancyPanel(Minecraft.getMinecraft().fontRenderer, 45, 35, new Object[][] {{" = ", new ItemStack(ModItems.nugget_u238, 11), new ItemStack(ModItems.nugget_u235)}}, 0)
+		scene1.add(new ActionCreateActor(4, new ActorFancyPanel(Minecraft.getMinecraft().fontRenderer, 45, 35, new Object[][] {{" = ", new ItemStack(Nuggies.nugget_u238, 11), new ItemStack(Nuggies.nugget_u235)}}, 0)
 				.setColors(colorCopper).setOrientation(Orientation.LEFT)));
 		
 		script.addScene(scene0).addScene(scene1);

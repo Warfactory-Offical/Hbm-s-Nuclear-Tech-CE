@@ -4,7 +4,7 @@ import com.hbm.entity.effect.EntityNukeTorex;
 import com.hbm.entity.logic.EntityNukeExplosionMK5;
 import com.hbm.entity.projectile.EntityBulletBaseMK4;
 import com.hbm.entity.projectile.EntityBulletBeamBase;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.GunConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
@@ -96,7 +96,7 @@ public class XFactoryFolly {
         folly_nuke = new BulletConfig().setItem(GunFactory.EnumAmmoSecret.FOLLY_NUKE).setChunkloading().setLife(600).setVel(4F).setGrav(0.015D)
                 .setOnImpact(LAMBDA_NUKE_IMPACT);
 
-        ModItems.gun_folly = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.SECRET, "gun_folly", new GunConfig()
+        Armory.gun_folly = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.SECRET, "gun_folly", new GunConfig()
                 .dura(0).draw(40).crosshair(Crosshair.NONE)
                 .rec(new Receiver(0)
                         .dmg(1_000F).delay(26).dryfire(false).reload(160).jam(0).sound(HBMSoundHandler.loudestNoiseOnEarth, 100.0F, 1.0F)

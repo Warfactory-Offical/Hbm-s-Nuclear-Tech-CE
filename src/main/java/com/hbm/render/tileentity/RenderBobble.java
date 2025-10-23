@@ -6,7 +6,8 @@ import com.hbm.blocks.generic.BlockBobble.BobbleType;
 import com.hbm.blocks.generic.BlockBobble.TileEntityBobble;
 import com.hbm.hfr.render.loader.HFRWavefrontObject;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foods;
+import com.hbm.items.ModItems.Inserts;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.amlfrom1710.IModelCustom;
@@ -321,7 +322,7 @@ public class RenderBobble extends TileEntitySpecialRenderer<TileEntityBobble> im
             GlStateManager.translate(0.25, 1.9, 0.075);
             GlStateManager.rotate(-60, 0, 0, 1);
             GlStateManager.scale(0.5, 0.5, 0.5);
-            this.renderItem(new ItemStack(ModItems.cigarette));
+            this.renderItem(new ItemStack(Inserts.cigarette));
         }
 
         if (type == BobbleType.NOS) {
@@ -434,7 +435,7 @@ public class RenderBobble extends TileEntitySpecialRenderer<TileEntityBobble> im
             case ADAM29: {
                 GlStateManager.translate(0.4, 1.15, 0.4);
                 GlStateManager.scale(0.5, 0.5, 0.5);
-                renderItem(new ItemStack(ModItems.can_redbomb));
+                renderItem(new ItemStack(Foods.can_redbomb));
                 break;
             }
             case PHEO: {

@@ -3,7 +3,7 @@ package com.hbm.handler;
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.SolarSystem;
 import com.hbm.inventory.fluid.FluidType;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.MissileParts;
 import com.hbm.items.weapon.ItemMissile.FuelType;
 import com.hbm.items.weapon.ItemMissile.PartType;
 import com.hbm.items.weapon.ItemMissile.WarheadType;
@@ -180,7 +180,7 @@ public class RocketStruct {
 	}
 
 	public boolean hasSufficientFuel(CelestialBody from, CelestialBody to, boolean fromOrbit, boolean toOrbit) {
-		if(capsule.part == ModItems.rp_pod_20) {
+		if(capsule.part == MissileParts.rp_pod_20) {
 			return from == to && (fromOrbit || toOrbit); // Pods can transfer, fall to orbited body, and return to station, but NOT hop on the surface
 		}
 

@@ -2,7 +2,7 @@ package com.hbm.inventory.material;
 
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.material.NTMMaterial.SmeltingBehavior;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foundry;
 import com.hbm.items.machine.ItemScraps;
 import com.hbm.util.I18nUtil;
 import com.hbm.util.ItemStackUtil;
@@ -223,7 +223,7 @@ public class Mats {
 			list.addAll(entries);
 		}
 
-		if(stack.getItem() == ModItems.scraps) {
+		if(stack.getItem() == Foundry.scraps) {
 			list.add(ItemScraps.getMats(stack));
 		}
 		

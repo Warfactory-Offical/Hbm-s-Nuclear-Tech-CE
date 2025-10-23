@@ -11,6 +11,7 @@ import com.hbm.inventory.fluid.trait.FT_Flammable;
 import com.hbm.inventory.recipes.loader.SerializableRecipe;
 import com.hbm.items.ItemEnums;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Materials.Ingots;
 import com.hbm.items.machine.ItemFluidIcon;
 import com.hbm.items.special.ItemBedrockOreNew;
 import net.minecraft.init.Items;
@@ -117,7 +118,7 @@ public class PyroOvenRecipes extends SerializableRecipe {
         //hydrogen and carbon from natgas
         recipes.add(new PyroOvenRecipe(60)
                 .in(new FluidStack(Fluids.GAS, 12_000))
-                .out(new FluidStack(Fluids.HYDROGEN, 8_000)).out(new ItemStack(ModItems.ingot_graphite, 1)));
+                .out(new FluidStack(Fluids.HYDROGEN, 8_000)).out(new ItemStack(Ingots.ingot_graphite, 1)));
     }
 
     private static void registerSFAuto(FluidType fluid) {

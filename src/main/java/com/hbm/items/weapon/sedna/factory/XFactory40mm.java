@@ -8,7 +8,7 @@ import com.hbm.entity.projectile.EntityBulletBaseMK4;
 import com.hbm.explosion.vanillant.ExplosionVNT;
 import com.hbm.explosion.vanillant.standard.*;
 import com.hbm.items.ItemEnums;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.GunConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
@@ -149,7 +149,7 @@ public class XFactory40mm {
         g40_inc = g40_base.clone().setItem(GunFactory.EnumAmmo.G40_INC).setCasing(ItemEnums.EnumCasingType.LARGE, 4).setOnImpact(LAMBDA_STANDARD_EXPLODE_INC).setDamage(0.75F).setCasing(new SpentCasing(SpentCasing.CasingType.STRAIGHT).setColor(0xE86F20).setScale(2, 2F, 1.5F).register("g40inc"));
         g40_phosphorus = g40_base.clone().setItem(GunFactory.EnumAmmo.G40_PHOSPHORUS).setCasing(ItemEnums.EnumCasingType.LARGE, 4).setOnImpact(LAMBDA_STANDARD_EXPLODE_PHOSPHORUS).setDamage(0.75F).setCasing(new SpentCasing(SpentCasing.CasingType.STRAIGHT).setColor(0xC8C8C8).setScale(2, 2F, 1.5F).register("g40phos"));
 
-        ModItems.gun_flaregun = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_flaregun", new GunConfig()
+        Armory.gun_flaregun = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_flaregun", new GunConfig()
                 .dura(100).draw(7).inspect(39).crosshair(RenderScreenOverlay.Crosshair.L_CIRCUMFLEX).smoke(LAMBDA_SMOKE)
                 .rec(new Receiver(0)
                         .dmg(15F).delay(20).reload(28).jam(33).sound(HBMSoundHandler.hkShoot, 1.0F, 1.0F)
@@ -160,7 +160,7 @@ public class XFactory40mm {
                 .anim(LAMBDA_FLAREGUN_ANIMS).orchestra(Orchestras.ORCHESTRA_FLAREGUN)
         );
 
-        ModItems.gun_congolake = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_congolake", new GunConfig()
+        Armory.gun_congolake = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_congolake", new GunConfig()
                 .dura(400).draw(7).inspect(39).reloadSequential(true).crosshair(RenderScreenOverlay.Crosshair.L_CIRCUMFLEX).smoke(LAMBDA_SMOKE)
                 .rec(new Receiver(0)
                         .dmg(20F).delay(24).reload(16, 16, 16, 0).jam(0).sound(HBMSoundHandler.glShoot, 1.0F, 1.0F)

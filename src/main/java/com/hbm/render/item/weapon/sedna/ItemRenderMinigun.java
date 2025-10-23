@@ -1,6 +1,6 @@
 package com.hbm.render.item.weapon.sedna;
 
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
@@ -82,7 +82,7 @@ public class ItemRenderMinigun extends ItemRenderWeaponBase {
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(0, 0, 12);
 		GlStateManager.rotate(90, 0, 1, 0);
-		if(stack.getItem() == ModItems.gun_minigun_lacunae) {
+		if(stack.getItem() == Armory.gun_minigun_lacunae) {
 			renderLaserFlash(gun.lastShot[0], 50, 1D, 0xff00ff);
 			GlStateManager.translate(0, 0, -0.25);
 			renderLaserFlash(gun.lastShot[0], 50, 0.5D, 0xff0080);

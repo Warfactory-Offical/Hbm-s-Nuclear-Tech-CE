@@ -4,6 +4,7 @@ import com.hbm.api.block.IToolable.ToolType;
 import com.hbm.handler.ArmorUtil;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.ArmorSets;
 import com.hbm.items.tool.ItemKeyPin;
 import com.hbm.items.tool.ItemTooling;
 import com.hbm.lib.HBMSoundHandler;
@@ -134,7 +135,7 @@ public class TileEntityLockableBase extends TileEntity implements IBufPacketRece
 		
 		if(canPick) {
 			
-			if(ArmorUtil.checkArmorPiece(player, ModItems.jackt, 2) || ArmorUtil.checkArmorPiece(player, ModItems.jackt2, 2))
+			if(ArmorUtil.checkArmorPiece(player, ArmorSets.jackt, 2) || ArmorUtil.checkArmorPiece(player, ArmorSets.jackt2, 2))
 				chanceOfSuccess *= 100D;
 			
 			double rand = player.world.rand.nextDouble() * 100;

@@ -1,6 +1,6 @@
 package com.hbm.items.weapon.sedna.mods;
 
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.sedna.GunConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT.WeaponQuality;
@@ -21,7 +21,7 @@ public class WeaponModScope extends WeaponModBase {
 	public <T> T eval(T base, ItemStack gun, String key, Object parent) {
 
 		if(Objects.equals(key, GunConfig.O_SCOPETEXTURE)) {
-			if(gun.getItem() == ModItems.gun_heavy_revolver) return (T) XFactory44.scope_lilmac;
+			if(gun.getItem() == Armory.gun_heavy_revolver) return (T) XFactory44.scope_lilmac;
 			if(((ItemGunBaseNT) gun.getItem()).quality == WeaponQuality.UTILITY) return (T) XFactoryTool.scope;
 			return (T) XFactory556mm.scope;
 		}

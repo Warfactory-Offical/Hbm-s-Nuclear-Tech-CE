@@ -6,7 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import com.hbm.api.entity.IResistanceProvider;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.ArmorSets;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.Tuple.Quartet;
 import net.minecraft.entity.Entity;
@@ -119,77 +119,77 @@ public class DamageResistanceHandler {
 
         entityStats.put(EntityCreeper.class, new ResistanceStats().addCategory(CATEGORY_EXPLOSION, 2F, 0.25F));
 
-        itemStats.put(ModItems.jackt, new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 5F, 0.5F));
-        itemStats.put(ModItems.jackt2, new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 5F, 0.5F));
+        itemStats.put(ArmorSets.jackt, new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 5F, 0.5F));
+        itemStats.put(ArmorSets.jackt2, new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 5F, 0.5F));
 
-        registerSet(ModItems.steel_helmet, ModItems.steel_plate, ModItems.steel_legs, ModItems.steel_boots, new ResistanceStats());
-        registerSet(ModItems.titanium_helmet, ModItems.titanium_plate, ModItems.titanium_legs, ModItems.titanium_boots, new ResistanceStats());
-        registerSet(ModItems.alloy_helmet, ModItems.alloy_plate, ModItems.alloy_legs, ModItems.alloy_boots,
+        registerSet(ArmorSets.steel_helmet, ArmorSets.steel_plate, ArmorSets.steel_legs, ArmorSets.steel_boots, new ResistanceStats());
+        registerSet(ArmorSets.titanium_helmet, ArmorSets.titanium_plate, ArmorSets.titanium_legs, ArmorSets.titanium_boots, new ResistanceStats());
+        registerSet(ArmorSets.alloy_helmet, ArmorSets.alloy_plate, ArmorSets.alloy_legs, ArmorSets.alloy_boots,
                 new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 2F, 0.1F));
-        registerSet(ModItems.cobalt_helmet, ModItems.cobalt_plate, ModItems.cobalt_legs, ModItems.cobalt_boots,
+        registerSet(ArmorSets.cobalt_helmet, ArmorSets.cobalt_plate, ArmorSets.cobalt_legs, ArmorSets.cobalt_boots,
                 new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 2F, 0.1F));
-        registerSet(ModItems.starmetal_helmet, ModItems.starmetal_plate, ModItems.starmetal_legs, ModItems.starmetal_boots,
+        registerSet(ArmorSets.starmetal_helmet, ArmorSets.starmetal_plate, ArmorSets.starmetal_legs, ArmorSets.starmetal_boots,
                 new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 3F, 0.25F).setOther(1F, 0.1F));
-        registerSet(null, null, ModItems.zirconium_legs, null, new ResistanceStats()
+        registerSet(null, null, ArmorSets.zirconium_legs, null, new ResistanceStats()
                 .setOther(0F, 1F)); //What?
                          //MetalloloM: *Yes*
-        registerSet(ModItems.dnt_helmet, ModItems.dnt_plate, ModItems.dnt_legs, ModItems.dnt_boots, new ResistanceStats());
-        registerSet(ModItems.cmb_helmet, ModItems.cmb_plate, ModItems.cmb_legs, ModItems.cmb_boots,
+        registerSet(ArmorSets.dnt_helmet, ArmorSets.dnt_plate, ArmorSets.dnt_legs, ArmorSets.dnt_boots, new ResistanceStats());
+        registerSet(ArmorSets.cmb_helmet, ArmorSets.cmb_plate, ArmorSets.cmb_legs, ArmorSets.cmb_boots,
                 new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 5F, 0.5F).setOther(5F, 0.25F));
-        registerSet(ModItems.schrabidium_helmet, ModItems.schrabidium_plate, ModItems.schrabidium_legs, ModItems.schrabidium_boots,
+        registerSet(ArmorSets.schrabidium_helmet, ArmorSets.schrabidium_plate, ArmorSets.schrabidium_legs, ArmorSets.schrabidium_boots,
                 new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 10F, 0.65F).setOther(5F, 0.5F));
-        registerSet(ModItems.robes_helmet, ModItems.robes_plate, ModItems.robes_legs, ModItems.robes_boots, new ResistanceStats());
+        registerSet(ArmorSets.robes_helmet, ArmorSets.robes_plate, ArmorSets.robes_legs, ArmorSets.robes_boots, new ResistanceStats());
 
-        registerSet(ModItems.security_helmet, ModItems.security_plate, ModItems.security_legs, ModItems.security_boots,
+        registerSet(ArmorSets.security_helmet, ArmorSets.security_plate, ArmorSets.security_legs, ArmorSets.security_boots,
                 new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 5F, 0.5F).addCategory(CATEGORY_EXPLOSION, 2F, 0.25F));
-        registerSet(ModItems.steamsuit_helmet, ModItems.steamsuit_plate, ModItems.steamsuit_legs, ModItems.steamsuit_boots,
+        registerSet(ArmorSets.steamsuit_helmet, ArmorSets.steamsuit_plate, ArmorSets.steamsuit_legs, ArmorSets.steamsuit_boots,
                 new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 2F, 0.15F).addCategory(CATEGORY_FIRE, 0.5F, 0.25F).addExact(DamageSource.FALL.getDamageType(), 5F, 0.25F).setOther(0F, 0.1F));
-        registerSet(ModItems.dieselsuit_helmet, ModItems.dieselsuit_plate, ModItems.dieselsuit_legs, ModItems.dieselsuit_boots, new
+        registerSet(ArmorSets.dieselsuit_helmet, ArmorSets.dieselsuit_plate, ArmorSets.dieselsuit_legs, ArmorSets.dieselsuit_boots, new
         ResistanceStats()
                 .addCategory(CATEGORY_PHYSICAL, 1F, 0.15F)
                 .addCategory(CATEGORY_FIRE, 0.5F, 0.5F)
                 .addCategory(CATEGORY_EXPLOSION, 2F, 0.15F)
                 .setOther(0F, 0.1F));
-        registerSet(ModItems.ajr_helmet, ModItems.ajr_plate, ModItems.ajr_legs, ModItems.ajr_boots,
+        registerSet(ArmorSets.ajr_helmet, ArmorSets.ajr_plate, ArmorSets.ajr_legs, ArmorSets.ajr_boots,
                 new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 4F, 0.15F).addCategory(CATEGORY_FIRE, 0.5F, 0.35F).addCategory(CATEGORY_EXPLOSION, 7.5F, 0.25F).addExact(DamageSource.FALL.getDamageType(), 0F, 1F).setOther(0F, 0.15F));
-        registerSet(ModItems.ajro_helmet, ModItems.ajro_plate, ModItems.ajro_legs, ModItems.ajro_boots,
+        registerSet(ArmorSets.ajro_helmet, ArmorSets.ajro_plate, ArmorSets.ajro_legs, ArmorSets.ajro_boots,
                 new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 4F, 0.15F).addCategory(CATEGORY_FIRE, 0.5F, 0.35F).addCategory(CATEGORY_EXPLOSION, 7.5F, 0.25F).addExact(DamageSource.FALL.getDamageType(), 0F, 1F).setOther(0F, 0.15F));
-        registerSet(ModItems.rpa_helmet, ModItems.rpa_plate, ModItems.rpa_legs, ModItems.rpa_boots,
+        registerSet(ArmorSets.rpa_helmet, ArmorSets.rpa_plate, ArmorSets.rpa_legs, ArmorSets.rpa_boots,
                 new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 25F, 0.65F).addCategory(CATEGORY_FIRE, 10F, 0.9F).addCategory(CATEGORY_EXPLOSION, 15F, 0.25F).addCategory(CATEGORY_ENERGY, 25F, 0.75F).addExact(DamageSource.FALL.getDamageType(), 0F, 1F).addExact(DamageClass.LASER.name(), 10F, 0.75F).setOther(15F, 0.3F));
         ResistanceStats bj =
                 new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 5F, 0.5F).addCategory(CATEGORY_FIRE, 2.5F, 0.5F).addCategory(CATEGORY_EXPLOSION, 10F, 0.25F).addExact(DamageSource.FALL.getDamageType(), 0F, 1F).setOther(2F, 0.15F);
-        registerSet(ModItems.bj_helmet, ModItems.bj_plate, ModItems.bj_legs, ModItems.bj_boots, bj);
-        registerSet(ModItems.bj_helmet, ModItems.bj_plate_jetpack, ModItems.bj_legs, ModItems.bj_boots, bj);
-        registerSet(ModItems.envsuit_helmet, ModItems.envsuit_plate, ModItems.envsuit_legs, ModItems.envsuit_boots, new ResistanceStats()
+        registerSet(ArmorSets.bj_helmet, ArmorSets.bj_plate, ArmorSets.bj_legs, ArmorSets.bj_boots, bj);
+        registerSet(ArmorSets.bj_helmet, ArmorSets.bj_plate_jetpack, ArmorSets.bj_legs, ArmorSets.bj_boots, bj);
+        registerSet(ArmorSets.envsuit_helmet, ArmorSets.envsuit_plate, ArmorSets.envsuit_legs, ArmorSets.envsuit_boots, new ResistanceStats()
                 .addCategory(CATEGORY_FIRE, 2F, 0.75F)
                 .addExact(DamageSource.DROWN.getDamageType(), 0F, 1F)
                 .addExact(DamageSource.FALL.getDamageType(), 5F, 0.75F)
                 .setOther(0F, 0.1F));
-        registerSet(ModItems.hev_helmet, ModItems.hev_plate, ModItems.hev_legs, ModItems.hev_boots,
+        registerSet(ArmorSets.hev_helmet, ArmorSets.hev_plate, ArmorSets.hev_legs, ArmorSets.hev_boots,
                 new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 2F, 0.25F).addCategory(CATEGORY_FIRE, 0.5F, 0.5F).addCategory(CATEGORY_EXPLOSION, 5F, 0.25F).addExact(DamageSource.ON_FIRE.getDamageType(), 0F, 1F).addExact(DamageSource.FALL.getDamageType(), 10F, 0F).setOther(2F, 0.25F));
-        registerSet(ModItems.bismuth_helmet, ModItems.bismuth_plate, ModItems.bismuth_legs, ModItems.bismuth_boots, new ResistanceStats()
+        registerSet(ArmorSets.bismuth_helmet, ArmorSets.bismuth_plate, ArmorSets.bismuth_legs, ArmorSets.bismuth_boots, new ResistanceStats()
                 .addCategory(CATEGORY_PHYSICAL, 2F, 0.15F)
                 .addCategory(CATEGORY_FIRE, 5F, 0.5F)
                 .addCategory(CATEGORY_EXPLOSION, 5F, 0.25F)
                 .addExact(DamageSource.FALL.getDamageType(), 0F, 1F)
                 .setOther(2F, 0.25F));
-        registerSet(ModItems.fau_helmet, ModItems.fau_plate, ModItems.fau_legs, ModItems.fau_boots,
+        registerSet(ArmorSets.fau_helmet, ArmorSets.fau_plate, ArmorSets.fau_legs, ArmorSets.fau_boots,
                 new ResistanceStats().addCategory(CATEGORY_EXPLOSION, 50F, 0.95F).addCategory(CATEGORY_FIRE, 0F, 1F).addExact(DamageClass.LASER.name(), 25F, 0.95F).addExact(DamageSource.FALL.getDamageType(), 0F, 1F).setOther(100F, 0.99F));
-        registerSet(ModItems.dns_helmet, ModItems.dns_plate, ModItems.dns_legs, ModItems.dns_boots,
+        registerSet(ArmorSets.dns_helmet, ArmorSets.dns_plate, ArmorSets.dns_legs, ArmorSets.dns_boots,
                 new ResistanceStats().addCategory(CATEGORY_EXPLOSION, 100F, 0.99F).addCategory(CATEGORY_FIRE, 0F, 1F).setOther(1000F, 1F));
-        registerSet(ModItems.taurun_helmet, ModItems.taurun_plate, ModItems.taurun_legs, ModItems.taurun_boots, new ResistanceStats()
+        registerSet(ArmorSets.taurun_helmet, ArmorSets.taurun_plate, ArmorSets.taurun_legs, ArmorSets.taurun_boots, new ResistanceStats()
                 .addCategory(CATEGORY_PHYSICAL, 2F, 0.15F)
                 .addCategory(CATEGORY_FIRE, 0F, 0.25F)
                 .addCategory(CATEGORY_EXPLOSION, 0F, 0.25F)
                 .addExact(DamageSource.FALL.getDamageType(), 4F, 0.5F)
                 .setOther(2F, 0.1F));
-        registerSet(ModItems.t51_helmet, ModItems.t51_plate, ModItems.t51_legs, ModItems.t51_boots, new ResistanceStats()
+        registerSet(ArmorSets.t51_helmet, ArmorSets.t51_plate, ArmorSets.t51_legs, ArmorSets.t51_boots, new ResistanceStats()
                 .addCategory(CATEGORY_PHYSICAL, 2F, 0.15F)
                 .addCategory(CATEGORY_FIRE, 0.5F, 0.35F)
                 .addCategory(CATEGORY_EXPLOSION, 5F, 0.25F)
                 .addExact(DamageSource.FALL.damageType, 0F, 1F)
                 .setOther(0F, 0.1F));
-        registerSet(ModItems.trenchmaster_helmet, ModItems.trenchmaster_plate, ModItems.trenchmaster_legs, ModItems.trenchmaster_boots, new
+        registerSet(ArmorSets.trenchmaster_helmet, ArmorSets.trenchmaster_plate, ArmorSets.trenchmaster_legs, ArmorSets.trenchmaster_boots, new
         ResistanceStats()
                 .addCategory(CATEGORY_PHYSICAL, 5F, 0.5F)
                 .addCategory(CATEGORY_FIRE, 5F, 0.5F)
@@ -198,19 +198,19 @@ public class DamageResistanceHandler {
                 .addExact(DamageSource.FALL.getDamageType(), 10F, 0.5F)
                 .setOther(5F, 0.25F));
 
-        registerSet(ModItems.euphemium_helmet, ModItems.euphemium_plate, ModItems.euphemium_legs, ModItems.euphemium_boots,
+        registerSet(ArmorSets.euphemium_helmet, ArmorSets.euphemium_plate, ArmorSets.euphemium_legs, ArmorSets.euphemium_boots,
                 new ResistanceStats().setOther(1_000_000F, 1F));
 
-        registerSet(ModItems.hazmat_helmet, ModItems.hazmat_plate, ModItems.hazmat_legs, ModItems.hazmat_boots, new ResistanceStats());
-        registerSet(ModItems.hazmat_helmet_red, ModItems.hazmat_plate_red, ModItems.hazmat_legs_red, ModItems.hazmat_boots_red,
+        registerSet(ArmorSets.hazmat_helmet, ArmorSets.hazmat_plate, ArmorSets.hazmat_legs, ArmorSets.hazmat_boots, new ResistanceStats());
+        registerSet(ArmorSets.hazmat_helmet_red, ArmorSets.hazmat_plate_red, ArmorSets.hazmat_legs_red, ArmorSets.hazmat_boots_red,
                 new ResistanceStats());
-        registerSet(ModItems.hazmat_helmet_grey, ModItems.hazmat_plate_grey, ModItems.hazmat_legs_grey, ModItems.hazmat_boots_grey,
+        registerSet(ArmorSets.hazmat_helmet_grey, ArmorSets.hazmat_plate_grey, ArmorSets.hazmat_legs_grey, ArmorSets.hazmat_boots_grey,
                 new ResistanceStats());
-        registerSet(ModItems.liquidator_helmet, ModItems.liquidator_plate, ModItems.liquidator_legs, ModItems.liquidator_boots,
+        registerSet(ArmorSets.liquidator_helmet, ArmorSets.liquidator_plate, ArmorSets.liquidator_legs, ArmorSets.liquidator_boots,
                 new ResistanceStats());
-        registerSet(ModItems.hazmat_paa_helmet, ModItems.hazmat_paa_plate, ModItems.hazmat_paa_legs, ModItems.hazmat_paa_boots,
+        registerSet(ArmorSets.hazmat_paa_helmet, ArmorSets.hazmat_paa_plate, ArmorSets.hazmat_paa_legs, ArmorSets.hazmat_paa_boots,
                 new ResistanceStats());
-        registerSet(ModItems.asbestos_helmet, ModItems.asbestos_plate, ModItems.asbestos_legs, ModItems.asbestos_boots,
+        registerSet(ArmorSets.asbestos_helmet, ArmorSets.asbestos_plate, ArmorSets.asbestos_legs, ArmorSets.asbestos_boots,
                 new ResistanceStats().addCategory(CATEGORY_FIRE, 10F, 0.9F));
     }
 

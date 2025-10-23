@@ -2,7 +2,7 @@ package com.hbm.items.weapon.sedna.factory;
 
 import com.hbm.config.ClientConfig;
 import com.hbm.items.ItemEnums;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.GunConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
@@ -40,7 +40,7 @@ public class XFactory22lr {
         p22_ap = new BulletConfig().setItem(GunFactory.EnumAmmo.P22_AP).setCasing(ItemEnums.EnumCasingType.SMALL_STEEL, 24).setKnockback(0F).setDoesPenetrate(true).setDamageFalloffByPen(false).setDamage(1.5F).setThresholdNegation(2.5F).setArmorPiercing(0.15F)
                 .setCasing(casing22.clone().setColor(SpentCasing.COLOR_CASE_44).register("p22ap"));
 
-        ModItems.gun_am180 = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_am180", new GunConfig()
+        Armory.gun_am180 = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_am180", new GunConfig()
                 .dura(177 * 25).draw(15).inspect(38).crosshair(Crosshair.L_CIRCLE).smoke(LAMBDA_SMOKE)
                 .rec(new Receiver(0)
                         .dmg(2F).delay(1).dry(10).auto(true).spread(0.02F).reload(66).jam(30).sound(HBMSoundHandler.fireGreaseGun, 1.0F, 1.0F)

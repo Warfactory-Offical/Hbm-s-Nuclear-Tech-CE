@@ -7,6 +7,8 @@ import com.hbm.handler.ArmorUtil;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IRadiationImmune;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foods;
+import com.hbm.items.ModItems.Inserts;
 import com.hbm.main.AdvancementManager;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
@@ -141,8 +143,8 @@ public class EntityMaskMan extends EntityMob implements IRadiationImmune {
 			ArmorUtil.installGasMaskFilter(mask, new ItemStack(ModItems.gas_mask_filter_combo));
 			
 			this.entityDropItem(mask, 0F);
-			this.dropItem(ModItems.coin_maskman, 1);
-			this.dropItem(ModItems.v1, 1);
+			this.dropItem(Foods.coin_maskman, 1);
+			this.dropItem(Inserts.v1, 1);
 			this.dropItem(Items.SKULL, 1);
 		}
 	}

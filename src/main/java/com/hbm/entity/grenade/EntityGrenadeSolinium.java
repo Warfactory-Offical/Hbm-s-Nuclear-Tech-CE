@@ -4,7 +4,7 @@ import com.hbm.config.BombConfig;
 import com.hbm.entity.effect.EntityCloudSolinium;
 import com.hbm.entity.logic.EntityNukeExplosionMK3;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.ItemGrenade;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
@@ -63,7 +63,7 @@ public class EntityGrenadeSolinium extends EntityGrenadeBouncyBase {
 
 	@Override
 	protected int getMaxTimer() {
-		return ItemGrenade.getFuseTicks(ModItems.grenade_solinium);
+		return ItemGrenade.getFuseTicks(Armory.grenade_solinium);
 	}
 
 	@Override

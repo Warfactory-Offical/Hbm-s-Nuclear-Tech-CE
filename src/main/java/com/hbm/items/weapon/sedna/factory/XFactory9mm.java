@@ -1,7 +1,7 @@
 package com.hbm.items.weapon.sedna.factory;
 
 import com.hbm.items.ItemEnums;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.GunConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
@@ -40,7 +40,7 @@ public class XFactory9mm {
         p9_ap = new BulletConfig().setItem(GunFactory.EnumAmmo.P9_AP).setCasing(ItemEnums.EnumCasingType.SMALL_STEEL, 12).setDoesPenetrate(true).setDamageFalloffByPen(false).setDamage(1.5F).setThresholdNegation(5F).setArmorPiercing(0.15F)
                 .setCasing(casing9.clone().setColor(SpentCasing.COLOR_CASE_44).register("p9ap"));
 
-        ModItems.gun_greasegun = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_greasegun", new GunConfig()
+        Armory.gun_greasegun = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_greasegun", new GunConfig()
                 .dura(3_000).draw(20).inspect(31).crosshair(RenderScreenOverlay.Crosshair.L_CIRCLE).smoke(LAMBDA_SMOKE)
                 .rec(new Receiver(0)
                         .dmg(3F).delay(4).dry(40).auto(true).spread(0.015F).reload(60).jam(55).sound(HBMSoundHandler.fireGreaseGun, 1.0F, 1.0F)
@@ -51,7 +51,7 @@ public class XFactory9mm {
                 .anim(LAMBDA_GREASEGUN_ANIMS).orchestra(Orchestras.ORCHESTRA_GREASEGUN)
         ).setNameMutator(LAMBDA_NAME_GREASEGUN);
 
-        ModItems.gun_lag = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_lag", new GunConfig()
+        Armory.gun_lag = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_lag", new GunConfig()
                 .dura(1_700).draw(7).inspect(31).crosshair(RenderScreenOverlay.Crosshair.CIRCLE).smoke(LAMBDA_SMOKE)
                 .rec(new Receiver(0)
                         .dmg(25F).delay(4).dry(10).spread(0.005F).reload(53).jam(44).sound(HBMSoundHandler.firePistol, 1.0F, 1.0F)
@@ -62,7 +62,7 @@ public class XFactory9mm {
                 .anim(LAMBDA_LAG_ANIMS).orchestra(Orchestras.ORCHESTRA_LAG)
         );
 
-        ModItems.gun_uzi = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_uzi", new GunConfig()
+        Armory.gun_uzi = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_uzi", new GunConfig()
                 .dura(3_000).draw(15).inspect(31).crosshair(RenderScreenOverlay.Crosshair.CIRCLE).smoke(LAMBDA_SMOKE)
                 .rec(new Receiver(0)
                         .dmg(3F).delay(2).dry(25).auto(true).spread(0.005F).reload(55).jam(50).sound(HBMSoundHandler.fireUzi, 1.0F, 1.0F)
@@ -72,7 +72,7 @@ public class XFactory9mm {
                 .setupStandardConfiguration()
                 .anim(LAMBDA_UZI_ANIMS).orchestra(Orchestras.ORCHESTRA_UZI)
         ).setNameMutator(LAMBDA_NAME_UZI);
-        ModItems.gun_uzi_akimbo = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.B_SIDE, "gun_uzi_akimbo",
+        Armory.gun_uzi_akimbo = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.B_SIDE, "gun_uzi_akimbo",
                 new GunConfig().dura(3_000).draw(15).inspect(31).crosshair(RenderScreenOverlay.Crosshair.CIRCLE).smoke(LAMBDA_SMOKE)
                         .rec(new Receiver(0)
                                 .dmg(3F).spreadHipfire(0F).delay(2).dry(25).auto(true).spread(0.005F).reload(55).jam(50).sound(HBMSoundHandler.fireUzi, 1.0F, 1.0F)

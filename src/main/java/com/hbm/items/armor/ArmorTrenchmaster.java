@@ -2,7 +2,8 @@ package com.hbm.items.armor;
 
 import com.hbm.capability.HbmCapability;
 import com.hbm.handler.ArmorModHandler;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.ArmorSets;
+import com.hbm.items.ModItems.Inserts;
 import com.hbm.items.gear.ArmorFSB;
 import com.hbm.render.model.ModelArmorTrenchmaster;
 import com.hbm.util.I18nUtil;
@@ -33,7 +34,7 @@ public class ArmorTrenchmaster extends ArmorFSB {
 
     public static boolean isTrenchMaster(EntityPlayer player) {
         if (player == null) return false;
-        return player.inventory.armorItemInSlot(2) != null && player.inventory.armorItemInSlot(2).getItem() == ModItems.trenchmaster_plate && ArmorFSB.hasFSBArmor(player);
+        return player.inventory.armorItemInSlot(2) != null && player.inventory.armorItemInSlot(2).getItem() == ArmorSets.trenchmaster_plate && ArmorFSB.hasFSBArmor(player);
     }
 
     @Override
@@ -92,7 +93,7 @@ public class ArmorTrenchmaster extends ArmorFSB {
 		if(!player.inventory.armorItemInSlot(3).isEmpty()) {
 			ItemStack[] mods =  ArmorModHandler.pryMods(player.inventory.armorItemInSlot(3));
 			ItemStack helmet = mods[ArmorModHandler.helmet_only];
-			return helmet != null && helmet.getItem() == ModItems.card_aos;
+			return helmet != null && helmet.getItem() == Inserts.card_aos;
 		}
 		return false;
 	}

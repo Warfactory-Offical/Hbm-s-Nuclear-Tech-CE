@@ -4,6 +4,7 @@ import com.hbm.config.BombConfig;
 import com.hbm.entity.effect.EntityNukeTorex;
 import com.hbm.entity.logic.EntityBalefire;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foods;
 import com.hbm.potion.HbmPotion;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,7 +28,7 @@ public class ItemFoodSoup extends ItemSoup {
 
 	@Override
 	public void addInformation(ItemStack stack, World world, List<String> list, ITooltipFlag flagIn){
-		if(this == ModItems.glowing_stew) {
+		if(this == Foods.glowing_stew) {
             list.add("Removes 80 RAD");
     	}
 		super.addInformation(stack, world, list, flagIn);
@@ -35,11 +36,11 @@ public class ItemFoodSoup extends ItemSoup {
 
 	@Override
 	protected void onFoodEaten(ItemStack stack, World worldIn, EntityPlayer player) {
-		if(stack.getItem() == ModItems.glowing_stew){
+		if(stack.getItem() == Foods.glowing_stew){
 			player.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 2 * 20, 0));
 			player.addPotionEffect(new PotionEffect(HbmPotion.radaway, 4 * 20, 0));
 		}
-		if(stack.getItem() == ModItems.balefire_scrambled){
+		if(stack.getItem() == Foods.balefire_scrambled){
 			player.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 5 * 20, 0));
 			player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 15 * 60 * 20, 10));
 			player.addPotionEffect(new PotionEffect(HbmPotion.radaway, 15 * 60 * 20, 4));
@@ -54,7 +55,7 @@ public class ItemFoodSoup extends ItemSoup {
 				EntityNukeTorex.statFac(worldIn, player.posX, player.posY, player.posZ, 25);
 			}
 		}
-		if(stack.getItem() == ModItems.balefire_and_ham){
+		if(stack.getItem() == Foods.balefire_and_ham){
 			player.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 5 * 20, 0));
 			player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 60 * 60 * 20, 10));
 			player.addPotionEffect(new PotionEffect(HbmPotion.radaway, 60 * 60 * 20, 16));

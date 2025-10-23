@@ -3,7 +3,7 @@ package com.hbm.inventory;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.DummyTexs;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import net.minecraft.block.Block;
@@ -215,7 +215,7 @@ public class RecipesCommon {
 
         @Contract("-> new")
         public ItemStack toStack() {
-            return new ItemStack(item == null ? ModItems.nothing : item, stacksize, meta);
+            return new ItemStack(item == null ? DummyTexs.nothing : item, stacksize, meta);
         }
 
         @Override

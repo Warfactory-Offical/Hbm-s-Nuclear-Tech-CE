@@ -7,7 +7,8 @@ import com.hbm.entity.projectile.EntityBulletBeamBase;
 import com.hbm.explosion.vanillant.ExplosionVNT;
 import com.hbm.explosion.vanillant.standard.EntityProcessorCrossSmooth;
 import com.hbm.explosion.vanillant.standard.PlayerProcessorStandard;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
+import com.hbm.items.ModItems.Materials.Ingots;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.GunConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
@@ -20,9 +21,6 @@ import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
-import com.hbm.render.anim.BusAnimation;
-import com.hbm.render.anim.BusAnimationSequence;
-import com.hbm.render.anim.HbmAnimations;
 import com.hbm.render.anim.sedna.BusAnimationKeyframeSedna.IType;
 import com.hbm.render.anim.sedna.BusAnimationSedna;
 import com.hbm.render.anim.sedna.BusAnimationSequenceSedna;
@@ -125,20 +123,20 @@ public class XFactoryEnergy {
 
     public static void init() {
 
-        energy_tesla = new BulletConfig().setItem(GunFactory.EnumAmmo.CAPACITOR).setCasing(new ItemStack(ModItems.ingot_polymer, 2), 4).setupDamageClass(DamageResistanceHandler.DamageClass.ELECTRIC).setBeam().setSpread(0.0F).setLife(5).setRenderRotations(false).setDoesPenetrate(true)
+        energy_tesla = new BulletConfig().setItem(GunFactory.EnumAmmo.CAPACITOR).setCasing(new ItemStack(Ingots.ingot_polymer, 2), 4).setupDamageClass(DamageResistanceHandler.DamageClass.ELECTRIC).setBeam().setSpread(0.0F).setLife(5).setRenderRotations(false).setDoesPenetrate(true)
                 .setOnBeamImpact(LAMBDA_LIGHTNING_HIT);
-        energy_tesla_overcharge = new BulletConfig().setItem(GunFactory.EnumAmmo.CAPACITOR_OVERCHARGE).setCasing(new ItemStack(ModItems.ingot_polymer, 2), 4).setupDamageClass(DamageResistanceHandler.DamageClass.ELECTRIC).setBeam().setSpread(0.0F).setLife(5).setRenderRotations(false).setDoesPenetrate(true)
+        energy_tesla_overcharge = new BulletConfig().setItem(GunFactory.EnumAmmo.CAPACITOR_OVERCHARGE).setCasing(new ItemStack(Ingots.ingot_polymer, 2), 4).setupDamageClass(DamageResistanceHandler.DamageClass.ELECTRIC).setBeam().setSpread(0.0F).setLife(5).setRenderRotations(false).setDoesPenetrate(true)
                 .setDamage(1.5F).setOnBeamImpact(LAMBDA_LIGHTNING_HIT);
 
-        energy_las = new BulletConfig().setItem(GunFactory.EnumAmmo.CAPACITOR).setCasing(new ItemStack(ModItems.ingot_polymer, 2), 4).setupDamageClass(DamageResistanceHandler.DamageClass.LASER).setBeam().setSpread(0.0F).setLife(5).setRenderRotations(false).setOnBeamImpact(BulletConfig.LAMBDA_STANDARD_BEAM_HIT);
-        energy_las_overcharge = new BulletConfig().setItem(GunFactory.EnumAmmo.CAPACITOR_OVERCHARGE).setCasing(new ItemStack(ModItems.ingot_polymer, 2), 4).setupDamageClass(DamageResistanceHandler.DamageClass.LASER).setBeam().setSpread(0.0F).setLife(5).setRenderRotations(false).setDoesPenetrate(true).setOnBeamImpact(BulletConfig.LAMBDA_STANDARD_BEAM_HIT);
-        energy_las_ir = new BulletConfig().setItem(GunFactory.EnumAmmo.CAPACITOR_IR).setCasing(new ItemStack(ModItems.ingot_polymer, 2), 4).setupDamageClass(DamageResistanceHandler.DamageClass.FIRE).setBeam().setSpread(0.0F).setLife(5).setRenderRotations(false).setOnBeamImpact(LAMBDA_IR_HIT);
+        energy_las = new BulletConfig().setItem(GunFactory.EnumAmmo.CAPACITOR).setCasing(new ItemStack(Ingots.ingot_polymer, 2), 4).setupDamageClass(DamageResistanceHandler.DamageClass.LASER).setBeam().setSpread(0.0F).setLife(5).setRenderRotations(false).setOnBeamImpact(BulletConfig.LAMBDA_STANDARD_BEAM_HIT);
+        energy_las_overcharge = new BulletConfig().setItem(GunFactory.EnumAmmo.CAPACITOR_OVERCHARGE).setCasing(new ItemStack(Ingots.ingot_polymer, 2), 4).setupDamageClass(DamageResistanceHandler.DamageClass.LASER).setBeam().setSpread(0.0F).setLife(5).setRenderRotations(false).setDoesPenetrate(true).setOnBeamImpact(BulletConfig.LAMBDA_STANDARD_BEAM_HIT);
+        energy_las_ir = new BulletConfig().setItem(GunFactory.EnumAmmo.CAPACITOR_IR).setCasing(new ItemStack(Ingots.ingot_polymer, 2), 4).setupDamageClass(DamageResistanceHandler.DamageClass.FIRE).setBeam().setSpread(0.0F).setLife(5).setRenderRotations(false).setOnBeamImpact(LAMBDA_IR_HIT);
 
         energy_emerald = energy_las.clone().setArmorPiercing(0.5F).setThresholdNegation(10F);
         energy_emerald_overcharge = energy_las_overcharge.clone().setArmorPiercing(0.5F).setThresholdNegation(15F);
         energy_emerald_ir = energy_las_ir.clone().setArmorPiercing(0.5F).setThresholdNegation(10F);
 
-        ModItems.gun_tesla_cannon = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_tesla_cannon", new GunConfig()
+        Armory.gun_tesla_cannon = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_tesla_cannon", new GunConfig()
                 .dura(2_000).draw(10).inspect(33).reloadSequential(true).crosshair(Crosshair.CIRCLE)
                 .rec(new Receiver(0)
                         .dmg(35F).delay(20).reload(44).jam(19).sound(HBMSoundHandler.fireTesla, 1.0F, 1.0F)
@@ -149,7 +147,7 @@ public class XFactoryEnergy {
                 .anim(LAMBDA_TESLA_ANIMS).orchestra(Orchestras.ORCHESTRA_TESLA)
         );
 
-        ModItems.gun_laser_pistol = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_laser_pistol", new GunConfig()
+        Armory.gun_laser_pistol = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_laser_pistol", new GunConfig()
                 .dura(500).draw(10).inspect(26).crosshair(Crosshair.CIRCLE)
                 .rec(new Receiver(0)
                         .dmg(25F).delay(5).spread(1F).spreadHipfire(1F).reload(45).jam(37).sound(HBMSoundHandler.fireLaserPistol, 1.0F, 1.0F)
@@ -159,7 +157,7 @@ public class XFactoryEnergy {
                 .setupStandardConfiguration()
                 .anim(LAMBDA_LASER_PISTOL).orchestra(Orchestras.ORCHESTRA_LASER_PISTOL)
         );
-        ModItems.gun_laser_pistol_pew_pew = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.B_SIDE, "gun_laser_pistol_pew_pew", new GunConfig()
+        Armory.gun_laser_pistol_pew_pew = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.B_SIDE, "gun_laser_pistol_pew_pew", new GunConfig()
                 .dura(500).draw(10).inspect(26).crosshair(Crosshair.CIRCLE)
                 .rec(new Receiver(0)
                         .dmg(30F).rounds(5).delay(10).spread(0.25F).spreadHipfire(1F).reload(45).jam(37).sound(HBMSoundHandler.fireLaserPistol, 1.0F, 0.8F)
@@ -169,7 +167,7 @@ public class XFactoryEnergy {
                 .setupStandardConfiguration()
                 .anim(LAMBDA_LASER_PISTOL).orchestra(Orchestras.ORCHESTRA_LASER_PISTOL)
         );
-        ModItems.gun_laser_pistol_morning_glory = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.LEGENDARY, "gun_laser_pistol_morning_glory", new GunConfig()
+        Armory.gun_laser_pistol_morning_glory = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.LEGENDARY, "gun_laser_pistol_morning_glory", new GunConfig()
                 .dura(1_500).draw(10).inspect(26).crosshair(Crosshair.CIRCLE)
                 .rec(new Receiver(0)
                         .dmg(20F).delay(7).spread(0F).spreadHipfire(0.5F).reload(45).jam(37).sound(HBMSoundHandler.fireLaserPistol, 1.0F, 1.1F)
@@ -180,7 +178,7 @@ public class XFactoryEnergy {
                 .anim(LAMBDA_LASER_PISTOL).orchestra(Orchestras.ORCHESTRA_LASER_PISTOL)
         );
 
-        ModItems.gun_lasrifle = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_lasrifle", new GunConfig()
+        Armory.gun_lasrifle = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_lasrifle", new GunConfig()
                 .dura(2_000).draw(10).inspect(26).reloadSequential(true).crosshair(Crosshair.CIRCLE).scopeTexture(scope_luna)
                 .rec(new Receiver(0)
                         .dmg(50F).delay(8).reload(44).jam(36).sound(HBMSoundHandler.fireLaser, 1.0F, 1.0F)

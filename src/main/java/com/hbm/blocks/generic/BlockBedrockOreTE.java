@@ -6,7 +6,7 @@ import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.fluid.FluidStack;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Materials.Powders;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.I18nUtil;
 import net.minecraft.block.BlockContainer;
@@ -98,7 +98,7 @@ public class BlockBedrockOreTE extends BlockContainer implements ILookOverlay {
 		public void readFromNBT(@NotNull NBTTagCompound nbt) {
 			super.readFromNBT(nbt);
 			this.resource = new ItemStack(Item.getItemById(nbt.getInteger("0id")), nbt.getByte("size"), nbt.getShort("meta"));
-			if(this.resource.isEmpty()) this.resource = new ItemStack(ModItems.powder_iron);
+			if(this.resource.isEmpty()) this.resource = new ItemStack(Powders.powder_iron);
 			FluidType type = Fluids.fromID(nbt.getInteger("fluid"));
 
 			if(type != Fluids.NONE) {

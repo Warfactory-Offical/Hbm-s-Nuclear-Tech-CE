@@ -2,7 +2,7 @@ package com.hbm.entity.mob;
 
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IRadiationImmune;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foods;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.util.ContaminationUtil;
 import com.hbm.util.MutableVec3d;
@@ -108,6 +108,6 @@ public class EntityGlowingOne extends EntityZombie implements IRadiationImmune {
 	@Override
 	protected void dropLoot(boolean wasRecentlyHit, int lootingModifier, DamageSource source) {
 		super.dropLoot(wasRecentlyHit, lootingModifier, source);
-		this.dropItem(ModItems.cap_rad, Math.max(1, lootingModifier));
+		this.dropItem(Foods.cap_rad, Math.max(1, lootingModifier));
 	}
 }

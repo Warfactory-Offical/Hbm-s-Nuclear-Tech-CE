@@ -2,6 +2,7 @@ package com.hbm.items.gear;
 
 import com.hbm.handler.ArmorUtil;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.ArmorSets;
 import com.hbm.lib.RefStrings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -30,10 +31,10 @@ public class ArmorEuphemium extends ItemArmor implements ISpecialArmor {
 	
 	@Override
 	public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
-		if(stack.getItem().equals(ModItems.euphemium_helmet) || stack.getItem().equals(ModItems.euphemium_plate) || stack.getItem().equals(ModItems.euphemium_boots)) {
+		if(stack.getItem().equals(ArmorSets.euphemium_helmet) || stack.getItem().equals(ArmorSets.euphemium_plate) || stack.getItem().equals(ArmorSets.euphemium_boots)) {
 			return (RefStrings.MODID + ":textures/armor/euphemium_1.png");
 		}
-		if(stack.getItem().equals(ModItems.euphemium_legs)) {
+		if(stack.getItem().equals(ArmorSets.euphemium_legs)) {
 			return (RefStrings.MODID + ":textures/armor/euphemium_2.png");
 		}
 		return null;
@@ -41,7 +42,7 @@ public class ArmorEuphemium extends ItemArmor implements ISpecialArmor {
 
 	@Override
 	public ArmorProperties getProperties(EntityLivingBase player, ItemStack armor, DamageSource source, double damage, int slot) {
-		if(player instanceof EntityPlayer && ArmorUtil.checkArmor((EntityPlayer)player, ModItems.euphemium_helmet, ModItems.euphemium_plate, ModItems.euphemium_legs, ModItems.euphemium_boots))
+		if(player instanceof EntityPlayer && ArmorUtil.checkArmor((EntityPlayer)player, ArmorSets.euphemium_helmet, ArmorSets.euphemium_plate, ArmorSets.euphemium_legs, ArmorSets.euphemium_boots))
 		{
 			return new ArmorProperties(1, 1, MathHelper.floor(999999999));
 		}
@@ -81,7 +82,7 @@ public class ArmorEuphemium extends ItemArmor implements ISpecialArmor {
 	
 	@Override
 	public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack) {
-		if(player instanceof EntityPlayer && ArmorUtil.checkArmor(player, ModItems.euphemium_helmet, ModItems.euphemium_plate, ModItems.euphemium_legs, ModItems.euphemium_boots))
+		if(player instanceof EntityPlayer && ArmorUtil.checkArmor(player, ArmorSets.euphemium_helmet, ArmorSets.euphemium_plate, ArmorSets.euphemium_legs, ArmorSets.euphemium_boots))
 		{
 			player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 5, 127, true, false));
 			player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 5, 127, true, false));

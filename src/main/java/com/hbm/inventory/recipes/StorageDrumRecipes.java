@@ -3,6 +3,8 @@ package com.hbm.inventory.recipes;
 import com.hbm.config.VersatileConfig;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Materials.Ingots;
+import com.hbm.items.ModItems.Materials.Nuggies;
 import com.hbm.items.special.ItemWasteLong;
 import com.hbm.items.special.ItemWasteShort;
 import net.minecraft.item.ItemStack;
@@ -53,8 +55,8 @@ public class StorageDrumRecipes {
 			);
 		}
 		
-		addRecipe(new ComparableStack(ModItems.ingot_au198, 1), new ItemStack(ModItems.bottle_mercury, 1), (int)(VersatileConfig.getShortDecayChance()*0.01), 500, 500);
-		addRecipe(new ComparableStack(ModItems.nugget_au198, 1), new ItemStack(ModItems.ingot_mercury, 1), (int)(VersatileConfig.getShortDecayChance()*0.001), 50, 50);
+		addRecipe(new ComparableStack(Ingots.ingot_au198, 1), new ItemStack(ModItems.bottle_mercury, 1), (int)(VersatileConfig.getShortDecayChance()*0.01), 500, 500);
+		addRecipe(new ComparableStack(Nuggies.nugget_au198, 1), new ItemStack(Nuggies.ingot_mercury, 1), (int)(VersatileConfig.getShortDecayChance()*0.001), 50, 50);
 	}
 
 	public static void addRecipe(ComparableStack input, ItemStack output, int chance, int wasteLiquid, int wasteGas){

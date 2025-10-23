@@ -1,6 +1,6 @@
 package com.hbm.render.item.weapon.sedna;
 
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
@@ -176,7 +176,7 @@ public class ItemRenderDoubleBarrel extends ItemRenderWeaponBase {
 	}
 
 	public boolean isSawedOff(ItemStack stack) {
-		return stack.getItem() == ModItems.gun_double_barrel_sacred_dragon;
+		return stack.getItem() == Armory.gun_double_barrel_sacred_dragon;
 	}
 }
 

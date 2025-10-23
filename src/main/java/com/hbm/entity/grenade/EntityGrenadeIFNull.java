@@ -1,7 +1,7 @@
 package com.hbm.entity.grenade;
 
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.ItemGrenade;
 import com.hbm.util.DelayedTick;
 import net.minecraft.entity.Entity;
@@ -86,7 +86,7 @@ public class EntityGrenadeIFNull extends EntityGrenadeBouncyBase {
 
 	@Override
 	protected int getMaxTimer() {
-		return ItemGrenade.getFuseTicks(ModItems.grenade_if_null);
+		return ItemGrenade.getFuseTicks(Armory.grenade_if_null);
 	}
 
 	@Override

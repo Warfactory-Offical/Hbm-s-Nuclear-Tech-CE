@@ -2,7 +2,7 @@ package com.hbm.items.weapon.sedna.factory;
 
 import com.hbm.entity.projectile.EntityBulletBaseMK4;
 import com.hbm.entity.projectile.EntityBulletBeamBase;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.sedna.hud.HUDComponentAmmoCounter;
 import com.hbm.items.weapon.sedna.hud.HUDComponentDurabilityBar;
 import com.hbm.items.weapon.sedna.impl.ItemGunChargeThrower;
@@ -506,7 +506,7 @@ public class LegoClient {
 
         if (bullet.getThrower() instanceof EntityPlayer player) {
             ItemStack stack = player.getHeldItemMainhand();
-            if (!stack.isEmpty() && stack.getItem() == ModItems.gun_charge_thrower && ItemGunChargeThrower.getLastHook(stack) == bullet.getEntityId()) {
+            if (!stack.isEmpty() && stack.getItem() == Armory.gun_charge_thrower && ItemGunChargeThrower.getLastHook(stack) == bullet.getEntityId()) {
                 renderWire(bullet, interp);
             }
         }

@@ -3,7 +3,7 @@ package com.hbm.items.weapon.sedna.factory;
 import com.hbm.explosion.vanillant.ExplosionVNT;
 import com.hbm.explosion.vanillant.standard.*;
 import com.hbm.items.ItemAmmoEnums;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.particle.SpentCasing;
 import net.minecraft.item.ItemStack;
@@ -19,12 +19,12 @@ public class XFactoryTurret {
     public static BulletConfig shell_w9;
 
     public static void init() {
-        dgk_normal = new BulletConfig().setItem(new ItemStack(ModItems.ammo_dgk));
+        dgk_normal = new BulletConfig().setItem(new ItemStack(Armory.ammo_dgk));
 
-        shell_normal = new BulletConfig().setItem(ModItems.ammo_shell.stackFromEnum(ItemAmmoEnums.Ammo240Shell.STOCK)).setDamage(1F).setCasing(CASINNG240MM.clone().register("240standard")).setOnImpact((bullet, mop) -> {
+        shell_normal = new BulletConfig().setItem(Armory.ammo_shell.stackFromEnum(ItemAmmoEnums.Ammo240Shell.STOCK)).setDamage(1F).setCasing(CASINNG240MM.clone().register("240standard")).setOnImpact((bullet,mop) -> {
             Lego.standardExplode(bullet, mop, 10F); bullet.setDead();
         });
-        shell_explosive = new BulletConfig().setItem(ModItems.ammo_shell.stackFromEnum(ItemAmmoEnums.Ammo240Shell.EXPLOSIVE)).setDamage(1.5F).setCasing(CASINNG240MM.clone().register("240ext")).setOnImpact((bullet, mop) -> {
+        shell_explosive = new BulletConfig().setItem(Armory.ammo_shell.stackFromEnum(ItemAmmoEnums.Ammo240Shell.EXPLOSIVE)).setDamage(1.5F).setCasing(CASINNG240MM.clone().register("240ext")).setOnImpact((bullet,mop) -> {
             ExplosionVNT vnt = new ExplosionVNT(bullet.world, mop.hitVec.x, mop.hitVec.y, mop.hitVec.z, 10F);
             vnt.setBlockAllocator(new BlockAllocatorStandard());
             vnt.setBlockProcessor(new BlockProcessorStandard());
@@ -34,8 +34,8 @@ public class XFactoryTurret {
             vnt.explode();
             bullet.setDead();
         });
-        shell_ap = new BulletConfig().setItem(ModItems.ammo_shell.stackFromEnum(ItemAmmoEnums.Ammo240Shell.APFSDS_T)).setDamage(2F).setDoesPenetrate(true).setCasing(CASINNG240MM.clone().register("240w"));
-        shell_du = new BulletConfig().setItem(ModItems.ammo_shell.stackFromEnum(ItemAmmoEnums.Ammo240Shell.APFSDS_DU)).setDamage(2.5F).setDoesPenetrate(true).setDamageFalloffByPen(false).setCasing(CASINNG240MM.clone().register("240u"));
-        shell_w9 = new BulletConfig().setItem(ModItems.ammo_shell.stackFromEnum(ItemAmmoEnums.Ammo240Shell.W9)).setDamage(2.5F).setCasing(CASINNG240MM.clone().register("240n")).setOnImpact(XFactoryCatapult.LAMBDA_NUKE_STANDARD);
+        shell_ap = new BulletConfig().setItem(Armory.ammo_shell.stackFromEnum(ItemAmmoEnums.Ammo240Shell.APFSDS_T)).setDamage(2F).setDoesPenetrate(true).setCasing(CASINNG240MM.clone().register("240w"));
+        shell_du = new BulletConfig().setItem(Armory.ammo_shell.stackFromEnum(ItemAmmoEnums.Ammo240Shell.APFSDS_DU)).setDamage(2.5F).setDoesPenetrate(true).setDamageFalloffByPen(false).setCasing(CASINNG240MM.clone().register("240u"));
+        shell_w9 = new BulletConfig().setItem(Armory.ammo_shell.stackFromEnum(ItemAmmoEnums.Ammo240Shell.W9)).setDamage(2.5F).setCasing(CASINNG240MM.clone().register("240n")).setOnImpact(XFactoryCatapult.LAMBDA_NUKE_STANDARD);
     }
 }

@@ -2,7 +2,7 @@ package com.hbm.items.armor;
 
 import com.hbm.capability.HbmCapability;
 import com.hbm.handler.ArmorModHandler;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Inserts;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -21,11 +21,11 @@ public class ItemModCard extends ItemArmorMod {
 
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<String> list, ITooltipFlag flagIn) {
-        if(this == ModItems.card_aos) {
+        if(this == Inserts.card_aos) {
             list.add(TextFormatting.RED + "Top of the line!");
             list.add(TextFormatting.RED + "Guns now have a 33% chance to not consume ammo.");
         }
-        if(this == ModItems.card_qos) {
+        if(this == Inserts.card_qos) {
             list.add(TextFormatting.RED + "Power!");
             list.add(TextFormatting.RED + "Adds a 33% chance to tank damage with no cap.");
         }
@@ -40,7 +40,7 @@ public class ItemModCard extends ItemArmorMod {
 
     @Override
     public void modDamage(LivingHurtEvent event, ItemStack armor) {
-        if(this == ModItems.card_qos && event.getEntityLiving().getRNG().nextInt(3) == 0 && event.getEntityLiving() instanceof EntityPlayer player) {
+        if(this == Inserts.card_qos && event.getEntityLiving().getRNG().nextInt(3) == 0 && event.getEntityLiving() instanceof EntityPlayer player) {
             HbmCapability.plink(player, SoundEvents.ENTITY_ITEM_BREAK, 0.5F, 1.0F + player.getRNG().nextFloat() * 0.5F);
             event.setAmount(0);
             event.setCanceled(true);

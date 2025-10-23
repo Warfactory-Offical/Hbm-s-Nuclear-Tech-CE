@@ -11,6 +11,10 @@ import com.hbm.inventory.fluid.trait.FT_Flammable;
 import com.hbm.inventory.recipes.loader.SerializableRecipe;
 import com.hbm.items.ItemEnums;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Materials.Billets;
+import com.hbm.items.ModItems.Materials.Ingots;
+import com.hbm.items.ModItems.Materials.Nuggies;
+import com.hbm.items.ModItems.Materials.Powders;
 import com.hbm.items.machine.ItemFluidIcon;
 import com.hbm.util.Tuple;
 import net.minecraft.block.Block;
@@ -62,14 +66,14 @@ public class SolidificationRecipes extends SerializableRecipe {
 
         registerRecipe(WATER,		1000,			Blocks.ICE);
         registerRecipe(LAVA,		1000,			Blocks.OBSIDIAN);
-        registerRecipe(MERCURY,		125,			ModItems.ingot_mercury);
+        registerRecipe(MERCURY,		125,			Nuggies.ingot_mercury);
         registerRecipe(BIOGAS,		250,			ModItems.biomass_compressed);
-        registerRecipe(SALIENT,		1280,			new ItemStack(ModItems.bio_wafer, 8)); //4 (food val) * 2 (sat mod) * 2 (constant) * 10 (quanta) * 8 (batch size)
+        registerRecipe(SALIENT,		1280,			new ItemStack(Billets.bio_wafer, 8)); //4 (food val) * 2 (sat mod) * 2 (constant) * 10 (quanta) * 8 (batch size)
         registerRecipe(ENDERJUICE,	100,			Items.ENDER_PEARL);
-        registerRecipe(WATZ,		1000,			ModItems.ingot_mud);
+        registerRecipe(WATZ,		1000,			Ingots.ingot_mud);
         registerRecipe(REDMUD,		450,			Items.IRON_INGOT);
-        registerRecipe(SODIUM,		100,			ModItems.powder_sodium);
-        registerRecipe(LEAD,		100,			ModItems.ingot_lead);
+        registerRecipe(SODIUM,		100,			Powders.powder_sodium);
+        registerRecipe(LEAD,		100,			Ingots.ingot_lead);
         registerRecipe(SLOP,		250,			ModBlocks.ore_oil_sand);
 
         registerRecipe(OIL,				SF_OIL,			OreDictManager.DictFrame.fromOne(ModItems.oil_tar, ItemEnums.EnumTarType.CRUDE));

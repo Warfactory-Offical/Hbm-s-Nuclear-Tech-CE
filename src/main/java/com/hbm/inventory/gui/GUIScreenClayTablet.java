@@ -2,7 +2,7 @@ package com.hbm.inventory.gui;
 
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.recipes.PedestalRecipes;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.DummyTexs;
 import com.hbm.lib.RefStrings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -77,7 +77,7 @@ public class GUIScreenClayTablet extends GuiScreen {
                         }
 
                         List<ItemStack> inputs = ingredient.extractForJEI();
-                        ItemStack input = inputs.isEmpty() ? new ItemStack(ModItems.nothing) : inputs.get((int) (Math.abs(System.currentTimeMillis() / 1000) % inputs.size()));
+                        ItemStack input = inputs.isEmpty() ? new ItemStack(DummyTexs.nothing) : inputs.get((int) (Math.abs(System.currentTimeMillis() / 1000) % inputs.size()));
 
                         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
                         RenderHelper.enableGUIStandardItemLighting();

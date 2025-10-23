@@ -7,7 +7,7 @@ import com.hbm.explosion.vanillant.ExplosionVNT;
 import com.hbm.explosion.vanillant.standard.*;
 import com.hbm.handler.radiation.ChunkRadiationManager;
 import com.hbm.handler.threading.PacketThreading;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.GunConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
@@ -153,7 +153,7 @@ public class XFactoryCatapult {
         nuke_hive = new BulletConfig().setItem(GunFactory.EnumAmmo.NUKE_HIVE).setProjectiles(12).setLife(300).setVel(1F).setGrav(0.025F).setSpread(0.15F).setDamage(0.25F).setOnImpact(LAMBDA_NUKE_HIVE);
         nuke_balefire = new BulletConfig().setItem(GunFactory.EnumAmmo.NUKE_BALEFIRE).setDamage(2.5F).setLife(300).setVel(3F).setGrav(0.025F).setOnImpact(LAMBDA_NUKE_BALEFIRE);
 
-        ModItems.gun_fatman = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_fatman", new GunConfig()
+        Armory.gun_fatman = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_fatman", new GunConfig()
                 .dura(300).draw(20).inspect(30).crosshair(Crosshair.L_CIRCUMFLEX).hideCrosshair(false)
                 .rec(new Receiver(0)
                         .dmg(100F).spreadHipfire(0F).delay(10).reload(57).jam(40).sound(HBMSoundHandler.fireFatman, 1.0F, 1.0F)

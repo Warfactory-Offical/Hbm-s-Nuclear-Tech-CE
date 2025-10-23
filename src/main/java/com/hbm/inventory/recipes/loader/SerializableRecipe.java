@@ -13,7 +13,7 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.material.MatDistribution;
 import com.hbm.inventory.recipes.*;
 import com.hbm.inventory.recipes.anvil.AnvilRecipes;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.DummyTexs;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.Tuple;
 import net.minecraft.item.Item;
@@ -289,7 +289,7 @@ public abstract class SerializableRecipe {
         } catch (Exception ignored) {
         }
         MainRegistry.logger.error("Error reading stack array {}", array.toString());
-        return new RecipesCommon.ComparableStack(ModItems.nothing);
+        return new RecipesCommon.ComparableStack(DummyTexs.nothing);
     }
 
     protected static RecipesCommon.AStack[] readAStackArray(JsonArray array) {
@@ -332,7 +332,7 @@ public abstract class SerializableRecipe {
         } catch (Exception ignored) {
         }
         MainRegistry.logger.error("Error reading stack array {} - defaulting to NOTHING item!", array.toString());
-        return new ItemStack(ModItems.nothing);
+        return new ItemStack(DummyTexs.nothing);
     }
 
     private static Tuple.Pair<ItemStack, Float> readItemStackChance(JsonArray array) {
@@ -345,7 +345,7 @@ public abstract class SerializableRecipe {
         } catch (Exception ignored) {
         }
         MainRegistry.logger.error("Error reading stack array {} - defaulting to NOTHING item!", array.toString());
-        return new Tuple.Pair<>(new ItemStack(ModItems.nothing), 1F);
+        return new Tuple.Pair<>(new ItemStack(DummyTexs.nothing), 1F);
     }
 
     protected static ItemStack[] readItemStackArray(JsonArray array) {

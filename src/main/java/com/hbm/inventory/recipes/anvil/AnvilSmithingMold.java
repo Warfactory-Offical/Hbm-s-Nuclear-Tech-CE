@@ -4,7 +4,7 @@ import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.RecipesCommon.OreDictStack;
 import com.hbm.inventory.material.MaterialShapes;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foundry;
 import com.hbm.util.ItemStackUtil;
 import net.minecraft.item.ItemStack;
 
@@ -17,7 +17,7 @@ public class AnvilSmithingMold extends AnvilSmithingRecipe {
 	ItemStack[] matchesStack;
 
 	public AnvilSmithingMold(int meta, AStack demo, Object o) {
-		super(1, new ItemStack(ModItems.mold, 1, meta), demo, new ComparableStack(ModItems.mold_base));
+		super(1, new ItemStack(Foundry.mold, 1, meta), demo, new ComparableStack(Foundry.mold_base));
 		
 		if(o instanceof OreDictStack)
 			matchesPrefix = (OreDictStack) o;

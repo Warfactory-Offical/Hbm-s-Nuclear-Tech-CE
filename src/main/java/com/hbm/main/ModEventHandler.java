@@ -32,6 +32,11 @@ import com.hbm.interfaces.IBomb;
 import com.hbm.inventory.recipes.loader.SerializableRecipe;
 import com.hbm.items.IEquipReceiver;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.*;
+import com.hbm.items.ModItems.Materials.Crystals;
+import com.hbm.items.ModItems.Materials.Ingots;
+import com.hbm.items.ModItems.Materials.Nuggies;
+import com.hbm.items.ModItems.Materials.Powders;
 import com.hbm.items.armor.*;
 import com.hbm.items.food.ItemConserve;
 import com.hbm.items.gear.ArmorFSB;
@@ -201,7 +206,7 @@ public class ModEventHandler {
             ItemStack[] mods = ArmorModHandler.pryMods(yeet);
             ItemStack cladding = mods[ArmorModHandler.cladding];
 
-            if (cladding != null && cladding.getItem() == ModItems.cladding_obsidian) {
+            if (cladding != null && cladding.getItem() == Inserts.cladding_obsidian) {
                 event.getEntity().setEntityInvulnerable(true);
             }
         }
@@ -215,15 +220,15 @@ public class ModEventHandler {
     public void lootTableLoad(LootTableLoadEvent e) {
         //Drillgon200: Yeah we're doing this in code. Screw minecraft json.
         if (CompatibilityConfig.modLoot) {
-            addWeightedRandomToLootTable(e, LootTableList.CHESTS_VILLAGE_BLACKSMITH, new WeightedRandomChestContentFrom1710(new ItemStack(ModItems.armor_polish), 1, 1, 3));
-            addWeightedRandomToLootTable(e, LootTableList.CHESTS_VILLAGE_BLACKSMITH, new WeightedRandomChestContentFrom1710(new ItemStack(ModItems.bathwater), 1, 1, 1));
-            addWeightedRandomToLootTable(e, LootTableList.CHESTS_ABANDONED_MINESHAFT, new WeightedRandomChestContentFrom1710(new ItemStack(ModItems.bathwater), 1, 1, 1));
-            addWeightedRandomToLootTable(e, LootTableList.CHESTS_ABANDONED_MINESHAFT, new WeightedRandomChestContentFrom1710(new ItemStack(ModItems.serum), 1, 1, 5));
-            addWeightedRandomToLootTable(e, LootTableList.CHESTS_SIMPLE_DUNGEON, new WeightedRandomChestContentFrom1710(new ItemStack(ModItems.heart_piece), 1, 1, 1));
-            addWeightedRandomToLootTable(e, LootTableList.CHESTS_DESERT_PYRAMID, new WeightedRandomChestContentFrom1710(new ItemStack(ModItems.heart_piece), 1, 1, 1));
-            addWeightedRandomToLootTable(e, LootTableList.CHESTS_JUNGLE_TEMPLE, new WeightedRandomChestContentFrom1710(new ItemStack(ModItems.heart_piece), 1, 1, 1));
-            addWeightedRandomToLootTable(e, LootTableList.CHESTS_SIMPLE_DUNGEON, new WeightedRandomChestContentFrom1710(new ItemStack(ModItems.scrumpy), 1, 1, 1));
-            addWeightedRandomToLootTable(e, LootTableList.CHESTS_DESERT_PYRAMID, new WeightedRandomChestContentFrom1710(new ItemStack(ModItems.scrumpy), 1, 1, 1));
+            addWeightedRandomToLootTable(e, LootTableList.CHESTS_VILLAGE_BLACKSMITH, new WeightedRandomChestContentFrom1710(new ItemStack(Inserts.armor_polish), 1, 1, 3));
+            addWeightedRandomToLootTable(e, LootTableList.CHESTS_VILLAGE_BLACKSMITH, new WeightedRandomChestContentFrom1710(new ItemStack(Inserts.bathwater), 1, 1, 1));
+            addWeightedRandomToLootTable(e, LootTableList.CHESTS_ABANDONED_MINESHAFT, new WeightedRandomChestContentFrom1710(new ItemStack(Inserts.bathwater), 1, 1, 1));
+            addWeightedRandomToLootTable(e, LootTableList.CHESTS_ABANDONED_MINESHAFT, new WeightedRandomChestContentFrom1710(new ItemStack(Inserts.serum), 1, 1, 5));
+            addWeightedRandomToLootTable(e, LootTableList.CHESTS_SIMPLE_DUNGEON, new WeightedRandomChestContentFrom1710(new ItemStack(Inserts.heart_piece), 1, 1, 1));
+            addWeightedRandomToLootTable(e, LootTableList.CHESTS_DESERT_PYRAMID, new WeightedRandomChestContentFrom1710(new ItemStack(Inserts.heart_piece), 1, 1, 1));
+            addWeightedRandomToLootTable(e, LootTableList.CHESTS_JUNGLE_TEMPLE, new WeightedRandomChestContentFrom1710(new ItemStack(Inserts.heart_piece), 1, 1, 1));
+            addWeightedRandomToLootTable(e, LootTableList.CHESTS_SIMPLE_DUNGEON, new WeightedRandomChestContentFrom1710(new ItemStack(Inserts.scrumpy), 1, 1, 1));
+            addWeightedRandomToLootTable(e, LootTableList.CHESTS_DESERT_PYRAMID, new WeightedRandomChestContentFrom1710(new ItemStack(Inserts.scrumpy), 1, 1, 1));
         }
     }
 
@@ -250,23 +255,23 @@ public class ModEventHandler {
 
         if (!e.player.world.isRemote && e.smelting.getItem() == Items.IRON_INGOT && e.player.getRNG().nextInt(64) == 0) {
 
-            if (!e.player.inventory.addItemStackToInventory(new ItemStack(ModItems.lodestone)))
-                e.player.dropItem(new ItemStack(ModItems.lodestone), false);
+            if (!e.player.inventory.addItemStackToInventory(new ItemStack(Inserts.lodestone)))
+                e.player.dropItem(new ItemStack(Inserts.lodestone), false);
             else
                 e.player.inventoryContainer.detectAndSendChanges();
         }
 
-        if (!e.player.world.isRemote && e.smelting.getItem() == ModItems.ingot_uranium && e.player.getRNG().nextInt(64) == 0) {
+        if (!e.player.world.isRemote && e.smelting.getItem() == Ingots.ingot_uranium && e.player.getRNG().nextInt(64) == 0) {
 
-            if (!e.player.inventory.addItemStackToInventory(new ItemStack(ModItems.quartz_plutonium)))
-                e.player.dropItem(new ItemStack(ModItems.quartz_plutonium), false);
+            if (!e.player.inventory.addItemStackToInventory(new ItemStack(Inserts.quartz_plutonium)))
+                e.player.dropItem(new ItemStack(Inserts.quartz_plutonium), false);
             else
                 e.player.inventoryContainer.detectAndSendChanges();
         }
     }
     @SubscribeEvent
     public void onItemPickup(PlayerEvent.ItemPickupEvent event) {
-        if(event.getStack().getItem() == ModItems.canned_conserve && EnumUtil.grabEnumSafely(
+        if(event.getStack().getItem() == Foods.canned_conserve && EnumUtil.grabEnumSafely(
                 ItemConserve.EnumFoodType.class, event.getStack().getItemDamage()) == ItemConserve.EnumFoodType.JIZZ)
             AdvancementManager.grantAchievement(event.player, AdvancementManager.achC20_5);
         if(event.getStack().getItem() == Items.SLIME_BALL)
@@ -300,7 +305,7 @@ public class ModEventHandler {
                     if (rand.nextInt(128) == 0)
                         entity.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(ModItems.gas_mask, 1, world.rand.nextInt(100)));
                     if (rand.nextInt(256) == 0)
-                        entity.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(ModItems.mask_of_infamy, 1, world.rand.nextInt(100)));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(ToolSets.mask_of_infamy, 1, world.rand.nextInt(100)));
                 }
                 if (!(hasHat || hasChest || hasLegs || hasFeet)) {
 /*                    if (randomArmorNumber < 2) { //1:32768
@@ -319,60 +324,60 @@ public class ModEventHandler {
                         entity.setItemStackToSlot(EntityEquipmentSlot.LEGS, new ItemStack(ModItems.ajr_legs, 1));
                         entity.setItemStackToSlot(EntityEquipmentSlot.FEET, new ItemStack(ModItems.ajr_boots, 1));
                     }*/ if (randomArmorNumber < 2 << 8) { //1:256
-                        entity.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(ModItems.t51_helmet, 1));
-                        entity.setItemStackToSlot(EntityEquipmentSlot.CHEST, new ItemStack(ModItems.t51_plate, 1));
-                        entity.setItemStackToSlot(EntityEquipmentSlot.LEGS, new ItemStack(ModItems.t51_legs, 1));
-                        entity.setItemStackToSlot(EntityEquipmentSlot.FEET, new ItemStack(ModItems.t51_boots, 1));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(ArmorSets.t51_helmet, 1));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.CHEST, new ItemStack(ArmorSets.t51_plate, 1));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.LEGS, new ItemStack(ArmorSets.t51_legs, 1));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.FEET, new ItemStack(ArmorSets.t51_boots, 1));
                     } else  if (randomArmorNumber < 2 << 10) { //1:64
-                        entity.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(ModItems.security_helmet, 1, world.rand.nextInt(ModItems.titanium_helmet.getMaxDamage(ItemStack.EMPTY))));
-                        entity.setItemStackToSlot(EntityEquipmentSlot.CHEST, new ItemStack(ModItems.security_plate, 1, world.rand.nextInt(ModItems.titanium_plate.getMaxDamage(ItemStack.EMPTY))));
-                        entity.setItemStackToSlot(EntityEquipmentSlot.LEGS, new ItemStack(ModItems.security_legs, 1, world.rand.nextInt(ModItems.titanium_legs.getMaxDamage(ItemStack.EMPTY))));
-                        entity.setItemStackToSlot(EntityEquipmentSlot.FEET, new ItemStack(ModItems.security_boots, 1, world.rand.nextInt(ModItems.titanium_boots.getMaxDamage(ItemStack.EMPTY))));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(ArmorSets.security_helmet, 1, world.rand.nextInt(ArmorSets.titanium_helmet.getMaxDamage(ItemStack.EMPTY))));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.CHEST, new ItemStack(ArmorSets.security_plate, 1, world.rand.nextInt(ArmorSets.titanium_plate.getMaxDamage(ItemStack.EMPTY))));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.LEGS, new ItemStack(ArmorSets.security_legs, 1, world.rand.nextInt(ArmorSets.titanium_legs.getMaxDamage(ItemStack.EMPTY))));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.FEET, new ItemStack(ArmorSets.security_boots, 1, world.rand.nextInt(ArmorSets.titanium_boots.getMaxDamage(ItemStack.EMPTY))));
                     } else if (randomArmorNumber < 2 << 11) { //1:32
-                        entity.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(ModItems.hazmat_helmet, 1, world.rand.nextInt(ModItems.hazmat_helmet.getMaxDamage(ItemStack.EMPTY))));
-                        entity.setItemStackToSlot(EntityEquipmentSlot.CHEST, new ItemStack(ModItems.hazmat_plate, 1, world.rand.nextInt(ModItems.hazmat_helmet.getMaxDamage(ItemStack.EMPTY))));
-                        entity.setItemStackToSlot(EntityEquipmentSlot.LEGS, new ItemStack(ModItems.hazmat_legs, 1, world.rand.nextInt(ModItems.hazmat_helmet.getMaxDamage(ItemStack.EMPTY))));
-                        entity.setItemStackToSlot(EntityEquipmentSlot.FEET, new ItemStack(ModItems.hazmat_boots, 1, world.rand.nextInt(ModItems.hazmat_helmet.getMaxDamage(ItemStack.EMPTY))));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(ArmorSets.hazmat_helmet, 1, world.rand.nextInt(ArmorSets.hazmat_helmet.getMaxDamage(ItemStack.EMPTY))));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.CHEST, new ItemStack(ArmorSets.hazmat_plate, 1, world.rand.nextInt(ArmorSets.hazmat_helmet.getMaxDamage(ItemStack.EMPTY))));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.LEGS, new ItemStack(ArmorSets.hazmat_legs, 1, world.rand.nextInt(ArmorSets.hazmat_helmet.getMaxDamage(ItemStack.EMPTY))));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.FEET, new ItemStack(ArmorSets.hazmat_boots, 1, world.rand.nextInt(ArmorSets.hazmat_helmet.getMaxDamage(ItemStack.EMPTY))));
                     } else if (randomArmorNumber < 2 << 12) { //1:16
-                        entity.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(ModItems.titanium_helmet, 1, world.rand.nextInt(ModItems.titanium_helmet.getMaxDamage(ItemStack.EMPTY))));
-                        entity.setItemStackToSlot(EntityEquipmentSlot.CHEST, new ItemStack(ModItems.titanium_plate, 1, world.rand.nextInt(ModItems.titanium_plate.getMaxDamage(ItemStack.EMPTY))));
-                        entity.setItemStackToSlot(EntityEquipmentSlot.LEGS, new ItemStack(ModItems.titanium_legs, 1, world.rand.nextInt(ModItems.titanium_legs.getMaxDamage(ItemStack.EMPTY))));
-                        entity.setItemStackToSlot(EntityEquipmentSlot.FEET, new ItemStack(ModItems.titanium_boots, 1, world.rand.nextInt(ModItems.titanium_boots.getMaxDamage(ItemStack.EMPTY))));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(ArmorSets.titanium_helmet, 1, world.rand.nextInt(ArmorSets.titanium_helmet.getMaxDamage(ItemStack.EMPTY))));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.CHEST, new ItemStack(ArmorSets.titanium_plate, 1, world.rand.nextInt(ArmorSets.titanium_plate.getMaxDamage(ItemStack.EMPTY))));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.LEGS, new ItemStack(ArmorSets.titanium_legs, 1, world.rand.nextInt(ArmorSets.titanium_legs.getMaxDamage(ItemStack.EMPTY))));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.FEET, new ItemStack(ArmorSets.titanium_boots, 1, world.rand.nextInt(ArmorSets.titanium_boots.getMaxDamage(ItemStack.EMPTY))));
                     } else if (randomArmorNumber < 2 << 13) { //1:8
-                        entity.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(ModItems.steel_helmet, 1, world.rand.nextInt(ModItems.steel_helmet.getMaxDamage(ItemStack.EMPTY))));
-                        entity.setItemStackToSlot(EntityEquipmentSlot.CHEST, new ItemStack(ModItems.steel_plate, 1, world.rand.nextInt(ModItems.steel_plate.getMaxDamage(ItemStack.EMPTY))));
-                        entity.setItemStackToSlot(EntityEquipmentSlot.LEGS, new ItemStack(ModItems.steel_legs, 1, world.rand.nextInt(ModItems.steel_legs.getMaxDamage(ItemStack.EMPTY))));
-                        entity.setItemStackToSlot(EntityEquipmentSlot.FEET, new ItemStack(ModItems.steel_boots, 1, world.rand.nextInt(ModItems.steel_boots.getMaxDamage(ItemStack.EMPTY))));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(ArmorSets.steel_helmet, 1, world.rand.nextInt(ArmorSets.steel_helmet.getMaxDamage(ItemStack.EMPTY))));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.CHEST, new ItemStack(ArmorSets.steel_plate, 1, world.rand.nextInt(ArmorSets.steel_plate.getMaxDamage(ItemStack.EMPTY))));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.LEGS, new ItemStack(ArmorSets.steel_legs, 1, world.rand.nextInt(ArmorSets.steel_legs.getMaxDamage(ItemStack.EMPTY))));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.FEET, new ItemStack(ArmorSets.steel_boots, 1, world.rand.nextInt(ArmorSets.steel_boots.getMaxDamage(ItemStack.EMPTY))));
                     }
                 }
 
                 if (!hasMainHand) {
                     if (randomHandNumber == 0)
-                        entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.pipe_lead, 1, world.rand.nextInt(100)));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ToolSets.pipe_lead, 1, world.rand.nextInt(100)));
                     else if (randomHandNumber == 1)
-                        entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.reer_graar, 1, world.rand.nextInt(100)));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ToolSets.reer_graar, 1, world.rand.nextInt(100)));
                     else if (randomHandNumber == 2)
-                        entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.pipe_rusty, 1, world.rand.nextInt(100)));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ToolSets.pipe_rusty, 1, world.rand.nextInt(100)));
                     else if (randomHandNumber == 3)
-                        entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.crowbar, 1, world.rand.nextInt(100)));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ToolSets.crowbar, 1, world.rand.nextInt(100)));
                     else if (randomHandNumber == 4)
-                        entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.steel_pickaxe, 1, world.rand.nextInt(300)));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ToolSets.steel_pickaxe, 1, world.rand.nextInt(300)));
                     else if (randomHandNumber == 5)
-                        entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.bat, 1, world.rand.nextInt(300)));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ToolSets.bat, 1, world.rand.nextInt(300)));
                     else if (randomHandNumber == 6)
-                        entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.bat_nail, 1, world.rand.nextInt(300)));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ToolSets.bat_nail, 1, world.rand.nextInt(300)));
                     else if (randomHandNumber == 7)
-                        entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.golf_club, 1, world.rand.nextInt(300)));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ToolSets.golf_club, 1, world.rand.nextInt(300)));
                     else if (randomHandNumber == 8)
-                        entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.titanium_sword, 1, world.rand.nextInt(300)));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ToolSets.titanium_sword, 1, world.rand.nextInt(300)));
                     else if (randomHandNumber == 9)
-                        entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.steel_sword, 1, world.rand.nextInt(300)));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ToolSets.steel_sword, 1, world.rand.nextInt(300)));
                     else if (randomHandNumber == 10)
-                        entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.stopsign));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ToolSets.stopsign));
                     else if (randomHandNumber == 11)
-                        entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.sopsign));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ToolSets.sopsign));
                     else if (randomHandNumber == 12)
-                        entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.chernobylsign));
+                        entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ToolSets.chernobylsign));
                 }
 
                 if (!hasOffHand) {
@@ -396,7 +401,7 @@ public class ModEventHandler {
 
         if(entity instanceof EntityZombie) {
             if(world.rand.nextFloat() < 0.005F && soot > 2) { // full hazmat zombine
-                MobUtil.equipFullSet(entity, ModItems.hazmat_helmet, ModItems.hazmat_plate, ModItems.hazmat_legs, ModItems.hazmat_boots);
+                MobUtil.equipFullSet(entity, ArmorSets.hazmat_helmet, ArmorSets.hazmat_plate, ArmorSets.hazmat_legs, ArmorSets.hazmat_boots);
                 return;
             }
             slotPools = MobUtil.slotPoolCommon;
@@ -433,7 +438,7 @@ public class ModEventHandler {
         ArrayList<WeightedRandomObject> pool = new ArrayList<>();
 
         if(soot < 0.3){
-            pool.add(new WeightedRandomObject(new ItemStack(ModItems.gun_pepperbox), 5));
+            pool.add(new WeightedRandomObject(new ItemStack(Armory.gun_pepperbox), 5));
             pool.add(new WeightedRandomObject(null, 20));
         } else if(soot > 0.3 && soot < 1) {
             pool.addAll(MobUtil.slotPoolGuns.get(0.3));
@@ -696,7 +701,7 @@ public class ModEventHandler {
                 event.setAmount(event.getAmount() - reduce);
             }
             props.setLastDamage(player.ticksExisted);
-            if (ArmorUtil.checkArmor(event.getEntityLiving(), ModItems.euphemium_helmet, ModItems.euphemium_plate, ModItems.euphemium_legs, ModItems.euphemium_boots)) {
+            if (ArmorUtil.checkArmor(event.getEntityLiving(), ArmorSets.euphemium_helmet, ArmorSets.euphemium_plate, ArmorSets.euphemium_legs, ArmorSets.euphemium_boots)) {
                 event.setCanceled(true);
             }
         }
@@ -757,7 +762,7 @@ public class ModEventHandler {
         EntityLivingBase e = event.getEntityLiving();
 
         if (e instanceof EntityPlayer player) {
-            if (ArmorUtil.checkArmor(e, ModItems.euphemium_helmet, ModItems.euphemium_plate, ModItems.euphemium_legs, ModItems.euphemium_boots)) {
+            if (ArmorUtil.checkArmor(e, ArmorSets.euphemium_helmet, ArmorSets.euphemium_plate, ArmorSets.euphemium_legs, ArmorSets.euphemium_boots)) {
                 if (event.getSource() != ModDamageSource.digamma) {
                     HbmCapability.plink(player, SoundEvents.ENTITY_ITEM_BREAK, 5.0F, 1.0F + e.getRNG().nextFloat() * 0.5F);
                     event.setCanceled(true);
@@ -801,7 +806,7 @@ public class ModEventHandler {
             ItemStack[] mods = ArmorModHandler.pryMods(chestplate);
             ItemStack servo = mods[ArmorModHandler.servos];
 
-            if (servo != null && !servo.isEmpty() && servo.getItem() == ModItems.ballistic_gauntlet) {
+            if (servo != null && !servo.isEmpty() && servo.getItem() == Inserts.ballistic_gauntlet) {
 
                 BulletConfig firedConfig = null;
                 BulletConfig[] gauntletConfigs = new BulletConfig[] {XFactory12ga.g12_bp, XFactory12ga.g12_bp_magnum, XFactory12ga.g12_bp_slug, XFactory12ga.g12, XFactory12ga.g12_slug, XFactory12ga.g12_flechette, XFactory12ga.g12_magnum, XFactory12ga.g12_explosive, XFactory12ga.g12_phosphorus};
@@ -990,7 +995,7 @@ public class ModEventHandler {
             return;
 
         if (event.getEntityLiving() instanceof EntityPlayer) {
-            if (ArmorUtil.checkArmor((EntityPlayer) event.getEntityLiving(), ModItems.euphemium_helmet, ModItems.euphemium_plate, ModItems.euphemium_legs, ModItems.euphemium_boots)) {
+            if (ArmorUtil.checkArmor((EntityPlayer) event.getEntityLiving(), ArmorSets.euphemium_helmet, ArmorSets.euphemium_plate, ArmorSets.euphemium_legs, ArmorSets.euphemium_boots)) {
                 if (event.getSource() != ModDamageSource.digamma) {
                     event.setCanceled(true);
                     event.getEntityLiving().setHealth(event.getEntityLiving().getMaxHealth());
@@ -1009,7 +1014,7 @@ public class ModEventHandler {
         }
 
         if (event.getEntity().getUniqueID().toString().equals(Library.Alcater)) {
-            event.getEntity().entityDropItem(new ItemStack(ModItems.bottle_rad).setStackDisplayName("§aAlcater's §2Neo §aNuka§r"), 0.5F);
+            event.getEntity().entityDropItem(new ItemStack(Foods.bottle_rad).setStackDisplayName("§aAlcater's §2Neo §aNuka§r"), 0.5F);
         }
 
         if (event.getEntity() instanceof EntityCreeperTainted && event.getSource() == ModDamageSource.boxcar) {
@@ -1025,25 +1030,25 @@ public class ModEventHandler {
                     && !(((EntityDamageSource) event.getSource()).getTrueSource() instanceof FakePlayer)) {
 
                 if (event.getEntityLiving() instanceof EntitySpider && event.getEntityLiving().getRNG().nextInt(500) == 0) {
-                    event.getEntityLiving().dropItem(ModItems.spider_milk, 1);
+                    event.getEntityLiving().dropItem(Inserts.spider_milk, 1);
                 }
 
                 if (event.getEntityLiving() instanceof EntityCaveSpider && event.getEntityLiving().getRNG().nextInt(100) == 0) {
-                    event.getEntityLiving().dropItem(ModItems.serum, 1);
+                    event.getEntityLiving().dropItem(Inserts.serum, 1);
                 }
 
                 if (event.getEntityLiving() instanceof EntityAnimal && event.getEntityLiving().getRNG().nextInt(500) == 0) {
-                    event.getEntityLiving().dropItem(ModItems.bandaid, 1);
+                    event.getEntityLiving().dropItem(Inserts.bandaid, 1);
                 }
 
                 if (event.getEntityLiving() instanceof IMob && event.getEntityLiving().getRNG().nextInt(1000) == 0) {
-                    event.getEntityLiving().dropItem(ModItems.heart_piece, 1);
+                    event.getEntityLiving().dropItem(Inserts.heart_piece, 1);
                     if(event.getEntityLiving().getRNG().nextInt(250) == 0) event.getEntityLiving().dropItem(ModItems.key_red_cracked, 1);
                     if(event.getEntityLiving().getRNG().nextInt(250) == 0) event.getEntityLiving().dropItem(ModItems.launch_code_piece, 1);
                 }
 
                 if (event.getEntityLiving() instanceof EntityCyberCrab && event.getEntityLiving().getRNG().nextInt(500) == 0) {
-                    event.getEntityLiving().dropItem(ModItems.wd40, 1);
+                    event.getEntityLiving().dropItem(Inserts.wd40, 1);
                 }
             }
         }
@@ -1360,7 +1365,7 @@ public class ModEventHandler {
 
             event.setCost(10);
         }
-        if (event.getLeft().getItem() == ModItems.ingot_meteorite && event.getRight().getItem() == ModItems.ingot_meteorite &&
+        if (event.getLeft().getItem() == Ingots.ingot_meteorite && event.getRight().getItem() == Ingots.ingot_meteorite &&
                 event.getLeft().getCount() == 1 && event.getRight().getCount() == 1) {
 
             double h1 = ItemHot.getHeat(event.getLeft());
@@ -1368,14 +1373,14 @@ public class ModEventHandler {
 
             if (h1 >= 0.5 && h2 >= 0.5) {
 
-                ItemStack out = new ItemStack(ModItems.ingot_meteorite_forged);
+                ItemStack out = new ItemStack(Ingots.ingot_meteorite_forged);
                 ItemHot.heatUp(out, (h1 + h2) / 2D);
                 event.setOutput(out);
                 event.setCost(10);
             }
         }
 
-        if (event.getLeft().getItem() == ModItems.ingot_meteorite_forged && event.getRight().getItem() == ModItems.ingot_meteorite_forged &&
+        if (event.getLeft().getItem() == Ingots.ingot_meteorite_forged && event.getRight().getItem() == Ingots.ingot_meteorite_forged &&
                 event.getLeft().getCount() == 1 && event.getRight().getCount() == 1) {
 
             double h1 = ItemHot.getHeat(event.getLeft());
@@ -1383,27 +1388,27 @@ public class ModEventHandler {
 
             if (h1 >= 0.5 && h2 >= 0.5) {
 
-                ItemStack out = new ItemStack(ModItems.blade_meteorite);
+                ItemStack out = new ItemStack(Nuggies.blade_meteorite);
                 ItemHot.heatUp(out, (h1 + h2) / 2D);
                 event.setOutput(out);
                 event.setCost(30);
             }
         }
 
-        if (event.getLeft().getItem() == ModItems.meteorite_sword_seared && event.getRight().getItem() == ModItems.ingot_meteorite_forged &&
+        if (event.getLeft().getItem() == ToolSets.meteorite_sword_seared && event.getRight().getItem() == Ingots.ingot_meteorite_forged &&
                 event.getLeft().getCount() == 1 && event.getRight().getCount() == 1) {
 
             double h2 = ItemHot.getHeat(event.getRight());
 
             if (h2 >= 0.5) {
 
-                ItemStack out = new ItemStack(ModItems.meteorite_sword_reforged);
+                ItemStack out = new ItemStack(ToolSets.meteorite_sword_reforged);
                 event.setOutput(out);
                 event.setCost(50);
             }
         }
 
-        if (event.getLeft().getItem() == ModItems.ingot_steel_dusted && event.getRight().getItem() == ModItems.ingot_steel_dusted &&
+        if (event.getLeft().getItem() == Ingots.ingot_steel_dusted && event.getRight().getItem() == Ingots.ingot_steel_dusted &&
                 event.getLeft().getCount() == event.getRight().getCount()) {
 
             double h1 = ItemHot.getHeat(event.getLeft());
@@ -1420,9 +1425,9 @@ public class ModEventHandler {
 
                 ItemStack out;
                 if (done) {
-                    out = new ItemStack(ModItems.ingot_chainsteel, event.getLeft().getCount(), 0);
+                    out = new ItemStack(Ingots.ingot_chainsteel, event.getLeft().getCount(), 0);
                 } else {
-                    out = new ItemStack(ModItems.ingot_steel_dusted, event.getLeft().getCount(), i3);
+                    out = new ItemStack(Ingots.ingot_steel_dusted, event.getLeft().getCount(), i3);
                 }
 
                 ItemHot.heatUp(out, done ? 1D : (h1 + h2) / 2D);
@@ -1511,19 +1516,19 @@ public class ModEventHandler {
 
         else if (fuel.getItem() == ModItems.biomass) event.setBurnTime(single * 2);
         else if (fuel.getItem() == ModItems.biomass_compressed) event.setBurnTime(single * 4);
-        else if (fuel.getItem() == ModItems.powder_coal) event.setBurnTime(single * 8);
+        else if (fuel.getItem() == Powders.powder_coal) event.setBurnTime(single * 8);
         else if (fuel.getItem() == ModItems.scrap) event.setBurnTime(single / 4);
         else if (fuel.getItem() == ModItems.dust) event.setBurnTime(single / 8);
         else if (fuel.getItem() == Item.getItemFromBlock(ModBlocks.block_scrap)) event.setBurnTime(single * 2);
-        else if (fuel.getItem() == ModItems.powder_fire) event.setBurnTime(6400);
+        else if (fuel.getItem() == Powders.powder_fire) event.setBurnTime(6400);
         else if (fuel.getItem() == ModItems.lignite) event.setBurnTime(1200);
-        else if (fuel.getItem() == ModItems.powder_lignite) event.setBurnTime(1200);
+        else if (fuel.getItem() == Powders.powder_lignite) event.setBurnTime(1200);
         else if (fuel.getItem() == ModItems.coke) event.setBurnTime(single * 16);
         else if (fuel.getItem() == Item.getItemFromBlock(ModBlocks.block_coke)) event.setBurnTime(single * 160);
         else if (fuel.getItem() == ModItems.book_guide) event.setBurnTime(single);
         else if (fuel.getItem() == ModItems.coal_infernal) event.setBurnTime(4800);
-        else if (fuel.getItem() == ModItems.crystal_coal) event.setBurnTime(6400);
-        else if (fuel.getItem() == ModItems.powder_sawdust) event.setBurnTime(single / 2);
+        else if (fuel.getItem() == Crystals.crystal_coal) event.setBurnTime(6400);
+        else if (fuel.getItem() == Powders.powder_sawdust) event.setBurnTime(single / 2);
         else if (fuel.getItem() == ModItems.briquette) {
             int meta = fuel.getItemDamage();
             switch (meta) {

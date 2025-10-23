@@ -7,7 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
 import com.hbm.itempool.ItemPool;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.DummyTexs;
 import com.hbm.main.MainRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -137,6 +137,6 @@ public class ItemPoolConfigJSON {
             }
         } catch(Exception ignored) { }
         MainRegistry.logger.error("Error reading stack array " + array.toString() + " - defaulting to NOTHING item!");
-        return new ItemStack(ModItems.nothing);
+        return new ItemStack(DummyTexs.nothing);
     }
 }

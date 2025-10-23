@@ -1,9 +1,8 @@
 package com.hbm.items.weapon.sedna.factory;
 
 import com.hbm.blocks.ICustomBlockHighlight;
-import com.hbm.blocks.ModBlocks;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.sedna.GunConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.items.weapon.sedna.Receiver;
@@ -11,9 +10,6 @@ import com.hbm.items.weapon.sedna.impl.ItemGunDrill;
 import com.hbm.items.weapon.sedna.mags.IMagazine;
 import com.hbm.items.weapon.sedna.mags.MagazineFluid;
 import com.hbm.items.weapon.sedna.mods.WeaponModManager;
-import com.hbm.render.anim.BusAnimation;
-import com.hbm.render.anim.BusAnimationSequence;
-import com.hbm.render.anim.HbmAnimations;
 import com.hbm.render.anim.sedna.BusAnimationKeyframeSedna;
 import com.hbm.render.anim.sedna.BusAnimationSedna;
 import com.hbm.render.anim.sedna.BusAnimationSequenceSedna;
@@ -26,7 +22,6 @@ import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.SPacketEffect;
 import net.minecraft.util.DamageSource;
@@ -51,7 +46,7 @@ public class XFactoryDrill {
 
     public static void init() {
 
-        ModItems.gun_drill = new ItemGunDrill(ItemGunBaseNT.WeaponQuality.UTILITY, "gun_drill", new GunConfig()
+        Armory.gun_drill = new ItemGunDrill(ItemGunBaseNT.WeaponQuality.UTILITY, "gun_drill", new GunConfig()
                 .dura(3_000).draw(10).inspect(55).hideCrosshair(false).crosshair(RenderScreenOverlay.Crosshair.L_CIRCUMFLEX)
                 .rec(new Receiver(0)
                         .dmg(10F).delay(20).auto(true).jam(0)
@@ -139,11 +134,11 @@ public class XFactoryDrill {
     }
 
     // this system technically doesn't need to be part of the GunCfg or Receiver or anything, we can just do this and it works the exact same
-    public static double getModdableReach(ItemStack stack, double base) {		return WeaponModManager.eval(base, stack, D_REACH, ModItems.gun_drill, 0); }
-    public static float getModdableDTNegation(ItemStack stack, float base) {	return WeaponModManager.eval(base, stack, F_DTNEG, ModItems.gun_drill, 0); }
-    public static float getModdablePiercing(ItemStack stack, float base) {		return WeaponModManager.eval(base, stack, F_PIERCE, ModItems.gun_drill, 0); }
-    public static int getModdableAoE(ItemStack stack, int base) {				return WeaponModManager.eval(base, stack, I_AOE, ModItems.gun_drill, 0); }
-    public static int getModdableHarvestLevel(ItemStack stack, int base) {		return WeaponModManager.eval(base, stack, I_HARVEST, ModItems.gun_drill, 0); }
+    public static double getModdableReach(ItemStack stack, double base) {		return WeaponModManager.eval(base, stack, D_REACH, Armory.gun_drill, 0); }
+    public static float getModdableDTNegation(ItemStack stack, float base) {	return WeaponModManager.eval(base, stack, F_DTNEG, Armory.gun_drill, 0); }
+    public static float getModdablePiercing(ItemStack stack, float base) {		return WeaponModManager.eval(base, stack, F_PIERCE, Armory.gun_drill, 0); }
+    public static int getModdableAoE(ItemStack stack, int base) {				return WeaponModManager.eval(base, stack, I_AOE, Armory.gun_drill, 0); }
+    public static int getModdableHarvestLevel(ItemStack stack, int base) {		return WeaponModManager.eval(base, stack, I_HARVEST, Armory.gun_drill, 0); }
 
     @SuppressWarnings("incomplete-switch")
     public static final BiFunction<ItemStack, HbmAnimationsSedna.AnimType, BusAnimationSedna> LAMBDA_DRILL_ANIMS = (stack, type) -> {

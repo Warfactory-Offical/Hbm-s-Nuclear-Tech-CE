@@ -2,7 +2,7 @@ package com.hbm.items.food;
 
 import com.hbm.entity.effect.EntityVortex;
 import com.hbm.items.ItemEnumMultiFood;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foods;
 import com.hbm.util.I18nUtil;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -45,7 +45,7 @@ public class ItemConserve extends ItemEnumMultiFood<ItemConserve.EnumFoodType> {
     @Override
     protected void onFoodEaten(ItemStack stack, World worldIn, EntityPlayer player) {
         super.onFoodEaten(stack, worldIn, player);
-        player.inventory.addItemStackToInventory(new ItemStack(ModItems.can_key));
+        player.inventory.addItemStackToInventory(new ItemStack(Foods.can_key));
         EnumFoodType type = getVariant(stack);
         if (type == null) return;
         if (type == EnumFoodType.BHOLE && !worldIn.isRemote) {

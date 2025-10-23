@@ -5,7 +5,7 @@ import com.hbm.api.block.IToolable;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.inventory.material.Mats.MaterialStack;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foundry;
 import com.hbm.items.machine.ItemScraps;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.machine.TileEntityFoundryOutlet;
@@ -122,7 +122,7 @@ public class FoundryOutlet extends BlockContainer implements ICrucibleAcceptor, 
 	 	if(!player.isSneaking()) {
 	 		TileEntityFoundryOutlet tile = (TileEntityFoundryOutlet) world.getTileEntity(pos);
 
-	 		if(!player.getHeldItem(hand).isEmpty() && player.getHeldItem(hand).getItem() == ModItems.scraps) {
+	 		if(!player.getHeldItem(hand).isEmpty() && player.getHeldItem(hand).getItem() == Foundry.scraps) {
 	 			MaterialStack mat = ItemScraps.getMats(player.getHeldItem(hand));
 	 			if(mat != null) {
 	 				tile.filter = mat.material;

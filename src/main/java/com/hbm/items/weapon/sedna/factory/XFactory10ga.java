@@ -1,7 +1,7 @@
 package com.hbm.items.weapon.sedna.factory;
 
 import com.hbm.items.ItemEnums;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.GunConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
@@ -38,7 +38,7 @@ public class XFactory10ga {
         g10_slug = new BulletConfig().setItem(GunFactory.EnumAmmo.G10_SLUG).setCasing(ItemEnums.EnumCasingType.BUCKSHOT_ADVANCED, 4).setRicochetAngle(15).setThresholdNegation(10F).setArmorPiercing(0.1F).setDoesPenetrate(true).setCasing(new SpentCasing(SpentCasing.CasingType.SHOTGUN).setColor(0x808080, SpentCasing.COLOR_CASE_12GA).setScale(1F).register("10GASlug"));
         g10_explosive = new BulletConfig().setItem(GunFactory.EnumAmmo.G10_EXPLOSIVE).setCasing(ItemEnums.EnumCasingType.BUCKSHOT_ADVANCED, 4).setWear(3F).setProjectiles(10).setDamage(1F/4F).setSpread(buckshotSpread).setCasing(new SpentCasing(SpentCasing.CasingType.SHOTGUN).setColor(0xFAC943, SpentCasing.COLOR_CASE_12GA).setScale(1F).register("10GAEXP")).setOnImpact(LAMBDA_TINY_EXPLODE);
 
-        ModItems.gun_double_barrel = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.SPECIAL, "gun_double_barrel", new GunConfig()
+        Armory.gun_double_barrel = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.SPECIAL, "gun_double_barrel", new GunConfig()
                 .dura(1000).draw(10).inspect(39).crosshair(RenderScreenOverlay.Crosshair.L_CIRCLE).smoke(Lego.LAMBDA_STANDARD_SMOKE)
                 .rec(new Receiver(0)
                         .dmg(30F).rounds(2).delay(10).reload(41).reloadOnEmpty(true).sound(HBMSoundHandler.fireShotgun, 1.0F, 0.9F)
@@ -48,7 +48,7 @@ public class XFactory10ga {
                 .setupStandardConfiguration()
                 .anim(LAMBDA_DOUBLE_BARREL_ANIMS).orchestra(Orchestras.ORCHESTRA_DOUBLE_BARREL)
         );
-        ModItems.gun_double_barrel_sacred_dragon = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.B_SIDE, "gun_double_barrel_sacred_dragon", new GunConfig()
+        Armory.gun_double_barrel_sacred_dragon = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.B_SIDE, "gun_double_barrel_sacred_dragon", new GunConfig()
                 .dura(6000).draw(10).inspect(39).crosshair(RenderScreenOverlay.Crosshair.L_CIRCLE).smoke(Lego.LAMBDA_STANDARD_SMOKE)
                 .rec(new Receiver(0)
                         .dmg(45F).spreadAmmo(1.35F).rounds(2).delay(10).reload(41).reloadOnEmpty(true).sound(HBMSoundHandler.fireShotgun, 1.0F, 0.9F)
@@ -58,7 +58,7 @@ public class XFactory10ga {
                 .setupStandardConfiguration()
                 .anim(LAMBDA_DOUBLE_BARREL_ANIMS).orchestra(Orchestras.ORCHESTRA_DOUBLE_BARREL)
         );
-        ModItems.gun_autoshotgun_heretic = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.DEBUG, "gun_autoshotgun_heretic", new GunConfig()
+        Armory.gun_autoshotgun_heretic = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.DEBUG, "gun_autoshotgun_heretic", new GunConfig()
                 .draw(20).inspect(65).reloadSequential(true).inspectCancel(false).crosshair(RenderScreenOverlay.Crosshair.L_CIRCLE).hideCrosshair(false).smoke(Lego.LAMBDA_STANDARD_SMOKE)
                 .rec(new Receiver(0)
                         .dmg(100F).delay(3).auto(true).dryfireAfterAuto(true).reload(110).jam(19).sound(HBMSoundHandler.fireShotgunAuto, 1.0F, 1.0F)

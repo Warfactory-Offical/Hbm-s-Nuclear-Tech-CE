@@ -8,6 +8,7 @@ import com.hbm.entity.missile.EntityMissileTier2;
 import com.hbm.entity.mob.EntityUndeadSoldier;
 import com.hbm.items.ItemEnums;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.tileentity.TileEntityDoorGeneric;
 import com.hbm.tileentity.machine.storage.TileEntityCrateBase;
 import com.hbm.util.ContaminationUtil;
@@ -298,7 +299,7 @@ public class LogicBlockActions {
 			world.addWeatherEffect(blitz);
 
 			TileEntityCrateBase crate = (TileEntityCrateBase) world.getTileEntity(pos);
-			((IInventory) crate).setInventorySlotContents(15, new ItemStack(ModItems.gun_bolter));
+			((IInventory) crate).setInventorySlotContents(15, new ItemStack(Armory.gun_bolter));
 		}
 	};
 

@@ -1,7 +1,7 @@
 package com.hbm.blocks.bomb;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Materials.Powders;
 import com.hbm.tileentity.bomb.TileEntityFireworks;
 import com.hbm.util.I18nUtil;
 import net.minecraft.block.BlockContainer;
@@ -55,7 +55,7 @@ public class BlockFireworks extends BlockContainer {
 				return true;
 			}
 
-			if(player.getHeldItem(hand).getItem() == ModItems.sulfur) {
+			if(player.getHeldItem(hand).getItem() == Powders.sulfur) {
 				te.charges += player.getHeldItem(hand).getCount();
 				te.markDirty();
 				player.getHeldItem(hand).setCount(0);

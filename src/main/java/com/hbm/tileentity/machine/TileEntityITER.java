@@ -7,7 +7,6 @@ import com.hbm.blocks.machine.MachineITER;
 import com.hbm.explosion.ExplosionLarge;
 import com.hbm.explosion.ExplosionNT;
 import com.hbm.handler.CompatHandler;
-import com.hbm.handler.radiation.ChunkRadiationManager;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerITER;
@@ -19,6 +18,7 @@ import com.hbm.inventory.recipes.BreederRecipes;
 import com.hbm.inventory.recipes.BreederRecipes.BreederRecipe;
 import com.hbm.inventory.recipes.FusionRecipes;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.ToolSets;
 import com.hbm.items.special.ItemFusionShield;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
@@ -271,11 +271,11 @@ public class TileEntityITER extends TileEntityMachineBase implements ITickable, 
         if (stackIn.isEmpty()) return;
         BreederRecipe out = BreederRecipes.getOutput(stackIn);
 		
-		if(stackIn.getItem() == ModItems.meteorite_sword_irradiated)
-			out = new BreederRecipe(ModItems.meteorite_sword_fused, 1000);
+		if(stackIn.getItem() == ToolSets.meteorite_sword_irradiated)
+			out = new BreederRecipe(ToolSets.meteorite_sword_fused, 1000);
 
-		if(stackIn.getItem() == ModItems.meteorite_sword_fused)
-			out = new BreederRecipe(ModItems.meteorite_sword_baleful, 4000);
+		if(stackIn.getItem() == ToolSets.meteorite_sword_fused)
+			out = new BreederRecipe(ToolSets.meteorite_sword_baleful, 4000);
 
 		if(out == null) {
 			this.progress = 0;

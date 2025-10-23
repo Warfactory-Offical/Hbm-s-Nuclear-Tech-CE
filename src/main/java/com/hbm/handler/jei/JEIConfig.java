@@ -13,6 +13,9 @@ import com.hbm.inventory.recipes.DFCRecipes;
 import com.hbm.items.EffectItem;
 import com.hbm.items.ItemEnums;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
+import com.hbm.items.ModItems.DummyTexs;
+import com.hbm.items.ModItems.MissileParts;
 import com.hbm.items.machine.ItemFELCrystal.EnumWavelengths;
 import com.hbm.items.machine.ItemFluidIcon;
 import com.hbm.items.weapon.ItemCustomMissile;
@@ -344,7 +347,7 @@ public class JEIConfig implements IModPlugin {
         }
         // Some things are even beyond my control...or are they?
         blacklist.addIngredientToBlacklist(new ItemStack(ModItems.memory));
-        for(int i = 0; i < GunFactory.EnumAmmoSecret.values().length; i++) blacklist.addIngredientToBlacklist(new ItemStack(ModItems.ammo_secret, 1, i));
+        for(int i = 0; i < GunFactory.EnumAmmoSecret.values().length; i++) blacklist.addIngredientToBlacklist(new ItemStack(Armory.ammo_secret, 1, i));
         for(int i = 0; i < ItemEnums.EnumSecretType.values().length; i++) blacklist.addIngredientToBlacklist(new ItemStack(ModItems.item_secret, 1, i));
 
         blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.machine_electric_furnace_on));
@@ -372,32 +375,32 @@ public class JEIConfig implements IModPlugin {
         blacklist.addIngredientToBlacklist(new ItemStack(ModItems.bobmazon_hidden));
         blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.zirnox_destroyed));
         blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.machine_furnace_brick_on));
-        blacklist.addIngredientToBlacklist(new ItemStack(ModItems.ammo_misc));
+        blacklist.addIngredientToBlacklist(new ItemStack(Armory.ammo_misc));
         blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rocket_custom));
         if(!GeneralConfig.enableDebugMode) {
             blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.obj_tester));
             blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.test_render));
-            blacklist.addIngredientToBlacklist(new ItemStack(ModItems.ammo_debug));
-            blacklist.addIngredientToBlacklist(new ItemStack(ModItems.gun_debug));
+            blacklist.addIngredientToBlacklist(new ItemStack(Armory.ammo_debug));
+            blacklist.addIngredientToBlacklist(new ItemStack(Armory.gun_debug));
             blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.keypad_test));
             // TODO
             // WIP so removed it from JEI
             for(int i = 0; i < SolarSystem.Body.values().length; i++) blacklist.addIngredientToBlacklist(new ItemStack(ModItems.full_drive, 1, i));
-            blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rp_capsule_20));
-            blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rp_fuselage_20_1));
-            blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rp_fuselage_20_3));
-            blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rp_fuselage_20_6));
-            blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rp_fuselage_20_12));
-            blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rp_legs_20));
-            blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rp_pod_20));
-            blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rp_station_core_20));
+            blacklist.addIngredientToBlacklist(new ItemStack(MissileParts.rp_capsule_20));
+            blacklist.addIngredientToBlacklist(new ItemStack(MissileParts.rp_fuselage_20_1));
+            blacklist.addIngredientToBlacklist(new ItemStack(MissileParts.rp_fuselage_20_3));
+            blacklist.addIngredientToBlacklist(new ItemStack(MissileParts.rp_fuselage_20_6));
+            blacklist.addIngredientToBlacklist(new ItemStack(MissileParts.rp_fuselage_20_12));
+            blacklist.addIngredientToBlacklist(new ItemStack(MissileParts.rp_legs_20));
+            blacklist.addIngredientToBlacklist(new ItemStack(MissileParts.rp_pod_20));
+            blacklist.addIngredientToBlacklist(new ItemStack(MissileParts.rp_station_core_20));
         }
         if (MainRegistry.polaroidID != 11) {
             blacklist.addIngredientToBlacklist(new ItemStack(ModItems.book_secret));
             // blacklist.addIngredientToBlacklist(new ItemStack(ModItems.book_of_));
             blacklist.addIngredientToBlacklist(new ItemStack(ModItems.ams_core_thingy));
         }
-        blacklist.addIngredientToBlacklist(new ItemStack(ModItems.achievement_icon));
+        blacklist.addIngredientToBlacklist(new ItemStack(DummyTexs.achievement_icon));
         blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_block_uf6));
         blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_block_puf6));
         blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.dummy_block_vault));

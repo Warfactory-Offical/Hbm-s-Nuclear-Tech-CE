@@ -15,7 +15,7 @@ import com.hbm.explosion.vanillant.standard.BlockProcessorStandard;
 import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foods;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.main.ResourceManager;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
@@ -210,7 +210,7 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider {
     @Override
     protected void dropFewItems(boolean byPlayer, int looting) {
         super.dropFewItems(byPlayer, looting);
-        Item drop = isBurning() ? ModItems.glyphid_meat_grilled : ModItems.glyphid_meat;
+        Item drop = isBurning() ? Foods.glyphid_meat_grilled : Foods.glyphid_meat;
         if(rand.nextInt(2) == 0) this.entityDropItem(new ItemStack(drop, ((int) getScale() * 2) + looting), 0F);
     }
 

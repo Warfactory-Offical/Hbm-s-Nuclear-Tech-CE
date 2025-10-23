@@ -8,6 +8,7 @@ import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerNukeBalefire;
 import com.hbm.inventory.gui.GUINukeBalefire;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Batteries;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.ModContext;
 import com.hbm.tileentity.IGUIProvider;
@@ -116,12 +117,12 @@ public class TileEntityNukeBalefire extends TileEntityMachineBase implements ITi
 
 	public int getBattery() {
 		ItemStack stackInSlot = inventory.getStackInSlot(1);
-		if(stackInSlot.getItem() == ModItems.battery_spark &&
-				((IBatteryItem)ModItems.battery_spark).getCharge(stackInSlot) == ((IBatteryItem)ModItems.battery_spark).getMaxCharge(stackInSlot)) {
+		if(stackInSlot.getItem() == Batteries.battery_spark &&
+				((IBatteryItem) Batteries.battery_spark).getCharge(stackInSlot) == ((IBatteryItem) Batteries.battery_spark).getMaxCharge(stackInSlot)) {
 			return 1;
 		}
-		if(stackInSlot.getItem() == ModItems.battery_trixite &&
-				((IBatteryItem)ModItems.battery_trixite).getCharge(stackInSlot) == ((IBatteryItem)ModItems.battery_trixite).getMaxCharge(stackInSlot)) {
+		if(stackInSlot.getItem() == Batteries.battery_trixite &&
+				((IBatteryItem) Batteries.battery_trixite).getCharge(stackInSlot) == ((IBatteryItem) Batteries.battery_trixite).getMaxCharge(stackInSlot)) {
 			return 2;
 		}
 

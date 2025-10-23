@@ -3,6 +3,7 @@ package com.hbm.items.gear;
 import com.hbm.api.item.IGasMask;
 import com.hbm.handler.ArmorUtil;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.ArmorSets;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.NTMRenderHelper;
 import com.hbm.render.model.ModelGasMask;
@@ -79,7 +80,7 @@ public class ArmorGasMask extends ItemArmor implements IGasMask {
 				return this.modelGas;
 			}
 		}
-		if (this == ModItems.gas_mask_m65 || this == ModItems.hazmat_helmet_red || this == ModItems.hazmat_helmet_grey || this == ModItems.gas_mask_mono || this == ModItems.hazmat_paa_helmet || this == ModItems.gas_mask_olde) {
+		if (this == ModItems.gas_mask_m65 || this == ArmorSets.hazmat_helmet_red || this == ArmorSets.hazmat_helmet_grey || this == ModItems.gas_mask_mono || this == ArmorSets.hazmat_paa_helmet || this == ModItems.gas_mask_olde) {
 			if (armorSlot == EntityEquipmentSlot.HEAD) {
 				if (this.modelM65 == null) {
 					this.modelM65 = new ModelM65();
@@ -104,16 +105,16 @@ public class ArmorGasMask extends ItemArmor implements IGasMask {
 		if (stack.getItem() == ModItems.gas_mask_mono) {
 			return (RefStrings.MODID + ":textures/armor/ModelM65Mono.png");
 		}
-		if(stack.getItem() == ModItems.hazmat_helmet) {
+		if(stack.getItem() == ArmorSets.hazmat_helmet) {
 			return (RefStrings.MODID + ":textures/armor/hazmat_1.png");
 		}
-		if (stack.getItem() == ModItems.hazmat_helmet_red) {
+		if (stack.getItem() == ArmorSets.hazmat_helmet_red) {
 			return (RefStrings.MODID + ":textures/armor/ModelHazRed.png");
 		}
-		if (stack.getItem() == ModItems.hazmat_helmet_grey) {
+		if (stack.getItem() == ArmorSets.hazmat_helmet_grey) {
 			return (RefStrings.MODID + ":textures/armor/ModelHazGrey.png");
 		}
-		if(stack.getItem() == ModItems.hazmat_paa_helmet) {
+		if(stack.getItem() == ArmorSets.hazmat_paa_helmet) {
 			return (RefStrings.MODID + ":textures/armor/ModelHazPaa.png");
 		}
 		return "hbm:textures/models/capes/CapeUnknown.png";
@@ -122,7 +123,7 @@ public class ArmorGasMask extends ItemArmor implements IGasMask {
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void renderHelmetOverlay(ItemStack stack, EntityPlayer player, ScaledResolution resolution, float partialTicks) {
-		if(this != ModItems.gas_mask && this != ModItems.gas_mask_m65 && this != ModItems.hazmat_helmet_red && this != ModItems.hazmat_helmet_grey)
+		if(this != ModItems.gas_mask && this != ModItems.gas_mask_m65 && this != ArmorSets.hazmat_helmet_red && this != ArmorSets.hazmat_helmet_grey)
     		return;
     	
 
@@ -132,7 +133,7 @@ public class ArmorGasMask extends ItemArmor implements IGasMask {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableAlpha();
         
-        if(this == ModItems.gas_mask_m65 || this == ModItems.hazmat_helmet_red || this == ModItems.hazmat_helmet_grey) {
+        if(this == ModItems.gas_mask_m65 || this == ArmorSets.hazmat_helmet_red || this == ArmorSets.hazmat_helmet_grey) {
         	switch((int)((double)stack.getItemDamage() / (double)stack.getMaxDamage() * 6D)) {
         	case 0:
             	Minecraft.getMinecraft().getTextureManager().bindTexture(goggleBlur0); break;

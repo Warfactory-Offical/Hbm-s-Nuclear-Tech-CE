@@ -1,6 +1,7 @@
 package com.hbm.creativetabs;
 
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.MissileParts;
 import com.hbm.items.weapon.ItemCustomMissile;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
@@ -31,67 +32,67 @@ public class MissileTab extends CreativeTabs {
 		super.displayAllRelevantItems(list);
 		
 		list.add(ItemCustomMissile.buildMissile(
-				ModItems.mp_chip_3,
-				ModItems.mp_warhead_10_he,
-				ModItems.mp_fuselage_10_kerosene,
-				ModItems.mp_stability_10_flat,
-				ModItems.mp_thruster_10_kerosene).setStackDisplayName(TextFormatting.DARK_PURPLE + "Lil Bub"));
+				MissileParts.mp_chip_3,
+				MissileParts.mp_warhead_10_he,
+				MissileParts.mp_fuselage_10_kerosene,
+				MissileParts.mp_stability_10_flat,
+				MissileParts.mp_thruster_10_kerosene).setStackDisplayName(TextFormatting.DARK_PURPLE + "Lil Bub"));
 		
 		list.add(ItemCustomMissile.buildMissile(
-				ModItems.mp_chip_3,
-				ModItems.mp_warhead_10_incendiary,
-				ModItems.mp_fuselage_10_long_solid,
-				ModItems.mp_stability_10_space,
-				ModItems.mp_thruster_10_solid).setStackDisplayName(TextFormatting.DARK_PURPLE + "Long Boy"));
+				MissileParts.mp_chip_3,
+				MissileParts.mp_warhead_10_incendiary,
+				MissileParts.mp_fuselage_10_long_solid,
+				MissileParts.mp_stability_10_space,
+				MissileParts.mp_thruster_10_solid).setStackDisplayName(TextFormatting.DARK_PURPLE + "Long Boy"));
 		
 		list.add(ItemCustomMissile.buildMissile(
-				ModItems.mp_chip_3,
-				ModItems.mp_warhead_10_nuclear,
-				ModItems.mp_fuselage_10_15_kerosene,
-				ModItems.mp_stability_15_flat,
-				ModItems.mp_thruster_15_kerosene).setStackDisplayName(TextFormatting.DARK_PURPLE + "Uncle Kim"));
+				MissileParts.mp_chip_3,
+				MissileParts.mp_warhead_10_nuclear,
+				MissileParts.mp_fuselage_10_15_kerosene,
+				MissileParts.mp_stability_15_flat,
+				MissileParts.mp_thruster_15_kerosene).setStackDisplayName(TextFormatting.DARK_PURPLE + "Uncle Kim"));
 		
 		list.add(ItemCustomMissile.buildMissile(
-				ModItems.mp_chip_3,
-				ModItems.mp_warhead_10_nuclear_large,
-				ModItems.mp_fuselage_10_15_balefire,
-				ModItems.mp_stability_15_flat,
-				ModItems.mp_thruster_15_balefire_large).setStackDisplayName(TextFormatting.GREEN + "Trotty's Toy Rocket"));
+				MissileParts.mp_chip_3,
+				MissileParts.mp_warhead_10_nuclear_large,
+				MissileParts.mp_fuselage_10_15_balefire,
+				MissileParts.mp_stability_15_flat,
+				MissileParts.mp_thruster_15_balefire_large).setStackDisplayName(TextFormatting.GREEN + "Trotty's Toy Rocket"));
 		
 		list.add(ItemCustomMissile.buildMissile(
-				ModItems.mp_chip_3,
-				ModItems.mp_warhead_15_nuclear_shark,
-				ModItems.mp_fuselage_15_kerosene_camo,
-				ModItems.mp_stability_15_thin,
-				ModItems.mp_thruster_15_kerosene_triple).setStackDisplayName(TextFormatting.DARK_PURPLE + "Stealthy Shark"));
+				MissileParts.mp_chip_3,
+				MissileParts.mp_warhead_15_nuclear_shark,
+				MissileParts.mp_fuselage_15_kerosene_camo,
+				MissileParts.mp_stability_15_thin,
+				MissileParts.mp_thruster_15_kerosene_triple).setStackDisplayName(TextFormatting.DARK_PURPLE + "Stealthy Shark"));
 		
 		list.add(ItemCustomMissile.buildMissile(
-				ModItems.mp_chip_3,
-				ModItems.mp_warhead_15_he,
-				ModItems.mp_fuselage_15_kerosene_polite,
-				ModItems.mp_stability_15_thin,
-				ModItems.mp_thruster_15_kerosene_dual).setStackDisplayName(TextFormatting.DARK_PURPLE + "Polite Lad"));
+				MissileParts.mp_chip_3,
+				MissileParts.mp_warhead_15_he,
+				MissileParts.mp_fuselage_15_kerosene_polite,
+				MissileParts.mp_stability_15_thin,
+				MissileParts.mp_thruster_15_kerosene_dual).setStackDisplayName(TextFormatting.DARK_PURPLE + "Polite Lad"));
 		
 		list.add(ItemCustomMissile.buildMissile(
-				ModItems.mp_chip_3,
-				ModItems.mp_warhead_15_n2,
-				ModItems.mp_fuselage_15_solid_desh,
-				ModItems.mp_stability_15_thin,
-				ModItems.mp_thruster_15_solid_hexdecuple).setStackDisplayName(TextFormatting.DARK_PURPLE + "NERV's Leftover Missile"));
+				MissileParts.mp_chip_3,
+				MissileParts.mp_warhead_15_n2,
+				MissileParts.mp_fuselage_15_solid_desh,
+				MissileParts.mp_stability_15_thin,
+				MissileParts.mp_thruster_15_solid_hexdecuple).setStackDisplayName(TextFormatting.DARK_PURPLE + "NERV's Leftover Missile"));
 		
 		list.add(ItemCustomMissile.buildMissile(
-				ModItems.mp_chip_5,
-				ModItems.mp_warhead_15_mirv,
-				ModItems.mp_fuselage_15_kerosene_lambda,
-				ModItems.mp_stability_15_soyuz,
-				ModItems.mp_thruster_15_kerosene).setStackDisplayName(TextFormatting.BLUE + "7 For 1 Package Deal"));
+				MissileParts.mp_chip_5,
+				MissileParts.mp_warhead_15_mirv,
+				MissileParts.mp_fuselage_15_kerosene_lambda,
+				MissileParts.mp_stability_15_soyuz,
+				MissileParts.mp_thruster_15_kerosene).setStackDisplayName(TextFormatting.BLUE + "7 For 1 Package Deal"));
 		
 		list.add(ItemCustomMissile.buildMissile(
-				ModItems.mp_chip_4,
-				ModItems.mp_warhead_15_balefire,
-				ModItems.mp_fuselage_15_20_kerosene_magnusson,
+				MissileParts.mp_chip_4,
+				MissileParts.mp_warhead_15_balefire,
+				MissileParts.mp_fuselage_15_20_kerosene_magnusson,
 				null,
-				ModItems.mp_thruster_20_kerosene).setStackDisplayName(TextFormatting.GREEN + "Hightower Missile"));
+				MissileParts.mp_thruster_20_kerosene).setStackDisplayName(TextFormatting.GREEN + "Hightower Missile"));
 		
 	}
 }

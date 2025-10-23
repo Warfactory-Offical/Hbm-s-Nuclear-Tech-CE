@@ -2,6 +2,7 @@ package com.hbm.items.machine;
 
 import com.hbm.api.energymk2.IBatteryItem;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Batteries;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.I18nUtil;
@@ -58,7 +59,7 @@ public class ItemBattery extends Item implements IBatteryItem {
 
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<String> list, ITooltipFlag flagIn) {
-        if (stack.getItem() == ModItems.battery_creative) return;
+        if (stack.getItem() == Batteries.battery_creative) return;
         long charge = maxCharge;
         if (stack.hasTagCompound()) charge = getCharge(stack);
 
@@ -78,7 +79,7 @@ public class ItemBattery extends Item implements IBatteryItem {
     @Override
     public EnumRarity getRarity(@NotNull ItemStack p_77613_1_) {
 
-        if (this == ModItems.battery_schrabidium) {
+        if (this == Batteries.battery_schrabidium) {
             return EnumRarity.RARE;
         }
 
@@ -90,7 +91,7 @@ public class ItemBattery extends Item implements IBatteryItem {
     }
 
     public void chargeBattery(ItemStack stack, long i) {
-        if (stack.getItem() == ModItems.battery_creative) return;
+        if (stack.getItem() == Batteries.battery_creative) return;
         if (stack.getItem() instanceof ItemBattery) {
             if (stack.hasTagCompound()) {
                 long charge = stack.getTagCompound().getLong("charge");
@@ -103,7 +104,7 @@ public class ItemBattery extends Item implements IBatteryItem {
     }
 
     public void setCharge(ItemStack stack, long i) {
-        if (stack.getItem() == ModItems.battery_creative) return;
+        if (stack.getItem() == Batteries.battery_creative) return;
         if (stack.getItem() instanceof ItemBattery) {
             if (stack.hasTagCompound()) {
                 stack.getTagCompound().setLong("charge", Math.min(i, maxCharge));
@@ -115,7 +116,7 @@ public class ItemBattery extends Item implements IBatteryItem {
     }
 
     public void dischargeBattery(ItemStack stack, long i) {
-        if (stack.getItem() == ModItems.battery_creative) return;
+        if (stack.getItem() == Batteries.battery_creative) return;
         if (stack.getItem() instanceof ItemBattery) {
             if (stack.hasTagCompound()) {
                 long charge = stack.getTagCompound().getLong("charge");
@@ -128,7 +129,7 @@ public class ItemBattery extends Item implements IBatteryItem {
     }
 
     public long getCharge(ItemStack stack) {
-        if (stack.getItem() == ModItems.battery_creative) return Long.MAX_VALUE;
+        if (stack.getItem() == Batteries.battery_creative) return Long.MAX_VALUE;
         if (stack.getItem() instanceof ItemBattery) {
             if (stack.hasTagCompound()) {
                 return stack.getTagCompound().getLong("charge");
@@ -159,7 +160,7 @@ public class ItemBattery extends Item implements IBatteryItem {
 
     @Override
     public boolean showDurabilityBar(ItemStack stack) {
-        return stack.getItem() != ModItems.battery_creative;
+        return stack.getItem() != Batteries.battery_creative;
     }
 
     @Override

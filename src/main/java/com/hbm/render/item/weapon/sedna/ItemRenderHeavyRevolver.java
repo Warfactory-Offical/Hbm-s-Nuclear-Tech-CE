@@ -1,6 +1,6 @@
 package com.hbm.render.item.weapon.sedna;
 
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.items.weapon.sedna.mods.WeaponModManager;
 import com.hbm.main.ResourceManager;
@@ -183,7 +183,7 @@ public class ItemRenderHeavyRevolver extends ItemRenderWeaponBase {
 	}
 
 	public boolean isScoped(ItemStack stack) {
-		return stack.getItem() == ModItems.gun_heavy_revolver_lilmac || WeaponModManager.hasUpgrade(stack, 0, WeaponModManager.ID_SCOPE);
+		return stack.getItem() == Armory.gun_heavy_revolver_lilmac || WeaponModManager.hasUpgrade(stack, 0, WeaponModManager.ID_SCOPE);
 	}
 }
 

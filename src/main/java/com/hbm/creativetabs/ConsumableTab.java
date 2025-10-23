@@ -1,6 +1,6 @@
 package com.hbm.creativetabs;
 
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foods;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -16,8 +16,8 @@ public class ConsumableTab extends CreativeTabs {
 	@Override
     @SideOnly(Side.CLIENT)
 	public ItemStack createIcon() {
-		if(ModItems.bottle_nuka != null){
-			return new ItemStack(ModItems.bottle_nuka);
+		if(Foods.bottle_nuka != null){
+			return new ItemStack(Foods.bottle_nuka);
 		}
 		return new ItemStack(Items.IRON_PICKAXE);
 	}

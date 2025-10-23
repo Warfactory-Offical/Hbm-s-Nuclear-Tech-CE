@@ -3,7 +3,7 @@ package com.hbm.inventory.container;
 import com.hbm.api.energymk2.IBatteryItem;
 import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotTakeOnly;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Batteries;
 import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.tileentity.machine.oil.TileEntityMachinePyroOven;
@@ -59,7 +59,7 @@ public class ContainerPyroOven extends Container {
                 }
             } else {
 
-                if(rStack.getItem() instanceof IBatteryItem || rStack.getItem() == ModItems.battery_creative) {
+                if(rStack.getItem() instanceof IBatteryItem || rStack.getItem() == Batteries.battery_creative) {
                     if(!this.mergeItemStack(stack, 0, 1, false)) return ItemStack.EMPTY;
                 } else if(rStack.getItem() instanceof IItemFluidIdentifier) {
                     if(!this.mergeItemStack(stack, 3, 4, false)) return ItemStack.EMPTY;

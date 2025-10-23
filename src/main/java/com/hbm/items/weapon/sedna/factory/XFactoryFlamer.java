@@ -5,6 +5,7 @@ import com.hbm.capability.HbmLivingProps;
 import com.hbm.entity.effect.EntityFireLingering;
 import com.hbm.entity.projectile.EntityBulletBaseMK4;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.GunConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
@@ -136,7 +137,7 @@ public class XFactoryFlamer {
         flame_daybreaker_balefire = flame_balefire.clone().setLife(200).setVel(2F).setGrav(0.035D)
                 .setOnImpact((bullet, mop) -> { Lego.standardExplode(bullet, mop, 5F); spawnFire(bullet, mop, 7.5F, 2.5F, 400, EntityFireLingering.TYPE_BALEFIRE); bullet.setDead(); });
 
-        ModItems.gun_flamer = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_flamer", new GunConfig()
+        Armory.gun_flamer = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_flamer", new GunConfig()
                 .dura(20_000).draw(10).inspect(17).crosshair(Crosshair.L_CIRCLE)
                 .rec(new Receiver(0)
                         .dmg(1F).spreadHipfire(0F).delay(1).auto(true).reload(90).jam(17)
@@ -146,7 +147,7 @@ public class XFactoryFlamer {
                 .setupStandardConfiguration()
                 .anim(LAMBDA_FLAMER_ANIMS).orchestra(Orchestras.ORCHESTRA_FLAMER)
         );
-        ModItems.gun_flamer_topaz = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.B_SIDE, "gun_flamer_topaz", new GunConfig()
+        Armory.gun_flamer_topaz = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.B_SIDE, "gun_flamer_topaz", new GunConfig()
                 .dura(20_000).draw(10).inspect(17).crosshair(Crosshair.L_CIRCLE)
                 .rec(new Receiver(0)
                         .dmg(1.5F).spreadHipfire(0F).delay(1).auto(true).reload(90).jam(17)
@@ -156,7 +157,7 @@ public class XFactoryFlamer {
                 .setupStandardConfiguration()
                 .anim(LAMBDA_FLAMER_ANIMS).orchestra(Orchestras.ORCHESTRA_FLAMER)
         );
-        ModItems.gun_flamer_daybreaker = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.LEGENDARY, "gun_flamer_daybreaker", new GunConfig()
+        Armory.gun_flamer_daybreaker = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.LEGENDARY, "gun_flamer_daybreaker", new GunConfig()
                 .dura(20_000).draw(10).inspect(17).crosshair(Crosshair.L_CIRCLE)
                 .rec(new Receiver(0)
                         .dmg(25F).spreadHipfire(0F).delay(10).auto(true).reload(90).jam(17).sound(HBMSoundHandler.fireBlackPowder, 1.0F, 1.0F)
@@ -167,7 +168,7 @@ public class XFactoryFlamer {
                 .anim(LAMBDA_FLAMER_ANIMS).orchestra(Orchestras.ORCHESTRA_FLAMER_DAYBREAKER)
         );
 
-        ModItems.gun_chemthrower = new ItemGunChemthrower(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_chemthrower", new GunConfig()
+        Armory.gun_chemthrower = new ItemGunChemthrower(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_chemthrower", new GunConfig()
                 .dura(90_000).draw(10).inspect(17).crosshair(Crosshair.L_CIRCLE).smoke(Lego.LAMBDA_STANDARD_SMOKE)
                 .rec(new Receiver(0)
                         .delay(1).spreadHipfire(0F).auto(true)

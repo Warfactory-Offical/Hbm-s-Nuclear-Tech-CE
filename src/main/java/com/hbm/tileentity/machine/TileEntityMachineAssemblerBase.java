@@ -4,6 +4,7 @@ import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.recipes.AssemblerRecipes;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.ToolSets;
 import com.hbm.items.machine.ItemAssemblyTemplate;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
@@ -111,8 +112,8 @@ public abstract class TileEntityMachineAssemblerBase extends TileEntityMachineBa
         this.power -= this.consumption;
         this.progress[index]++;
 
-        if(!this.inventory.getStackInSlot(0).isEmpty() && this.inventory.getStackInSlot(0).getItem() == ModItems.meteorite_sword_alloyed)
-            this.inventory.setStackInSlot(0, new ItemStack(ModItems.meteorite_sword_machined)); //fisfndmoivndlmgindgifgjfdnblfm
+        if(!this.inventory.getStackInSlot(0).isEmpty() && this.inventory.getStackInSlot(0).getItem() == ToolSets.meteorite_sword_alloyed)
+            this.inventory.setStackInSlot(0, new ItemStack(ToolSets.meteorite_sword_machined)); //fisfndmoivndlmgindgifgjfdnblfm
 
         int template = getTemplateIndex(index);
 

@@ -6,6 +6,7 @@ import com.hbm.handler.WeightedRandomFrom1710;
 import com.hbm.itempool.ItemPool;
 import com.hbm.itempool.ItemPoolsRedRoom;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.ArmorSets;
 import com.hbm.items.tool.ItemModDoor;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
@@ -194,10 +195,10 @@ public class BlockKeyhole extends Block {
         if(rand == 0) {
             world.setBlockState(new BlockPos(x, y + 1, z), ModBlocks.deco_loot.getDefaultState());
             BlockLoot.TileEntityLoot loot = (BlockLoot.TileEntityLoot) world.getTileEntity(new BlockPos(x, y + 1, z));
-            loot.addItem(new ItemStack(ModItems.trenchmaster_helmet), 0, 0, 0);
-            loot.addItem(new ItemStack(ModItems.trenchmaster_plate), 0, 0, 0);
-            loot.addItem(new ItemStack(ModItems.trenchmaster_legs), 0, 0, 0);
-            loot.addItem(new ItemStack(ModItems.trenchmaster_boots), 0, 0, 0);
+            loot.addItem(new ItemStack(ArmorSets.trenchmaster_helmet), 0, 0, 0);
+            loot.addItem(new ItemStack(ArmorSets.trenchmaster_plate), 0, 0, 0);
+            loot.addItem(new ItemStack(ArmorSets.trenchmaster_legs), 0, 0, 0);
+            loot.addItem(new ItemStack(ArmorSets.trenchmaster_boots), 0, 0, 0);
         } else {
             spawnPedestalItem(world, x, y + 1, z);
         }

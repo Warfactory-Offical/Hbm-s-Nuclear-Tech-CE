@@ -12,6 +12,9 @@ import com.hbm.inventory.material.NTMMaterial;
 import com.hbm.inventory.recipes.loader.SerializableRecipe;
 import com.hbm.items.ItemEnums;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Materials.Ingots;
+import com.hbm.items.ModItems.Materials.Powders;
+import com.hbm.items.ModItems.ToolSets;
 import com.hbm.items.machine.ItemStamp;
 import com.hbm.util.Tuple.Pair;
 import net.minecraft.init.Blocks;
@@ -60,13 +63,13 @@ public class PressRecipes extends SerializableRecipe {
 		makeRecipe(ItemStamp.StampType.FLAT, new OreDictStack(DIAMOND.dust()),						Items.DIAMOND);
 		makeRecipe(ItemStamp.StampType.FLAT, new OreDictStack(EMERALD.dust()),						Items.EMERALD);
 		makeRecipe(ItemStamp.StampType.FLAT, new ComparableStack(ModItems.biomass),					ModItems.biomass_compressed);
-		makeRecipe(ItemStamp.StampType.FLAT, new OreDictStack(ANY_COKE.gem()),						ModItems.ingot_graphite);
-		makeRecipe(ItemStamp.StampType.FLAT, new ComparableStack(ModItems.meteorite_sword_reforged),	ModItems.meteorite_sword_hardened);
+		makeRecipe(ItemStamp.StampType.FLAT, new OreDictStack(ANY_COKE.gem()),						Ingots.ingot_graphite);
+		makeRecipe(ItemStamp.StampType.FLAT, new ComparableStack(ToolSets.meteorite_sword_reforged),	ToolSets.meteorite_sword_hardened);
 		makeRecipe(ItemStamp.StampType.FLAT, new ComparableStack(Blocks.LOG, 1, 3),					ModItems.ball_resin);
 
 		makeRecipe(ItemStamp.StampType.FLAT, new OreDictStack(COAL.dust()),							DictFrame.fromOne(ModItems.briquette, ItemEnums.EnumBriquetteType.COAL));
 		makeRecipe(ItemStamp.StampType.FLAT, new OreDictStack(LIGNITE.dust()),						DictFrame.fromOne(ModItems.briquette, ItemEnums.EnumBriquetteType.LIGNITE));
-		makeRecipe(ItemStamp.StampType.FLAT, new ComparableStack(ModItems.powder_sawdust),			DictFrame.fromOne(ModItems.briquette, ItemEnums.EnumBriquetteType.WOOD));
+		makeRecipe(ItemStamp.StampType.FLAT, new ComparableStack(Powders.powder_sawdust),			DictFrame.fromOne(ModItems.briquette, ItemEnums.EnumBriquetteType.WOOD));
 
 		makeRecipe(ItemStamp.StampType.PLATE, new OreDictStack(IRON.ingot()),			ModItems.plate_iron);
 		makeRecipe(ItemStamp.StampType.PLATE, new OreDictStack(GOLD.ingot()),			ModItems.plate_gold);

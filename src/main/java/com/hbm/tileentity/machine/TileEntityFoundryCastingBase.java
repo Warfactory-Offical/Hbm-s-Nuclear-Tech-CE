@@ -1,13 +1,11 @@
 package com.hbm.tileentity.machine;
 
-import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.material.Mats.MaterialStack;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foundry;
 import com.hbm.items.machine.ItemMold;
 import com.hbm.items.machine.ItemMold.Mold;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.ItemStackHandlerWrapper;
-import com.hbm.packet.toclient.BufPacket;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -16,7 +14,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
@@ -105,7 +102,7 @@ public abstract class TileEntityFoundryCastingBase extends TileEntityFoundryBase
 	public Mold getInstalledMold() {
 		if(inventory.getStackInSlot(0).isEmpty()) return null;
 
-		if(inventory.getStackInSlot(0).getItem() == ModItems.mold) {
+		if(inventory.getStackInSlot(0).getItem() == Foundry.mold) {
 			Mold mold = ((ItemMold) inventory.getStackInSlot(0).getItem()).getMold(inventory.getStackInSlot(0));
 
 			if(mold.size == this.getMoldSize()){

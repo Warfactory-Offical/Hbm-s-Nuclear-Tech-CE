@@ -5,7 +5,7 @@ import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.container.ContainerTurretBase;
 import com.hbm.inventory.gui.GUITurretHIMARS;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.ItemAmmoHIMARS;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
@@ -57,7 +57,7 @@ public class TileEntityTurretHIMARS extends TileEntityTurretBaseArtillery implem
     ammoStacks = new ArrayList<>();
 
     NonNullList<ItemStack> list = NonNullList.create();
-    ModItems.ammo_himars.getSubItems(MainRegistry.weaponTab, list);
+    Armory.ammo_himars.getSubItems(MainRegistry.weaponTab, list);
     this.ammoStacks.addAll(list);
 
     return ammoStacks;
@@ -134,7 +134,7 @@ public class TileEntityTurretHIMARS extends TileEntityTurretBaseArtillery implem
 
     for (int i = 1; i < 10; i++) {
       if (inventory.getStackInSlot(i) != ItemStack.EMPTY) {
-        if (inventory.getStackInSlot(i).getItem() == ModItems.ammo_himars) {
+        if (inventory.getStackInSlot(i).getItem() == Armory.ammo_himars) {
           return inventory.getStackInSlot(i);
         }
       }
@@ -208,7 +208,7 @@ public class TileEntityTurretHIMARS extends TileEntityTurretBaseArtillery implem
                       ItemAmmoHIMARS.itemTypes[available.getItemDamage()];
                   this.typeLoaded = available.getItemDamage();
                   this.ammo = type.amount;
-                  this.consumeAmmo(new RecipesCommon.ComparableStack(ModItems.ammo_himars, 1, available.getItemDamage()));
+                  this.consumeAmmo(new RecipesCommon.ComparableStack(Armory.ammo_himars, 1, available.getItemDamage()));
                 }
               }
             }

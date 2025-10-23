@@ -10,7 +10,7 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.gui.GUIRadiolysis;
 import com.hbm.inventory.recipes.RadiolysisRecipes;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foods;
 import com.hbm.items.machine.ItemRTGPellet;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
@@ -209,7 +209,7 @@ public class TileEntityMachineRadiolysis extends TileEntityMachineBase implement
     // Code: pressure, sword, sterilize.
     private void sterilize() {
         if(!inventory.getStackInSlot(12).isEmpty()) {
-            if (inventory.getStackInSlot(12).getItem() instanceof ItemFood && !(inventory.getStackInSlot(12).getItem() == ModItems.pancake)) {
+            if (inventory.getStackInSlot(12).getItem() instanceof ItemFood && !(inventory.getStackInSlot(12).getItem() == Foods.pancake)) {
                 inventory.extractItem(12, 1, false);
             }
 

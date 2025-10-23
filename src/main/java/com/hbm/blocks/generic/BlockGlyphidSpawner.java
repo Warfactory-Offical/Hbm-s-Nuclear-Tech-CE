@@ -6,7 +6,7 @@ import com.hbm.config.MobConfig;
 import com.hbm.entity.mob.glyphid.*;
 import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foods;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.Tuple.Pair;
 import net.minecraft.block.BlockContainer;
@@ -55,7 +55,7 @@ public class BlockGlyphidSpawner extends BlockContainer implements IBlockMulti {
 
     @Override
     public Item getItemDropped(IBlockState state, Random rand, int fortune) {
-        return ModItems.egg_glyphid;
+        return Foods.egg_glyphid;
     }
 
     @Override

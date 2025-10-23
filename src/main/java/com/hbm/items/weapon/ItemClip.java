@@ -1,8 +1,7 @@
 package com.hbm.items.weapon;
 
 import com.hbm.items.ModItems;
-import com.hbm.items.special.ItemSimpleConsumable;
-import com.hbm.lib.Library;
+import com.hbm.items.ModItems.Armory;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -35,7 +34,7 @@ public class ItemClip extends Item {
 	
 	@Override
 	public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-		if(this == ModItems.ammo_container)
+		if(this == Armory.ammo_container)
 		{
 			tooltip.add("Gives ammo for all held weapons.");
 		}

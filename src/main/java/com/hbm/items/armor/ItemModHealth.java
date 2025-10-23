@@ -2,7 +2,7 @@ package com.hbm.items.armor;
 
 import com.google.common.collect.Multimap;
 import com.hbm.handler.ArmorModHandler;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Inserts;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -28,11 +28,11 @@ public class ItemModHealth extends ItemArmorMod {
 		String color = "" + (System.currentTimeMillis() % 1000 < 500 ? TextFormatting.RED : TextFormatting.LIGHT_PURPLE);
 
 		list.add(color + "+" + (Math.round(health * 10) * 0.1) + " health");
-		if(this == ModItems.heart_piece)
+		if(this == Inserts.heart_piece)
 			list.add("Dropped by 1:1000 Mobs");
 		list.add("");
 		
-		if(this == ModItems.black_diamond) {
+		if(this == Inserts.black_diamond) {
 			list.add(TextFormatting.DARK_GRAY + "Nostalgia");
 			list.add("");
 		}

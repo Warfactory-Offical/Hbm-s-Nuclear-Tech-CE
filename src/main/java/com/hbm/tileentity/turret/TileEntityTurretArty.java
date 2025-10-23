@@ -6,7 +6,7 @@ import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerTurretBase;
 import com.hbm.inventory.gui.GUITurretArty;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.ItemAmmoArty;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
@@ -56,7 +56,7 @@ public class TileEntityTurretArty extends TileEntityTurretBaseArtillery implemen
         ammoStacks = new ArrayList<>();
 
         NonNullList<ItemStack> list = NonNullList.create();
-        ModItems.ammo_arty.getSubItems(MainRegistry.weaponTab, list);
+        Armory.ammo_arty.getSubItems(MainRegistry.weaponTab, list);
         this.ammoStacks.addAll(list);
 
         return ammoStacks;
@@ -172,7 +172,7 @@ public class TileEntityTurretArty extends TileEntityTurretBaseArtillery implemen
 
         for(int i = 1; i < 10; i++) {
             if(inventory.getStackInSlot(i) != ItemStack.EMPTY) {
-                if(inventory.getStackInSlot(i).getItem() == ModItems.ammo_arty) {
+                if(inventory.getStackInSlot(i).getItem() == Armory.ammo_arty) {
                     return inventory.getStackInSlot(i);
                 }
             }
@@ -363,7 +363,7 @@ public class TileEntityTurretArty extends TileEntityTurretBaseArtillery implemen
             if(conf != null) {
                 cachedCasingConfig = ItemAmmoArty.itemTypes[conf.getItemDamage()].casing;
                 this.spawnShell(conf);
-                this.consumeAmmo(ModItems.ammo_arty);
+                this.consumeAmmo(Armory.ammo_arty);
                 world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.jeremy_fire, SoundCategory.BLOCKS, 25.0F, 1.0F);
                 Vec3 pos = new Vec3(this.getTurretPos());
                 Vec3 vec = Vec3.createVectorHelper(this.getBarrelLength(), 0, 0);

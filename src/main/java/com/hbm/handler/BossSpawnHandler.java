@@ -8,7 +8,7 @@ import com.hbm.entity.mob.EntityFBIDrone;
 import com.hbm.entity.mob.EntityMaskMan;
 import com.hbm.entity.mob.EntityRADBeast;
 import com.hbm.entity.projectile.EntityMeteor;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Inserts;
 import com.hbm.main.MainRegistry;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.util.ContaminationUtil;
@@ -185,10 +185,10 @@ public class BossSpawnHandler {
 							ItemStack mod = ArmorModHandler.pryMods(armor)[ArmorModHandler.helmet_only];
 							
 							if(mod != null) {
-								if(mod.getItem() == ModItems.protection_charm) {
+								if(mod.getItem() == Inserts.protection_charm) {
 									repell = true;
 								}
-								if(mod.getItem() == ModItems.meteor_charm) {
+								if(mod.getItem() == Inserts.meteor_charm) {
 									strike = false;
 								}
 							}

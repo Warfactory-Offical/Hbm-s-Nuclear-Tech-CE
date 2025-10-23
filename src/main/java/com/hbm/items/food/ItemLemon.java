@@ -1,6 +1,8 @@
 package com.hbm.items.food;
 
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foods;
+import com.hbm.items.ModItems.Materials.Ingots;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,54 +27,54 @@ public class ItemLemon extends ItemFood {
 	
 	@Override
 	public void addInformation(ItemStack stack, World worldIn, List<String> list, ITooltipFlag flagIn) {
-		if(this == ModItems.lemon) {
+		if(this == Foods.lemon) {
 			list.add("Eh, good enough.");
 		}
 		
-		if(this == ModItems.med_ipecac) {
+		if(this == Foods.med_ipecac) {
 			list.add("Bitter juice that will cause your stomach");
 			list.add("to forcefully eject it's contents.");
 		}
 		
-		if(this == ModItems.med_ptsd) {
+		if(this == Foods.med_ptsd) {
 			list.add("This isn't even PTSD mediaction, it's just");
 			list.add("Ipecac in a different bottle!");
 		}
 		
-		if(this == ModItems.med_schizophrenia) {
+		if(this == Foods.med_schizophrenia) {
 			list.add("Makes the voices go away. Just for a while.");
 			list.add("");
 			list.add("...");
 			list.add("Better not take it.");
 		}
 		
-		if(this == ModItems.loops) {
+		if(this == Foods.loops) {
 			list.add("Brøther, may I have some lööps?");
 		}
 		
-		if(this == ModItems.loop_stew) {
+		if(this == Foods.loop_stew) {
 			list.add("A very, very healthy breakfast.");
 		}
 		
-		if(this == ModItems.twinkie) {
+		if(this == Foods.twinkie) {
 			list.add("Expired 600 years ago!");
 		}
-		if(this == ModItems.pudding) {
+		if(this == Foods.pudding) {
 			list.add("What if he did?");
 			list.add("What if he didn't?");
 			list.add("What if the world was made of pudding?");
 		}
-		if(this == ModItems.ingot_semtex) {
+		if(this == Ingots.ingot_semtex) {
 			list.add("Semtex H Plastic Explosive");
 			list.add("Performant explosive for many applications.");
 			list.add("Edible");
 		}
 
-		if(this == ModItems.marshmallow) {
+		if(this == Foods.marshmallow) {
 			list.add("Gets grilled in the heat of burning nuclear failure");
 		}
 
-		if(this == ModItems.marshmallow_roasted) {
+		if(this == Foods.marshmallow_roasted) {
 			list.add("Hmmm... tastes a bit metallic");
 		}
 	}
@@ -80,11 +82,11 @@ public class ItemLemon extends ItemFood {
 	
 	@Override
 	protected void onFoodEaten(ItemStack stack, World worldIn, EntityPlayer player) {
-		if(this == ModItems.med_ipecac || this == ModItems.med_ptsd) {
+		if(this == Foods.med_ipecac || this == Foods.med_ptsd) {
 			player.addPotionEffect(new PotionEffect(MobEffects.HUNGER, 50, 49));
 		}
 		
-		if(this == ModItems.loop_stew) {
+		if(this == Foods.loop_stew) {
 			player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 20 * 20, 1));
 			player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 60 * 20, 2));
 			player.addPotionEffect(new PotionEffect(MobEffects.SPEED, 60 * 20, 1));
@@ -96,7 +98,7 @@ public class ItemLemon extends ItemFood {
 	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving) {
 		ItemStack sta = super.onItemUseFinish(stack, worldIn, entityLiving);
         
-        if(this == ModItems.loop_stew)
+        if(this == Foods.loop_stew)
         	return new ItemStack(Items.BOWL);
         
         return sta;

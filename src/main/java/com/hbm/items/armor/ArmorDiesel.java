@@ -6,7 +6,7 @@ import com.hbm.handler.ArmorModHandler;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.ArmorSets;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.render.model.ModelArmorDiesel;
 
@@ -69,7 +69,7 @@ public class ArmorDiesel extends ArmorFSBFueled {
 	public void onArmorTick(World world, EntityPlayer player, ItemStack stack) {
 		super.onArmorTick(world, player, stack);
 
-		if(!world.isRemote && this == ModItems.dieselsuit_legs && this.hasFSBArmor(player) && world.getTotalWorldTime() % 3 == 0) {
+		if(!world.isRemote && this == ArmorSets.dieselsuit_legs && this.hasFSBArmor(player) && world.getTotalWorldTime() % 3 == 0) {
 			NBTTagCompound data = new NBTTagCompound();
 			data.setString("type", "bnuuy");
 			data.setInteger("player", player.getEntityId());

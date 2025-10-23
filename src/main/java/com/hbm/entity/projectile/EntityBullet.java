@@ -9,6 +9,7 @@ import com.hbm.entity.mob.EntityCreeperNuclear;
 import com.hbm.handler.ArmorUtil;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.DummyTexs;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.ParticleBurstPacket;
@@ -609,7 +610,7 @@ public class EntityBullet extends Entity implements IProjectile {
 		if (!this.world.isRemote && this.inGround && this.arrowShake <= 0) {
 			boolean flag = this.canBePickedUp == 1 || this.canBePickedUp == 2 && entityIn.capabilities.isCreativeMode;
 
-			if (this.canBePickedUp == 1 && !entityIn.inventory.addItemStackToInventory(new ItemStack(ModItems.nothing, 1))) { //ammo_rocket
+			if (this.canBePickedUp == 1 && !entityIn.inventory.addItemStackToInventory(new ItemStack(DummyTexs.nothing, 1))) { //ammo_rocket
 				flag = false;
 			}
 

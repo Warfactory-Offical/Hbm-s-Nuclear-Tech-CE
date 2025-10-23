@@ -30,6 +30,12 @@ import com.hbm.inventory.recipes.loader.SerializableRecipe;
 import com.hbm.items.IDynamicModels;
 import com.hbm.items.IModelRegister;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
+import com.hbm.items.ModItems.Foods;
+import com.hbm.items.ModItems.Foundry;
+import com.hbm.items.ModItems.Materials.Ingots;
+import com.hbm.items.ModItems.Materials.Nuggies;
+import com.hbm.items.ModItems.ToolSets;
 import com.hbm.items.RBMKItemRenderers;
 import com.hbm.items.armor.ArmorNo9;
 import com.hbm.items.armor.ItemArmorMod;
@@ -278,9 +284,9 @@ public class ModEventHandlerClient {
 
         ModelResourceLocation[] locations = new ModelResourceLocation[ItemAmmoArty.itemTypes.length];
         for (i = 0; i < ItemAmmoArty.itemTypes.length; i++) {
-            locations[i] = new ModelResourceLocation(ModItems.ammo_arty.getRegistryName() + "_" + i, "inventory");
+            locations[i] = new ModelResourceLocation(Armory.ammo_arty.getRegistryName() + "_" + i, "inventory");
         }
-        ModelLoader.registerItemVariants(ModItems.ammo_arty, locations);
+        ModelLoader.registerItemVariants(Armory.ammo_arty, locations);
 
         FluidType[] order = Fluids.getInNiceOrder();
         for (i = 0; i < order.length; i++) {
@@ -313,8 +319,8 @@ public class ModEventHandlerClient {
 
 
         ((ItemBedrockOreNew) ModItems.bedrock_ore).registerModels();
-        ((ItemAmmoArty) ModItems.ammo_arty).registerModels();
-        ((ItemMold) ModItems.mold).registerModels();
+        ((ItemAmmoArty) Armory.ammo_arty).registerModels();
+        ((ItemMold) Foundry.mold).registerModels();
         IDynamicModels.registerModels();
         IDynamicModels.registerCustomStateMappers();
         IMetaItemTesr.redirectModels();
@@ -381,7 +387,7 @@ public class ModEventHandlerClient {
             for (int i = 0; i < TrackType.values().length; i++) {
                 ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(item.getRegistryName(), "inventory"));
             }
-        } else if (item == ModItems.ingot_u238m2) {
+        } else if (item == Ingots.ingot_u238m2) {
             ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
             ModelLoader.setCustomModelResourceLocation(item, 1, new ModelResourceLocation(RefStrings.MODID + ":hs-elements", "inventory"));
             ModelLoader.setCustomModelResourceLocation(item, 2, new ModelResourceLocation(RefStrings.MODID + ":hs-arsenic", "inventory"));
@@ -415,7 +421,7 @@ public class ModEventHandlerClient {
             for (int i = 0; i < ItemWasteShort.WasteClass.values().length; i++) {
                 ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(item.getRegistryName(), "inventory"));
             }
-        } else if (item == ModItems.coin_siege) {
+        } else if (item == Foods.coin_siege) {
             for (int i = 0; i < SiegeTier.getLength(); i++) {
                 ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(RefStrings.MODID + ":coin_siege_" + SiegeTier.tiers[i].name, "inventory"));
             }
@@ -507,39 +513,39 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         swapModelsNoGui(ModItems.shimmer_sledge, reg);
         swapModelsNoGui(ModItems.shimmer_axe, reg);
         swapModels(ModItems.fluid_duct, reg);
-        swapModelsNoGui(ModItems.stopsign, reg);
-        swapModelsNoGui(ModItems.sopsign, reg);
-        swapModelsNoGui(ModItems.chernobylsign, reg);
+        swapModelsNoGui(ToolSets.stopsign, reg);
+        swapModelsNoGui(ToolSets.sopsign, reg);
+        swapModelsNoGui(ToolSets.chernobylsign, reg);
         swapModels(Item.getItemFromBlock(ModBlocks.radiorec), reg);
         swapModels(ModItems.gun_vortex, reg);
         swapModelsNoGui(ModItems.wood_gavel, reg);
         swapModelsNoGui(ModItems.lead_gavel, reg);
         swapModelsNoGui(ModItems.diamond_gavel, reg);
         swapModelsNoGui(ModItems.mese_gavel, reg);
-        swapModels(ModItems.ingot_steel_dusted, reg);
-        swapModels(ModItems.ingot_chainsteel, reg);
-        swapModels(ModItems.ingot_meteorite, reg);
-        swapModels(ModItems.ingot_meteorite_forged, reg);
-        swapModels(ModItems.blade_meteorite, reg);
+        swapModels(Ingots.ingot_steel_dusted, reg);
+        swapModels(Ingots.ingot_chainsteel, reg);
+        swapModels(Ingots.ingot_meteorite, reg);
+        swapModels(Ingots.ingot_meteorite_forged, reg);
+        swapModels(Nuggies.blade_meteorite, reg);
         swapModels(ModItems.crucible, reg);
         swapModels(ModItems.hs_sword, reg);
         swapModels(ModItems.hf_sword, reg);
         swapModels(ModItems.gun_egon, reg);
         swapModels(ModItems.jshotgun, reg);
 
-        swapModels(ModItems.meteorite_sword_seared, reg);
-        swapModels(ModItems.meteorite_sword_reforged, reg);
-        swapModels(ModItems.meteorite_sword_hardened, reg);
-        swapModels(ModItems.meteorite_sword_alloyed, reg);
-        swapModels(ModItems.meteorite_sword_machined, reg);
-        swapModels(ModItems.meteorite_sword_treated, reg);
-        swapModels(ModItems.meteorite_sword_etched, reg);
-        swapModels(ModItems.meteorite_sword_bred, reg);
-        swapModels(ModItems.meteorite_sword_irradiated, reg);
-        swapModels(ModItems.meteorite_sword_fused, reg);
-        swapModels(ModItems.meteorite_sword_baleful, reg);
-        swapModels(ModItems.meteorite_sword_warped, reg);
-        swapModels(ModItems.meteorite_sword_demonic, reg);
+        swapModels(ToolSets.meteorite_sword_seared, reg);
+        swapModels(ToolSets.meteorite_sword_reforged, reg);
+        swapModels(ToolSets.meteorite_sword_hardened, reg);
+        swapModels(ToolSets.meteorite_sword_alloyed, reg);
+        swapModels(ToolSets.meteorite_sword_machined, reg);
+        swapModels(ToolSets.meteorite_sword_treated, reg);
+        swapModels(ToolSets.meteorite_sword_etched, reg);
+        swapModels(ToolSets.meteorite_sword_bred, reg);
+        swapModels(ToolSets.meteorite_sword_irradiated, reg);
+        swapModels(ToolSets.meteorite_sword_fused, reg);
+        swapModels(ToolSets.meteorite_sword_baleful, reg);
+        swapModels(ToolSets.meteorite_sword_warped, reg);
+        swapModels(ToolSets.meteorite_sword_demonic, reg);
 
         swapModelsNoGui(ModItems.bedrock_ore, reg);
         swapModels(ModItems.detonator_laser, reg);
@@ -549,7 +555,7 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         swapModels(ModItems.fluid_tank_full, reg);
         swapModels(ModItems.fluid_tank_lead_full, reg);
 
-        swapModels(ModItems.ammo_himars, reg);
+        swapModels(Armory.ammo_himars, reg);
         swapModels(ModItems.jetpack_glider, reg);
         swapModels(ModItems.gear_large, reg);
 
@@ -627,7 +633,7 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
                 }
             }
             return 0xFFFFFF;
-        }, ModItems.scraps);
+        }, Foundry.scraps);
         //TODO: Move to IDynamicModels
         ItemDepletedFuel.registerColorHandlers(evt);
         ItemBedrockOreNew.registerColorHandlers(evt);

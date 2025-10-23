@@ -2,6 +2,7 @@ package com.hbm.items.special;
 
 import com.hbm.items.ItemBakedBase;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Materials.Powders;
 import com.hbm.main.MainRegistry;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
@@ -33,7 +34,7 @@ public class ItemFuel extends ItemBakedBase {
 			else
 				list.add("I hate dust!");
 		}
-		if(this == ModItems.powder_fire)
+		if(this == Powders.powder_fire)
 		{
 			list.add("Used in multi purpose bombs:");
 			list.add("Incendiary bombs are fun!");

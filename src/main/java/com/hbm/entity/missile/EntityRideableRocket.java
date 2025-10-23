@@ -16,6 +16,7 @@ import com.hbm.items.ItemVOTVdrive;
 import com.hbm.items.ItemVOTVdrive.Destination;
 import com.hbm.items.ItemVOTVdrive.Target;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.MissileParts;
 import com.hbm.items.weapon.ItemCustomRocket;
 import com.hbm.items.weapon.ItemMissile;
 import com.hbm.lib.HBMSoundHandler;
@@ -358,7 +359,7 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 							if(targetWorld != null) {
 								Satellite.orbit(targetWorld, Satellite.getIDFromItem(rocket.capsule.part), satFreq, posX, posY, posZ);
 							}
-						} else if(rocket.capsule.part == ModItems.rp_station_core_20) {
+						} else if(rocket.capsule.part == MissileParts.rp_station_core_20) {
 							// We mark the station as travellable, but we don't actually add the station until the player travels to it
 							OrbitalStation.addStation(x, z, CelestialBody.getBody(world));
 
@@ -466,7 +467,7 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 	}
 
 	public boolean isReusable() {
-		return getRocket().capsule.part == ModItems.rp_pod_20;
+		return getRocket().capsule.part == MissileParts.rp_pod_20;
 	}
 
 	@Override
@@ -532,7 +533,7 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 				return false;
 			} else if(getPassengers().isEmpty() && source.getTrueSource() instanceof EntityPlayer) {
 				// A pickaxe is required to break, unless it's just the capsule (or it has tipped over)
-				if((getRocket().stages.isEmpty() && getRocket().capsule.part != ModItems.rp_pod_20) || getState() == RocketState.TIPPING) {
+				if((getRocket().stages.isEmpty() && getRocket().capsule.part != MissileParts.rp_pod_20) || getState() == RocketState.TIPPING) {
 					dropNDie(source);
 				} else {
 					EntityPlayer player = (EntityPlayer)source.getTrueSource();

@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 import com.hbm.inventory.fluid.FluidStack;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.DummyTexs;
 import com.hbm.items.machine.ItemFluidIcon;
 import com.hbm.util.Tuple.Pair;
 
@@ -30,12 +30,12 @@ public class RadiolysisRecipes {
             Pair<FluidStack, FluidStack> pair = fluidTypePairEntry.getValue();
             ItemStack[] outputs = new ItemStack[2];
             if (pair.getKey().type == Fluids.NONE) {
-                outputs[0] = new ItemStack(ModItems.nothing);
+                outputs[0] = new ItemStack(DummyTexs.nothing);
             } else {
                 outputs[0] = ItemFluidIcon.make(pair.getKey().type, pair.getKey().fill);
             }
             if (pair.getValue().type == Fluids.NONE) {
-                outputs[1] = new ItemStack(ModItems.nothing);
+                outputs[1] = new ItemStack(DummyTexs.nothing);
             } else {
                 outputs[1] = ItemFluidIcon.make(pair.getValue().type, pair.getValue().fill);
             }

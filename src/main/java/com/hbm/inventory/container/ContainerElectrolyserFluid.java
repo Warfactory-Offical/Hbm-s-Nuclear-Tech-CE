@@ -3,7 +3,7 @@ package com.hbm.inventory.container;
 import com.hbm.api.energymk2.IBatteryItem;
 import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotTakeOnly;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Batteries;
 import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.tileentity.machine.TileEntityElectrolyser;
@@ -68,7 +68,7 @@ public class ContainerElectrolyserFluid extends Container {
                 }
             } else {
 
-                if(var3.getItem() instanceof IBatteryItem || var3.getItem() == ModItems.battery_creative) {
+                if(var3.getItem() instanceof IBatteryItem || var3.getItem() == Batteries.battery_creative) {
                     if(!this.mergeItemStack(var5, 0, 1, false)) {
                         return ItemStack.EMPTY;
                     }

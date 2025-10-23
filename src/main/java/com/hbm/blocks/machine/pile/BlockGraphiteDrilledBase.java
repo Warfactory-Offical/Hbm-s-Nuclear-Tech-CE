@@ -9,6 +9,7 @@ import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.material.Mats;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Materials.Ingots;
 import com.hbm.items.special.ItemCell;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.RefStrings;
@@ -71,7 +72,7 @@ public class BlockGraphiteDrilledBase extends BlockFlammable implements IToolabl
 	public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
 		int meta = getMetaFromState(state);
 		List<ItemStack> drops = new ArrayList<>();
-		drops.add(new ItemStack(ModItems.ingot_graphite, 8));
+		drops.add(new ItemStack(Ingots.ingot_graphite, 8));
 		if ((meta & 4) == 4)
 			drops.add(new ItemStack(ModItems.shell, 1, Mats.MAT_ALUMINIUM.id));
 		if (getInsertedItem() != null)

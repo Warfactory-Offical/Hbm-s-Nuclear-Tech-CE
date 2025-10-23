@@ -4,7 +4,7 @@ import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.container.ContainerMachineAmmoPress;
 import com.hbm.inventory.recipes.AmmoPressRecipes;
 import com.hbm.inventory.recipes.AmmoPressRecipes.AmmoPressRecipe;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.DummyTexs;
 import com.hbm.lib.RefStrings;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.packet.PacketDispatcher;
@@ -272,7 +272,7 @@ public class GUIMachineAmmoPress extends GuiInfoContainer {
         List<ItemStack> inputs = stack.extractForJEI();
         ItemStack input =
                 inputs.isEmpty()
-                        ? new ItemStack(ModItems.nothing)
+                        ? new ItemStack(DummyTexs.nothing)
                         : inputs.get((int) (Math.abs(System.currentTimeMillis() / 1000) % inputs.size()));
 
         RenderHelper.enableGUIStandardItemLighting();

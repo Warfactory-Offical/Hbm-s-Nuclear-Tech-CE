@@ -3,6 +3,7 @@ package com.hbm.items.armor;
 import com.hbm.capability.HbmLivingProps;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Inserts;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.AdvancementManager;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
@@ -60,7 +61,7 @@ public class ItemCigarette extends Item {
     @Override
     public @NotNull ItemStack onItemUseFinish(ItemStack stack, @NotNull World worldIn, @NotNull EntityLivingBase entityLiving) {
         if (!worldIn.isRemote && entityLiving instanceof EntityPlayer player) {
-            if (this == ModItems.cigarette) {
+            if (this == Inserts.cigarette) {
                 if (!player.capabilities.isCreativeMode) {
                     stack.shrink(1);
                     HbmLivingProps.incrementBlackLung(player, 2000);
@@ -71,7 +72,7 @@ public class ItemCigarette extends Item {
                 if(helmet.getItem() == ModItems.no9) {
                     AdvancementManager.grantAchievement(player, AdvancementManager.achNo9);
                 }
-            } else if (this == ModItems.crackpipe) {
+            } else if (this == Inserts.crackpipe) {
                 if (!player.capabilities.isCreativeMode) {
                     stack.shrink(1);
                     HbmLivingProps.incrementBlackLung(player, 500);
@@ -97,7 +98,7 @@ public class ItemCigarette extends Item {
     @SideOnly(Side.CLIENT)
     public void addInformation(@NotNull ItemStack stack, @Nullable World worldIn, @NotNull List<String> tooltip, @NotNull ITooltipFlag flagIn) {
 
-        if (this == ModItems.cigarette) {
+        if (this == Inserts.cigarette) {
             tooltip.add(TextFormatting.RED + "✓ Asbestos filter");
             tooltip.add(TextFormatting.RED + "✓ High in tar");
             tooltip.add(TextFormatting.RED + "✓ Tobacco contains 100% Polonium-210");

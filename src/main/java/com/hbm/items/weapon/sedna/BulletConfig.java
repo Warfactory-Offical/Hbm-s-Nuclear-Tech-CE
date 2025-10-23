@@ -10,6 +10,7 @@ import com.hbm.inventory.OreDictManager;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.items.ItemEnums;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.sedna.factory.ConfettiUtil;
 import com.hbm.items.weapon.sedna.factory.GunFactory;
 import com.hbm.lib.ForgeDirection;
@@ -270,12 +271,12 @@ public class BulletConfig implements Cloneable {
     }
 
     public BulletConfig setItem(GunFactory.EnumAmmo ammo) {
-        this.ammo = new RecipesCommon.ComparableStack(ModItems.ammo_standard, 1, ammo.ordinal());
+        this.ammo = new RecipesCommon.ComparableStack(Armory.ammo_standard, 1, ammo.ordinal());
         return this;
     }
 
     public BulletConfig setItem(GunFactory.EnumAmmoSecret ammo) {
-        this.ammo = new RecipesCommon.ComparableStack(ModItems.ammo_secret, 1, ammo.ordinal());
+        this.ammo = new RecipesCommon.ComparableStack(Armory.ammo_secret, 1, ammo.ordinal());
         return this;
     }
 

@@ -8,7 +8,8 @@ import com.hbm.explosion.ExplosionNukeSmall;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IRadiationImmune;
 import com.hbm.inventory.OreDictManager;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
+import com.hbm.items.ModItems.Foods;
 import com.hbm.items.weapon.sedna.factory.GunFactory;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.main.AdvancementManager;
@@ -98,7 +99,7 @@ public class EntityCreeperNuclear extends EntityCreeper implements IRadiationImm
 		super.dropFewItems(wasRecentlyHit, lootingModifier);
 
 		if (rand.nextInt(3) == 0)
-			this.dropItem(ModItems.coin_creeper, 1);
+			this.dropItem(Foods.coin_creeper, 1);
 	}
 
 	@Override
@@ -110,7 +111,7 @@ public class EntityCreeperNuclear extends EntityCreeper implements IRadiationImm
 			AdvancementManager.grantAchievement(player, AdvancementManager.bossCreeper);
 		}
 		if (cause.getTrueSource() instanceof EntitySkeleton || (cause.isProjectile() && cause.getImmediateSource() instanceof EntityArrow arrow && arrow.shootingEntity == null)) {
-            this.entityDropItem(OreDictManager.DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.NUKE_STANDARD), 1);
+            this.entityDropItem(OreDictManager.DictFrame.fromOne(Armory.ammo_standard, GunFactory.EnumAmmo.NUKE_STANDARD), 1);
 		}
 	}
 

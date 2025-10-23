@@ -1,7 +1,7 @@
 package com.hbm.items.armor;
 
 import com.hbm.handler.ArmorModHandler;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Inserts;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -24,11 +24,11 @@ public class ItemModBathwater extends ItemArmorMod {
 	@Override
 	public void addInformation(ItemStack stack, World worldIn, List<String> list, ITooltipFlag flagIn){
 		String color = "";
-		if(this == ModItems.bathwater){
+		if(this == Inserts.bathwater){
 			color = "" + (System.currentTimeMillis() % 1000 < 500 ? TextFormatting.BLUE : TextFormatting.LIGHT_PURPLE);
 			list.add(color + "Inflicts Poison II on the attacker");
 		}
-		if(this == ModItems.bathwater_mk2){
+		if(this == Inserts.bathwater_mk2){
 			color = "" + (System.currentTimeMillis() % 1000 < 500 ? TextFormatting.GREEN : TextFormatting.YELLOW);
 			list.add(color + "Inflicts Wither IV on the attacker");
 		}
@@ -39,11 +39,11 @@ public class ItemModBathwater extends ItemArmorMod {
 	@Override
 	public void addDesc(List<String> list, ItemStack stack, ItemStack armor) {
 		String color = "";
-		if(this == ModItems.bathwater){
+		if(this == Inserts.bathwater){
 			color = "" + (System.currentTimeMillis() % 1000 < 500 ? TextFormatting.BLUE : TextFormatting.LIGHT_PURPLE);
 			list.add(color + "  " + stack.getDisplayName() + " (Poisons attackers)");
 		}
-		if(this == ModItems.bathwater_mk2){
+		if(this == Inserts.bathwater_mk2){
 			color = "" + (System.currentTimeMillis() % 1000 < 500 ? TextFormatting.GREEN : TextFormatting.YELLOW);
 			list.add(color + "  " + stack.getDisplayName() + " (Withers attackers)");
 		}
@@ -60,10 +60,10 @@ public class ItemModBathwater extends ItemArmorMod {
 				
 				if(attacker instanceof EntityLivingBase) {
 					
-					if(this == ModItems.bathwater)
+					if(this == Inserts.bathwater)
 						((EntityLivingBase)attacker).addPotionEffect(new PotionEffect(MobEffects.POISON, 200, 2));
 					
-					else if(this == ModItems.bathwater_mk2)
+					else if(this == Inserts.bathwater_mk2)
 						((EntityLivingBase)attacker).addPotionEffect(new PotionEffect(MobEffects.WITHER, 200, 4));
 				}
 			}

@@ -7,6 +7,8 @@ import com.hbm.inventory.OreDictManager;
 import com.hbm.itempool.ItemPool;
 import com.hbm.itempool.ItemPoolsPile;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
+import com.hbm.items.ModItems.Foods;
 import com.hbm.items.special.ItemBookLore;
 import com.hbm.items.weapon.sedna.factory.GunFactory;
 import net.minecraft.init.Items;
@@ -87,13 +89,13 @@ public class LootGenerator {
         if(loot != null && loot.items.isEmpty()) {
 
             if(world.rand.nextInt(5) == 0)
-                loot.addItem(OreDictManager.DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.NUKE_STANDARD), -0.25, 0, -0.125);
+                loot.addItem(OreDictManager.DictFrame.fromOne(Armory.ammo_standard, GunFactory.EnumAmmo.NUKE_STANDARD), -0.25, 0, -0.125);
             else
-                loot.addItem(OreDictManager.DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.ROCKET_HEAT), -0.25, 0, -0.25);
+                loot.addItem(OreDictManager.DictFrame.fromOne(Armory.ammo_standard, GunFactory.EnumAmmo.ROCKET_HEAT), -0.25, 0, -0.25);
 
-            for(int i = 0; i < 4; i++) addItemWithDeviation(loot, world.rand, new ItemStack(ModItems.cap_nuka, 2), 0.125, i * 0.03125, 0.25);
+            for(int i = 0; i < 4; i++) addItemWithDeviation(loot, world.rand, new ItemStack(Foods.cap_nuka, 2), 0.125, i * 0.03125, 0.25);
             for(int i = 0; i < 2; i++) addItemWithDeviation(loot, world.rand, new ItemStack(ModItems.syringe_metal_stimpak, 1), -0.25, i * 0.03125, 0.25);
-            for(int i = 0; i < 6; i++) addItemWithDeviation(loot, world.rand, new ItemStack(ModItems.cap_nuka, 2), 0.125, i * 0.03125, -0.25);
+            for(int i = 0; i < 6; i++) addItemWithDeviation(loot, world.rand, new ItemStack(Foods.cap_nuka, 2), 0.125, i * 0.03125, -0.25);
         }
     }
 
@@ -219,18 +221,18 @@ public class LootGenerator {
     public static void lootFlareGun(World world, int x, int y, int z) {
         BlockLoot.TileEntityLoot loot = (BlockLoot.TileEntityLoot) world.getTileEntity(new BlockPos(x, y, z));
         if (loot != null && loot.items.isEmpty()) {
-            addItemWithDeviation(loot, world.rand, new ItemStack(ModItems.gun_flaregun), 0, 0, -0.25);
+            addItemWithDeviation(loot, world.rand, new ItemStack(Armory.gun_flaregun), 0, 0, -0.25);
 
             int count = world.rand.nextInt(3) + 2;
             for (int k = 0; k < count; k++)
                 addItemWithDeviation(loot, world.rand,
-                        new ItemStack(ModItems.ammo_standard, 1, GunFactory.EnumAmmo.G26_FLARE.ordinal()),
+                        new ItemStack(Armory.ammo_standard, 1, GunFactory.EnumAmmo.G26_FLARE.ordinal()),
                         -0.25, k * 0.03125, 0.25);
 
             count = world.rand.nextInt(1) + 1;
             for (int k = 0; k < count; k++)
                 addItemWithDeviation(loot, world.rand,
-                        new ItemStack(ModItems.ammo_standard, 1,
+                        new ItemStack(Armory.ammo_standard, 1,
                                 world.rand.nextBoolean() ? GunFactory.EnumAmmo.G26_FLARE_SUPPLY.ordinal() : GunFactory.EnumAmmo.G26_FLARE_WEAPON.ordinal()),
                         0.25, k * 0.03125, 0.125);
         }

@@ -2,7 +2,7 @@ package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.ToolSets;
 import com.hbm.lib.HBMSoundHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -120,7 +120,7 @@ public class BlockSupplyCrate extends BlockContainer {
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if(!player.getHeldItemMainhand().isEmpty() && player.getHeldItemMainhand().getItem().equals(ModItems.crowbar)) {
+        if(!player.getHeldItemMainhand().isEmpty() && player.getHeldItemMainhand().getItem().equals(ToolSets.crowbar)) {
             if(!world.isRemote) {
                 dropContents(world, pos);
                 world.destroyBlock(pos, true);

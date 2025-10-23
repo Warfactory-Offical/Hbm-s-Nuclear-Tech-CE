@@ -1,6 +1,7 @@
 package com.hbm.items.food;
 
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foods;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
@@ -35,7 +36,7 @@ public class ItemMuchoMango extends ItemFood {
 
     @Override
     public void addInformation(ItemStack stack, World world, List<String> list, ITooltipFlag flagIn) {
-        if(this == ModItems.mucho_mango) {
+        if(this == Foods.mucho_mango) {
             list.add("The Comically Large Can");
         }
     }

@@ -16,6 +16,7 @@ import com.hbm.items.ItemEnums;
 import com.hbm.items.ItemEnums.EnumAshType;
 import com.hbm.items.ItemEnums.EnumCasingType;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Materials.Powders;
 import com.hbm.main.MainRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -128,7 +129,7 @@ public class MatDistribution extends SerializableRecipe {
 
         //TODO
         registerEntry(DictFrame.fromOne(ModBlocks.stone_resource, EnumStoneType.LIMESTONE), MAT_FLUX, DUST.q(10));
-        registerEntry(ModItems.powder_flux, MAT_FLUX, DUST.q(1));
+        registerEntry(Powders.powder_flux, MAT_FLUX, DUST.q(1));
         registerEntry(new ItemStack(Items.COAL, 1, 1), MAT_CARBON, NUGGET.q(3));
 
         registerEntry(DictFrame.fromOne(ModItems.powder_ash, EnumAshType.WOOD), MAT_CARBON, NUGGET.q(1));

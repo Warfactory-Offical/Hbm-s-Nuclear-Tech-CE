@@ -1,6 +1,6 @@
 package com.hbm.render.item.weapon.sedna;
 
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.items.weapon.sedna.mods.WeaponModManager;
 import com.hbm.main.ResourceManager;
@@ -213,11 +213,11 @@ public class ItemRenderG3 extends ItemRenderWeaponBase {
 	}
 
 	public boolean hasSilencer(ItemStack stack) {
-		return stack.getItem() == ModItems.gun_g3_zebra || WeaponModManager.hasUpgrade(stack, 0, WeaponModManager.ID_SILENCER);
+		return stack.getItem() == Armory.gun_g3_zebra || WeaponModManager.hasUpgrade(stack, 0, WeaponModManager.ID_SILENCER);
 	}
 
 	public boolean isScoped(ItemStack stack) {
-		return stack.getItem() == ModItems.gun_g3_zebra || WeaponModManager.hasUpgrade(stack, 0, WeaponModManager.ID_SCOPE);
+		return stack.getItem() == Armory.gun_g3_zebra || WeaponModManager.hasUpgrade(stack, 0, WeaponModManager.ID_SCOPE);
 	}
 
 	public ResourceLocation getTexture(ItemStack stack) {

@@ -1,7 +1,7 @@
 package com.hbm.blocks.bomb;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Materials.Powders;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -81,7 +81,7 @@ public class BlockCloudResidue extends Block {
 	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
 		if(rand.nextInt(25) == 1){
-			return ModItems.powder_cloud;
+			return Powders.powder_cloud;
 		}
 		return Items.AIR;
 	}

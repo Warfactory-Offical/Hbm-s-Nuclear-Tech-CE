@@ -4,7 +4,7 @@ import com.google.common.collect.Multimap;
 import com.hbm.capability.HbmCapability;
 import com.hbm.capability.HbmCapability.IHBMData;
 import com.hbm.handler.ArmorUtil;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.ArmorSets;
 import com.hbm.items.gear.ArmorFSB;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
@@ -61,7 +61,7 @@ public class ArmorDNT extends ArmorFSBPowered {
 
 		super.onArmorTick(world, player, stack);
 		
-		if(this != ModItems.dns_plate)
+		if(this != ArmorSets.dns_plate)
 			return;
 
 		IHBMData props = HbmCapability.getData(player);

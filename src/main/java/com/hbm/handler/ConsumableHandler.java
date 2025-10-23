@@ -4,6 +4,7 @@ import com.hbm.capability.HbmLivingProps;
 import com.hbm.config.VersatileConfig;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foods;
 import com.hbm.items.armor.JetpackFueledBase;
 import com.hbm.items.weapon.sedna.GunConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
@@ -177,7 +178,7 @@ public class ConsumableHandler {
                 new PotionEffect(MobEffects.NAUSEA, 5 * 20, 0)
         );
         context.playSound(HBMSoundHandler.syringeUse);
-        context.shrinkAndReplaceItem(ModItems.syringe_metal_empty, ModItems.bottle2_empty);
+        context.shrinkAndReplaceItem(ModItems.syringe_metal_empty, Foods.bottle2_empty);
     }
 
     private static void handleJetpackTank(final Context context) {

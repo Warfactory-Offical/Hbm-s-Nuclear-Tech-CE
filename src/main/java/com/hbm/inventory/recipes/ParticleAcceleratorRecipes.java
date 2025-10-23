@@ -6,6 +6,8 @@ import com.google.gson.stream.JsonWriter;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.recipes.loader.SerializableRecipe;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foods;
+import com.hbm.items.ModItems.Materials.Powders;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -74,12 +76,12 @@ public class ParticleAcceleratorRecipes extends SerializableRecipe {
         recipes.add(new ParticleAcceleratorRecipe(new RecipesCommon.ComparableStack(ModItems.particle_muon),
                 new RecipesCommon.ComparableStack(ModItems.particle_dark), 12_500, new ItemStack(ModItems.particle_strange), null));
         recipes.add(new ParticleAcceleratorRecipe(new RecipesCommon.ComparableStack(ModItems.particle_strange),
-                new RecipesCommon.ComparableStack(ModItems.powder_magic), 12_500, new ItemStack(ModItems.particle_sparkticle),
+                new RecipesCommon.ComparableStack(Powders.powder_magic), 12_500, new ItemStack(ModItems.particle_sparkticle),
                 new ItemStack(ModItems.dust)));
         recipes.add(new ParticleAcceleratorRecipe(new RecipesCommon.ComparableStack(ModItems.particle_sparkticle),
                 new RecipesCommon.ComparableStack(ModItems.particle_higgs), 70_000, new ItemStack(ModItems.particle_digamma), null));
         recipes.add(new ParticleAcceleratorRecipe(new RecipesCommon.ComparableStack(Items.CHICKEN),
-                new RecipesCommon.ComparableStack(Items.CHICKEN), 100, new ItemStack(ModItems.nugget), new ItemStack(ModItems.nugget)));
+                new RecipesCommon.ComparableStack(Items.CHICKEN), 100, new ItemStack(Foods.nugget), new ItemStack(Foods.nugget)));
     }
 
     @Override

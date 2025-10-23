@@ -3,6 +3,9 @@ package com.hbm.world.generator.room;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.crafting.handlers.MKUCraftingHandler;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Inserts;
+import com.hbm.items.ModItems.Materials.Nuggies;
+import com.hbm.items.ModItems.Materials.Powders;
 import com.hbm.tileentity.machine.TileEntitySafe;
 import com.hbm.world.generator.CellularDungeon;
 import com.hbm.world.generator.CellularDungeonRoom;
@@ -123,19 +126,19 @@ public class MeteorDungeonRoom8 extends CellularDungeonRoom {
 
 		if(r == 0) {
 			orig = bookIodine;
-			ingred = ModItems.powder_iodine;
+			ingred = Powders.powder_iodine;
 		} else if(r == 1) {
 			orig = bookPhosphorous;
-			ingred = ModItems.powder_fire;
+			ingred = Powders.powder_fire;
 		} else if(r == 2) {
 			orig = bookDust;
 			ingred = ModItems.dust;
 		} else if(r == 3) {
 			orig = bookMercury;
-			ingred = ModItems.ingot_mercury;
+			ingred = Nuggies.ingot_mercury;
 		} else if(r == 4) {
 			orig = bookFlower;
-			ingred = ModItems.morning_glory;
+			ingred = Inserts.morning_glory;
 		} else {
 			orig = bookSyringe;
 			ingred = ModItems.syringe_metal_empty;

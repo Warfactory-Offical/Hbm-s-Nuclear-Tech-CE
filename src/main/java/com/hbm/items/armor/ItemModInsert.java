@@ -2,7 +2,7 @@ package com.hbm.items.armor;
 
 import com.google.common.collect.Multimap;
 import com.hbm.handler.ArmorModHandler;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Inserts;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -84,7 +84,7 @@ public class ItemModInsert extends ItemArmorMod {
 		
 		insert.setItemDamage(insert.getItemDamage() + 1);
 		
-		if(!event.getEntity().world.isRemote && this == ModItems.insert_era) {
+		if(!event.getEntity().world.isRemote && this == Inserts.insert_era) {
 			event.getEntity().world.newExplosion(event.getEntity(), event.getEntity().posX, event.getEntity().posY - event.getEntity().getYOffset() + event.getEntity().height * 0.5, event.getEntity().posZ, 0.05F, false, false);
 		}
 		

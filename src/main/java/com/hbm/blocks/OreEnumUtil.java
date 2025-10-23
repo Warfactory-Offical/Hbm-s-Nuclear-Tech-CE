@@ -4,6 +4,10 @@ import com.hbm.handler.WeightedRandomChestContentFrom1710;
 import com.hbm.itempool.ItemPool;
 import com.hbm.itempool.ItemPoolsSingle;
 import com.hbm.items.ItemEnums;
+import com.hbm.items.ModItems.Materials.Crystals;
+import com.hbm.items.ModItems.Materials.Ingots;
+import com.hbm.items.ModItems.Materials.Nuggies;
+import com.hbm.items.ModItems.Materials.Powders;
 import com.hbm.lib.TriFunction;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Items;
@@ -43,7 +47,7 @@ public class OreEnumUtil {
 
 
     public static ItemStack phosphorusNetherDrop(IBlockState state, Random rand) {
-        return rand.nextInt(10) == 0 ? new ItemStack(ingot_phosphorus) : new ItemStack(powder_fire);
+        return rand.nextInt(10) == 0 ? new ItemStack(Ingots.ingot_phosphorus) : new ItemStack(Powders.powder_fire);
     }
 
     public static ItemStack blockMeteorDrop(IBlockState state, Random rand) {
@@ -58,10 +62,10 @@ public class OreEnumUtil {
         DIAMOND(() -> new ItemStack(Items.DIAMOND), OreEnumUtil::vanillaFortune),
         EMERALD(() -> new ItemStack(Items.EMERALD), OreEnumUtil::vanillaFortune),
 
-        ASBESTOS(() -> new ItemStack(ingot_asbestos), OreEnumUtil::vanillaFortune),
-        SULFUR(() -> new ItemStack(sulfur), OreEnumUtil::base2Rand3Fortune),
-        NITER(() -> new ItemStack(niter), OreEnumUtil::base1Rand2Fortune),
-        FLUORITE(() -> new ItemStack(fluorite), OreEnumUtil::base2Rand3Fortune),
+        ASBESTOS(() -> new ItemStack(Ingots.ingot_asbestos), OreEnumUtil::vanillaFortune),
+        SULFUR(() -> new ItemStack(Powders.sulfur), OreEnumUtil::base2Rand3Fortune),
+        NITER(() -> new ItemStack(Powders.niter), OreEnumUtil::base1Rand2Fortune),
+        FLUORITE(() -> new ItemStack(Ingots.fluorite), OreEnumUtil::base2Rand3Fortune),
         METEORITE_FRAG(() -> new ItemStack(fragment_meteorite), OreEnumUtil::base1Rand3),
         METEORITE_TREASURE(OreEnumUtil::getMeteorTreasure, OreEnumUtil::base1Rand3),
         COBALT(() -> new ItemStack(fragment_cobalt), OreEnumUtil::cobaltAmount),
@@ -75,15 +79,15 @@ public class OreEnumUtil {
         COLTAN(() -> new ItemStack(fragment_coltan), OreEnumUtil::vanillaFortune),
         RAD_GEM(() -> new ItemStack(gem_rad), OreEnumUtil::vanillaFortune),
         WASTE_TRINITE(() -> new ItemStack(trinitite), OreEnumUtil::vanillaFortune),
-        ZIRCON(() -> new ItemStack(nugget_zirconium), OreEnumUtil::base2Rand2Fortune),
+        ZIRCON(() -> new ItemStack(Nuggies.nugget_zirconium), OreEnumUtil::base2Rand2Fortune),
         NEODYMIUM(() -> new ItemStack(fragment_neodymium), OreEnumUtil::base2Rand2Fortune),
-        NITAN(() -> new ItemStack(powder_nitan_mix), OreEnumUtil::const1),
+        NITAN(() -> new ItemStack(Powders.powder_nitan_mix), OreEnumUtil::const1),
 
-        CLUSTER_IRON(() -> new ItemStack(crystal_iron), OreEnumUtil::vanillaFortune),
-        CLUSTER_TITANIUM(() -> new ItemStack(crystal_titanium), OreEnumUtil::vanillaFortune),
-        CLUSTER_ALUMINIUM(() -> new ItemStack(crystal_aluminium), OreEnumUtil::vanillaFortune),
-        CLUSTER_COPPER(() -> new ItemStack(crystal_copper), OreEnumUtil::vanillaFortune),
-        CLUSTER_TUNGSTEN(() -> new ItemStack(crystal_tungsten), OreEnumUtil::vanillaFortune),
+        CLUSTER_IRON(() -> new ItemStack(Crystals.crystal_iron), OreEnumUtil::vanillaFortune),
+        CLUSTER_TITANIUM(() -> new ItemStack(Crystals.crystal_titanium), OreEnumUtil::vanillaFortune),
+        CLUSTER_ALUMINIUM(() -> new ItemStack(Crystals.crystal_aluminium), OreEnumUtil::vanillaFortune),
+        CLUSTER_COPPER(() -> new ItemStack(Crystals.crystal_copper), OreEnumUtil::vanillaFortune),
+        CLUSTER_TUNGSTEN(() -> new ItemStack(Crystals.crystal_tungsten), OreEnumUtil::vanillaFortune),
         ;
 
         public final BiFunction<IBlockState, Random, ItemStack> dropFunction;

@@ -2,7 +2,7 @@ package com.hbm.entity.mob.botprime;
 
 import com.hbm.entity.mob.ai.EntityAINearestAttackableTargetNT;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foods;
 import com.hbm.main.AdvancementManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.IEntityLivingData;
@@ -149,7 +149,7 @@ public class EntityBOTPrimeHead extends EntityBOTPrimeBase {
 			List<EntityPlayer> players = world.getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox().grow(200, 200, 200));
 			for(EntityPlayer player : players) {
 				AdvancementManager.grantAchievement(player, AdvancementManager.bossWorm);
-				player.inventory.addItemStackToInventory(new ItemStack(ModItems.coin_worm));
+				player.inventory.addItemStackToInventory(new ItemStack(Foods.coin_worm));
 			}
 		}
 		

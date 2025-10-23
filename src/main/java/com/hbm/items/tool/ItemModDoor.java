@@ -2,6 +2,7 @@ package com.hbm.items.tool;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.BlockItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.SoundType;
@@ -45,11 +46,11 @@ public class ItemModDoor extends Item {
             }
             Block block1;
 
-            if(this == ModItems.door_metal)
+            if(this == BlockItems.door_metal)
             	block1 = ModBlocks.door_metal;
-            else if(this == ModItems.door_office)
+            else if(this == BlockItems.door_office)
             	block1 = ModBlocks.door_office;
-            else if(this == ModItems.door_red)
+            else if(this == BlockItems.door_red)
                 block1 = ModBlocks.door_red;
             else
             	block1 = ModBlocks.door_bunker;

@@ -12,6 +12,10 @@ import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.recipes.loader.SerializableRecipe;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.DummyTexs;
+import com.hbm.items.ModItems.Materials.Ingots;
+import com.hbm.items.ModItems.Materials.Powders;
+import com.hbm.items.ModItems.ToolSets;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.Tuple;
 import net.minecraft.block.Block;
@@ -206,7 +210,7 @@ public class BlastFurnaceRecipes extends SerializableRecipe {
         for (Tuple.Triplet<Object, Object, ItemStack> recipe : blastFurnaceRecipes) {
             if (!hiddenRecipes.contains(new RecipesCommon.ComparableStack(recipe.getZ()))) {
                 ItemStack nothing =
-                        new ItemStack(ModItems.nothing).setStackDisplayName("If you're reading this, an error has occured! Check the " + "console.");
+                        new ItemStack(DummyTexs.nothing).setStackDisplayName("If you're reading this, an error has occured! Check the " + "console.");
                 List<ItemStack> in1 = new ArrayList<>();
                 List<ItemStack> in2 = new ArrayList<>();
                 in1.add(nothing);
@@ -269,23 +273,23 @@ public class BlastFurnaceRecipes extends SerializableRecipe {
     public void registerDefaults() {
         registerFuels();
         /* STEEL */
-        addRecipe(IRON, COAL, new ItemStack(ModItems.ingot_steel, 1));
-        addRecipe(IRON, ANY_COKE, new ItemStack(ModItems.ingot_steel, 1));
-        addRecipe(IRON.ore(), COAL, new ItemStack(ModItems.ingot_steel, 2));
-        addRecipe(IRON.ore(), ANY_COKE, new ItemStack(ModItems.ingot_steel, 3));
-        addRecipe(IRON.ore(), new RecipesCommon.ComparableStack(ModItems.powder_flux), new ItemStack(ModItems.ingot_steel, 3));
+        addRecipe(IRON, COAL, new ItemStack(Ingots.ingot_steel, 1));
+        addRecipe(IRON, ANY_COKE, new ItemStack(Ingots.ingot_steel, 1));
+        addRecipe(IRON.ore(), COAL, new ItemStack(Ingots.ingot_steel, 2));
+        addRecipe(IRON.ore(), ANY_COKE, new ItemStack(Ingots.ingot_steel, 3));
+        addRecipe(IRON.ore(), new RecipesCommon.ComparableStack(Powders.powder_flux), new ItemStack(Ingots.ingot_steel, 3));
 
-        addRecipe(CU, REDSTONE, new ItemStack(ModItems.ingot_red_copper, 2));
-        addRecipe(STEEL, MINGRADE, new ItemStack(ModItems.ingot_advanced_alloy, 2));
+        addRecipe(CU, REDSTONE, new ItemStack(Ingots.ingot_red_copper, 2));
+        addRecipe(STEEL, MINGRADE, new ItemStack(Ingots.ingot_advanced_alloy, 2));
         addRecipe(W, COAL, new ItemStack(ModItems.neutron_reflector, 2));
         addRecipe(W, ANY_COKE, new ItemStack(ModItems.neutron_reflector, 2));
         addRecipe(new RecipesCommon.ComparableStack(ModItems.canister_full, 1, Fluids.GASOLINE.getID()), "slimeball", new ItemStack(ModItems.canister_napalm));
-        addRecipe(W, SA326.nugget(), new ItemStack(ModItems.ingot_magnetized_tungsten));
-        addRecipe(STEEL, TC99.nugget(), new ItemStack(ModItems.ingot_tcalloy));
+        addRecipe(W, SA326.nugget(), new ItemStack(Ingots.ingot_magnetized_tungsten));
+        addRecipe(STEEL, TC99.nugget(), new ItemStack(Ingots.ingot_tcalloy));
         addRecipe(GOLD.plate(), ModItems.plate_mixed, new ItemStack(ModItems.plate_paa, 2));
-        addRecipe(BIGMT, ModItems.ingot_meteorite, new ItemStack(ModItems.ingot_starmetal, 2));
-        addRecipe(CO, ModItems.powder_meteorite, new ItemStack(ModItems.ingot_meteorite));
-        addRecipe(ModItems.meteorite_sword_hardened, CO, new ItemStack(ModItems.meteorite_sword_alloyed));
+        addRecipe(BIGMT, Ingots.ingot_meteorite, new ItemStack(Ingots.ingot_starmetal, 2));
+        addRecipe(CO, Powders.powder_meteorite, new ItemStack(Ingots.ingot_meteorite));
+        addRecipe(ToolSets.meteorite_sword_hardened, CO, new ItemStack(ToolSets.meteorite_sword_alloyed));
 
 
         if (GeneralConfig.enableLBSM && GeneralConfig.enableLBSMSimpleChemsitry) {
@@ -298,7 +302,7 @@ public class BlastFurnaceRecipes extends SerializableRecipe {
             IMCBlastFurnace.buffer.clear();
         }
 
-        hiddenRecipes.add(new RecipesCommon.ComparableStack(ModItems.meteorite_sword_alloyed));
+        hiddenRecipes.add(new RecipesCommon.ComparableStack(ToolSets.meteorite_sword_alloyed));
     }
 
     @Override

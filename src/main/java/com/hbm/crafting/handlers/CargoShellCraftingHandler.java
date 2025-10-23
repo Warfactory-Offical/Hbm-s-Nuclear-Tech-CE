@@ -1,6 +1,6 @@
 package com.hbm.crafting.handlers;
 
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -25,7 +25,7 @@ public class CargoShellCraftingHandler extends IForgeRegistryEntry.Impl<IRecipe>
 
                 itemCount++;
 
-                if (stack.getItem() == ModItems.ammo_arty && stack.getMetadata() == 8 && !stack.hasTagCompound()) {
+                if (stack.getItem() == Armory.ammo_arty && stack.getMetadata() == 8 && !stack.hasTagCompound()) {
                     shellCount++;
                 }
             }
@@ -45,7 +45,7 @@ public class CargoShellCraftingHandler extends IForgeRegistryEntry.Impl<IRecipe>
             if (stack.isEmpty())
                 continue;
 
-            if (stack.getItem() == ModItems.ammo_arty && stack.getMetadata() == 8 && !stack.hasTagCompound()) {
+            if (stack.getItem() == Armory.ammo_arty && stack.getMetadata() == 8 && !stack.hasTagCompound()) {
                 ItemStack copy = stack.copy();
                 copy.setCount(1);
                 shell = copy;
@@ -74,7 +74,7 @@ public class CargoShellCraftingHandler extends IForgeRegistryEntry.Impl<IRecipe>
 
     @Override
     public ItemStack getRecipeOutput() {
-        return new ItemStack(ModItems.ammo_shell, 1, 8);
+        return new ItemStack(Armory.ammo_shell, 1, 8);
     }
 
     @Override

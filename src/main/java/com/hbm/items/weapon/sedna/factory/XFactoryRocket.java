@@ -4,7 +4,7 @@ import com.hbm.entity.effect.EntityFireLingering;
 import com.hbm.entity.projectile.EntityBulletBaseMK4;
 import com.hbm.explosion.vanillant.ExplosionVNT;
 import com.hbm.explosion.vanillant.standard.*;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.GunConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
@@ -153,7 +153,7 @@ public class XFactoryRocket {
             rocket_ml[i] = makeML(rocket_template[i]);
         }
 
-        ModItems.gun_panzerschreck = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_panzerschreck", new GunConfig()
+        Armory.gun_panzerschreck = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_panzerschreck", new GunConfig()
                 .dura(300).draw(7).inspect(40).crosshair(Crosshair.L_CIRCUMFLEX)
                 .rec(new Receiver(0)
                         .dmg(25F).delay(5).reload(50).jam(40).sound(HBMSoundHandler.rpgShoot, 1.0F, 1.0F)
@@ -164,7 +164,7 @@ public class XFactoryRocket {
                 .anim(LAMBDA_PANZERSCHRECK_ANIMS).orchestra(Orchestras.ORCHESTRA_PANERSCHRECK)
         );
 
-        ModItems.gun_stinger = new ItemGunStinger(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_stinger", new GunConfig()
+        Armory.gun_stinger = new ItemGunStinger(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_stinger", new GunConfig()
                 .dura(300).draw(7).inspect(40).crosshair(Crosshair.L_BOX_OUTLINE)
                 .rec(new Receiver(0)
                         .dmg(35F).delay(5).reload(50).jam(40).sound(HBMSoundHandler.rpgShoot, 1.0F, 1.0F)
@@ -175,7 +175,7 @@ public class XFactoryRocket {
                 .anim(LAMBDA_PANZERSCHRECK_ANIMS).orchestra(Orchestras.ORCHESTRA_STINGER)
         );
 
-        ModItems.gun_quadro = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_quadro", new GunConfig()
+        Armory.gun_quadro = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_quadro", new GunConfig()
                 .dura(400).draw(7).inspect(40).crosshair(Crosshair.L_CIRCUMFLEX).hideCrosshair(false)
                 .rec(new Receiver(0)
                         .dmg(40F).spreadHipfire(0F).delay(10).reload(55).jam(40).sound(HBMSoundHandler.rpgShoot, 1.0F, 1.0F)
@@ -186,7 +186,7 @@ public class XFactoryRocket {
                 .anim(LAMBDA_QUADRO_ANIMS).orchestra(Orchestras.ORCHESTRA_QUADRO)
         );
 
-        ModItems.gun_missile_launcher = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_missile_launcher", new GunConfig()
+        Armory.gun_missile_launcher = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_missile_launcher", new GunConfig()
                 .dura(500).draw(20).inspect(40).crosshair(Crosshair.L_CIRCUMFLEX).hideCrosshair(false)
                 .rec(new Receiver(0)
                         .dmg(50F).spreadHipfire(0F).delay(5).reload(48).jam(33).sound(HBMSoundHandler.rpgShoot, 1.0F, 1.0F)

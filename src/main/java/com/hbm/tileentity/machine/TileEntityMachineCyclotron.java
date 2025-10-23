@@ -11,6 +11,8 @@ import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.gui.GUIMachineCyclotron;
 import com.hbm.inventory.recipes.CyclotronRecipes;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foods;
+import com.hbm.items.ModItems.Materials.Powders;
 import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
@@ -325,10 +327,10 @@ public class TileEntityMachineCyclotron extends TileEntityMachineBase implements
 	public static Item getItemForPlug(int i) {
 
 		switch(i) {
-		case 0: return ModItems.powder_balefire;
+		case 0: return Powders.powder_balefire;
 		case 1: return ModItems.book_of_;
 		case 2: return ModItems.diamond_gavel;
-		case 3: return ModItems.coin_maskman;
+		case 3: return Foods.coin_maskman;
 		}
 
 		return null;

@@ -5,7 +5,7 @@ import com.hbm.api.block.IToolable;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.inventory.material.Mats.MaterialStack;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foundry;
 import com.hbm.items.machine.ItemMold;
 import com.hbm.items.machine.ItemMold.Mold;
 import com.hbm.items.machine.ItemScraps;
@@ -110,7 +110,7 @@ public abstract class FoundryCastingBase extends BlockContainer implements ICruc
 
         ItemStack heldItem = player.getHeldItem(hand);
         //insert mold
-        if (!heldItem.isEmpty() && heldItem.getItem() == ModItems.mold) {
+        if (!heldItem.isEmpty() && heldItem.getItem() == Foundry.mold) {
             Mold mold = ((ItemMold) heldItem.getItem()).getMold(heldItem);
 
             if (mold.size == cast.getMoldSize()) {

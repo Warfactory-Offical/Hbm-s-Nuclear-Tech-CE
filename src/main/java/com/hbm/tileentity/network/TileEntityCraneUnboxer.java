@@ -5,7 +5,7 @@ import com.hbm.entity.item.EntityMovingItem;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerCraneUnboxer;
 import com.hbm.inventory.gui.GUICraneUnboxer;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Upgrades;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.IGUIProvider;
 import net.minecraft.block.Block;
@@ -52,11 +52,11 @@ public class TileEntityCraneUnboxer extends TileEntityCraneBase implements IGUIP
             int zCoord = pos.getZ();
             int delay = 20;
             if (inventory.getStackInSlot(22) != null && inventory.getStackInSlot(22) != ItemStack.EMPTY) {
-                if (inventory.getStackInSlot(22).getItem() == ModItems.upgrade_ejector_1) {
+                if (inventory.getStackInSlot(22).getItem() == Upgrades.upgrade_ejector_1) {
                     delay = 10;
-                } else if (inventory.getStackInSlot(22).getItem() == ModItems.upgrade_ejector_2) {
+                } else if (inventory.getStackInSlot(22).getItem() == Upgrades.upgrade_ejector_2) {
                     delay = 5;
-                } else if (inventory.getStackInSlot(22).getItem() == ModItems.upgrade_ejector_3) {
+                } else if (inventory.getStackInSlot(22).getItem() == Upgrades.upgrade_ejector_3) {
                     delay = 2;
                 }
             }
@@ -66,11 +66,11 @@ public class TileEntityCraneUnboxer extends TileEntityCraneBase implements IGUIP
                 int amount = 1;
 
                 if (inventory.getStackInSlot(21) != null && inventory.getStackInSlot(21) != ItemStack.EMPTY) {
-                    if (inventory.getStackInSlot(21).getItem() == ModItems.upgrade_stack_1) {
+                    if (inventory.getStackInSlot(21).getItem() == Upgrades.upgrade_stack_1) {
                         amount = 4;
-                    } else if (inventory.getStackInSlot(21).getItem() == ModItems.upgrade_stack_2) {
+                    } else if (inventory.getStackInSlot(21).getItem() == Upgrades.upgrade_stack_2) {
                         amount = 16;
-                    } else if (inventory.getStackInSlot(21).getItem() == ModItems.upgrade_stack_3) {
+                    } else if (inventory.getStackInSlot(21).getItem() == Upgrades.upgrade_stack_3) {
                         amount = 64;
                     }
                 }

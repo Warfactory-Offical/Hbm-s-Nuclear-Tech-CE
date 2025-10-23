@@ -1,6 +1,6 @@
 package com.hbm.sound;
 
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.DummyTexs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -26,7 +26,7 @@ public class MovingSoundXVL1456 extends MovingSoundPlayerLoop {
 		
 		//this.setPitch(this.getPitch() + 0.1F);
 		                                                 //gun_xvl1456
-		if(i == null || (i != null && i.getItem() != ModItems.nothing) || !((EntityPlayer)this.player).isSneaking() || ((EntityPlayer)this.player).getItemInUseCount() <= 0)
+		if(i == null || (i != null && i.getItem() != DummyTexs.nothing) || !((EntityPlayer)this.player).isSneaking() || ((EntityPlayer)this.player).getItemInUseCount() <= 0)
 			this.stop();
 	}
 }

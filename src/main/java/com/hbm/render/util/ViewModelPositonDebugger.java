@@ -15,8 +15,8 @@ import org.lwjgl.input.Keyboard;
 import java.util.HashMap;
 import java.util.Map;
 
-//Modified vesion of LeafiaGripOffsetHelper.java by abysschroma
-//https://github.com/abysschroma/NTM-but-uncomfortable/blob/main/src/main/java/com/leafia/dev/items/LeafiaGripOffsetHelper.java
+//Modified vesion of LeafiaGripOffsetHelper.java by leafia
+//https://github.com/ntmleafia/NTM-but-uncomfortable/blob/main/src/main/java/com/leafia/dev/items/LeafiaGripOffsetHelper.java
 @SideOnly(Side.CLIENT)
 public class ViewModelPositonDebugger {
     static boolean debug = false;

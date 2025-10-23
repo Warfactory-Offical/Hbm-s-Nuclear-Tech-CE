@@ -1,7 +1,7 @@
 package com.hbm.items.armor;
 
 import com.hbm.handler.ArmorModHandler;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Inserts;
 import com.hbm.lib.ModDamageSource;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
@@ -21,12 +21,12 @@ public class ItemModCharm extends ItemArmorMod {
 	
 		list.add("§bYou feel blessed.");
 		
-		if(this == ModItems.protection_charm) {
+		if(this == Inserts.protection_charm) {
 			list.add("§bDiverts meteors away from the player.");
 			list.add("§bMeteors no longer destroy blocks.");
 			list.add("§bHalves broadcaster damage");
 		}
-		if(this == ModItems.meteor_charm) {
+		if(this == Inserts.meteor_charm) {
 			list.add("§bDisables meteorite spawning.");
 			list.add("§bNegates broadcaster damage");
 		}
@@ -44,9 +44,9 @@ public class ItemModCharm extends ItemArmorMod {
 		
 		if(event.getSource() == ModDamageSource.broadcast) {
 			
-			if(this == ModItems.protection_charm)
+			if(this == Inserts.protection_charm)
 				event.setAmount(event.getAmount()*0.5F);
-			if(this == ModItems.meteor_charm)
+			if(this == Inserts.meteor_charm)
 				event.setAmount(0);
 		}
 	}

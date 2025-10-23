@@ -11,6 +11,8 @@ import com.hbm.inventory.fluid.trait.FT_Flammable;
 import com.hbm.inventory.recipes.loader.SerializableRecipe;
 import com.hbm.items.ItemEnums;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Materials.Ingots;
+import com.hbm.items.ModItems.Materials.Powders;
 import com.hbm.items.machine.ItemFluidIcon;
 import com.hbm.util.Tuple;
 import net.minecraft.init.Items;
@@ -56,15 +58,15 @@ public class CokerRecipes extends SerializableRecipe {
 
         registerSFAuto(WOODOIL, 340_000L, new ItemStack(Items.COAL, 1, 1), GAS_COKER);
 
-        registerRecipe(WATZ, 4_000, new ItemStack(ModItems.ingot_mud, 4), null);
+        registerRecipe(WATZ, 4_000, new ItemStack(Ingots.ingot_mud, 4), null);
         registerRecipe(REDMUD, 450, new ItemStack(Items.IRON_INGOT, 1), new FluidStack(MERCURY, 50));
         registerRecipe(BITUMEN, 16_000, OreDictManager.DictFrame.fromOne(ModItems.coke, ItemEnums.EnumCokeType.PETROLEUM), new FluidStack(OIL_COKER, 1_600));
         registerRecipe(LUBRICANT, 12_000, OreDictManager.DictFrame.fromOne(ModItems.coke, ItemEnums.EnumCokeType.PETROLEUM), new FluidStack(OIL_COKER, 1_200));
-        registerRecipe(CALCIUM_SOLUTION, 125, new ItemStack(ModItems.powder_calcium), new FluidStack(SPENTSTEAM, 100));
+        registerRecipe(CALCIUM_SOLUTION, 125, new ItemStack(Powders.powder_calcium), new FluidStack(SPENTSTEAM, 100));
         //only cokable gas to extract sulfur content
-        registerRecipe(SOURGAS, 1_000, new ItemStack(ModItems.sulfur), new FluidStack(GAS_COKER, 150));
-        registerRecipe(SLOP, 1000, new ItemStack(ModItems.powder_limestone), new FluidStack(COLLOID, 250));
-        registerRecipe(VITRIOL, 4000, new ItemStack(ModItems.powder_iron), new FluidStack(SULFURIC_ACID, 500));
+        registerRecipe(SOURGAS, 1_000, new ItemStack(Powders.sulfur), new FluidStack(GAS_COKER, 150));
+        registerRecipe(SLOP, 1000, new ItemStack(Powders.powder_limestone), new FluidStack(COLLOID, 250));
+        registerRecipe(VITRIOL, 4000, new ItemStack(Powders.powder_iron), new FluidStack(SULFURIC_ACID, 500));
     }
 
     private static void registerAuto(FluidType fluid, FluidType type) {

@@ -6,6 +6,11 @@ import com.hbm.inventory.OreDictManager.DictFrame;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ItemEnums.EnumAchievementType;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.*;
+import com.hbm.items.ModItems.Materials.Billets;
+import com.hbm.items.ModItems.Materials.Ingots;
+import com.hbm.items.ModItems.Materials.Nuggies;
+import com.hbm.items.ModItems.Materials.Powders;
 import com.hbm.items.food.ItemConserve;
 import com.hbm.datagen.dsl.AdvancementDSL;
 import com.hbm.datagen.dsl.AdvancementDSL.Display;
@@ -26,7 +31,7 @@ public class AdvGen {
                 new Display()
                         .titleKey("achievement.impossible")
                         .descKey("achievement.impossible.desc")
-                        .icon(ModItems.nothing)
+                        .icon(DummyTexs.nothing)
                         .frame(FrameType.CHALLENGE)
                         .toast(true)
                         .announce(true)
@@ -49,7 +54,7 @@ public class AdvGen {
                 new Display()
                         .titleKey("achievement.gofish")
                         .descKey("achievement.gofish.desc")
-                        .icon(DictFrame.fromOne(ModItems.achievement_icon, EnumAchievementType.GOFISH))
+                        .icon(DictFrame.fromOne(DummyTexs.achievement_icon, EnumAchievementType.GOFISH))
                         .frame(FrameType.CHALLENGE)
                         .toast(true)
                         .announce(true),
@@ -60,22 +65,22 @@ public class AdvGen {
                 new Display()
                         .titleKey("achievement.potato")
                         .descKey("achievement.potato.desc")
-                        .icon(ModItems.battery_potatos)
+                        .icon(Batteries.battery_potatos)
                         .frame(FrameType.CHALLENGE)
                         .toast(true)
                         .announce(true),
-                "crafting", ModItems.battery_potatos)
+                "crafting", Batteries.battery_potatos)
         );
         batch.add(Templates.obtainAnyItemStack("achc20_5",
                 "hbm:root",
                 new Display()
                         .titleKey("achievement.c20_5")
                         .descKey("achievement.c20_5.desc")
-                        .icon(DictFrame.fromOne(ModItems.achievement_icon, EnumAchievementType.QUESTIONMARK))
+                        .icon(DictFrame.fromOne(DummyTexs.achievement_icon, EnumAchievementType.QUESTIONMARK))
                         .frame(FrameType.CHALLENGE)
                         .toast(true)
                         .announce(true),
-                "crafting", new ItemStack(ModItems.canned_conserve, 1, ItemConserve.EnumFoodType.JIZZ.ordinal()))
+                "crafting", new ItemStack(Foods.canned_conserve, 1, ItemConserve.EnumFoodType.JIZZ.ordinal()))
         );
         batch.add(Templates.impossible("achstratum",
                 "hbm:root",
@@ -93,7 +98,7 @@ public class AdvGen {
                 new Display()
                         .titleKey("achievement.slimeball")
                         .descKey("achievement.slimeball.desc")
-                        .icon(DictFrame.fromOne(ModItems.achievement_icon, EnumAchievementType.ACID))
+                        .icon(DictFrame.fromOne(DummyTexs.achievement_icon, EnumAchievementType.ACID))
                         .toast(true)
                         .announce(true),
                 "crafting", Items.SLIME_BALL)
@@ -103,7 +108,7 @@ public class AdvGen {
                 new Display()
                         .titleKey("achievement.sulfuric")
                         .descKey("achievement.sulfuric.desc")
-                        .icon(DictFrame.fromOne(ModItems.achievement_icon, EnumAchievementType.BALLS))
+                        .icon(DictFrame.fromOne(DummyTexs.achievement_icon, EnumAchievementType.BALLS))
                         .frame(FrameType.CHALLENGE)
                         .toast(true)
                         .announce(true),
@@ -136,7 +141,7 @@ public class AdvGen {
                 new Display()
                         .titleKey("achievement.hidden")
                         .descKey("achievement.hidden.desc")
-                        .icon(DictFrame.fromOne(ModItems.achievement_icon, EnumAchievementType.QUESTIONMARK))
+                        .icon(DictFrame.fromOne(DummyTexs.achievement_icon, EnumAchievementType.QUESTIONMARK))
                         .toast(true)
                         .announce(true),
                 "impossible")
@@ -146,7 +151,7 @@ public class AdvGen {
                 new Display()
                         .titleKey("achievement.digammaSee")
                         .descKey("achievement.digammaSee.desc")
-                        .icon(DictFrame.fromOne(ModItems.achievement_icon, EnumAchievementType.DIGAMMASEE))
+                        .icon(DictFrame.fromOne(DummyTexs.achievement_icon, EnumAchievementType.DIGAMMASEE))
                         .toast(true)
                         .announce(true),
                 "impossible")
@@ -156,7 +161,7 @@ public class AdvGen {
                 new Display()
                         .titleKey("achievement.digammaFeel")
                         .descKey("achievement.digammaFeel.desc")
-                        .icon(DictFrame.fromOne(ModItems.achievement_icon, EnumAchievementType.DIGAMMAFEEL))
+                        .icon(DictFrame.fromOne(DummyTexs.achievement_icon, EnumAchievementType.DIGAMMAFEEL))
                         .toast(true)
                         .announce(true),
                 "impossible")
@@ -166,7 +171,7 @@ public class AdvGen {
                 new Display()
                         .titleKey("achievement.digammaKnow")
                         .descKey("achievement.digammaKnow.desc")
-                        .icon(DictFrame.fromOne(ModItems.achievement_icon, EnumAchievementType.DIGAMMAKNOW))
+                        .icon(DictFrame.fromOne(DummyTexs.achievement_icon, EnumAchievementType.DIGAMMAKNOW))
                         .toast(true)
                         .announce(true)
                         .frame(FrameType.CHALLENGE),
@@ -177,7 +182,7 @@ public class AdvGen {
                 new Display()
                         .titleKey("achievement.digammaKauaiMoho")
                         .descKey("achievement.digammaKauaiMoho.desc")
-                        .icon(DictFrame.fromOne(ModItems.achievement_icon, EnumAchievementType.DIGAMMAKAUAIMOHO))
+                        .icon(DictFrame.fromOne(DummyTexs.achievement_icon, EnumAchievementType.DIGAMMAKAUAIMOHO))
                         .toast(true)
                         .announce(true)
                         .frame(FrameType.CHALLENGE),
@@ -188,7 +193,7 @@ public class AdvGen {
                 new Display()
                         .titleKey("achievement.digammaUpOnTop")
                         .descKey("achievement.digammaUpOnTop.desc")
-                        .icon(DictFrame.fromOne(ModItems.achievement_icon, EnumAchievementType.DIGAMMAUPONTOP))
+                        .icon(DictFrame.fromOne(DummyTexs.achievement_icon, EnumAchievementType.DIGAMMAUPONTOP))
                         .toast(true)
                         .announce(true)
                         .frame(FrameType.CHALLENGE),
@@ -225,7 +230,7 @@ public class AdvGen {
                 "hbm:achburnerpress",
                 new Display()
                         .key("selenium")
-                        .icon(ModItems.ingot_starmetal)
+                        .icon(Ingots.ingot_starmetal)
                         .toast(true)
                         .announce(true)
                         .frame(FrameType.CHALLENGE),
@@ -253,19 +258,19 @@ public class AdvGen {
                 "hbm:achchemplant",
                 new Display()
                         .key("polymer")
-                        .icon(ModItems.ingot_polymer)
+                        .icon(Ingots.ingot_polymer)
                         .toast(true)
                         .announce(true),
-                "crafting", ModItems.ingot_polymer)
+                "crafting", Ingots.ingot_polymer)
         );
         batch.add(Templates.obtainAnyItem("achdesh",
                 "hbm:achchemplant",
                 new Display()
                         .key("desh")
-                        .icon(ModItems.ingot_desh)
+                        .icon(Ingots.ingot_desh)
                         .toast(true)
                         .announce(true),
-                "crafting", ModItems.ingot_desh)
+                "crafting", Ingots.ingot_desh)
         );
         batch.add(Templates.obtainAnyItem("achtantalum",
                 "hbm:achchemplant",
@@ -281,7 +286,7 @@ public class AdvGen {
                 "hbm:achdesh",
                 new Display()
                         .key("gasCent")
-                        .icon(ModItems.ingot_uranium_fuel)
+                        .icon(Ingots.ingot_uranium_fuel)
                         .toast(true)
                         .announce(true),
                 "crafting", new ItemStack(ModBlocks.machine_gascent))
@@ -329,10 +334,10 @@ public class AdvGen {
                 "hbm:achdesh",
                 new Display()
                         .key("schrab")
-                        .icon(ModItems.ingot_schrabidium)
+                        .icon(Ingots.ingot_schrabidium)
                         .toast(true)
                         .announce(true),
-                "crafting", ModItems.ingot_schrabidium, ModItems.nugget_schrabidium)
+                "crafting", Ingots.ingot_schrabidium, Nuggies.nugget_schrabidium)
         );
         batch.add(Templates.obtainAnyItemStack("achacidizer",
                 "hbm:achdesh",
@@ -347,20 +352,20 @@ public class AdvGen {
                                 .parent("hbm:achcentrifuge")
                                 .display(AdvancementDSL
                                         .display()
-                                        .icon(ModItems.coffee_radium)
+                                        .icon(Foods.coffee_radium)
                                         .key("radium")
                                         .frame(FrameType.CHALLENGE)
-                                ).consumeAnyItem("eaten", ModItems.coffee_radium)
+                                ).consumeAnyItem("eaten", Foods.coffee_radium)
                                 .build()
         );
         batch.add(Templates.obtainAnyItem("achtechnetium",
                 "hbm:achcentrifuge",
                 new Display()
                         .key("technetium")
-                        .icon(ModItems.ingot_tcalloy)
+                        .icon(Ingots.ingot_tcalloy)
                         .toast(true)
                         .announce(true),
-                "crafting", ModItems.nugget_technetium)
+                "crafting", Nuggies.nugget_technetium)
         );
         batch.add(Templates.impossible("achzirnoxboom",
                 "hbm:achcentrifuge",
@@ -379,7 +384,7 @@ public class AdvGen {
                         .icon(ModItems.pile_rod_plutonium)
                         .toast(true)
                         .announce(true),
-                "crafting", ModItems.billet_pu_mix)
+                "crafting", Billets.billet_pu_mix)
         );
         batch.add(Templates.obtainAnyItemStack("achsilex",
                 "hbm:achacidizer",
@@ -413,10 +418,10 @@ public class AdvGen {
                 "hbm:achconcrete",
                 new Display()
                         .key("RBMK")
-                        .icon(ModItems.rbmk_fuel_ueu)
+                        .icon(RBMKFuel.rbmk_fuel_ueu)
                         .toast(true)
                         .announce(true),
-                "crafting", ModItems.rbmk_fuel_empty)
+                "crafting", RBMKFuel.rbmk_fuel_empty)
         );
         batch.add(Templates.impossible("achrbmkboom",
                 "hbm:achrbmk",
@@ -432,20 +437,20 @@ public class AdvGen {
                 "hbm:achrbmk",
                 new Display()
                         .key("bismuth")
-                        .icon(ModItems.ingot_bismuth)
+                        .icon(Ingots.ingot_bismuth)
                         .toast(true)
                         .announce(true),
-                "crafting", ModItems.nugget_bismuth)
+                "crafting", Nuggies.nugget_bismuth)
         );
         batch.add(Templates.obtainAnyItem("achbreeding",
                 "hbm:achrbmk",
                 new Display()
                         .key("breeding")
-                        .icon(ModItems.ingot_am_mix)
+                        .icon(Ingots.ingot_am_mix)
                         .toast(true)
                         .announce(true)
                         .frame(FrameType.CHALLENGE),
-                "crafting", ModItems.nugget_am241, ModItems.nugget_am242)
+                "crafting", Nuggies.nugget_am241, Nuggies.nugget_am242)
         );
         batch.add(Templates.obtainAnyItemStack("achfusion",
                 "hbm:achbismuth",
@@ -461,7 +466,7 @@ public class AdvGen {
                 "hbm:achfusion",
                 new Display()
                         .key("meltdown")
-                        .icon(ModItems.powder_balefire)
+                        .icon(Powders.powder_balefire)
                         .toast(true)
                         .announce(true)
                         .frame(FrameType.CHALLENGE),
@@ -476,8 +481,8 @@ public class AdvGen {
                         .announce(true)
                         .frame(FrameType.CHALLENGE),
                 "crafting", ModItems.missile_nuclear, ModItems.missile_nuclear_cluster, ModItems.missile_doomsday,
-                ModItems.mp_warhead_10_nuclear, ModItems.mp_warhead_10_nuclear_large, ModItems.mp_warhead_15_nuclear,
-                ModItems.mp_warhead_15_nuclear_shark, ModItems.mp_warhead_15_boxcar)
+                MissileParts.mp_warhead_10_nuclear, MissileParts.mp_warhead_10_nuclear_large, MissileParts.mp_warhead_15_nuclear,
+                MissileParts.mp_warhead_15_nuclear_shark, MissileParts.mp_warhead_15_boxcar)
         );
         batch.add(Templates.impossible("achmanhattan",
                 "hbm:achpolymer",

@@ -9,6 +9,7 @@ import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.container.ContainerReactorResearch;
 import com.hbm.inventory.gui.GUIReactorResearch;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.ToolSets;
 import com.hbm.items.machine.ItemPlateFuel;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.IGUIProvider;
@@ -289,8 +290,8 @@ public class TileEntityReactorResearch extends TileEntityMachineBase implements 
                 continue;
             }
 
-            if(inventory.getStackInSlot(i).getItem() == ModItems.meteorite_sword_bred)
-                inventory.setStackInSlot(i, new ItemStack(ModItems.meteorite_sword_irradiated));
+            if(inventory.getStackInSlot(i).getItem() == ToolSets.meteorite_sword_bred)
+                inventory.setStackInSlot(i, new ItemStack(ToolSets.meteorite_sword_irradiated));
 
             slotFlux[i] = 0;
         }

@@ -2,6 +2,7 @@ package com.hbm.items.special;
 
 import com.hbm.items.ItemBakedBase;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foods;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.I18nUtil;
 import net.minecraft.client.resources.I18n;
@@ -97,11 +98,11 @@ public class ItemCustomLore extends ItemBakedBase {
     			this == ModItems.rune_thurisaz ||
     			this == ModItems.egg_balefire_shard ||
     			this == ModItems.egg_balefire ||
-    			this == ModItems.coin_maskman || 
-    			this == ModItems.coin_radiation || 
-    			this == ModItems.coin_worm || 
-    			this == ModItems.coin_ufo || 
-    			this == ModItems.coin_creeper) 
+    			this == Foods.coin_maskman ||
+    			this == Foods.coin_radiation ||
+    			this == Foods.coin_worm ||
+    			this == Foods.coin_ufo ||
+    			this == Foods.coin_creeper)
 		{
     		return true;
     	}

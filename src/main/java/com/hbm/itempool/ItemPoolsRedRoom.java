@@ -4,6 +4,10 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
 import com.hbm.items.ItemEnums;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
+import com.hbm.items.ModItems.Foods;
+import com.hbm.items.ModItems.Inserts;
+import com.hbm.items.ModItems.ToolSets;
 
 import static com.hbm.lib.HbmChestContents.weighted;
 
@@ -17,30 +21,30 @@ public class ItemPoolsRedRoom {
         //pedestal items
         new ItemPool(POOL_RED_PEDESTAL) {{
             this.pool = new WeightedRandomChestContentFrom1710[] {
-                    weighted(ModItems.armor_polish, 0, 1, 1, 10),
-                    weighted(ModItems.bandaid, 0, 1, 1, 10),
-                    weighted(ModItems.serum, 0, 1, 1, 10),
-                    weighted(ModItems.quartz_plutonium, 0, 1, 1, 10),
-                    weighted(ModItems.morning_glory, 0, 1, 1, 10),
-                    weighted(ModItems.spider_milk, 0, 1, 1, 10),
-                    weighted(ModItems.ink, 0, 1, 1, 10),
-                    weighted(ModItems.heart_container, 0, 1, 1, 10),
-                    weighted(ModItems.black_diamond, 0, 1, 1, 10),
-                    weighted(ModItems.scrumpy, 0, 1, 1, 10),
+                    weighted(Inserts.armor_polish, 0, 1, 1, 10),
+                    weighted(Inserts.bandaid, 0, 1, 1, 10),
+                    weighted(Inserts.serum, 0, 1, 1, 10),
+                    weighted(Inserts.quartz_plutonium, 0, 1, 1, 10),
+                    weighted(Inserts.morning_glory, 0, 1, 1, 10),
+                    weighted(Inserts.spider_milk, 0, 1, 1, 10),
+                    weighted(Inserts.ink, 0, 1, 1, 10),
+                    weighted(Inserts.heart_container, 0, 1, 1, 10),
+                    weighted(Inserts.black_diamond, 0, 1, 1, 10),
+                    weighted(Inserts.scrumpy, 0, 1, 1, 10),
 
-                    weighted(ModItems.wild_p, 0, 1, 1, 5),
-                    weighted(ModItems.ballistic_gauntlet, 0, 1, 1, 10),
-                    weighted(ModItems.card_aos, 0, 1, 1, 5),
-                    weighted(ModItems.card_qos, 0, 1, 1, 5),
-                    weighted(ModItems.starmetal_sword, 0, 1, 1, 5),
+                    weighted(Inserts.wild_p, 0, 1, 1, 5),
+                    weighted(Inserts.ballistic_gauntlet, 0, 1, 1, 10),
+                    weighted(Inserts.card_aos, 0, 1, 1, 5),
+                    weighted(Inserts.card_qos, 0, 1, 1, 5),
+                    weighted(ToolSets.starmetal_sword, 0, 1, 1, 5),
                     weighted(ModItems.gem_alexandrite, 0, 1, 1, 5),
-                    weighted(ModItems.crackpipe, 0, 1, 1, 5),
-                    weighted(ModItems.flask_infusion, 0, 1, 1, 5),
+                    weighted(Inserts.crackpipe, 0, 1, 1, 5),
+                    weighted(Foods.flask_infusion, 0, 1, 1, 5),
                     weighted(ModBlocks.boxcar, 0, 1, 1, 5),
                     weighted(ModItems.book_of_, 0, 1, 1, 5),
 
-                    weighted(ModItems.gun_hangman, 0, 1, 1, 1),
-                    weighted(ModItems.gun_mas36, 0, 1, 1, 1),
+                    weighted(Armory.gun_hangman, 0, 1, 1, 1),
+                    weighted(Armory.gun_mas36, 0, 1, 1, 1),
             };
         }};
 

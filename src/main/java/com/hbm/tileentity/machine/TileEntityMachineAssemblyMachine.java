@@ -13,6 +13,7 @@ import com.hbm.inventory.gui.GUIMachineAssemblyMachine;
 import com.hbm.inventory.recipes.AssemblyMachineRecipes;
 import com.hbm.inventory.recipes.loader.GenericRecipe;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.ToolSets;
 import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.HBMSoundHandler;
@@ -122,8 +123,8 @@ public class TileEntityMachineAssemblyMachine extends TileEntityMachineBase impl
             if(this.assemblerModule.markDirty) this.markDirty();
 
             if(didProcess) {
-                if(!inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(0).getItem() == ModItems.meteorite_sword_alloyed)
-                    inventory.setStackInSlot(0, new ItemStack(ModItems.meteorite_sword_machined));
+                if(!inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(0).getItem() == ToolSets.meteorite_sword_alloyed)
+                    inventory.setStackInSlot(0, new ItemStack(ToolSets.meteorite_sword_machined));
             }
 
             this.networkPackNT(100);

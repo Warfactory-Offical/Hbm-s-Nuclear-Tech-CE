@@ -1,6 +1,6 @@
 package com.hbm.items.weapon.sedna.factory;
 
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.GunConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
@@ -32,7 +32,7 @@ public class XFactory75Bolt {
         b75_exp = new BulletConfig().setItem(GunFactory.EnumAmmo.B75_EXP).setDamage(1.5F).setArmorPiercing(-0.25F)
                 .setCasing(casing75.clone().register("b75exp"));
 
-        ModItems.gun_bolter = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.SPECIAL, "gun_bolter", new GunConfig()
+        Armory.gun_bolter = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.SPECIAL, "gun_bolter", new GunConfig()
                 .dura(3_000).draw(20).inspect(31).crosshair(RenderScreenOverlay.Crosshair.L_CIRCLE).smoke(LAMBDA_SMOKE)
                 .rec(new Receiver(0)
                         .dmg(15F).delay(2).auto(true).spread(0.005F).reload(40).jam(55).sound(HBMSoundHandler.fireBlackPowder, 1.0F, 1.0F)

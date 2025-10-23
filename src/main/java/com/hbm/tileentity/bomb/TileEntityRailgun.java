@@ -8,6 +8,7 @@ import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerRailgun;
 import com.hbm.inventory.gui.GUIRailgun;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
@@ -250,7 +251,7 @@ public class TileEntityRailgun extends TileEntityLoadedBase implements ITickable
 		
 		int required = RadiationConfig.railgunUse;
 		
-		if(inventory.getStackInSlot(2).getItem() == ModItems.charge_railgun && power >= required) {
+		if(inventory.getStackInSlot(2).getItem() == Armory.charge_railgun && power >= required) {
 			return true;
 		}
 		

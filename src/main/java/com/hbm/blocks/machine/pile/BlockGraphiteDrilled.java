@@ -2,11 +2,10 @@ package com.hbm.blocks.machine.pile;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockMeta;
-import com.hbm.blocks.machine.pile.BlockGraphiteDrilledBase;
-import com.hbm.blocks.machine.pile.BlockGraphiteRod;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.material.Mats;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Materials.Ingots;
 import com.hbm.items.special.ItemCell;
 import com.hbm.lib.HBMSoundHandler;
 import net.minecraft.block.Block;
@@ -47,7 +46,7 @@ public class BlockGraphiteDrilled extends BlockGraphiteDrilledBase {
 				if(checkInteraction(world, x, y, z, meta, player, hand, ModItems.pile_rod_detector, ModBlocks.block_graphite_detector)) return true;
 				if(meta >> 2 != 1) {
 					if(checkInteraction(world, x, y, z, meta | 4, player, hand, ModItems.shell, ModBlocks.block_graphite_drilled)) return true;
-					return checkInteraction(world, x, y, z, 0, player, hand, ModItems.ingot_graphite, ModBlocks.block_graphite);
+					return checkInteraction(world, x, y, z, 0, player, hand, Ingots.ingot_graphite, ModBlocks.block_graphite);
 				}
 			}
 		}

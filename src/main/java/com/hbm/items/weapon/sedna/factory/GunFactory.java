@@ -3,7 +3,7 @@ package com.hbm.items.weapon.sedna.factory;
 import com.hbm.interfaces.IOrderedEnum;
 import com.hbm.items.ItemBakedBase;
 import com.hbm.items.ItemEnumMulti;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.GunConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
@@ -22,15 +22,15 @@ public class GunFactory {
     public static void init() {
 
         /// AMMO ITEMS ///
-        ModItems.ammo_debug = new ItemBakedBase("ammo_debug", "ammo_45");
-        ModItems.ammo_standard = new ItemEnumMulti("ammo_standard", EnumAmmo.class, true, true).setCreativeTab(MainRegistry.weaponTab);
-        ModItems.ammo_secret = new ItemEnumMulti("ammo_secret", EnumAmmoSecret.class, true, true).setCreativeTab(null);
+        Armory.ammo_debug = new ItemBakedBase("ammo_debug", "ammo_45");
+        Armory.ammo_standard = new ItemEnumMulti("ammo_standard", EnumAmmo.class, true, true).setCreativeTab(MainRegistry.weaponTab);
+        Armory.ammo_secret = new ItemEnumMulti("ammo_secret", EnumAmmoSecret.class, true, true).setCreativeTab(null);
 
         //// BULLLET CFGS ///
-        ammo_debug = new BulletConfig().setItem(ModItems.ammo_debug).setSpread(0.01F).setRicochetAngle(45).setCasing(CASING44.clone().register("DEBUG0"));
+        ammo_debug = new BulletConfig().setItem(Armory.ammo_debug).setSpread(0.01F).setRicochetAngle(45).setCasing(CASING44.clone().register("DEBUG0"));
 
         /// GUNS ///
-        ModItems.gun_debug = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.DEBUG, "gun_debug", new GunConfig()
+        Armory.gun_debug = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.DEBUG, "gun_debug", new GunConfig()
                 .dura(600F).draw(15).inspect(23).crosshair(RenderScreenOverlay.Crosshair.L_CLASSIC).smoke(Lego.LAMBDA_STANDARD_SMOKE).orchestra(Orchestras.DEBUG_ORCHESTRA)
                 .rec(new Receiver(0)
                         .dmg(10F).delay(14).reload(46).jam(23).sound(HBMSoundHandler.shoot44, 1.0F, 1.0F)
@@ -66,10 +66,10 @@ public class GunFactory {
         XFactoryDrill.init();
         XFactory35800.init();
 
-        ModItems.weapon_mod_test = new ItemEnumMulti("weapon_mod_test", EnumModTest.class, true, true).setMaxStackSize(1);
-        ModItems.weapon_mod_generic = new ItemEnumMulti("weapon_mod_generic", EnumModGeneric.class, true, true).setMaxStackSize(1).setCreativeTab(MainRegistry.weaponTab);
-        ModItems.weapon_mod_special = new ItemEnumMulti("weapon_mod_special", EnumModSpecial.class, true, true).setMaxStackSize(1).setCreativeTab(MainRegistry.weaponTab);
-        ModItems.weapon_mod_caliber = new ItemEnumMulti("weapon_mod_caliber", EnumModCaliber.class, true, true).setMaxStackSize(1).setCreativeTab(MainRegistry.weaponTab);
+        Armory.weapon_mod_test = new ItemEnumMulti("weapon_mod_test", EnumModTest.class, true, true).setMaxStackSize(1);
+        Armory.weapon_mod_generic = new ItemEnumMulti("weapon_mod_generic", EnumModGeneric.class, true, true).setMaxStackSize(1).setCreativeTab(MainRegistry.weaponTab);
+        Armory.weapon_mod_special = new ItemEnumMulti("weapon_mod_special", EnumModSpecial.class, true, true).setMaxStackSize(1).setCreativeTab(MainRegistry.weaponTab);
+        Armory.weapon_mod_caliber = new ItemEnumMulti("weapon_mod_caliber", EnumModCaliber.class, true, true).setMaxStackSize(1).setCreativeTab(MainRegistry.weaponTab);
 
         /// PROXY BULLSHIT ///
         MainRegistry.proxy.registerGunCfg();

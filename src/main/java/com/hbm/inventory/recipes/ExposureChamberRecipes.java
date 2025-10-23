@@ -8,6 +8,7 @@ import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.RecipesCommon.OreDictStack;
 import com.hbm.inventory.recipes.loader.SerializableRecipe;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Materials.Ingots;
 import net.minecraft.item.ItemStack;
 
 import java.io.IOException;
@@ -51,13 +52,13 @@ public class ExposureChamberRecipes extends SerializableRecipe {
     @Override
     public void registerDefaults() {
         recipes.add(new ExposureChamberRecipe(new ComparableStack(ModItems.particle_higgs), new OreDictStack(U.ingot()),
-                new ItemStack(ModItems.ingot_schraranium)));
+                new ItemStack(Ingots.ingot_schraranium)));
         recipes.add(new ExposureChamberRecipe(new ComparableStack(ModItems.particle_higgs), new OreDictStack(U238.ingot()),
-                new ItemStack(ModItems.ingot_schrabidium)));
+                new ItemStack(Ingots.ingot_schrabidium)));
         recipes.add(new ExposureChamberRecipe(new ComparableStack(ModItems.particle_dark), new OreDictStack(PU.ingot()),
-                new ItemStack(ModItems.ingot_euphemium)));
+                new ItemStack(Ingots.ingot_euphemium)));
         recipes.add(new ExposureChamberRecipe(new ComparableStack(ModItems.particle_sparkticle), new OreDictStack(SBD.ingot()),
-                new ItemStack(ModItems.ingot_dineutronium)));
+                new ItemStack(Ingots.ingot_dineutronium)));
     }
 
     @Override

@@ -10,7 +10,7 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.material.Mats;
 import com.hbm.inventory.material.Mats.MaterialStack;
 import com.hbm.inventory.recipes.loader.SerializableRecipe;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Materials.Powders;
 import com.hbm.items.machine.ItemFluidIcon;
 import com.hbm.items.machine.ItemScraps;
 import net.minecraft.item.ItemStack;
@@ -65,7 +65,7 @@ public class RotaryFurnaceRecipes extends SerializableRecipe {
             25,
             new OreDictStack(IRON.fragment(), 9),
             new OreDictStack(ANY_COKE.gem()),
-            new ComparableStack(ModItems.powder_flux)));
+            new ComparableStack(Powders.powder_flux)));
 
     recipes.add(
         new RotaryFurnaceRecipe(
@@ -73,7 +73,7 @@ public class RotaryFurnaceRecipes extends SerializableRecipe {
             100,
             200,
             new FluidStack(Fluids.LIGHTOIL, 100),
-            new ComparableStack(ModItems.powder_desh_ready)));
+            new ComparableStack(Powders.powder_desh_ready)));
 
     recipes.add(
         new RotaryFurnaceRecipe(
@@ -89,7 +89,7 @@ public class RotaryFurnaceRecipes extends SerializableRecipe {
             400,
             new FluidStack(Fluids.GAS_COKER, 100),
             new OreDictStack(STEEL.ingot(), 1),
-            new ComparableStack(ModItems.powder_flux, 2)));
+            new ComparableStack(Powders.powder_flux, 2)));
     recipes.add(
         new RotaryFurnaceRecipe(
             new MaterialStack(MAT_SATURN, INGOT.q(2)),
@@ -119,7 +119,7 @@ public class RotaryFurnaceRecipes extends SerializableRecipe {
             40,
             200,
             new FluidStack(Fluids.SODIUM_ALUMINATE, 150),
-            new ComparableStack(ModItems.powder_flux, 2)));
+            new ComparableStack(Powders.powder_flux, 2)));
   }
 
   public static HashMap<Object, Object> getRecipes() {

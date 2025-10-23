@@ -5,11 +5,10 @@ import com.hbm.inventory.material.MaterialShapes;
 import com.hbm.inventory.material.Mats;
 import com.hbm.inventory.material.NTMMaterial;
 import com.hbm.items.ModItems;
-import com.hbm.items.machine.ItemScraps;
+import com.hbm.items.ModItems.Foundry;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.icon.RGBMutatorInterpolatedComponentRemap;
 import com.hbm.render.icon.TextureAtlasSpriteMutatable;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.model.ModelRotation;
@@ -145,7 +144,7 @@ public class ItemAutogen extends Item {
         ItemColors itemColors = evt.getItemColors();
         IItemColor handler = new ItemAutogen.AutogenColorHandler();
         for (ItemAutogen item : INSTANCES) {
-            if (item != ModItems.scraps) itemColors.registerItemColorHandler(handler, item);
+            if (item != Foundry.scraps) itemColors.registerItemColorHandler(handler, item);
         }
     }
 

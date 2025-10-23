@@ -1,6 +1,6 @@
 package com.hbm.items.weapon.sedna.mods;
 
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.sedna.GunConfig;
 import com.hbm.items.weapon.sedna.Receiver;
 import com.hbm.items.weapon.sedna.factory.XFactory12ga;
@@ -22,7 +22,7 @@ public class WeaponModSawedOff extends WeaponModBase {
 		if(Objects.equals(key, Receiver.F_SPREADAMMO)) { return cast((Float) base * 1.5F, base); }
 		if(Objects.equals(key, Receiver.F_BASEDAMAGE)) { return cast((Float) base * 1.35F, base); }
 		
-		if(gun.getItem() == ModItems.gun_maresleg) {
+		if(gun.getItem() == Armory.gun_maresleg) {
 			if(Objects.equals(key, GunConfig.FUN_ANIMNATIONS)) return (T) XFactory12ga.LAMBDA_MARESLEG_SHORT_ANIMS;
 			if(Objects.equals(key, GunConfig.I_DRAWDURATION)) return cast(5, base);
 		}

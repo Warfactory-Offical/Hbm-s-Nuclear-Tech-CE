@@ -2,6 +2,7 @@ package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.DummyTexs;
 import com.hbm.tileentity.deco.TileEntityDecoBlockAlt;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockHorizontal;
@@ -64,7 +65,7 @@ public class DecoBlockAlt extends BlockContainer {
 			{
 				if(this == ModBlocks.statue_elb)
 				{
-					if(stack.getItem() == ModItems.nothing) //gun_revolver_cursed
+					if(stack.getItem() == DummyTexs.nothing) //gun_revolver_cursed
 					{
 						world.setBlockState(pos, ModBlocks.statue_elb_g.getDefaultState().withProperty(FACING, state.getValue(FACING)), 2);
 
@@ -101,7 +102,7 @@ public class DecoBlockAlt extends BlockContainer {
 				}
 				if(this == ModBlocks.statue_elb_w)
 				{
-					if(stack.getItem() == ModItems.nothing) //gun_revolver_cursed
+					if(stack.getItem() == DummyTexs.nothing) //gun_revolver_cursed
 					{
 						world.setBlockState(pos, ModBlocks.statue_elb_f.getDefaultState().withProperty(FACING, state.getValue(FACING)), 2);
 

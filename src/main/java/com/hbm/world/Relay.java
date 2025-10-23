@@ -5,8 +5,7 @@ import com.hbm.config.GeneralConfig;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
 import com.hbm.itempool.ItemPool;
 import com.hbm.itempool.ItemPoolsLegacy;
-import com.hbm.items.ModItems;
-import com.hbm.lib.HbmChestContents;
+import com.hbm.items.ModItems.Inserts;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.machine.TileEntityCrateIron;
 import com.hbm.world.phased.AbstractPhasedStructure;
@@ -662,7 +661,7 @@ public class Relay extends AbstractPhasedStructure {
 				(worldIn, random, blockPos, chest) -> {
 					WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_GENERIC), chest, 8);
 					if(worldIn.rand.nextInt(5) == 0) {
-						((TileEntityCrateIron)chest).inventory.setStackInSlot(11, new ItemStack(ModItems.morning_glory));
+						((TileEntityCrateIron)chest).inventory.setStackInSlot(11, new ItemStack(Inserts.morning_glory));
 					}
 				});
         world.setBlockState(pos.setPos(x + 7, y + 0, z + 10), Blocks.BRICK_BLOCK.getDefaultState(), 3);

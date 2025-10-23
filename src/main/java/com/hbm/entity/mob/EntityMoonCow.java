@@ -2,7 +2,7 @@ package com.hbm.entity.mob;
 
 import com.hbm.entity.mob.ai.EntityMoonWalkHelper;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foods;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.init.Items;
@@ -29,7 +29,7 @@ public class EntityMoonCow extends EntityCow {
 
     @Override
     protected Item getDropItem() {
-        return ModItems.cheese;
+        return Foods.cheese;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class EntityMoonCow extends EntityCow {
         j = this.rand.nextInt(3) + 1 + this.rand.nextInt(1 + looting);
 
         for(k = 0; k < j; ++k) {
-            this.dropItem(ModItems.cheese, 1);
+            this.dropItem(Foods.cheese, 1);
         }
     }
 

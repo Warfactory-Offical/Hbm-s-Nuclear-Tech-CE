@@ -7,6 +7,7 @@ import com.hbm.handler.RocketStruct;
 import com.hbm.handler.atmosphere.IBlockSealable;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.MissileParts;
 import com.hbm.items.weapon.ItemCustomRocket;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.TileEntityProxyCombo;
@@ -95,7 +96,7 @@ public class BlockOrbitalStation extends BlockDummyable implements IBlockSealabl
 						station.spawnRocket(held);
 						held.shrink(1);
 					}
-					if(held.getItem() == ModItems.rp_capsule_20 || held.getItem() == ModItems.rp_pod_20) {
+					if(held.getItem() == MissileParts.rp_capsule_20 || held.getItem() == MissileParts.rp_pod_20) {
 						station.spawnRocket(ItemCustomRocket.build(new RocketStruct(held)));
 						held.shrink(1);
 					}
@@ -197,7 +198,7 @@ public class BlockOrbitalStation extends BlockDummyable implements IBlockSealabl
 					if(held.getItem() == ModItems.rocket_custom && ItemCustomRocket.hasFuel(held)) {
 						text.add(I18nUtil.resolveKey("station.placeRocket"));
 					}
-					if(held.getItem() == ModItems.rp_capsule_20 || held.getItem() == ModItems.rp_pod_20) {
+					if(held.getItem() == MissileParts.rp_capsule_20 || held.getItem() == MissileParts.rp_pod_20) {
 						text.add(I18nUtil.resolveKey("station.placeRocket"));
 					}
 				}

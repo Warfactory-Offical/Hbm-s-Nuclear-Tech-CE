@@ -8,7 +8,7 @@ import com.hbm.handler.BulletConfiguration;
 import com.hbm.handler.GunConfiguration;
 import com.hbm.interfaces.IBulletImpactBehavior;
 import com.hbm.inventory.RecipesCommon;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Materials.Nuggies;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.potion.HbmPotion;
 import com.hbm.render.anim.BusAnimation;
@@ -96,7 +96,7 @@ public class GunEnergyFactory {
 
 		BulletConfiguration bullet = new BulletConfiguration();
 
-		bullet.ammo = new RecipesCommon.ComparableStack(ModItems.nugget_euphemium);
+		bullet.ammo = new RecipesCommon.ComparableStack(Nuggies.nugget_euphemium);
 		bullet.ammoCount = 1000;
 		bullet.wear = 1;
 		bullet.velocity = 1F;

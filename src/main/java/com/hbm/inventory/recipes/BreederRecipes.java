@@ -7,6 +7,7 @@ import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.recipes.loader.SerializableRecipe;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.ToolSets;
 import com.hbm.items.machine.ItemBreedingRod;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -41,7 +42,7 @@ public class BreederRecipes extends SerializableRecipe {
         setRecipe(ItemBreedingRod.BreedingRodType.URANIUM, ItemBreedingRod.BreedingRodType.RGP, 200);
         setRecipe(ItemBreedingRod.BreedingRodType.RGP, ItemBreedingRod.BreedingRodType.WASTE, 200);
 
-        recipes.put(new ComparableStack(ModItems.meteorite_sword_etched), new BreederRecipe(new ItemStack(ModItems.meteorite_sword_bred), 1000));
+        recipes.put(new ComparableStack(ToolSets.meteorite_sword_etched), new BreederRecipe(new ItemStack(ToolSets.meteorite_sword_bred), 1000));
     }
 
 	public static void setRecipe(ItemBreedingRod.BreedingRodType inputType, ItemBreedingRod.BreedingRodType outputType, int flux) {

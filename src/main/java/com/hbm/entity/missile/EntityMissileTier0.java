@@ -12,6 +12,8 @@ import com.hbm.explosion.ExplosionNukeGeneric;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.material.Mats;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
+import com.hbm.items.ModItems.Materials.Powders;
 import com.hbm.main.MainRegistry;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
@@ -102,7 +104,7 @@ public abstract class EntityMissileTier0 extends EntityMissileBaseNT {
 			bl.posZ = this.posZ;
 			this.world.spawnEntity(bl);
 		}
-		@Override public ItemStack getDebrisRareDrop() { return new ItemStack(ModItems.grenade_black_hole, 1); }
+		@Override public ItemStack getDebrisRareDrop() { return new ItemStack(Armory.grenade_black_hole, 1); }
 		@Override public ItemStack getMissileItemForInfo() { return new ItemStack(ModItems.missile_bhole); }
 	}
 	@AutoRegister(name = "entity_missile_taint", trackingRange = 1000)
@@ -122,7 +124,7 @@ public abstract class EntityMissileTier0 extends EntityMissileBaseNT {
                     world.setBlockState(pos, ModBlocks.taint.getDefaultState(), 2);
 			}
 		}
-		@Override public ItemStack getDebrisRareDrop() { return new ItemStack(ModItems.powder_spark_mix, 1); }
+		@Override public ItemStack getDebrisRareDrop() { return new ItemStack(Powders.powder_spark_mix, 1); }
 		@Override public ItemStack getMissileItemForInfo() { return new ItemStack(ModItems.missile_taint); }
 	}
 	@AutoRegister(name = "entity_missile_emp", trackingRange = 1000)

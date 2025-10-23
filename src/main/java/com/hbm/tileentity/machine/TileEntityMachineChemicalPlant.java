@@ -13,6 +13,7 @@ import com.hbm.inventory.gui.GUIMachineChemicalPlant;
 import com.hbm.inventory.recipes.ChemicalPlantRecipes;
 import com.hbm.inventory.recipes.loader.GenericRecipe;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.ToolSets;
 import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.HBMSoundHandler;
@@ -130,8 +131,8 @@ public class TileEntityMachineChemicalPlant extends TileEntityMachineBase implem
             if(this.chemplantModule.markDirty) this.markDirty();
 
             if(didProcess) {
-                if(!inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(0).getItem() == ModItems.meteorite_sword_machined)
-                    inventory.setStackInSlot(0, new ItemStack(ModItems.meteorite_sword_treated));
+                if(!inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(0).getItem() == ToolSets.meteorite_sword_machined)
+                    inventory.setStackInSlot(0, new ItemStack(ToolSets.meteorite_sword_treated));
             }
 
             this.networkPackNT(100);

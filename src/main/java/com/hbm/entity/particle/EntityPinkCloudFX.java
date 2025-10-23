@@ -1,7 +1,7 @@
 package com.hbm.entity.particle;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.DummyTexs;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.ModFXCollidePacket;
 import net.minecraft.block.state.IBlockState;
@@ -20,8 +20,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class EntityPinkCloudFX extends Particle {
 
 	private static final Item[] TEXTURE_ITEMS = new Item[]{
-			ModItems.pc1, ModItems.pc2, ModItems.pc3, ModItems.pc4,
-			ModItems.pc5, ModItems.pc6, ModItems.pc7, ModItems.pc8
+			DummyTexs.pc1, DummyTexs.pc2, DummyTexs.pc3, DummyTexs.pc4,
+			DummyTexs.pc5, DummyTexs.pc6, DummyTexs.pc7, DummyTexs.pc8
 	};
 
 	private final int meta;

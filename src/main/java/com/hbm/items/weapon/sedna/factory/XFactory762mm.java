@@ -2,7 +2,8 @@ package com.hbm.items.weapon.sedna.factory;
 
 import com.hbm.entity.projectile.EntityBulletBaseMK4;
 import com.hbm.items.ItemEnums;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
+import com.hbm.items.ModItems.Materials.Ingots;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.GunConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
@@ -56,11 +57,11 @@ public class XFactory762mm {
         r762_he = new BulletConfig().setItem(GunFactory.EnumAmmo.R762_HE).setCasing(ItemEnums.EnumCasingType.SMALL_STEEL, 6).setWear(3F).setDamage(2F).setOnImpact(LAMBDA_TINY_EXPLODE)
                 .setCasing(casing762.clone().setColor(SpentCasing.COLOR_CASE_44).register("r762he"));
 
-        energy_lacunae = new BulletConfig().setItem(GunFactory.EnumAmmo.CAPACITOR).setCasing(new ItemStack(ModItems.ingot_polymer, 2), 4 * 40).setupDamageClass(DamageResistanceHandler.DamageClass.LASER).setBeam().setReloadCount(40).setSpread(0.0F).setLife(5).setRenderRotations(false).setOnBeamImpact(BulletConfig.LAMBDA_STANDARD_BEAM_HIT);
-        energy_lacunae_overcharge = new BulletConfig().setItem(GunFactory.EnumAmmo.CAPACITOR_OVERCHARGE).setCasing(new ItemStack(ModItems.ingot_polymer, 2), 4 * 40).setupDamageClass(DamageResistanceHandler.DamageClass.LASER).setBeam().setReloadCount(40).setSpread(0.0F).setLife(5).setRenderRotations(false).setDoesPenetrate(true).setOnBeamImpact(BulletConfig.LAMBDA_STANDARD_BEAM_HIT);
-        energy_lacunae_ir = new BulletConfig().setItem(GunFactory.EnumAmmo.CAPACITOR_IR).setCasing(new ItemStack(ModItems.ingot_polymer, 2), 4 * 40).setupDamageClass(DamageResistanceHandler.DamageClass.FIRE).setBeam().setReloadCount(40).setSpread(0.0F).setLife(5).setRenderRotations(false).setOnBeamImpact(XFactoryEnergy.LAMBDA_IR_HIT);
+        energy_lacunae = new BulletConfig().setItem(GunFactory.EnumAmmo.CAPACITOR).setCasing(new ItemStack(Ingots.ingot_polymer, 2), 4 * 40).setupDamageClass(DamageResistanceHandler.DamageClass.LASER).setBeam().setReloadCount(40).setSpread(0.0F).setLife(5).setRenderRotations(false).setOnBeamImpact(BulletConfig.LAMBDA_STANDARD_BEAM_HIT);
+        energy_lacunae_overcharge = new BulletConfig().setItem(GunFactory.EnumAmmo.CAPACITOR_OVERCHARGE).setCasing(new ItemStack(Ingots.ingot_polymer, 2), 4 * 40).setupDamageClass(DamageResistanceHandler.DamageClass.LASER).setBeam().setReloadCount(40).setSpread(0.0F).setLife(5).setRenderRotations(false).setDoesPenetrate(true).setOnBeamImpact(BulletConfig.LAMBDA_STANDARD_BEAM_HIT);
+        energy_lacunae_ir = new BulletConfig().setItem(GunFactory.EnumAmmo.CAPACITOR_IR).setCasing(new ItemStack(Ingots.ingot_polymer, 2), 4 * 40).setupDamageClass(DamageResistanceHandler.DamageClass.FIRE).setBeam().setReloadCount(40).setSpread(0.0F).setLife(5).setRenderRotations(false).setOnBeamImpact(XFactoryEnergy.LAMBDA_IR_HIT);
 
-        ModItems.gun_carbine = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_carbine", new GunConfig()
+        Armory.gun_carbine = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_carbine", new GunConfig()
                 .dura(3_000).draw(10).inspect(31).reloadSequential(true).crosshair(Crosshair.CIRCLE).smoke(LAMBDA_SMOKE)
                 .rec(new Receiver(0)
                         .dmg(15F).delay(5).dry(15).spread(0.0F).reload(30, 0, 15, 0).jam(60).sound(HBMSoundHandler.fireBlackPowder, 1.0F, 1.0F)
@@ -71,7 +72,7 @@ public class XFactory762mm {
                 .anim(LAMBDA_CARBINE_ANIMS).orchestra(Orchestras.ORCHESTRA_CARBINE)
         );
 
-        ModItems.gun_minigun = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_minigun", new GunConfig()
+        Armory.gun_minigun = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_minigun", new GunConfig()
                 .dura(50_000).draw(20).inspect(20).crosshair(Crosshair.L_CIRCLE).smoke(LAMBDA_SMOKE)
                 .rec(new Receiver(0)
                         .dmg(6F).delay(1).auto(true).dry(15).spread(0.01F).sound(HBMSoundHandler.calShoot, 1.0F, 1.0F)
@@ -81,7 +82,7 @@ public class XFactory762mm {
                 .setupStandardConfiguration()
                 .anim(LAMBDA_MINIGUN_ANIMS).orchestra(Orchestras.ORCHESTRA_MINIGUN)
         );
-        ModItems.gun_minigun_lacunae = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.LEGENDARY, "gun_minigun_lacunae", new GunConfig()
+        Armory.gun_minigun_lacunae = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.LEGENDARY, "gun_minigun_lacunae", new GunConfig()
                 .dura(50_000).draw(20).inspect(20).crosshair(Crosshair.L_CIRCLE)
                 .rec(new Receiver(0)
                         .dmg(12F).delay(1).auto(true).dry(15).reload(15).spread(0.01F).sound(HBMSoundHandler.fireLaserGatling, 1.0F, 1.0F)
@@ -91,7 +92,7 @@ public class XFactory762mm {
                 .setupStandardConfiguration()
                 .anim(LAMBDA_MINIGUN_ANIMS).orchestra(Orchestras.ORCHESTRA_MINIGUN)
         );
-        ModItems.gun_minigun_dual = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.DEBUG, "gun_minigun_dual",
+        Armory.gun_minigun_dual = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.DEBUG, "gun_minigun_dual",
                 new GunConfig()
                         .dura(50_000).draw(20).inspect(20).crosshair(Crosshair.L_CIRCLE).smoke(LAMBDA_SMOKE)
                         .rec(new Receiver(0)
@@ -114,7 +115,7 @@ public class XFactory762mm {
                         .anim(LAMBDA_MINIGUN_ANIMS).orchestra(Orchestras.ORCHESTRA_MINIGUN_DUAL)
         );
 
-        ModItems.gun_mas36 = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.LEGENDARY, "gun_mas36", new GunConfig()
+        Armory.gun_mas36 = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.LEGENDARY, "gun_mas36", new GunConfig()
                 .dura(5_000).draw(20).inspect(31).reloadSequential(true).crosshair(Crosshair.CIRCLE).smoke(LAMBDA_SMOKE)
                 .rec(new Receiver(0)
                         .dmg(30F).delay(25).dry(25).spread(0.0F).reload(43).jam(43).sound(HBMSoundHandler.fireRifleHeavy, 1.0F, 1.0F)

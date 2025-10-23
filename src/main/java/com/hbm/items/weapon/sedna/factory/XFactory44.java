@@ -4,7 +4,7 @@ import com.hbm.entity.projectile.EntityBoxcar;
 import com.hbm.entity.projectile.EntityBulletBaseMK4;
 import com.hbm.entity.projectile.EntityTorpedo;
 import com.hbm.items.ItemEnums;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.GunConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
@@ -80,7 +80,7 @@ public class XFactory44 {
         m44_equestrian_mn7 = new BulletConfig().setItem(GunFactory.EnumAmmoSecret.M44_EQUESTRIAN).setDamage(0F).setOnImpact(LAMBDA_TORPEDO)
                 .setCasing(casing44.clone().setColor(SpentCasing.COLOR_CASE_EQUESTRIAN).register("m44equestrianMn7"));
 
-        ModItems.gun_henry = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_henry", new GunConfig()
+        Armory.gun_henry = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_henry", new GunConfig()
                 .dura(300).draw(15).inspect(23).reloadSequential(true).crosshair(Crosshair.CIRCLE).smoke(Lego.LAMBDA_STANDARD_SMOKE)
                 .rec(new Receiver(0)
                         .dmg(10F).delay(20).reload(25, 11, 14, 8).jam(45).sound(HBMSoundHandler.fireRifle, 1.0F, 1.0F)
@@ -90,7 +90,7 @@ public class XFactory44 {
                 .setupStandardConfiguration()
                 .anim(LAMBDA_HENRY_ANIMS).orchestra(Orchestras.ORCHESTRA_HENRY)
         );
-        ModItems.gun_henry_lincoln = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.B_SIDE, "gun_henry_lincoln", new GunConfig()
+        Armory.gun_henry_lincoln = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.B_SIDE, "gun_henry_lincoln", new GunConfig()
                 .dura(300).draw(15).inspect(23).reloadSequential(true).crosshair(Crosshair.CIRCLE).smoke(Lego.LAMBDA_STANDARD_SMOKE)
                 .rec(new Receiver(0)
                         .dmg(20F).spreadHipfire(0F).delay(20).reload(25, 11, 14, 8).jam(45).sound(HBMSoundHandler.fireRifle, 1.0F, 1.25F)
@@ -101,7 +101,7 @@ public class XFactory44 {
                 .anim(LAMBDA_HENRY_ANIMS).orchestra(Orchestras.ORCHESTRA_HENRY)
         );
 
-        ModItems.gun_heavy_revolver = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_heavy_revolver", new GunConfig()
+        Armory.gun_heavy_revolver = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_heavy_revolver", new GunConfig()
                 .dura(600).draw(10).inspect(23).crosshair(Crosshair.L_CLASSIC).smoke(Lego.LAMBDA_STANDARD_SMOKE)
                 .rec(new Receiver(0)
                         .dmg(15F).delay(14).reload(46).jam(23).sound(HBMSoundHandler.shoot44, 1.0F, 1.0F)
@@ -111,7 +111,7 @@ public class XFactory44 {
                 .setupStandardConfiguration()
                 .anim(LAMBDA_NOPIP_ANIMS).orchestra(Orchestras.ORCHESTRA_NOPIP)
         ).setNameMutator(LAMBDA_NAME_NOPIP);
-        ModItems.gun_heavy_revolver_lilmac = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.LEGENDARY, "gun_heavy_revolver_lilmac", new GunConfig()
+        Armory.gun_heavy_revolver_lilmac = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.LEGENDARY, "gun_heavy_revolver_lilmac", new GunConfig()
                 .dura(31_000).draw(10).inspect(23).crosshair(Crosshair.L_CLASSIC).scopeTexture(scope_lilmac).smoke(Lego.LAMBDA_STANDARD_SMOKE)
                 .rec(new Receiver(0)
                         .dmg(30F).delay(14).reload(46).jam(23).sound(HBMSoundHandler.shoot44, 1.0F, 1.0F)
@@ -121,7 +121,7 @@ public class XFactory44 {
                 .setupStandardConfiguration()
                 .anim(LAMBDA_LILMAC_ANIMS).orchestra(Orchestras.ORCHESTRA_NOPIP)
         );
-        ModItems.gun_heavy_revolver_protege = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.LEGENDARY, "gun_heavy_revolver_protege", new GunConfig()
+        Armory.gun_heavy_revolver_protege = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.LEGENDARY, "gun_heavy_revolver_protege", new GunConfig()
                 .dura(31_000).draw(10).inspect(23).crosshair(Crosshair.L_CLASSIC).smoke(Lego.LAMBDA_STANDARD_SMOKE)
                 .rec(new Receiver(0)
                         .dmg(30F).delay(14).reload(46).jam(23).sound(HBMSoundHandler.shoot44, 1.0F, 0.8F)
@@ -132,7 +132,7 @@ public class XFactory44 {
                 .anim(LAMBDA_LILMAC_ANIMS).orchestra(Orchestras.ORCHESTRA_NOPIP)
         );
 
-        ModItems.gun_hangman = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.LEGENDARY, "gun_hangman", new GunConfig()
+        Armory.gun_hangman = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.LEGENDARY, "gun_hangman", new GunConfig()
                 .dura(600).draw(10).inspect(31).inspectCancel(false).crosshair(Crosshair.CIRCLE).smoke(Lego.LAMBDA_STANDARD_SMOKE)
                 .rec(new Receiver(0)
                         .dmg(25F).delay(10).reload(46).jam(23).sound(HBMSoundHandler.shoot44, 1.0F, 1.0F)

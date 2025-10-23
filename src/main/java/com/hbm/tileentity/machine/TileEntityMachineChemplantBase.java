@@ -10,6 +10,7 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.recipes.ChemplantRecipes;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.ToolSets;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
@@ -140,8 +141,8 @@ public abstract class TileEntityMachineChemplantBase extends TileEntityMachineBa
 		this.power -= this.consumption;
 		this.progress[index]++;
 
-		if(!inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(0).getItem() == ModItems.meteorite_sword_machined)
-			inventory.setStackInSlot(0, new ItemStack(ModItems.meteorite_sword_treated)); //fisfndmoivndlmgindgifgjfdnblfm
+		if(!inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(0).getItem() == ToolSets.meteorite_sword_machined)
+			inventory.setStackInSlot(0, new ItemStack(ToolSets.meteorite_sword_treated)); //fisfndmoivndlmgindgifgjfdnblfm
 
 		int template = getTemplateIndex(index);
 		ChemplantRecipes.ChemRecipe recipe = ChemplantRecipes.indexMapping.get(inventory.getStackInSlot(template).getItemDamage());

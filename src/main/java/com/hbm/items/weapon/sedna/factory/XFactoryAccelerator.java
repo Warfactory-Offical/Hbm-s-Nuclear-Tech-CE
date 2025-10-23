@@ -2,6 +2,7 @@ package com.hbm.items.weapon.sedna.factory;
 
 import com.hbm.entity.projectile.EntityBulletBeamBase;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.GunConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
@@ -92,7 +93,7 @@ public class XFactoryAccelerator {
 
         tauChargeMag.addConfigs(tau_uranium_charge);
 
-        ModItems.gun_tau = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_tau", new GunConfig()
+        Armory.gun_tau = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_tau", new GunConfig()
                 .dura(6_400).draw(10).inspect(10).crosshair(Crosshair.CIRCLE)
                 .rec(new Receiver(0)
                         .dmg(25F).spreadHipfire(0F).delay(4).auto(true).spread(0F)
@@ -108,7 +109,7 @@ public class XFactoryAccelerator {
                 .anim(LAMBDA_TAU_ANIMS).orchestra(Orchestras.ORCHESTRA_TAU)
         );
 
-        ModItems.gun_coilgun = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.SPECIAL, "gun_coilgun", new GunConfig()
+        Armory.gun_coilgun = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.SPECIAL, "gun_coilgun", new GunConfig()
                 .dura(400).draw(5).inspect(39).crosshair(Crosshair.L_CIRCUMFLEX)
                 .rec(new Receiver(0)
                         .dmg(35F).delay(5).reload(20).jam(33).sound(HBMSoundHandler.coilgunShoot, 1.0F, 1.0F)

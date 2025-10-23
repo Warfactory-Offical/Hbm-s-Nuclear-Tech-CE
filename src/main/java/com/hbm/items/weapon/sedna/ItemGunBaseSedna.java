@@ -8,7 +8,7 @@ import com.hbm.interfaces.IItemHUD;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.items.IEquipReceiver;
 import com.hbm.items.ItemBakedBase;
-import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.ArmorSets;
 import com.hbm.items.gear.ArmorFSB;
 import com.hbm.lib.HbmCollection;
 import com.hbm.packet.PacketDispatcher;
@@ -844,7 +844,7 @@ public class ItemGunBaseSedna extends ItemBakedBase implements IHoldableWeapon, 
     }
 
     public static boolean isTrenchMaster(EntityPlayer player) {
-        return !player.inventory.armorInventory.get(2).isEmpty() && player.inventory.armorInventory.get(2).getItem() == ModItems.trenchmaster_plate && ArmorFSB.hasFSBArmor(player);
+        return !player.inventory.armorInventory.get(2).isEmpty() && player.inventory.armorInventory.get(2).getItem() == ArmorSets.trenchmaster_plate && ArmorFSB.hasFSBArmor(player);
     }
 
     public static boolean hasAoS(EntityPlayer player) {

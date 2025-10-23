@@ -11,6 +11,11 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.recipes.loader.SerializableRecipe;
 import com.hbm.items.ItemEnums;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foods;
+import com.hbm.items.ModItems.Materials.Billets;
+import com.hbm.items.ModItems.Materials.Ingots;
+import com.hbm.items.ModItems.Materials.Nuggies;
+import com.hbm.items.ModItems.Materials.Powders;
 import com.hbm.items.machine.ItemFluidIcon;
 import com.hbm.util.Tuple;
 import net.minecraft.init.Blocks;
@@ -38,19 +43,19 @@ public class RBMKOutgasserRecipes extends SerializableRecipe {
 		recipes.put(new RecipesCommon.OreDictStack(LI.dustTiny()),	new Tuple.Pair(null, new FluidStack(Fluids.TRITIUM, 100)));
 
 		/* gold to gold-198 */
-		recipes.put(new RecipesCommon.OreDictStack(GOLD.ingot()),		new Tuple.Pair(new ItemStack(ModItems.ingot_au198), null));
-		recipes.put(new RecipesCommon.OreDictStack(GOLD.nugget()),	new Tuple.Pair(new ItemStack(ModItems.nugget_au198), null));
-		recipes.put(new RecipesCommon.OreDictStack(GOLD.dust()),		new Tuple.Pair(new ItemStack(ModItems.powder_au198), null));
+		recipes.put(new RecipesCommon.OreDictStack(GOLD.ingot()),		new Tuple.Pair(new ItemStack(Ingots.ingot_au198), null));
+		recipes.put(new RecipesCommon.OreDictStack(GOLD.nugget()),	new Tuple.Pair(new ItemStack(Nuggies.nugget_au198), null));
+		recipes.put(new RecipesCommon.OreDictStack(GOLD.dust()),		new Tuple.Pair(new ItemStack(Powders.powder_au198), null));
 
 		/* thorium to thorium fuel */
-		recipes.put(new RecipesCommon.OreDictStack(TH232.ingot()),	new Tuple.Pair(new ItemStack(ModItems.ingot_thorium_fuel), null));
-		recipes.put(new RecipesCommon.OreDictStack(TH232.nugget()),	new Tuple.Pair(new ItemStack(ModItems.nugget_thorium_fuel), null));
-		recipes.put(new RecipesCommon.OreDictStack(TH232.billet()),	new Tuple.Pair(new ItemStack(ModItems.billet_thorium_fuel), null));
+		recipes.put(new RecipesCommon.OreDictStack(TH232.ingot()),	new Tuple.Pair(new ItemStack(Ingots.ingot_thorium_fuel), null));
+		recipes.put(new RecipesCommon.OreDictStack(TH232.nugget()),	new Tuple.Pair(new ItemStack(Nuggies.nugget_thorium_fuel), null));
+		recipes.put(new RecipesCommon.OreDictStack(TH232.billet()),	new Tuple.Pair(new ItemStack(Billets.billet_thorium_fuel), null));
 
 		/* mushrooms to glowing mushrooms */
 		recipes.put(new ComparableStack(Blocks.BROWN_MUSHROOM),	new Tuple.Pair(new ItemStack(ModBlocks.mush), null));
 		recipes.put(new ComparableStack(Blocks.RED_MUSHROOM),	new Tuple.Pair(new ItemStack(ModBlocks.mush), null));
-		recipes.put(new ComparableStack(Items.MUSHROOM_STEW),	new Tuple.Pair(new ItemStack(ModItems.glowing_stew), null));
+		recipes.put(new ComparableStack(Items.MUSHROOM_STEW),	new Tuple.Pair(new ItemStack(Foods.glowing_stew), null));
 
 		recipes.put(new RecipesCommon.OreDictStack(COAL.gem()),		new Tuple.Pair(DictFrame.fromOne(ModItems.oil_tar, ItemEnums.EnumTarType.COAL, 1), new FluidStack(Fluids.SYNGAS, 50)));
 		recipes.put(new RecipesCommon.OreDictStack(COAL.dust()),		new Tuple.Pair(DictFrame.fromOne(ModItems.oil_tar, ItemEnums.EnumTarType.COAL, 1), new FluidStack(Fluids.SYNGAS, 50)));

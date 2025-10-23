@@ -4,6 +4,8 @@ import com.hbm.handler.radiation.ChunkRadiationManager;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IRadiationImmune;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Foods;
+import com.hbm.items.ModItems.Materials.Nuggies;
 import com.hbm.items.machine.ItemZirnoxRodDepleted;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
@@ -53,7 +55,7 @@ public class EntityRADBeast extends EntityMob implements IRadiationImmune {
     
     public EntityRADBeast makeLeader() {
     	this.setDropChance(EntityEquipmentSlot.MAINHAND, 1);
-    	this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.coin_radiation));
+    	this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Foods.coin_radiation));
         this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(360.0D);
         this.heal(this.getMaxHealth());
     	return this;
@@ -215,7 +217,7 @@ public class EntityRADBeast extends EntityMob implements IRadiationImmune {
 
         super.dropLoot(wasRecentlyHit, looting, source);
         if(looting > 0) {
-                this.dropItem(ModItems.nugget_polonium, looting);
+                this.dropItem(Nuggies.nugget_polonium, looting);
             }
             
         int count = this.rand.nextInt(3) + 1;

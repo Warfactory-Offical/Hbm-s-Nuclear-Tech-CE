@@ -18,6 +18,7 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.gui.GUIReactorZirnox;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.ToolSets;
 import com.hbm.items.machine.ItemZirnoxRod;
 import com.hbm.items.machine.ItemZirnoxRod.EnumZirnoxType;
 import com.hbm.lib.DirPos;
@@ -252,8 +253,8 @@ public class TileEntityReactorZirnox extends TileEntityMachineBase implements IT
                     if (!inventory.getStackInSlot(i).isEmpty()) {
                         if (inventory.getStackInSlot(i).getItem() instanceof ItemZirnoxRod)
                             decay(i);
-                        else if (inventory.getStackInSlot(i).getItem() == ModItems.meteorite_sword_bred)
-                            inventory.setStackInSlot(i, new ItemStack(ModItems.meteorite_sword_irradiated));
+                        else if (inventory.getStackInSlot(i).getItem() == ToolSets.meteorite_sword_bred)
+                            inventory.setStackInSlot(i, new ItemStack(ToolSets.meteorite_sword_irradiated));
                     }
                 }
             }

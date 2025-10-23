@@ -7,6 +7,10 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.gui.GUIScreenBobmazon.Offer;
 import com.hbm.inventory.gui.GUIScreenBobmazon.Requirement;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.*;
+import com.hbm.items.ModItems.Materials.Billets;
+import com.hbm.items.ModItems.Materials.Ingots;
+import com.hbm.items.ModItems.Materials.Powders;
 import com.hbm.items.food.ItemConserve;
 import com.hbm.items.machine.ItemBattery;
 import com.hbm.items.special.ItemKitCustom;
@@ -33,8 +37,8 @@ public class BobmazonOfferFactory {
 
 		//gear
 		standard.add(new Offer(new ItemStack(Blocks.TORCH, 64), Requirement.NONE, 2));
-		standard.add(new Offer(new ItemStack(ModItems.definitelyfood, 16), Requirement.NONE, 4));
-		standard.add(new Offer(new ItemStack(ModItems.nitra, 4), Requirement.CHEMICS, 16));
+		standard.add(new Offer(new ItemStack(Foods.definitelyfood, 16), Requirement.NONE, 4));
+		standard.add(new Offer(new ItemStack(Powders.nitra, 4), Requirement.CHEMICS, 16));
 		standard.add(new Offer(new ItemStack(ModItems.gun_kit_1, 1), Requirement.ASSEMBLY, 16));
 		standard.add(new Offer(new ItemStack(ModItems.geiger_counter, 1), Requirement.NONE, 16));
 		standard.add(new Offer(new ItemStack(ModItems.matchstick, 16), Requirement.STEEL, 2));
@@ -54,23 +58,23 @@ public class BobmazonOfferFactory {
 		//for(int i = 1; i < PlushieType.values().length; i++) standard.add(new Offer(new ItemStack(ModBlocks.plushie, 1, i), Requirement.OIL, 16, i < 3 ? 10 : 0));
 
 		special.add(new Offer(new ItemStack(Items.IRON_INGOT, 64), Requirement.STEEL, 1));
-		special.add(new Offer(new ItemStack(ModItems.ingot_steel, 64), Requirement.STEEL, 1));
-		special.add(new Offer(new ItemStack(ModItems.ingot_copper, 64), Requirement.STEEL, 1));
-		special.add(new Offer(new ItemStack(ModItems.ingot_red_copper, 64), Requirement.STEEL, 1));
-		special.add(new Offer(new ItemStack(ModItems.ingot_titanium, 64), Requirement.STEEL, 1));
-		special.add(new Offer(new ItemStack(ModItems.ingot_tungsten, 64), Requirement.STEEL, 1));
-		special.add(new Offer(new ItemStack(ModItems.ingot_cobalt, 64), Requirement.STEEL, 1));
-		special.add(new Offer(new ItemStack(ModItems.ingot_desh, 64), Requirement.STEEL, 1));
-		special.add(new Offer(new ItemStack(ModItems.ingot_tantalium, 64), Requirement.STEEL, 5));
-		special.add(new Offer(new ItemStack(ModItems.ingot_bismuth, 16), Requirement.STEEL, 5));
-		special.add(new Offer(new ItemStack(ModItems.ingot_schrabidium, 16), Requirement.STEEL, 5));
-		special.add(new Offer(new ItemStack(ModItems.ingot_euphemium, 8), Requirement.STEEL, 16));
-		special.add(new Offer(new ItemStack(ModItems.ingot_dineutronium, 1), Requirement.STEEL, 16));
-		special.add(new Offer(new ItemStack(ModItems.ingot_starmetal, 16), Requirement.STEEL, 8));
-		special.add(new Offer(new ItemStack(ModItems.ingot_semtex, 16), Requirement.STEEL, 1));
-		special.add(new Offer(new ItemStack(ModItems.ingot_u235, 16), Requirement.STEEL, 1));
-		special.add(new Offer(new ItemStack(ModItems.ingot_pu239, 16), Requirement.STEEL, 1));
-		special.add(new Offer(new ItemStack(ModItems.ammo_container, 16), Requirement.STEEL, 5));
+		special.add(new Offer(new ItemStack(Ingots.ingot_steel, 64), Requirement.STEEL, 1));
+		special.add(new Offer(new ItemStack(Ingots.ingot_copper, 64), Requirement.STEEL, 1));
+		special.add(new Offer(new ItemStack(Ingots.ingot_red_copper, 64), Requirement.STEEL, 1));
+		special.add(new Offer(new ItemStack(Ingots.ingot_titanium, 64), Requirement.STEEL, 1));
+		special.add(new Offer(new ItemStack(Ingots.ingot_tungsten, 64), Requirement.STEEL, 1));
+		special.add(new Offer(new ItemStack(Ingots.ingot_cobalt, 64), Requirement.STEEL, 1));
+		special.add(new Offer(new ItemStack(Ingots.ingot_desh, 64), Requirement.STEEL, 1));
+		special.add(new Offer(new ItemStack(Ingots.ingot_tantalium, 64), Requirement.STEEL, 5));
+		special.add(new Offer(new ItemStack(Ingots.ingot_bismuth, 16), Requirement.STEEL, 5));
+		special.add(new Offer(new ItemStack(Ingots.ingot_schrabidium, 16), Requirement.STEEL, 5));
+		special.add(new Offer(new ItemStack(Ingots.ingot_euphemium, 8), Requirement.STEEL, 16));
+		special.add(new Offer(new ItemStack(Ingots.ingot_dineutronium, 1), Requirement.STEEL, 16));
+		special.add(new Offer(new ItemStack(Ingots.ingot_starmetal, 16), Requirement.STEEL, 8));
+		special.add(new Offer(new ItemStack(Ingots.ingot_semtex, 16), Requirement.STEEL, 1));
+		special.add(new Offer(new ItemStack(Ingots.ingot_u235, 16), Requirement.STEEL, 1));
+		special.add(new Offer(new ItemStack(Ingots.ingot_pu239, 16), Requirement.STEEL, 1));
+		special.add(new Offer(new ItemStack(Armory.ammo_container, 16), Requirement.STEEL, 5));
 		special.add(new Offer(new ItemStack(ModItems.nuke_starter_kit), Requirement.STEEL, 5));
 		special.add(new Offer(new ItemStack(ModItems.nuke_advanced_kit), Requirement.STEEL, 5));
 		special.add(new Offer(new ItemStack(ModItems.nuke_commercially_kit), Requirement.STEEL, 5));
@@ -97,9 +101,9 @@ public class BobmazonOfferFactory {
 		special.add(new Offer(new ItemStack(ModItems.spawn_ufo, 1), Requirement.STEEL, 10));
 		special.add(new Offer(new ItemStack(ModItems.sat_laser, 1), Requirement.HIDDEN, 8));
 		special.add(new Offer(new ItemStack(ModItems.sat_gerald, 1), Requirement.HIDDEN, 32));
-		special.add(new Offer(new ItemStack(ModItems.billet_yharonite, 4), Requirement.HIDDEN, 16));
-		special.add(new Offer(new ItemStack(ModItems.ingot_chainsteel, 1), Requirement.HIDDEN, 16));
-		special.add(new Offer(new ItemStack(ModItems.ingot_electronium, 1), Requirement.HIDDEN, 16));
+		special.add(new Offer(new ItemStack(Billets.billet_yharonite, 4), Requirement.HIDDEN, 16));
+		special.add(new Offer(new ItemStack(Ingots.ingot_chainsteel, 1), Requirement.HIDDEN, 16));
+		special.add(new Offer(new ItemStack(Ingots.ingot_electronium, 1), Requirement.HIDDEN, 16));
 		special.add(new Offer(new ItemStack(ModItems.book_of_, 1), Requirement.HIDDEN, 16));
 		special.add(new Offer(new ItemStack(ModItems.mese_pickaxe, 1), Requirement.HIDDEN, 16));
 		special.add(new Offer(new ItemStack(ModItems.mysteryshovel, 1), Requirement.HIDDEN, 16));
@@ -121,7 +125,7 @@ public class BobmazonOfferFactory {
 				new ItemStack(ModBlocks.iter),
 				new ItemStack(ModBlocks.plasma_heater),
 				new ItemStack(ModItems.fusion_shield_vaporwave),
-				ItemBattery.getFullBattery(ModItems.battery_spark),
+				ItemBattery.getFullBattery(Batteries.battery_spark),
 				new ItemStack(ModBlocks.machine_chemplant, 10),
 				new ItemStack(ModBlocks.machine_fluidtank, 8),
 				new ItemStack(ModBlocks.red_wire_coated, 64),
@@ -143,36 +147,36 @@ public class BobmazonOfferFactory {
 		), Requirement.HIDDEN, 64));
 
 		special.add(new Offer(ItemKitCustom.create("Maid's Cleaning Utensils", "For the hard to reach spots", 0x00ff00, 0x008000,
-				new ItemStack(ModItems.gun_m2),
-				new ItemStack(ModItems.ammo_standard, 64, GunFactory.EnumAmmo.BMG50_DU.ordinal()),
-				new ItemStack(ModItems.ammo_standard, 64, GunFactory.EnumAmmo.BMG50_DU.ordinal()),
-				new ItemStack(ModItems.ammo_standard, 64, GunFactory.EnumAmmo.BMG50_DU.ordinal()),
-				new ItemStack(ModItems.ammo_standard, 64, GunFactory.EnumAmmo.BMG50_DU.ordinal()),
-				new ItemStack(ModItems.ammo_standard, 64, GunFactory.EnumAmmo.BMG50_DU.ordinal()),
-				new ItemStack(ModItems.gun_autoshotgun),
-				new ItemStack(ModItems.ammo_standard, 64, GunFactory.EnumAmmo.G12_MAGNUM.ordinal()),
-				new ItemStack(ModItems.ammo_standard, 64, GunFactory.EnumAmmo.G12_MAGNUM.ordinal()),
-				new ItemStack(ModItems.ammo_standard, 64, GunFactory.EnumAmmo.G12_MAGNUM.ordinal()),
-				new ItemStack(ModItems.ammo_standard, 64, GunFactory.EnumAmmo.G12_EXPLOSIVE.ordinal()),
-				new ItemStack(ModItems.ammo_standard, 64, GunFactory.EnumAmmo.G12_EXPLOSIVE.ordinal())
+				new ItemStack(Armory.gun_m2),
+				new ItemStack(Armory.ammo_standard, 64, GunFactory.EnumAmmo.BMG50_DU.ordinal()),
+				new ItemStack(Armory.ammo_standard, 64, GunFactory.EnumAmmo.BMG50_DU.ordinal()),
+				new ItemStack(Armory.ammo_standard, 64, GunFactory.EnumAmmo.BMG50_DU.ordinal()),
+				new ItemStack(Armory.ammo_standard, 64, GunFactory.EnumAmmo.BMG50_DU.ordinal()),
+				new ItemStack(Armory.ammo_standard, 64, GunFactory.EnumAmmo.BMG50_DU.ordinal()),
+				new ItemStack(Armory.gun_autoshotgun),
+				new ItemStack(Armory.ammo_standard, 64, GunFactory.EnumAmmo.G12_MAGNUM.ordinal()),
+				new ItemStack(Armory.ammo_standard, 64, GunFactory.EnumAmmo.G12_MAGNUM.ordinal()),
+				new ItemStack(Armory.ammo_standard, 64, GunFactory.EnumAmmo.G12_MAGNUM.ordinal()),
+				new ItemStack(Armory.ammo_standard, 64, GunFactory.EnumAmmo.G12_EXPLOSIVE.ordinal()),
+				new ItemStack(Armory.ammo_standard, 64, GunFactory.EnumAmmo.G12_EXPLOSIVE.ordinal())
 		), Requirement.HIDDEN, 64));
 
 		special.add(new Offer(ItemKitNBT.create(
 				new ItemStack(ModItems.rod_of_discord).setStackDisplayName("Cock Joke"),
-				ModItems.canned_conserve.stackFromEnum(64, ItemConserve.EnumFoodType.JIZZ).setStackDisplayName("Class A Horse Semen"),
-				new ItemStack(ModItems.pipe_lead).setStackDisplayName("Get Nutted, Dumbass"),
+				Foods.canned_conserve.stackFromEnum(64, ItemConserve.EnumFoodType.JIZZ).setStackDisplayName("Class A Horse Semen"),
+				new ItemStack(ToolSets.pipe_lead).setStackDisplayName("Get Nutted, Dumbass"),
 				new ItemStack(ModItems.gem_alexandrite)
 		).setStackDisplayName("The Nut Bucket"), Requirement.HIDDEN, 64));
 
 		special.add(new Offer(ItemKitNBT.create(
-				new ItemStack(ModItems.rpa_helmet),
-				new ItemStack(ModItems.rpa_plate),
-				new ItemStack(ModItems.rpa_legs),
-				new ItemStack(ModItems.rpa_boots),
-				new ItemStack(ModItems.gun_minigun_lacunae),
-				new ItemStack(ModItems.ammo_standard, 64, GunFactory.EnumAmmo.CAPACITOR_OVERCHARGE.ordinal()),
-				new ItemStack(ModItems.ammo_standard, 64, GunFactory.EnumAmmo.CAPACITOR_OVERCHARGE.ordinal()),
-				new ItemStack(ModItems.ammo_standard, 64, GunFactory.EnumAmmo.CAPACITOR_OVERCHARGE.ordinal())
+				new ItemStack(ArmorSets.rpa_helmet),
+				new ItemStack(ArmorSets.rpa_plate),
+				new ItemStack(ArmorSets.rpa_legs),
+				new ItemStack(ArmorSets.rpa_boots),
+				new ItemStack(Armory.gun_minigun_lacunae),
+				new ItemStack(Armory.ammo_standard, 64, GunFactory.EnumAmmo.CAPACITOR_OVERCHARGE.ordinal()),
+				new ItemStack(Armory.ammo_standard, 64, GunFactory.EnumAmmo.CAPACITOR_OVERCHARGE.ordinal()),
+				new ItemStack(Armory.ammo_standard, 64, GunFactory.EnumAmmo.CAPACITOR_OVERCHARGE.ordinal())
 		).setStackDisplayName("Frenchie's Reward"), Requirement.HIDDEN, 32));
 	}
 

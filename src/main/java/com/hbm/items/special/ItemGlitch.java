@@ -9,6 +9,9 @@ import com.hbm.explosion.ExplosionChaos;
 import com.hbm.explosion.ExplosionLarge;
 import com.hbm.interfaces.Spaghetti;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Armory;
+import com.hbm.items.ModItems.DummyTexs;
+import com.hbm.items.ModItems.Foods;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.I18nUtil;
@@ -75,7 +78,7 @@ public class ItemGlitch extends Item implements IBatteryItem {
 					player.inventory.addItemStackToInventory(new ItemStack(ModBlocks.block_meteor_treasure.getItemDropped(ModBlocks.block_meteor_treasure.getDefaultState(), itemRand, 0)));
 				break;
 			case 8:
-				player.inventory.addItemStackToInventory(new ItemStack(ModItems.ammo_container, 10));
+				player.inventory.addItemStackToInventory(new ItemStack(Armory.ammo_container, 10));
 				player.sendMessage(new TextComponentTranslation("chat.glitch.8"));
 				break;
 			case 9:
@@ -101,7 +104,7 @@ public class ItemGlitch extends Item implements IBatteryItem {
 				}
 				break;
 			case 13:
-				player.inventory.addItemStackToInventory(new ItemStack(ModItems.bottle_rad));
+				player.inventory.addItemStackToInventory(new ItemStack(Foods.bottle_rad));
 				player.inventory.addItemStackToInventory(new ItemStack(ModItems.geiger_counter));
 				player.sendMessage(new TextComponentTranslation("chat.glitch.13a"));
 				player.sendMessage(new TextComponentTranslation("chat.glitch.13b"));
@@ -121,7 +124,7 @@ public class ItemGlitch extends Item implements IBatteryItem {
 				player.sendMessage(new TextComponentTranslation("chat.glitch.17"));
 				break;
 			case 18:
-				player.inventory.addItemStackToInventory(new ItemStack(ModItems.nothing, 12)); //ammo_12gauge
+				player.inventory.addItemStackToInventory(new ItemStack(DummyTexs.nothing, 12)); //ammo_12gauge
 				player.sendMessage(new TextComponentTranslation("chat.glitch.18"));
 				break;
 			case 19:

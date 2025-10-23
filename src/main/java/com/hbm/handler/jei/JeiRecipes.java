@@ -11,6 +11,10 @@ import com.hbm.inventory.fluid.trait.FT_Heatable;
 import com.hbm.inventory.recipes.*;
 import com.hbm.inventory.recipes.MagicRecipes.MagicRecipe;
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.Batteries;
+import com.hbm.items.ModItems.DummyTexs;
+import com.hbm.items.ModItems.Materials.Ingots;
+import com.hbm.items.ModItems.Materials.Powders;
 import com.hbm.items.machine.ItemAssemblyTemplate;
 import com.hbm.items.machine.ItemFELCrystal.EnumWavelengths;
 import com.hbm.items.machine.ItemFluidIcon;
@@ -338,7 +342,7 @@ public class JeiRecipes {
 			for(int i = 0; i < recipe.in.size(); i ++)
 				inputs.add(recipe.in.get(i).getStack());
 			while(inputs.size() < 4)
-				inputs.add(new ItemStack(ModItems.nothing));
+				inputs.add(new ItemStack(DummyTexs.nothing));
 			output = recipe.getResult();
 		}
 		
@@ -567,11 +571,11 @@ public class JeiRecipes {
 
         	List<AStack> inputs = new ArrayList<>(7);
         	for(int j = 0; j < 7; j ++)
-        		inputs.add(j, new ComparableStack(ModItems.nothing));
+        		inputs.add(j, new ComparableStack(DummyTexs.nothing));
 
         	List<ItemStack> outputs = new ArrayList<>(6);
         	for(int j = 0; j < 6; j ++)
-        		outputs.add(j, new ItemStack(ModItems.nothing));
+        		outputs.add(j, new ItemStack(DummyTexs.nothing));
         	
         	//Adding template item
         	ItemStack template = new ItemStack(ModItems.chemistry_template, 1, i);
@@ -692,33 +696,33 @@ public class JeiRecipes {
 		if(batteries != null)
 			return batteries;
 		batteries = new ArrayList<>();
-		batteries.add(new ItemStack(ModItems.battery_potato));
-		batteries.add(new ItemStack(ModItems.battery_potatos));
-		batteries.add(new ItemStack(ModItems.battery_su));
-		batteries.add(new ItemStack(ModItems.battery_su_l));
-		batteries.add(new ItemStack(ModItems.battery_generic));
-		batteries.add(new ItemStack(ModItems.battery_red_cell));
-		batteries.add(new ItemStack(ModItems.battery_red_cell_6));
-		batteries.add(new ItemStack(ModItems.battery_red_cell_24));
-		batteries.add(new ItemStack(ModItems.battery_advanced));
-		batteries.add(new ItemStack(ModItems.battery_advanced_cell));
-		batteries.add(new ItemStack(ModItems.battery_advanced_cell_4));
-		batteries.add(new ItemStack(ModItems.battery_advanced_cell_12));
-		batteries.add(new ItemStack(ModItems.battery_lithium));
-		batteries.add(new ItemStack(ModItems.battery_lithium_cell));
-		batteries.add(new ItemStack(ModItems.battery_lithium_cell_3));
-		batteries.add(new ItemStack(ModItems.battery_lithium_cell_6));
-		batteries.add(new ItemStack(ModItems.battery_schrabidium));
-		batteries.add(new ItemStack(ModItems.battery_schrabidium_cell));
-		batteries.add(new ItemStack(ModItems.battery_schrabidium_cell_2));
-		batteries.add(new ItemStack(ModItems.battery_schrabidium_cell_4));
-		batteries.add(new ItemStack(ModItems.battery_spark));
-		batteries.add(new ItemStack(ModItems.battery_spark_cell_6));
-		batteries.add(new ItemStack(ModItems.battery_spark_cell_25));
-		batteries.add(new ItemStack(ModItems.battery_spark_cell_100));
-		batteries.add(new ItemStack(ModItems.battery_spark_cell_1000));
-		batteries.add(new ItemStack(ModItems.battery_spark_cell_10000));
-		batteries.add(new ItemStack(ModItems.battery_spark_cell_power));
+		batteries.add(new ItemStack(Batteries.battery_potato));
+		batteries.add(new ItemStack(Batteries.battery_potatos));
+		batteries.add(new ItemStack(Batteries.battery_su));
+		batteries.add(new ItemStack(Batteries.battery_su_l));
+		batteries.add(new ItemStack(Batteries.battery_generic));
+		batteries.add(new ItemStack(Batteries.battery_red_cell));
+		batteries.add(new ItemStack(Batteries.battery_red_cell_6));
+		batteries.add(new ItemStack(Batteries.battery_red_cell_24));
+		batteries.add(new ItemStack(Batteries.battery_advanced));
+		batteries.add(new ItemStack(Batteries.battery_advanced_cell));
+		batteries.add(new ItemStack(Batteries.battery_advanced_cell_4));
+		batteries.add(new ItemStack(Batteries.battery_advanced_cell_12));
+		batteries.add(new ItemStack(Batteries.battery_lithium));
+		batteries.add(new ItemStack(Batteries.battery_lithium_cell));
+		batteries.add(new ItemStack(Batteries.battery_lithium_cell_3));
+		batteries.add(new ItemStack(Batteries.battery_lithium_cell_6));
+		batteries.add(new ItemStack(Batteries.battery_schrabidium));
+		batteries.add(new ItemStack(Batteries.battery_schrabidium_cell));
+		batteries.add(new ItemStack(Batteries.battery_schrabidium_cell_2));
+		batteries.add(new ItemStack(Batteries.battery_schrabidium_cell_4));
+		batteries.add(new ItemStack(Batteries.battery_spark));
+		batteries.add(new ItemStack(Batteries.battery_spark_cell_6));
+		batteries.add(new ItemStack(Batteries.battery_spark_cell_25));
+		batteries.add(new ItemStack(Batteries.battery_spark_cell_100));
+		batteries.add(new ItemStack(Batteries.battery_spark_cell_1000));
+		batteries.add(new ItemStack(Batteries.battery_spark_cell_10000));
+		batteries.add(new ItemStack(Batteries.battery_spark_cell_power));
 		batteries.add(new ItemStack(ModItems.fusion_core));
 		batteries.add(new ItemStack(ModItems.energy_core));
 		return batteries;
@@ -729,8 +733,8 @@ public class JeiRecipes {
 			return cmbRecipes;
 		cmbRecipes = new ArrayList<>();
 		
-		cmbRecipes.add(new CMBFurnaceRecipe(Arrays.asList(new ItemStack(ModItems.ingot_advanced_alloy), new ItemStack(ModItems.ingot_magnetized_tungsten)), new ItemStack(ModItems.ingot_combine_steel, 4)));
-		cmbRecipes.add(new CMBFurnaceRecipe(Arrays.asList(new ItemStack(ModItems.powder_advanced_alloy), new ItemStack(ModItems.powder_magnetized_tungsten)), new ItemStack(ModItems.ingot_combine_steel, 4)));
+		cmbRecipes.add(new CMBFurnaceRecipe(Arrays.asList(new ItemStack(Ingots.ingot_advanced_alloy), new ItemStack(Ingots.ingot_magnetized_tungsten)), new ItemStack(Ingots.ingot_combine_steel, 4)));
+		cmbRecipes.add(new CMBFurnaceRecipe(Arrays.asList(new ItemStack(Powders.powder_advanced_alloy), new ItemStack(Powders.powder_magnetized_tungsten)), new ItemStack(Ingots.ingot_combine_steel, 4)));
 		
 		return cmbRecipes;
 	}
@@ -956,7 +960,7 @@ public class JeiRecipes {
 		public void getIngredients(IIngredients ingredients) {
 			List<List<ItemStack>> jeiInputs = Library.copyItemStackListList(inputs);
 			while (jeiInputs.size() < 12) {
-				jeiInputs.add(Collections.singletonList(new ItemStack(ModItems.nothing)));
+				jeiInputs.add(Collections.singletonList(new ItemStack(DummyTexs.nothing)));
 			}
 			ItemStack templateStack = ItemAssemblyTemplate.writeType(new ItemStack(ModItems.assembly_template), this.outputComparable);
 			jeiInputs.add(Collections.singletonList(templateStack));

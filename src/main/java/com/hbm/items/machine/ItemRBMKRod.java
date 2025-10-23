@@ -1,6 +1,7 @@
 package com.hbm.items.machine;
 
 import com.hbm.items.ModItems;
+import com.hbm.items.ModItems.RBMKFuel;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.machine.rbmk.IRBMKFluxReceiver.NType;
 import com.hbm.tileentity.machine.rbmk.RBMKDials;
@@ -77,7 +78,7 @@ public class ItemRBMKRod extends Item {
 
 		this.fullName = fullName;
 
-		this.setContainerItem(ModItems.rbmk_fuel_empty);
+		this.setContainerItem(RBMKFuel.rbmk_fuel_empty);
 		this.setMaxStackSize(1);
 		this.setCreativeTab(MainRegistry.controlTab);
 
@@ -440,7 +441,7 @@ public class ItemRBMKRod extends Item {
 
         list.add(TextFormatting.ITALIC + this.fullName);
 
-        if(this == ModItems.rbmk_fuel_drx) {
+        if(this == RBMKFuel.rbmk_fuel_drx) {
 
             if(ItemRBMKRod.getHullHeat(stack) >= 50 || ItemRBMKRod.getCoreHeat(stack) >= 50) {
                 list.add(TextFormatting.GOLD + I18nUtil.resolveKey("desc.item.wasteCooling"));
