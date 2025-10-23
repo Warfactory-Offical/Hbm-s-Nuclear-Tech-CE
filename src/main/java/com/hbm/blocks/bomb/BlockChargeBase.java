@@ -5,7 +5,7 @@ import com.hbm.api.block.IToolable;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.entity.item.EntityTNTPrimedBase;
 import com.hbm.interfaces.IBomb;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.bomb.TileEntityCharge;
 import net.minecraft.block.BlockContainer;
@@ -166,7 +166,7 @@ public abstract class BlockChargeBase extends BlockContainer implements IBomb, I
 
         if (charge.started) {
             charge.started = false;
-            world.playSound(null, pos, HBMSoundHandler.fstbmbStart, SoundCategory.BLOCKS, 10.0F, 1.0F);
+            world.playSound(null, pos, HBMSoundEvents.fstbmbStart, SoundCategory.BLOCKS, 10.0F, 1.0F);
             charge.markDirty();
         } else {
             safe = true;
@@ -213,7 +213,7 @@ public abstract class BlockChargeBase extends BlockContainer implements IBomb, I
             if (playerIn.isSneaking()) {
                 if (charge.timer > 0) {
                     charge.started = true;
-                    worldIn.playSound(null, pos, HBMSoundHandler.fstbmbStart, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    worldIn.playSound(null, pos, HBMSoundEvents.fstbmbStart, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 }
             } else {
                 switch (charge.timer) {
@@ -226,7 +226,7 @@ public abstract class BlockChargeBase extends BlockContainer implements IBomb, I
                     case 3600 -> charge.timer = 6000;
                     default -> charge.timer = 0;
                 }
-                worldIn.playSound(null, pos, HBMSoundHandler.techBoop, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                worldIn.playSound(null, pos, HBMSoundEvents.techBoop, SoundCategory.BLOCKS, 1.0F, 1.0F);
             }
             charge.markDirty();
         }

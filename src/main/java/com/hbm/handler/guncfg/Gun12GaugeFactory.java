@@ -2,7 +2,7 @@ package com.hbm.handler.guncfg;
 
 import com.hbm.handler.BulletConfigSyncingUtil;
 import com.hbm.handler.GunConfiguration;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.render.anim.BusAnimation;
 import com.hbm.render.anim.BusAnimationKeyframe;
 import com.hbm.render.anim.BusAnimationSequence;
@@ -30,7 +30,7 @@ public class Gun12GaugeFactory {
 		config.hasSights = true;
 		config.crosshair = Crosshair.L_CIRCLE;
 		config.reloadSound = GunConfiguration.RSOUND_REVOLVER;
-		config.firingSound = HBMSoundHandler.shottyShoot;
+		config.firingSound = HBMSoundEvents.shottyShoot;
 		
 		config.animations.put(AnimType.ALT_CYCLE, new BusAnimation()
 				.addBus("MEATHOOK_RECOIL", new BusAnimationSequence()
@@ -92,7 +92,7 @@ public class Gun12GaugeFactory {
 		config.hasSights = true;
 		config.crosshair = Crosshair.NONE;
 		config.reloadSound = null;
-		config.firingSound = HBMSoundHandler.shottyShoot;
+		config.firingSound = HBMSoundEvents.shottyShoot;
 		
 		config.animations.put(AnimType.ALT_CYCLE, new BusAnimation()
 				.addBus("JS_RECOIL2", new BusAnimationSequence()

@@ -16,7 +16,7 @@ import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.modules.machine.ModuleMachineAssembler;
@@ -217,7 +217,7 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
     }
 
     @Override public AudioWrapper createAudioLoop() {
-        return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.motor, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 0.5F, 15F, 0.75F, 20);
+        return MainRegistry.proxy.getLoopedSound(HBMSoundEvents.motor, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 0.5F, 15F, 0.75F, 20);
     }
 
     @Override public void onChunkUnload() {
@@ -477,7 +477,7 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
                         state = AFArmState.SLIDING;
                         direction = !direction;
                         if (!muffled)
-                            MainRegistry.proxy.playSoundClient(pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.assemblerStart, SoundCategory.BLOCKS, getVolume(0.25F), 1.25F + world.rand.nextFloat() * 0.25F);
+                            MainRegistry.proxy.playSoundClient(pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.assemblerStart, SoundCategory.BLOCKS, getVolume(0.25F), 1.25F + world.rand.nextFloat() * 0.25F);
                     }
                 }
                 case SLIDING -> {
@@ -572,12 +572,12 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
                             if (saw) {
                                 state = ArmState.CUT;
                                 targetAngles[2] = -targetAngles[2];
-                                if(!muffled) MainRegistry.proxy.playSoundClient(pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.assemblerCut, SoundCategory.BLOCKS, getVolume(0.5F), 1F + rand.nextFloat() * 0.25F);
+                                if(!muffled) MainRegistry.proxy.playSoundClient(pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.assemblerCut, SoundCategory.BLOCKS, getVolume(0.5F), 1F + rand.nextFloat() * 0.25F);
                             } else {
                                 state = ArmState.RETRACT;
                                 targetAngles[3] = 0D;
                                 if (!muffled)
-                                    MainRegistry.proxy.playSoundClient(pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.assemblerStrike, SoundCategory.BLOCKS, getVolume(0.5F), 1F);
+                                    MainRegistry.proxy.playSoundClient(pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.assemblerStrike, SoundCategory.BLOCKS, getVolume(0.5F), 1F);
                             }
                         }
                     }

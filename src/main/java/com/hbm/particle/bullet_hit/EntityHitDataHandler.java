@@ -2,7 +2,7 @@ package com.hbm.particle.bullet_hit;
 
 import com.hbm.config.GeneralConfig;
 import com.hbm.entity.projectile.EntityBulletBase;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.PacketSpecialDeath;
@@ -42,7 +42,7 @@ public class EntityHitDataHandler {
 				if(ent instanceof EntityPlayerMP){
 					PacketDispatcher.wrapper.sendTo(new PacketSpecialDeath(ent, 4), (EntityPlayerMP) ent);
 				}
-				ent.world.playSound(null, ent.posX, ent.posY, ent.posZ, HBMSoundHandler.mob_gib, SoundCategory.HOSTILE, 1, 1);
+				ent.world.playSound(null, ent.posX, ent.posY, ent.posZ, HBMSoundEvents.mob_gib, SoundCategory.HOSTILE, 1, 1);
 				itr.remove();
 				continue;
 			}

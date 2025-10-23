@@ -1,6 +1,6 @@
 package com.hbm.packet.toclient;
 
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.sound.SoundLoopPlayer;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -68,7 +68,7 @@ public class PlayerSoundPacket implements IMessage {
             if (player == null) return;
 
             SoundEvent sound = switch (type) {
-                case NULLRADAR -> HBMSoundHandler.alarmAirRaid;
+                case NULLRADAR -> HBMSoundEvents.alarmAirRaid;
             };
             if (sound != null) {
                 SoundLoopPlayer newSound = new SoundLoopPlayer(sound, type, player);

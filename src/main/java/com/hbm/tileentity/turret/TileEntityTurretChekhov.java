@@ -6,7 +6,7 @@ import com.hbm.inventory.container.ContainerTurretBase;
 import com.hbm.inventory.gui.GUITurretChekhov;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.factory.XFactory50;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.IGUIProvider;
@@ -83,7 +83,7 @@ public class TileEntityTurretChekhov extends TileEntityTurretBaseNT implements I
 				this.cachedCasingConfig = conf.casing;
 				this.spawnBullet(conf, 10F);
 				this.consumeAmmo(conf.ammo);
-				this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.chekhov_fire, SoundCategory.BLOCKS, 2.0F, 1.0F);
+				this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.chekhov_fire, SoundCategory.BLOCKS, 2.0F, 1.0F);
 				
 				Vec3 pos = new Vec3(this.getTurretPos());
 				Vec3 vec = Vec3.createVectorHelper(this.getBarrelLength(), 0, 0);

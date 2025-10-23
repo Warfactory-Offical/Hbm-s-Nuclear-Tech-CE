@@ -19,7 +19,7 @@ import com.hbm.items.ModItems;
 import com.hbm.items.weapon.sedna.factory.GunFactory;
 import com.hbm.items.weapon.sedna.factory.XFactoryFlamer;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.IFluidCopiable;
@@ -135,7 +135,7 @@ public class TileEntityTurretFritz extends TileEntityTurretBaseNT implements IFl
 			proj.setPositionAndRotation(pos.x + vec.xCoord, pos.y + vec.yCoord, pos.z + vec.zCoord, proj.rotationYaw, proj.rotationPitch);
 			world.spawnEntity(proj);
 			
-			world.playSound(null, this.pos.getX(), this.pos.getY(), this.pos.getZ(), HBMSoundHandler.flamethrowerShoot, SoundCategory.BLOCKS, 2F, 1F + world.rand.nextFloat() * 0.5F);
+			world.playSound(null, this.pos.getX(), this.pos.getY(), this.pos.getZ(), HBMSoundEvents.flamethrowerShoot, SoundCategory.BLOCKS, 2F, 1F + world.rand.nextFloat() * 0.5F);
 			
 			NBTTagCompound data = new NBTTagCompound();
 			data.setString("type", "vanillaburst");

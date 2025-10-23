@@ -5,7 +5,7 @@ import com.hbm.entity.effect.EntityCloudTom;
 import com.hbm.entity.logic.EntityTomBlast;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IConstantRenderer;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.SoundCategory;
@@ -32,7 +32,7 @@ public class EntityTom extends EntityThrowable implements IConstantRenderer {
 		this.setPosition(posX + this.motionX, posY + this.motionY, posZ + this.motionZ);
 		
 		if(this.ticksExisted % 100 == 0) {
-			world.playSound(null, posX, posY, posZ, HBMSoundHandler.chime, SoundCategory.HOSTILE, 10000, 1.0F);
+			world.playSound(null, posX, posY, posZ, HBMSoundEvents.chime, SoundCategory.HOSTILE, 10000, 1.0F);
 		}
         
 		motionY = -0.5;

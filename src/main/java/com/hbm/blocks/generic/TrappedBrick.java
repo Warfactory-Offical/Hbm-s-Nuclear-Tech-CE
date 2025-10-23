@@ -1,7 +1,7 @@
 package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.tileentity.deco.TileEntityTrappedBrick;
 import net.minecraft.block.Block;
@@ -84,7 +84,7 @@ public class TrappedBrick extends BlockContainer {
 			List<Entity> targets = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(x, y + 1, z, x + 1, y + 2, z + 1));
 			for(Entity e : targets)
 				e.attackEntityFrom(ModDamageSource.spikes, 10);
-			world.playSound(null, x + 0.5, y + 1.5, z + 0.5, HBMSoundHandler.slicer, SoundCategory.HOSTILE, 1.0F, 1.0F);
+			world.playSound(null, x + 0.5, y + 1.5, z + 0.5, HBMSoundEvents.slicer, SoundCategory.HOSTILE, 1.0F, 1.0F);
 			break;
 		case MINE:
 			world.createExplosion(null, x + 0.5, y + 1.5, z + 0.5, 1F, false);

@@ -3,7 +3,7 @@ package com.hbm.blocks.generic;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.inventory.control_panel.ControlEvent;
 import com.hbm.inventory.control_panel.ControlEventSystem;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.machine.TileEntityBMPowerBox;
 import net.minecraft.block.BlockContainer;
@@ -64,7 +64,7 @@ public class BMPowerBox extends BlockContainer {
         }
         if (!worldIn.isRemote) {
             boolean oldIsOn = state.getValue(IS_ON);
-            worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.reactorStart, SoundCategory.BLOCKS, 1, oldIsOn ? 0.9F : 1);
+            worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.reactorStart, SoundCategory.BLOCKS, 1, oldIsOn ? 0.9F : 1);
             worldIn.setBlockState(pos, state.withProperty(IS_ON, !oldIsOn));
             worldIn.notifyNeighborsOfStateChange(pos, this, false);
             worldIn.notifyNeighborsOfStateChange(pos.offset(state.getValue(FACING).getOpposite()), this, false);

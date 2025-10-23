@@ -12,7 +12,7 @@ import com.hbm.inventory.fluid.trait.FT_Heatable;
 import com.hbm.inventory.fluid.trait.FT_Heatable.HeatingStep;
 import com.hbm.inventory.fluid.trait.FT_Heatable.HeatingType;
 import com.hbm.lib.DirPos;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.saveddata.TomSaveData;
@@ -22,7 +22,6 @@ import com.hbm.tileentity.IConfigurableMachine;
 import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -119,7 +118,7 @@ public class TileEntityHeatBoilerIndustrial extends TileEntityLoadedBase impleme
 
     @Override
     public AudioWrapper createAudioLoop() {
-        return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.boiler, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 0.125F, 10F, 1.0F, 20);
+        return MainRegistry.proxy.getLoopedSound(HBMSoundEvents.boiler, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 0.125F, 10F, 1.0F, 20);
     }
 
     @Override
@@ -218,7 +217,7 @@ public class TileEntityHeatBoilerIndustrial extends TileEntityLoadedBase impleme
 
                 if (ops > 0 && world.rand.nextInt(400) == 0) {
                     world.playSound(null, pos.getX() + 0.5, pos.getY() + 2, pos.getZ() + 0.5,
-                            HBMSoundHandler.boilerGroanSounds[world.rand.nextInt(3)], SoundCategory.BLOCKS, 10F, 1.0F);
+                            HBMSoundEvents.boilerGroanSounds[world.rand.nextInt(3)], SoundCategory.BLOCKS, 10F, 1.0F);
                 }
 
                 if (ops > 0) {

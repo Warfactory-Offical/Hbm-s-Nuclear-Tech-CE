@@ -2,7 +2,7 @@ package com.hbm.entity.mob.ai;
 
 import com.hbm.entity.projectile.EntityBulletBase;
 import com.hbm.handler.BulletConfigSyncingUtil;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.render.amlfrom1710.Vec3;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
@@ -54,7 +54,7 @@ public class EntityAIMaskmanLasergun extends EntityAIBase {
 				orb.motionY += 0.5D;
 
 				owner.world.spawnEntity(orb);
-				owner.playSound(HBMSoundHandler.teslaShoot, 1.0F, 1.0F);
+				owner.playSound(HBMSoundEvents.teslaShoot, 1.0F, 1.0F);
 				break;
 
 			case MISSILE:
@@ -65,7 +65,7 @@ public class EntityAIMaskmanLasergun extends EntityAIBase {
 				missile.motionZ = vec.zCoord * 0.05D;
 
 				owner.world.spawnEntity(missile);
-				owner.playSound(HBMSoundHandler.hkShoot, 1.0F, 1.0F);
+				owner.playSound(HBMSoundEvents.hkShoot, 1.0F, 1.0F);
 				break;
 
 			case SPLASH:

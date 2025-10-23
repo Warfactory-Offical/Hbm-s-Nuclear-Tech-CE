@@ -1,7 +1,7 @@
 package com.hbm.items.machine;
 
 import com.hbm.items.ModItems;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.main.MainRegistry;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -43,7 +43,7 @@ public class ItemTurretBiometry extends Item {
         if(world.isRemote)
         	player.sendMessage(new TextComponentTranslation("chat.addpldata"));
 
-    	world.playSound(player.posX, player.posY, player.posZ, HBMSoundHandler.techBleep, SoundCategory.PLAYERS, 1.0F, 1.0F, true);
+    	world.playSound(player.posX, player.posY, player.posZ, HBMSoundEvents.techBleep, SoundCategory.PLAYERS, 1.0F, 1.0F, true);
 		
 		player.swingArm(handIn);;
 		

@@ -23,7 +23,7 @@ import com.hbm.items.weapon.ItemMissileStandard;
 import com.hbm.items.weapon.ItemMissileStandard.MissileFuel;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.main.ModContext;
@@ -377,7 +377,7 @@ public abstract class TileEntityLaunchPadBase extends TileEntityMachineBase impl
 		}
 		world.spawnEntity(missile);
 		TrackerUtil.setTrackingRange(world, missile, 500);
-		world.playSound(null, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, HBMSoundHandler.missileTakeoff, SoundCategory.BLOCKS,  2.0F, 1.0F);
+		world.playSound(null, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, HBMSoundEvents.missileTakeoff, SoundCategory.BLOCKS,  2.0F, 1.0F);
 
 		this.power -= 75_000;
 		

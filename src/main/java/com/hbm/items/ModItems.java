@@ -35,7 +35,7 @@ import com.hbm.items.weapon.ItemMissile.PartSize;
 import com.hbm.items.weapon.ItemMissile.Rarity;
 import com.hbm.items.weapon.ItemMissile.WarheadType;
 import com.hbm.items.weapon.sedna.factory.GunFactory;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.potion.HbmPotion;
@@ -125,7 +125,7 @@ public class ModItems {
     public static final Item siox = new ItemPill(0, "siox").setCreativeTab(MainRegistry.consumableTab);
     public static final Item iv_xp_empty = new ItemSimpleConsumable("iv_xp_empty").setUseActionServer((stack, user) -> {
         if (user.experienceTotal >= 100) {
-            ItemSimpleConsumable.giveSoundAndDecrement(stack, user, HBMSoundHandler.syringeUse, new ItemStack(ModItems.iv_xp));
+            ItemSimpleConsumable.giveSoundAndDecrement(stack, user, HBMSoundEvents.syringeUse, new ItemStack(ModItems.iv_xp));
             EnchantmentUtil.removeExperience(user, 100);
         }
     }).setCreativeTab(MainRegistry.consumableTab);
@@ -139,32 +139,32 @@ public class ModItems {
     public static final Item five_htp = new ItemPill(0, "five_htp").setCreativeTab(MainRegistry.consumableTab);
     public static final Item iv_empty = new ItemSimpleConsumable("iv_empty").setUseActionServer((stack, user) -> {
         if (user.hurtResistantTime <= 0) {
-            ItemSimpleConsumable.giveSoundAndDecrement(stack, user, HBMSoundHandler.syringeUse, new ItemStack(ModItems.iv_blood));
+            ItemSimpleConsumable.giveSoundAndDecrement(stack, user, HBMSoundEvents.syringeUse, new ItemStack(ModItems.iv_blood));
             user.attackEntityFrom(DamageSource.MAGIC, 5F);
         }
     }).setCreativeTab(MainRegistry.consumableTab);
     public static final Item pill_iodine = new ItemPill(0, "pill_iodine").setCreativeTab(MainRegistry.consumableTab);
     public static final Item plan_c = new ItemPill(0, "plan_c").setCreativeTab(MainRegistry.consumableTab);
     public static final Item iv_blood = new ItemSimpleConsumable("iv_blood").setUseActionServer((stack, user) -> {
-        ItemSimpleConsumable.giveSoundAndDecrement(stack, user, HBMSoundHandler.radawayUse, new ItemStack(ModItems.iv_empty));
+        ItemSimpleConsumable.giveSoundAndDecrement(stack, user, HBMSoundEvents.radawayUse, new ItemStack(ModItems.iv_empty));
         user.heal(3F);
     }).setCreativeTab(MainRegistry.consumableTab);
     public static final Item stealth_boy = new ItemStarterKit("stealth_boy").setCreativeTab(MainRegistry.consumableTab);
     public static final Item jetpack_tank = new ItemConsumable("jetpack_tank").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
     public static final Item radaway = new ItemSimpleConsumable("radaway").setUseActionServer((stack, user) -> {
-        ItemSimpleConsumable.giveSoundAndDecrement(stack, user, HBMSoundHandler.radawayUse, new ItemStack(ModItems.iv_empty));
+        ItemSimpleConsumable.giveSoundAndDecrement(stack, user, HBMSoundEvents.radawayUse, new ItemStack(ModItems.iv_empty));
         ItemSimpleConsumable.addPotionEffect(user, HbmPotion.radaway, 200, 24);
     }).setCreativeTab(MainRegistry.consumableTab);
     public static final Item gun_kit_1 = new ItemRepairKit("gun_kit_1", 10).setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
     public static final Item gun_kit_2 = new ItemRepairKit("gun_kit_2",100).setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
     public static final Item radaway_strong = new ItemSimpleConsumable("radaway_strong").setUseActionServer((stack, user) -> {
-        ItemSimpleConsumable.giveSoundAndDecrement(stack, user, HBMSoundHandler.radawayUse, new ItemStack(ModItems.iv_empty));
+        ItemSimpleConsumable.giveSoundAndDecrement(stack, user, HBMSoundEvents.radawayUse, new ItemStack(ModItems.iv_empty));
         ItemSimpleConsumable.addPotionEffect(user, HbmPotion.radaway, 100, 99);
     }).setCreativeTab(MainRegistry.consumableTab);
     public static final Item euphemium_kit = new ItemStarterKit("euphemium_kit").setMaxStackSize(1).setCreativeTab(null);
     public static final Item cbt_device = new ItemConsumable("cbt_device").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
     public static final Item radaway_flush = new ItemSimpleConsumable("radaway_flush").setUseActionServer((stack, user) -> {
-        ItemSimpleConsumable.giveSoundAndDecrement(stack, user, HBMSoundHandler.radawayUse, new ItemStack(ModItems.iv_empty));
+        ItemSimpleConsumable.giveSoundAndDecrement(stack, user, HBMSoundEvents.radawayUse, new ItemStack(ModItems.iv_empty));
         ItemSimpleConsumable.addPotionEffect(user, HbmPotion.radaway, 50, 399);
     }).setCreativeTab(MainRegistry.consumableTab);
     public static final Item gas_mask_filter_rag = new ItemFilter("gas_mask_filter_rag", 4000).setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
@@ -445,9 +445,9 @@ public class ModItems {
     public static final Item hazmat_legs_grey = new ArmorHazmat(MainRegistry.enumArmorMaterialHazmat3, -1, EntityEquipmentSlot.LEGS, "hazmat_legs_grey").setMaxStackSize(1);
     public static final Item hazmat_boots_grey = new ArmorHazmat(MainRegistry.enumArmorMaterialHazmat3, -1, EntityEquipmentSlot.FEET, "hazmat_boots_grey").setMaxStackSize(1);
     public static final Item liquidator_helmet = new ArmorLiquidator(MainRegistry.aMatLiquidator, -1, EntityEquipmentSlot.HEAD, RefStrings.MODID + ":textures/armor/liquidator_helmet.png", "liquidator_helmet")
-            .setStep(HBMSoundHandler.iron)
-            .setJump(HBMSoundHandler.ironJump)
-            .setFall(HBMSoundHandler.ironLand).setMaxStackSize(1);
+            .setStep(HBMSoundEvents.iron)
+            .setJump(HBMSoundEvents.ironJump)
+            .setFall(HBMSoundEvents.ironLand).setMaxStackSize(1);
     public static final Item liquidator_plate = new ArmorLiquidator(MainRegistry.aMatLiquidator, -1, EntityEquipmentSlot.CHEST, RefStrings.MODID + ":textures/armor/liquidator_1.png", "liquidator_plate").cloneStats((ArmorFSB) liquidator_helmet).setMaxStackSize(1);
     public static final Item liquidator_legs = new ArmorLiquidator(MainRegistry.aMatLiquidator, -1, EntityEquipmentSlot.LEGS, RefStrings.MODID + ":textures/armor/liquidator_2.png", "liquidator_legs").cloneStats((ArmorFSB) liquidator_helmet).setMaxStackSize(1);
     public static final Item liquidator_boots = new ArmorLiquidator(MainRegistry.aMatLiquidator, -1, EntityEquipmentSlot.FEET, RefStrings.MODID + ":textures/armor/liquidator_1.png", "liquidator_boots").cloneStats((ArmorFSB) liquidator_helmet).setMaxStackSize(1);
@@ -533,18 +533,18 @@ public class ModItems {
             .setHasGeigerSound(true)
             .setHasHardLanding(true)
             .addEffect(new PotionEffect(MobEffects.STRENGTH, 20, 0))
-            .setStep(HBMSoundHandler.iron)
-            .setJump(HBMSoundHandler.ironJump)
-            .setFall(HBMSoundHandler.ironLand);
+            .setStep(HBMSoundEvents.iron)
+            .setJump(HBMSoundEvents.ironJump)
+            .setFall(HBMSoundEvents.ironLand);
     public static final Item t51_plate = new ArmorT51(MainRegistry.enumArmorMaterialT51, -1, EntityEquipmentSlot.CHEST, RefStrings.MODID + ":textures/armor/starmetal_1.png", 1000000, 10000, 1000, 5, "t51_plate").cloneStats((ArmorFSB) t51_helmet).setCreativeTab(CreativeTabs.COMBAT);
     public static final Item t51_legs = new ArmorT51(MainRegistry.enumArmorMaterialT51, -1, EntityEquipmentSlot.LEGS, ":textures/armor/starmetal_2.png",1000000, 10000, 1000, 5, "t51_legs").cloneStats((ArmorFSB) t51_helmet).setCreativeTab(CreativeTabs.COMBAT);
     public static final Item t51_boots = new ArmorT51(MainRegistry.enumArmorMaterialT51, -1, EntityEquipmentSlot.FEET, ":textures/armor/starmetal_1.png",1000000, 10000, 1000, 5, "t51_boots").cloneStats((ArmorFSB) t51_helmet).setCreativeTab(CreativeTabs.COMBAT);
     public static final Item steamsuit_helmet = new ArmorDesh(MainRegistry.aMatSteamsuit, 7, EntityEquipmentSlot.HEAD, RefStrings.MODID + ":textures/armor/starmetal_1.png", Fluids.STEAM, 64000, 500, 50, 1, "steamsuit_helmet")
             .addEffect(new PotionEffect(MobEffects.HASTE, 30, 0))
             .setHasHardLanding(true)
-            .setStep(HBMSoundHandler.iron) //Norwood: Upstream doesn't have it but i'll allow it
-            .setJump(HBMSoundHandler.ironJump)
-            .setFall(HBMSoundHandler.ironLand);
+            .setStep(HBMSoundEvents.iron) //Norwood: Upstream doesn't have it but i'll allow it
+            .setJump(HBMSoundEvents.ironJump)
+            .setFall(HBMSoundEvents.ironLand);
     public static final Item steamsuit_plate = new ArmorDesh(MainRegistry.aMatSteamsuit, 7, EntityEquipmentSlot.CHEST, RefStrings.MODID + ":textures/armor/starmetal_1.png", Fluids.STEAM, 64000, 500, 50, 1, "steamsuit_plate").cloneStats((ArmorFSB) steamsuit_helmet);
     public static final Item steamsuit_legs = new ArmorDesh(MainRegistry.aMatSteamsuit, 7, EntityEquipmentSlot.LEGS, RefStrings.MODID + ":textures/armor/starmetal_2.png", Fluids.STEAM, 64000, 500, 50, 1, "steamsuit_legs").cloneStats((ArmorFSB) steamsuit_helmet);
     public static final Item steamsuit_boots = new ArmorDesh(MainRegistry.aMatSteamsuit, 7, EntityEquipmentSlot.FEET, RefStrings.MODID + ":textures/armor/starmetal_1.png", Fluids.STEAM, 64000, 500, 50, 1, "steamsuit_boots").cloneStats((ArmorFSB) steamsuit_helmet);
@@ -589,9 +589,9 @@ public class ModItems {
             .setHasHardLanding(true)
             .addEffect(new PotionEffect(MobEffects.JUMP_BOOST, 30, 0))
             .addEffect(new PotionEffect(MobEffects.STRENGTH, 30, 0))
-            .setStep(HBMSoundHandler.iron)
-            .setJump(HBMSoundHandler.ironJump)
-            .setFall(HBMSoundHandler.ironLand);
+            .setStep(HBMSoundEvents.iron)
+            .setJump(HBMSoundEvents.ironJump)
+            .setFall(HBMSoundEvents.ironLand);
     public static final Item ajr_plate = new ArmorAJR(MainRegistry.aMatAJR, 7, EntityEquipmentSlot.CHEST, RefStrings.MODID + ":textures/armor/starmetal_1.png", 2500000, 10000, 2000, 25, "ajr_plate").cloneStats((ArmorFSB) ajr_helmet);
     public static final Item ajr_legs = new ArmorAJR(MainRegistry.aMatAJR, 7, EntityEquipmentSlot.LEGS, RefStrings.MODID + ":textures/armor/starmetal_2.png", 2500000, 10000, 2000, 25, "ajr_legs").cloneStats((ArmorFSB) ajr_helmet);
     public static final Item ajr_boots = new ArmorAJR(MainRegistry.aMatAJR, 7, EntityEquipmentSlot.FEET, RefStrings.MODID + ":textures/armor/starmetal_1.png", 2500000, 10000, 2000, 25, "ajr_boots").cloneStats((ArmorFSB) ajr_helmet);
@@ -601,9 +601,9 @@ public class ModItems {
             .setHasHardLanding(true)
             .addEffect(new PotionEffect(MobEffects.JUMP_BOOST, 30, 0))
             .addEffect(new PotionEffect(MobEffects.STRENGTH, 30, 0))
-            .setStep(HBMSoundHandler.iron)
-            .setJump(HBMSoundHandler.ironJump)
-            .setFall(HBMSoundHandler.ironLand);
+            .setStep(HBMSoundEvents.iron)
+            .setJump(HBMSoundEvents.ironJump)
+            .setFall(HBMSoundEvents.ironLand);
     public static final Item ajro_plate = new ArmorAJRO(MainRegistry.aMatAJR, -1, EntityEquipmentSlot.CHEST, RefStrings.MODID + ":textures/armor/starmetal_1.png", 2500000, 10000, 2000, 25, "ajro_plate").cloneStats((ArmorFSB) ajro_helmet);
     public static final Item ajro_legs = new ArmorAJRO(MainRegistry.aMatAJR, -1, EntityEquipmentSlot.LEGS, RefStrings.MODID + ":textures/armor/starmetal_2.png", 2500000, 10000, 2000, 25, "ajro_legs").cloneStats((ArmorFSB) ajro_helmet);
     public static final Item ajro_boots = new ArmorAJRO(MainRegistry.aMatAJR, -1, EntityEquipmentSlot.FEET, RefStrings.MODID + ":textures/armor/starmetal_1.png", 2500000, 10000, 2000, 25, "ajro_boots").cloneStats((ArmorFSB) ajro_helmet);
@@ -624,9 +624,9 @@ public class ModItems {
             .addEffect(new PotionEffect(MobEffects.JUMP_BOOST, 30, 0))
             .addEffect(new PotionEffect(MobEffects.SATURATION, 30, 0))
             .addEffect(new PotionEffect(HbmPotion.radx, 30, 0))
-            .setStep(HBMSoundHandler.iron)
-            .setJump(HBMSoundHandler.ironJump)
-            .setFall(HBMSoundHandler.ironLand);
+            .setStep(HBMSoundEvents.iron)
+            .setJump(HBMSoundEvents.ironJump)
+            .setFall(HBMSoundEvents.ironLand);
     public static final Item bj_plate = new ArmorBJ(MainRegistry.aMatBJ, 7, EntityEquipmentSlot.CHEST, RefStrings.MODID + ":textures/armor/starmetal_1.png", 10000000, 10000, 1000, 100, "bj_plate").cloneStats((ArmorFSB) bj_helmet);
     public static final Item bj_plate_jetpack = new ArmorBJJetpack(MainRegistry.aMatBJ, -1, EntityEquipmentSlot.CHEST, RefStrings.MODID + ":textures/armor/starmetal_1.png", 10000000, 10000, 1000, 100, "bj_plate_jetpack").cloneStats((ArmorFSB) bj_helmet);
     public static final Item bj_legs = new ArmorBJ(MainRegistry.aMatBJ, 7, EntityEquipmentSlot.LEGS, RefStrings.MODID + ":textures/armor/starmetal_2.png", 10000000, 10000, 1000, 100, "bj_legs").cloneStats((ArmorFSB) bj_helmet);
@@ -635,9 +635,9 @@ public class ModItems {
             .enableVATS(true)
             .setHasGeigerSound(true)
             .setHasHardLanding(true)
-            .setStep(HBMSoundHandler.poweredStep)
-            .setJump(HBMSoundHandler.poweredStep)
-            .setFall(HBMSoundHandler.poweredStep)
+            .setStep(HBMSoundEvents.poweredStep)
+            .setJump(HBMSoundEvents.poweredStep)
+            .setFall(HBMSoundEvents.poweredStep)
             .addEffect(new PotionEffect(MobEffects.STRENGTH, 20, 3));
     public static final Item rpa_plate = new ArmorRPA(MainRegistry.aMatRPA, -1, EntityEquipmentSlot.CHEST, RefStrings.MODID + ":textures/armor/starmetal_1.png", 2500000, 10000, 10000, 25, "RPA_plate").cloneStats((ArmorFSB) rpa_helmet);
     public static final Item rpa_legs = new ArmorRPA(MainRegistry.aMatRPA, -1, EntityEquipmentSlot.LEGS, RefStrings.MODID + ":textures/armor/starmetal_2.png", 2500000, 10000, 10000, 25, "RPA_legs").cloneStats((ArmorFSB) rpa_helmet);
@@ -647,9 +647,9 @@ public class ModItems {
             .setHasGeigerSound(true)
             .enableThermalSight(true)
             .setHasHardLanding(true)
-            .setStep(HBMSoundHandler.iron)
-            .setJump(HBMSoundHandler.ironJump)
-            .setFall(HBMSoundHandler.ironLand);
+            .setStep(HBMSoundEvents.iron)
+            .setJump(HBMSoundEvents.ironJump)
+            .setFall(HBMSoundEvents.ironLand);
     public static final Item fau_plate = new ArmorDigamma(MainRegistry.aMatFau, -1, EntityEquipmentSlot.CHEST, RefStrings.MODID + ":textures/armor/starmetal_1.png", 100000000, 100000, 25000, 1000, "fau_plate").cloneStats((ArmorFSB) fau_helmet);
     public static final Item fau_legs = new ArmorDigamma(MainRegistry.aMatFau, -1, EntityEquipmentSlot.LEGS, RefStrings.MODID + ":textures/armor/starmetal_2.png", 100000000, 100000, 25000, 1000, "fau_legs").cloneStats((ArmorFSB) fau_helmet);
     public static final Item fau_boots = new ArmorDigamma(MainRegistry.aMatFau, -1, EntityEquipmentSlot.FEET, RefStrings.MODID + ":textures/armor/starmetal_1.png", 100000000, 100000, 25000, 1000, "fau_boots").cloneStats((ArmorFSB) fau_helmet);
@@ -661,9 +661,9 @@ public class ModItems {
             .enableVATS(true)
             .enableThermalSight(true)
             .setHasHardLanding(true)
-            .setStep(HBMSoundHandler.iron)
-            .setJump(HBMSoundHandler.ironJump)
-            .setFall(HBMSoundHandler.ironLand);
+            .setStep(HBMSoundEvents.iron)
+            .setJump(HBMSoundEvents.ironJump)
+            .setFall(HBMSoundEvents.ironLand);
     public static final Item dns_plate = new ArmorDNT(MainRegistry.aMatDNS, -1, EntityEquipmentSlot.CHEST, RefStrings.MODID + ":textures/armor/starmetal_1.png", 1000000000, 1000000, 100000, 10000, "dns_plate").cloneStats((ArmorFSB) dns_helmet);
     public static final Item dns_legs = new ArmorDNT(MainRegistry.aMatDNS, -1, EntityEquipmentSlot.LEGS, RefStrings.MODID + ":textures/armor/starmetal_2.png", 1000000000, 1000000, 100000, 10000, "dns_legs").cloneStats((ArmorFSB) dns_helmet);
     public static final Item dns_boots = new ArmorDNT(MainRegistry.aMatDNS, -1, EntityEquipmentSlot.FEET, RefStrings.MODID + ":textures/armor/starmetal_1.png", 1000000000, 1000000, 100000, 10000, "dns_boots").cloneStats((ArmorFSB) dns_helmet);
@@ -2675,10 +2675,10 @@ public class ModItems {
     public static final Item door_bunker = new ItemModDoor("door_bunker").setCreativeTab(MainRegistry.blockTab);
     public static final Item door_red = new ItemModDoor("door_red").setCreativeTab(MainRegistry.blockTab);
     //Music
-    public static final Item record_lc = new ItemModRecord("lc", HBMSoundHandler.lambdaCore, "record_lc").setCreativeTab(CreativeTabs.MISC);
-    public static final Item record_ss = new ItemModRecord("ss", HBMSoundHandler.sectorSweep, "record_ss").setCreativeTab(CreativeTabs.MISC);
-    public static final Item record_vc = new ItemModRecord("vc", HBMSoundHandler.vortalCombat, "record_vc").setCreativeTab(CreativeTabs.MISC);
-    public static final Item record_glass = new ItemModRecord("glass", HBMSoundHandler.glass, "record_glass").setCreativeTab(CreativeTabs.MISC);
+    public static final Item record_lc = new ItemModRecord("lc", HBMSoundEvents.lambdaCore, "record_lc").setCreativeTab(CreativeTabs.MISC);
+    public static final Item record_ss = new ItemModRecord("ss", HBMSoundEvents.sectorSweep, "record_ss").setCreativeTab(CreativeTabs.MISC);
+    public static final Item record_vc = new ItemModRecord("vc", HBMSoundEvents.vortalCombat, "record_vc").setCreativeTab(CreativeTabs.MISC);
+    public static final Item record_glass = new ItemModRecord("glass", HBMSoundEvents.glass, "record_glass").setCreativeTab(CreativeTabs.MISC);
     //Weird items
     public static final Item flame_pony = new ItemCustomLore("flame_pony").setCreativeTab(MainRegistry.partsTab);
     public static final Item flame_conspiracy = new ItemCustomLore("flame_conspiracy").setCreativeTab(MainRegistry.partsTab);

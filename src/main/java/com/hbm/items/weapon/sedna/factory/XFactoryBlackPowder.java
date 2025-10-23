@@ -6,7 +6,7 @@ import com.hbm.items.weapon.sedna.GunConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.items.weapon.sedna.Receiver;
 import com.hbm.items.weapon.sedna.mags.MagazineFullReload;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.render.anim.sedna.BusAnimationKeyframeSedna.IType;
 import com.hbm.render.anim.sedna.BusAnimationSedna;
 import com.hbm.render.anim.sedna.BusAnimationSequenceSedna;
@@ -28,7 +28,7 @@ public class XFactoryBlackPowder {
         ModItems.gun_pepperbox = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_pepperbox", new GunConfig()
                 .dura(300).draw(4).inspect(23).crosshair(RenderScreenOverlay.Crosshair.CIRCLE).smoke(Lego.LAMBDA_STANDARD_SMOKE)
                 .rec(new Receiver(0)
-                        .dmg(5F).delay(27).reload(67).jam(58).sound(HBMSoundHandler.fireBlackPowder, 1.0F, 1.0F)
+                        .dmg(5F).delay(27).reload(67).jam(58).sound(HBMSoundEvents.fireBlackPowder, 1.0F, 1.0F)
                         .mag(new MagazineFullReload(0, 6).addConfigs(stone, flint, iron, shot))
                         .offset(0.75, -0.0625, -0.1875D)
                         .setupStandardFire().recoil(LAMBDA_RECOIL_PEPPERBOX))

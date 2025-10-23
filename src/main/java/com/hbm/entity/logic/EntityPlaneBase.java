@@ -1,9 +1,8 @@
 package com.hbm.entity.logic;
 
 import com.google.common.collect.ImmutableSet;
-import com.hbm.entity.effect.EntityCloudFleijaRainbow;
 import com.hbm.explosion.vanillant.ExplosionVNT;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.main.MainRegistry;
 import com.hbm.particle.helper.ExplosionSmallCreator;
@@ -70,7 +69,7 @@ public abstract class EntityPlaneBase extends Entity implements IChunkLoader {
 
     protected void killPlane() {
         ExplosionSmallCreator.composeEffect(world, posX, posY, posZ, 25, 3.5F, 2F);
-        world.playSound(null, posX, posY, posZ, HBMSoundHandler.planeShotDown, SoundCategory.NEUTRAL, 25.0F, 1.0F);
+        world.playSound(null, posX, posY, posZ, HBMSoundEvents.planeShotDown, SoundCategory.NEUTRAL, 25.0F, 1.0F);
     }
 
     @Override
@@ -134,7 +133,7 @@ public abstract class EntityPlaneBase extends Entity implements IChunkLoader {
                 if((world.getBlockState(pos).getBlock() != Blocks.AIR || posY < 0)) {
                     this.setDead();
                     new ExplosionVNT(world, posX, posY, posZ, 15F).makeStandard().explode();
-                    world.playSound(null, posX, posY, posZ, HBMSoundHandler.planeCrash, SoundCategory.NEUTRAL, 25.0F, 1.0F);
+                    world.playSound(null, posX, posY, posZ, HBMSoundEvents.planeCrash, SoundCategory.NEUTRAL, 25.0F, 1.0F);
                     return;
                 }
             } else {

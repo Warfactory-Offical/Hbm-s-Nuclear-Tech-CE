@@ -2,7 +2,7 @@ package com.hbm.sound;
 
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.ItemCrucible;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.MovingSound;
@@ -17,7 +17,7 @@ public class SoundLoopCrucible extends MovingSound {
 	public ISound start;
 	
 	public SoundLoopCrucible(EntityPlayer player) {
-		super(HBMSoundHandler.crucibleLoop, SoundCategory.PLAYERS);
+		super(HBMSoundEvents.crucibleLoop, SoundCategory.PLAYERS);
 		this.repeat = true;
 		this.repeatDelay = 0;
 		this.volume = 0.1F;
@@ -33,10 +33,10 @@ public class SoundLoopCrucible extends MovingSound {
 			this.donePlaying = true;
 			Minecraft.getMinecraft().getSoundHandler().stopSound(start);
 			start = null;
-			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getRecordSoundRecord(HBMSoundHandler.crucibleEnd, (float)player.posX, (float)player.posY, (float)player.posZ));
+			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getRecordSoundRecord(HBMSoundEvents.crucibleEnd, (float)player.posX, (float)player.posY, (float)player.posZ));
 		}
 		if(ticks == 0){
-			start = PositionedSoundRecord.getRecordSoundRecord(HBMSoundHandler.crucibleStart, (float)player.posX, (float)player.posY, (float)player.posZ);
+			start = PositionedSoundRecord.getRecordSoundRecord(HBMSoundEvents.crucibleStart, (float)player.posX, (float)player.posY, (float)player.posZ);
 			Minecraft.getMinecraft().getSoundHandler().playSound(start);
 		}
 		if(ticks == 8){

@@ -1,7 +1,7 @@
 package com.hbm.entity.mob;
 
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import net.minecraft.entity.Entity;
@@ -43,7 +43,7 @@ public class EntityQuackos extends EntityDuck {
      */
 	@Override
 	protected SoundEvent getAmbientSound() {
-		return HBMSoundHandler.megaquacc;
+		return HBMSoundEvents.megaquacc;
 	}
 	
 	/**
@@ -51,7 +51,7 @@ public class EntityQuackos extends EntityDuck {
      */
 	@Override
 	protected SoundEvent getDeathSound() {
-		return HBMSoundHandler.megaquacc;
+		return HBMSoundEvents.megaquacc;
 	}
 	
 	/**
@@ -59,7 +59,7 @@ public class EntityQuackos extends EntityDuck {
      */
 	@Override
 	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-		return HBMSoundHandler.megaquacc;
+		return HBMSoundEvents.megaquacc;
 	}
 	
 	/**
@@ -67,7 +67,7 @@ public class EntityQuackos extends EntityDuck {
      */
 	@Override
 	protected SoundEvent getFallSound(int heightIn) {
-		return HBMSoundHandler.megaquacc;
+		return HBMSoundEvents.megaquacc;
 	}
 	
 	/**

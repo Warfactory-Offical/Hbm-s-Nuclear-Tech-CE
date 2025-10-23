@@ -22,7 +22,7 @@ import com.hbm.items.IAnimatedItem;
 import com.hbm.items.ModItems;
 import com.hbm.items.RBMKItemRenderers;
 import com.hbm.items.weapon.sedna.factory.GunFactoryClient;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.RecoilHandler;
 import com.hbm.lib.RefStrings;
 import com.hbm.particle.*;
@@ -90,7 +90,6 @@ import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -1286,10 +1285,10 @@ public class ClientProxy extends ServerProxy {
                     int smokeScale = 5;
                     int smokeLife = 15;
                     if (mat == Material.IRON) {
-                        world.playSound(x, y, z, HBMSoundHandler.hit_metal, SoundCategory.BLOCKS, 1,
+                        world.playSound(x, y, z, HBMSoundEvents.hit_metal, SoundCategory.BLOCKS, 1,
                                 0.9F + world.rand.nextFloat() * 0.2F, false);
                     } else {
-                        world.playSound(x, y, z, HBMSoundHandler.hit_dirt, SoundCategory.BLOCKS, 1,
+                        world.playSound(x, y, z, HBMSoundEvents.hit_dirt, SoundCategory.BLOCKS, 1,
                                 0.7F + world.rand.nextFloat() * 0.3F, false);
                     }
                     if (mat == Material.ROCK || mat == Material.GROUND || mat == Material.GRASS || mat == Material.WOOD || mat == Material.LEAVES || mat == Material.SAND) {
@@ -1387,7 +1386,7 @@ public class ClientProxy extends ServerProxy {
                     }
 
                 } else if (hitType == Type.ENTITY) {
-                    world.playSound(x, y, z, HBMSoundHandler.hit_flesh, SoundCategory.BLOCKS, 1,
+                    world.playSound(x, y, z, HBMSoundEvents.hit_flesh, SoundCategory.BLOCKS, 1,
                             0.8F + world.rand.nextFloat() * 0.4F, false);
                     Vec3d bulletDirection = new Vec3d(data.getFloat("dirX"), data.getFloat("dirY"), data.getFloat(
                             "dirZ"));

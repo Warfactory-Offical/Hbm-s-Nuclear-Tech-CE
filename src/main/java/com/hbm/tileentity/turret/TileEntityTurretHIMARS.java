@@ -7,7 +7,7 @@ import com.hbm.inventory.container.ContainerTurretBase;
 import com.hbm.inventory.gui.GUITurretHIMARS;
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.ItemAmmoHIMARS;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.render.amlfrom1710.Vec3;
@@ -281,7 +281,7 @@ public class TileEntityTurretHIMARS extends TileEntityTurretBaseArtillery implem
         this.spawnShell(this.typeLoaded);
         this.ammo--;
         this.world.playSound(
-            null, this.pos, HBMSoundHandler.rocketFlame, SoundCategory.BLOCKS, 25.0F, 1.0F);
+            null, this.pos, HBMSoundEvents.rocketFlame, SoundCategory.BLOCKS, 25.0F, 1.0F);
       }
 
       if (this.mode == FiringMode.MANUAL && !this.targetQueue.isEmpty()) {

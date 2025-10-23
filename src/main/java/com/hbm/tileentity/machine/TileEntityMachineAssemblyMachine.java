@@ -15,7 +15,7 @@ import com.hbm.inventory.recipes.loader.GenericRecipe;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.lib.DirPos;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.modules.machine.ModuleMachineAssembler;
@@ -161,7 +161,7 @@ public class TileEntityMachineAssemblyMachine extends TileEntityMachineBase impl
                 }
 
                 if(!this.muffled && arm.prevAngles[3] != arm.angles[3] && arm.angles[3] == -0.75) {
-                    MainRegistry.proxy.playSoundClient(pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.assemblerStrike, SoundCategory.BLOCKS, this.getVolume(0.5F), 1F);
+                    MainRegistry.proxy.playSoundClient(pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.assemblerStrike, SoundCategory.BLOCKS, this.getVolume(0.5F), 1F);
                 }
             }
 
@@ -192,7 +192,7 @@ public class TileEntityMachineAssemblyMachine extends TileEntityMachineBase impl
                     if(this.ringDelay <= 0) {
                         this.ringTarget += (world.rand.nextDouble() * 2 - 1) * 135;
                         this.ringSpeed = 10D + world.rand.nextDouble() * 5D;
-                        if(!this.muffled) MainRegistry.proxy.playSoundClient(pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.assemblerStart, SoundCategory.BLOCKS, this.getVolume(0.25F), 1.25F + world.rand.nextFloat() * 0.25F);
+                        if(!this.muffled) MainRegistry.proxy.playSoundClient(pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.assemblerStart, SoundCategory.BLOCKS, this.getVolume(0.25F), 1.25F + world.rand.nextFloat() * 0.25F);
                     }
                 }
             }
@@ -200,7 +200,7 @@ public class TileEntityMachineAssemblyMachine extends TileEntityMachineBase impl
     }
 
     @Override public AudioWrapper createAudioLoop() {
-        return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.motor, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 0.5F, 15F, 0.75F, 20);
+        return MainRegistry.proxy.getLoopedSound(HBMSoundEvents.motor, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 0.5F, 15F, 0.75F, 20);
     }
 
     @Override public void onChunkUnload() {
@@ -252,7 +252,7 @@ public class TileEntityMachineAssemblyMachine extends TileEntityMachineBase impl
         this.assemblerModule.deserialize(buf);
 
         if(wasProcessing && !didProcess) {
-            MainRegistry.proxy.playSoundClient(pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.assemblerStop, SoundCategory.BLOCKS, this.getVolume(0.25F), 1.5F);
+            MainRegistry.proxy.playSoundClient(pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.assemblerStop, SoundCategory.BLOCKS, this.getVolume(0.25F), 1.5F);
         }
     }
 

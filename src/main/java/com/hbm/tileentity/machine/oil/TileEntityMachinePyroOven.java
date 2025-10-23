@@ -15,7 +15,7 @@ import com.hbm.inventory.recipes.PyroOvenRecipes.PyroOvenRecipe;
 import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.sound.AudioWrapper;
@@ -86,7 +86,7 @@ public class TileEntityMachinePyroOven extends TileEntityMachinePolluting implem
 
                 if (!stack.isEmpty() && stack.getItem() instanceof ItemMachineUpgrade && slot >= 4 && slot <= 5) {
                     world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-                            HBMSoundHandler.upgradePlug,
+                            HBMSoundEvents.upgradePlug,
                             net.minecraft.util.SoundCategory.BLOCKS, 1.0F, 1.0F);
                 }
             }
@@ -346,7 +346,7 @@ public class TileEntityMachinePyroOven extends TileEntityMachinePolluting implem
     }
 
     @Override public AudioWrapper createAudioLoop() {
-        return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.pyroOperate, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 15F, 1.0F, 20);
+        return MainRegistry.proxy.getLoopedSound(HBMSoundEvents.pyroOperate, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 15F, 1.0F, 20);
     }
 
     @Override public void onChunkUnload() {

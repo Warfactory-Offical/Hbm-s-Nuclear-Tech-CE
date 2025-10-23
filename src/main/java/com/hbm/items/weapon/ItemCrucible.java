@@ -5,7 +5,7 @@ import com.google.common.collect.Multimap;
 import com.hbm.config.GeneralConfig;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.IPostRender;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.main.ModEventHandlerClient;
 import com.hbm.packet.toserver.AuxButtonPacket;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
@@ -63,7 +63,7 @@ public class ItemCrucible extends ItemSwordCutter implements IPostRender {
 //		tag.setInteger("playerId", player.getEntityId());
 //		PacketDispatcher.wrapper.sendToAllTracking(new AuxParticlePacketNT(tag, 0, 0, 0), player);
 //		PacketThreading.createSendToThreadedPacket(new AuxParticlePacketNT(tag, 0, 0, 0), (EntityPlayerMP) player);
-		world.playSound(null, player.getPosition(), HBMSoundHandler.cDeploy, SoundCategory.PLAYERS, 5.0F, 1.0F);
+		world.playSound(null, player.getPosition(), HBMSoundEvents.cDeploy, SoundCategory.PLAYERS, 5.0F, 1.0F);
 	}
 	
 	@Override
@@ -90,7 +90,7 @@ public class ItemCrucible extends ItemSwordCutter implements IPostRender {
 			PacketThreading.createSendToThreadedPacket(new AuxParticlePacketNT(nbt, 0, 0, 0), (EntityPlayerMP)entityLiving);
 		}
 		if(getCharges(stack) > 0)
-			entityLiving.world.playSound(null, entityLiving.posX, entityLiving.posY, entityLiving.posZ, HBMSoundHandler.crucibleSwing, SoundCategory.PLAYERS, 1, 1);
+			entityLiving.world.playSound(null, entityLiving.posX, entityLiving.posY, entityLiving.posZ, HBMSoundEvents.crucibleSwing, SoundCategory.PLAYERS, 1, 1);
 
 		return true;
 	}

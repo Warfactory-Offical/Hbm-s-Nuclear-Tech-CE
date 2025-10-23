@@ -3,7 +3,7 @@ package com.hbm.items.weapon.sedna.impl;
 import com.hbm.items.weapon.sedna.GunConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.items.weapon.sedna.hud.IHUDComponent;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.render.misc.RenderScreenOverlay;
 import com.hbm.util.Vec3NT;
 import net.minecraft.client.Minecraft;
@@ -58,7 +58,7 @@ public class ItemGunStinger extends ItemGunBaseNT {
                         progressLockon(world, stack);
 
                         if(this.getLockonProgress(stack) >= 60 && !this.getIsLockedOn(stack)) {
-                            player.world.playSound(player, player.posX, player.posY, player.posZ, HBMSoundHandler.techBleep, SoundCategory.PLAYERS, 1F, 1F);
+                            player.world.playSound(player, player.posX, player.posY, player.posZ, HBMSoundEvents.techBleep, SoundCategory.PLAYERS, 1F, 1F);
                             this.setIsLockedOn(stack, true);
                         }
                     }

@@ -5,7 +5,7 @@ import com.hbm.config.MachineConfig;
 import com.hbm.hazard.HazardSystem;
 import com.hbm.items.ModItems;
 import com.hbm.items.tool.ItemKeyPin;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.InventoryHelper;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
@@ -147,12 +147,12 @@ public abstract class TileEntityCrate extends TileEntityCrateBase implements IGU
             ItemStack stack = player.getHeldItemMainhand();
 
             if (stack.getItem() instanceof ItemKeyPin && ItemKeyPin.getPins(stack) == this.lock) {
-                world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.lockOpen, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.lockOpen, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 return true;
             }
 
             if (stack.getItem() == ModItems.key_red) {
-                world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.lockOpen, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.lockOpen, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 return true;
             }
 

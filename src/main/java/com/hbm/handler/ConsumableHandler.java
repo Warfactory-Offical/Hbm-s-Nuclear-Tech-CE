@@ -7,7 +7,7 @@ import com.hbm.items.ModItems;
 import com.hbm.items.armor.JetpackFueledBase;
 import com.hbm.items.weapon.sedna.GunConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.potion.HbmPotion;
 import com.hbm.util.ItemStackUtil;
@@ -92,7 +92,7 @@ public class ConsumableHandler {
         if (!VersatileConfig.hasPotionSickness(context.target)) {
             context.target.clearActivePotions();
             VersatileConfig.applyPotionSickness(context.target, 5);
-            context.playSound(HBMSoundHandler.syringeUse);
+            context.playSound(HBMSoundEvents.syringeUse);
             context.shrinkAndReplaceItem(ModItems.syringe_empty);
         }
     }
@@ -119,12 +119,12 @@ public class ConsumableHandler {
                 new PotionEffect(MobEffects.ABSORPTION, 50 * 20, 4),
                 new PotionEffect(MobEffects.NAUSEA, 5 * 20, 4)
         );
-        context.playSound(HBMSoundHandler.syringeUse);
+        context.playSound(HBMSoundEvents.syringeUse);
         context.shrinkAndReplaceItem(ModItems.syringe_empty);
     }
 
     private static void handlePoisonSyringe(final Context context) {
-        context.playSound(HBMSoundHandler.syringeUse);
+        context.playSound(HBMSoundEvents.syringeUse);
         context.shrinkAndReplaceItem(ModItems.syringe_empty);
         if (context.rand.nextInt(2) == 0) {
             context.target.attackEntityFrom(ModDamageSource.euthanizedSelf, 30);
@@ -135,13 +135,13 @@ public class ConsumableHandler {
 
     private static void handleMetalStimpak(final Context context) {
         context.target.heal(5);
-        context.playSound(HBMSoundHandler.syringeUse);
+        context.playSound(HBMSoundEvents.syringeUse);
         context.shrinkAndReplaceItem(ModItems.syringe_metal_empty);
     }
 
     private static void handleMetalMedX(final Context context) {
         context.addPotionEffects(new PotionEffect(MobEffects.RESISTANCE, 4 * 60 * 20, 2));
-        context.playSound(HBMSoundHandler.syringeUse);
+        context.playSound(HBMSoundEvents.syringeUse);
         context.shrinkAndReplaceItem(ModItems.syringe_metal_empty);
     }
 
@@ -150,14 +150,14 @@ public class ConsumableHandler {
                 new PotionEffect(MobEffects.RESISTANCE, 2 * 60 * 20, 0),
                 new PotionEffect(MobEffects.STRENGTH, 2 * 60 * 20, 0)
         );
-        context.playSound(HBMSoundHandler.syringeUse);
+        context.playSound(HBMSoundEvents.syringeUse);
         context.shrinkAndReplaceItem(ModItems.syringe_metal_empty);
     }
 
     private static void handleMetalSuper(final Context context) {
         context.target.heal(25);
         context.addPotionEffects(new PotionEffect(MobEffects.SLOWNESS, 10 * 20, 0));
-        context.playSound(HBMSoundHandler.syringeUse);
+        context.playSound(HBMSoundEvents.syringeUse);
         context.shrinkAndReplaceItem(ModItems.syringe_metal_empty);
     }
 
@@ -176,7 +176,7 @@ public class ConsumableHandler {
                 new PotionEffect(HbmPotion.taint, 60 * 20, 0),
                 new PotionEffect(MobEffects.NAUSEA, 5 * 20, 0)
         );
-        context.playSound(HBMSoundHandler.syringeUse);
+        context.playSound(HBMSoundEvents.syringeUse);
         context.shrinkAndReplaceItem(ModItems.syringe_metal_empty, ModItems.bottle2_empty);
     }
 
@@ -188,18 +188,18 @@ public class ConsumableHandler {
             final int newFuel = Math.min(JetpackFueledBase.getFuel(jetpack) + 1000, jetItem.maxFuel);
             if (JetpackFueledBase.getFuel(jetpack) != newFuel) {
                 JetpackFueledBase.setFuel(jetpack, newFuel);
-                context.playSound(HBMSoundHandler.jetpackTank);
+                context.playSound(HBMSoundEvents.jetpackTank);
                 context.shrinkCurrentItem();
             }
         }
     }
 
     private static void handleGunKit1(final Context context) {
-        handleGunKit(context, 0.1F, HBMSoundHandler.spray);
+        handleGunKit(context, 0.1F, HBMSoundEvents.spray);
     }
 
     private static void handleGunKit2(final Context context) {
-        handleGunKit(context, 0.5F, HBMSoundHandler.repair);
+        handleGunKit(context, 0.5F, HBMSoundEvents.repair);
     }
 
     private static void handleGunKit(final Context context, final float repairFactor, final SoundEvent sound) {
@@ -232,12 +232,12 @@ public class ConsumableHandler {
     private static void handleCbtDevice(final Context context) {
         context.addPotionEffects(new PotionEffect(HbmPotion.bang, 30, 0));
         context.shrinkCurrentItem();
-        context.playSound(HBMSoundHandler.vice);
+        context.playSound(HBMSoundEvents.vice);
     }
 
     private static void handleMkUnicornSyringe(final Context context) {
         HbmLivingProps.setContagion(context.target, 3 * 60 * 60 * 20);
-        context.playSound(HBMSoundHandler.syringeUse);
+        context.playSound(HBMSoundEvents.syringeUse);
         context.shrinkCurrentItem();
     }
 

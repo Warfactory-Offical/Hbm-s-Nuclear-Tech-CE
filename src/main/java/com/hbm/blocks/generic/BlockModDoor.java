@@ -2,7 +2,7 @@ package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.items.ModItems;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.world.gen.nbt.INBTBlockTransformable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
@@ -31,7 +31,7 @@ public class BlockModDoor extends BlockDoor implements INBTBlockTransformable {
     }
 
     private static void playDoorSound(World world, BlockPos pos) {
-        world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.openDoor, SoundCategory.BLOCKS, 1.0F,
+        world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.openDoor, SoundCategory.BLOCKS, 1.0F,
                 world.rand.nextFloat() * 0.1F + 0.9F);
     }
 

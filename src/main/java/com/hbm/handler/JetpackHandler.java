@@ -8,7 +8,7 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.items.ModItems;
 import com.hbm.items.gear.JetpackGlider;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.main.ClientProxy;
 import com.hbm.main.MainRegistry;
 import com.hbm.main.ResourceManager;
@@ -685,7 +685,7 @@ public class JetpackHandler {
 				JetpackInfo j = entry.getValue();
 				if(j.thrust > 0.001){
 					if(j.sound == null){
-						Minecraft.getMinecraft().getSoundHandler().playSound(j.sound = new MovingSoundJetpack(player, HBMSoundHandler.jetpack, SoundCategory.PLAYERS));
+						Minecraft.getMinecraft().getSoundHandler().playSound(j.sound = new MovingSoundJetpack(player, HBMSoundEvents.jetpack, SoundCategory.PLAYERS));
 					}
 				} else {
 					if(j.sound != null){

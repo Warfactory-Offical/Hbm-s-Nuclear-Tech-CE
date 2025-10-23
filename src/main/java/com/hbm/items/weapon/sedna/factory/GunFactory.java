@@ -9,7 +9,7 @@ import com.hbm.items.weapon.sedna.GunConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.items.weapon.sedna.Receiver;
 import com.hbm.items.weapon.sedna.mags.MagazineFullReload;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.main.MainRegistry;
 import com.hbm.particle.SpentCasing;
 import com.hbm.render.misc.RenderScreenOverlay;
@@ -33,7 +33,7 @@ public class GunFactory {
         ModItems.gun_debug = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.DEBUG, "gun_debug", new GunConfig()
                 .dura(600F).draw(15).inspect(23).crosshair(RenderScreenOverlay.Crosshair.L_CLASSIC).smoke(Lego.LAMBDA_STANDARD_SMOKE).orchestra(Orchestras.DEBUG_ORCHESTRA)
                 .rec(new Receiver(0)
-                        .dmg(10F).delay(14).reload(46).jam(23).sound(HBMSoundHandler.shoot44, 1.0F, 1.0F)
+                        .dmg(10F).delay(14).reload(46).jam(23).sound(HBMSoundEvents.shoot44, 1.0F, 1.0F)
                         .mag(new MagazineFullReload(0, 12).addConfigs(ammo_debug))
                         .offset(0.75, -0.0625, -0.3125D)
                         .canFire(Lego.LAMBDA_STANDARD_CAN_FIRE).fire(Lego.LAMBDA_STANDARD_FIRE))

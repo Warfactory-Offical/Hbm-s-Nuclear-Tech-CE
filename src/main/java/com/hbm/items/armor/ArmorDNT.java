@@ -6,7 +6,7 @@ import com.hbm.capability.HbmCapability.IHBMData;
 import com.hbm.handler.ArmorUtil;
 import com.hbm.items.ModItems;
 import com.hbm.items.gear.ArmorFSB;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.Library;
 import com.hbm.render.model.ModelArmorDNT;
 import com.hbm.util.I18nUtil;
@@ -87,7 +87,7 @@ public class ArmorDNT extends ArmorFSBPowered {
 				player.fallDistance = 0;
 
 				if(world.getTotalWorldTime() % 4 == 0)
-					world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.immolatorShoot, SoundCategory.PLAYERS, 0.125F, 1.5F);
+					world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.immolatorShoot, SoundCategory.PLAYERS, 0.125F, 1.5F);
 
 			} else if(!player.isSneaking() && !player.onGround && props.getEnableBackpack()) {
 				player.fallDistance = 0;
@@ -107,7 +107,7 @@ public class ArmorDNT extends ArmorFSBPowered {
 					player.motionZ += player.getLookVec().z * 0.25 * player.moveForward;
 				}
 				if(world.getTotalWorldTime() % 4 == 0)
-					world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.immolatorShoot, SoundCategory.PLAYERS, 0.125F, 1.5F);
+					world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.immolatorShoot, SoundCategory.PLAYERS, 0.125F, 1.5F);
 			}
 			
 			if(player.isSneaking() && !player.onGround) {

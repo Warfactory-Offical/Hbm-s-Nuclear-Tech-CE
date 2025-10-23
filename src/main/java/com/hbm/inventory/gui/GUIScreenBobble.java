@@ -2,7 +2,7 @@ package com.hbm.inventory.gui;
 
 import com.hbm.blocks.generic.BlockBobble.BobbleType;
 import com.hbm.blocks.generic.BlockBobble.TileEntityBobble;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.util.Tuple.Pair;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiScreen;
@@ -26,7 +26,7 @@ public class GUIScreenBobble extends GuiScreen {
 
     @Override
     public void initGui() {
-        this.mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(HBMSoundHandler.bobble, 1.0F));
+        this.mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(HBMSoundEvents.bobble, 1.0F));
     }
 
     @Override

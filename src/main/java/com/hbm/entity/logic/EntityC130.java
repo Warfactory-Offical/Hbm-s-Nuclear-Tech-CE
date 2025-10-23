@@ -4,7 +4,7 @@ import com.hbm.entity.item.EntityParachuteCrate;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.itempool.ItemPool;
 import com.hbm.itempool.ItemPoolsC130;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.main.MainRegistry;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.util.EnumUtil;
@@ -31,7 +31,7 @@ public class EntityC130 extends EntityPlaneBase {
         if(world.isRemote) {
             if(this.getDataManager().get(HEALTH) > 0) {
                 if(audio == null || !audio.isPlaying()) {
-                    audio = MainRegistry.proxy.getLoopedSound(HBMSoundHandler.bomberLoop, SoundCategory.NEUTRAL, (float) posX, (float) posY, (float) posZ, 2F, 250F, 1F, 20);
+                    audio = MainRegistry.proxy.getLoopedSound(HBMSoundEvents.bomberLoop, SoundCategory.NEUTRAL, (float) posX, (float) posY, (float) posZ, 2F, 250F, 1F, 20);
                     audio.startSound();
                 }
                 audio.keepAlive();

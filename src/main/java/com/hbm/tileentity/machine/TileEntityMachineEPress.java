@@ -12,7 +12,7 @@ import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.items.machine.ItemMachineUpgrade.UpgradeType;
 import com.hbm.items.machine.ItemStamp;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.IUpgradeInfoProvider;
@@ -117,7 +117,7 @@ public class TileEntityMachineEPress extends TileEntityMachineBase implements IT
 
 						if (this.progress >= maxProgress) {
 							this.progress = maxProgress;
-							this.world.playSound(null, this.pos, HBMSoundHandler.pressOperate, SoundCategory.BLOCKS, 1.5F, 1.0F);
+							this.world.playSound(null, this.pos, HBMSoundEvents.pressOperate, SoundCategory.BLOCKS, 1.5F, 1.0F);
 							craftItem();
 							this.isRetracting = true;
 							this.delay = 5 - speed + 1;

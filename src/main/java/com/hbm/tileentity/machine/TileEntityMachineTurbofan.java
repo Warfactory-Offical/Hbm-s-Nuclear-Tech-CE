@@ -229,7 +229,7 @@ public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implem
 					}*/
 
 					if(this.afterburner > 90 && world.rand.nextInt(30) == 0) {
-						world.playSound(null, pos.getX() + 0.5, pos.getY() + 1.5, pos.getZ() + 0.5, HBMSoundHandler.chopperDamage /*HBMSoundHandler.blockDamage*/, SoundCategory.BLOCKS, 3.0F, 0.95F + world.rand.nextFloat() * 0.2F);
+						world.playSound(null, pos.getX() + 0.5, pos.getY() + 1.5, pos.getZ() + 0.5, HBMSoundEvents.chopperDamage /*HBMSoundHandler.blockDamage*/, SoundCategory.BLOCKS, 3.0F, 0.95F + world.rand.nextFloat() * 0.2F);
 					}
 
 					if(this.afterburner > 90) {
@@ -427,7 +427,7 @@ public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implem
 	}
 
 	public AudioWrapper createAudioLoop() {
-		return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.turbofanOperate, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 50F, 1.0F, 20);
+		return MainRegistry.proxy.getLoopedSound(HBMSoundEvents.turbofanOperate, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 50F, 1.0F, 20);
 	}
 
 	@Override

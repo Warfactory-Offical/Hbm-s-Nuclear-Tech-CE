@@ -8,7 +8,7 @@ import com.hbm.inventory.material.Mats;
 import com.hbm.items.IAnimatedItem;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.main.AdvancementManager;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
@@ -70,7 +70,7 @@ public class ItemBoltgun extends Item implements IAnimatedItem {
                 if (!slot.isEmpty()) {
                     if (slot.getItem() == bolt.getItem() && slot.getItemDamage() == bolt.getItemDamage()) {
                         if (!world.isRemote) {
-                            world.playSound(null, entity.posX, entity.posY, entity.posZ, HBMSoundHandler.boltgun, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                            world.playSound(null, entity.posX, entity.posY, entity.posZ, HBMSoundEvents.boltgun, SoundCategory.PLAYERS, 1.0F, 1.0F);
                             player.inventory.decrStackSize(i, 1);
                             player.inventoryContainer.detectAndSendChanges();
                             EntityDamageUtil.attackEntityFromIgnoreIFrame(entity, DamageSource.causePlayerDamage(player).setDamageBypassesArmor(), 10F);
@@ -135,7 +135,7 @@ public class ItemBoltgun extends Item implements IAnimatedItem {
 
     private void processNetwork(World world, BlockPos pos, EntityPlayer player, EnumFacing facing, float hitX, float hitY, float hitZ) {
 
-        world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.boltgun, SoundCategory.PLAYERS, 1.0F, 1.0F);
+        world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.boltgun, SoundCategory.PLAYERS, 1.0F, 1.0F);
         player.inventoryContainer.detectAndSendChanges();
         ForgeDirection dir = ForgeDirection.getOrientation(facing.getIndex());
         double off = 0.25;

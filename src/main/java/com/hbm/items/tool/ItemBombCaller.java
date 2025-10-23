@@ -3,7 +3,7 @@ package com.hbm.items.tool;
 import com.hbm.entity.logic.EntityBomber;
 import com.hbm.items.IDynamicModels;
 import com.hbm.items.ItemBakedBase;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.Library;
 import com.hbm.lib.RefStrings;
 import com.hbm.util.I18nUtil;
@@ -159,7 +159,7 @@ public class ItemBombCaller extends ItemBakedBase implements IDynamicModels {
           playerIn.posX,
           playerIn.posY,
           playerIn.posZ,
-          HBMSoundHandler.techBoop,
+          HBMSoundEvents.techBoop,
           SoundCategory.PLAYERS,
           1.0F,
           1.0F,

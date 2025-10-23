@@ -10,7 +10,7 @@ import com.hbm.explosion.vanillant.ExplosionVNT;
 import com.hbm.explosion.vanillant.standard.*;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.items.ModItems;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
@@ -288,7 +288,7 @@ public class ItemAmmoHIMARS extends Item implements IMetaItemTesr {
                 rocket.posX,
                 rocket.posY,
                 rocket.posZ,
-                HBMSoundHandler.explosion_medium,
+                HBMSoundEvents.explosion_medium,
                 SoundCategory.BLOCKS,
                 20.0F,
                 0.9F + rocket.world.rand.nextFloat() * 0.2F);
@@ -343,7 +343,7 @@ public class ItemAmmoHIMARS extends Item implements IMetaItemTesr {
                 rocket.posX,
                 rocket.posY,
                 rocket.posZ,
-                HBMSoundHandler.explosion_medium,
+                HBMSoundEvents.explosion_medium,
                 SoundCategory.BLOCKS,
                 20.0F,
                 0.9F + rocket.world.rand.nextFloat() * 0.2F);
@@ -362,7 +362,7 @@ public class ItemAmmoHIMARS extends Item implements IMetaItemTesr {
                 rocket.posX,
                 rocket.posY,
                 rocket.posZ,
-                HBMSoundHandler.explosion_medium,
+                HBMSoundEvents.explosion_medium,
                 SoundCategory.BLOCKS,
                 20.0F,
                 0.9F + rocket.world.rand.nextFloat() * 0.2F);

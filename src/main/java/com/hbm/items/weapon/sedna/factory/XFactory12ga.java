@@ -18,7 +18,7 @@ import com.hbm.items.weapon.sedna.mags.MagazineFullReload;
 import com.hbm.items.weapon.sedna.mags.MagazineSingleReload;
 import com.hbm.items.weapon.sedna.mods.WeaponModManager;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.main.MainRegistry;
 import com.hbm.main.ResourceManager;
 import com.hbm.packet.PacketDispatcher;
@@ -91,7 +91,7 @@ public class XFactory12ga {
         pippo.posY = mop.hitVec.y + 50;
         pippo.posZ = mop.hitVec.z;
         bullet.world.spawnEntity(pippo);
-        bullet.world.playSound(null, pippo.posX, pippo.posY + 50, pippo.posZ, HBMSoundHandler.boatWeapon, SoundCategory.PLAYERS, 100F, 1F);
+        bullet.world.playSound(null, pippo.posX, pippo.posY + 50, pippo.posZ, HBMSoundEvents.boatWeapon, SoundCategory.PLAYERS, 100F, 1F);
         bullet.setDead();
     };
 
@@ -281,7 +281,7 @@ public class XFactory12ga {
         ModItems.gun_maresleg = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_maresleg", new GunConfig()
                 .dura(600).draw(10).inspect(39).reloadSequential(true).crosshair(Crosshair.L_CIRCLE).smoke(Lego.LAMBDA_STANDARD_SMOKE)
                 .rec(new Receiver(0)
-                        .dmg(16F).delay(20).reload(22, 10, 13, 0).jam(24).sound(HBMSoundHandler.fireShotgun, 1.0F, 1.0F)
+                        .dmg(16F).delay(20).reload(22, 10, 13, 0).jam(24).sound(HBMSoundEvents.fireShotgun, 1.0F, 1.0F)
                         .mag(new MagazineSingleReload(0, 6).addConfigs(all))
                         .offset(0.75, -0.0625, -0.1875)
                         .setupStandardFire().recoil(LAMBDA_RECOIL_MARESLEG))
@@ -291,7 +291,7 @@ public class XFactory12ga {
         ModItems.gun_maresleg_akimbo = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.B_SIDE, "gun_maresleg_akimbo",
                 new GunConfig().dura(600).draw(5).inspect(39).reloadSequential(true).crosshair(Crosshair.L_CIRCLE).smoke(Lego.LAMBDA_STANDARD_SMOKE)
                         .rec(new Receiver(0)
-                                .dmg(16F).spreadHipfire(0F).spreadAmmo(1.35F).delay(20).reload(22, 10, 13, 0).jam(24).sound(HBMSoundHandler.fireShotgun, 1.0F, 1.0F)
+                                .dmg(16F).spreadHipfire(0F).spreadAmmo(1.35F).delay(20).reload(22, 10, 13, 0).jam(24).sound(HBMSoundEvents.fireShotgun, 1.0F, 1.0F)
                                 .mag(new MagazineSingleReload(0, 6).addConfigs(all))
                                 .offset(0.75, -0.0625, 0.1875D)
                                 .setupStandardFire().recoil(LAMBDA_RECOIL_MARESLEG))
@@ -300,7 +300,7 @@ public class XFactory12ga {
                         .anim(LAMBDA_MARESLEG_SHORT_ANIMS).orchestra(Orchestras.ORCHESTRA_MARESLEG_AKIMBO),
                 new GunConfig().dura(600).draw(5).inspect(39).reloadSequential(true).crosshair(Crosshair.L_CIRCLE).smoke(Lego.LAMBDA_STANDARD_SMOKE)
                         .rec(new Receiver(0)
-                                .dmg(16F).spreadHipfire(0F).spreadAmmo(1.35F).delay(20).reload(22, 10, 13, 0).jam(24).sound(HBMSoundHandler.fireShotgun, 1.0F, 1.0F)
+                                .dmg(16F).spreadHipfire(0F).spreadAmmo(1.35F).delay(20).reload(22, 10, 13, 0).jam(24).sound(HBMSoundEvents.fireShotgun, 1.0F, 1.0F)
                                 .mag(new MagazineSingleReload(1, 6).addConfigs(all))
                                 .offset(0.75, -0.0625, -0.1875)
                                 .setupStandardFire().recoil(LAMBDA_RECOIL_MARESLEG))
@@ -311,7 +311,7 @@ public class XFactory12ga {
         ModItems.gun_maresleg_broken = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.LEGENDARY, "gun_maresleg_broken", new GunConfig()
                 .dura(0).draw(5).inspect(39).reloadSequential(true).crosshair(Crosshair.L_CIRCLE).smoke(Lego.LAMBDA_STANDARD_SMOKE)
                 .rec(new Receiver(0)
-                        .dmg(32F).spreadAmmo(1.15F).delay(20).reload(22, 10, 13, 0).jam(24).sound(HBMSoundHandler.fireShotgun, 1.0F, 1.0F)
+                        .dmg(32F).spreadAmmo(1.15F).delay(20).reload(22, 10, 13, 0).jam(24).sound(HBMSoundEvents.fireShotgun, 1.0F, 1.0F)
                         .mag(new MagazineSingleReload(0, 6).addConfigs(g12_equestrian_tkr, g12_bp, g12_bp_magnum, g12_bp_slug, g12, g12_slug, g12_flechette, g12_magnum, g12_explosive, g12_phosphorus))
                         .offset(0.75, -0.0625, -0.1875)
                         .canFire(Lego.LAMBDA_STANDARD_CAN_FIRE).fire(Lego.LAMBDA_NOWEAR_FIRE).recoil(LAMBDA_RECOIL_MARESLEG))
@@ -322,7 +322,7 @@ public class XFactory12ga {
         ModItems.gun_liberator = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_liberator", new GunConfig()
                 .dura(200).draw(20).inspect(21).reloadSequential(true).crosshair(Crosshair.L_CIRCLE).smoke(Lego.LAMBDA_STANDARD_SMOKE)
                 .rec(new Receiver(0)
-                        .dmg(16F).delay(20).rounds(4).reload(25, 15, 7, 0).jam(45).sound(HBMSoundHandler.fireShotgunAlt, 1.0F, 1.0F)
+                        .dmg(16F).delay(20).rounds(4).reload(25, 15, 7, 0).jam(45).sound(HBMSoundEvents.fireShotgunAlt, 1.0F, 1.0F)
                         .mag(new MagazineSingleReload(0, 4).addConfigs(all))
                         .offset(0.75, -0.0625, -0.1875)
                         .setupStandardFire().recoil(LAMBDA_RECOIL_LIBERATOR))
@@ -333,7 +333,7 @@ public class XFactory12ga {
         ModItems.gun_spas12 = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_spas12", new GunConfig()
                 .dura(600).draw(20).inspect(39).reloadSequential(true).crosshair(Crosshair.L_CIRCLE).smoke(Lego.LAMBDA_STANDARD_SMOKE)
                 .rec(new Receiver(0)
-                        .dmg(32F).spreadHipfire(0F).delay(20).reload(5, 10, 10, 10, 0).jam(36).sound(HBMSoundHandler.shotgunShoot, 1.0F, 1.0F)
+                        .dmg(32F).spreadHipfire(0F).delay(20).reload(5, 10, 10, 10, 0).jam(36).sound(HBMSoundEvents.shotgunShoot, 1.0F, 1.0F)
                         .mag(new MagazineSingleReload(0, 8).addConfigs(all))
                         .offset(0.75, -0.0625, -0.1875)
                         .setupStandardFire().recoil(LAMBDA_RECOIL_MARESLEG))
@@ -344,7 +344,7 @@ public class XFactory12ga {
         ModItems.gun_autoshotgun = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_autoshotgun", new GunConfig()
                 .dura(2_000).draw(10).inspect(33).reloadSequential(true).crosshair(Crosshair.L_CIRCLE).smoke(Lego.LAMBDA_STANDARD_SMOKE)
                 .rec(new Receiver(0)
-                        .dmg(48F).delay(10).auto(true).autoAfterDry(true).dryfireAfterAuto(true).reload(44).jam(19).sound(HBMSoundHandler.fireShotgunAuto, 1.0F, 1.0F)
+                        .dmg(48F).delay(10).auto(true).autoAfterDry(true).dryfireAfterAuto(true).reload(44).jam(19).sound(HBMSoundEvents.fireShotgunAuto, 1.0F, 1.0F)
                         .mag(new MagazineFullReload(0, 20).addConfigs(all))
                         .offset(0.75, -0.125, -0.25)
                         .setupStandardFire().recoil(LAMBDA_RECOIL_AUTOSHOTGUN))
@@ -354,7 +354,7 @@ public class XFactory12ga {
         ModItems.gun_autoshotgun_shredder = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.B_SIDE, "gun_autoshotgun_shredder", new GunConfig()
                 .dura(2_000).draw(10).inspect(33).reloadSequential(true).crosshair(Crosshair.L_CIRCLE).smoke(Lego.LAMBDA_STANDARD_SMOKE)
                 .rec(new Receiver(0)
-                        .dmg(50F).delay(10).auto(true).autoAfterDry(true).dryfireAfterAuto(true).reload(44).jam(19).sound(HBMSoundHandler.fireShotgunAuto, 1.0F, 1.0F)
+                        .dmg(50F).delay(10).auto(true).autoAfterDry(true).dryfireAfterAuto(true).reload(44).jam(19).sound(HBMSoundEvents.fireShotgunAuto, 1.0F, 1.0F)
                         .mag(new MagazineBelt().addConfigs(g12_shredder, g12_shredder_slug, g12_shredder_flechette, g12_shredder_magnum, g12_shredder_explosive, g12_shredder_phosphorus))
                         .offset(0.75, -0.125, -0.25)
                         .setupStandardFire().recoil(LAMBDA_RECOIL_AUTOSHOTGUN))
@@ -364,7 +364,7 @@ public class XFactory12ga {
         ModItems.gun_autoshotgun_sexy = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.LEGENDARY, "gun_autoshotgun_sexy", new GunConfig()
                 .dura(5_000).draw(20).inspect(65).reloadSequential(true).inspectCancel(false).crosshair(Crosshair.L_CIRCLE).hideCrosshair(false).smoke(Lego.LAMBDA_STANDARD_SMOKE)
                 .rec(new Receiver(0)
-                        .dmg(64F).delay(4).auto(true).dryfireAfterAuto(true).reload(110).jam(19).sound(HBMSoundHandler.fireShotgunAuto, 1.0F, 1.0F)
+                        .dmg(64F).delay(4).auto(true).dryfireAfterAuto(true).reload(110).jam(19).sound(HBMSoundEvents.fireShotgunAuto, 1.0F, 1.0F)
                         .mag(new MagazineFullReload(0, 100).addConfigs(g12_equestrian_bj, g12_bp, g12_bp_magnum, g12_bp_slug, g12, g12_slug, g12_flechette, g12_magnum, g12_explosive, g12_phosphorus))
                         .offset(0.75, -0.125, -0.25)
                         .setupStandardFire().recoil(LAMBDA_RECOIL_SEXY))

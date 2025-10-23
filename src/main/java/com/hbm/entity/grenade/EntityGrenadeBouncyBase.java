@@ -2,7 +2,7 @@ package com.hbm.entity.grenade;
 
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.config.GeneralConfig;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.main.MainRegistry;
 import com.hbm.render.amlfrom1710.Vec3;
 import net.minecraft.block.Block;
@@ -307,7 +307,7 @@ public abstract class EntityGrenadeBouncyBase extends Entity implements IProject
 				bounce = true;
 				Vec3d mot = new Vec3d(motionX, motionY, motionZ);
 				if (mot.length() > 0.05)
-					world.playSound(null, this.posX, this.posY, this.posZ, HBMSoundHandler.grenadeBounce, SoundCategory.HOSTILE, 2.0F, 1.0F);
+					world.playSound(null, this.posX, this.posY, this.posZ, HBMSoundEvents.grenadeBounce, SoundCategory.HOSTILE, 2.0F, 1.0F);
 
 				motionX *= getBounceMod()*1.5;
 				motionY *= getBounceMod()*1.5;

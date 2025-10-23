@@ -2,7 +2,7 @@ package com.hbm.tileentity;
 
 import com.hbm.animloader.AnimatedModel;
 import com.hbm.animloader.Animation;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.Library;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.WavefrontObjDisplayList;
@@ -22,7 +22,7 @@ public abstract class DoorDecl {
 		
 		@Override
 		public SoundEvent getOpenSoundStart() {
-			return HBMSoundHandler.transitionSealOpen;
+			return HBMSoundEvents.transitionSealOpen;
 		};
 		
 		@Override
@@ -103,11 +103,11 @@ public abstract class DoorDecl {
 		
 		@Override
 		public SoundEvent getOpenSoundEnd() {
-			return HBMSoundHandler.nullMine;
+			return HBMSoundEvents.nullMine;
 		};
 		@Override
 		public SoundEvent getOpenSoundStart() {
-			return HBMSoundHandler.sliding_seal_open;
+			return HBMSoundEvents.sliding_seal_open;
 		};
 		
 		public float getSoundVolume(){
@@ -179,11 +179,11 @@ public abstract class DoorDecl {
 		
 		@Override
 		public SoundEvent getOpenSoundEnd() {
-			return HBMSoundHandler.sliding_seal_stop;
+			return HBMSoundEvents.sliding_seal_stop;
 		};
 		@Override
 		public SoundEvent getOpenSoundStart() {
-			return HBMSoundHandler.sliding_seal_open;
+			return HBMSoundEvents.sliding_seal_open;
 		};
 		
 		public float getSoundVolume(){
@@ -255,12 +255,12 @@ public abstract class DoorDecl {
 		
 		@Override
 		public SoundEvent getOpenSoundEnd() {
-			return HBMSoundHandler.garage_stop;
+			return HBMSoundEvents.garage_stop;
 		};
 		
 		@Override
 		public SoundEvent getOpenSoundLoop() {
-			return HBMSoundHandler.garage;
+			return HBMSoundEvents.garage;
 		};
 		
 		public float getSoundVolume(){
@@ -338,12 +338,12 @@ public abstract class DoorDecl {
 		
 		@Override
 		public SoundEvent getOpenSoundEnd() {
-			return HBMSoundHandler.garage_stop;
+			return HBMSoundEvents.garage_stop;
 		};
 		
 		@Override
 		public SoundEvent getOpenSoundLoop() {
-			return HBMSoundHandler.garage;
+			return HBMSoundEvents.garage;
 		};
 		
 		public float getSoundVolume(){
@@ -422,7 +422,7 @@ public abstract class DoorDecl {
 
 		@Override
 		public SoundEvent getOpenSoundStart() {
-			return HBMSoundHandler.hatch_open;
+			return HBMSoundEvents.hatch_open;
 		};
 		
 		public float getSoundVolume(){
@@ -526,15 +526,15 @@ public abstract class DoorDecl {
 		
 		@Override
 		public SoundEvent getOpenSoundEnd() {
-			return HBMSoundHandler.wgh_stop;
+			return HBMSoundEvents.wgh_stop;
 		};
 		@Override
 		public SoundEvent getOpenSoundLoop() {
-			return HBMSoundHandler.wgh_start;
+			return HBMSoundEvents.wgh_start;
 		};
 		@Override
 		public SoundEvent getSoundLoop2() {
-			return HBMSoundHandler.alarm6;
+			return HBMSoundEvents.alarm6;
 		};
 		
 		@Override
@@ -613,15 +613,15 @@ public abstract class DoorDecl {
 		
 		@Override
 		public SoundEvent getOpenSoundEnd() {
-			return HBMSoundHandler.qe_sliding_opened;
+			return HBMSoundEvents.qe_sliding_opened;
 		};
 		@Override
 		public SoundEvent getCloseSoundEnd() {
-			return HBMSoundHandler.qe_sliding_shut;
+			return HBMSoundEvents.qe_sliding_shut;
 		};
 		@Override
 		public SoundEvent getOpenSoundLoop() {
-			return HBMSoundHandler.qe_sliding_opening;
+			return HBMSoundEvents.qe_sliding_opening;
 		};
 		
 		public float getSoundVolume(){
@@ -690,11 +690,11 @@ public abstract class DoorDecl {
 
 		@Override
 		public SoundEvent getOpenSoundEnd() {
-			return HBMSoundHandler.wgh_stop;
+			return HBMSoundEvents.wgh_stop;
 		};
 		@Override
 		public SoundEvent getOpenSoundLoop() {
-			return HBMSoundHandler.wgh_start;
+			return HBMSoundEvents.wgh_start;
 		};
 		
 		@Override
@@ -770,15 +770,15 @@ public abstract class DoorDecl {
 		
 		@Override
 		public SoundEvent getOpenSoundEnd() {
-			return HBMSoundHandler.wgh_big_stop;
+			return HBMSoundEvents.wgh_big_stop;
 		};
 		@Override
 		public SoundEvent getOpenSoundLoop() {
-			return HBMSoundHandler.wgh_big_start;
+			return HBMSoundEvents.wgh_big_start;
 		};
 		@Override
 		public SoundEvent getOpenSoundStart() {
-			return HBMSoundHandler.door_spinny;
+			return HBMSoundEvents.door_spinny;
 		};
 		@Override
 		public SoundEvent getCloseSoundStart() {
@@ -786,7 +786,7 @@ public abstract class DoorDecl {
 		};
 		@Override
 		public SoundEvent getCloseSoundEnd() {
-			return HBMSoundHandler.door_spinny;
+			return HBMSoundEvents.door_spinny;
 		};
 
 		@Override
@@ -914,12 +914,12 @@ public abstract class DoorDecl {
 		
 		@Override
 		public SoundEvent getOpenSoundEnd() {
-			return HBMSoundHandler.garage_stop;
+			return HBMSoundEvents.garage_stop;
 		};
 		
 		@Override
 		public SoundEvent getOpenSoundLoop() {
-			return HBMSoundHandler.garage;
+			return HBMSoundEvents.garage;
 		};
 		
 		public float getSoundVolume(){

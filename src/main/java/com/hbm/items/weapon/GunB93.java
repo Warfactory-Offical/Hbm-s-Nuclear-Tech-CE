@@ -4,7 +4,7 @@ import com.hbm.entity.effect.EntityCloudFleijaRainbow;
 import com.hbm.entity.logic.EntityNukeExplosionMK3;
 import com.hbm.entity.projectile.EntityModBeam;
 import com.hbm.items.ModItems;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.I18nUtil;
 import net.minecraft.client.util.ITooltipFlag;
@@ -80,7 +80,7 @@ public class GunB93 extends Item {
 
 					worldIn.spawnEntity(entityarrow1);
 
-					worldIn.playSound(null, entityLiving.posX, entityLiving.posY, entityLiving.posZ, HBMSoundHandler.sparkShoot, SoundCategory.PLAYERS, 5.0F, 1.0F);
+					worldIn.playSound(null, entityLiving.posX, entityLiving.posY, entityLiving.posZ, HBMSoundEvents.sparkShoot, SoundCategory.PLAYERS, 5.0F, 1.0F);
 				}
 
 				setAnim(stack, 1);
@@ -101,7 +101,7 @@ public class GunB93 extends Item {
 				setAnim(stack, 0);
 
 			if (j == 15) {
-				world.playSound(null, entity.posX, entity.posY, entity.posZ, HBMSoundHandler.b92Reload, SoundCategory.PLAYERS, 2F, 0.9F);
+				world.playSound(null, entity.posX, entity.posY, entity.posZ, HBMSoundEvents.b92Reload, SoundCategory.PLAYERS, 2F, 0.9F);
 				setPower(stack, getPower(stack) + 1);
 				
 				if(getPower(stack) > 10) {

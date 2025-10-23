@@ -14,7 +14,7 @@ import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.fluid.trait.FT_Coolable;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.packet.toclient.BufPacket;
 import com.hbm.tileentity.IBufPacketReceiver;
 import com.hbm.tileentity.IConfigurableMachine;
@@ -132,7 +132,7 @@ public class TileEntityMachineSteamEngine extends TileEntityLoadedBase
         this.world.playSound(
             null,
             this.pos,
-            HBMSoundHandler.steamEngineOperate,
+            HBMSoundEvents.steamEngineOperate,
             SoundCategory.BLOCKS,
             1F,
             0.5F + (acceleration / 80F));

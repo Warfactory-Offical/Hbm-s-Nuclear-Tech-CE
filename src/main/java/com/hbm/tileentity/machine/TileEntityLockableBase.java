@@ -6,7 +6,7 @@ import com.hbm.handler.threading.PacketThreading;
 import com.hbm.items.ModItems;
 import com.hbm.items.tool.ItemKeyPin;
 import com.hbm.items.tool.ItemTooling;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.toclient.BufPacket;
 import com.hbm.tileentity.IBufPacketReceiver;
@@ -91,12 +91,12 @@ public class TileEntityLockableBase extends TileEntity implements IBufPacketRece
 		ItemStack stack = player.getHeldItemMainhand();
 
 		if(stack.getItem() instanceof ItemKeyPin && ItemKeyPin.getPins(stack) == this.lock) {
-			world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.lockOpen, SoundCategory.BLOCKS, 1.0F, 1.0F);
+			world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.lockOpen, SoundCategory.BLOCKS, 1.0F, 1.0F);
 			return true;
 		}
 
 		if(stack.getItem() == ModItems.key_red) {
-			world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.lockOpen, SoundCategory.BLOCKS, 1.0F, 1.0F);
+			world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.lockOpen, SoundCategory.BLOCKS, 1.0F, 1.0F);
 			return true;
 		}
 		return tryPick(player);
@@ -140,11 +140,11 @@ public class TileEntityLockableBase extends TileEntity implements IBufPacketRece
 			double rand = player.world.rand.nextDouble() * 100;
 			
 			if(chanceOfSuccess > rand) {
-        		world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.pinUnlock, SoundCategory.BLOCKS, 1.0F, 1.0F);
+        		world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.pinUnlock, SoundCategory.BLOCKS, 1.0F, 1.0F);
 				return true;
 			}
 
-    		world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.pinBreak, SoundCategory.BLOCKS, 1.0F, 0.8F + player.world.rand.nextFloat() * 0.2F);
+    		world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.pinBreak, SoundCategory.BLOCKS, 1.0F, 0.8F + player.world.rand.nextFloat() * 0.2F);
 		}
 		
 		return false;

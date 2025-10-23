@@ -1,7 +1,7 @@
 package com.hbm.particle.helper;
 
 import com.hbm.interfaces.Untested;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.particle.ParticleDebris;
 import com.hbm.particle.ParticleMukeWave;
 import com.hbm.particle.ParticleRocketFlame;
@@ -88,7 +88,7 @@ public class ExplosionCreator implements IParticleCreator {
         float dist = (float) player.getDistance(x, y, z);
 
         if (dist <= soundRange) {
-            SoundEvent sound = dist <= soundRange * 0.4 ? HBMSoundHandler.explosionLargeNear : HBMSoundHandler.explosionLargeFar;
+            SoundEvent sound = dist <= soundRange * 0.4 ? HBMSoundEvents.explosionLargeNear : HBMSoundEvents.explosionLargeFar;
 
             PositionedSoundRecord soundEffect = new PositionedSoundRecord(
                     sound,

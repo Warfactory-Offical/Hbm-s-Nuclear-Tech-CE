@@ -4,7 +4,7 @@ import com.google.common.base.Predicate;
 import com.hbm.entity.projectile.EntityBullet;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IRadiationImmune;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.ModDamageSource;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.EntityAIAttackRanged;
@@ -81,12 +81,12 @@ public class EntityCyberCrab extends EntityMob implements IRangedAttackMob, IRad
 	
 	@Override
 	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-		return HBMSoundHandler.cybercrab;
+		return HBMSoundEvents.cybercrab;
 	}
 	
 	@Override
 	protected SoundEvent getDeathSound() {
-		return HBMSoundHandler.cybercrab;
+		return HBMSoundEvents.cybercrab;
 	}
 	
 	@Override
@@ -101,7 +101,7 @@ public class EntityCyberCrab extends EntityMob implements IRangedAttackMob, IRad
 		bullet.setTau(true);
 		bullet.damage = 2;
         this.world.spawnEntity(bullet);
-        this.playSound(HBMSoundHandler.sawShoot, 1.0F, 2.0F);
+        this.playSound(HBMSoundEvents.sawShoot, 1.0F, 2.0F);
 	}
 
 	@Override

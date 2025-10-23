@@ -3,7 +3,7 @@ package com.hbm.blocks.machine;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemBattery;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.tileentity.machine.TileEntityRadiobox;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockHorizontal;
@@ -65,7 +65,7 @@ public class Radiobox extends BlockContainer {
 
 			if(player.getHeldItem(hand).getItem() == ModItems.battery_spark && !wasInfinite) {
 				player.getHeldItem(hand).shrink(1);
-				world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundHandler.upgradePlug, SoundCategory.BLOCKS, 1.5F, 1.0F);
+				world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundEvents.upgradePlug, SoundCategory.BLOCKS, 1.5F, 1.0F);
 				box.infinite = true;
 				box.markDirty();
 				return true;
@@ -73,10 +73,10 @@ public class Radiobox extends BlockContainer {
 			boolean on = world.getBlockState(pos).getValue(STATE);
 			if(!on) {
 				world.setBlockState(pos, world.getBlockState(pos).withProperty(STATE, true));
-				world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.reactorStart, SoundCategory.BLOCKS, 1.0F, 1.0F);
+				world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.reactorStart, SoundCategory.BLOCKS, 1.0F, 1.0F);
 			} else {
 				world.setBlockState(pos, world.getBlockState(pos).withProperty(STATE, false));
-				world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.reactorStart, SoundCategory.BLOCKS, 1.0F, 0.85F);
+				world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.reactorStart, SoundCategory.BLOCKS, 1.0F, 0.85F);
 			}
 			((TileEntityRadiobox)world.getTileEntity(pos)).infinite = wasInfinite;
 			

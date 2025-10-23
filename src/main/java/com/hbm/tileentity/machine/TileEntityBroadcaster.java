@@ -1,7 +1,7 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.main.MainRegistry;
 import com.hbm.sound.AudioWrapper;
@@ -86,9 +86,9 @@ public class TileEntityBroadcaster extends TileEntityLoadedBase implements ITick
         int xCoord = pos.getX(), yCoord = pos.getY(), zCoord = pos.getZ();
         Random rand = new Random(xCoord + yCoord + zCoord);
         SoundEvent event = switch (rand.nextInt(3)){
-            case 1 -> HBMSoundHandler.broadcast2;
-            case 2 -> HBMSoundHandler.broadcast3;
-            default -> HBMSoundHandler.broadcast1;
+            case 1 -> HBMSoundEvents.broadcast2;
+            case 2 -> HBMSoundEvents.broadcast3;
+            default -> HBMSoundEvents.broadcast1;
         };
         return MainRegistry.proxy.getLoopedSound(event, SoundCategory.BLOCKS, xCoord, yCoord, zCoord, 25F, 25F, 1.0F, 20);
     }

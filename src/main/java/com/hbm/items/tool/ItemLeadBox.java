@@ -4,7 +4,7 @@ import com.hbm.config.MachineConfig;
 import com.hbm.inventory.container.ContainerLeadBox;
 import com.hbm.inventory.gui.GUILeadBox;
 import com.hbm.items.ItemBakedBase;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.InventoryHelper;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
@@ -96,13 +96,13 @@ public class ItemLeadBox extends ItemBakedBase implements IGUIProvider {
 
         public void openInventory() {
             if (!player.world.isRemote) {
-                player.world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.crateOpen, SoundCategory.BLOCKS, 1.0F, 0.8F);
+                player.world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.crateOpen, SoundCategory.BLOCKS, 1.0F, 0.8F);
             }
         }
 
         public void closeInventory() {
             if (!player.world.isRemote) {
-                player.world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.crateClose, SoundCategory.BLOCKS, 1.0F, 0.8F);
+                player.world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.crateClose, SoundCategory.BLOCKS, 1.0F, 0.8F);
             }
         }
 

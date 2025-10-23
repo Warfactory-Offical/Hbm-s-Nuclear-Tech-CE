@@ -10,7 +10,7 @@ import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.items.ItemEnums;
 import com.hbm.items.ModItems;
 import com.hbm.items.special.ItemKitCustom;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.tileentity.IRepairable;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import io.netty.buffer.ByteBuf;
@@ -40,10 +40,10 @@ public class TileEntityLanternBehemoth extends TileEntityLoadedBase implements I
 
         if(!world.isRemote) {
 
-            if(comTimer == 360) world.playSound(null, getPos(), HBMSoundHandler.hornNearSingle, SoundCategory.BLOCKS, 10F, 1F);
-            if(comTimer == 280) world.playSound(null, getPos(), HBMSoundHandler.hornFarSingle, SoundCategory.BLOCKS, 100F, 1F);
-            if(comTimer == 220) world.playSound(null, getPos(), HBMSoundHandler.hornNearDual, SoundCategory.BLOCKS, 10F, 1F);
-            if(comTimer == 100) world.playSound(null, getPos(), HBMSoundHandler.hornFarDual, SoundCategory.BLOCKS, 100F, 1F);
+            if(comTimer == 360) world.playSound(null, getPos(), HBMSoundEvents.hornNearSingle, SoundCategory.BLOCKS, 10F, 1F);
+            if(comTimer == 280) world.playSound(null, getPos(), HBMSoundEvents.hornFarSingle, SoundCategory.BLOCKS, 100F, 1F);
+            if(comTimer == 220) world.playSound(null, getPos(), HBMSoundEvents.hornNearDual, SoundCategory.BLOCKS, 10F, 1F);
+            if(comTimer == 100) world.playSound(null, getPos(), HBMSoundEvents.hornFarDual, SoundCategory.BLOCKS, 100F, 1F);
 
             if(comTimer == 0) {
                 List<EntityPlayer> players = world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(pos.getX() - 10, pos.getY() - 10, pos.getZ() - 10, pos.getX() + 11, pos.getY() + 11, pos.getZ() + 11));

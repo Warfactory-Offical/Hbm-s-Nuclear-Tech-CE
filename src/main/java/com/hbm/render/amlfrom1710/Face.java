@@ -10,12 +10,12 @@ public class Face {
     public TextureCoordinate[] textureCoordinates;
 
     @SideOnly(Side.CLIENT)
-    public void addFaceForRender(Tessellator tessellator) {
+    public void addFaceForRender(CompositeBrush tessellator) {
         addFaceForRender(tessellator, 0.0000F);
     }
 
     @SideOnly(Side.CLIENT)
-    public void addFaceForRender(Tessellator tessellator, float textureOffset) {
+    public void addFaceForRender(CompositeBrush tessellator,float textureOffset) {
         if (faceNormal == null)
         {
             faceNormal = this.calculateFaceNormal();
@@ -67,7 +67,7 @@ public class Face {
     }
 
         @SideOnly(Side.CLIENT)
-    public void addFaceForRenderSplit(Tessellator tessellator, float textureOffset, float splitHeight, float scale) {
+    public void addFaceForRenderSplit(CompositeBrush tessellator,float textureOffset,float splitHeight,float scale) {
         if (faceNormal == null)
         {
             faceNormal = this.calculateFaceNormal();

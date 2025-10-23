@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
@@ -220,9 +220,9 @@ public class GUIRBMKConsole extends GuiScreen {
 		if (guiLeft + 30 <= mouseX && guiLeft + 30 + 28 > mouseX && guiTop + 138 < mouseY && guiTop + 138 + 28 >= mouseY) {
 			if (az5Lid) {
 				az5Lid = false;
-				mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(HBMSoundHandler.rbmk_az5_cover, 0.5F));
+				mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(HBMSoundEvents.rbmk_az5_cover, 0.5F));
 			} else if (lastPress + 3000 < System.currentTimeMillis()) {
-				mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(HBMSoundHandler.shutdown, 1));
+				mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(HBMSoundEvents.shutdown, 1));
 				lastPress = System.currentTimeMillis();
 
 				NBTTagCompound control = new NBTTagCompound();

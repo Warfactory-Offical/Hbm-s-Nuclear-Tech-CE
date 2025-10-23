@@ -2,7 +2,7 @@ package com.hbm.entity.effect;
 
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IConstantRenderer;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.main.MainRegistry;
 import com.hbm.render.amlfrom1710.Vec3;
 import net.minecraft.entity.Entity;
@@ -162,7 +162,7 @@ public class EntityNukeTorex extends Entity implements IConstantRenderer {
 
 				if(!didPlaySound) {
 					if(MainRegistry.proxy.me() != null && MainRegistry.proxy.me().getDistance(this) < (ticksExisted * 1.5 + 1) * 1.5) {
-						MainRegistry.proxy.playSoundClient(posX, posY, posZ, HBMSoundHandler.nuclearExplosion, SoundCategory.HOSTILE, 10_000F, 1F);
+						MainRegistry.proxy.playSoundClient(posX, posY, posZ, HBMSoundEvents.nuclearExplosion, SoundCategory.HOSTILE, 10_000F, 1F);
 						didPlaySound = true;
 					}
 				}

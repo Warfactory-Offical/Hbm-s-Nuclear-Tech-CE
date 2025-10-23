@@ -6,7 +6,7 @@ import com.hbm.items.weapon.ItemMissileStandard;
 import com.hbm.items.weapon.ItemMissileStandard.MissileFormFactor;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.sound.AudioWrapper;
@@ -159,8 +159,8 @@ public class TileEntityLaunchPadLarge extends TileEntityLaunchPadBase {
 			if(this.prevLift != this.lift) this.liftMoving = true;
 			if(this.prevErector != this.erector) this.erectorMoving = true;
 
-			if(prevLiftMoving && !this.liftMoving) world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.wgh_stop, SoundCategory.BLOCKS, 2F, 1F);
-			if(prevErectorMoving && !this.erectorMoving) world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.garage_stop, SoundCategory.BLOCKS, 2F, 1F);
+			if(prevLiftMoving && !this.liftMoving) world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.wgh_stop, SoundCategory.BLOCKS, 2F, 1F);
+			if(prevErectorMoving && !this.erectorMoving) world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.garage_stop, SoundCategory.BLOCKS, 2F, 1F);
 			
 		} else {
 			this.prevLift = this.lift;
@@ -177,7 +177,7 @@ public class TileEntityLaunchPadLarge extends TileEntityLaunchPadBase {
 			
 			if(this.liftMoving) {
 				if(this.audioLift == null || !this.audioLift.isPlaying()) {
-					this.audioLift = MainRegistry.proxy.getLoopedSound(HBMSoundHandler.wgh_start, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(),
+					this.audioLift = MainRegistry.proxy.getLoopedSound(HBMSoundEvents.wgh_start, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(),
 					0.75F, 1.0F);
 					this.audioLift.startSound();
 				}
@@ -191,7 +191,7 @@ public class TileEntityLaunchPadLarge extends TileEntityLaunchPadBase {
 			
 			if(this.erectorMoving) {
 				if(this.audioErector == null || !this.audioErector.isPlaying()) {
-					this.audioErector = MainRegistry.proxy.getLoopedSound(HBMSoundHandler.garage, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.5F, 1.0F);
+					this.audioErector = MainRegistry.proxy.getLoopedSound(HBMSoundEvents.garage, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.5F, 1.0F);
 					this.audioErector.startSound();
 				}
 				this.audioErector.keepAlive();

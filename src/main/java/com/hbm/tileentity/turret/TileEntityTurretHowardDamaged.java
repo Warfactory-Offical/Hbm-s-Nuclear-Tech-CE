@@ -4,7 +4,7 @@ import com.hbm.config.WeaponConfig;
 import com.hbm.handler.guncfg.GunDGKFactory;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.render.amlfrom1710.Vec3;
@@ -71,7 +71,7 @@ public class TileEntityTurretHowardDamaged extends TileEntityTurretHoward {
 			
 			if(timer % 4 == 0) {
 				
-				this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.howard_fire, SoundCategory.BLOCKS, 4.0F, 0.7F + world.rand.nextFloat() * 0.3F);
+				this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.howard_fire, SoundCategory.BLOCKS, 4.0F, 0.7F + world.rand.nextFloat() * 0.3F);
 
 				this.cachedCasingConfig = GunDGKFactory.CASINGDGK;
 				this.spawnCasing();

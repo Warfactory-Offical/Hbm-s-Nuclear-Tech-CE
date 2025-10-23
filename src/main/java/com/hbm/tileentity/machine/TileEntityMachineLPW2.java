@@ -11,7 +11,7 @@ import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.fluid.trait.FT_Rocket;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.main.MainRegistry;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.TileEntityMachineBase;
@@ -70,7 +70,7 @@ public class TileEntityMachineLPW2 extends TileEntityMachineBase implements ITic
 				soundtime++;
 
 				if(soundtime == 1) {
-					this.world.playSound(null, this.pos.getX(), this.pos.getY(), this.pos.getZ(), HBMSoundHandler.lpwstart, SoundCategory.BLOCKS, 1.5F, 1F);
+					this.world.playSound(null, this.pos.getX(), this.pos.getY(), this.pos.getZ(), HBMSoundEvents.lpwstart, SoundCategory.BLOCKS, 1.5F, 1F);
 				} else if(soundtime > 20) {
 					soundtime = 20;
 				}
@@ -78,7 +78,7 @@ public class TileEntityMachineLPW2 extends TileEntityMachineBase implements ITic
 				soundtime--;
 
 				if(soundtime == 19) {
-					this.world.playSound(null, this.pos.getX(), this.pos.getY(), this.pos.getZ(), HBMSoundHandler.lpwstop, SoundCategory.BLOCKS, 2.0F, 1F);
+					this.world.playSound(null, this.pos.getX(), this.pos.getY(), this.pos.getZ(), HBMSoundEvents.lpwstop, SoundCategory.BLOCKS, 2.0F, 1F);
 				} else if(soundtime <= 0) {
 					soundtime = 0;
 				}
@@ -143,7 +143,7 @@ public class TileEntityMachineLPW2 extends TileEntityMachineBase implements ITic
 	
 	@Override
 	public AudioWrapper createAudioLoop() {
-		return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.lpwloop, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 0.25F, 27.5F, 1.0F, 20);
+		return MainRegistry.proxy.getLoopedSound(HBMSoundEvents.lpwloop, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 0.25F, 27.5F, 1.0F, 20);
 	}
 
 	@Override

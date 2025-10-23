@@ -18,7 +18,7 @@ import com.hbm.items.ItemVOTVdrive.Target;
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.ItemCustomRocket;
 import com.hbm.items.weapon.ItemMissile;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.main.AdvancementManager;
 import com.hbm.main.MainRegistry;
 import com.hbm.saveddata.satellites.Satellite;
@@ -257,7 +257,7 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 						ExplosionLarge.explode(world, thrower, posX, posY, posZ, 5, true, false, true);
 						ExplosionLarge.spawnShrapnelShower(world, posX, posY, posZ, motionX, motionY, motionZ, 15, 0.075);
 
-						world.playSound(null, posX, posY, posZ, HBMSoundHandler.pipeFail, SoundCategory.PLAYERS, 10_000, 0.8F + this.world.rand.nextFloat() * 0.4F);
+						world.playSound(null, posX, posY, posZ, HBMSoundEvents.pipeFail, SoundCategory.PLAYERS, 10_000, 0.8F + this.world.rand.nextFloat() * 0.4F);
 					}
 				}
 
@@ -400,7 +400,7 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 			// ON state transitions
 			if(state != lastState) {
 				if(state == RocketState.LAUNCHING) {
-					AudioWrapper ignition = MainRegistry.proxy.getLoopedSound(HBMSoundHandler.rocketIgnition, SoundCategory.PLAYERS, (float)posX, (float)posY, (float)posZ, 1.0F, 1.0F);
+					AudioWrapper ignition = MainRegistry.proxy.getLoopedSound(HBMSoundEvents.rocketIgnition, SoundCategory.PLAYERS, (float)posX, (float)posY, (float)posZ, 1.0F, 1.0F);
 					ignition.setDoesRepeat(false);
 					ignition.startSound();
 				}
@@ -411,7 +411,7 @@ public class EntityRideableRocket extends EntityMissileBaseNT implements ILookOv
 				// We can't start audio loops at the same time as playing a sound, for some reason
 				if(state == RocketState.LAUNCHING || (state == RocketState.LANDING && motionY > -0.4)) {
 					if(audio == null || !audio.isPlaying()) {
-						SoundEvent rocketAudio = getRocket().stages.size() <= 1 ? HBMSoundHandler.rocketFlyLight : HBMSoundHandler.rocketFlyHeavy;
+						SoundEvent rocketAudio = getRocket().stages.size() <= 1 ? HBMSoundEvents.rocketFlyLight : HBMSoundEvents.rocketFlyHeavy;
 						audio = MainRegistry.proxy.getLoopedSound(rocketAudio, SoundCategory.PLAYERS, (float)posX, (float)posY, (float)posZ, 1.0F, 1.0F);
 						audio.startSound();
 					}

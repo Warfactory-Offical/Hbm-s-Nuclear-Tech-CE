@@ -22,7 +22,7 @@ import com.hbm.items.ModItems;
 import com.hbm.items.special.ItemFusionShield;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.Library;
 import com.hbm.main.AdvancementManager;
 import com.hbm.main.MainRegistry;
@@ -125,7 +125,7 @@ public class TileEntityITER extends TileEntityMachineBase implements ITickable, 
 
 					if(ItemFusionShield.getShieldDamage(inventory.getStackInSlot(3)) > ((ItemFusionShield)inventory.getStackInSlot(3).getItem()).maxDamage){
 						inventory.setStackInSlot(3, ItemStack.EMPTY);
-						world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundHandler.shutdown, SoundCategory.BLOCKS, 5F, 1F);
+						world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundEvents.shutdown, SoundCategory.BLOCKS, 5F, 1F);
 						this.isOn = false;
 						this.markDirty();
 					}

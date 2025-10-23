@@ -16,7 +16,7 @@ import com.hbm.inventory.fluid.trait.FT_PWRModerator;
 import com.hbm.inventory.gui.GUIPWR;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.main.MainRegistry;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.IGUIProvider;
@@ -328,7 +328,7 @@ public class TileEntityPWRController extends TileEntityMachineBase implements IT
 
     @Override
     public AudioWrapper createAudioLoop() {
-        return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.reactorLoop, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1F, 10F, 1.0F, 20);
+        return MainRegistry.proxy.getLoopedSound(HBMSoundEvents.reactorLoop, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1F, 10F, 1.0F, 20);
     }
 
     @Override

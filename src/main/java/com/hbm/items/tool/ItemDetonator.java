@@ -3,7 +3,7 @@ package com.hbm.items.tool;
 import com.hbm.config.GeneralConfig;
 import com.hbm.interfaces.IBomb;
 import com.hbm.items.ModItems;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.I18nUtil;
 import net.minecraft.client.util.ITooltipFlag;
@@ -60,7 +60,7 @@ public class ItemDetonator extends Item {
 				player.sendMessage(new TextComponentTranslation("§2[" + I18nUtil.resolveKey("chat.posset") + "]"+"§r"));
 			}
 			
-	        world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.techBoop, SoundCategory.AMBIENT, 1.0F, 1.0F);
+	        world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.techBoop, SoundCategory.AMBIENT, 1.0F, 1.0F);
         	
 			return EnumActionResult.SUCCESS;
 		}
@@ -81,7 +81,7 @@ public class ItemDetonator extends Item {
 			 BlockPos pos = new BlockPos(x, y, z);
 			 if(world.isBlockLoaded(pos) && world.getBlockState(pos).getBlock() instanceof IBomb)
 			 {
-				world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.techBleep, SoundCategory.AMBIENT, 1.0F, 1.0F);
+				world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.techBleep, SoundCategory.AMBIENT, 1.0F, 1.0F);
 				
 				
 				if(!world.isRemote)

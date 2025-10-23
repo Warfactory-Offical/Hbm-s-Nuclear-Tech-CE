@@ -1,7 +1,7 @@
 package com.hbm.items.tool;
 
 import com.hbm.items.ModItems;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.util.ContaminationUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -24,7 +24,7 @@ public class ItemLungDiagnostic extends Item {
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand handIn) {
 		
 		if(!world.isRemote) {
-			world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.techBoop, SoundCategory.PLAYERS, 1.0F, 1.0F);
+			world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.techBoop, SoundCategory.PLAYERS, 1.0F, 1.0F);
 			ContaminationUtil.printLungDiagnosticData(player);
 		}
 		

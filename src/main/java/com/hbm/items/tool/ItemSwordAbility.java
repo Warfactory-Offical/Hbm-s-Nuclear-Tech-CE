@@ -7,7 +7,7 @@ import com.hbm.handler.ability.AvailableAbilities;
 import com.hbm.handler.ability.IWeaponAbility;
 import com.hbm.items.IDynamicModels;
 import com.hbm.items.ModItems;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.RefStrings;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -137,7 +137,7 @@ public class ItemSwordAbility extends ItemSword implements IDynamicModels {
 
 			//hacky hacky hack
 			if(this == ModItems.mese_gavel)
-				attacker.world.playSound(null, target.posX, target.posY, target.posZ, HBMSoundHandler.whack, SoundCategory.HOSTILE, 3.0F, 1.F);
+				attacker.world.playSound(null, target.posX, target.posY, target.posZ, HBMSoundEvents.whack, SoundCategory.HOSTILE, 3.0F, 1.F);
 
 			this.abilities.getWeaponAbilities().forEach((ability, level) -> {
 				ability.onHit(level, attacker.world, (EntityPlayer) attacker, target, this);

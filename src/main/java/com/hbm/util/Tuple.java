@@ -21,11 +21,19 @@ public class Tuple {
 			this.key = x;
 			this.value = y;
 		}
-		
+
+		public X getA() {
+			return this.key;
+		}
+
+		public Y getB() {
+			return this.value;
+		}
+
 		public X getKey() {
 			return this.key;
 		}
-		
+
 		public Y getValue() {
 			return this.value;
 		}
@@ -72,6 +80,18 @@ public class Tuple {
 			this.x = x;
 			this.y = y;
 			this.z = z;
+		}
+
+		public X getA() {
+			return this.x;
+		}
+
+		public Y getB() {
+			return this.y;
+		}
+
+		public Z getC() {
+			return this.z;
 		}
 		
 		public X getX() {

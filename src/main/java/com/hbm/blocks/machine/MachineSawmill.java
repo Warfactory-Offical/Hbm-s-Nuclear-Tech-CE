@@ -5,7 +5,7 @@ import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ITooltipProvider;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.tileentity.TileEntityProxyCombo;
 import com.hbm.tileentity.machine.TileEntitySawmill;
 import com.hbm.util.I18nUtil;
@@ -100,7 +100,7 @@ public class MachineSawmill extends BlockDummyable implements ILookOverlay, IToo
                 player.getHeldItem(hand).shrink(1);
                 sawmill.hasBlade = true;
                 sawmill.markDirty();
-                world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundHandler.upgradePlug, SoundCategory.BLOCKS, 1.5F, 0.75F);
+                world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundEvents.upgradePlug, SoundCategory.BLOCKS, 1.5F, 0.75F);
                 return true;
             }
 

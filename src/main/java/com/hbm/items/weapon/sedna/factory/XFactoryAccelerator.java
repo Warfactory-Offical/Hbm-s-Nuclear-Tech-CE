@@ -8,7 +8,7 @@ import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.items.weapon.sedna.Receiver;
 import com.hbm.items.weapon.sedna.mags.MagazineBelt;
 import com.hbm.items.weapon.sedna.mags.MagazineSingleReload;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.main.MainRegistry;
 import com.hbm.render.anim.sedna.BusAnimationKeyframeSedna.IType;
 import com.hbm.render.anim.sedna.BusAnimationSedna;
@@ -111,7 +111,7 @@ public class XFactoryAccelerator {
         ModItems.gun_coilgun = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.SPECIAL, "gun_coilgun", new GunConfig()
                 .dura(400).draw(5).inspect(39).crosshair(Crosshair.L_CIRCUMFLEX)
                 .rec(new Receiver(0)
-                        .dmg(35F).delay(5).reload(20).jam(33).sound(HBMSoundHandler.coilgunShoot, 1.0F, 1.0F)
+                        .dmg(35F).delay(5).reload(20).jam(33).sound(HBMSoundEvents.coilgunShoot, 1.0F, 1.0F)
                         .mag(new MagazineSingleReload(0, 1).addConfigs(coil_tungsten, coil_ferrouranium))
                         .offset(0.75, -0.0625, -0.1875D)
                         .setupStandardFire().recoil(LAMBDA_RECOIL_COILGUN))
@@ -122,7 +122,7 @@ public class XFactoryAccelerator {
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> LAMBDA_TAU_PRIMARY_RELEASE = (stack, ctx) -> {
         if(ctx.getPlayer() == null || ItemGunBaseNT.getLastAnim(stack, ctx.configIndex) != HbmAnimationsSedna.AnimType.CYCLE) return;
-        ctx.getPlayer().world.playSound(null, ctx.getPlayer().posX, ctx.getPlayer().posY, ctx.getPlayer().posZ, HBMSoundHandler.fireTauRelease, SoundCategory.PLAYERS, 1F, 1F);
+        ctx.getPlayer().world.playSound(null, ctx.getPlayer().posX, ctx.getPlayer().posY, ctx.getPlayer().posZ, HBMSoundEvents.fireTauRelease, SoundCategory.PLAYERS, 1F, 1F);
     };
 
     public static BiConsumer<ItemStack, ItemGunBaseNT.LambdaContext> LAMBDA_TAU_SECONDARY_PRESS = (stack, ctx) -> {

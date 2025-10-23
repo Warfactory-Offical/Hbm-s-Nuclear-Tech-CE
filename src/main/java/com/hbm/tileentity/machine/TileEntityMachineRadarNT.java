@@ -19,7 +19,7 @@ import com.hbm.items.ISatChip;
 import com.hbm.items.ModItems;
 import com.hbm.items.tool.ItemCoordinateBase;
 import com.hbm.lib.DirPos;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.saveddata.satellites.*;
@@ -176,7 +176,7 @@ public class TileEntityMachineRadarNT extends TileEntityMachineBase implements I
 				pingTimer++;
 
 				if(power > 0 && pingTimer >= maxTimer) {
-					this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.sonarPing, SoundCategory.BLOCKS, 1.0F, 1.0F);
+					this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.sonarPing, SoundCategory.BLOCKS, 1.0F, 1.0F);
 					pingTimer = 0;
 				}
 			}
@@ -460,7 +460,7 @@ public class TileEntityMachineRadarNT extends TileEntityMachineBase implements I
 					if(data.hasKey("launchPosX")) {
 						int x = data.getInteger("launchPosX");
 						int z = data.getInteger("launchPosZ");
-						world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.techBleep, SoundCategory.AMBIENT, 1.0F, 1.0F);
+						world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.techBleep, SoundCategory.AMBIENT, 1.0F, 1.0F);
 						sat.onClick(world, player, x, z);
 					}
 				}
@@ -469,7 +469,7 @@ public class TileEntityMachineRadarNT extends TileEntityMachineBase implements I
 						int x = data.getInteger("launchPosX");
 						int z = data.getInteger("launchPosZ");
 						int y = 60; //one day I will make radars transmit Y coordinate as well and you will be butchered alhamdulila
-						world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.techBleep, SoundCategory.AMBIENT, 1.0F, 1.0F);
+						world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.techBleep, SoundCategory.AMBIENT, 1.0F, 1.0F);
 						sat.onCoordAction(world, player, x, y, z);
 					}
 				}
@@ -478,7 +478,7 @@ public class TileEntityMachineRadarNT extends TileEntityMachineBase implements I
 						int x = data.getInteger("launchPosX");
 						int z = data.getInteger("launchPosZ");
 						int y = world.getTopSolidOrLiquidBlock(new BlockPos(x, pos.getY()+1, z)).getY(); //the top fucking block because I will never make radars transmit Y coordinates as well!
-						world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.techBleep, SoundCategory.AMBIENT, 1.0F, 1.0F);
+						world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.techBleep, SoundCategory.AMBIENT, 1.0F, 1.0F);
 						sat.onCoordAction(world, player, x, y, z);
 					}
 				}
@@ -495,14 +495,14 @@ public class TileEntityMachineRadarNT extends TileEntityMachineBase implements I
 							Entity entity = world.getEntityByID(data.getInteger("launchEntity"));
 							if(entity != null) {
 								if(rec.sendCommandEntity(entity)) {
-									world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.techBleep, SoundCategory.PLAYERS, 1.0F, 1.0F);
+									world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.techBleep, SoundCategory.PLAYERS, 1.0F, 1.0F);
 								}
 							}
 						} else if(data.hasKey("launchPosX")) {
 							int x = data.getInteger("launchPosX");
 							int z = data.getInteger("launchPosZ");
 							if(rec.sendCommandPosition(x, pos.getY(), z)) {
-								world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.techBleep, SoundCategory.PLAYERS, 1.0F, 1.0F);
+								world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.techBleep, SoundCategory.PLAYERS, 1.0F, 1.0F);
 							}
 						}
 					}

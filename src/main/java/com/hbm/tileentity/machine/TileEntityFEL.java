@@ -9,7 +9,7 @@ import com.hbm.inventory.gui.GUIFEL;
 import com.hbm.items.machine.ItemFELCrystal;
 import com.hbm.items.machine.ItemFELCrystal.EnumWavelengths;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.PacketDispatcher;
@@ -268,7 +268,7 @@ public class TileEntityFEL extends TileEntityMachineBase implements ITickable, I
 
 	@Override
 	public AudioWrapper createAudioLoop() {
-		return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.fel, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 2.0F, 10F, 2.0F);
+		return MainRegistry.proxy.getLoopedSound(HBMSoundEvents.fel, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 2.0F, 10F, 2.0F);
 	}
 
 	@Override

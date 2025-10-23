@@ -235,7 +235,7 @@ public class TileEntityMachineChemicalFactory extends TileEntityMachineBase impl
     }
     // FIXME this shit doesn't work
     @Override public AudioWrapper createAudioLoop() {
-        return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.chemicalPlant, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1F, 15F, 1.0F, 20);
+        return MainRegistry.proxy.getLoopedSound(HBMSoundEvents.chemicalPlant, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1F, 15F, 1.0F, 20);
     }
 
     @Override public void onChunkUnload() {

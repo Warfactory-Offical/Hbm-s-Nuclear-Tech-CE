@@ -4,7 +4,7 @@ import baubles.api.BaubleType;
 import baubles.api.IBauble;
 import com.hbm.capability.HbmLivingProps;
 import com.hbm.items.ModItems;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.util.ContaminationUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -32,7 +32,7 @@ public class ItemDigammaDiagnostic extends Item implements IBauble {
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand handIn) {
 		
 		if(!world.isRemote) {
-			world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.techBoop, SoundCategory.PLAYERS, 1.0F, 1.0F);
+			world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.techBoop, SoundCategory.PLAYERS, 1.0F, 1.0F);
 			ContaminationUtil.printDiagnosticData(player);
 		}
 		
@@ -78,7 +78,7 @@ public class ItemDigammaDiagnostic extends Item implements IBauble {
 					int r = list.get(world.rand.nextInt(list.size()));
 					
 					if(r > 0){
-						world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.voiceSounds[r-1], SoundCategory.PLAYERS, (float)x*0.04F+0.04F, 1.0F);
+						world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.voiceSounds[r-1], SoundCategory.PLAYERS, (float)x*0.04F+0.04F, 1.0F);
 					}
 				}
 			}

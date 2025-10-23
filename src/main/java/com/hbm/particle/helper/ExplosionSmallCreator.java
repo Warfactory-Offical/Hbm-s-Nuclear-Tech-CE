@@ -1,6 +1,6 @@
 package com.hbm.particle.helper;
 
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.particle.ParticleExplosionSmall;
 import com.hbm.particle.ParticleLargeBlockDebris;
 import net.minecraft.block.material.Material;
@@ -47,7 +47,7 @@ public class ExplosionSmallCreator implements IParticleCreator {
         // Sound
         float dist = (float) player.getDistance(x, y, z);
         if (dist < 200) {
-            SoundEvent sound = dist < 80 ? HBMSoundHandler.explosionSmallNear : HBMSoundHandler.explosionSmallFar;
+            SoundEvent sound = dist < 80 ? HBMSoundEvents.explosionSmallNear : HBMSoundEvents.explosionSmallFar;
             Minecraft.getMinecraft().getSoundHandler().playDelayedSound(
                     new PositionedSoundRecord(sound, SoundCategory.PLAYERS, 100F, 1.0F, (float) x, (float) y, (float) z),
                     (int) (dist / speedOfSound)

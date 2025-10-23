@@ -4,7 +4,7 @@ import com.hbm.config.PotionConfig;
 import com.hbm.handler.radiation.ChunkRadiationManager;
 import com.hbm.interfaces.NotableComments;
 import com.hbm.items.ModItems;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.render.NTMRenderHelper;
 import com.hbm.render.amlfrom1710.IModelCustom;
 import com.hbm.util.ContaminationUtil;
@@ -166,7 +166,7 @@ public class ArmorFSB extends ItemArmor {
             step = false;
 
             if(player.world.isRemote && player.onGround) {
-                steppy(player, HBMSoundHandler.poweredStep);
+                steppy(player, HBMSoundEvents.poweredStep);
             }
         } else step = true;
 
@@ -273,7 +273,7 @@ public class ArmorFSB extends ItemArmor {
 
                 int r = list.getInt(world.rand.nextInt(list.size()));
 
-                if(r > 0) world.playSound(null, entity.posX, entity.posY, entity.posZ, HBMSoundHandler.geigerSounds[r-1], SoundCategory.PLAYERS, 1.0F, 1.0F);
+                if(r > 0) world.playSound(null, entity.posX, entity.posY, entity.posZ, HBMSoundEvents.geigerSounds[r-1], SoundCategory.PLAYERS, 1.0F, 1.0F);
             }
         }
     }

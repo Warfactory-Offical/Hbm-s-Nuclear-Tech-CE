@@ -2,7 +2,7 @@ package com.hbm.items.armor;
 
 import com.hbm.handler.ArmorModHandler;
 import com.hbm.items.ModItems;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAICreeperSwell;
@@ -61,7 +61,7 @@ public class ItemModDefuser extends ItemArmorMod {
 
                 if(toRem != null) {
                     creeper.tasks.removeTask(toRem);
-                    creeper.world.playSound(creeper.posX, creeper.posY, creeper.posZ, HBMSoundHandler.pinBreak, SoundCategory.PLAYERS, 1.0F, 1.0F, false);
+                    creeper.world.playSound(creeper.posX, creeper.posY, creeper.posZ, HBMSoundEvents.pinBreak, SoundCategory.PLAYERS, 1.0F, 1.0F, false);
                     creeper.dropItem(ModItems.safety_fuse, 1);
                     creeper.attackEntityFrom(DamageSource.causeMobDamage(entity), 1.0F);
                     creeper.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 0, 200));

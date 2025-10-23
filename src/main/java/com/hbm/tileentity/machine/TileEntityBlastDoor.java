@@ -10,7 +10,7 @@ import com.hbm.inventory.control_panel.ControlEvent;
 import com.hbm.inventory.control_panel.ControlEventSystem;
 import com.hbm.inventory.control_panel.DataValueFloat;
 import com.hbm.inventory.control_panel.IControllable;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.TEVaultPacket;
 import net.minecraft.init.Blocks;
@@ -102,11 +102,11 @@ public class TileEntityBlastDoor extends TileEntityLockableBase implements ITick
                     if (state == DoorState.OPENING) {
                         state = DoorState.OPEN;
                         broadcastControlEvt();
-                        this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.reactorStop, SoundCategory.BLOCKS, 0.5F, 1.0F);
+                        this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.reactorStop, SoundCategory.BLOCKS, 0.5F, 1.0F);
                     } else if (state == DoorState.CLOSING) {
                         state = DoorState.CLOSED;
                         broadcastControlEvt();
-                        this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.reactorStop, SoundCategory.BLOCKS, 0.5F, 1.0F);
+                        this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.reactorStop, SoundCategory.BLOCKS, 0.5F, 1.0F);
 
                         // With door finally closed, mark chunk for rad update since door is now rad resistant
                         // No need to update when open as well, as opening door should update
@@ -393,7 +393,7 @@ public class TileEntityBlastDoor extends TileEntityLockableBase implements ITick
 					new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 150));
             closeNeigh();
             broadcastControlEvt();
-            this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.reactorStart, SoundCategory.BLOCKS, 0.5F, 0.75F);
+            this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.reactorStart, SoundCategory.BLOCKS, 0.5F, 0.75F);
 
             // With door opening, mark chunk for rad update
             RadiationSystemNT.markChunkForRebuild(world, pos);
@@ -403,7 +403,7 @@ public class TileEntityBlastDoor extends TileEntityLockableBase implements ITick
 					new TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 150));
             openNeigh();
             broadcastControlEvt();
-            this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.reactorStart, SoundCategory.BLOCKS, 0.5F, 0.75F);
+            this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.reactorStart, SoundCategory.BLOCKS, 0.5F, 0.75F);
 
 
             // With door closing, mark chunk for rad update

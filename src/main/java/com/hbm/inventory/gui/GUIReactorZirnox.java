@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.inventory.container.ContainerReactorZirnox;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.RefStrings;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.packet.PacketDispatcher;
@@ -67,14 +67,14 @@ public class GUIReactorZirnox extends GuiInfoContainer {
             control.setBoolean("control", true);
 
             PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(control, zirnox.getPos().getX(), zirnox.getPos().getY(), zirnox.getPos().getZ()));
-            mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(HBMSoundHandler.rbmk_az5_cover, 0.5F));
+            mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(HBMSoundEvents.rbmk_az5_cover, 0.5F));
         }
 
         if(guiLeft + 151 <= x && guiLeft + 151 + 36 > x && guiTop + 51 < y && guiTop + 51 + 36 >= y) {
             control.setBoolean("vent", true); // sus impostre like amogus
 
             PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(control, zirnox.getPos().getX(), zirnox.getPos().getY(), zirnox.getPos().getZ()));
-            mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(HBMSoundHandler.rbmk_az5_cover, 0.5F));
+            mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(HBMSoundEvents.rbmk_az5_cover, 0.5F));
         }
     }
 

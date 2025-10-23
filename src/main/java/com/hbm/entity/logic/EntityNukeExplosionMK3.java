@@ -11,7 +11,7 @@ import com.hbm.entity.effect.EntityFalloutRain;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.Spaghetti;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
@@ -23,7 +23,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.common.ForgeChunkManager.Type;
@@ -311,7 +310,7 @@ public class EntityNukeExplosionMK3 extends Entity implements IChunkLoader {
 	public static HashMap<ATEntry, Long> at = new HashMap<>();
 
 	private static void createParticle(World world, int dim, double x, double y, double z, float r, float g, float b) {
-		world.playSound(null, x+0.5D, y+0.5D, z+0.5D, HBMSoundHandler.ufoBlast, SoundCategory.HOSTILE, 15.0F, 1.0F);
+		world.playSound(null, x+0.5D, y+0.5D, z+0.5D, HBMSoundEvents.ufoBlast, SoundCategory.HOSTILE, 15.0F, 1.0F);
 						
 		NBTTagCompound data = new NBTTagCompound();
 		data.setString("type", "plasmablast");
@@ -390,7 +389,7 @@ public class EntityNukeExplosionMK3 extends Entity implements IChunkLoader {
 						double iy = i == 0 ? y : (entry.y + 0.5);
 						double iz = i == 0 ? z : (entry.z + 0.5);
 
-						world.playSound(null, ix, iy, iz, HBMSoundHandler.ufoBlast, SoundCategory.PLAYERS, 15.0F, 0.7F + world.rand.nextFloat() * 0.2F);
+						world.playSound(null, ix, iy, iz, HBMSoundEvents.ufoBlast, SoundCategory.PLAYERS, 15.0F, 0.7F + world.rand.nextFloat() * 0.2F);
 
 						NBTTagCompound data = new NBTTagCompound();
 						data.setString("type", "plasmablast");
