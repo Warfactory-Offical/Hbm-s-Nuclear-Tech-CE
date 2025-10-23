@@ -17,7 +17,7 @@ import com.hbm.handler.BulletConfiguration;
 import com.hbm.handler.GunConfigurationSedna;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.weapon.sedna.ItemGunBaseSedna;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
@@ -321,9 +321,9 @@ public class EntityBulletBaseNT extends EntityThrowableInterp implements IBullet
                         }
 
                         if(config.plink == 1)
-                            world.playSound(null, this.posX, this.posY, this.posZ, HBMSoundHandler.ricochet, SoundCategory.BLOCKS, 0.25F, 1.0F);
+                            world.playSound(null, this.posX, this.posY, this.posZ, HBMSoundEvents.ricochet, SoundCategory.BLOCKS, 0.25F, 1.0F);
                         if(config.plink == 2)
-                            world.playSound(null, this.posX, this.posY, this.posZ, HBMSoundHandler.grenadeBounce, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                            world.playSound(null, this.posX, this.posY, this.posZ, HBMSoundEvents.grenadeBounce, SoundCategory.BLOCKS, 1.0F, 1.0F);
 
                         this.setPosition(mop.hitVec.x, mop.hitVec.y, mop.hitVec.z);
                         onRicochet(mop.getBlockPos().getX(), mop.getBlockPos().getY(), mop.getBlockPos().getZ());

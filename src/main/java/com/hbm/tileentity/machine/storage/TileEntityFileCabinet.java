@@ -3,7 +3,7 @@ package com.hbm.tileentity.machine.storage;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerFileCabinet;
 import com.hbm.inventory.gui.GUIFileCabinet;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.tileentity.IBufPacketReceiver;
 import com.hbm.tileentity.IGUIProvider;
 import io.netty.buffer.ByteBuf;
@@ -81,14 +81,14 @@ public class TileEntityFileCabinet extends TileEntityCrateBase implements IGUIPr
 
         if(this.playersUsing > 0) {
             if(lowerExtent == 0F && upperExtent == 0F)
-                this.world.playSound(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundHandler.crateOpen, SoundCategory.BLOCKS, 0.8F, 1.0F, false);
+                this.world.playSound(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundEvents.crateOpen, SoundCategory.BLOCKS, 0.8F, 1.0F, false);
             else {
                 if(upperExtent + openSpeed >= maxExtent && lowerExtent < maxExtent) {
-                    this.world.playSound(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundHandler.crateOpen, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.7F, false);
+                    this.world.playSound(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundEvents.crateOpen, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.7F, false);
                 }
 
                 if(lowerExtent + openSpeed >= maxExtent && lowerExtent < maxExtent) {
-                    this.world.playSound(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundHandler.crateOpen, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.7F, false);
+                    this.world.playSound(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundEvents.crateOpen, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.7F, false);
                 }
             }
 
@@ -100,11 +100,11 @@ public class TileEntityFileCabinet extends TileEntityCrateBase implements IGUIPr
 
         } else if(lowerExtent > 0) {
             if(upperExtent - openSpeed < maxExtent / 2 && upperExtent >= maxExtent / 2 && upperExtent != lowerExtent) {
-                this.world.playSound(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundHandler.crateClose, SoundCategory.BLOCKS, 0.8F, 1.0F, false);
+                this.world.playSound(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundEvents.crateClose, SoundCategory.BLOCKS, 0.8F, 1.0F, false);
             }
 
             if(lowerExtent - openSpeed < maxExtent / 2 && lowerExtent >= maxExtent / 2) {
-                this.world.playSound(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundHandler.crateClose, SoundCategory.BLOCKS, 0.8F, 1.0F, false);
+                this.world.playSound(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundEvents.crateClose, SoundCategory.BLOCKS, 0.8F, 1.0F, false);
             }
 
             this.upperExtent -= openSpeed;

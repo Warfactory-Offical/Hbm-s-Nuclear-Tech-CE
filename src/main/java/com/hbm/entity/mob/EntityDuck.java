@@ -1,7 +1,7 @@
 package com.hbm.entity.mob;
 
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.util.DamageSource;
@@ -16,17 +16,17 @@ public class EntityDuck extends EntityChicken {
 	
 	@Override
 	protected SoundEvent getAmbientSound() {
-		return HBMSoundHandler.ducc;
+		return HBMSoundEvents.ducc;
 	}
 	
 	@Override
 	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-		return HBMSoundHandler.ducc;
+		return HBMSoundEvents.ducc;
 	}
 	
 	@Override
 	protected SoundEvent getDeathSound() {
-		return HBMSoundHandler.ducc;
+		return HBMSoundEvents.ducc;
 	}
 	
 	@Override

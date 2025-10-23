@@ -6,7 +6,7 @@ import com.hbm.handler.MultiblockHandlerXR;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.TileEntityProxyCombo;
 import com.hbm.tileentity.machine.TileEntityChungus;
@@ -65,7 +65,7 @@ public class MachineChungus extends BlockDummyable implements ILookOverlay {
 				int iZ2 = entity.getPos().getZ() + dir.offsetZ * 2 + turn.offsetZ * 2;
 				
 				if((x == iX || x == iX2) && (z == iZ || z == iZ2) && y < entity.getPos().getY() + 2) {
-					world.playSound(null, x + 0.5, y + 0.5, z + 0.5, HBMSoundHandler.chungus_lever, SoundCategory.BLOCKS, 1.5F, 1.0F);
+					world.playSound(null, x + 0.5, y + 0.5, z + 0.5, HBMSoundEvents.chungus_lever, SoundCategory.BLOCKS, 1.5F, 1.0F);
 					
 					if(!world.isRemote) {
 						FluidType currentType = entity.tanks[0].getTankType();

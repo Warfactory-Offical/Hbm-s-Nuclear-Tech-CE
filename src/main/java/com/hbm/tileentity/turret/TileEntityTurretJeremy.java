@@ -7,7 +7,7 @@ import com.hbm.inventory.container.ContainerTurretBase;
 import com.hbm.inventory.gui.GUITurretJeremy;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.factory.XFactoryTurret;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.IGUIProvider;
@@ -83,7 +83,7 @@ public class TileEntityTurretJeremy extends TileEntityTurretBaseNT implements IG
 			reload--;
 		
 		if(reload == 1)
-			this.world.playSound(null, pos, HBMSoundHandler.jeremy_reload, SoundCategory.BLOCKS, 2.0F, 1.0F);
+			this.world.playSound(null, pos, HBMSoundEvents.jeremy_reload, SoundCategory.BLOCKS, 2.0F, 1.0F);
 		
 		super.update();
 	}
@@ -100,7 +100,7 @@ public class TileEntityTurretJeremy extends TileEntityTurretBaseNT implements IG
 				this.cachedCasingConfig = conf.casing;
 				this.spawnBullet(conf, 50F);
 				this.consumeAmmo(conf.ammo);
-				this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.jeremy_fire, SoundCategory.BLOCKS, 4.0F, 1.0F);
+				this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.jeremy_fire, SoundCategory.BLOCKS, 4.0F, 1.0F);
 				
 				Vec3 pos = new Vec3(this.getTurretPos());
 				Vec3 vec = Vec3.createVectorHelper(this.getBarrelLength(), 0, 0);

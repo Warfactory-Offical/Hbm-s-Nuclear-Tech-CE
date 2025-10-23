@@ -3,7 +3,7 @@ package com.hbm.entity.effect;
 import com.hbm.explosion.ExplosionNT;
 import com.hbm.explosion.ExplosionNT.ExAttrib;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.main.AdvancementManager;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.ContaminationUtil;
@@ -108,7 +108,7 @@ public class EntitySpear extends Entity {
 				}
 				this.setDead();
 				
-				world.playSound(null, posX, posY, posZ, HBMSoundHandler.dflash, SoundCategory.HOSTILE, 25000.0F, 1.0F);
+				world.playSound(null, posX, posY, posZ, HBMSoundEvents.dflash, SoundCategory.HOSTILE, 25000.0F, 1.0F);
 				
 				NBTTagCompound data = new NBTTagCompound();
 				data.setString("type", "smoke");

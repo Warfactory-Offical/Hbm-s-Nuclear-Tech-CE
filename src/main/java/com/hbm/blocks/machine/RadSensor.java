@@ -1,7 +1,7 @@
 package com.hbm.blocks.machine;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.tileentity.machine.TileEntityRadSensor;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -37,7 +37,7 @@ public class RadSensor extends BlockContainer {
 		{
 			return true;
 		} else if(player != null){
-	    	world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.techBoop, SoundCategory.BLOCKS, 1.0F, 1.0F);
+	    	world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.techBoop, SoundCategory.BLOCKS, 1.0F, 1.0F);
 
 	    	TileEntityRadSensor entity = (TileEntityRadSensor) world.getTileEntity(pos);
 	    	player.sendMessage(new TextComponentString("§6===== ☢ Radiaton Sensor ☢ =====§r"));

@@ -2,7 +2,7 @@ package com.hbm.inventory.gui;
 
 import com.hbm.items.ISatChip;
 import com.hbm.items.tool.ItemSatInterface;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.SatCoordPacket;
@@ -17,7 +17,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.io.IOException;
 
@@ -88,7 +87,7 @@ public class GUIScreenSatCoord extends GuiScreen {
     				
     				if(NumberUtils.isCreatable(yField.getText())) {
     					
-        	    		mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(HBMSoundHandler.techBleep, 1.0F));
+        	    		mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(HBMSoundEvents.techBleep, 1.0F));
         	    		PacketDispatcher.wrapper.sendToServer(
         	    				new SatCoordPacket(
         	    						(int)Double.parseDouble(xField.getText()),
@@ -101,7 +100,7 @@ public class GUIScreenSatCoord extends GuiScreen {
     				
     			} else {
     	    		
-    	    		mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(HBMSoundHandler.techBleep, 1.0F));
+    	    		mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(HBMSoundEvents.techBleep, 1.0F));
     	    		PacketDispatcher.wrapper.sendToServer(
     	    				new SatCoordPacket(
     	    						(int)Double.parseDouble(xField.getText()),

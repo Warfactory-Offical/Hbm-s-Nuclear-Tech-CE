@@ -1,7 +1,7 @@
 package com.hbm.items.special;
 
 import com.hbm.items.ModItems;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.util.ItemStackUtil;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -56,7 +56,7 @@ public class ItemKitNBT extends Item {
             }
         }
 
-        worldIn.playSound(playerIn, playerIn.getPosition(), HBMSoundHandler.itemUnpack, SoundCategory.PLAYERS, 1.0F, 1.0F);
+        worldIn.playSound(playerIn, playerIn.getPosition(), HBMSoundEvents.itemUnpack, SoundCategory.PLAYERS, 1.0F, 1.0F);
 
         return new ActionResult<>(EnumActionResult.SUCCESS, stack);
     }

@@ -2,7 +2,7 @@ package com.hbm.explosion.vanillant.standard;
 
 import com.hbm.explosion.vanillant.ExplosionVNT;
 import com.hbm.explosion.vanillant.interfaces.IExplosionSFX;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,7 +16,7 @@ public class ExplosionEffectTiny implements IExplosionSFX {
     public void doEffect(ExplosionVNT explosion, World world, double x, double y, double z, float size) {
         if(world.isRemote) return;
 
-        world.playSound(null, x, y, z, HBMSoundHandler.explosion_tiny, SoundCategory.BLOCKS, 15.0F, 1.0F);
+        world.playSound(null, x, y, z, HBMSoundEvents.explosion_tiny, SoundCategory.BLOCKS, 15.0F, 1.0F);
 
         NBTTagCompound data = new NBTTagCompound();
         data.setString("type", "vanillaExt");

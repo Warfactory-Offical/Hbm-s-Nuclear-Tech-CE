@@ -5,7 +5,7 @@ import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerMassStorage;
 import com.hbm.inventory.gui.GUIMassStorage;
 import com.hbm.items.ModItems;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.packet.toclient.BufPacket;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.IBufPacketReceiver;
@@ -147,11 +147,11 @@ public class TileEntityMassStorage extends TileEntityCrateBase implements IBufPa
 	}
 
 	public void openInventory(EntityPlayer player) {
-		player.world.playSound(player.posX, player.posY, player.posZ, HBMSoundHandler.storageOpen, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+		player.world.playSound(player.posX, player.posY, player.posZ, HBMSoundEvents.storageOpen, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
 	}
 
 	public void closeInventory(EntityPlayer player) {
-		player.world.playSound(player.posX, player.posY, player.posZ, HBMSoundHandler.storageClose, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+		player.world.playSound(player.posX, player.posY, player.posZ, HBMSoundEvents.storageClose, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
 	}
 
 	@Override

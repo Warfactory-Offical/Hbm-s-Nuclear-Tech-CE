@@ -4,7 +4,7 @@ import com.hbm.blocks.*;
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.IMetaItemTesr;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.tileentity.TileEntityProxyCombo;
 import com.hbm.tileentity.machine.TileEntityStirling;
 import com.hbm.util.BobMathUtil;
@@ -16,7 +16,6 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -26,7 +25,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -95,7 +93,7 @@ public class MachineStirling extends BlockDummyable implements ILookOverlay, ITo
                 player.getHeldItem(EnumHand.MAIN_HAND).shrink(1);
                 stirling.hasCog = true;
                 stirling.markDirty();
-                world.playSound(null, blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5, HBMSoundHandler.upgradePlug, SoundCategory.PLAYERS, 1.5F, 0.75F);
+                world.playSound(null, blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5, HBMSoundEvents.upgradePlug, SoundCategory.PLAYERS, 1.5F, 0.75F);
                 return true;
             }
         }

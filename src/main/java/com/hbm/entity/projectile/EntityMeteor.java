@@ -4,7 +4,7 @@ import com.hbm.config.CompatibilityConfig;
 import com.hbm.config.GeneralConfig;
 import com.hbm.explosion.ExplosionLarge;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.main.MainRegistry;
 import com.hbm.world.Meteorite;
 import net.minecraft.block.material.Material;
@@ -60,7 +60,7 @@ public class EntityMeteor extends EntityThrowable {
     			}
     			(new Meteorite()).generate(world, rand, (int)Math.round(this.posX - 0.5D), (int)Math.round(this.posY - 0.5D), (int)Math.round(this.posZ - 0.5D));
     		}
-            this.world.playSound(null, this.posX, this.posY, this.posZ, HBMSoundHandler.oldExplosion, SoundCategory.HOSTILE, 12.5F, 0.5F + this.rand.nextFloat() * 0.1F);
+            this.world.playSound(null, this.posX, this.posY, this.posZ, HBMSoundEvents.oldExplosion, SoundCategory.HOSTILE, 12.5F, 0.5F + this.rand.nextFloat() * 0.1F);
     		this.setDead();
         }
         

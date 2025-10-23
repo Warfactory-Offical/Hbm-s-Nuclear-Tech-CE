@@ -18,7 +18,7 @@ import com.hbm.handler.BulletConfigSyncingUtil;
 import com.hbm.handler.BulletConfiguration;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.Library;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.main.MainRegistry;
@@ -384,9 +384,9 @@ public class EntityBulletBase extends Entity implements IProjectile {
 							}
 
 							if (config.plink == 1)
-								world.playSound(this.posX, this.posY, this.posZ, HBMSoundHandler.ricochet, SoundCategory.HOSTILE, 0.25F, 1.0F, true);
+								world.playSound(this.posX, this.posY, this.posZ, HBMSoundEvents.ricochet, SoundCategory.HOSTILE, 0.25F, 1.0F, true);
 							if (config.plink == 2)
-								world.playSound(this.posX, this.posY, this.posZ, HBMSoundHandler.grenadeBounce, SoundCategory.HOSTILE, 1.0F, 1.0F, true);
+								world.playSound(this.posX, this.posY, this.posZ, HBMSoundEvents.grenadeBounce, SoundCategory.HOSTILE, 1.0F, 1.0F, true);
 
 							onRicochet(movement.getBlockPos());
 
@@ -583,7 +583,7 @@ public class EntityBulletBase extends Entity implements IProjectile {
 					EntityNukeTorex.statFac(world, pos.getX() + 0.5, pos.getY() + 5, pos.getZ() + 0.5, config.nuke);
 				}
 			}
-			world.playSound(null, posX, posY, posZ, HBMSoundHandler.mukeExplosion, SoundCategory.HOSTILE, 15.0F, 1.0F);
+			world.playSound(null, posX, posY, posZ, HBMSoundEvents.mukeExplosion, SoundCategory.HOSTILE, 15.0F, 1.0F);
 		}
 
 		if (config.destroysBlocks && !world.isRemote) {

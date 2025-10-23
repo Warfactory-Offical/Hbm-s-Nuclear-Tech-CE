@@ -5,7 +5,7 @@ import com.hbm.api.item.IGasMask;
 import com.hbm.handler.ArmorModHandler;
 import com.hbm.handler.ArmorUtil;
 import com.hbm.items.ModItems;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -72,7 +72,7 @@ public class ItemFilter extends Item {
 		
 		ArmorUtil.installGasMaskFilter(helmet, copy);
 		
-		world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.gasmaskScrew, SoundCategory.PLAYERS, 1.0F, 1.0F);
+		world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.gasmaskScrew, SoundCategory.PLAYERS, 1.0F, 1.0F);
 				
 		return filter;
 	}

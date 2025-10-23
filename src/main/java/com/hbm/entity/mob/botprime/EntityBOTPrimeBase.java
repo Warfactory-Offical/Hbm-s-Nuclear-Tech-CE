@@ -3,7 +3,7 @@ package com.hbm.entity.mob.botprime;
 import com.google.common.base.Predicate;
 import com.hbm.entity.projectile.EntityBulletBase;
 import com.hbm.handler.BulletConfigSyncingUtil;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -65,7 +65,7 @@ public abstract class EntityBOTPrimeBase extends EntityWormBaseNT {
 	
 	@Override
 	protected SoundEvent getDeathSound() {
-		return HBMSoundHandler.bombDet;
+		return HBMSoundEvents.bombDet;
 	}
 	
 	protected void laserAttack(Entity target, boolean head) {
@@ -83,12 +83,12 @@ public abstract class EntityBOTPrimeBase extends EntityWormBaseNT {
 				this.world.spawnEntity(bullet);
 			}
 
-			this.playSound(HBMSoundHandler.ballsLaser, 5.0F, 0.75F);
+			this.playSound(HBMSoundEvents.ballsLaser, 5.0F, 0.75F);
 
 		} else {
 			EntityBulletBase bullet = new EntityBulletBase(this.world, BulletConfigSyncingUtil.WORM_BOLT, this, living, 0.5F, 0.125F);
 			this.world.spawnEntity(bullet);
-			this.playSound(HBMSoundHandler.ballsLaser, 5.0F, 1.0F);
+			this.playSound(HBMSoundEvents.ballsLaser, 5.0F, 1.0F);
 		}
 	}
 

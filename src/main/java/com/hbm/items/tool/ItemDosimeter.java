@@ -4,7 +4,7 @@ import baubles.api.BaubleType;
 import baubles.api.IBauble;
 import com.hbm.items.ModItems;
 import com.hbm.items.gear.ArmorFSB;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.util.ContaminationUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -63,10 +63,10 @@ public class ItemDosimeter extends Item implements IBauble {
 					int r = list.get(rand.nextInt(list.size()));
 					
 					if(r > 0)
-						world.playSound(null, entity.posX, entity.posY, entity.posZ, HBMSoundHandler.geigerSounds[r-1], SoundCategory.PLAYERS, 1.0F, 1.0F);
+						world.playSound(null, entity.posX, entity.posY, entity.posZ, HBMSoundEvents.geigerSounds[r-1], SoundCategory.PLAYERS, 1.0F, 1.0F);
 					
 				} else if(rand.nextInt(100) == 0) {
-					world.playSound(null, entity.posX, entity.posY, entity.posZ, HBMSoundHandler.geigerSounds[(rand.nextInt(1))], SoundCategory.PLAYERS, 1.0F, 1.0F);
+					world.playSound(null, entity.posX, entity.posY, entity.posZ, HBMSoundEvents.geigerSounds[(rand.nextInt(1))], SoundCategory.PLAYERS, 1.0F, 1.0F);
 				}
 			}
 		}
@@ -76,7 +76,7 @@ public class ItemDosimeter extends Item implements IBauble {
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand handIn) {
 		
 		if(!world.isRemote) {
-			world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.techBoop, SoundCategory.PLAYERS, 1.0F, 1.0F);
+			world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.techBoop, SoundCategory.PLAYERS, 1.0F, 1.0F);
 			ContaminationUtil.printDosimeterData(player);
 		}
 		

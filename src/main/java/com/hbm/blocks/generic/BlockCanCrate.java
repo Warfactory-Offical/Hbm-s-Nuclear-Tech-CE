@@ -3,7 +3,7 @@ package com.hbm.blocks.generic;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.items.ModItems;
 import com.hbm.items.food.ItemConserve;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -35,7 +35,7 @@ public class BlockCanCrate extends Block {
             if (!worldIn.isRemote) {
                 dropContents(worldIn, pos);
                 worldIn.setBlockToAir(pos);
-                worldIn.playSound(null, pos, HBMSoundHandler.crateBreak, SoundCategory.BLOCKS, 0.5F, 1.0F);
+                worldIn.playSound(null, pos, HBMSoundEvents.crateBreak, SoundCategory.BLOCKS, 0.5F, 1.0F);
             }
             return true;
         }

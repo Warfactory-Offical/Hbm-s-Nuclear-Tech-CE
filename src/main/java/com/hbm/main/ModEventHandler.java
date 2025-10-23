@@ -41,7 +41,7 @@ import com.hbm.items.weapon.ItemGunBase;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.items.weapon.sedna.factory.XFactory12ga;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.Library;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.lib.RefStrings;
@@ -158,7 +158,7 @@ public class ModEventHandler {
     @SubscribeEvent
     public void soundRegistering(RegistryEvent.Register<SoundEvent> evt) {
 
-        for (SoundEvent e : HBMSoundHandler.ALL_SOUNDS) {
+        for (SoundEvent e : HBMSoundEvents.ALL_SOUNDS) {
             evt.getRegistry().register(e);
         }
     }
@@ -828,7 +828,7 @@ public class ModEventHandler {
                         }
                     }
 
-                    player.world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.shotgunShoot, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                    player.world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.shotgunShoot, SoundCategory.PLAYERS, 1.0F, 1.0F);
                 }
             }
         }
@@ -870,7 +870,7 @@ public class ModEventHandler {
 
             if (!Float.isFinite(player.getHealth()) || !Float.isFinite(player.getAbsorptionAmount())) {
                 player.sendMessage(new TextComponentString("Your health has been restored!"));
-                player.world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.syringeUse, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                player.world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.syringeUse, SoundCategory.PLAYERS, 1.0F, 1.0F);
                 player.setHealth(player.getMaxHealth());
                 player.setAbsorptionAmount(0);
             }

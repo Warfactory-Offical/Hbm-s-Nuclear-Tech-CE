@@ -7,7 +7,7 @@ import com.hbm.inventory.RecipesCommon.OreDictStack;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.items.ModItems;
 import com.hbm.items.tool.ItemDrone.EnumDroneType;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.network.TileEntityDroneDock;
 import com.hbm.tileentity.network.TileEntityDroneProvider;
@@ -97,7 +97,7 @@ public class EntityRequestDrone extends EntityDroneBase {
                                     if (!stack.isEmpty() && aStack.matchesRecipe(stack, true)) {
                                         this.heldItem = stack.copy();
                                         this.setAppearance(1);
-                                        world.playSound(null, posX, posY, posZ, HBMSoundHandler.itemUnpack, SoundCategory.BLOCKS, 0.5F, 0.75F);
+                                        world.playSound(null, posX, posY, posZ, HBMSoundEvents.itemUnpack, SoundCategory.BLOCKS, 0.5F, 0.75F);
                                         provider.inventory.setStackInSlot(i, ItemStack.EMPTY);
                                         provider.markDirty();
                                         break;
@@ -137,7 +137,7 @@ public class EntityRequestDrone extends EntityDroneBase {
 
                                 if (this.heldItem.isEmpty()) {
                                     this.setAppearance(0);
-                                    world.playSound(null, posX, posY, posZ, HBMSoundHandler.itemUnpack, SoundCategory.BLOCKS, 0.5F, 0.75F);
+                                    world.playSound(null, posX, posY, posZ, HBMSoundEvents.itemUnpack, SoundCategory.BLOCKS, 0.5F, 0.75F);
                                 }
 
                                 requester.markDirty();
@@ -163,7 +163,7 @@ public class EntityRequestDrone extends EntityDroneBase {
                                             }
                                         }
                                         dock.dockDrone(i, drone.copy());
-                                        this.world.playSound(null, dock.getPos().getX() + 0.5, dock.getPos().getY() + 0.5, dock.getPos().getZ() + 0.5, HBMSoundHandler.storageClose, SoundCategory.BLOCKS, 2.0F, 1.0F);
+                                        this.world.playSound(null, dock.getPos().getX() + 0.5, dock.getPos().getY() + 0.5, dock.getPos().getZ() + 0.5, HBMSoundEvents.storageClose, SoundCategory.BLOCKS, 2.0F, 1.0F);
                                         break;
                                     } else if (dock.getStackInSlot(i).isItemEqual(drone) && dock.getStackInSlot(i).getCount() < 64) {
                                         this.setDead();
@@ -173,7 +173,7 @@ public class EntityRequestDrone extends EntityDroneBase {
                                             }
                                         }
                                         dock.getStackInSlot(i).grow(1);
-                                        this.world.playSound(null, dock.getPos().getX() + 0.5, dock.getPos().getY() + 0.5, dock.getPos().getZ() + 0.5, HBMSoundHandler.storageClose, SoundCategory.BLOCKS, 2.0F, 1.0F);
+                                        this.world.playSound(null, dock.getPos().getX() + 0.5, dock.getPos().getY() + 0.5, dock.getPos().getZ() + 0.5, HBMSoundEvents.storageClose, SoundCategory.BLOCKS, 2.0F, 1.0F);
                                         break;
                                     }
                                 }

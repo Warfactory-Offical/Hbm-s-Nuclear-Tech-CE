@@ -7,7 +7,7 @@ import com.hbm.entity.logic.EntityNukeExplosionMK5;
 import com.hbm.entity.projectile.EntityRubble;
 import com.hbm.handler.ArmorUtil;
 import com.hbm.items.ModItems;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.main.AdvancementManager;
 import com.hbm.main.MainRegistry;
 import com.hbm.potion.HbmPotion;
@@ -72,7 +72,7 @@ public class WeaponSpecial extends ItemSword {
         	{
 				target.setHealth(0.0F);
         	}
-        	world.playSound(null, target.posX, target.posY, target.posZ, HBMSoundHandler.bonk, SoundCategory.PLAYERS, 3.0F, 0.1F);
+        	world.playSound(null, target.posX, target.posY, target.posZ, HBMSoundEvents.bonk, SoundCategory.PLAYERS, 3.0F, 0.1F);
 		}
 		if(this == ModItems.bottle_opener) {
 			if (!target.world.isRemote)
@@ -98,14 +98,14 @@ public class WeaponSpecial extends ItemSword {
 			target.motionX += dX;
 			target.motionY += dY;
 			target.motionZ += dZ;
-        	world.playSound(null, target.posX, target.posY, target.posZ, HBMSoundHandler.bang, SoundCategory.PLAYERS, 3.0F, 1.F);
+        	world.playSound(null, target.posX, target.posY, target.posZ, HBMSoundEvents.bang, SoundCategory.PLAYERS, 3.0F, 1.F);
 		}
     	
 		if(this == ModItems.shimmer_axe) {
 			
 			target.setHealth(target.getHealth() / 2);
 			
-			world.playSound(null, target.posX, target.posY, target.posZ, HBMSoundHandler.slice, SoundCategory.PLAYERS, 3.0F, 1.F);
+			world.playSound(null, target.posX, target.posY, target.posZ, HBMSoundEvents.slice, SoundCategory.PLAYERS, 3.0F, 1.F);
 		}
 		if(this == ModItems.wrench) {
 
@@ -131,7 +131,7 @@ public class WeaponSpecial extends ItemSword {
 		if(this == ModItems.memespoon) {
 
 			if(attacker.fallDistance >= 2) {
-				world.playSound(null, target.posX, target.posY, target.posZ, HBMSoundHandler.bang, SoundCategory.PLAYERS, 3.0F, 0.75F);
+				world.playSound(null, target.posX, target.posY, target.posZ, HBMSoundEvents.bang, SoundCategory.PLAYERS, 3.0F, 0.75F);
 				target.setHealth(0);
 			}
 			
@@ -148,13 +148,13 @@ public class WeaponSpecial extends ItemSword {
 			}
 		}
 		if(this == ModItems.stopsign || this == ModItems.sopsign)
-        	world.playSound(null, target.posX, target.posY, target.posZ, HBMSoundHandler.stop, SoundCategory.PLAYERS, 1.0F, 1.0F);
+        	world.playSound(null, target.posX, target.posY, target.posZ, HBMSoundEvents.stop, SoundCategory.PLAYERS, 1.0F, 1.0F);
 		if(this == ModItems.wood_gavel) {
-        	world.playSound(null, target.posX, target.posY, target.posZ, HBMSoundHandler.whack, SoundCategory.PLAYERS, 3.0F, 1.F);
+        	world.playSound(null, target.posX, target.posY, target.posZ, HBMSoundEvents.whack, SoundCategory.PLAYERS, 3.0F, 1.F);
 		}
 
 		if(this == ModItems.lead_gavel) {
-			world.playSound(null, target.posX, target.posY, target.posZ, HBMSoundHandler.whack, SoundCategory.PLAYERS, 3.0F, 1.F);
+			world.playSound(null, target.posX, target.posY, target.posZ, HBMSoundEvents.whack, SoundCategory.PLAYERS, 3.0F, 1.F);
 
 			target.addPotionEffect(new PotionEffect(HbmPotion.lead, 15 * 20, 4));
 		}
@@ -164,7 +164,7 @@ public class WeaponSpecial extends ItemSword {
 			float ded = target.getMaxHealth() / 3;
 			target.setHealth(target.getHealth() - ded);
 
-			world.playSound(null, target.posX, target.posY, target.posZ, HBMSoundHandler.whack, SoundCategory.PLAYERS, 3.0F, 1.F);
+			world.playSound(null, target.posX, target.posY, target.posZ, HBMSoundEvents.whack, SoundCategory.PLAYERS, 3.0F, 1.F);
 		}
 
 		return false;
@@ -191,7 +191,7 @@ public class WeaponSpecial extends ItemSword {
 				rubble.motionX += dX;
 				rubble.motionY += dY;
 				rubble.motionZ += dZ;
-	        	world.playSound(null, rubble.posX, rubble.posY, rubble.posZ, HBMSoundHandler.bang, SoundCategory.PLAYERS, 3.0F, 1.0F);
+	        	world.playSound(null, rubble.posX, rubble.posY, rubble.posZ, HBMSoundEvents.bang, SoundCategory.PLAYERS, 3.0F, 1.0F);
 				
 	        	if(!world.isRemote) {
 	        		
@@ -204,7 +204,7 @@ public class WeaponSpecial extends ItemSword {
 		
 		if(this == ModItems.shimmer_axe) {
 
-        	world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundHandler.kaping, SoundCategory.PLAYERS, 3.0F, 1.0F);
+        	world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundEvents.kaping, SoundCategory.PLAYERS, 3.0F, 1.0F);
 
         	if(!world.isRemote) {
 				if(world.getBlockState(pos).getBlock() != Blocks.AIR && world.getBlockState(pos).getBlock().getExplosionResistance(null) < 6000) {

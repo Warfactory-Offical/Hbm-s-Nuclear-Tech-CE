@@ -7,7 +7,7 @@ import com.hbm.explosion.vanillant.ExplosionVNT;
 import com.hbm.explosion.vanillant.standard.*;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.main.MainRegistry;
 import com.hbm.main.ResourceManager;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
@@ -160,7 +160,7 @@ public class EntityGlyphidNuclear extends EntityGlyphid {
                 vnt.setPlayerProcessor(new PlayerProcessorStandard());
                 vnt.explode();
 
-                world.playSound(null, getPosition(), HBMSoundHandler.mukeExplosion, SoundCategory.HOSTILE, 15.0F, 1.0F);
+                world.playSound(null, getPosition(), HBMSoundEvents.mukeExplosion, SoundCategory.HOSTILE, 15.0F, 1.0F);
 
                 NBTTagCompound data = new NBTTagCompound();
                 data.setString("type", "muke");
@@ -174,7 +174,7 @@ public class EntityGlyphidNuclear extends EntityGlyphid {
             this.setDead();
         } else {
             if(!world.isRemote && this.deathTicks % 10 == 0) {
-                world.playSound(null, getPosition(), HBMSoundHandler.fstbmbPing, SoundCategory.HOSTILE, 5.0F, 1.0F);
+                world.playSound(null, getPosition(), HBMSoundEvents.fstbmbPing, SoundCategory.HOSTILE, 5.0F, 1.0F);
             }
         }
     }

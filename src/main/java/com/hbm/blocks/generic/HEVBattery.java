@@ -3,7 +3,7 @@ package com.hbm.blocks.generic;
 import com.hbm.api.energymk2.IBatteryItem;
 import com.hbm.items.armor.ArmorFSBPowered;
 import com.hbm.items.gear.ArmorFSB;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.amlfrom1710.WavefrontObject;
 import com.hbm.render.model.BlockDecoBakedModel;
@@ -84,7 +84,7 @@ public class HEVBattery extends BlockBakeBase {
                 }
 
 
-                world.playSound(null, pos, HBMSoundHandler.battery, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                world.playSound(null, pos, HBMSoundEvents.battery, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 world.setBlockToAir(pos);
             }
 

@@ -3,7 +3,7 @@ package com.hbm.tileentity.bomb;
 import com.hbm.blocks.bomb.BlockChargeBase;
 
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.main.ModContext;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import io.netty.buffer.ByteBuf;
@@ -30,7 +30,7 @@ public class TileEntityCharge extends TileEntityLoadedBase implements ITickable 
                 timer--;
 
                 if(timer % 20 == 0 && timer > 0)
-                    world.playSound(null, pos, HBMSoundHandler.fstbmbPing, SoundCategory.BLOCKS, 10.0F, 1.0F);
+                    world.playSound(null, pos, HBMSoundEvents.fstbmbPing, SoundCategory.BLOCKS, 10.0F, 1.0F);
 
                 if(timer <= 0) {
                     Entity detonator;

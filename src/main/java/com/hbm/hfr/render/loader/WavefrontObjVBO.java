@@ -1,10 +1,11 @@
 package com.hbm.hfr.render.loader;
 
+import com.hbm.render.amlfrom1710.CompositeBrush;
 import com.hbm.render.amlfrom1710.IModelCustom;
 import com.hbm.render.amlfrom1710.TextureCoordinate;
 import com.hbm.render.amlfrom1710.Vertex;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 
 import java.nio.FloatBuffer;
@@ -147,22 +148,22 @@ public class WavefrontObjVBO implements IModelCustom {
     }
 
     @Override
-    public void tessellateAll(com.hbm.render.amlfrom1710.Tessellator tes){
+    public void tessellateAll(CompositeBrush tes){
         throw new RuntimeException("Tessellate not supported on HFR model");
     }
 
     @Override
-    public void tessellatePart(com.hbm.render.amlfrom1710.Tessellator tes, String name){
+    public void tessellatePart(CompositeBrush tes,String name){
         throw new RuntimeException("Tessellate not supported on HFR model");
     }
 
     @Override
-    public void tessellateOnly(com.hbm.render.amlfrom1710.Tessellator tes, String... names){
+    public void tessellateOnly(CompositeBrush tes,String... names){
         throw new RuntimeException("Tessellate not supported on HFR model");
     }
 
     @Override
-    public void tessellateAllExcept(com.hbm.render.amlfrom1710.Tessellator tes, String... excluded){
+    public void tessellateAllExcept(CompositeBrush tes,String... excluded){
         throw new RuntimeException("Tessellate not supported on HFR model");
     }
 

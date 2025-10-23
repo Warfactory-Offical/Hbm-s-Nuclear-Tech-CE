@@ -1,6 +1,6 @@
 package com.hbm.packet.toclient;
 
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.sound.*;
 import com.hbm.tileentity.machine.*;
 import io.netty.buffer.ByteBuf;
@@ -56,26 +56,26 @@ public class LoopedSoundPacket implements IMessage {
             TileEntity te = mc.world.getTileEntity(new BlockPos(msg.x, msg.y, msg.z));
             if (te == null) return;
             if (te instanceof TileEntityMachineChemplant plant && plant.isProgressing) {
-                playUniqueSound(plant, SoundLoopChemplant.list, () -> new SoundLoopChemplant(HBMSoundHandler.chemplantOperate, plant));
+                playUniqueSound(plant, SoundLoopChemplant.list, () -> new SoundLoopChemplant(HBMSoundEvents.chemplantOperate, plant));
             } else if (te instanceof TileEntityMachineChemfac fac && fac.isProgressing) {
-                playUniqueSound(fac, SoundLoopChemplant.list, () -> new SoundLoopChemplant(HBMSoundHandler.chemplantOperate, fac));
+                playUniqueSound(fac, SoundLoopChemplant.list, () -> new SoundLoopChemplant(HBMSoundEvents.chemplantOperate, fac));
             } else if (te instanceof TileEntityFEL fel && fel.isOn) {
-                playUniqueSound(fel, SoundLoopFel.list, () -> new SoundLoopFel(HBMSoundHandler.fel, fel));
+                playUniqueSound(fel, SoundLoopFel.list, () -> new SoundLoopFel(HBMSoundEvents.fel, fel));
             } else if (te instanceof TileEntityMachineMiningLaser laser && laser.isOn) {
-                playUniqueSound(laser, SoundLoopFel.list, () -> new SoundLoopFel(HBMSoundHandler.fel, laser));
+                playUniqueSound(laser, SoundLoopFel.list, () -> new SoundLoopFel(HBMSoundEvents.fel, laser));
             } else if (te instanceof TileEntityMachineAssembler assembler && assembler.isProgressing) {
-                playUniqueSound(assembler, SoundLoopAssembler.list, () -> new SoundLoopAssembler(HBMSoundHandler.assemblerOperate, assembler));
+                playUniqueSound(assembler, SoundLoopAssembler.list, () -> new SoundLoopAssembler(HBMSoundEvents.assemblerOperate, assembler));
             } else if (te instanceof TileEntityMachineTurbofan turbofan && turbofan.wasOn) {
-                playUniqueSound(turbofan, SoundLoopTurbofan.list, () -> new SoundLoopTurbofan(HBMSoundHandler.turbofanOperate, turbofan));
+                playUniqueSound(turbofan, SoundLoopTurbofan.list, () -> new SoundLoopTurbofan(HBMSoundEvents.turbofanOperate, turbofan));
             } else if (te instanceof TileEntityMachineCentrifuge centrifuge && centrifuge.isProgressing) {
-                playUniqueSound(centrifuge, SoundLoopCentrifuge.list, () -> new SoundLoopCentrifuge(HBMSoundHandler.centrifugeOperate, centrifuge));
+                playUniqueSound(centrifuge, SoundLoopCentrifuge.list, () -> new SoundLoopCentrifuge(HBMSoundEvents.centrifugeOperate, centrifuge));
             } else if (te instanceof TileEntityMachineGasCent gasCent && gasCent.isProgressing) {
-                playUniqueSound(gasCent, SoundLoopCentrifuge.list, () -> new SoundLoopCentrifuge(HBMSoundHandler.centrifugeOperate, gasCent));
+                playUniqueSound(gasCent, SoundLoopCentrifuge.list, () -> new SoundLoopCentrifuge(HBMSoundEvents.centrifugeOperate, gasCent));
             } else if (te instanceof TileEntityHeatBoilerIndustrial boiler) {
                 SoundEvent event = switch (Math.abs(te.getPos().hashCode()) % 3) {
-                    case 1 -> HBMSoundHandler.boiler_groan2;
-                    case 2 -> HBMSoundHandler.boiler_groan3;
-                    default -> HBMSoundHandler.boiler_groan1;
+                    case 1 -> HBMSoundEvents.boiler_groan2;
+                    case 2 -> HBMSoundEvents.boiler_groan3;
+                    default -> HBMSoundEvents.boiler_groan1;
                 };
                 playUniqueSound(boiler, SoundLoopHeatBoilerIndustrial.list, () -> new SoundLoopHeatBoilerIndustrial(event, boiler));
             }

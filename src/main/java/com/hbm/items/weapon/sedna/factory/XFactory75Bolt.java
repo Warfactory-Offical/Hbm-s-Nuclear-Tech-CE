@@ -6,7 +6,7 @@ import com.hbm.items.weapon.sedna.GunConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.items.weapon.sedna.Receiver;
 import com.hbm.items.weapon.sedna.mags.MagazineFullReload;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.particle.SpentCasing;
 import com.hbm.render.anim.sedna.BusAnimationSedna;
 import com.hbm.render.anim.sedna.BusAnimationSequenceSedna;
@@ -35,7 +35,7 @@ public class XFactory75Bolt {
         ModItems.gun_bolter = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.SPECIAL, "gun_bolter", new GunConfig()
                 .dura(3_000).draw(20).inspect(31).crosshair(RenderScreenOverlay.Crosshair.L_CIRCLE).smoke(LAMBDA_SMOKE)
                 .rec(new Receiver(0)
-                        .dmg(15F).delay(2).auto(true).spread(0.005F).reload(40).jam(55).sound(HBMSoundHandler.fireBlackPowder, 1.0F, 1.0F)
+                        .dmg(15F).delay(2).auto(true).spread(0.005F).reload(40).jam(55).sound(HBMSoundEvents.fireBlackPowder, 1.0F, 1.0F)
                         .mag(new MagazineFullReload(0, 30).addConfigs(b75, b75_inc, b75_exp))
                         .offset(1, -0.0625 * 2.5, -0.25D)
                         .setupStandardFire().recoil(LAMBDA_RECOIL_BOLT))

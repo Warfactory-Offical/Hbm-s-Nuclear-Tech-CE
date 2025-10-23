@@ -13,7 +13,7 @@ import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ModItems;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.particle.SpentCasing;
@@ -202,7 +202,7 @@ public class ItemAmmoArty extends Item {
     }
 
     public static void standardExplosion(EntityArtilleryShell shell, RayTraceResult mop, float size, float rangeMod, boolean breaksBlocks) {
-        shell.world.playSound(null, shell.posX, shell.posY, shell.posZ, HBMSoundHandler.explosion_medium, SoundCategory.PLAYERS, 20.0F, 0.9F + rand.nextFloat() * 0.2F);
+        shell.world.playSound(null, shell.posX, shell.posY, shell.posZ, HBMSoundEvents.explosion_medium, SoundCategory.PLAYERS, 20.0F, 0.9F + rand.nextFloat() * 0.2F);
         Vec3d vec = new Vec3d(shell.motionX, shell.motionY, shell.motionZ).normalize();
         ExplosionVNT xnt = new ExplosionVNT(shell.world, mop.hitVec.x - vec.x, mop.hitVec.y - vec.y, mop.hitVec.z - vec.z, size);
         if(breaksBlocks) {

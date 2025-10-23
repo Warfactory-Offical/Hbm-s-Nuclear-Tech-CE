@@ -2,7 +2,7 @@ package com.hbm.items.tool;
 
 import com.hbm.blocks.turret.TurretBaseNT;
 import com.hbm.items.ModItems;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.render.amlfrom1710.Vec3;
@@ -83,7 +83,7 @@ public class ItemTurretControl extends Item {
                 player.sendMessage(new TextComponentTranslation("chat.turretcontrol.linked"));
             }
 
-            worldIn.playSound(player.posX, player.posY, player.posZ, HBMSoundHandler.techBleep, SoundCategory.PLAYERS, 1.0F, 1.0F, false);
+            worldIn.playSound(player.posX, player.posY, player.posZ, HBMSoundEvents.techBleep, SoundCategory.PLAYERS, 1.0F, 1.0F, false);
 
             return EnumActionResult.SUCCESS;
         }
@@ -176,7 +176,7 @@ public class ItemTurretControl extends Item {
                         if (rpos.typeOfHit == RayTraceResult.Type.ENTITY) {
                             turret.target = rpos.entityHit;
                             turret.turnTowards(turret.getEntityPos(rpos.entityHit));
-                            world.playSound(player.posX, player.posY, player.posZ, HBMSoundHandler.techBleep, SoundCategory.PLAYERS, 1.0F, 1.0F, false);
+                            world.playSound(player.posX, player.posY, player.posZ, HBMSoundEvents.techBleep, SoundCategory.PLAYERS, 1.0F, 1.0F, false);
                         } else if (rpos.typeOfHit == RayTraceResult.Type.BLOCK) {
                             turret.tPos = vecDestination.toVec3d();
                             turret.manualOverride = true;

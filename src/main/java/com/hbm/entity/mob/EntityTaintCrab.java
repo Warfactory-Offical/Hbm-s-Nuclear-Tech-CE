@@ -5,7 +5,7 @@ import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.sedna.factory.XFactory762mm;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.potion.HbmPotion;
 import com.hbm.tileentity.machine.TileEntityTesla;
@@ -78,7 +78,7 @@ public class EntityTaintCrab extends EntityCyberCrab {
 		data.setDouble("mZ", bullet.motionZ * 0.3);
 		PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, bullet.posX, bullet.posY, bullet.posZ), new TargetPoint(this.dimension, posX, posY, posZ, 50));
         this.world.spawnEntity(bullet);
-        this.playSound(HBMSoundHandler.sawShoot, 1.0F, 0.5F);
+        this.playSound(HBMSoundEvents.sawShoot, 1.0F, 0.5F);
 	}
 	
 }

@@ -1,9 +1,8 @@
 package com.hbm.handler.ability;
 
-import com.hbm.blocks.ModBlocks;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.items.ModItems;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.potion.HbmPotion;
 import com.hbm.util.ContaminationUtil;
@@ -268,7 +267,7 @@ public interface IWeaponAbility extends IBaseAbility {
                                 new NetworkRegistry.TargetPoint(living.dimension, living.posX, living.posY, living.posZ, 50));
                     }
 
-                    world.playSound(null, living.posX, living.posY + living.height * 0.5, living.posZ, HBMSoundHandler.chainsaw, SoundCategory.PLAYERS, 0.5F, 1.0F);
+                    world.playSound(null, living.posX, living.posY + living.height * 0.5, living.posZ, HBMSoundEvents.chainsaw, SoundCategory.PLAYERS, 0.5F, 1.0F);
                 }
             }
         }

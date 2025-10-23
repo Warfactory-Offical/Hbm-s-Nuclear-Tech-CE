@@ -5,7 +5,7 @@ import com.hbm.handler.BulletConfiguration;
 import com.hbm.handler.GunConfiguration;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.items.ModItems;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.render.misc.RenderScreenOverlay.Crosshair;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class GunRocketFactory {
 		config.reloadType = GunConfiguration.RELOAD_SINGLE;
 		config.allowsInfinity = true;
 		config.crosshair = Crosshair.L_CIRCUMFLEX;
-		config.firingSound = HBMSoundHandler.rpgShoot;
+		config.firingSound = HBMSoundEvents.rpgShoot;
 		config.reloadSound = GunConfiguration.RSOUND_LAUNCHER;
 		config.reloadSoundEnd = false;
 		

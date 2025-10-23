@@ -18,7 +18,7 @@ import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemPistons;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.sound.AudioWrapper;
@@ -227,7 +227,7 @@ public class TileEntityMachineCombustionEngine extends TileEntityMachinePollutin
   @Override
   public AudioWrapper createAudioLoop() {
     return MainRegistry.proxy.getLoopedSound(
-        HBMSoundHandler.iGeneratorOperate,
+        HBMSoundEvents.iGeneratorOperate,
         SoundCategory.BLOCKS,
         pos.getX(),
         pos.getY(),

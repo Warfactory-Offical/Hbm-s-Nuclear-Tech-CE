@@ -8,7 +8,7 @@ import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerNukeBalefire;
 import com.hbm.inventory.gui.GUINukeBalefire;
 import com.hbm.items.ModItems;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.main.ModContext;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
@@ -59,7 +59,7 @@ public class TileEntityNukeBalefire extends TileEntityMachineBase implements ITi
 				timer--;
 
 				if(timer % 20 == 0)
-					world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.fstbmbPing, SoundCategory.BLOCKS, 5.0F, 1.0F);
+					world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.fstbmbPing, SoundCategory.BLOCKS, 5.0F, 1.0F);
 			}
 
 			if(timer <= 0) {
@@ -73,7 +73,7 @@ public class TileEntityNukeBalefire extends TileEntityMachineBase implements ITi
 	public void handleButtonPacket(int value, int meta) {
 
 		if(meta == 0 && this.isLoaded()) {
-			world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.fstbmbStart, SoundCategory.BLOCKS, 5.0F, 1.0F);
+			world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.fstbmbStart, SoundCategory.BLOCKS, 5.0F, 1.0F);
 			started = true;
 		}
 

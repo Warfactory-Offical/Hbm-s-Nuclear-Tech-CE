@@ -2,7 +2,7 @@ package com.hbm.items.special;
 
 import com.hbm.handler.HazmatRegistry;
 import com.hbm.items.ModItems;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -49,7 +49,7 @@ public class ItemCladding extends Item {
 			}
 
 			if(used) {
-				world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.repair, SoundCategory.PLAYERS, 1.0F, 1.0F);
+				world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.repair, SoundCategory.PLAYERS, 1.0F, 1.0F);
 				stack.shrink(1);
 			}
 		}

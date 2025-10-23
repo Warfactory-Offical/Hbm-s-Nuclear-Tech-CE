@@ -2,7 +2,7 @@ package com.hbm.entity.mob.ai;
 
 import com.hbm.entity.projectile.EntityBulletBase;
 import com.hbm.handler.BulletConfigSyncingUtil;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.render.amlfrom1710.Vec3;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
@@ -49,7 +49,7 @@ public class EntityAIMaskmanMinigun extends EntityAIBase {
 
 			EntityBulletBase bullet = new EntityBulletBase(owner.world, BulletConfigSyncingUtil.MASKMAN_BULLET, owner, target, 1.0F, 0);
 			owner.world.spawnEntity(bullet);
-			owner.playSound(HBMSoundHandler.calShoot, 1.0F, 1.0F);
+			owner.playSound(HBMSoundEvents.calShoot, 1.0F, 1.0F);
 		}
 		
 		this.owner.rotationYaw = this.owner.rotationYawHead;

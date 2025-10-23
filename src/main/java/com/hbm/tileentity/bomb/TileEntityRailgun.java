@@ -9,7 +9,7 @@ import com.hbm.inventory.container.ContainerRailgun;
 import com.hbm.inventory.gui.GUIRailgun;
 import com.hbm.items.ModItems;
 import com.hbm.lib.DirPos;
-import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.HBMSoundEvents;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.render.amlfrom1710.Vec3;
@@ -267,7 +267,7 @@ public class TileEntityRailgun extends TileEntityLoadedBase implements ITickable
 				power = 0;
 			fired = true;
 		} else {
-			world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.buttonNo, SoundCategory.BLOCKS, 1.0F, 1.0F);
+			world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.buttonNo, SoundCategory.BLOCKS, 1.0F, 1.0F);
 		}
 	}
 	
@@ -295,7 +295,7 @@ public class TileEntityRailgun extends TileEntityLoadedBase implements ITickable
 		fart.motionZ = motionZ;
 		fart.rotation();
 		world.spawnEntity(fart);
-		world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.railgunFire, SoundCategory.BLOCKS, 100.0F, 1.0F);
+		world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.railgunFire, SoundCategory.BLOCKS, 100.0F, 1.0F);
 	}
 	
 	@Override
