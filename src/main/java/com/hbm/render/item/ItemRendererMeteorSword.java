@@ -24,8 +24,6 @@ import org.lwjgl.opengl.GL11;
 @AutoRegister(item = "meteorite_sword_irradiated", constructorArgsString = "0.75F, 1.0F, 0.0F")
 @AutoRegister(item = "meteorite_sword_fused", constructorArgsString = "1.0F, 0.0F, 0.5F")
 @AutoRegister(item = "meteorite_sword_baleful", constructorArgsString = "0.0F, 1.0F, 0.0F")
-@AutoRegister(item = "meteorite_sword_warped", constructorArgsString = "1.0F, 1.0F, 1.0F")
-@AutoRegister(item = "meteorite_sword_demonic", constructorArgsString = "1.0F, 0.0F, 0.0F")
 public class ItemRendererMeteorSword extends TEISRBase {
 
     float r;

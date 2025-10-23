@@ -607,14 +607,14 @@ public class ModItems {
     public static final Item ajro_plate = new ArmorAJRO(MainRegistry.aMatAJR, -1, EntityEquipmentSlot.CHEST, RefStrings.MODID + ":textures/armor/starmetal_1.png", 2500000, 10000, 2000, 25, "ajro_plate").cloneStats((ArmorFSB) ajro_helmet);
     public static final Item ajro_legs = new ArmorAJRO(MainRegistry.aMatAJR, -1, EntityEquipmentSlot.LEGS, RefStrings.MODID + ":textures/armor/starmetal_2.png", 2500000, 10000, 2000, 25, "ajro_legs").cloneStats((ArmorFSB) ajro_helmet);
     public static final Item ajro_boots = new ArmorAJRO(MainRegistry.aMatAJR, -1, EntityEquipmentSlot.FEET, RefStrings.MODID + ":textures/armor/starmetal_1.png", 2500000, 10000, 2000, 25, "ajro_boots").cloneStats((ArmorFSB) ajro_helmet);
-    public static final Item hev_helmet = new ArmorHEV(MainRegistry.aMatHEV, 7, EntityEquipmentSlot.HEAD, RefStrings.MODID + ":textures/armor/starmetal_1.png", 5000000, 10000, 2500, 100, "hev_helmet")
+    public static final Item hev_helmet = new ArmorHEV(MainRegistry.aMatHEV, 7, EntityEquipmentSlot.HEAD, RefStrings.MODID + ":textures/armor/starmetal_1.png", 1000000, 10000, 2500, 0, "hev_helmet")
             .addEffect(new PotionEffect(MobEffects.JUMP_BOOST, 30, 0))
             .addEffect(new PotionEffect(MobEffects.SPEED, 30, 1))
             .setHasGeigerSound(true)
             .setHasCustomGeiger(true);
-    public static final Item hev_plate = new ArmorHEV(MainRegistry.aMatHEV, 7, EntityEquipmentSlot.CHEST, RefStrings.MODID + ":textures/armor/starmetal_1.png", 5000000, 10000, 2500, 100, "hev_plate").cloneStats((ArmorFSB) hev_helmet);
-    public static final Item hev_legs = new ArmorHEV(MainRegistry.aMatHEV, 7, EntityEquipmentSlot.LEGS, RefStrings.MODID + ":textures/armor/starmetal_2.png", 5000000, 10000, 2500, 100, "hev_legs").cloneStats((ArmorFSB) hev_helmet);
-    public static final Item hev_boots = new ArmorHEV(MainRegistry.aMatHEV, 7, EntityEquipmentSlot.FEET, RefStrings.MODID + ":textures/armor/starmetal_1.png", 5000000, 10000, 2500, 100, "hev_boots").cloneStats((ArmorFSB) hev_helmet);
+    public static final Item hev_plate = new ArmorHEV(MainRegistry.aMatHEV, 7, EntityEquipmentSlot.CHEST, RefStrings.MODID + ":textures/armor/starmetal_1.png", 1000000, 10000, 2500, 0, "hev_plate").cloneStats((ArmorFSB) hev_helmet);
+    public static final Item hev_legs = new ArmorHEV(MainRegistry.aMatHEV, 7, EntityEquipmentSlot.LEGS, RefStrings.MODID + ":textures/armor/starmetal_2.png", 1000000, 10000, 2500, 0, "hev_legs").cloneStats((ArmorFSB) hev_helmet);
+    public static final Item hev_boots = new ArmorHEV(MainRegistry.aMatHEV, 7, EntityEquipmentSlot.FEET, RefStrings.MODID + ":textures/armor/starmetal_1.png", 1000000, 10000, 2500, 0, "hev_boots").cloneStats((ArmorFSB) hev_helmet);
     public static final Item bj_helmet = new ArmorBJ(MainRegistry.aMatBJ, 7, EntityEquipmentSlot.HEAD, RefStrings.MODID + ":textures/armor/starmetal_1.png", 10000000, 10000, 1000, 100, "bj_helmet")
             .enableVATS(true)
             .enableThermalSight(true)
@@ -642,7 +642,7 @@ public class ModItems {
     public static final Item rpa_plate = new ArmorRPA(MainRegistry.aMatRPA, -1, EntityEquipmentSlot.CHEST, RefStrings.MODID + ":textures/armor/starmetal_1.png", 2500000, 10000, 10000, 25, "RPA_plate").cloneStats((ArmorFSB) rpa_helmet);
     public static final Item rpa_legs = new ArmorRPA(MainRegistry.aMatRPA, -1, EntityEquipmentSlot.LEGS, RefStrings.MODID + ":textures/armor/starmetal_2.png", 2500000, 10000, 10000, 25, "RPA_legs").cloneStats((ArmorFSB) rpa_helmet);
     public static final Item rpa_boots = new ArmorRPA(MainRegistry.aMatRPA, -1, EntityEquipmentSlot.FEET, RefStrings.MODID + ":textures/armor/starmetal_1.png", 2500000, 10000, 10000, 25, "RPA_boots").cloneStats((ArmorFSB) rpa_helmet);
-    public static final Item fau_helmet = new ArmorDigamma(MainRegistry.aMatFau, -1, EntityEquipmentSlot.HEAD, RefStrings.MODID + ":textures/armor/starmetal_1.png", 100000000, 100000, 25000, 1000, "fau_helmet")
+    public static final Item fau_helmet = new ArmorDigamma(MainRegistry.aMatFau, -1, EntityEquipmentSlot.HEAD, RefStrings.MODID + ":textures/armor/starmetal_1.png", 10000000, 100000, 25000, 1000, "fau_helmet")
             .addEffect(new PotionEffect(MobEffects.JUMP_BOOST, 30, 1))
             .setHasGeigerSound(true)
             .enableThermalSight(true)
@@ -650,10 +650,10 @@ public class ModItems {
             .setStep(HBMSoundHandler.iron)
             .setJump(HBMSoundHandler.ironJump)
             .setFall(HBMSoundHandler.ironLand);
-    public static final Item fau_plate = new ArmorDigamma(MainRegistry.aMatFau, -1, EntityEquipmentSlot.CHEST, RefStrings.MODID + ":textures/armor/starmetal_1.png", 100000000, 100000, 25000, 1000, "fau_plate").cloneStats((ArmorFSB) fau_helmet);
-    public static final Item fau_legs = new ArmorDigamma(MainRegistry.aMatFau, -1, EntityEquipmentSlot.LEGS, RefStrings.MODID + ":textures/armor/starmetal_2.png", 100000000, 100000, 25000, 1000, "fau_legs").cloneStats((ArmorFSB) fau_helmet);
-    public static final Item fau_boots = new ArmorDigamma(MainRegistry.aMatFau, -1, EntityEquipmentSlot.FEET, RefStrings.MODID + ":textures/armor/starmetal_1.png", 100000000, 100000, 25000, 1000, "fau_boots").cloneStats((ArmorFSB) fau_helmet);
-    public static final Item dns_helmet = new ArmorDNT(MainRegistry.aMatDNS, -1, EntityEquipmentSlot.HEAD, RefStrings.MODID + ":textures/armor/starmetal_1.png", 1000000000, 1000000, 100000, 10000, "dns_helmet")
+    public static final Item fau_plate = new ArmorDigamma(MainRegistry.aMatFau, -1, EntityEquipmentSlot.CHEST, RefStrings.MODID + ":textures/armor/starmetal_1.png", 10000000, 100000, 25000, 1000, "fau_plate").cloneStats((ArmorFSB) fau_helmet);
+    public static final Item fau_legs = new ArmorDigamma(MainRegistry.aMatFau, -1, EntityEquipmentSlot.LEGS, RefStrings.MODID + ":textures/armor/starmetal_2.png", 10000000, 100000, 25000, 1000, "fau_legs").cloneStats((ArmorFSB) fau_helmet);
+    public static final Item fau_boots = new ArmorDigamma(MainRegistry.aMatFau, -1, EntityEquipmentSlot.FEET, RefStrings.MODID + ":textures/armor/starmetal_1.png", 10000000, 100000, 25000, 1000, "fau_boots").cloneStats((ArmorFSB) fau_helmet);
+    public static final Item dns_helmet = new ArmorDNT(MainRegistry.aMatDNS, -1, EntityEquipmentSlot.HEAD, RefStrings.MODID + ":textures/armor/starmetal_1.png", 1000000000, 1000000, 100000, 115, "dns_helmet")
             .addEffect(new PotionEffect(MobEffects.STRENGTH, 30, 9))
             .addEffect(new PotionEffect(MobEffects.HASTE, 30, 7))
             .addEffect(new PotionEffect(MobEffects.JUMP_BOOST, 30, 2))
@@ -664,9 +664,9 @@ public class ModItems {
             .setStep(HBMSoundHandler.iron)
             .setJump(HBMSoundHandler.ironJump)
             .setFall(HBMSoundHandler.ironLand);
-    public static final Item dns_plate = new ArmorDNT(MainRegistry.aMatDNS, -1, EntityEquipmentSlot.CHEST, RefStrings.MODID + ":textures/armor/starmetal_1.png", 1000000000, 1000000, 100000, 10000, "dns_plate").cloneStats((ArmorFSB) dns_helmet);
-    public static final Item dns_legs = new ArmorDNT(MainRegistry.aMatDNS, -1, EntityEquipmentSlot.LEGS, RefStrings.MODID + ":textures/armor/starmetal_2.png", 1000000000, 1000000, 100000, 10000, "dns_legs").cloneStats((ArmorFSB) dns_helmet);
-    public static final Item dns_boots = new ArmorDNT(MainRegistry.aMatDNS, -1, EntityEquipmentSlot.FEET, RefStrings.MODID + ":textures/armor/starmetal_1.png", 1000000000, 1000000, 100000, 10000, "dns_boots").cloneStats((ArmorFSB) dns_helmet);
+    public static final Item dns_plate = new ArmorDNT(MainRegistry.aMatDNS, -1, EntityEquipmentSlot.CHEST, RefStrings.MODID + ":textures/armor/starmetal_1.png", 1000000000, 1000000, 100000, 115, "dns_plate").cloneStats((ArmorFSB) dns_helmet);
+    public static final Item dns_legs = new ArmorDNT(MainRegistry.aMatDNS, -1, EntityEquipmentSlot.LEGS, RefStrings.MODID + ":textures/armor/starmetal_2.png", 1000000000, 1000000, 100000, 115, "dns_legs").cloneStats((ArmorFSB) dns_helmet);
+    public static final Item dns_boots = new ArmorDNT(MainRegistry.aMatDNS, -1, EntityEquipmentSlot.FEET, RefStrings.MODID + ":textures/armor/starmetal_1.png", 1000000000, 1000000, 100000, 115, "dns_boots").cloneStats((ArmorFSB) dns_helmet);
     public static final Item goggles = new ArmorModel(ArmorMaterial.IRON, -1, EntityEquipmentSlot.HEAD, "goggles").setMaxStackSize(1);
     public static final Item ashglasses = new ArmorAshGlasses(ArmorMaterial.IRON, -1, EntityEquipmentSlot.HEAD, "ashglasses").setMaxStackSize(1);
     public static final Item mask_rag = new ItemRag("mask_rag").setMaxStackSize(1).setCreativeTab(CreativeTabs.COMBAT);
@@ -1681,8 +1681,7 @@ public class ModItems {
     public static final Item meteorite_sword_irradiated = new ItemSwordMeteorite(35F, 0, MainRegistry.matMeteorite, "meteorite_sword_irradiated");
     public static final Item meteorite_sword_fused = new ItemSwordMeteorite(50F, 0, MainRegistry.matMeteorite, "meteorite_sword_fused");
     public static final Item meteorite_sword_baleful = new ItemSwordMeteorite(75F, 0, MainRegistry.matMeteorite, "meteorite_sword_baleful");
-    public static final Item meteorite_sword_warped = new ItemSwordMeteorite(110F, 0, MainRegistry.matMeteorite, "meteorite_sword_warped");
-    public static final Item meteorite_sword_demonic = new ItemSwordMeteorite(400F, 0, MainRegistry.matMeteorite, "meteorite_sword_demonic");
+
     //Templates
     public static final Item blueprints = new ItemBlueprints("blueprints").setMaxStackSize(1).setCreativeTab(MainRegistry.templateTab);
     public static final Item blueprint_folder = new ItemBlueprintFolder("blueprint_folder").setCreativeTab(MainRegistry.templateTab);
@@ -2020,7 +2019,6 @@ public class ModItems {
     public static final ItemRBMKPellet rbmk_pellet_hes = new ItemRBMKPellet("Highly Enriched Schrabidium-326", "rbmk_pellet_hes");
     public static final ItemRBMKPellet rbmk_pellet_leaus = new ItemRBMKPellet("Low Enriched Australium (Tasmanite)", "rbmk_pellet_leaus");
     public static final ItemRBMKPellet rbmk_pellet_heaus = new ItemRBMKPellet("Highly Enriched Australium (Ayerite)", "rbmk_pellet_heaus");
-    public static final ItemRBMKPellet rbmk_pellet_unobtainium = new ItemRBMKPellet("The Strongest Manmade Neutron Emitter", "rbmk_pellet_unobtainium");
     public static final ItemRBMKPellet rbmk_pellet_po210be = new ItemRBMKPellet("Polonium-210 & Beryllium Neutron Source", "rbmk_pellet_po210be");
     public static final ItemRBMKPellet rbmk_pellet_ra226be = new ItemRBMKPellet("Radium-226 & Beryllium Neutron Source", "rbmk_pellet_ra226be");
     public static final ItemRBMKPellet rbmk_pellet_pu238be = new ItemRBMKPellet("Plutonium-238 & Beryllium Neutron Source", "rbmk_pellet_pu238be");
@@ -2189,17 +2187,6 @@ public class ModItems {
             .setMeltingPoint(5211)
             .setFuelColor(0.929F, 0.812F, 0F)
             .setCherenkovColor(1F, 0.9F, 0F);
-    //EXTENDED STUFF
-    public static final ItemRBMKRod rbmk_fuel_unobtainium = new ItemRBMKRod(rbmk_pellet_unobtainium, "rbmk_fuel_unobtainium")
-            .setYield(250000000D)
-            .setStats(40, 1)
-            .setFunction(EnumBurnFunc.SQUARE_ROOT)
-            .setDepletionFunction(EnumDepleteFunc.BOOSTED_SLOPE)
-            .setHeat(0.01D)
-            .setDiffusion(0.2D)
-            .setMeltingPoint(6000)
-            .setFuelColor(0F, 0.373F, 0.565F);
-    //
     public static final ItemRBMKRod rbmk_fuel_ra226be = new ItemRBMKRod(rbmk_pellet_ra226be, "rbmk_fuel_ra226be")
             .setYield(100000000D)
             .setStats(0D, 20)
