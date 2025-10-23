@@ -44,6 +44,7 @@ public class BombConfig {
 	public static boolean chunkloading = true;
 	public static int explosionAlgorithm = 2;
 	public static int maxThreads = -1;
+    public static boolean safeCommit = false;
 	
 	public static void loadFromConfig(Configuration config) {
 		final String CATEGORY_NUKES = CommonConfig.CATEGORY_NUKES;
@@ -179,5 +180,9 @@ public class BombConfig {
 		Property maxThreadsP = config.get(CATEGORY_NUKE, "6.11.1_explosionMaxThreads", -1);
 		maxThreadsP.setComment("Configures the maximum thread count for the threaded DDA explosion algorithm.\n -N = CPU count - N, 0 = CPU count, N = N");
 		maxThreads = maxThreadsP.getInt();
+
+        Property safeCommitP = config.get(CATEGORY_NUKE, "6.11.2_safeCommit", false);
+        safeCommitP.setComment("Prefer safety over performance(~30% slower). Affects algorithm 1, 2, and fallout rain effect.");
+        safeCommit = safeCommitP.getBoolean();
 	}
 }
