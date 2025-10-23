@@ -8,7 +8,7 @@ import com.hbm.inventory.container.ContainerDroneDock;
 import com.hbm.inventory.gui.GUIDroneDock;
 import com.hbm.items.ModItems;
 import com.hbm.items.tool.ItemDrone;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.network.RequestNetwork.PathNode;
 import com.hbm.tileentity.network.RequestNetwork.RequestNode;
@@ -138,7 +138,7 @@ public class TileEntityDroneDock extends TileEntityRequestNetworkContainer imple
         drone.program.add(DroneProgram.DOCK);
 
         world.spawnEntity(drone);
-        this.world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundEvents.storageOpen, SoundCategory.BLOCKS, 2.0F, 1.0F);
+        this.world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundHandler.storageOpen, SoundCategory.BLOCKS, 2.0F, 1.0F);
 
         return true;
     }

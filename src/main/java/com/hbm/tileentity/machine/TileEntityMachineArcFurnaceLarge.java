@@ -18,7 +18,7 @@ import com.hbm.items.machine.ItemArcElectrode;
 import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.PacketDispatcher;
@@ -112,7 +112,7 @@ public class TileEntityMachineArcFurnaceLarge extends TileEntityMachineBase impl
 
                 if (!stack.isEmpty() && stack.getItem() instanceof ItemMachineUpgrade && slot == 4) {
                     world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-                            HBMSoundEvents.upgradePlug,
+                            HBMSoundHandler.upgradePlug,
                             net.minecraft.util.SoundCategory.BLOCKS, 1.0F, 1.0F);
                 }
             }
@@ -220,7 +220,7 @@ public class TileEntityMachineArcFurnaceLarge extends TileEntityMachineBase impl
 
             if(this.lid != this.prevLid) {
                 if(this.audioLid == null || !this.audioLid.isPlaying()) {
-                    this.audioLid = MainRegistry.proxy.getLoopedSound(HBMSoundEvents.wgh_start, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), this.getVolume(0.75F), 15F);
+                    this.audioLid = MainRegistry.proxy.getLoopedSound(HBMSoundHandler.wgh_start, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), this.getVolume(0.75F), 15F);
                     this.audioLid.startSound();
                 }
                 this.audioLid.keepAlive();
@@ -232,12 +232,12 @@ public class TileEntityMachineArcFurnaceLarge extends TileEntityMachineBase impl
             }
 
             if((lid == 1 || lid == 0) && lid != prevLid && !(this.prevLid == 0)) {
-                MainRegistry.proxy.playSoundClient(pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.wgh_stop, SoundCategory.BLOCKS, this.getVolume(1F), 1F);
+                MainRegistry.proxy.playSoundClient(pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.wgh_stop, SoundCategory.BLOCKS, this.getVolume(1F), 1F);
             }
 
             if(this.isProgressing) {
                 if(this.audioProgress == null || !this.audioProgress.isPlaying()) {
-                    this.audioProgress = MainRegistry.proxy.getLoopedSound(HBMSoundEvents.electricHum, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), this.getVolume(1.5F), 15F);
+                    this.audioProgress = MainRegistry.proxy.getLoopedSound(HBMSoundHandler.electricHum, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), this.getVolume(1.5F), 15F);
                     this.audioProgress.startSound();
                 }
                 this.audioProgress.updatePitch(0.75F);

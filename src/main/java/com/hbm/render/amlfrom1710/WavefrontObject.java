@@ -5,7 +5,7 @@ import net.minecraft.client.resources.IResource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -169,7 +169,7 @@ public class WavefrontObject implements IModelCustom
     @SideOnly(Side.CLIENT)
     public void renderAll()
     {
-        CompositeBrush tessellator = CompositeBrush.instance;
+        Tessellator tessellator = Tessellator.instance;
 
         if (currentGroupObject != null)
         {
@@ -186,7 +186,7 @@ public class WavefrontObject implements IModelCustom
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void tessellateAll(CompositeBrush tessellator)
+    public void tessellateAll(Tessellator tessellator)
     {
         for (GroupObject groupObject : groupObjects)
         {
@@ -212,7 +212,7 @@ public class WavefrontObject implements IModelCustom
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void tessellateOnly(CompositeBrush tessellator,String... groupNames) {
+    public void tessellateOnly(Tessellator tessellator, String... groupNames) {
         for (GroupObject groupObject : groupObjects)
         {
             for (String groupName : groupNames)
@@ -239,7 +239,7 @@ public class WavefrontObject implements IModelCustom
     }
 
     @SideOnly(Side.CLIENT)
-    public void tessellatePartSplit(CompositeBrush tessellator,String partName,float splitHeight,float scale) {
+    public void tessellatePartSplit(Tessellator tessellator, String partName, float splitHeight, float scale) {
         for (GroupObject groupObject : groupObjects)
         {
             if (partName.equalsIgnoreCase(groupObject.name))
@@ -251,7 +251,7 @@ public class WavefrontObject implements IModelCustom
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void tessellatePart(CompositeBrush tessellator,String partName) {
+    public void tessellatePart(Tessellator tessellator, String partName) {
         for (GroupObject groupObject : groupObjects)
         {
             if (partName.equalsIgnoreCase(groupObject.name))
@@ -284,7 +284,7 @@ public class WavefrontObject implements IModelCustom
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void tessellateAllExcept(CompositeBrush tessellator,String... excludedGroupNames)
+    public void tessellateAllExcept(Tessellator tessellator, String... excludedGroupNames)
     {
         boolean exclude;
         for (GroupObject groupObject : groupObjects)

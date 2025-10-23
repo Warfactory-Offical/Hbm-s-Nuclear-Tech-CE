@@ -6,7 +6,7 @@ import com.hbm.items.weapon.sedna.ItemGunBaseNT.LambdaContext;
 import com.hbm.items.weapon.sedna.factory.Orchestras;
 import com.hbm.items.weapon.sedna.factory.XFactory44;
 import com.hbm.items.weapon.sedna.factory.XFactory762mm;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.render.anim.sedna.BusAnimationKeyframeSedna.IType;
 import com.hbm.render.anim.sedna.BusAnimationSedna;
 import com.hbm.render.anim.sedna.BusAnimationSequenceSedna;
@@ -56,7 +56,7 @@ public class WeaponModCarbineBayonet extends WeaponModBase {
 						mop.entityHit.motionX *= 2;
 						mop.entityHit.motionZ *= 2;
 						// TODO SOUND
-						entity.world.playSound(null, mop.entityHit.posX, mop.entityHit.posY, mop.entityHit.posZ, HBMSoundEvents.fireStab, SoundCategory.PLAYERS, 1F, 0.9F + entity.getRNG().nextFloat() * 0.2F);
+						entity.world.playSound(null, mop.entityHit.posX, mop.entityHit.posY, mop.entityHit.posZ, HBMSoundHandler.fireStab, SoundCategory.PLAYERS, 1F, 0.9F + entity.getRNG().nextFloat() * 0.2F);
 					}
 					if(mop.typeOfHit == mop.typeOfHit.BLOCK) {
 						Block b = entity.world.getBlockState(mop.getBlockPos()).getBlock();

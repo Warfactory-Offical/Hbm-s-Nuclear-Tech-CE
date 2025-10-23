@@ -2,11 +2,13 @@ package com.hbm.blocks.machine.pile;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockMeta;
+import com.hbm.blocks.machine.pile.BlockGraphiteDrilledBase;
+import com.hbm.blocks.machine.pile.BlockGraphiteRod;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.material.Mats;
 import com.hbm.items.ModItems;
 import com.hbm.items.special.ItemCell;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -60,7 +62,7 @@ public class BlockGraphiteDrilled extends BlockGraphiteDrilledBase {
 			if(item == ModItems.shell && player.getHeldItem(hand).getItemDamage() != Mats.MAT_ALUMINIUM.id) return false; //shitty workaround
 			if(item == ModItems.cell && player.getHeldItem(hand).getItemDamage() != Fluids.TRITIUM.getID()) return false; //shitty workaround x2
 			world.setBlockState(new BlockPos(x, y, z), block.getDefaultState().withProperty(BlockMeta.META, meta), 3);
-			world.playSound(null, x + 0.5, y + 1.5, z + 0.5, HBMSoundEvents.upgradePlug, SoundCategory.BLOCKS, 1.0F, 1.0F);
+			world.playSound(null, x + 0.5, y + 1.5, z + 0.5, HBMSoundHandler.upgradePlug, SoundCategory.BLOCKS, 1.0F, 1.0F);
 			
 			return true;
 		}
@@ -79,7 +81,7 @@ public class BlockGraphiteDrilled extends BlockGraphiteDrilledBase {
 
 		if(!world.isRemote && (side.getIndex() == cfg * 2 || side.getIndex() == cfg * 2 + 1) && meta >> 2 == 1) {
 			world.setBlockState(pos, ModBlocks.block_graphite_drilled.getDefaultState().withProperty(BlockMeta.META, cfg), 3);
-			world.playSound(null, x + 0.5, y + 1.5, z + 0.5, HBMSoundEvents.upgradePlug, SoundCategory.BLOCKS, 1.0F, 0.85F);
+			world.playSound(null, x + 0.5, y + 1.5, z + 0.5, HBMSoundHandler.upgradePlug, SoundCategory.BLOCKS, 1.0F, 0.85F);
 
 			BlockGraphiteRod.ejectItem(world, x, y, z, side, new ItemStack(ModItems.shell, 1, Mats.MAT_ALUMINIUM.id));
 		}

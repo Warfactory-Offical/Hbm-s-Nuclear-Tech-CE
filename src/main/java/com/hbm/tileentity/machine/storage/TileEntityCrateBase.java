@@ -2,7 +2,7 @@ package com.hbm.tileentity.machine.storage;
 
 import com.hbm.api.tile.ILootContainerModifiable;
 import com.hbm.api.tile.IWorldRenameable;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ItemStackHandlerWrapper;
 import com.hbm.tileentity.machine.TileEntityLockableBase;
 import net.minecraft.block.state.IBlockState;
@@ -184,7 +184,7 @@ public abstract class TileEntityCrateBase extends TileEntityLockableBase impleme
      * This method is only called client-side.
      */
     public void openInventory(EntityPlayer player) {
-        player.world.playSound(player.posX, player.posY, player.posZ, HBMSoundEvents.crateOpen, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+        player.world.playSound(player.posX, player.posY, player.posZ, HBMSoundHandler.crateOpen, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
     }
 
     /**
@@ -192,7 +192,7 @@ public abstract class TileEntityCrateBase extends TileEntityLockableBase impleme
      * This method is only called client-side.
      */
     public void closeInventory(EntityPlayer player) {
-        player.world.playSound(player.posX, player.posY, player.posZ, HBMSoundEvents.crateClose, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+        player.world.playSound(player.posX, player.posY, player.posZ, HBMSoundHandler.crateClose, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
     }
 
     public boolean isItemValidForSlot(int i, ItemStack stack) {

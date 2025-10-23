@@ -5,7 +5,7 @@ import com.hbm.config.GeneralConfig;
 import com.hbm.entity.mob.EntityDuck;
 import com.hbm.items.weapon.ItemCrucible;
 import com.hbm.items.weapon.ItemMissile.PartSize;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.RailgunCallbackPacket;
 import com.hbm.packet.toclient.RailgunFirePacket;
@@ -88,7 +88,7 @@ public class AuxButtonPacket implements IMessage {
                             ducc.motionZ = vec.z;
 
                             p.world.spawnEntity(ducc);
-                            p.world.playSound(null, p.posX, p.posY, p.posZ, HBMSoundEvents.ducc, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                            p.world.playSound(null, p.posX, p.posY, p.posZ, HBMSoundHandler.ducc, SoundCategory.PLAYERS, 1.0F, 1.0F);
 
                             perDat.setBoolean("hasDucked", true);
 
@@ -153,11 +153,11 @@ public class AuxButtonPacket implements IMessage {
 
                     if (m.id == 0) {
                         if (gun.setAngles(false)) {
-                            p.world.playSound(null, m.x, m.y, m.z, HBMSoundEvents.buttonYes, SoundCategory.BLOCKS, 1.0F, 1.0F);
-                            p.world.playSound(null, m.x, m.y, m.z, HBMSoundEvents.railgunOrientation, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                            p.world.playSound(null, m.x, m.y, m.z, HBMSoundHandler.buttonYes, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                            p.world.playSound(null, m.x, m.y, m.z, HBMSoundHandler.railgunOrientation, SoundCategory.BLOCKS, 1.0F, 1.0F);
                             PacketDispatcher.wrapper.sendToAll(new RailgunCallbackPacket(m.x, m.y, m.z, gun.pitch, gun.yaw));
                         } else {
-                            p.world.playSound(null, m.x, m.y, m.z, HBMSoundEvents.buttonNo, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                            p.world.playSound(null, m.x, m.y, m.z, HBMSoundHandler.buttonNo, SoundCategory.BLOCKS, 1.0F, 1.0F);
                         }
                     }
 
@@ -165,10 +165,10 @@ public class AuxButtonPacket implements IMessage {
                         if (gun.canFire()) {
                             gun.fireDelay = TileEntityRailgun.cooldownDurationTicks;
                             PacketDispatcher.wrapper.sendToAll(new RailgunFirePacket(m.x, m.y, m.z));
-                            p.world.playSound(null, m.x, m.y, m.z, HBMSoundEvents.buttonYes, SoundCategory.BLOCKS, 1.0F, 1.0F);
-                            p.world.playSound(null, m.x, m.y, m.z, HBMSoundEvents.railgunCharge, SoundCategory.BLOCKS, 10.0F, 1.0F);
+                            p.world.playSound(null, m.x, m.y, m.z, HBMSoundHandler.buttonYes, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                            p.world.playSound(null, m.x, m.y, m.z, HBMSoundHandler.railgunCharge, SoundCategory.BLOCKS, 10.0F, 1.0F);
                         } else {
-                            p.world.playSound(null, m.x, m.y, m.z, HBMSoundEvents.buttonNo, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                            p.world.playSound(null, m.x, m.y, m.z, HBMSoundHandler.buttonNo, SoundCategory.BLOCKS, 1.0F, 1.0F);
                         }
                     }
                 }

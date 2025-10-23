@@ -9,7 +9,7 @@ import com.hbm.inventory.material.Mats;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemScraps;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.tileentity.TileEntityProxyCombo;
 import com.hbm.tileentity.machine.TileEntityMachineStrandCaster;
 import com.hbm.util.I18nUtil;
@@ -139,7 +139,7 @@ public class MachineStrandCaster extends BlockDummyable implements ICrucibleAcce
         caster.inventory.setStackInSlot(0, heldItem.copy());
         caster.inventory.getStackInSlot(0).setCount(1);
         player.getHeldItem(hand).shrink(1);
-        world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundEvents.upgradePlug, SoundCategory.BLOCKS, 1.0F, 1.0F);
+        world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundHandler.upgradePlug, SoundCategory.BLOCKS, 1.0F, 1.0F);
         caster.markDirty();
         return true;
       }

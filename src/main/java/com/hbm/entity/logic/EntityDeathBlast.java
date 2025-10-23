@@ -6,7 +6,7 @@ import com.hbm.handler.BulletConfigSyncingUtil;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IConstantRenderer;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.render.amlfrom1710.Vec3;
 import net.minecraft.entity.Entity;
@@ -55,7 +55,7 @@ public class EntityDeathBlast extends Entity implements IConstantRenderer {
 			NBTTagCompound data = new NBTTagCompound();
 			data.setString("type", "muke");
 			PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, posX, posY + 0.5, posZ), new TargetPoint(world.provider.getDimension(), posX, posY, posZ, 250));
-			world.playSound(null, posX, posY, posZ, HBMSoundEvents.mukeExplosion, SoundCategory.HOSTILE, 25.0F, 0.9F);
+			world.playSound(null, posX, posY, posZ, HBMSoundHandler.mukeExplosion, SoundCategory.HOSTILE, 25.0F, 0.9F);
 		}
 	}
 	

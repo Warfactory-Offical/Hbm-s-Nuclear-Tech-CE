@@ -15,7 +15,7 @@ import com.hbm.inventory.fluid.trait.FluidTraitSimple;
 import com.hbm.inventory.gui.GUIMachineGasFlare;
 import com.hbm.items.machine.ItemMachineUpgrade.UpgradeType;
 import com.hbm.lib.DirPos;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.IFluidCopiable;
@@ -149,7 +149,7 @@ public class TileEntityMachineGasFlare extends TileEntityMachineBase implements 
 						ParticleUtil.spawnGasFlame(world, pos.getX() + 0.5F, pos.getY() + 11.75F, pos.getZ() + 0.5F, world.rand.nextGaussian() * 0.15, 0.2, world.rand.nextGaussian() * 0.15);
 
 						if(this.world.getTotalWorldTime() % 5 == 0)
-							this.world.playSound(null, pos.getX(), pos.getY() + 11, pos.getZ(), HBMSoundEvents.flamethrowerShoot, SoundCategory.BLOCKS, 1.5F, 1F);
+							this.world.playSound(null, pos.getX(), pos.getY() + 11, pos.getZ(), HBMSoundHandler.flamethrowerShoot, SoundCategory.BLOCKS, 1.5F, 1F);
 
 						List<Entity> list = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos.add(-1, 12, -2), pos.add(2, 17, 2)));
 						for(Entity e : list) {
@@ -158,7 +158,7 @@ public class TileEntityMachineGasFlare extends TileEntityMachineBase implements 
 						}
 
 						if(world.getTotalWorldTime() % 3 == 0)
-							this.world.playSound(null, this.pos.getX(), this.pos.getY() + 11, this.pos.getZ(), HBMSoundEvents.flamethrowerShoot, SoundCategory.BLOCKS, getVolume(1.5F), 0.75F);
+							this.world.playSound(null, this.pos.getX(), this.pos.getY() + 11, this.pos.getZ(), HBMSoundHandler.flamethrowerShoot, SoundCategory.BLOCKS, getVolume(1.5F), 0.75F);
 
 						if(world.getTotalWorldTime() % 5 == 0 && eject > 0) {
 							FT_Polluting.pollute(world, pos.getX(), pos.getY(), pos.getZ(), tank.getTankType(), FluidTrait.FluidReleaseType.BURN, eject * 5);

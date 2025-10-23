@@ -3,7 +3,7 @@ package com.hbm.entity.projectile;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.explosion.ExplosionLarge;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.render.amlfrom1710.Vec3;
 import net.minecraft.entity.Entity;
@@ -41,7 +41,7 @@ public class EntityBuilding extends EntityThrowable {
         
         if(this.world.getBlockState(new BlockPos((int)this.posX, (int)this.posY, (int)this.posZ)).getBlock() != Blocks.AIR)
         {
-            this.world.playSound(null, this.posX, this.posY, this.posZ, HBMSoundEvents.oldExplosion, SoundCategory.BLOCKS, 10000.0F, 0.5F + this.rand.nextFloat() * 0.1F);
+            this.world.playSound(null, this.posX, this.posY, this.posZ, HBMSoundHandler.oldExplosion, SoundCategory.BLOCKS, 10000.0F, 0.5F + this.rand.nextFloat() * 0.1F);
     		this.setDead();
         	ExplosionLarge.spawnParticles(world, posX, posY + 3, posZ, 150);
         	ExplosionLarge.spawnShock(world, posX, posY + 1, posZ, 24, 6);

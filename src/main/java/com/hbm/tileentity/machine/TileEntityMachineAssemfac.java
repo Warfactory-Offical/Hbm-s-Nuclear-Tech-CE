@@ -11,7 +11,7 @@ import com.hbm.inventory.gui.GUIAssemfac;
 import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.IGUIProvider;
 import io.netty.buffer.ByteBuf;
@@ -66,7 +66,7 @@ public class TileEntityMachineAssemfac extends TileEntityMachineAssemblerBase im
                 super.setStackInSlot(slot, stack);
 
                 if(stack != ItemStack.EMPTY && slot >= 1 && slot <= 4 && stack.getItem() instanceof ItemMachineUpgrade) {
-                    world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundEvents.upgradePlug, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundHandler.upgradePlug, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 }
             }
         };

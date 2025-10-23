@@ -1,7 +1,7 @@
 package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -95,7 +95,7 @@ public class Spikes extends Block {
     public void onEntityCollision(World world, BlockPos pos, IBlockState state, Entity ent) {
         if (ent instanceof EntityLivingBase && ent.motionY < -0.1) {
             if (ent.attackEntityFrom(ModDamageSource.spikes, 100))
-                world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundEvents.slicer, SoundCategory.HOSTILE, 1.0F, 1.0F);
+                world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundHandler.slicer, SoundCategory.HOSTILE, 1.0F, 1.0F);
         }
     }
 

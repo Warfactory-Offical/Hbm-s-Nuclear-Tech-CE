@@ -6,7 +6,7 @@ import com.hbm.dim.SolarSystem;
 import com.hbm.dim.orbit.OrbitalStation;
 import com.hbm.entity.missile.EntityRideableRocket;
 import com.hbm.interfaces.Untested;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -216,7 +216,7 @@ public class ItemVOTVdrive extends ItemEnumMulti {
                         rocket.setState(EntityRideableRocket.RocketState.AWAITING);
                     }
 
-                    world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.upgradePlug, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.upgradePlug, SoundCategory.BLOCKS, 1.0F, 1.0F);
                     if (!player.inventory.addItemStackToInventory(newStack)) {
                         player.dropItem(newStack, true, false);
                     }

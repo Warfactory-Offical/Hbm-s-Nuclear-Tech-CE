@@ -8,7 +8,7 @@ import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.items.weapon.sedna.Receiver;
 import com.hbm.items.weapon.sedna.mags.MagazineFullReload;
 import com.hbm.items.weapon.sedna.mods.WeaponModManager;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
 import com.hbm.main.ResourceManager;
 import com.hbm.particle.SpentCasing;
@@ -43,7 +43,7 @@ public class XFactory9mm {
         ModItems.gun_greasegun = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_greasegun", new GunConfig()
                 .dura(3_000).draw(20).inspect(31).crosshair(RenderScreenOverlay.Crosshair.L_CIRCLE).smoke(LAMBDA_SMOKE)
                 .rec(new Receiver(0)
-                        .dmg(3F).delay(4).dry(40).auto(true).spread(0.015F).reload(60).jam(55).sound(HBMSoundEvents.fireGreaseGun, 1.0F, 1.0F)
+                        .dmg(3F).delay(4).dry(40).auto(true).spread(0.015F).reload(60).jam(55).sound(HBMSoundHandler.fireGreaseGun, 1.0F, 1.0F)
                         .mag(new MagazineFullReload(0, 30).addConfigs(p9_sp, p9_fmj, p9_jhp, p9_ap))
                         .offset(1, -0.0625 * 2.5, -0.25D)
                         .setupStandardFire().recoil(LAMBDA_RECOIL_GREASEGUN))
@@ -54,7 +54,7 @@ public class XFactory9mm {
         ModItems.gun_lag = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_lag", new GunConfig()
                 .dura(1_700).draw(7).inspect(31).crosshair(RenderScreenOverlay.Crosshair.CIRCLE).smoke(LAMBDA_SMOKE)
                 .rec(new Receiver(0)
-                        .dmg(25F).delay(4).dry(10).spread(0.005F).reload(53).jam(44).sound(HBMSoundEvents.firePistol, 1.0F, 1.0F)
+                        .dmg(25F).delay(4).dry(10).spread(0.005F).reload(53).jam(44).sound(HBMSoundHandler.firePistol, 1.0F, 1.0F)
                         .mag(new MagazineFullReload(0, 17).addConfigs(p9_sp, p9_fmj, p9_jhp, p9_ap))
                         .offset(1, -0.0625 * 2.5, -0.25D)
                         .setupStandardFire().recoil(LAMBDA_RECOIL_LAG))
@@ -65,7 +65,7 @@ public class XFactory9mm {
         ModItems.gun_uzi = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_uzi", new GunConfig()
                 .dura(3_000).draw(15).inspect(31).crosshair(RenderScreenOverlay.Crosshair.CIRCLE).smoke(LAMBDA_SMOKE)
                 .rec(new Receiver(0)
-                        .dmg(3F).delay(2).dry(25).auto(true).spread(0.005F).reload(55).jam(50).sound(HBMSoundEvents.fireUzi, 1.0F, 1.0F)
+                        .dmg(3F).delay(2).dry(25).auto(true).spread(0.005F).reload(55).jam(50).sound(HBMSoundHandler.fireUzi, 1.0F, 1.0F)
                         .mag(new MagazineFullReload(0, 30).addConfigs(p9_sp, p9_fmj, p9_jhp, p9_ap))
                         .offset(1, -0.0625 * 2.5, -0.25D)
                         .setupStandardFire().recoil(LAMBDA_RECOIL_UZI))
@@ -75,7 +75,7 @@ public class XFactory9mm {
         ModItems.gun_uzi_akimbo = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.B_SIDE, "gun_uzi_akimbo",
                 new GunConfig().dura(3_000).draw(15).inspect(31).crosshair(RenderScreenOverlay.Crosshair.CIRCLE).smoke(LAMBDA_SMOKE)
                         .rec(new Receiver(0)
-                                .dmg(3F).spreadHipfire(0F).delay(2).dry(25).auto(true).spread(0.005F).reload(55).jam(50).sound(HBMSoundEvents.fireUzi, 1.0F, 1.0F)
+                                .dmg(3F).spreadHipfire(0F).delay(2).dry(25).auto(true).spread(0.005F).reload(55).jam(50).sound(HBMSoundHandler.fireUzi, 1.0F, 1.0F)
                                 .mag(new MagazineFullReload(0, 30).addConfigs(p9_sp, p9_fmj, p9_jhp, p9_ap))
                                 .offset(1, -0.0625 * 2.5, 0.375D)
                                 .setupStandardFire().recoil(LAMBDA_RECOIL_UZI))
@@ -84,7 +84,7 @@ public class XFactory9mm {
                         .anim(LAMBDA_UZI_ANIMS).orchestra(Orchestras.ORCHESTRA_UZI_AKIMBO),
                 new GunConfig().dura(3_000).draw(15).inspect(31).crosshair(RenderScreenOverlay.Crosshair.CIRCLE).smoke(LAMBDA_SMOKE)
                         .rec(new Receiver(0)
-                                .dmg(3F).spreadHipfire(0F).delay(2).dry(25).auto(true).spread(0.005F).reload(55).jam(50).sound(HBMSoundEvents.fireUzi, 1.0F, 1.0F)
+                                .dmg(3F).spreadHipfire(0F).delay(2).dry(25).auto(true).spread(0.005F).reload(55).jam(50).sound(HBMSoundHandler.fireUzi, 1.0F, 1.0F)
                                 .mag(new MagazineFullReload(1, 30).addConfigs(p9_sp, p9_fmj, p9_jhp, p9_ap))
                                 .offset(1, -0.0625 * 2.5, -0.375D)
                                 .setupStandardFire().recoil(LAMBDA_RECOIL_UZI))

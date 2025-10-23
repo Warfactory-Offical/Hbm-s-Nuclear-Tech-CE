@@ -9,7 +9,7 @@ import com.hbm.inventory.fluid.FluidStack;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.gui.GUIDroneCrate;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.IGUIProvider;
@@ -133,7 +133,7 @@ public class TileEntityDroneCrate extends TileEntityMachineBase implements IGUIP
         if (loaded) {
             this.markDirty();
             drone.setAppearance(1);
-            world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundEvents.itemUnpack, SoundCategory.BLOCKS, 0.5F, 0.75F);
+            world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundHandler.itemUnpack, SoundCategory.BLOCKS, 0.5F, 0.75F);
         }
     }
 
@@ -181,7 +181,7 @@ public class TileEntityDroneCrate extends TileEntityMachineBase implements IGUIP
         if (emptied) {
             drone.setAppearance(0);
             world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-                    HBMSoundEvents.itemUnpack, SoundCategory.BLOCKS, 0.5F, 0.75F);
+                    HBMSoundHandler.itemUnpack, SoundCategory.BLOCKS, 0.5F, 0.75F);
         }
     }
 
@@ -193,7 +193,7 @@ public class TileEntityDroneCrate extends TileEntityMachineBase implements IGUIP
             drone.fluid = new FluidStack(tank.getTankType(), tank.getFill());
             this.tank.setFill(0);
             drone.setAppearance(2);
-            world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundEvents.itemUnpack, SoundCategory.BLOCKS, 0.5F, 0.75F);
+            world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundHandler.itemUnpack, SoundCategory.BLOCKS, 0.5F, 0.75F);
 
             this.markDirty();
         }
@@ -214,7 +214,7 @@ public class TileEntityDroneCrate extends TileEntityMachineBase implements IGUIP
                 tank.setFill(tank.getMaxFill());
                 drone.fluid.fill = overshoot;
             }
-            world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundEvents.itemUnpack, SoundCategory.BLOCKS, 0.5F, 0.75F);
+            world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, HBMSoundHandler.itemUnpack, SoundCategory.BLOCKS, 0.5F, 0.75F);
 
             this.markDirty();
         }

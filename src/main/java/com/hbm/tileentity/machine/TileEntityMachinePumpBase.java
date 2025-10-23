@@ -10,7 +10,7 @@ import com.hbm.dim.orbit.WorldProviderOrbit;
 import com.hbm.dim.trait.CBT_Water;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.lib.DirPos;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.IConfigurableMachine;
 import com.hbm.tileentity.IFluidCopiable;
@@ -124,7 +124,7 @@ public abstract class TileEntityMachinePumpBase extends TileEntityLoadedBase imp
                 this.rotor -= 360F;
                 this.lastRotor -= 360F;
 
-                world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.steamEngineOperate, SoundCategory.BLOCKS, 0.5F, 0.75F);
+                world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.steamEngineOperate, SoundCategory.BLOCKS, 0.5F, 0.75F);
                 world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ENTITY_GENERIC_SPLASH, SoundCategory.BLOCKS, 1F, 0.5F);
             }
         }

@@ -6,7 +6,7 @@ import com.hbm.blocks.machine.VaultDoor;
 import com.hbm.handler.radiation.RadiationSystemNT;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IAnimatedDoor;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.TEVaultPacket;
 import net.minecraft.init.Blocks;
@@ -81,45 +81,45 @@ public class TileEntityVaultDoor extends TileEntityLockableBase implements ITick
             if (state == DoorState.OPENING && state.isMovingState()) {
 
                 if (timer == 0)
-                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.vaultScrapeNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.vaultScrapeNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 if (timer == 45)
-                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.vaultThudNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.vaultThudNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 if (timer == 55)
-                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.vaultThudNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.vaultThudNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 if (timer == 65)
-                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.vaultThudNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.vaultThudNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 if (timer == 75)
-                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.vaultThudNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.vaultThudNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 if (timer == 85)
-                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.vaultThudNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.vaultThudNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 if (timer == 95)
-                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.vaultThudNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.vaultThudNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 if (timer == 105)
-                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.vaultThudNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.vaultThudNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 if (timer == 115)
-                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.vaultThudNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.vaultThudNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
             }
             if (state == DoorState.CLOSING && state.isMovingState()) {
 
                 if (timer == 0)
-                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.vaultThudNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.vaultThudNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 if (timer == 10)
-                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.vaultThudNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.vaultThudNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 if (timer == 20)
-                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.vaultThudNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.vaultThudNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 if (timer == 30)
-                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.vaultThudNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.vaultThudNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 if (timer == 40)
-                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.vaultThudNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.vaultThudNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 if (timer == 50)
-                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.vaultThudNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.vaultThudNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 if (timer == 60)
-                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.vaultThudNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.vaultThudNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 if (timer == 70)
-                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.vaultThudNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.vaultThudNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
 
                 if (timer == 80)
-                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.vaultScrapeNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.vaultScrapeNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
             }
 
             if (state.isStationaryState()) {

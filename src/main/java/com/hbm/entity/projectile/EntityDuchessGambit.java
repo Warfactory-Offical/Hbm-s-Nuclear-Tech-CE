@@ -4,7 +4,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.explosion.ExplosionLarge;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.projectile.EntityThrowable;
@@ -50,7 +50,7 @@ public class EntityDuchessGambit extends EntityThrowable {
         
         if(!this.world.isRemote && this.world.getBlockState(new BlockPos((int)this.posX, (int)this.posY, (int)this.posZ)).getBlock() != Blocks.AIR)
         {
-            this.world.playSound(null, this.posX, this.posY, this.posZ, HBMSoundEvents.alarmGambit, SoundCategory.BLOCKS, 10000.0F, 1F);
+            this.world.playSound(null, this.posX, this.posY, this.posZ, HBMSoundHandler.alarmGambit, SoundCategory.BLOCKS, 10000.0F, 1F);
     		this.setDead();
     		if(!world.isRemote && CompatibilityConfig.isWarDim(world)){
 	    		List<Entity> list = (List<Entity>)world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(posX - 5, posY - 2, posZ - 9, posX + 5, posY + 2, posZ + 9));

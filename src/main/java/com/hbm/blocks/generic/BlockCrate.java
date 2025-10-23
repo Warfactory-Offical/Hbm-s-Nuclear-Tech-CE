@@ -5,7 +5,7 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ModItems;
 import com.hbm.items.special.ItemCell;
 import com.hbm.items.weapon.sedna.factory.GunFactory;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -51,7 +51,7 @@ public class BlockCrate extends BlockFalling {
         if (player.getHeldItemMainhand().getItem().equals(ModItems.crowbar)) {
             dropItems(world, pos.getX(), pos.getY(), pos.getZ());
             world.setBlockToAir(pos);
-            world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.crateBreak, SoundCategory.BLOCKS, 0.5F, 1.0F);
+            world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.crateBreak, SoundCategory.BLOCKS, 0.5F, 1.0F);
             return true;
         } else {
             if (world.isRemote) {

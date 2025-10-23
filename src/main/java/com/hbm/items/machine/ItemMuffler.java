@@ -1,7 +1,7 @@
 package com.hbm.items.machine;
 
 import com.hbm.items.ItemBakedBase;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import com.hbm.util.CompatExternal;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,7 +26,7 @@ public class ItemMuffler extends ItemBakedBase {
             TileEntityLoadedBase tile = (TileEntityLoadedBase) te;
             if(!tile.muffled) {
                 tile.muffled = true;
-                world.playSound(player, player.posX, player.posY, player.posZ, HBMSoundEvents.upgradePlug, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                world.playSound(player, player.posX, player.posY, player.posZ, HBMSoundHandler.upgradePlug, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 player.getHeldItem(hand).shrink(1);
                 tile.markDirty();
                 return EnumActionResult.SUCCESS;

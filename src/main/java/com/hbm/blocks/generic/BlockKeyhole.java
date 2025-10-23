@@ -8,7 +8,7 @@ import com.hbm.itempool.ItemPoolsRedRoom;
 import com.hbm.items.ModItems;
 import com.hbm.items.tool.ItemModDoor;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.AdvancementManager;
 import net.minecraft.advancements.PlayerAdvancements;
 import net.minecraft.block.Block;
@@ -55,7 +55,7 @@ public class BlockKeyhole extends Block {
                 ForgeDirection dir = ForgeDirection.getOrientation(facing);
                 generateRoom(world, pos.getX() - dir.offsetX * 4, pos.getY() - 2, pos.getZ() - dir.offsetZ * 4);
                 ItemModDoor.placeDoor(world, pos.down(), facing.getOpposite(), ModBlocks.door_red, false);
-                world.playSound(player, pos, HBMSoundEvents.lockOpen, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                world.playSound(player, pos, HBMSoundHandler.lockOpen, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 PlayerAdvancements advancements = ((EntityPlayerMP) player).getAdvancements();
                 advancements.grantCriterion(AdvancementManager.achRedRoom, "impossible");
                 return true;

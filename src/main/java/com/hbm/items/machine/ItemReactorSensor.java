@@ -2,7 +2,7 @@ package com.hbm.items.machine;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.items.ModItems;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -58,7 +58,7 @@ public class ItemReactorSensor extends Item {
 			stack.getTagCompound().setInteger("y", pos.getY());
 			stack.getTagCompound().setInteger("z", pos.getZ());
 
-			world.playSound(player, player.posX, player.posY, player.posZ, HBMSoundEvents.techBoop, SoundCategory.BLOCKS, 1.0F, 1.0F);
+			world.playSound(player, player.posX, player.posY, player.posZ, HBMSoundHandler.techBoop, SoundCategory.BLOCKS, 1.0F, 1.0F);
 
 			return EnumActionResult.SUCCESS;
 

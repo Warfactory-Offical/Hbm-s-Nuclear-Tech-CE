@@ -5,7 +5,7 @@ import baubles.api.IBauble;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.items.ModItems;
 import com.hbm.items.gear.ArmorFSB;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.util.ContaminationUtil;
 import net.minecraft.entity.Entity;
@@ -64,9 +64,9 @@ public class ItemGeigerCounter extends Item implements IBauble {
                 if(x > 25) list.add(6);
                 int r = list.get(world.rand.nextInt(list.size()));
 
-                if(r > 0) world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.geigerSounds[r - 1], SoundCategory.PLAYERS, 1.0F, 1.0F);
+                if(r > 0) world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.geigerSounds[r - 1], SoundCategory.PLAYERS, 1.0F, 1.0F);
             } else if(world.rand.nextInt(100) == 0) {
-				world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.geigerSounds[(world.rand.nextInt(1))], SoundCategory.PLAYERS, 1.0F, 1.0F);
+				world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.geigerSounds[(world.rand.nextInt(1))], SoundCategory.PLAYERS, 1.0F, 1.0F);
 			}
 		}
 	}
@@ -85,7 +85,7 @@ public class ItemGeigerCounter extends Item implements IBauble {
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand handIn) {
 		if(!world.isRemote) {
-	    	world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.techBoop, SoundCategory.PLAYERS, 1.0F, 1.0F);
+	    	world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.techBoop, SoundCategory.PLAYERS, 1.0F, 1.0F);
 
 	    	ContaminationUtil.printGeigerData(player);
 		}

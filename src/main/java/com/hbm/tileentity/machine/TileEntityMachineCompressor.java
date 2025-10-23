@@ -4,7 +4,7 @@ import com.hbm.blocks.BlockDummyable;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -40,7 +40,7 @@ public class TileEntityMachineCompressor extends TileEntityMachineCompressorBase
                 if(this.pistonDir) {
                     this.piston -= randSpeed;
                     if(this.piston <= 0) {
-                        MainRegistry.proxy.playSoundClient(pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.boltgun, SoundCategory.BLOCKS, this.getVolume(0.5F), 0.75F);
+                        MainRegistry.proxy.playSoundClient(pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.boltgun, SoundCategory.BLOCKS, this.getVolume(0.5F), 0.75F);
                         this.pistonDir = !this.pistonDir;
                     }
                 } else {

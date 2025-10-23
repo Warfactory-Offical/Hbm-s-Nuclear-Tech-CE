@@ -11,7 +11,7 @@ import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.gui.GUIFurnaceCombo;
 import com.hbm.inventory.recipes.CombinationRecipes;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.tileentity.IFluidCopiable;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.util.Tuple;
@@ -123,7 +123,7 @@ public class TileEntityFurnaceCombination extends TileEntityMachinePolluting imp
                     for (Entity e : entities) e.setFire(5);
 
                     if (world.getTotalWorldTime() % 10 == 0)
-                        this.world.playSound(null, pos.up(), HBMSoundEvents.flamethrowerShoot, SoundCategory.BLOCKS, 0.25F, 0.5F);
+                        this.world.playSound(null, pos.up(), HBMSoundHandler.flamethrowerShoot, SoundCategory.BLOCKS, 0.25F, 0.5F);
                     if (world.getTotalWorldTime() % 20 == 0) this.pollute(PollutionHandler.PollutionType.SOOT, PollutionHandler.SOOT_PER_SECOND * 3);
                 }
             } else {

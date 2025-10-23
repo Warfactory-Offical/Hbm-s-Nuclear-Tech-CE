@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.items.ModItems;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.RefStrings;
 import com.hbm.packet.toserver.ItemDesignatorPacket;
 import com.hbm.packet.PacketDispatcher;
@@ -16,6 +16,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.io.IOException;
 
@@ -126,25 +127,25 @@ public class GUIScreenDesignator extends GuiScreen {
     	if(player != null){
             if(this.isOnXButton(i, j)){
                 this.xField.setText(Integer.toString(-1 * NumberUtils.toInt(this.xField.getText())));
-                mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(HBMSoundEvents.buttonYes, 1.0F));
+                mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(HBMSoundHandler.buttonYes, 1.0F));
             }
 
             if(this.isOnZButton(i, j)){
                 this.zField.setText(Integer.toString(-1 * NumberUtils.toInt(this.zField.getText())));
-                mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(HBMSoundEvents.buttonYes, 1.0F));
+                mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(HBMSoundHandler.buttonYes, 1.0F));
             }
 
             if(this.isOnHereButton(i, j)) {
                 hereButtonCoolDown = 20;
                 this.xField.setText(Integer.toString((int) player.posX));
                 this.zField.setText(Integer.toString((int) player.posZ));
-                mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(HBMSoundEvents.buttonYes, 1.0F));
+                mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(HBMSoundHandler.buttonYes, 1.0F));
             }
 
             if(this.isOnSaveButton(i, j) && saveButtonCoolDown == 0) {
                 saveButtonCoolDown = 20;
                 this.formatInput();
-	    		mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(HBMSoundEvents.techBleep, 1.0F));
+	    		mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(HBMSoundHandler.techBleep, 1.0F));
 	    		PacketDispatcher.wrapper.sendToServer(new ItemDesignatorPacket(Integer.parseInt(xField.getText()), Integer.parseInt(zField.getText())));
             }
     	}

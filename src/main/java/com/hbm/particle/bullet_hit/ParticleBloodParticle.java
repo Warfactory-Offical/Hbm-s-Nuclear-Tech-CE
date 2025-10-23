@@ -2,7 +2,7 @@ package com.hbm.particle.bullet_hit;
 
 import com.hbm.config.GeneralConfig;
 import com.hbm.handler.HbmShaderManager2;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.ResourceManager;
 import com.hbm.particle.ParticleDecal;
 import com.hbm.particle.ParticleLayerBase;
@@ -24,7 +24,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 public class ParticleBloodParticle extends ParticleLayerBase {
 
@@ -98,7 +98,7 @@ public class ParticleBloodParticle extends ParticleLayerBase {
 					Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleDecalFlow(world, data, 150, (float)hit.x-direction.x, (float)hit.y-direction.y, (float)hit.z-direction.z).shader(ResourceManager.blood_dissolve));
 				}
 				float vel = (float) Math.sqrt(motionX*motionX + motionY*motionY + motionZ*motionZ);
-				world.playSound(posX, posY, posZ, HBMSoundEvents.blood_splat, SoundCategory.BLOCKS, vel*0.5F, 0.8F+rand.nextFloat()*0.4F, false);
+				world.playSound(posX, posY, posZ, HBMSoundHandler.blood_splat, SoundCategory.BLOCKS, vel*0.5F, 0.8F+rand.nextFloat()*0.4F, false);
 				setExpired();
 				return;
 			}

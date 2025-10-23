@@ -6,7 +6,7 @@ import com.hbm.handler.ArmorUtil;
 import com.hbm.handler.HbmKeybinds.EnumKeybind;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.items.armor.JetpackFueledBase;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.render.amlfrom1710.Vec3;
@@ -71,7 +71,7 @@ public class JetpackVectorized extends JetpackFueledBase {
 					player.fallDistance = 0;
 			}
 
-			world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.flamethrowerShoot, SoundCategory.PLAYERS, 0.25F, 1.5F);
+			world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.flamethrowerShoot, SoundCategory.PLAYERS, 0.25F, 1.5F);
 			this.useUpFuel(player, stack, 3);
 			ArmorUtil.resetFlightTime(player);
 

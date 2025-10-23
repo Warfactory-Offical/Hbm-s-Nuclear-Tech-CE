@@ -15,7 +15,7 @@ import com.hbm.items.weapon.ItemMissile;
 import com.hbm.items.weapon.ItemMissile.FuelType;
 import com.hbm.items.weapon.ItemMissile.PartSize;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.main.ModContext;
@@ -212,7 +212,7 @@ public class TileEntityLaunchTable extends TileEntityMachineBase implements ITic
     }
 
     public void launch() {
-        world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.missileTakeoff, SoundCategory.BLOCKS, 10.0F, 1.0F);
+        world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.missileTakeoff, SoundCategory.BLOCKS, 10.0F, 1.0F);
 
         int tX = inventory.getStackInSlot(1).getTagCompound().getInteger("xCoord");
         int tZ = inventory.getStackInSlot(1).getTagCompound().getInteger("zCoord");

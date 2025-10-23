@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.inventory.container.ContainerReactorResearch;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.RefStrings;
 import com.hbm.modules.NumberDisplay;
 import com.hbm.packet.PacketDispatcher;
@@ -114,7 +114,7 @@ public class GUIReactorResearch extends GuiInfoContainer {
             timer = 15;
 
             PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(control, reactor.getPos().getX(), reactor.getPos().getY(), reactor.getPos().getZ()));
-            mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(HBMSoundEvents.rbmk_az5_cover, 0.5F));
+            mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(HBMSoundHandler.rbmk_az5_cover, 0.5F));
         }
     }
 

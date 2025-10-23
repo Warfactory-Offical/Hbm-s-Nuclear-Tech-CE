@@ -14,7 +14,6 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.lib.CapabilityContextProvider;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ItemStackHandlerWrapper;
-import com.llib.exceptions.messages.TextWarningLeafia;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -168,16 +167,8 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase impleme
 
     @Override
     public void readFromNBT(NBTTagCompound compound) {
-        if(compound.hasKey("inventory")) {
-            NBTTagCompound nbt = compound.getCompoundTag("inventory");
-            if (nbt.getInteger("Size") == inventory.getSlots())
-                inventory.deserializeNBT(nbt);
-            else {
-                System.out.println("WARNING: Invalid machine storage size! Resetting storage for block at "+pos.getX()+","+pos.getY()+","+pos.getZ());
-                for (EntityPlayer plr : world.playerEntities)
-                    plr.sendMessage(new TextWarningLeafia("Invalid machine storage size! Resetting storage.. ("+pos.getX()+","+pos.getY()+","+pos.getZ()+")"));
-            }
-        }
+        if (compound.hasKey("inventory"))
+            inventory.deserializeNBT(compound.getCompoundTag("inventory"));
         super.readFromNBT(compound);
     }
 

@@ -7,7 +7,7 @@ import com.hbm.inventory.recipes.PressRecipes;
 import com.hbm.items.machine.ItemStamp;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.BufferUtil;
@@ -162,7 +162,7 @@ public class TileEntityConveyorPress extends TileEntityMachineBase implements IT
             }
         }
 
-        this.world.playSound(null, pos, HBMSoundEvents.pressOperate, SoundCategory.BLOCKS, getVolume(1.5F), 1.0F);
+        this.world.playSound(null, pos, HBMSoundHandler.pressOperate, SoundCategory.BLOCKS, getVolume(1.5F), 1.0F);
 
         if(inventory.getStackInSlot(0).getMaxDamage() != 0) {
             ItemStack stack = inventory.getStackInSlot(0).copy();

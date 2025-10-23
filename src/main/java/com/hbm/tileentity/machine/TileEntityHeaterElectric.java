@@ -7,7 +7,7 @@ import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.ICopiable;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.IBufPacketReceiver;
@@ -87,7 +87,7 @@ public class TileEntityHeaterElectric extends TileEntityLoadedBase implements IH
 
 	@Override
 	public AudioWrapper createAudioLoop() {
-		return MainRegistry.proxy.getLoopedSound(HBMSoundEvents.electricHum, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 0.25F, 7.5F, 1.0F, 20);
+		return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.electricHum, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 0.25F, 7.5F, 1.0F, 20);
 	}
 
 	@Override

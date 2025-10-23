@@ -4,10 +4,10 @@ import com.hbm.hfr.render.loader.HFRWavefrontObject;
 import com.hbm.hfr.render.loader.S_GroupObject;
 import com.hbm.render.amlfrom1710.GroupObject;
 import com.hbm.render.amlfrom1710.IModelCustom;
-import com.hbm.render.amlfrom1710.CompositeBrush;
+import com.hbm.render.amlfrom1710.Tessellator;
 import com.hbm.render.amlfrom1710.WavefrontObject;
 import org.apache.commons.lang3.tuple.Pair;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ public class WavefrontObjDisplayList implements IModelCustom {
 	public List<Pair<String, Integer>> nameToCallList = new ArrayList<>();
 	
 	public WavefrontObjDisplayList(WavefrontObject obj) {
-		CompositeBrush tes = CompositeBrush.instance;
+		Tessellator tes = Tessellator.instance;
 		for(GroupObject g : obj.groupObjects){
 			int list = GL11.glGenLists(1);
 			GL11.glNewList(list, GL11.GL_COMPILE);
@@ -99,22 +99,22 @@ public class WavefrontObjDisplayList implements IModelCustom {
 	}
 
 	@Override
-	public void tessellateAll(CompositeBrush tes){
+	public void tessellateAll(Tessellator tes){
 		throw new RuntimeException("Tessellate operation not supported on display list object");
 	}
 
 	@Override
-	public void tessellatePart(CompositeBrush tes,String name){
+	public void tessellatePart(Tessellator tes, String name){
 		throw new RuntimeException("Tessellate operation not supported on display list object");
 	}
 
 	@Override
-	public void tessellateOnly(CompositeBrush tes,String... names){
+	public void tessellateOnly(Tessellator tes, String... names){
 		throw new RuntimeException("Tessellate operation not supported on display list object");
 	}
 
 	@Override
-	public void tessellateAllExcept(CompositeBrush tes,String... excluded){
+	public void tessellateAllExcept(Tessellator tes, String... excluded){
 		throw new RuntimeException("Tessellate operation not supported on display list object");
 	}
 }

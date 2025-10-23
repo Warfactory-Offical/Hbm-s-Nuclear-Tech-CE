@@ -9,7 +9,7 @@ import com.hbm.inventory.container.ContainerTurretBase;
 import com.hbm.inventory.gui.GUITurretHoward;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.factory.XFactoryTurret;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.particle.SpentCasing;
@@ -127,7 +127,7 @@ public class TileEntityTurretHoward extends TileEntityTurretBaseNT implements IG
 
 				if(conf != null) {
 					this.consumeAmmo(conf.ammo);
-					this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.howard_reload, SoundCategory.BLOCKS, 4.0F, 1F);
+					this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.howard_reload, SoundCategory.BLOCKS, 4.0F, 1F);
 					loaded = 200;
 				}
 			}
@@ -143,8 +143,8 @@ public class TileEntityTurretHoward extends TileEntityTurretBaseNT implements IG
 
 			SpentCasing cfg = GunDGKFactory.CASINGDGK;
 
-			this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.howard_fire, SoundCategory.BLOCKS, 4.0F, 0.9F + world.rand.nextFloat() * 0.3F);
-			this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.howard_fire, SoundCategory.BLOCKS, 4.0F, 1F + world.rand.nextFloat() * 0.3F);
+			this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.howard_fire, SoundCategory.BLOCKS, 4.0F, 0.9F + world.rand.nextFloat() * 0.3F);
+			this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.howard_fire, SoundCategory.BLOCKS, 4.0F, 1F + world.rand.nextFloat() * 0.3F);
 
 			for(int i = 0; i < 2; i++) {
 				this.cachedCasingConfig = cfg;

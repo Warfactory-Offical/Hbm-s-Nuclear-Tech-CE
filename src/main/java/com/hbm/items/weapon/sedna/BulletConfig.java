@@ -13,7 +13,7 @@ import com.hbm.items.ModItems;
 import com.hbm.items.weapon.sedna.factory.ConfettiUtil;
 import com.hbm.items.weapon.sedna.factory.GunFactory;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.particle.SpentCasing;
 import com.hbm.util.BobMathUtil;
 import com.hbm.util.DamageResistanceHandler;
@@ -76,7 +76,7 @@ public class BulletConfig implements Cloneable {
                     case 2, 3 -> bullet.motionZ *= -1;
                     case 4, 5 -> bullet.motionX *= -1;
                 }
-                bullet.world.playSound(bullet.posX, bullet.posY, bullet.posZ, HBMSoundEvents.ricochet, SoundCategory.BLOCKS,
+                bullet.world.playSound(bullet.posX, bullet.posY, bullet.posZ, HBMSoundHandler.ricochet, SoundCategory.BLOCKS,
                         0.25F, 1.0F, true);
                 bullet.setPosition(mop.hitVec.x, mop.hitVec.y, mop.hitVec.z);
                 if (bullet.world instanceof WorldServer ws) {

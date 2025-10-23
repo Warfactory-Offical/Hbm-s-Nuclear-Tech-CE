@@ -8,7 +8,7 @@ import com.hbm.items.weapon.ItemCustomMissile;
 import com.hbm.items.weapon.ItemMissile;
 import com.hbm.items.weapon.ItemMissile.FuelType;
 import com.hbm.items.weapon.ItemMissile.PartType;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ItemStackHandlerWrapper;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.TEMissileMultipartPacket;
@@ -210,7 +210,7 @@ public class TileEntityMachineMissileAssembly extends TileEntity implements ITic
 		inventory.setStackInSlot(2, ItemStack.EMPTY);
 		inventory.setStackInSlot(4, ItemStack.EMPTY);
 
-		this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.missileAssembly2, SoundCategory.BLOCKS, 1F, 1F);
+		this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.missileAssembly2, SoundCategory.BLOCKS, 1F, 1F);
 	}
 	
 	@Override

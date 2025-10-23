@@ -4,7 +4,7 @@ import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.factory.XFactory9mm;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.util.Vec3dUtil;
 import net.minecraft.entity.Entity;
@@ -64,7 +64,7 @@ public class TileEntityTurretSentryDamaged extends TileEntityTurretSentry {
 
       if (shotSide) {
         this.world.playSound(
-            null, this.pos, HBMSoundEvents.sentryFire, SoundCategory.BLOCKS, 2.0F, 1.0F);
+            null, this.pos, HBMSoundHandler.sentryFire, SoundCategory.BLOCKS, 2.0F, 1.0F);
         this.spawnBullet(conf, 5F);
 
         vec = new Vec3d(this.getBarrelLength(), 0, 0);
@@ -76,7 +76,7 @@ public class TileEntityTurretSentryDamaged extends TileEntityTurretSentry {
 
       } else {
         this.world.playSound(
-            null, this.pos, HBMSoundEvents.sentryFire, SoundCategory.BLOCKS, 2.0F, 0.75F);
+            null, this.pos, HBMSoundHandler.sentryFire, SoundCategory.BLOCKS, 2.0F, 0.75F);
         if (usesCasings()) {
           if (this.casingDelay() == 0) {
             spawnCasing();

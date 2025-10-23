@@ -13,17 +13,16 @@ import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManage
 public class ParticleRBMKMush extends Particle {
 
 	private static final ResourceLocation texture = new ResourceLocation(com.hbm.lib.RefStrings.MODID + ":textures/particle/rbmk_mush.png");
-	public boolean isPink = false;
-
+	
 	public ParticleRBMKMush(World worldIn, double posXIn, double posYIn, double posZIn, float scale){
 		super(worldIn, posXIn, posYIn, posZIn);
 		particleMaxAge = 80;
 
 		this.particleRed = this.particleGreen = this.particleBlue = 0;
-
+		
 		this.particleScale = scale;
 	}
-
+	
 	@Override
 	public void onUpdate(){
 		this.prevPosX = this.posX;
@@ -36,14 +35,15 @@ public class ParticleRBMKMush extends Particle {
 			this.setExpired();
 		}
 	}
-
+	
 	@Override
 	public int getFXLayer(){
 		return 3;
 	}
-
+	
 	@Override
 	public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ){
+        GlStateManager.enableAlpha();
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		NTMRenderHelper.resetParticleInterpPos(entityIn, partialTicks);
 
@@ -54,17 +54,17 @@ public class ParticleRBMKMush extends Particle {
 		// how many frames we're in
 		int prog = particleAge * segs / particleMaxAge;
 
-		GlStateManager.color(1, isPink ? 0 : 1, 1, 1);
+		GlStateManager.color(1, 1, 1, 1);
 		GlStateManager.glNormal3f(0, 1, 0);
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 		GlStateManager.disableLighting();
 		GlStateManager.enableBlend();
-		GlStateManager.depthMask(false);GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
+		GlStateManager.depthMask(false);
 		RenderHelper.disableStandardItemLighting();
 
 		Tessellator tes = Tessellator.getInstance();
 		BufferBuilder buf = tes.getBuffer();
-
+		
 		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
 		float scale = this.particleScale;
@@ -77,7 +77,6 @@ public class ParticleRBMKMush extends Particle {
 		buf.pos((double) (pX + rotationX * scale + rotationXY * scale), (double) (pY + rotationZ * scale), (double) (pZ + rotationYZ * scale + rotationXZ * scale)).tex(0, prog * frame).endVertex();
 		buf.pos((double) (pX + rotationX * scale - rotationXY * scale), (double) (pY - rotationZ * scale), (double) (pZ + rotationYZ * scale - rotationXZ * scale)).tex(0, (prog + 1) * frame).endVertex();
 		tes.draw();
-		GlStateManager.color(1, 1, 1, 1);
 
 		GlStateManager.doPolygonOffset(0, 0);
 		GlStateManager.enableLighting();

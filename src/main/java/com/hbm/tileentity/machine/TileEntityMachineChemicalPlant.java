@@ -15,7 +15,7 @@ import com.hbm.inventory.recipes.loader.GenericRecipe;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.lib.DirPos;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.modules.machine.ModuleMachineChemplant;
@@ -165,7 +165,7 @@ public class TileEntityMachineChemicalPlant extends TileEntityMachineBase implem
     }
     // FIXME this shit doesn't work
     @Override public AudioWrapper createAudioLoop() {
-        return MainRegistry.proxy.getLoopedSound(HBMSoundEvents.chemicalPlant, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1F, 15F, 1.0F, 20);
+        return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.chemicalPlant, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1F, 15F, 1.0F, 20);
     }
 
     @Override public void onChunkUnload() {

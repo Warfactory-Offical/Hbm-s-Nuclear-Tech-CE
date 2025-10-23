@@ -3,7 +3,7 @@ package com.hbm.blocks.machine.pile;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockMeta;
 import com.hbm.items.ModItems;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.block.BlockBakeFrame;
 import com.hbm.tileentity.machine.pile.TileEntityPileNeutronDetector;
@@ -60,7 +60,7 @@ public class BlockGraphiteNeutronDetector extends BlockGraphiteDrilledTE {
 
         world.setBlockState(pos, world.getBlockState(pos).withProperty(BlockMeta.META, newMeta), 3);
 
-        world.playSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, HBMSoundEvents.techBleep, SoundCategory.BLOCKS, 0.02F, 1.0F);
+        world.playSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, HBMSoundHandler.techBleep, SoundCategory.BLOCKS, 0.02F, 1.0F);
 
         EnumFacing dir = EnumFacing.byIndex(pureMeta * 2);
 

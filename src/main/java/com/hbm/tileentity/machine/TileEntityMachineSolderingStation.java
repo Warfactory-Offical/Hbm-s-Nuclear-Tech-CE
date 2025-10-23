@@ -18,7 +18,7 @@ import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.items.machine.ItemMachineUpgrade.UpgradeType;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.tileentity.IFluidCopiable;
@@ -99,7 +99,7 @@ public class TileEntityMachineSolderingStation extends TileEntityMachineBase
                   pos.getX() + 0.5,
                   pos.getY() + 0.5,
                   pos.getZ() + 0.5,
-                  HBMSoundEvents.upgradePlug,
+                  HBMSoundHandler.upgradePlug,
                   SoundCategory.BLOCKS,
                   1.0F,
                   1.0F);

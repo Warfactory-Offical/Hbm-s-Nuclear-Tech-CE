@@ -4,7 +4,7 @@ import com.hbm.api.entity.IRadarDetectable;
 import com.hbm.entity.logic.IChunkLoader;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.weapon.ItemAmmoArty;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -166,7 +166,7 @@ public class EntityArtilleryShell extends EntityThrowableNT implements IChunkLoa
                 double dist = Math.sqrt(deltaToTargetX * deltaToTargetX + deltaToTargetZ * deltaToTargetZ);
 
                 if (speed * 18 > dist) {
-                    world.playSound(null, this.targetX, this.targetY, this.targetZ, HBMSoundEvents.mortarWhistle, SoundCategory.BLOCKS, 15.0F, 0.9F + rand.nextFloat() * 0.2F);
+                    world.playSound(null, this.targetX, this.targetY, this.targetZ, HBMSoundHandler.mortarWhistle, SoundCategory.BLOCKS, 15.0F, 0.9F + rand.nextFloat() * 0.2F);
                     this.didWhistle = true; // Play whistle sound when close to the target
                 }
             }

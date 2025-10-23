@@ -4,7 +4,7 @@ import com.hbm.capability.HbmCapability;
 import com.hbm.capability.HbmCapability.IHBMData;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.items.armor.JetpackFueledBase;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.render.amlfrom1710.Vec3;
@@ -96,7 +96,7 @@ public class JetpackBooster extends JetpackFueledBase {
                     player.fallDistance = 0;
             }
 
-            world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.flamethrowerShoot, SoundCategory.PLAYERS, 0.25F, 1.0F);
+            world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.flamethrowerShoot, SoundCategory.PLAYERS, 0.25F, 1.0F);
             this.useUpFuel(player, stack, 1);
         }
     }

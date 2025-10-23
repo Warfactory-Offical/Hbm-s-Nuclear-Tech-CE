@@ -2,7 +2,7 @@ package com.hbm.items.armor;
 
 import com.hbm.capability.HbmLivingProps;
 import com.hbm.handler.ArmorModHandler;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.potion.HbmPotion;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
@@ -39,7 +39,7 @@ public class ItemModAuto extends ItemArmorMod {
 
             if (HbmLivingProps.getDigamma(entity) >= 5D) {
                 ArmorModHandler.removeMod(armor, ArmorModHandler.extra);
-                entity.world.playSound(null, entity.posX, entity.posY, entity.posZ, HBMSoundEvents.syringeUse, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                entity.world.playSound(null, entity.posX, entity.posY, entity.posZ, HBMSoundHandler.syringeUse, SoundCategory.PLAYERS, 1.0F, 1.0F);
                 HbmLivingProps.setDigamma(entity, HbmLivingProps.getDigamma(entity) - 5D);
                 entity.addPotionEffect(new PotionEffect(HbmPotion.stability, 60 * 20, 0));
                 entity.heal(20F);

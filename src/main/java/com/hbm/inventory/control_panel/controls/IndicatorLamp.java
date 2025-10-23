@@ -3,7 +3,7 @@ package com.hbm.inventory.control_panel.controls;
 import com.hbm.inventory.control_panel.*;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.amlfrom1710.IModelCustom;
-import com.hbm.render.amlfrom1710.CompositeBrush;
+import com.hbm.render.amlfrom1710.Tessellator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -13,7 +13,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.List;
 
@@ -40,7 +40,7 @@ public class IndicatorLamp extends Control {
     public void render() {
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
         Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.ctrl_button_push_tex);
-        CompositeBrush tes = CompositeBrush.instance;
+        Tessellator tes = Tessellator.instance;
         IModelCustom model = getModel();
 
         boolean isLit = getVar("isLit").getBoolean();

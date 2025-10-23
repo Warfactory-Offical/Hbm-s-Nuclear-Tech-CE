@@ -7,7 +7,7 @@ import com.hbm.inventory.container.ContainerTurretBase;
 import com.hbm.inventory.gui.GUITurretMaxwell;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemMachineUpgrade;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.potion.HbmPotion;
@@ -264,7 +264,7 @@ public class TileEntityTurretMaxwell extends TileEntityTurretBaseNT implements I
 				vdat.setInteger("ent", this.target.getEntityId());
 				PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(vdat, this.target.posX, this.target.posY + this.target.height * 0.5, this.target.posZ), new TargetPoint(this.target.dimension, this.target.posX, this.target.posY + this.target.height * 0.5, this.target.posZ, 150));
 				if(this.screm)
-					world.playSound(null, this.target.posX, this.target.posY, this.target.posZ, HBMSoundEvents.screm, SoundCategory.BLOCKS, 2.0F, 0.95F + world.rand.nextFloat() * 0.2F);
+					world.playSound(null, this.target.posX, this.target.posY, this.target.posZ, HBMSoundHandler.screm, SoundCategory.BLOCKS, 2.0F, 0.95F + world.rand.nextFloat() * 0.2F);
 				else
 					world.playSound(null, this.target.posX, this.target.posY, this.target.posZ, SoundEvents.ENTITY_ZOMBIE_BREAK_DOOR_WOOD, SoundCategory.BLOCKS, 2.0F, 0.95F + world.rand.nextFloat() * 0.2F);
 			}

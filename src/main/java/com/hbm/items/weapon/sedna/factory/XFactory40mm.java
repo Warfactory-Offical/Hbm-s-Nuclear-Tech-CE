@@ -15,7 +15,7 @@ import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.items.weapon.sedna.Receiver;
 import com.hbm.items.weapon.sedna.mags.MagazineSingleReload;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
 import com.hbm.main.ResourceManager;
 import com.hbm.particle.SpentCasing;
@@ -124,7 +124,7 @@ public class XFactory40mm {
     public static void spawnPlane(Entity entity, EntityC130.C130PayloadType payload) {
         if(!entity.world.isRemote && entity.ticksExisted == 40) {
             EntityBulletBaseMK4 bullet = (EntityBulletBaseMK4) entity;
-            if(bullet.getThrower() != null) bullet.world.playSound(bullet.getThrower().attackingPlayer, bullet.getThrower().getPosition(), HBMSoundEvents.techBleep, SoundCategory.PLAYERS,
+            if(bullet.getThrower() != null) bullet.world.playSound(bullet.getThrower().attackingPlayer, bullet.getThrower().getPosition(), HBMSoundHandler.techBleep, SoundCategory.PLAYERS,
             1.0F, 1.0F);
             EntityC130 c130 = new EntityC130(bullet.world);
             int x = (int) Math.floor(bullet.posX);
@@ -152,7 +152,7 @@ public class XFactory40mm {
         ModItems.gun_flaregun = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_flaregun", new GunConfig()
                 .dura(100).draw(7).inspect(39).crosshair(RenderScreenOverlay.Crosshair.L_CIRCUMFLEX).smoke(LAMBDA_SMOKE)
                 .rec(new Receiver(0)
-                        .dmg(15F).delay(20).reload(28).jam(33).sound(HBMSoundEvents.hkShoot, 1.0F, 1.0F)
+                        .dmg(15F).delay(20).reload(28).jam(33).sound(HBMSoundHandler.hkShoot, 1.0F, 1.0F)
                         .mag(new MagazineSingleReload(0, 1).addConfigs(g26_flare, g26_flare_supply, g26_flare_weapon))
                         .offset(0.75, -0.0625, -0.1875D)
                         .setupStandardFire().recoil(LAMBDA_RECOIL_GL))
@@ -163,7 +163,7 @@ public class XFactory40mm {
         ModItems.gun_congolake = new ItemGunBaseNT(ItemGunBaseNT.WeaponQuality.A_SIDE, "gun_congolake", new GunConfig()
                 .dura(400).draw(7).inspect(39).reloadSequential(true).crosshair(RenderScreenOverlay.Crosshair.L_CIRCUMFLEX).smoke(LAMBDA_SMOKE)
                 .rec(new Receiver(0)
-                        .dmg(20F).delay(24).reload(16, 16, 16, 0).jam(0).sound(HBMSoundEvents.glShoot, 1.0F, 1.0F)
+                        .dmg(20F).delay(24).reload(16, 16, 16, 0).jam(0).sound(HBMSoundHandler.glShoot, 1.0F, 1.0F)
                         .mag(new MagazineSingleReload(0, 4).addConfigs(g40_he, g40_heat, g40_demo, g40_inc, g40_phosphorus))
                         .offset(0.75, -0.0625, -0.1875D)
                         .setupStandardFire().recoil(LAMBDA_RECOIL_GL))

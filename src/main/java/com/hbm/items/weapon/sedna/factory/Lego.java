@@ -17,7 +17,7 @@ import com.hbm.items.weapon.sedna.ItemGunBaseNT.LambdaContext;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT.SmokeNode;
 import com.hbm.items.weapon.sedna.Receiver;
 import com.hbm.items.weapon.sedna.mags.IMagazine;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
 import com.hbm.particle.helper.BlackPowderCreator;
 import com.hbm.render.anim.sedna.BusAnimationSedna;
@@ -130,10 +130,10 @@ public class Lego {
             int mode = ItemGunBaseNT.getMode(stack, 0);
             ItemGunBaseNT.setMode(stack, index, 1 - mode);
             if(mode == 0) {
-                entity.world.playSound(null, entity.getPosition().getX(), entity.getPosition().getY(), entity.getPosition().getZ(), HBMSoundEvents.switchmode1, SoundCategory.PLAYERS, 1F, 1F);
+                entity.world.playSound(null, entity.getPosition().getX(), entity.getPosition().getY(), entity.getPosition().getZ(), HBMSoundHandler.switchmode1, SoundCategory.PLAYERS, 1F, 1F);
             }
             else {
-                entity.world.playSound(null, entity.getPosition().getX(), entity.getPosition().getY(), entity.getPosition().getZ(), HBMSoundEvents.switchmode2, SoundCategory.PLAYERS, 1F, 1F);
+                entity.world.playSound(null, entity.getPosition().getX(), entity.getPosition().getY(), entity.getPosition().getZ(), HBMSoundHandler.switchmode2, SoundCategory.PLAYERS, 1F, 1F);
             }
         }
     };

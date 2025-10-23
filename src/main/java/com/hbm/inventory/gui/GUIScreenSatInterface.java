@@ -4,7 +4,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.inventory.BedrockOreRegistry;
 import com.hbm.items.ISatChip;
 import com.hbm.items.tool.ItemSatInterface;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.SatLaserPacket;
@@ -26,6 +26,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
+import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.Arrays;
 import java.util.List;
@@ -55,7 +56,7 @@ public class GUIScreenSatInterface extends GuiScreen {
 
     		if(i >= this.guiLeft + 8 && i < this.guiLeft + 208 && j >= this.guiTop + 8 && j < this.guiTop + 208 && player != null) {
     			
-    			mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(HBMSoundEvents.techBleep, 1.0F));
+    			mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(HBMSoundHandler.techBleep, 1.0F));
     			
     			int x = this.x - guiLeft + i - 8 - 100;
     			int z = this.z - guiTop + j - 8 - 100;

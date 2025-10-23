@@ -1,7 +1,7 @@
 package com.hbm.blocks.network.energy;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.tileentity.network.energy.TileEntityCableSwitch;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -38,7 +38,7 @@ public class CableDetector extends BlockContainer {
 		boolean on = world.isBlockPowered(pos);
 		if(on) {
 			world.setBlockState(pos, world.getBlockState(pos).withProperty(STATE, true), 2);
-			world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.reactorStart, SoundCategory.BLOCKS, 1.0F, 0.3F);
+			world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.reactorStart, SoundCategory.BLOCKS, 1.0F, 0.3F);
 		} else {
 			world.setBlockState(pos, world.getBlockState(pos).withProperty(STATE, false), 2);
 		}

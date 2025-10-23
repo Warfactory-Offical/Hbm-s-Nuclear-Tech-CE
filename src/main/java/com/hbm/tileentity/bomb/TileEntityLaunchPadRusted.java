@@ -10,7 +10,7 @@ import com.hbm.inventory.container.ContainerLaunchPadRusted;
 import com.hbm.inventory.gui.GUILaunchPadRusted;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
@@ -118,7 +118,7 @@ public class TileEntityLaunchPadRusted extends TileEntityMachineBase implements 
                     EntityMissileTier4.EntityMissileDoomsdayRusted missile = new EntityMissileTier4.EntityMissileDoomsdayRusted(world, pos.getX() + 0.5F, pos.getY() + 1F, pos.getZ() + 0.5F, targetX, targetZ);
                     world.spawnEntity(missile);
                     TrackerUtil.setTrackingRange(world, missile, 500);
-                    world.playSound(null, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, HBMSoundEvents.missileTakeoff, SoundCategory.BLOCKS, 2.0F, 1.0F);
+                    world.playSound(null, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, HBMSoundHandler.missileTakeoff, SoundCategory.BLOCKS, 2.0F, 1.0F);
                     this.missileLoaded = false;
                     // idk if shrink will work, I'll do that for safety purposes
                     this.inventory.setStackInSlot(1, new ItemStack(inventory.getStackInSlot(1).getItem(), inventory.getStackInSlot(1).getCount() - 1));

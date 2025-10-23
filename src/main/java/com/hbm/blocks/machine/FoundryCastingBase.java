@@ -10,7 +10,7 @@ import com.hbm.items.machine.ItemMold;
 import com.hbm.items.machine.ItemMold.Mold;
 import com.hbm.items.machine.ItemScraps;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.InventoryHelper;
 import com.hbm.tileentity.machine.TileEntityFoundryCastingBase;
 import com.hbm.util.I18nUtil;
@@ -126,7 +126,7 @@ public abstract class FoundryCastingBase extends BlockContainer implements ICruc
                 cast.inventory.setStackInSlot(0, newMold); // Set mold in Slot 0
                 heldItem.shrink(1);
 
-                world.playSound(null, pos, HBMSoundEvents.upgradePlug, SoundCategory.BLOCKS, 1.5F, 1.0F);
+                world.playSound(null, pos, HBMSoundHandler.upgradePlug, SoundCategory.BLOCKS, 1.5F, 1.0F);
                 cast.markDirty();
                 world.notifyBlockUpdate(pos, state, state, 3);
                 return true;

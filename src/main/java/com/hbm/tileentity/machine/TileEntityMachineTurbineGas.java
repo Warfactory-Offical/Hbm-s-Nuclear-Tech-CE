@@ -17,7 +17,7 @@ import com.hbm.inventory.fluid.trait.FT_Combustible.FuelGrade;
 import com.hbm.inventory.gui.GUIMachineTurbineGas;
 import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.render.amlfrom1710.Vec3;
@@ -168,12 +168,12 @@ public class TileEntityMachineTurbineGas extends TileEntityMachineBase implement
 			if(rpm >= 10 && state != -1) { //if conditions are right, play the sound
 
 				if(audio == null) { //if there is no sound playing, start it
-					audio = MainRegistry.proxy.getLoopedSound(HBMSoundEvents.turbinegasRunning, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), getVolume(1.0F), 20F, 2.0F, 20);
+					audio = MainRegistry.proxy.getLoopedSound(HBMSoundHandler.turbinegasRunning, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), getVolume(1.0F), 20F, 2.0F, 20);
 					audio.startSound();
 
 				} else if(!audio.isPlaying()) {
 					audio.stopSound();
-					audio = MainRegistry.proxy.getLoopedSound(HBMSoundEvents.turbinegasRunning, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), getVolume(1.0F), 20F, 2.0F, 20);
+					audio = MainRegistry.proxy.getLoopedSound(HBMSoundHandler.turbinegasRunning, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), getVolume(1.0F), 20F, 2.0F, 20);
 					audio.startSound();
 				}
 
@@ -269,7 +269,7 @@ public class TileEntityMachineTurbineGas extends TileEntityMachineBase implement
 		}
 
 		if(counter == 50) {
-			world.playSound(null, pos.getX(), pos.getY() +2, pos.getZ(), HBMSoundEvents.turbinegasStartup, SoundCategory.BLOCKS, 1.0F, 1.0F);
+			world.playSound(null, pos.getX(), pos.getY() +2, pos.getZ(), HBMSoundHandler.turbinegasStartup, SoundCategory.BLOCKS, 1.0F, 1.0F);
 		}
 
 		if(counter == 580) {
@@ -293,7 +293,7 @@ public class TileEntityMachineTurbineGas extends TileEntityMachineBase implement
 
 			if(counter == 225) {
 
-				world.playSound(null, pos.getX(), pos.getY() +2, pos.getZ(), HBMSoundEvents.turbinegasShutdown, SoundCategory.BLOCKS, 1.0F, 1.0F);
+				world.playSound(null, pos.getX(), pos.getY() +2, pos.getZ(), HBMSoundHandler.turbinegasShutdown, SoundCategory.BLOCKS, 1.0F, 1.0F);
 
 				rpmLast = rpm;
 				tempLast = temp;

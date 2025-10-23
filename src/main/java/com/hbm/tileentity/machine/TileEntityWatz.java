@@ -18,7 +18,7 @@ import com.hbm.items.machine.ItemWatzPellet;
 import com.hbm.items.machine.ItemWatzPellet.EnumWatzType;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.AdvancementManager;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
@@ -182,7 +182,7 @@ public class TileEntityWatz extends TileEntityMachineBase implements ITickable, 
                 this.disassemble();
 
                 ChunkRadiationManager.proxy.incrementRad(world, pos.add(0, 1, 0), 1_000F);
-                world.playSound(null, pos.getX() + 0.5, pos.getY() + 2, pos.getZ() + 0.5, HBMSoundEvents.rbmk_explosion, SoundCategory.BLOCKS, 50.0F, 1.0F);
+                world.playSound(null, pos.getX() + 0.5, pos.getY() + 2, pos.getZ() + 0.5, HBMSoundHandler.rbmk_explosion, SoundCategory.BLOCKS, 50.0F, 1.0F);
                 NBTTagCompound data = new NBTTagCompound();
                 data.setString("type", "rbmkmush");
                 data.setFloat("scale", 5);

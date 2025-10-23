@@ -6,7 +6,7 @@ import com.hbm.entity.projectile.EntityMinerBeam;
 import com.hbm.entity.projectile.EntityRubble;
 import com.hbm.explosion.ExplosionChaos;
 import com.hbm.items.ModItems;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import java.util.List;
 import java.util.Random;
@@ -43,7 +43,7 @@ public class ItemMultitoolPassive extends Item {
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
 		ItemStack stack = player.getHeldItem(hand);
 		if(player.isSneaking()) {
-			world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.techBoop, SoundCategory.PLAYERS, 2.0F, 1.0F);
+			world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.techBoop, SoundCategory.PLAYERS, 2.0F, 1.0F);
 
 			if(this == ModItems.multitool_ext) {
 				return ActionResult.newResult(EnumActionResult.SUCCESS, new ItemStack(ModItems.multitool_miner, 1, stack.getItemDamage()));
@@ -81,7 +81,7 @@ public class ItemMultitoolPassive extends Item {
 
 				EntityMinerBeam plasma = new EntityMinerBeam(world, player, 0.75F);
 
-				world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.immolatorIgnite, SoundCategory.PLAYERS, 1.0F, 1F);
+				world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.immolatorIgnite, SoundCategory.PLAYERS, 1.0F, 1F);
 				// world.playSoundAtEntity(player, "hbm:weapon.immolatorShoot",
 				// 1.0F, 1F);
 
@@ -95,7 +95,7 @@ public class ItemMultitoolPassive extends Item {
 
 				EntityLaserBeam plasma = new EntityLaserBeam(world, player, 1F);
 
-				world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.immolatorIgnite, SoundCategory.PLAYERS, 1.0F, 1F);
+				world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.immolatorIgnite, SoundCategory.PLAYERS, 1.0F, 1F);
 				// world.playSoundAtEntity(player, "hbm:weapon.immolatorShoot",
 				// 1.0F, 1F);
 

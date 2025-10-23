@@ -1,12 +1,13 @@
 package com.hbm.items;
 
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.util.ItemStackUtil;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
@@ -113,12 +114,12 @@ public class ItemInventory extends ItemStackHandler {
 
     public void openInventory() {
         if (player == null) return;
-        player.world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.crateOpen, SoundCategory.BLOCKS, 1.0F, 0.8F);
+        player.world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.crateOpen, SoundCategory.BLOCKS, 1.0F, 0.8F);
     }
 
     public void closeInventory() {
         if (player == null) return;
-        player.world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.crateClose, SoundCategory.BLOCKS, 1.0F, 0.8F);
+        player.world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.crateClose, SoundCategory.BLOCKS, 1.0F, 0.8F);
     }
 
     public static byte[] compress(NBTTagCompound p_74798_0_) throws IOException

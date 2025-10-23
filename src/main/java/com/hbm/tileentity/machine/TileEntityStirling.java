@@ -11,7 +11,7 @@ import com.hbm.entity.projectile.EntityCog;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.IConfigurableMachine;
 import com.hbm.tileentity.TileEntityLoadedBase;
@@ -70,7 +70,7 @@ public class TileEntityStirling extends TileEntityLoadedBase implements IEnergyP
 
                     if (overspeed > 60 && warnCooldown == 0) {
                         warnCooldown = 100;
-                        world.playSound(null, this.pos, HBMSoundEvents.warnOverspeed, SoundCategory.BLOCKS, 2F, 1F);
+                        world.playSound(null, this.pos, HBMSoundHandler.warnOverspeed, SoundCategory.BLOCKS, 2F, 1F);
                     }
 
                     if (overspeed > overspeedLimit) {

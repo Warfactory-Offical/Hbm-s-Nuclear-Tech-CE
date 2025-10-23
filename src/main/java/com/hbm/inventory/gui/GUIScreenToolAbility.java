@@ -2,7 +2,7 @@ package com.hbm.inventory.gui;
 
 import com.hbm.handler.ability.*;
 import com.hbm.items.tool.ItemToolAbility;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.PacketDispatcher;
@@ -311,7 +311,7 @@ public class GUIScreenToolAbility extends GuiScreen {
                 int availableLevels = availableAbilities.maxLevel(hoveredAbility) + 1;
 
                 if(hoveredAbility != selectedAbility || availableLevels > 1) {
-                    mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(HBMSoundEvents.techBoop, 2F));
+                    mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(HBMSoundHandler.techBoop, 2F));
                 }
 
                 if(hoveredAbility == selectedAbility) {

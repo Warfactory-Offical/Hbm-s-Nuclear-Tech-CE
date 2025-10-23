@@ -10,7 +10,7 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.material.Mats;
 import com.hbm.items.ModItems;
 import com.hbm.items.special.ItemCell;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.block.BlockBakeFrame;
 import net.minecraft.block.Block;
@@ -222,7 +222,7 @@ public class BlockGraphiteDrilledBase extends BlockFlammable implements IToolabl
 				} else {
 					ItemStack eject = ((BlockGraphiteDrilledBase) oldBlock).getInsertedItem(oldMeta);
 					ejectItem(world, ix - dir.getXOffset(), iy - dir.getYOffset(), iz - dir.getZOffset(), dir, eject);
-					world.playSound(null, ix + 0.5, iy + 0.5, iz + 0.5, HBMSoundEvents.upgradePlug, SoundCategory.BLOCKS, 1.25F, 1.0F);
+					world.playSound(null, ix + 0.5, iy + 0.5, iz + 0.5, HBMSoundHandler.upgradePlug, SoundCategory.BLOCKS, 1.25F, 1.0F);
 
 					break;
 				}

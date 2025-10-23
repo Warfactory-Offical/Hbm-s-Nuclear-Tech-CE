@@ -4,7 +4,7 @@ import com.hbm.config.GeneralConfig;
 import com.hbm.interfaces.IBomb;
 import com.hbm.interfaces.IHoldableWeapon;
 import com.hbm.items.ModItems;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.render.misc.RenderScreenOverlay;
@@ -52,11 +52,11 @@ public class ItemLaserDetonator extends Item implements IHoldableWeapon {
 	    			MainRegistry.logger.log(Level.INFO, "[DET] Tried to detonate block at " + pos.getX() + " / " + pos.getY() + " / " + pos.getZ() + " by " + player.getDisplayName() + "!");
 	    		
 	    		player.sendMessage(new TextComponentString("§2["+I18nUtil.resolveKey("chat.detonated")+"]"+"§r"));
-	        	world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.techBleep, SoundCategory.AMBIENT, 1.0F, 1.0F);
+	        	world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.techBleep, SoundCategory.AMBIENT, 1.0F, 1.0F);
 	        	
 	    	} else {
 	    		player.sendMessage(new TextComponentString("§c"+I18nUtil.resolveKey("chat.posbadrror")+"§r"));
-	        	world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.techBleep, SoundCategory.AMBIENT, 1.0F, 1.0F);
+	        	world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.techBleep, SoundCategory.AMBIENT, 1.0F, 1.0F);
 	    	}
 		}
 		return super.onItemRightClick(world, player, hand);

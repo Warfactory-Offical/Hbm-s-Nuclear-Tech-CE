@@ -5,7 +5,7 @@ import com.hbm.entity.logic.EntityNukeExplosionMK5;
 import com.hbm.explosion.ExplosionNT.ExAttrib;
 import com.hbm.handler.radiation.ChunkRadiationManager;
 import com.hbm.handler.threading.PacketThreading;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 
@@ -35,7 +35,7 @@ public class ExplosionNukeSmall {
             );
         }
 
-        world.playSound(null, new BlockPos(posX, posY, posZ), HBMSoundEvents.mukeExplosion, SoundCategory.BLOCKS, 15.0F, 1.0F);
+        world.playSound(null, new BlockPos(posX, posY, posZ), HBMSoundHandler.mukeExplosion, SoundCategory.BLOCKS, 15.0F, 1.0F);
 
         if (params.shrapnelCount > 0) {
             ExplosionLarge.spawnShrapnels(world, posX, posY, posZ, params.shrapnelCount);

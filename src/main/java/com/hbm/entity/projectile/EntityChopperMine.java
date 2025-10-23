@@ -2,7 +2,7 @@ package com.hbm.entity.projectile;
 
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.IProjectile;
@@ -121,7 +121,7 @@ public class EntityChopperMine extends Entity implements IProjectile {
 		//if(timer % 20 == 0)
 		//	world.playSoundAtEntity(this, "random.click", 10.0F, 1.5F);
 		
-		world.playSound(null, this.posX, this.posY, this.posZ, HBMSoundEvents.nullMine, SoundCategory.HOSTILE, 10.0F, 1F);
+		world.playSound(null, this.posX, this.posY, this.posZ, HBMSoundHandler.nullMine, SoundCategory.HOSTILE, 10.0F, 1F);
 		
 		if(timer >= 100 || world.getBlockState(new BlockPos((int)this.posX, (int)this.posY, (int)this.posZ)).getMaterial() != Material.AIR)
 		{	

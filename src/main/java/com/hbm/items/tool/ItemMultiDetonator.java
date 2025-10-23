@@ -3,7 +3,7 @@ package com.hbm.items.tool;
 import com.hbm.config.GeneralConfig;
 import com.hbm.interfaces.IBomb;
 import com.hbm.items.ModItems;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.I18nUtil;
 import net.minecraft.client.util.ITooltipFlag;
@@ -66,7 +66,7 @@ public class ItemMultiDetonator extends Item {
 				player.sendMessage(new TextComponentString("§a["+I18nUtil.resolveKey("chat.posadd")+"]§r"));
 			}
 			
-	        world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.techBoop, SoundCategory.AMBIENT, 2.0F, 1.0F);
+	        world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.techBoop, SoundCategory.AMBIENT, 2.0F, 1.0F);
         	
 			return EnumActionResult.SUCCESS;
 		}
@@ -96,7 +96,7 @@ public class ItemMultiDetonator extends Item {
 					int z = locs[2][i];
 					BlockPos pos = new BlockPos(x, y, z);
 					if (world.getBlockState(pos).getBlock() instanceof IBomb) {
-						world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.techBleep, SoundCategory.AMBIENT, 1.0F, 1.0F);
+						world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.techBleep, SoundCategory.AMBIENT, 1.0F, 1.0F);
 						if (!world.isRemote) {
 							((IBomb) world.getBlockState(pos).getBlock()).explode(world, pos, player);
 
@@ -117,7 +117,7 @@ public class ItemMultiDetonator extends Item {
 				stack.getTagCompound().setIntArray("yValues", new int[0]);
 				stack.getTagCompound().setIntArray("zValues", new int[0]);
 				
-		        world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.techBoop, SoundCategory.AMBIENT, 2.0F, 1.0F);
+		        world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.techBoop, SoundCategory.AMBIENT, 2.0F, 1.0F);
 				
 				if(world.isRemote)
 				{

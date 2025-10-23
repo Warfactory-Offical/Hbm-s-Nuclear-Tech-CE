@@ -6,7 +6,7 @@ import com.hbm.blocks.machine.DummyBlockSiloHatch;
 import com.hbm.handler.radiation.RadiationSystemNT;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IAnimatedDoor;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.TEDoorAnimationPacket;
 import net.minecraft.init.Blocks;
@@ -57,7 +57,7 @@ public class TileEntitySiloHatch extends TileEntityLockableBase implements ITick
                 if (state == DoorState.CLOSING) {
                     if (timer == 1) {
                         BlockPos hydrolics = pos.offset(facing, 5);
-                        this.world.playSound(null, hydrolics.getX(), hydrolics.getY(), hydrolics.getZ(), HBMSoundEvents.siloclose,
+                        this.world.playSound(null, hydrolics.getX(), hydrolics.getY(), hydrolics.getZ(), HBMSoundHandler.siloclose,
 								SoundCategory.BLOCKS, 3F, 1F);
                     }
                     if (timer == 50) {
@@ -80,7 +80,7 @@ public class TileEntitySiloHatch extends TileEntityLockableBase implements ITick
                 } else if (state == DoorState.OPENING) {
                     if (timer == 1) {
                         BlockPos hydrolics = pos.offset(facing, 5);
-                        this.world.playSound(null, hydrolics.getX(), hydrolics.getY(), hydrolics.getZ(), HBMSoundEvents.siloopen,
+                        this.world.playSound(null, hydrolics.getX(), hydrolics.getY(), hydrolics.getZ(), HBMSoundHandler.siloopen,
 								SoundCategory.BLOCKS, 4F, 1F);
                     }
                     if (timer == 70) {

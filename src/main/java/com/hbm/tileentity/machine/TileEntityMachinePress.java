@@ -5,7 +5,7 @@ import com.hbm.inventory.container.ContainerMachinePress;
 import com.hbm.inventory.gui.GUIMachinePress;
 import com.hbm.inventory.recipes.PressRecipes;
 import com.hbm.items.machine.ItemStamp;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 import io.netty.buffer.ByteBuf;
@@ -92,7 +92,7 @@ public class TileEntityMachinePress extends TileEntityMachineBase implements ITi
 
 					if (this.progress >= maxProgress) {
 						this.progress = maxProgress;
-						this.world.playSound(null, this.pos, HBMSoundEvents.pressOperate, SoundCategory.BLOCKS, 1.5F, 1.0F);
+						this.world.playSound(null, this.pos, HBMSoundHandler.pressOperate, SoundCategory.BLOCKS, 1.5F, 1.0F);
 						ItemStack output = PressRecipes.getOutput(inventory.getStackInSlot(2), inventory.getStackInSlot(1));
 						if (inventory.getStackInSlot(3).isEmpty()) {
 							inventory.setStackInSlot(3, output.copy());

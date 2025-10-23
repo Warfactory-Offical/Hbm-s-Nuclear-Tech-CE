@@ -2,7 +2,7 @@ package com.hbm.items.armor;
 
 import com.hbm.handler.ArmorModHandler;
 import com.hbm.handler.threading.PacketThreading;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.AdvancementManager;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.util.I18nUtil;
@@ -53,7 +53,7 @@ public class ItemModKnife extends ItemArmorMod {
 			
 			if(entity.ticksExisted % 50 == 0 && entity.getMaxHealth() > 2F) {
 
-				entity.world.playSound(null, entity.posX, entity.posY, entity.posZ, HBMSoundEvents.slicer, SoundCategory.PLAYERS, 1.0F, 1.0F);
+				entity.world.playSound(null, entity.posX, entity.posY, entity.posZ, HBMSoundHandler.slicer, SoundCategory.PLAYERS, 1.0F, 1.0F);
 				
 				NBTTagCompound nbt = new NBTTagCompound();
 				nbt.setString("type", "bloodvomit");

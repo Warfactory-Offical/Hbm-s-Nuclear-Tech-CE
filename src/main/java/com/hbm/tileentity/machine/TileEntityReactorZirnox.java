@@ -22,7 +22,7 @@ import com.hbm.items.machine.ItemZirnoxRod;
 import com.hbm.items.machine.ItemZirnoxRod.EnumZirnoxType;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.AdvancementManager;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
@@ -419,7 +419,7 @@ public class TileEntityReactorZirnox extends TileEntityMachineBase implements IT
         world.setBlockState(pos, ModBlocks.zirnox_destroyed.getStateFromMeta(meta), 3);
         MultiblockHandlerXR.fillSpace(world, pos.getX(), pos.getY(), pos.getZ(), dimensions, ModBlocks.zirnox_destroyed, ForgeDirection.getOrientation(meta - BlockDummyable.offset));
 
-        world.playSound(null, pos.getX(), pos.getY() + 2, pos.getZ(), HBMSoundEvents.rbmk_explosion, SoundCategory.BLOCKS, 10.0F, 1.0F);
+        world.playSound(null, pos.getX(), pos.getY() + 2, pos.getZ(), HBMSoundHandler.rbmk_explosion, SoundCategory.BLOCKS, 10.0F, 1.0F);
         world.createExplosion(null, pos.getX(), pos.getY() + 3, pos.getZ(), 6.0F, true);
         zirnoxDebris();
         ExplosionNukeGeneric.waste(world, pos.getX(), pos.getY(), pos.getZ(), 35);

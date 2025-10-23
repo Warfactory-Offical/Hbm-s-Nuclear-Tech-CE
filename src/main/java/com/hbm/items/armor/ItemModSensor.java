@@ -2,7 +2,7 @@ package com.hbm.items.armor;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.handler.ArmorModHandler;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -69,9 +69,9 @@ public class ItemModSensor extends ItemArmorMod {
         }
 
         if(explosive) {
-            entity.world.playSound(entity.posX, entity.posY, entity.posZ, HBMSoundEvents.follyAquired, SoundCategory.PLAYERS, 0.5F, 1.0F, false);
+            entity.world.playSound(entity.posX, entity.posY, entity.posZ, HBMSoundHandler.follyAquired, SoundCategory.PLAYERS, 0.5F, 1.0F, false);
         } else if(poison) {
-            entity.world.playSound(entity.posX, entity.posY, entity.posZ, HBMSoundEvents.techBoop, SoundCategory.PLAYERS,  2F, 1.5F, false);
+            entity.world.playSound(entity.posX, entity.posY, entity.posZ, HBMSoundHandler.techBoop, SoundCategory.PLAYERS,  2F, 1.5F, false);
         }
     }
 }

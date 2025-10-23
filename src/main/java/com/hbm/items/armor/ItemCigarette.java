@@ -3,7 +3,7 @@ package com.hbm.items.armor;
 import com.hbm.capability.HbmLivingProps;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.items.ModItems;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.AdvancementManager;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import net.minecraft.client.util.ITooltipFlag;
@@ -80,7 +80,7 @@ public class ItemCigarette extends Item {
                 player.heal(10F);
             }
 
-            worldIn.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.cough, SoundCategory.PLAYERS, 1.0F, 1.0F);
+            worldIn.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.cough, SoundCategory.PLAYERS, 1.0F, 1.0F);
 
             NBTTagCompound nbt = new NBTTagCompound();
             nbt.setString("type", "vomit");

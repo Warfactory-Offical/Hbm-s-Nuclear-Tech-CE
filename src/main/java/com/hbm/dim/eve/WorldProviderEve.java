@@ -7,7 +7,7 @@ import com.hbm.dim.WorldChunkManagerCelestial.BiomeGenLayers;
 import com.hbm.dim.WorldProviderCelestial;
 import com.hbm.dim.eve.GenLayerEve.GenLayerEveBiomes;
 import com.hbm.dim.eve.GenLayerEve.GenLayerEveRiverMix;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -51,7 +51,7 @@ public class WorldProviderEve extends WorldProviderCelestial {
 				flashd = 0;
 			} else if (chargetime >= 100) {
 				if (flashd <= 1) {
-					Minecraft.getMinecraft().player.playSound(HBMSoundEvents.rumble, 10F, 1F);
+					Minecraft.getMinecraft().player.playSound(HBMSoundHandler.rumble, 10F, 1F);
 				}
 				flashd += 0.1f;
 				flashd = Math.min(100.0f, flashd + 0.1f * (100.0f - flashd) * 0.15f);

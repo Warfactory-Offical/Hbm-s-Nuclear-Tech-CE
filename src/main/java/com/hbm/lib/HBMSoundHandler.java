@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class HBMSoundEvents {
+public final class HBMSoundHandler {
 
     public static List<SoundEvent> ALL_SOUNDS = new ArrayList<>();
 

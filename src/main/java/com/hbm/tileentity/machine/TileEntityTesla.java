@@ -10,7 +10,7 @@ import com.hbm.entity.mob.EntityTeslaCrab;
 import com.hbm.handler.ArmorUtil;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.packet.PacketDispatcher;
@@ -122,7 +122,7 @@ public class TileEntityTesla extends TileEntityMachineBase implements ITickable,
 			
 			if(!(e instanceof EntityPlayer && ArmorUtil.checkForFaraday((EntityPlayer)e)))
 				if(e.attackEntityFrom(ModDamageSource.electricity, MathHelper.clamp(0.5F * e.getMaxHealth() / (float)targets.size(), 3, 20)))
-					worldObj.playSound(null, e.posX, e.posY, e.posZ, HBMSoundEvents.tesla, SoundCategory.BLOCKS, 1.0F, 1.0F);
+					worldObj.playSound(null, e.posX, e.posY, e.posZ, HBMSoundHandler.tesla, SoundCategory.BLOCKS, 1.0F, 1.0F);
 			
 			if(e instanceof EntityCreeper) {
 				e.onStruckByLightning(new EntityLightningBolt(worldObj, e.posX, e.posY, e.posZ, true));

@@ -7,7 +7,7 @@ import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ITooltipProvider;
 import com.hbm.items.machine.ItemStamp;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.tileentity.machine.TileEntityConveyorPress;
 import com.hbm.util.BobMathUtil;
 import com.hbm.util.I18nUtil;
@@ -80,7 +80,7 @@ public class MachineConveyorPress extends BlockDummyable implements IConveyorBel
                 stack.setCount(1);
                 press.inventory.setStackInSlot(0, stack);
                 player.getHeldItem(EnumHand.MAIN_HAND).shrink(1);
-                world.playSound(null, pos, HBMSoundEvents.upgradePlug, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                world.playSound(null, pos, HBMSoundHandler.upgradePlug, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 press.markChanged();
                 world.markBlockRangeForRenderUpdate(pos, pos);
                 return true;

@@ -7,7 +7,7 @@ import com.hbm.explosion.ExplosionChaos;
 import com.hbm.explosion.ExplosionLarge;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IConstantRenderer;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
@@ -57,13 +57,13 @@ public class EntityBombletZeta extends EntityThrowable implements IConstantRende
     		{
     			if(type == 0) {
     				ExplosionLarge.explode(world, thrower, this.posX + 0.5F, this.posY + 0.5F, this.posZ + 0.5F, 5.0F, true, false, false);
-    	        	world.playSound(posX + 0.5F, posY + 0.5F, posZ + 0.5F, HBMSoundEvents.bombDet, SoundCategory.HOSTILE, 25.0F, 0.8F + rand.nextFloat() * 0.4F, true);
+    	        	world.playSound(posX + 0.5F, posY + 0.5F, posZ + 0.5F, HBMSoundHandler.bombDet, SoundCategory.HOSTILE, 25.0F, 0.8F + rand.nextFloat() * 0.4F, true);
     			}
     			if(type == 1) {
     				ExplosionLarge.explode(world, thrower, this.posX + 0.5F, this.posY + 0.5F, this.posZ + 0.5F, 2.5F, false, false, false);
     				ExplosionChaos.burn(world, thrower, pos, 9);
     				ExplosionChaos.flameDeath(world, thrower, pos, 14);
-    	        	world.playSound(posX + 0.5F, posY + 0.5F, posZ + 0.5F, HBMSoundEvents.bombDet, SoundCategory.HOSTILE, 25.0F, 1.0F, true);
+    	        	world.playSound(posX + 0.5F, posY + 0.5F, posZ + 0.5F, HBMSoundHandler.bombDet, SoundCategory.HOSTILE, 25.0F, 1.0F, true);
     	        	
     	        	for(int i = 0; i < 5; i++)
     	        		ExplosionLarge.spawnBurst(world, this.posX + 0.5F, this.posY + 1.0F, this.posZ + 0.5F, rand.nextInt(10) + 15, rand.nextFloat() * 2 + 2);

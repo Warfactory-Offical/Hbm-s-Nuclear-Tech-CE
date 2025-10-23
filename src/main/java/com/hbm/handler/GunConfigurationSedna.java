@@ -1,6 +1,6 @@
 package com.hbm.handler;
 
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.HbmCollection;
 import com.hbm.render.anim.sedna.BusAnimationSedna;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
@@ -125,7 +125,7 @@ public class GunConfigurationSedna implements Cloneable {
     public static final String RSOUND_FATMAN = "hbm:weapon.fatmanReload";
 
     public GunConfigurationSedna silenced() {
-        this.firingSound = HBMSoundEvents.silencerShoot;
+        this.firingSound = HBMSoundHandler.silencerShoot;
         return this;
     }
 

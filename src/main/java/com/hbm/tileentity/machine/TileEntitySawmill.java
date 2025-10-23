@@ -8,7 +8,7 @@ import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.tileentity.TileEntityMachineBase;
@@ -123,7 +123,7 @@ public class TileEntitySawmill extends TileEntityMachineBase implements ITickabl
 
                     if(overspeed > 60 && warnCooldown == 0) {
                         warnCooldown = 100;
-                        world.playSound(null, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, HBMSoundEvents.warnOverspeed, SoundCategory.BLOCKS, 2.0F, 1.0F);
+                        world.playSound(null, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, HBMSoundHandler.warnOverspeed, SoundCategory.BLOCKS, 2.0F, 1.0F);
                     }
 
                     if(overspeed > 300) {

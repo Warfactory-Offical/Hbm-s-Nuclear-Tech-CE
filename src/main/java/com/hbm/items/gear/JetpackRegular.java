@@ -5,7 +5,7 @@ import com.hbm.capability.HbmCapability.IHBMData;
 import com.hbm.handler.ArmorUtil;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.items.armor.JetpackFueledBase;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import net.minecraft.client.util.ITooltipFlag;
@@ -55,7 +55,7 @@ public class JetpackRegular extends JetpackFueledBase {
 			if(player.motionY < 0.4D)
 				player.motionY += 0.1D;
 
-			world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.flamethrowerShoot, SoundCategory.PLAYERS, 0.25F, 1.5F);
+			world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.flamethrowerShoot, SoundCategory.PLAYERS, 0.25F, 1.5F);
 			this.useUpFuel(player, stack, 5);
 			ArmorUtil.resetFlightTime(player);
 		}

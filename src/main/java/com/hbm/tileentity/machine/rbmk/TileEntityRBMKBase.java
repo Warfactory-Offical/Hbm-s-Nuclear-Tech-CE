@@ -15,7 +15,7 @@ import com.hbm.inventory.control_panel.DataValue;
 import com.hbm.inventory.control_panel.DataValueFloat;
 import com.hbm.inventory.control_panel.IControllable;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.AdvancementManager;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
@@ -146,7 +146,7 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
 				this.jumpheight = 0;
 				this.downwardSpeed = 0;
 				this.falling = false;
-				world.playSound(null, pos.getX(),  pos.getY() + 4,  pos.getZ(), HBMSoundEvents.rbmkLid, SoundCategory.BLOCKS, 2.0F, 1.0F);
+				world.playSound(null, pos.getX(),  pos.getY() + 4,  pos.getZ(), HBMSoundHandler.rbmkLid, SoundCategory.BLOCKS, 2.0F, 1.0F);
 			}
 		}
 	}
@@ -554,7 +554,7 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
 		PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, avgX + 0.5, pos.getY() + 1, avgZ + 0.5), new TargetPoint(world.provider.getDimension(), avgX + 0.5, pos.getY() + 1, avgZ + 0.5, 250));
 		MainRegistry.proxy.effectNT(data);
 
-		world.playSound(null, avgX + 0.5, pos.getY() + 1, avgZ + 0.5, HBMSoundEvents.rbmk_explosion, SoundCategory.BLOCKS, 50.0F, 1.0F);
+		world.playSound(null, avgX + 0.5, pos.getY() + 1, avgZ + 0.5, HBMSoundHandler.rbmk_explosion, SoundCategory.BLOCKS, 50.0F, 1.0F);
 
 		List<EntityPlayer> list = world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(pos.getX() - 50 + 0.5, pos.getY() - 50 + 0.5, pos.getZ() - 50 + 0.5, pos.getX() + 50 + 0.5, pos.getY() + 50 + 0.5, pos.getZ() + 50 + 0.5));
 

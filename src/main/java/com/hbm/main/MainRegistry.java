@@ -46,7 +46,7 @@ import com.hbm.inventory.recipes.loader.SerializableRecipe;
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.GrenadeDispenserRegistry;
 import com.hbm.items.weapon.sedna.mods.WeaponModManager;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.HbmWorld;
 import com.hbm.lib.Library;
 import com.hbm.lib.RefStrings;
@@ -206,7 +206,7 @@ public class MainRegistry {
     public static ToolMaterial matHF = EnumHelper.addToolMaterial("CRUCIBLE", 3, 10000, 50.0F, 100.0F, 200);
 
     static {
-        HBMSoundEvents.init();
+        HBMSoundHandler.init();
         FluidRegistry.enableUniversalBucket();
     }
 

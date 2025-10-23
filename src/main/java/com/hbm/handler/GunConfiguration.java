@@ -1,6 +1,6 @@
 package com.hbm.handler;
 
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.render.anim.BusAnimation;
 import com.hbm.render.anim.HbmAnimations.AnimType;
 import com.hbm.render.misc.RenderScreenOverlay.Crosshair;
@@ -87,7 +87,7 @@ public class GunConfiguration {
 	public static SoundEvent RSOUND_FATMAN;
 	
 	public GunConfiguration silenced() {
-		this.firingSound = HBMSoundEvents.silencerShoot;
+		this.firingSound = HBMSoundHandler.silencerShoot;
 		return this;
 	}
 }

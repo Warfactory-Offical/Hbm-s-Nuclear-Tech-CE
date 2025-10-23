@@ -7,7 +7,7 @@ import com.hbm.interfaces.ICopiable;
 import com.hbm.inventory.container.ContainerRBMKAutoloader;
 import com.hbm.inventory.gui.GUIRBMKAutoloader;
 import com.hbm.items.machine.ItemRBMKRod;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.IGUIProvider;
@@ -143,7 +143,7 @@ public class TileEntityRBMKAutoloader extends TileEntityMachineBase implements I
 
             if(this.renderPiston > 0.01 && this.renderPiston < 0.99) {
                 if(this.audioLift == null || !this.audioLift.isPlaying()) {
-                    this.audioLift = MainRegistry.proxy.getLoopedSound(HBMSoundEvents.wgh_start, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), this.getVolume(0.75F), 25F, 1.0F, 5);
+                    this.audioLift = MainRegistry.proxy.getLoopedSound(HBMSoundHandler.wgh_start, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), this.getVolume(0.75F), 25F, 1.0F, 5);
                     this.audioLift.startSound();
                 }
                 this.audioLift.updateVolume(this.getVolume(0.75F));
@@ -152,7 +152,7 @@ public class TileEntityRBMKAutoloader extends TileEntityMachineBase implements I
                 if(this.audioLift != null) {
                     this.audioLift.stopSound();
                     this.audioLift = null;
-                    MainRegistry.proxy.playSoundClient(pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.wgh_stop, SoundCategory.BLOCKS, this.getVolume(2F), 1F);
+                    MainRegistry.proxy.playSoundClient(pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.wgh_stop, SoundCategory.BLOCKS, this.getVolume(2F), 1F);
                 }
             }
 

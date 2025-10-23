@@ -3,7 +3,7 @@ package com.hbm.items.tool;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockBedrockOreTE;
 import com.hbm.items.ModItems;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -80,7 +80,7 @@ public class ItemSurveyScanner extends Item {
 			}
 		}
 
-		world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.techBleep, SoundCategory.PLAYERS, 1.0F, 1.0F);
+		world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.techBleep, SoundCategory.PLAYERS, 1.0F, 1.0F);
 		
 		player.swingArm(hand);
 		

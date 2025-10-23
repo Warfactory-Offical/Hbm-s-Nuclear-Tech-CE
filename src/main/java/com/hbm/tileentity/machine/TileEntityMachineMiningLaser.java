@@ -19,7 +19,7 @@ import com.hbm.inventory.recipes.CrystallizerRecipes;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.packet.toclient.LoopedSoundPacket;
 import com.hbm.packet.PacketDispatcher;
@@ -94,7 +94,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 			public void setStackInSlot(int slot, @NotNull ItemStack stack) {
 				super.setStackInSlot(slot, stack);
 				if(stack != ItemStack.EMPTY && slot >= 1 && slot <= 8 && stack.getItem() instanceof ItemMachineUpgrade)
-					world.playSound(null, pos.getX() + 0.5, pos.getY() + 1.5, pos.getZ() + 0.5, HBMSoundEvents.upgradePlug, SoundCategory.BLOCKS, 1.0F, 1.0F);
+					world.playSound(null, pos.getX() + 0.5, pos.getY() + 1.5, pos.getZ() + 0.5, HBMSoundHandler.upgradePlug, SoundCategory.BLOCKS, 1.0F, 1.0F);
 			}
 		};
 		tankNew = new FluidTankNTM(Fluids.OIL, 64000);
@@ -187,7 +187,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 					}
 				}
 				if(beam && hasUpgrade(ModItems.upgrade_screm)) {
-					world.playSound(null, targetX + 0.5, targetY + 0.5, targetZ + 0.5, HBMSoundEvents.screm, SoundCategory.BLOCKS, 20.0F, 1.0F);
+					world.playSound(null, targetX + 0.5, targetY + 0.5, targetZ + 0.5, HBMSoundHandler.screm, SoundCategory.BLOCKS, 20.0F, 1.0F);
 				}
 			} else {
 				targetY = pos.getY() - 2;

@@ -3,7 +3,7 @@ package com.hbm.items.tool;
 import com.hbm.items.ModItems;
 import com.hbm.items.armor.ArmorFSBPowered;
 import com.hbm.items.gear.ArmorFSB;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.util.I18nUtil;
 import net.minecraft.client.util.ITooltipFlag;
@@ -42,7 +42,7 @@ public class ItemFusionCore extends Item {
 
         	stack.shrink(1);
 
-            world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundEvents.battery, SoundCategory.PLAYERS, 1F, 1F);
+            world.playSound(null, player.posX, player.posY, player.posZ, HBMSoundHandler.battery, SoundCategory.PLAYERS, 1F, 1F);
     	}
 		return super.onItemRightClick(world, player, hand);
 	}

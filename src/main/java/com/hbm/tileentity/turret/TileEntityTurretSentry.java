@@ -9,7 +9,7 @@ import com.hbm.inventory.gui.GuiInfoContainer;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.factory.XFactory9mm;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.util.Vec3dUtil;
@@ -163,7 +163,7 @@ public class TileEntityTurretSentry extends TileEntityTurretBaseNT implements IG
         this.spawnBullet(conf, 5F);
         this.consumeAmmo(conf.ammo);
         this.world.playSound(
-            null, this.pos, HBMSoundEvents.sentryFire, SoundCategory.BLOCKS, 2.0F, 1.0F);
+            null, this.pos, HBMSoundHandler.sentryFire, SoundCategory.BLOCKS, 2.0F, 1.0F);
 
         Vec3d pos = this.getTurretPos();
         Vec3d vec = new Vec3d(this.getBarrelLength(), 0, 0);
@@ -228,7 +228,7 @@ public class TileEntityTurretSentry extends TileEntityTurretBaseNT implements IG
     super.seekNewTarget();
 
     if (lastTarget != this.target && this.target != null) {
-      world.playSound(null, pos, HBMSoundEvents.sentryLockon, SoundCategory.BLOCKS, 2.0F, 1.5F);
+      world.playSound(null, pos, HBMSoundHandler.sentryLockon, SoundCategory.BLOCKS, 2.0F, 1.5F);
     }
   }
 

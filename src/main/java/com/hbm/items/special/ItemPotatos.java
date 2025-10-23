@@ -1,7 +1,7 @@
 package com.hbm.items.special;
 
 import com.hbm.items.machine.ItemBattery;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -30,7 +30,7 @@ public class ItemPotatos extends ItemBattery {
     				
     		    	float pitch = (float)getCharge(stack) / (float)this.getMaxCharge(stack) * 0.5F + 0.5F;
     		    	
-    				world.playSound(null, p.posX, p.posY, p.posZ, HBMSoundEvents.potatOSRandom, SoundCategory.PLAYERS, 1.0F, pitch);
+    				world.playSound(null, p.posX, p.posY, p.posZ, HBMSoundHandler.potatOSRandom, SoundCategory.PLAYERS, 1.0F, pitch);
     				setTimer(stack, 200 + itemRand.nextInt(100));
     			}
     		}

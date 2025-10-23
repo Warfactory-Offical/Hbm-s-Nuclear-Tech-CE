@@ -9,7 +9,7 @@ import com.hbm.handler.GunConfiguration;
 import com.hbm.interfaces.IBulletImpactBehavior;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.items.ModItems;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.potion.HbmPotion;
 import com.hbm.render.anim.BusAnimation;
 import com.hbm.render.anim.BusAnimationKeyframe;
@@ -40,7 +40,7 @@ public class GunEnergyFactory {
 		config.crosshair = Crosshair.NONE;
 		config.durability = 12000;
 		config.reloadSound = GunConfiguration.RSOUND_MAG; //MetalloloM: i'll add new sounds for it later
-		config.firingSound = HBMSoundEvents.hksShoot;
+		config.firingSound = HBMSoundHandler.hksShoot;
 		config.reloadSoundEnd = false;
 
 		config.name = "Visual Operation Ranged Tactical Electromagnetic Xenoblaster";
@@ -77,7 +77,7 @@ public class GunEnergyFactory {
 		config.crosshair = Crosshair.NONE;
 		config.durability = 10000;
 		config.reloadSound = GunConfiguration.RSOUND_MAG;
-		config.firingSound = HBMSoundEvents.osiprShoot;
+		config.firingSound = HBMSoundHandler.osiprShoot;
 		config.reloadSoundEnd = false;
 
 		config.name = "Gluon Gun";
@@ -121,7 +121,7 @@ public class GunEnergyFactory {
 
 				if(!bullet.world.isRemote) {
 					ExplosionChaos.explodeZOMG(bullet.world, (int) bullet.posX, (int) bullet.posY, (int) bullet.posZ, 5);
-					bullet.world.playSound(null, bullet.posX, bullet.posY, bullet.posZ, HBMSoundEvents.bombDet, SoundCategory.HOSTILE, 5.0F, 1.0F);
+					bullet.world.playSound(null, bullet.posX, bullet.posY, bullet.posZ, HBMSoundHandler.bombDet, SoundCategory.HOSTILE, 5.0F, 1.0F);
 					ExplosionLarge.spawnParticles(bullet.world, bullet.posX, bullet.posY, bullet.posZ, 5);
 				}
 			}

@@ -8,7 +8,7 @@ import com.hbm.entity.grenade.EntityGrenadeZOMG;
 import com.hbm.entity.projectile.*;
 import com.hbm.handler.ArmorUtil;
 import com.hbm.handler.threading.PacketThreading;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.potion.HbmPotion;
@@ -793,7 +793,7 @@ public class ExplosionChaos {
 			entityZomg.shootingEntity = shooter;
 
 			world.spawnEntity(entityZomg);
-			world.playSound(null, zomg.posX, zomg.posY, zomg.posZ, HBMSoundEvents.zomgShoot, SoundCategory.AMBIENT, 10.0F, 0.8F + (rand.nextFloat() * 0.4F));
+			world.playSound(null, zomg.posX, zomg.posY, zomg.posZ, HBMSoundHandler.zomgShoot, SoundCategory.AMBIENT, 10.0F, 0.8F + (rand.nextFloat() * 0.4F));
 		}
 	}
 

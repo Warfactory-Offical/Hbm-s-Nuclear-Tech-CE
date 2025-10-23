@@ -6,7 +6,7 @@ import com.hbm.handler.HbmShaderManager2;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.weapon.ItemGunBase;
 import com.hbm.items.weapon.ItemGunJShotty;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.GLCompat;
@@ -76,10 +76,10 @@ public class ItemRenderJShotgun extends TEISRBase {
 				public boolean onRender(int prevFrame, int currentFrame, int model, float diffN, String modelName) {
 					//Sounds
 					if(prevFrame == 9 && currentFrame == 10){
-						Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getRecord(HBMSoundEvents.jsg_reload0, 1F, 0.15F));
+						Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getRecord(HBMSoundHandler.jsg_reload0, 1F, 0.15F));
 					}
 					if(prevFrame == 45 && currentFrame == 46){
-						Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getRecord(HBMSoundEvents.jsg_reload1, 1F, 0.15F));
+						Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getRecord(HBMSoundHandler.jsg_reload1, 1F, 0.15F));
 					}
 					if(modelName.startsWith("Main")){
 						firstPersonFlashlightPos = NTMRenderHelper.project(1.31674F, -8.20808F, -1.57076F);

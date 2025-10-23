@@ -2,7 +2,7 @@ package com.hbm.items.tool;
 
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.items.ItemBase;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.turret.TileEntityTurretBaseArtillery;
 import net.minecraft.block.Block;
@@ -89,7 +89,7 @@ public class ItemDesignatorArtyRange extends ItemBase {
             player.posX,
             player.posY,
             player.posZ,
-            HBMSoundEvents.techBleep,
+            HBMSoundHandler.techBleep,
             SoundCategory.PLAYERS,
             1.0F,
             1.0F);
@@ -125,7 +125,7 @@ public class ItemDesignatorArtyRange extends ItemBase {
             player.posX,
             player.posY,
             player.posZ,
-            HBMSoundEvents.techBoop,
+            HBMSoundHandler.techBoop,
             SoundCategory.PLAYERS,
             1.0F,
             1.0F);

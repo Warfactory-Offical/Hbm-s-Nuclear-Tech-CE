@@ -6,7 +6,7 @@ import com.hbm.inventory.container.ContainerTurretBase;
 import com.hbm.inventory.gui.GUITurretRichard;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.factory.XFactoryRocket;
-import com.hbm.lib.HBMSoundEvents;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.IGUIProvider;
 import io.netty.buffer.ByteBuf;
@@ -115,7 +115,7 @@ public class TileEntityTurretRichard extends TileEntityTurretBaseNT implements I
 			if(conf != null) {
 				this.spawnBullet(conf, 30F);
 				this.consumeAmmo(conf.ammo);
-				this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundEvents.richard_fire, SoundCategory.BLOCKS, 2.0F, 1.0F);
+				this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.richard_fire, SoundCategory.BLOCKS, 2.0F, 1.0F);
 				this.loaded--;
 				
 			} else {
