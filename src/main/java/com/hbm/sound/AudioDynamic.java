@@ -29,6 +29,7 @@ public class AudioDynamic extends MovingSound {
 		this.repeat = true;
 		this.attenuationType = ISound.AttenuationType.NONE;
 		this.intendedVolume = 10;
+        this.range = 10;
 		this.nonLegacy = useNewSystem;
 	}
 	

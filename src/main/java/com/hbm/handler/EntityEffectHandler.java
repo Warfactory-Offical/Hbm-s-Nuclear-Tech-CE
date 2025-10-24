@@ -612,8 +612,7 @@ public class EntityEffectHandler {
 					if(dashActivated && stamina >= perDash) {
 
 						Vec3d lookingIn = player.getLookVec();
-						Vec3d strafeVec = player.getLookVec();
-						strafeVec.rotatePitch((float)Math.PI * 0.5F);
+						Vec3d strafeVec = lookingIn.rotateYaw((float)Math.PI * 0.5F);
 
 						int forward = (int) Math.signum(player.moveForward);
 						int strafe = (int) Math.signum(player.moveStrafing);
