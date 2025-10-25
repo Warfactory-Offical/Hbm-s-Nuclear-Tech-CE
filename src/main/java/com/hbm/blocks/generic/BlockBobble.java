@@ -1,24 +1,29 @@
 package com.hbm.blocks.generic;
 
+import com.hbm.blocks.ICustomBlockItem;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.gui.GUIScreenBobble;
+import com.hbm.items.IModelRegister;
 import com.hbm.items.special.ItemPlasticScrap.ScrapType;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.world.gen.nbt.INBTBlockTransformable;
 import com.hbm.world.gen.nbt.INBTTileEntityTransformable;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -35,12 +40,14 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.Nullable;
 
-public class BlockBobble extends BlockContainer implements INBTBlockTransformable {
+public class BlockBobble extends BlockContainer implements INBTBlockTransformable, ICustomBlockItem {
 
     public static final PropertyInteger META = PropertyInteger.create("rot", 0, 15);
     private static final AxisAlignedBB BOUNDS = new AxisAlignedBB(5.5D / 16D, 0.0D, 5.5D / 16D, 1.0D - 5.5D / 16D, 0.625D, 1.0D - 5.5D / 16D);
@@ -170,6 +177,27 @@ public class BlockBobble extends BlockContainer implements INBTBlockTransformabl
     @Override
     public TileEntity createNewTileEntity(World world, int meta) {
         return new TileEntityBobble();
+    }
+
+    @Override
+    public void registerItem() {
+        ItemBlock itemBlock = new BlockBobbleItem(this);
+        itemBlock.setRegistryName(this.getRegistryName());
+        ForgeRegistries.ITEMS.register(itemBlock);
+    }
+
+    private static class BlockBobbleItem extends CustomBlockItem implements IModelRegister {
+        private BlockBobbleItem(Block block) {
+            super(block);
+        }
+
+        @Override
+        @SideOnly(Side.CLIENT)
+        public void registerModels() {
+            for (int meta = 0; meta < BobbleType.values().length; meta++) {
+                ModelLoader.setCustomModelResourceLocation(this, meta, new ModelResourceLocation(this.getRegistryName(), "inventory"));
+            }
+        }
     }
 
     public enum BobbleType {

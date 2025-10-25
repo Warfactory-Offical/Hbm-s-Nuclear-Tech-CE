@@ -583,7 +583,7 @@ public class RenderBobble extends TileEntitySpecialRenderer<TileEntityBobble> im
 
 
     @Override
-    public ItemRenderBase getRenderer(Item item) { //TODO: this somehow doesn't work
+    public ItemRenderBase getRenderer(Item item) {
         return new ItemRenderBase() {
             public void renderInventory() {
                 GlStateManager.translate(0, -3.5, 0);
