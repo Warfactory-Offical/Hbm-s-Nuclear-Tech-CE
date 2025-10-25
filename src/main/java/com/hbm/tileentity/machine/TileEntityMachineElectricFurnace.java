@@ -269,9 +269,7 @@ public class TileEntityMachineElectricFurnace extends TileEntityMachineBase impl
 
     @Override
     public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
-        boolean isSwapBetweenVariants = (oldState.getBlock() == ModBlocks.machine_electric_furnace_off && newState.getBlock() == ModBlocks.machine_electric_furnace_on) ||
-                (oldState.getBlock() == ModBlocks.machine_electric_furnace_on  && newState.getBlock() == ModBlocks.machine_electric_furnace_off);
-        if (isSwapBetweenVariants) return false;
+        if (Library.isSwappingBetweenVariants(oldState, newState, ModBlocks.machine_electric_furnace_off, ModBlocks.machine_electric_furnace_on)) return false;
         return super.shouldRefresh(world, pos, oldState, newState);
     }
 }

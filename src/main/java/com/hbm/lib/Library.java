@@ -1678,4 +1678,8 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 		}
 		return newState;
 	}
+
+    public static boolean isSwappingBetweenVariants(IBlockState state1, IBlockState state2, Block validBlock1, Block validBlock2) {
+        return (state1.getBlock() == validBlock1 || state1.getBlock() == validBlock2) && (state2.getBlock() == validBlock1 || state2.getBlock() == validBlock2);
+    }
 }
