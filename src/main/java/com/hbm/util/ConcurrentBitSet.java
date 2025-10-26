@@ -1,5 +1,6 @@
 package com.hbm.util;
 
+import com.hbm.interfaces.BitMask;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,7 +15,7 @@ import static com.hbm.lib.UnsafeHolder.U;
  * @author mlbv
  */
 @ThreadSafe
-public class ConcurrentBitSet implements Cloneable {
+public class ConcurrentBitSet implements BitMask, Cloneable {
     private static final int ABASE;
     private static final int ASHIFT;
 
@@ -77,6 +78,7 @@ public class ConcurrentBitSet implements Cloneable {
         return bitSet;
     }
 
+    @Override
     @Contract(pure = true)
     public boolean get(int bit) {
         if (bit < 0) throw new IndexOutOfBoundsException("bit < 0: " + bit);
@@ -87,6 +89,7 @@ public class ConcurrentBitSet implements Cloneable {
         return (word & mask) != 0;
     }
 
+    @Override
     public void set(int bit) {
         if (bit < 0 || bit >= logicalSize) return;
         int wordIndex = bit >>> 6;
@@ -103,6 +106,7 @@ public class ConcurrentBitSet implements Cloneable {
         }
     }
 
+    @Override
     public boolean getAndSet(int bit) {
         if (bit < 0 || bit >= logicalSize) throw new IndexOutOfBoundsException("bit index out of bounds: " + bit);
         int wordIndex = bit >>> 6;
@@ -276,6 +280,7 @@ public class ConcurrentBitSet implements Cloneable {
         }
     }
 
+    @Override
     @Contract(pure = true)
     public int nextSetBit(int from) {
         if (from < 0) from = 0;
@@ -293,6 +298,7 @@ public class ConcurrentBitSet implements Cloneable {
         }
     }
 
+    @Override
     @Contract(pure = true)
     public int nextClearBit(int from) {
         if (from < 0) throw new IndexOutOfBoundsException("from < 0: " + from);
@@ -311,6 +317,7 @@ public class ConcurrentBitSet implements Cloneable {
         }
     }
 
+    @Override
     @Contract(pure = true)
     public int previousSetBit(int from) {
         if (from < 0) return -1;
@@ -327,6 +334,7 @@ public class ConcurrentBitSet implements Cloneable {
         }
     }
 
+    @Override
     @Contract(pure = true)
     public int previousClearBit(int from) {
         if (from < 0) return -1;
@@ -349,16 +357,19 @@ public class ConcurrentBitSet implements Cloneable {
         }
     }
 
+    @Override
     @Contract(pure = true)
     public boolean isEmpty() {
         return bitCount.sum() == 0;
     }
 
+    @Override
     @Contract(pure = true)
     public long cardinality() {
         return bitCount.sum();
     }
 
+    @Override
     @Contract(pure = true)
     public int length() {
         if (logicalSize == 0) return 0;
@@ -374,11 +385,13 @@ public class ConcurrentBitSet implements Cloneable {
         return 0;
     }
 
+    @Override
     @Contract(pure = true)
     public int size() {
         return wordCount << 6;
     }
 
+    @Override
     @Contract(pure = true)
     public int logicalSize() {
         return logicalSize;
@@ -463,6 +476,7 @@ public class ConcurrentBitSet implements Cloneable {
         }
     }
 
+    @Override
     @Contract(pure = true)
     public long[] toLongArray() {
         int len = length();

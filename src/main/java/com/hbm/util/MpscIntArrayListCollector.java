@@ -1,5 +1,6 @@
 package com.hbm.util;
 
+import com.hbm.lib.TLPool;
 import com.hbm.lib.UnsafeHolder;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
@@ -15,10 +16,13 @@ import static com.hbm.lib.UnsafeHolder.U;
  */
 public class MpscIntArrayListCollector {
     private static final long HEAD_OFF = UnsafeHolder.fieldOffset(MpscIntArrayListCollector.class, "head");
+    private static final TLPool<Node> NODE_POOL = new TLPool<>(() -> new Node(0, null), n -> n.next = null, 64, 4096);
     private Node head;
 
     public void push(int i) {
-        Node n = new Node(i, null);
+        Node n = NODE_POOL.borrow();
+        n.v = i;
+        n.next = null;
         while (true) {
             Node h = (Node) U.getObjectVolatile(this, HEAD_OFF);
             n.next = h;
@@ -33,7 +37,9 @@ public class MpscIntArrayListCollector {
         Node headNode = null;
         Node tailNode = null;
         for (int i = 0; i < size; i++) {
-            Node n = new Node(values.getInt(i), headNode);
+            Node n = NODE_POOL.borrow();
+            n.v = values.getInt(i);
+            n.next = headNode;
             headNode = n;
             if (tailNode == null) tailNode = n;
         }
@@ -55,7 +61,12 @@ public class MpscIntArrayListCollector {
         out.size(n);
         int[] a = out.elements();
         int i = 0;
-        for (Node p = h; p != null; p = p.next) a[i++] = p.v; // LIFO
+        for (Node p = h; p != null; ) {
+            a[i++] = p.v; // LIFO
+            Node next = p.next;
+            NODE_POOL.recycle(p);
+            p = next;
+        }
         return out;
     }
 
@@ -74,12 +85,17 @@ public class MpscIntArrayListCollector {
         l.size(base + n);
         int[] a = l.elements();
         int i = base;
-        for (Node p = h; p != null; p = p.next) a[i++] = p.v;
+        for (Node p = h; p != null; ) {
+            a[i++] = p.v;
+            Node next = p.next;
+            NODE_POOL.recycle(p);
+            p = next;
+        }
         return n;
     }
 
     private static final class Node {
-        private final int v;
+        private int v;
         private Node next;
 
         Node(int v, Node next) {

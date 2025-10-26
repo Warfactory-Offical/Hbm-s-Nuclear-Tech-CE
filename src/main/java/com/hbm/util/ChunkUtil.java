@@ -1,6 +1,7 @@
 package com.hbm.util;
 
 import com.hbm.config.GeneralConfig;
+import com.hbm.interfaces.BitMask;
 import com.hbm.interfaces.ServerThread;
 import com.hbm.interfaces.ThreadSafeMethod;
 import com.hbm.lib.Library;
@@ -54,7 +55,8 @@ import static com.hbm.lib.UnsafeHolder.U;
  *       <strong>CAS publish</strong> per sub-chunk (see {@link #applyAndSwap}
  *       and {@link #casEbsAt};{@link #copyAndModify} builds a modified copy without publishing).</li>
  *   <li>Selective carving of blocks inside a sub-chunk from a bitmask while collecting metadata
- *       such as tile-entity removals and edge contacts (see {@link #copyAndCarve}).</li>
+ *       such as tile-entity removals and edge contacts (see {@link #copyAndCarve} and
+ *       {@link #copyAndCarveLocal}).</li>
  *   <li>TileEntity lifecycle fix-ups after block-state transitions (see {@link #flushTileEntity}).</li>
  * </ul>
  *
@@ -322,6 +324,72 @@ public final class ChunkUtil {
         return copied;
     }
 
+    @ThreadSafeMethod
+    private static boolean touchesOutsideNonAir(@NotNull WorldServer world, int chunkX, int chunkZ, int subY, int height, int xLocal, int yLocal,
+                                                int zLocal, @Nullable ExtendedBlockStorage @NotNull [] srcs, @NotNull NeighborCache nc) {
+        if (yLocal == 0 && subY > 0) {
+            ExtendedBlockStorage below = srcs[subY - 1];
+            if (below != null && !below.isEmpty()) {
+                if (below.get(xLocal, 15, zLocal).getBlock() != Blocks.AIR) return true;
+            }
+        }
+        if (yLocal == 15 && subY < (height >> 4) - 1) {
+            ExtendedBlockStorage above = srcs[subY + 1];
+            if (above != null && !above.isEmpty()) {
+                if (above.get(xLocal, 0, zLocal).getBlock() != Blocks.AIR) return true;
+            }
+        }
+
+        if (xLocal == 0) {
+            if (nc.negX == null) nc.negX = getLoadedEBS(world, ChunkPos.asLong(chunkX - 1, chunkZ));
+            if (nc.negX != null) {
+                ExtendedBlockStorage n = nc.negX[subY];
+                if (n != null && !n.isEmpty() && n.get(15, yLocal, zLocal).getBlock() != Blocks.AIR) return true;
+            }
+        }
+        if (xLocal == 15) {
+            if (nc.posX == null) nc.posX = getLoadedEBS(world, ChunkPos.asLong(chunkX + 1, chunkZ));
+            if (nc.posX != null) {
+                ExtendedBlockStorage n = nc.posX[subY];
+                if (n != null && !n.isEmpty() && n.get(0, yLocal, zLocal).getBlock() != Blocks.AIR) return true;
+            }
+        }
+        if (zLocal == 0) {
+            if (nc.negZ == null) nc.negZ = getLoadedEBS(world, ChunkPos.asLong(chunkX, chunkZ - 1));
+            if (nc.negZ != null) {
+                ExtendedBlockStorage n = nc.negZ[subY];
+                if (n != null && !n.isEmpty() && n.get(xLocal, yLocal, 15).getBlock() != Blocks.AIR) return true;
+            }
+        }
+        if (zLocal == 15) {
+            if (nc.posZ == null) nc.posZ = getLoadedEBS(world, ChunkPos.asLong(chunkX, chunkZ + 1));
+            if (nc.posZ != null) {
+                ExtendedBlockStorage n = nc.posZ[subY];
+                return n != null && !n.isEmpty() && n.get(xLocal, yLocal, 0).getBlock() != Blocks.AIR;
+            }
+        }
+        return false;
+    }
+
+    @ThreadSafeMethod
+    private static void carveOne(@NotNull WorldServer world, int chunkX, int chunkZ, int subY, int height, int xLocal, int yLocal, int zLocal,
+                                 int xGlobal, int yGlobal, int zGlobal, @Nullable ExtendedBlockStorage @NotNull [] srcs,
+                                 @NotNull ExtendedBlockStorage dst, @NotNull NeighborCache nc, @NotNull LongCollection teRemovals,
+                                 @NotNull LongCollection edgeOut) {
+        final IBlockState old = dst.get(xLocal, yLocal, zLocal);
+        final Block oldBlock = old.getBlock();
+        if (oldBlock == Blocks.AIR) return;
+
+        final long packed = Library.blockPosToLong(xGlobal, yGlobal, zGlobal);
+        if (oldBlock.hasTileEntity(old)) teRemovals.add(packed);
+
+        if (touchesOutsideNonAir(world, chunkX, chunkZ, subY, height, xLocal, yLocal, zLocal, srcs, nc)) {
+            edgeOut.add(packed);
+        }
+
+        dst.set(xLocal, yLocal, zLocal, AIR_DEFAULT_STATE); // updates ref counts
+    }
+
     /**
      * Produce a modified copy of the target sub-chunk by <em>carving out</em> positions marked in
      * {@code bs}. For every non-air block removed, tile-entity removals and edge contacts are
@@ -350,17 +418,18 @@ public final class ChunkUtil {
     @ThreadSafeMethod
     @Contract(mutates = "param7, param8") // teRemovals and edgeOut
     public static @Nullable ExtendedBlockStorage copyAndCarve(@NotNull WorldServer world, int chunkX, int chunkZ, int subY,
-                                                              @Nullable ExtendedBlockStorage @NotNull [] srcs, @NotNull ConcurrentBitSet bs,
+                                                              @Nullable ExtendedBlockStorage @NotNull [] srcs, @NotNull BitMask bs,
                                                               @NotNull LongCollection teRemovals, @NotNull LongCollection edgeOut) {
         ExtendedBlockStorage src = getEbsVolatile(srcs, subY);
         if (src == null || src.isEmpty()) return null;
         final int height = world.getHeight();
         final ExtendedBlockStorage dst = copyOf(src);
-        ExtendedBlockStorage[] storagesNegX = null, storagesPosX = null, storagesNegZ = null, storagesPosZ = null;
+        final NeighborCache nc = new NeighborCache();
+
         final int startBit = (height - 1 - ((subY << 4) + 15)) << 8;
         final int endBit = ((height - 1 - (subY << 4)) << 8) | 0xFF;
-        int bit = bs.nextSetBit(startBit);
-        while (bit >= 0 && bit <= endBit) {
+
+        for (int bit = bs.nextSetBit(startBit); bit >= 0 && bit <= endBit; bit = bs.nextSetBit(bit + 1)) {
             final int yGlobal = height - 1 - (bit >>> 8);
             final int xGlobal = (chunkX << 4) | ((bit >>> 4) & 0xF);
             final int zGlobal = (chunkZ << 4) | (bit & 0xF);
@@ -369,76 +438,41 @@ public final class ChunkUtil {
             final int yLocal = yGlobal & 0xF;
             final int zLocal = zGlobal & 0xF;
 
-            final IBlockState old = dst.get(xLocal, yLocal, zLocal);
-            final Block oldBlock = old.getBlock();
-            if (oldBlock != Blocks.AIR) {
-                final long packed = Library.blockPosToLong(xGlobal, yGlobal, zGlobal);
-                if (oldBlock.hasTileEntity(old)) teRemovals.add(packed);
-                boolean touchesOutsideNonAir = false;
-                if (yLocal == 0 && subY > 0) {
-                    ExtendedBlockStorage below = srcs[subY - 1];
-                    if (below != null && !below.isEmpty()) {
-                        IBlockState nb = below.get(xLocal, 15, zLocal);
-                        if (nb.getBlock() != Blocks.AIR) touchesOutsideNonAir = true;
-                    }
-                }
-                if (!touchesOutsideNonAir && yLocal == 15 && subY < (height >> 4) - 1) {
-                    ExtendedBlockStorage above = srcs[subY + 1];
-                    if (above != null && !above.isEmpty()) {
-                        IBlockState nb = above.get(xLocal, 0, zLocal);
-                        if (nb.getBlock() != Blocks.AIR) touchesOutsideNonAir = true;
-                    }
-                }
-                if (!touchesOutsideNonAir && xLocal == 0) {
-                    int nCX = chunkX - 1;
-                    if (storagesNegX == null) storagesNegX = getLoadedEBS(world, ChunkPos.asLong(nCX, chunkZ));
-                    if (storagesNegX != null) {
-                        ExtendedBlockStorage n = storagesNegX[subY];
-                        if (n != null && !n.isEmpty()) {
-                            IBlockState nb = n.get(15, yLocal, zLocal);
-                            if (nb.getBlock() != Blocks.AIR) touchesOutsideNonAir = true;
-                        }
-                    }
-                }
-                if (!touchesOutsideNonAir && xLocal == 15) {
-                    int nCX = chunkX + 1;
-                    if (storagesPosX == null) storagesPosX = getLoadedEBS(world, ChunkPos.asLong(nCX, chunkZ));
-                    if (storagesPosX != null) {
-                        ExtendedBlockStorage n = storagesPosX[subY];
-                        if (n != null && !n.isEmpty()) {
-                            IBlockState nb = n.get(0, yLocal, zLocal);
-                            if (nb.getBlock() != Blocks.AIR) touchesOutsideNonAir = true;
-                        }
-                    }
-                }
-                if (!touchesOutsideNonAir && zLocal == 0) {
-                    int nCZ = chunkZ - 1;
-                    if (storagesNegZ == null) storagesNegZ = getLoadedEBS(world, ChunkPos.asLong(chunkX, nCZ));
-                    if (storagesNegZ != null) {
-                        ExtendedBlockStorage n = storagesNegZ[subY];
-                        if (n != null && !n.isEmpty()) {
-                            IBlockState nb = n.get(xLocal, yLocal, 15);
-                            if (nb.getBlock() != Blocks.AIR) touchesOutsideNonAir = true;
-                        }
-                    }
-                }
-                if (!touchesOutsideNonAir && zLocal == 15) {
-                    int nCZ = chunkZ + 1;
-                    if (storagesPosZ == null) storagesPosZ = getLoadedEBS(world, ChunkPos.asLong(chunkX, nCZ));
-                    if (storagesPosZ != null) {
-                        ExtendedBlockStorage n = storagesPosZ[subY];
-                        if (n != null && !n.isEmpty()) {
-                            IBlockState nb = n.get(xLocal, yLocal, 0);
-                            if (nb.getBlock() != Blocks.AIR) touchesOutsideNonAir = true;
-                        }
-                    }
-                }
-                if (touchesOutsideNonAir) {
-                    edgeOut.add(packed);
-                }
-                dst.set(xLocal, yLocal, zLocal, AIR_DEFAULT_STATE); // updates ref counts
-            }
-            bit = bs.nextSetBit(bit + 1);
+            carveOne(world, chunkX, chunkZ, subY, height, xLocal, yLocal, zLocal, xGlobal, yGlobal, zGlobal, srcs, dst, nc, teRemovals, edgeOut);
+        }
+        return dst;
+    }
+
+    /**
+     * Same as {@link #copyAndCarve(WorldServer, int, int, int, ExtendedBlockStorage[], BitMask, LongCollection, LongCollection)},
+     * but accepts a <strong>local</strong> (0..4095) bitmask for the target sub-chunk. Each set bit represents
+     * {@code index = x | (z << 4) | (y << 8)}.
+     *
+     * <p>Only local indices in range [0,4095] are considered; others are ignored.</p>
+     *
+     * @return a copied {@link ExtendedBlockStorage} with carved positions set to air, or {@code null} if the source is empty.
+     */
+    @ThreadSafeMethod
+    @Contract(mutates = "param7, param8") // teRemovals and edgeOut
+    public static @Nullable ExtendedBlockStorage copyAndCarveLocal(@NotNull WorldServer world, int chunkX, int chunkZ, int subY,
+                                                                   @Nullable ExtendedBlockStorage @NotNull [] srcs, @NotNull BitMask localMask,
+                                                                   @NotNull LongCollection teRemovals, @NotNull LongCollection edgeOut) {
+        ExtendedBlockStorage src = getEbsVolatile(srcs, subY);
+        if (src == null || src.isEmpty()) return null;
+        final int height = world.getHeight();
+        final ExtendedBlockStorage dst = copyOf(src);
+        final NeighborCache nc = new NeighborCache();
+
+        for (int idx = localMask.nextSetBit(0); idx >= 0 && idx < 4096; idx = localMask.nextSetBit(idx + 1)) {
+            final int xLocal = idx & 15;
+            final int yLocal = (idx >>> 8) & 15;
+            final int zLocal = (idx >>> 4) & 15;
+
+            final int xGlobal = (chunkX << 4) | xLocal;
+            final int yGlobal = (subY << 4) | yLocal;
+            final int zGlobal = (chunkZ << 4) | zLocal;
+
+            carveOne(world, chunkX, chunkZ, subY, height, xLocal, yLocal, zLocal, xGlobal, yGlobal, zGlobal, srcs, dst, nc, teRemovals, edgeOut);
         }
         return dst;
     }
@@ -825,5 +859,12 @@ public final class ChunkUtil {
     @Contract(pure = true)
     public static int indexToZ(int index, int chunkZ) {
         return (chunkZ << 4) | ((index >>> 4) & 15);
+    }
+
+    /**
+     * Lazy neighbor storage cache for edge-contact checks while carving.
+     */
+    private static final class NeighborCache {
+        @Nullable ExtendedBlockStorage[] negX, posX, negZ, posZ;
     }
 }
