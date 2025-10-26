@@ -46,7 +46,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.EntitySelectors;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.world.Explosion;
@@ -62,6 +65,7 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.Level;
@@ -1416,6 +1420,21 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 		return hasBoundingBox && state.getMaterial() == Material.PORTAL;
 	}
 
+    /**
+     * Attempts to export a list of items to an external inventory or conveyor belt at a given position.
+     * It first tries to insert into an IItemHandler (chest, etc.), then tries to place on an IConveyorBelt.
+     *
+     * @param world         The world object.
+     * @param exportToPos   The block position of the target inventory/conveyor.
+     * @param accessSide    The direction from which the target block is being accessed.
+     * @param itemsToExport A list of ItemStacks to be exported. This list will not be modified.
+     * @return A new list containing any leftover ItemStacks that could not be fully exported. Returns an empty list on full success.
+     */
+    public static @NotNull List<ItemStack> popProducts(@NotNull World world, @NotNull BlockPos exportToPos, @NotNull ForgeDirection accessSide,
+                                                       @NotNull List<ItemStack> itemsToExport) {
+        return popProducts(world, exportToPos, Objects.requireNonNull(accessSide.toEnumFacing()), itemsToExport);
+    }
+
 	/**
 	 * Attempts to export a list of items to an external inventory or conveyor belt at a given position.
 	 * It first tries to insert into an IItemHandler (chest, etc.), then tries to place on an IConveyorBelt.
@@ -1426,32 +1445,20 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 	 * @param itemsToExport A list of ItemStacks to be exported. This list will not be modified.
 	 * @return A new list containing any leftover ItemStacks that could not be fully exported. Returns an empty list on full success.
 	 */
-	public static @NotNull List<ItemStack> popProducts(@NotNull World world, @NotNull BlockPos exportToPos, @NotNull ForgeDirection accessSide,
+    public static @NotNull List<ItemStack> popProducts(@NotNull World world, @NotNull BlockPos exportToPos, @NotNull EnumFacing accessSide,
 													   @NotNull List<ItemStack> itemsToExport) {
 		if (itemsToExport.isEmpty()) return Collections.emptyList();
-
 		List<ItemStack> remainingItems = new ArrayList<>();
-		for (ItemStack item : itemsToExport) {
-			if (!item.isEmpty()) {
-				remainingItems.add(item.copy());
-			}
-		}
-
-		if (remainingItems.isEmpty()) {
-			return Collections.emptyList();
-		}
 
 		TileEntity tile = world.getTileEntity(exportToPos);
-		if (tile != null && tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, accessSide.toEnumFacing())) {
-			IItemHandler inv = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, accessSide.toEnumFacing());
+        if (tile != null && tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, accessSide)) {
+            IItemHandler inv = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, accessSide);
 			if (inv != null) {
-				ListIterator<ItemStack> iterator = remainingItems.listIterator();
-				while (iterator.hasNext()) {
-					ItemStack originalStack = iterator.next();
-					ItemStack leftover = InventoryUtil.tryAddItemToInventory(inv, 0, inv.getSlots() - 1, originalStack);
-					iterator.set(leftover);
-				}
-				remainingItems.removeIf(ItemStack::isEmpty);
+                for (ItemStack stack : itemsToExport){
+                    ItemStack remainder = ItemHandlerHelper.insertItemStacked(inv, stack, false);
+                    if (!remainder.isEmpty())
+                        remainingItems.add(remainder);
+                }
 			}
 		}
 
@@ -1479,7 +1486,88 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 		return remainingItems;
 	}
 
-	/**
+
+    /**
+     * Attempts to export items from a source inventory slot range [from, to] to an external
+     * inventory or conveyor belt at a given position. It first tries to insert into an
+     * IItemHandler (chest, etc.), then tries to place on an IConveyorBelt.
+     * <p>
+     * All modifications happen in-place on the provided {@code inventory}. This method returns void.
+     *
+     * @param world       The world object.
+     * @param exportToPos The block position of the target inventory/conveyor.
+     * @param accessSide  The direction from which the target block is being accessed.
+     * @param inventory   The source inventory to export from.
+     * @param from        Inclusive start slot index in the source inventory.
+     * @param to          Inclusive end slot index in the source inventory.
+     */
+    public static void popProducts(@NotNull World world, @NotNull BlockPos exportToPos, @NotNull ForgeDirection accessSide,
+                                   @NotNull IItemHandler inventory, int from, int to) {
+        popProducts(world, exportToPos, Objects.requireNonNull(accessSide.toEnumFacing()), inventory, from, to);
+    }
+
+    /**
+     * Attempts to export items from a source inventory slot range [from, to] to an external
+     * inventory or conveyor belt at a given position. It first tries to insert into an
+     * IItemHandler (chest, etc.), then tries to place on an IConveyorBelt.
+     * <p>
+     * All modifications happen in-place on the provided {@code inventory}. This method returns void.
+     *
+     * @param world       The world object.
+     * @param exportToPos The block position of the target inventory/conveyor.
+     * @param accessSide  The direction from which the target block is being accessed.
+     * @param inventory   The source inventory to export from.
+     * @param from        Inclusive start slot index in the source inventory, inclusive.
+     * @param to          Inclusive end slot index in the source inventory, inclusive.
+     */
+    public static void popProducts(@NotNull World world, @NotNull BlockPos exportToPos, @NotNull EnumFacing accessSide,
+                                   @NotNull IItemHandler inventory, int from, int to) {
+        int slots = inventory.getSlots();
+        if (slots <= 0) return;
+
+        int start = Math.max(0, from);
+        int end = Math.min(to, slots - 1);
+        if (start > end) return;
+        TileEntity tile = world.getTileEntity(exportToPos);
+        IItemHandler target = null;
+        if (tile != null && tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, accessSide)) {
+            target = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, accessSide);
+        }
+
+        if (target != null) {
+            for (int slot = start; slot <= end; slot++) {
+                while (true) {
+                    ItemStack toMoveSim = inventory.extractItem(slot, Integer.MAX_VALUE, true);
+                    if (toMoveSim.isEmpty()) break;
+                    ItemStack leftover = ItemHandlerHelper.insertItemStacked(target, toMoveSim, false);
+                    int inserted = toMoveSim.getCount() - (leftover.isEmpty() ? 0 : leftover.getCount());
+                    if (inserted <= 0) break;
+                    inventory.extractItem(slot, inserted, false);
+                }
+            }
+        }
+
+        Block block = world.getBlockState(exportToPos).getBlock();
+        if (block instanceof IConveyorBelt belt) {
+            if (world.isRemote) return;
+
+            for (int slot = start; slot <= end; slot++) {
+                ItemStack stack = inventory.getStackInSlot(slot);
+                if (stack.isEmpty()) continue;
+                Vec3d base = new Vec3d(exportToPos.getX() + 0.5, exportToPos.getY() + 0.5, exportToPos.getZ() + 0.5);
+                Vec3d vec = belt.getClosestSnappingPosition(world, exportToPos, base);
+                EntityMovingItem moving = new EntityMovingItem(world);
+                moving.setPosition(base.x, vec.y, base.z);
+                moving.setItemStack(stack.copy());
+                if (world.spawnEntity(moving)) {
+                    inventory.extractItem(slot, stack.getCount(), false);
+                }
+            }
+        }
+    }
+
+
+    /**
 	 * Attempts to pull items for a given recipe from a source inventory into a destination inventory.
 	 *
 	 * @param sourceContainer      The IItemHandler of the inventory to pull from.
