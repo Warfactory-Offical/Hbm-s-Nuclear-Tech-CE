@@ -1,5 +1,6 @@
 package com.hbm.inventory.container;
 
+import com.hbm.interfaces.IContainerOpenEventListener;
 import com.hbm.tileentity.machine.storage.TileEntityFileCabinet;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -8,7 +9,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class ContainerFileCabinet extends Container {
+public class ContainerFileCabinet extends Container implements IContainerOpenEventListener {
 
     protected TileEntityFileCabinet cabinet;
 
@@ -65,5 +66,16 @@ public class ContainerFileCabinet extends Container {
     @Override
     public boolean canInteractWith(EntityPlayer player) {
         return cabinet.isUseableByPlayer(player);
+    }
+
+    @Override
+    public void onContainerOpened(EntityPlayer player) {
+        cabinet.openInventory(player);
+    }
+
+    @Override
+    public void onContainerClosed(EntityPlayer player) {
+        super.onContainerClosed(player);
+        cabinet.closeInventory(player);
     }
 }

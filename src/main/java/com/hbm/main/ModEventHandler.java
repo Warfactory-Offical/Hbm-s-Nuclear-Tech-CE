@@ -29,6 +29,7 @@ import com.hbm.handler.threading.PacketThreading;
 import com.hbm.hazard.HazardSystem;
 import com.hbm.integration.groovy.HbmGroovyPropertyContainer;
 import com.hbm.interfaces.IBomb;
+import com.hbm.interfaces.IContainerOpenEventListener;
 import com.hbm.inventory.recipes.loader.SerializableRecipe;
 import com.hbm.items.IEquipReceiver;
 import com.hbm.items.ModItems;
@@ -110,6 +111,7 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.PotionEvent.PotionApplicableEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerFlyableFallEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
@@ -1547,6 +1549,13 @@ public class ModEventHandler {
     public void onCheckLadder(CheckLadderEvent evt) {
         if (ClimbableRegistry.isEntityOnAny(evt.getWorld(), evt.getEntity())) {
             evt.setResult(Result.ALLOW);
+        }
+    }
+
+    @SubscribeEvent
+    public void onContainerOpen(PlayerContainerEvent.Open event) {
+        if (event.getContainer() instanceof IContainerOpenEventListener listener) {
+            listener.onContainerOpened(event.getEntityPlayer());
         }
     }
 
