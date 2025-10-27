@@ -95,6 +95,7 @@ public class ItemEnums {
 
   public enum EnumCircuitType {
     VACUUM_TUBE,
+    NUMITRON,
     CAPACITOR,
     CAPACITOR_TANTALIUM,
     PCB,
