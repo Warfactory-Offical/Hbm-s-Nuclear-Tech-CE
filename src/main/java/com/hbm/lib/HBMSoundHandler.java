@@ -354,6 +354,7 @@ public final class HBMSoundHandler {
     public static SoundEvent assemblerStrike;
     public static SoundEvent assemblerStart;
     public static SoundEvent assemblerStop;
+    public static SoundEvent meteoriteFallingLoop;
     public static SoundEvent assemblerCut;
 
     public static SoundEvent alarmHatch = registerBypass("alarm.hatch");
@@ -412,6 +413,7 @@ public final class HBMSoundHandler {
         assemblerOperate = register("block.assembleroperate");
         fel = register("block.fel");
         hephaestusRunning = register("block.hephaestusRunning");
+        meteoriteFallingLoop = register("entity.meteoriteFallingLoop");
         pressOperate = register("block.pressoperate");
         laserBang = register("weapon.laserBang");
         blockDebris = register("block.debris");

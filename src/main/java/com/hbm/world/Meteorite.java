@@ -147,10 +147,19 @@ public class Meteorite {
 				}
 			}
 
-		switch (rand.nextInt(3)) {
-			case 0 -> generateLarge(world, rand, x, y, z);
-			case 1 -> generateMedium(world, rand, x, y, z);
-			case 2 -> generateSmall(world, rand, x, y, z);
+		switch(rand.nextInt(3)) {
+			case 0:
+				generateLarge(world, rand, x, y, z);
+				world.createExplosion(null, x + 0.5, y + 1.5, z + 0.5, 9F, true);
+				break;
+			case 1:
+				world.createExplosion(null, x + 0.5, y + 1.5, z + 0.5, 6F, true);
+				generateMedium(world, rand, x, y, z);
+				break;
+			case 2:
+				world.createExplosion(null, x + 0.5, y + 1.5, z + 0.5, 5F, true);
+				generateSmall(world, rand, x, y, z);
+				break;
 		}
 	}
 	

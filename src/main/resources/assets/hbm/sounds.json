@@ -332,8 +332,10 @@
     "player.cough": {"category": "player", "sounds": ["hbm:player/cough1", "hbm:player/cough2", "hbm:player/cough3", "hbm:player/cough4"]},
 	"player.gulp": {"category": "player", "sounds": ["hbm:player/gulp1", "hbm:player/gulp2", "hbm:player/gulp3", "hbm:player/gulp4"]},
     "player.groan": {"category": "player", "sounds": ["hbm:player/groan1", "hbm:player/groan2", "hbm:player/groan3"]},
-    
-    "step.metal": {"category": "player", "sounds": [{"name": "hbm:footsteps/metal", "stream": false}]},
+
+    "entity.meteoriteFallingLoop": {"category": "block", "sounds": ["hbm:entity/meteoritefallingloop"]},
+
+  "step.metal": {"category": "player", "sounds": [{"name": "hbm:footsteps/metal", "stream": false}]},
     "step.iron_jump": {"category": "player", "sounds": [{"name": "hbm:footsteps/iron_jump", "stream": false}]},
     "step.iron_land": {"category": "player", "sounds": [{"name": "hbm:footsteps/iron_land", "stream": false}]},
     "step.iron": {"category": "player", "sounds": ["hbm:footsteps/iron1", "hbm:footsteps/iron2", "hbm:footsteps/iron3", "hbm:footsteps/iron4"]},

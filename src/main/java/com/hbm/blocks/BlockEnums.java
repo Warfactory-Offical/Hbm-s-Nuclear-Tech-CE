@@ -2,6 +2,7 @@ package com.hbm.blocks;
 
 import com.hbm.items.ModItems;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IStringSerializable;
 
 import javax.annotation.Nullable;
 

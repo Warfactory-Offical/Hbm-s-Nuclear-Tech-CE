@@ -279,8 +279,7 @@ public class ModBlocks {
 	public static final Block block_meteor_broken = new BlockNTMOre("block_meteor_broken", OreEnum.METEORITE_FRAG, 1, 0).setCreativeTab(MainRegistry.resourceTab).setHardness(15.0F).setResistance(360.0F);
 	public static final Block block_meteor_molten = new BlockHazard(Material.ROCK, "block_meteor_molten").setTickRandomly(true).setLightLevel(0.75F).setCreativeTab(MainRegistry.resourceTab).setHardness(15.0F).setResistance(360.0F);
 	public static final Block block_meteor_treasure = new BlockNTMOre("block_meteor_treasure", OreEnum.METEORITE_TREASURE, 3).setCreativeTab(MainRegistry.resourceTab).setHardness(15.0F).setResistance(360.0F);
-	public static final Block ore_meteor = new BlockEnumMeta(Material.ROCK, SoundType.STONE, "ore_meteor", BlockEnums.EnumMeteorType.class, true, true).setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);
-
+	public static final Block ore_meteor = new BlockMeteorOre().setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);
 
 	public static final Block meteor_polished = new BlockBase(Material.ROCK, "meteor_polished").setCreativeTab(MainRegistry.blockTab).setHardness(15.0F).setResistance(360.0F);
 	public static final Block meteor_brick = new BlockBase(Material.ROCK, "meteor_brick").setCreativeTab(MainRegistry.blockTab).setHardness(15.0F).setResistance(360.0F);
