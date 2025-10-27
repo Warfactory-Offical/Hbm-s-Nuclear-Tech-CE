@@ -69,7 +69,7 @@ public class TileEntityMachineAssemblyMachine extends TileEntityMachineBase impl
     public UpgradeManagerNT upgradeManager = new UpgradeManagerNT(this);
 
     public TileEntityMachineAssemblyMachine() {
-        super(17);
+        super(17, true, true);
         this.inputTank = new FluidTankNTM(Fluids.NONE, 4_000);
         this.outputTank = new FluidTankNTM(Fluids.NONE, 4_000);
 

@@ -26,7 +26,7 @@ public class ItemGasCanister extends Item {
 	public static final ModelResourceLocation gasCansiterFullModel = new ModelResourceLocation(
 			RefStrings.MODID + ":gas_full", "inventory");
 	
-	
+
 	public ItemGasCanister(String s){
 		this.setTranslationKey(s);
 		this.setRegistryName(s);
@@ -72,7 +72,7 @@ public class ItemGasCanister extends Item {
 	
 	@Override
 	public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-		tooltip.add(4000 + "/" + 4000 + " mb");
+		tooltip.add("1000/1000 mB");
 	}
 	
 	@Override

@@ -72,7 +72,7 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
     protected DelegateAssemblyFactoy delegate = new DelegateAssemblyFactoy();
 
     public TileEntityMachineAssemblyFactory() {
-        super(60);
+        super(60, true, true);
 
         animations = new AssemfacArm[2];
         for(int i = 0; i < animations.length; i++) animations[i] = new AssemfacArm(i);
