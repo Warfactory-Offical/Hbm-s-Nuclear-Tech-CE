@@ -3,19 +3,16 @@ package com.hbm.world;
 import com.hbm.blocks.BlockEnums;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.bomb.BlockTaint;
-import com.hbm.config.BombConfig;
 import com.hbm.config.GeneralConfig;
-import com.hbm.entity.effect.EntityNukeTorex;
-import com.hbm.entity.logic.EntityNukeExplosionMK5;
 import com.hbm.explosion.ExplosionLarge;
+import com.hbm.interfaces.Spaghetti;
 import com.hbm.inventory.OreDictManager;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ModDamageSource;
-import com.hbm.main.MainRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -23,21 +20,32 @@ import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
 // mlbv: this is unlikely to cause cascading worldgen
+@Spaghetti("why")
 public class Meteorite {
+
+    public static boolean safeMode = false;
 	
-	public void generate(World world, Random rand, int x, int y, int z) {
+	public void generate(World world, Random rand, int x, int y, int z, boolean safe, boolean allowSpecials, boolean damagingImpact) {
+        safeMode = safe;
+
+        if(replacables.isEmpty()) {
+            generateReplacables();
+        }
+
+        if(damagingImpact) {
+            List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(x - 7.5, y - 7.5, z - 7.5, x + 7.5, y + 7.5, z + 7.5));
+
+            for (Entity e : list) {
+                e.attackEntityFrom(ModDamageSource.meteorite, 1000);
+            }
+        }
 		
-		List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(x - 7.5, y - 7.5, z - 7.5, x + 7.5, y + 7.5, z + 7.5));
-		
-		for(Entity e : list) {
-			e.attackEntityFrom(ModDamageSource.meteorite, 1000);
-		}
-		
-		if(GeneralConfig.enableSpecialMeteors)
+		if(GeneralConfig.enableSpecialMeteors && allowSpecials)
 			switch (rand.nextInt(300)) {
 				case 0 -> {
 					//Meteor-only tiny meteorite
@@ -51,7 +59,7 @@ public class Meteorite {
 					List<ItemStack> list1 = new ArrayList<>(this.getRandomOre(rand));
 					int i = list1.size();
 					for (int j = 0; j < i; j++)
-						list1.add(new ItemStack(Blocks.STONE));
+						list1.add(new ItemStack(ModBlocks.block_meteor_broken));
 					generateSphere7x7(world, rand, x, y, z, list1);
 					return;
 				}
@@ -60,7 +68,7 @@ public class Meteorite {
 					List<ItemStack> list2 = new ArrayList<>(this.getRandomOre(rand));
 					int k = list2.size() / 2;
 					for (int j = 0; j < k; j++)
-						list2.add(new ItemStack(Blocks.STONE));
+						list2.add(new ItemStack(ModBlocks.block_meteor_broken));
 					generateSphere5x5(world, rand, x, y, z, list2);
 					return;
 				}
@@ -126,16 +134,6 @@ public class Meteorite {
 					world.setBlockState(new BlockPos(x, y, z), ModBlocks.taint.getDefaultState().withProperty(BlockTaint.TAINTAGE, 9), 2);
 					return;
 				}
-				case 11 -> {
-					//Atomic meteorite
-					world.spawnEntity(EntityNukeExplosionMK5.statFac(world, BombConfig.fatmanRadius, x + 0.5, y + 0.5, z + 0.5));
-					if (rand.nextInt(100) == 0 || MainRegistry.polaroidID == 11) {
-						EntityNukeTorex.statFacBale(world, x + 0.5, y + 0.5, z + 0.5, BombConfig.fatmanRadius);
-					} else {
-						EntityNukeTorex.statFac(world, x + 0.5, y + 0.5, z + 0.5, BombConfig.fatmanRadius);
-					}
-					return;
-				}
 				case 12 -> {
 					//Star Blaster
 					world.createExplosion(null, x + 0.5, y + 0.5, z + 0.5, 10F, true);
@@ -147,20 +145,11 @@ public class Meteorite {
 				}
 			}
 
-		switch(rand.nextInt(3)) {
-			case 0:
-				generateLarge(world, rand, x, y, z);
-				world.createExplosion(null, x + 0.5, y + 1.5, z + 0.5, 9F, true);
-				break;
-			case 1:
-				world.createExplosion(null, x + 0.5, y + 1.5, z + 0.5, 6F, true);
-				generateMedium(world, rand, x, y, z);
-				break;
-			case 2:
-				world.createExplosion(null, x + 0.5, y + 1.5, z + 0.5, 5F, true);
-				generateSmall(world, rand, x, y, z);
-				break;
-		}
+        switch (rand.nextInt(3)) {
+            case 0 -> generateLarge(world, rand, x, y, z);
+            case 1 -> generateMedium(world, rand, x, y, z);
+            case 2 -> generateSmall(world, rand, x, y, z);
+        }
 	}
 	
 	public void generateLarge(World world, Random rand, int x, int y, int z) {
@@ -578,8 +567,13 @@ public class Meteorite {
 	}
 
 	public void setBlock(World world, BlockPos mPos, ItemStack stack){
-		if(world.getBlockState(mPos).getBlock().getExplosionResistance(null) < 3_000_000){
-			world.setBlockState(mPos, Block.getBlockFromItem(stack.getItem()).getDefaultState(), 2);
+        IBlockState targetState = world.getBlockState(mPos);
+        Block targetBlock = targetState.getBlock();
+
+        if (safeMode && !targetBlock.isReplaceable(world, mPos) && !replacables.contains(targetBlock)) return;
+
+        if(targetState.getBlockHardness(world, mPos) < 10_000) {
+			world.setBlockState(mPos, Block.getBlockFromItem(stack.getItem()).getDefaultState(), 2 | 16);
 		}
 	}
 	
@@ -616,4 +610,15 @@ public class Meteorite {
 		for(BlockEnums.EnumMeteorType num : BlockEnums.EnumMeteorType.values()) ores.add(OreDictManager.DictFrame.fromOne(ModBlocks.ore_meteor, num));
 		return ores;
 	}
+
+    public static HashSet<Block> replacables = new HashSet<>();
+
+    public static void generateReplacables() {
+        replacables.add(ModBlocks.block_meteor);
+        replacables.add(ModBlocks.block_meteor_broken);
+        replacables.add(ModBlocks.block_meteor_cobble);
+        replacables.add(ModBlocks.block_meteor_molten);
+        replacables.add(ModBlocks.block_meteor_treasure);
+        replacables.add(ModBlocks.ore_meteor);
+    }
 }

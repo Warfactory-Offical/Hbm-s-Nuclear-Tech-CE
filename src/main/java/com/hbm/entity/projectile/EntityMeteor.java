@@ -10,7 +10,6 @@ import com.hbm.main.MainRegistry;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.world.Meteorite;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
@@ -30,18 +29,20 @@ import java.util.List;
 public class EntityMeteor extends EntityThrowable {
 
 	public boolean safe = false;
-	private AudioWrapper audio;
+	private AudioWrapper audioFly;
 
 	public EntityMeteor(World world) {
 		super(world);
 		this.ignoreFrustumCheck = true;
 		this.isImmuneToFire = true;
-	}
+        this.setSize(4F, 4F);
+        //mlbv: yeah upstream did this in the ctor with keepAlive = 0; not really sure what they are doing..
+        if(world.isRemote)
+            audioFly = MainRegistry.proxy.getLoopedSound(HBMSoundHandler.meteoriteFallingLoop, SoundCategory.BLOCKS, (float) this.posX, (float) this.posY, (float) this.posZ, 1F, 100F, 0.9F + this.rand.nextFloat() * 0.2F, 0);
+    }
 
-
-
-	public List<BlockPos> getBlocksInRadius(World world, int x, int y, int z, int radius) {
-		List<BlockPos> foundBlocks = new ArrayList();
+	public List<BlockPos> getBlocksInRadius(BlockPos pos, int radius) {
+		List<BlockPos> foundBlocks = new ArrayList<>();
 
 		int rSq = radius * radius;
 		for(int dx = -radius; dx <= radius; dx++) {
@@ -49,7 +50,7 @@ public class EntityMeteor extends EntityThrowable {
 				for(int dz = -radius; dz <= radius; dz++) {
 					// Check if point (dx, dy, dz) lies inside the sphere
 					if(dx * dx + dy * dy + dz * dz <= rSq) {
-						foundBlocks.add(new BlockPos(x + dx, y + dy, z + dz));
+						foundBlocks.add(pos.add(dx, dy, dz));
 					}
 				}
 			}
@@ -57,20 +58,19 @@ public class EntityMeteor extends EntityThrowable {
 		return foundBlocks;
 	}
 
-	public void damageOrDestroyBlock(World world, int x, int y, int z) {
+	public void damageOrDestroyBlock(World world, BlockPos pos) {
 		if (safe) return;
 
-		BlockPos pos = new BlockPos(x, y, z);
+        // Get current block info
 		IBlockState state = world.getBlockState(pos);
 		Block block = state.getBlock();
-
-		if (block == Blocks.AIR) return; // skip air blocks
-
-		float hardness = block.getBlockHardness(state, world, pos);
+		if (block.isAir(state, world, pos)) return;
+		float hardness = state.getBlockHardness(world, pos);
 
 		// Check if the block is weak and can be destroyed
 		if (block == Blocks.LEAVES || block == Blocks.LOG || (hardness >= 0 && hardness <= 0.3F)) {
-			world.setBlockToAir(pos);
+            // Destroy the block
+            world.setBlockToAir(pos);
 		} else {
 			// Found a solid block
 			if (hardness < 0 || hardness > 5F) return;
@@ -95,15 +95,19 @@ public class EntityMeteor extends EntityThrowable {
 	}
 
 
-	public void clearMeteorPath(World world, int x, int y, int z) {
-		for(BlockPos blockPos : getBlocksInRadius(world, x, y, z, 5)) {
-			damageOrDestroyBlock(world, blockPos.getX(), blockPos.getY(), blockPos.getZ());
+	public void clearMeteorPath(World world, BlockPos pos) {
+		for(BlockPos blockPos : getBlocksInRadius(pos, 5)) {
+			damageOrDestroyBlock(world, blockPos);
 		}
 	}
 
 
 	@Override
 	public void onUpdate() {
+        if(!world.isRemote && !GeneralConfig.enableMeteorStrikes) {
+            this.setDead();
+            return;
+        }
 
 		this.lastTickPosX = this.prevPosX = posX;
 		this.lastTickPosY = this.prevPosY = posY;
@@ -121,68 +125,52 @@ public class EntityMeteor extends EntityThrowable {
 		this.motionY -= 0.03;
 		if(motionY < -2.5)
 			motionY = -2.5;
+        BlockPos pos = getPosition();
+        if (!this.world.isRemote && this.posY < 260 && CompatibilityConfig.isWarDim(world)) {
+            clearMeteorPath(world, pos);
+            IBlockState currentBlock = world.getBlockState(pos);
+            if (!currentBlock.getBlock().isAir(currentBlock, world, pos)) {
+                world.createExplosion(this, this.posX, this.posY, this.posZ, 5 + rand.nextFloat(), !safe);
+                if (GeneralConfig.enableMeteorTails) {
+                    ExplosionLarge.spawnRubble(world, this.posX, this.posY, this.posZ, 25);
 
-        if(this.world.getBlockState(new BlockPos((int)this.posX, (int)this.posY, (int)this.posZ)).getMaterial() != Material.AIR)
-        {
-			if (!this.world.isRemote && CompatibilityConfig.isWarDim(world)) {
-				BlockPos pos = new BlockPos(this.posX, this.posY, this.posZ);
-				if (world.getBlockState(pos).getMaterial() != Material.AIR) {
-					clearMeteorPath(world, pos.getX(), pos.getY(), pos.getZ());
-					world.createExplosion(this, this.posX, this.posY, this.posZ, 5 + rand.nextFloat(), !safe);
-					if (GeneralConfig.enableMeteorTails) {
-						ExplosionLarge.spawnParticles(world, posX, posY + 5, posZ, 75);
-						ExplosionLarge.spawnParticles(world, posX + 5, posY, posZ, 75);
-						ExplosionLarge.spawnParticles(world, posX - 5, posY, posZ, 75);
-						ExplosionLarge.spawnParticles(world, posX, posY, posZ + 5, 75);
-						ExplosionLarge.spawnParticles(world, posX, posY, posZ - 5, 75);
-					}
-					(new Meteorite()).generate(world, rand,
-							(int)Math.round(this.posX - 0.5D),
-							(int)Math.round(this.posY - 0.5D),
-							(int)Math.round(this.posZ - 0.5D));
-					this.world.playSound(null, this.posX, this.posY, this.posZ,
-							HBMSoundHandler.oldExplosion, SoundCategory.HOSTILE,
-							12.5F, 0.5F + this.rand.nextFloat() * 0.1F);
-					this.setDead();
-				}
-			}
-			if (world.isRemote) {
-				// Initialize the looping meteor sound if it doesn't exist
-				if (this.audio == null) {
-					this.audio = createAudioLoop();
-					if (this.audio != null) {
-						this.audio.setDoesRepeat(true);
-						this.audio.updateVolume(1.0F);
-						this.audio.updateRange(200F);
-						this.audio.setKeepAlive(40); // initial buffer for AudioDynamic
-						this.audio.startSound();
-					}
-				}
+                    ExplosionLarge.spawnParticles(world, posX, posY + 5, posZ, 75);
+                    ExplosionLarge.spawnParticles(world, posX + 5, posY, posZ, 75);
+                    ExplosionLarge.spawnParticles(world, posX - 5, posY, posZ, 75);
+                    ExplosionLarge.spawnParticles(world, posX, posY, posZ + 5, 75);
+                    ExplosionLarge.spawnParticles(world, posX, posY, posZ - 5, 75);
+                }
+                // Bury the meteor into the ground
+                int spawnPosX = (int) (Math.round(this.posX - 0.5D) + (safe ? 0 : (this.motionZ * 4)));
+                int spawnPosY = (int) Math.round(this.posY - (safe ? 0 : 4));
+                int spawnPosZ = (int) (Math.round(this.posZ - 0.5D) + (safe ? 0 : (this.motionZ * 4)));
+                new Meteorite().generate(world, rand, spawnPosX, spawnPosY, spawnPosZ, safe, true, true);
+                clearMeteorPath(world, new BlockPos(spawnPosX, spawnPosY, spawnPosZ));
+                this.world.playSound(null, this.posX, this.posY, this.posZ,
+                        HBMSoundHandler.oldExplosion, SoundCategory.HOSTILE,
+                        10000.5F, 0.5F + this.rand.nextFloat() * 0.1F);
+                this.setDead();
+            }
+        }
 
-				if (this.audio != null) {
-					this.audio.keepAlive();
-					this.audio.updatePosition((float) this.posX, (float) this.posY, (float) this.posZ);
-					if (this.isDead && this.audio != null) {
-						this.audio.stopSound();
-						this.audio = null;
-					}
-					}
-				} else {
-					if (this.audio != null && this.audio.isPlaying()) {
-						this.audio.keepAlive();
-						this.audio.updateVolume(1F);
-						this.audio.updatePosition((float) this.posX, (float) this.posY, (float) this.posZ);
-					} else {
-						EntityPlayer player = MainRegistry.proxy.me();
-						if (player != null) {
-							double distance = player.getDistanceSq(this.posX, this.posY, this.posZ);
-							if (distance < 110 * 110 && this.audio != null) {
-								this.audio.startSound();
-							}
-						}
-					}
-				}
-			}
+        // Sound
+        if (world.isRemote) {
+            if(this.isDead) {
+                if (this.audioFly != null) this.audioFly.stopSound();
+
+            } else if(this.audioFly.isPlaying()) {
+                // Update sound
+                this.audioFly.keepAlive();
+                this.audioFly.updateVolume(1F);
+                this.audioFly.updatePosition((float) this.posX, (float) this.posY, (float) this.posZ);
+            } else {
+                EntityPlayer player = MainRegistry.proxy.me();
+                double distance = player.getDistanceSq(this.posX, this.posY, this.posZ);
+                if(distance < 110 * 110) {
+                    this.audioFly.startSound();
+                }
+            }
+        }
 
         if(GeneralConfig.enableMeteorTails && world.isRemote && world.isAreaLoaded(new BlockPos(posX, posY, posZ), 6)) {
 
@@ -200,18 +188,6 @@ public class EntityMeteor extends EntityThrowable {
 
 	}
 
-	public AudioWrapper createAudioLoop() {
-		return MainRegistry.proxy.getLoopedSound(
-				HBMSoundHandler.meteoriteFallingLoop,
-				SoundCategory.BLOCKS,
-				(float) this.posX,
-				(float) this.posY,
-				(float) this.posZ,
-				100F,
-				0.9F + this.rand.nextFloat() * 0.2F,
-				0
-		);
-	}
 	@Override
 	@SideOnly(Side.CLIENT)
     public boolean isInRangeToRenderDist(double distance) {
@@ -228,7 +204,7 @@ public class EntityMeteor extends EntityThrowable {
 	public float getBrightness() {
         return 1.0F;
     }
-	
+
 	@Override
 	protected void onImpact(RayTraceResult result) {
 	}

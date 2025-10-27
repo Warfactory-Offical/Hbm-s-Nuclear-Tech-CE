@@ -22,6 +22,7 @@ import net.minecraft.world.World;
 import java.util.List;
 import java.util.Map;
 
+//mlbv: useful for testing, please don't remove it
 public class ItemMeteorRemote extends Item {
 
 	public ItemMeteorRemote(String s) {
