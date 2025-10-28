@@ -584,6 +584,10 @@ public class AnvilRecipes extends SerializableRecipe {
 			constructionRecipes.add(new AnvilConstructionRecipe(new AStack[] {new OreDictStack(IRON.plate(), 1), new ComparableStack(ModItems.plate_polymer)}, new AnvilOutput(new ItemStack(ModBlocks.fluid_duct_exhaust, 8, i))).setTier(2).setOverlay(OverlayType.CONSTRUCTION));
 			constructionRecipes.add(new AnvilConstructionRecipe(new ComparableStack(ModBlocks.fluid_duct_exhaust, 8, i), new AnvilOutput[] {new AnvilOutput(new ItemStack(ModItems.plate_iron)), new AnvilOutput(new ItemStack(ModItems.plate_polymer))}).setTier(2));
 		}
+		for(int i = 0; i < 5; i++) {
+			constructionRecipes.add(new AnvilConstructionRecipe(new AStack[] {new OreDictStack(MINGRADE.ingot(), 8), new ComparableStack(ModItems.plate_polymer)}, new AnvilOutput(new ItemStack(ModBlocks.red_cable_box, 8, i))).setTier(2).setOverlay(OverlayType.CONSTRUCTION));
+			constructionRecipes.add(new AnvilConstructionRecipe(new ComparableStack(ModBlocks.red_cable_box, 8, i), new AnvilOutput[] {new AnvilOutput(new ItemStack(ModItems.ingot_red_copper, 8)), new AnvilOutput(new ItemStack(ModItems.plate_polymer))}).setTier(2));
+		}
 	}
 
 	public static void registerConstructionAmmo() {
