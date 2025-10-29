@@ -55,7 +55,7 @@ public class BlockSellafield extends BlockMeta implements IDynamicModels {
 
     public static final IUnlistedProperty<Integer> VARIANT = new PropertyRandomVariant(sellafieldTextures.length);
     public final static int LEVELS = 5;
-    public static final float rad = 2f;
+    public static final float rad = 0.5f;
     public static final int[][] colors = new int[][]{
             {0x4C7939, 0x41463F},
             {0x418223, 0x3E443B},
@@ -69,6 +69,7 @@ public class BlockSellafield extends BlockMeta implements IDynamicModels {
     public BlockSellafield(Material mat, SoundType type, String s) {
         super(mat, type, s, (short) LEVELS);
         this.showMetaInCreative = true;
+        this.needsRandomTick = true;
     }
 
     @Override
@@ -80,9 +81,6 @@ public class BlockSellafield extends BlockMeta implements IDynamicModels {
     @Override
     public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
         super.onBlockAdded(worldIn, pos, state);
-        if (!worldIn.isRemote) {
-            worldIn.scheduleUpdate(pos, this, 5 + worldIn.rand.nextInt(20));
-        }
     }
 
     @Override
@@ -95,13 +93,14 @@ public class BlockSellafield extends BlockMeta implements IDynamicModels {
     @Override
     public void onEntityWalk(World worldIn, BlockPos pos, Entity entityIn) {
         int level = worldIn.getBlockState(pos).getValue(META);
-        if (entityIn instanceof EntityLivingBase) {
-            ((EntityLivingBase) entityIn).addPotionEffect(new PotionEffect(HbmPotion.radiation, 30 * 20, level < 5 ? level : level * 2));
+        if (entityIn instanceof EntityLivingBase livingBase) {
+            livingBase.addPotionEffect(new PotionEffect(HbmPotion.radiation, 30 * 20, level < 5 ? level : level * 2));
             if (level >= 3)
                 entityIn.setFire(level);
         }
     }
 
+    @Override
     public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
         if (world.isRemote) return;
         IBlockState currentState = world.getBlockState(pos);
@@ -111,11 +110,9 @@ public class BlockSellafield extends BlockMeta implements IDynamicModels {
 
         if (rand.nextInt(level == 0 ? 25 : 15) == 0) {
             if (level > 0)
-                world.setBlockState(pos, ModBlocks.sellafield.getDefaultState().withProperty(META, level - 1));
+                world.setBlockState(pos, ModBlocks.sellafield.getDefaultState().withProperty(META, level - 1), 2);
             else
                 world.setBlockState(pos, ModBlocks.sellafield_slaked.getDefaultState(), 3);
-        } else {
-            world.scheduleUpdate(pos, this, 5 + world.rand.nextInt(20));
         }
     }
 
