@@ -55,7 +55,20 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
 
 	@Deprecated
 	public static int rbmkHeight = 4;
-	
+    private static final String title = "Dump of Ordered Data Diagnostic (DODD)";
+    private static final List<String> exceptions;
+
+    static {
+        exceptions = new ArrayList<>();
+        exceptions.add("x");
+        exceptions.add("y");
+        exceptions.add("z");
+        exceptions.add("items");
+        exceptions.add("id");
+        exceptions.add("muffled");
+        exceptions.add("ForgeCaps");
+    }
+
 	public double heat = 20.0D;
 	public double jumpheight = 0.0D;
 	public float downwardSpeed = 0.0F;
@@ -350,15 +363,6 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
 			int pX = resolution.getScaledWidth() / 2 + 8;
 			int pZ = resolution.getScaledHeight() / 2;
 
-			List<String> exceptions = new ArrayList<>();
-			exceptions.add("x");
-			exceptions.add("y");
-			exceptions.add("z");
-			exceptions.add("items");
-			exceptions.add("id");
-			exceptions.add("muffled");
-
-			String title = "Dump of Ordered Data Diagnostic (DODD)";
 			mc.fontRenderer.drawString(title, (int)(pX / scale) + 1, (int)((pZ - 19) / scale), 0x006000);
 			mc.fontRenderer.drawString(title, (int)(pX / scale), (int)((pZ - 20) / scale), 0x00FF00);
 

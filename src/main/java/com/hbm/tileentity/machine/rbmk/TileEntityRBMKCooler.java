@@ -8,7 +8,9 @@ import com.hbm.inventory.control_panel.DataValueFloat;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.Library;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKConsole.ColumnType;
+import io.netty.buffer.ByteBuf;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
@@ -25,8 +27,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
-@Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
+
 @AutoRegister
+@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")
 public class TileEntityRBMKCooler extends TileEntityRBMKBase implements IFluidStandardReceiver, SimpleComponent, CompatHandler.OCComponent {
 
 	public FluidTankNTM tank;
@@ -46,6 +49,9 @@ public class TileEntityRBMKCooler extends TileEntityRBMKBase implements IFluidSt
 	public void update() {
 
 		if(!world.isRemote) {
+
+            if (this.world.getTotalWorldTime() % 20 == 0)
+                this.trySubscribe(tank.getTankType(), world, pos.getX(), pos.getY() - 1, pos.getZ(), Library.NEG_Y);
 
 			if((int) (this.heat) > 750) {
 
@@ -135,6 +141,20 @@ public class TileEntityRBMKCooler extends TileEntityRBMKBase implements IFluidSt
 		nbt.setInteger("cooled", this.lastCooled);
 		return nbt;
 	}
+
+    @Override
+    public void serialize(ByteBuf buf) {
+        super.serialize(buf);
+        this.tank.serialize(buf);
+        buf.writeInt(this.lastCooled);
+    }
+
+    @Override
+    public void deserialize(ByteBuf buf) {
+        super.deserialize(buf);
+        this.tank.deserialize(buf);
+        this.lastCooled = buf.readInt();
+    }
 
 	@Override
 	public ColumnType getConsoleType() {
