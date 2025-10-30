@@ -321,19 +321,24 @@ public class ExplosionChaos {
 			data.setDouble("moY", rand.nextGaussian() * speed);
 			data.setDouble("moZ", rand.nextGaussian() * speed);
 			// Th3_Sl1ze: let's be honest, I don't know what range I should set so I'm going with 128
-			if(type == 0) {
-				data.setString("type", "chlorinefx");
-				PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, x, y, z), new NetworkRegistry.TargetPoint(world.provider.getDimension(), x, y, z, 128));
-			} else if(type == 1) {
-				data.setString("type", "cloudfx");
-				PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, x, y, z), new NetworkRegistry.TargetPoint(world.provider.getDimension(), x, y, z, 128));
-			} else if(type == 2) {
-				data.setString("type", "pinkcloudfx");
-				PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, x, y, z), new NetworkRegistry.TargetPoint(world.provider.getDimension(), x, y, z, 128));
-			} else {
-				data.setString("type", "orangefx");
-				PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, x, y, z), new NetworkRegistry.TargetPoint(world.provider.getDimension(), x, y, z, 128));
-			}
+            switch (type) {
+                case 0 -> {
+                    data.setString("type", "chlorinefx");
+                    PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, x, y, z), new NetworkRegistry.TargetPoint(world.provider.getDimension(), x, y, z, 128));
+                }
+                case 1 -> {
+                    data.setString("type", "cloudfx");
+                    PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, x, y, z), new NetworkRegistry.TargetPoint(world.provider.getDimension(), x, y, z, 128));
+                }
+                case 2 -> {
+                    data.setString("type", "pinkcloudfx");
+                    PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, x, y, z), new NetworkRegistry.TargetPoint(world.provider.getDimension(), x, y, z, 128));
+                }
+                default -> {
+                    data.setString("type", "orangefx");
+                    PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, x, y, z), new NetworkRegistry.TargetPoint(world.provider.getDimension(), x, y, z, 128));
+                }
+            }
 
 		}
 	}
