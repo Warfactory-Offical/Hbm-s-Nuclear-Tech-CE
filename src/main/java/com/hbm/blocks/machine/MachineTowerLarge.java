@@ -2,12 +2,9 @@ package com.hbm.blocks.machine;
 
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ILookOverlay;
-import com.hbm.dim.CelestialBody;
-import com.hbm.dim.trait.CBT_Atmosphere;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.TileEntityProxyCombo;
 import com.hbm.tileentity.machine.TileEntityTowerLarge;
-import com.hbm.util.BobMathUtil;
 import com.hbm.util.I18nUtil;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
@@ -78,13 +75,6 @@ public class MachineTowerLarge extends BlockDummyable implements ILookOverlay {
 		TileEntityTowerLarge tower = (TileEntityTowerLarge) te;
 
 		List<String> text = new ArrayList<>();
-
-		if(!tower.vacuumOptimised) {
-			CBT_Atmosphere atmosphere = CelestialBody.getTrait(world, CBT_Atmosphere.class);
-			if(CelestialBody.inOrbit(world) || atmosphere == null || atmosphere.getPressure() < 0.01) {
-				text.add("&[" + (BobMathUtil.getBlink() ? 0xff0000 : 0xffff00) + "&]! ! ! " + I18nUtil.resolveKey("atmosphere.noVacuum") + " ! ! !");
-			}
-		}
 
 		for(int i = 0; i < tower.tanks.length; i++)
 			text.add((i < 1 ? (TextFormatting.GREEN + "-> ") : (TextFormatting.RED + "<- ")) + TextFormatting.RESET + tower.tanks[i].getTankType().getLocalizedName() + ": " + tower.tanks[i].getFill() + "/" + tower.tanks[i].getMaxFill() + "mB");

@@ -2,7 +2,6 @@ package com.hbm.handler.jei;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.GeneralConfig;
-import com.hbm.dim.SolarSystem;
 import com.hbm.handler.jei.transfer.ExposureChamberTransferInfo;
 import com.hbm.inventory.FluidContainerRegistry;
 import com.hbm.inventory.container.ContainerFurnaceCombo;
@@ -373,7 +372,6 @@ public class JEIConfig implements IModPlugin {
         blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.zirnox_destroyed));
         blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.machine_furnace_brick_on));
         blacklist.addIngredientToBlacklist(new ItemStack(ModItems.ammo_misc));
-        blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rocket_custom));
         if(!GeneralConfig.enableDebugMode) {
             blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.obj_tester));
             blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.test_render));
@@ -381,8 +379,6 @@ public class JEIConfig implements IModPlugin {
             blacklist.addIngredientToBlacklist(new ItemStack(ModItems.gun_debug));
             blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.keypad_test));
             // TODO
-            // WIP so removed it from JEI
-            for(int i = 0; i < SolarSystem.Body.values().length; i++) blacklist.addIngredientToBlacklist(new ItemStack(ModItems.full_drive, 1, i));
             blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rp_capsule_20));
             blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rp_fuselage_20_1));
             blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rp_fuselage_20_3));

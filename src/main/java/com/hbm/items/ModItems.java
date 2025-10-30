@@ -1139,7 +1139,6 @@ public class ModItems {
     public static final Item rod_zirnox_empty = new ItemBase("rod_zirnox_empty").setMaxStackSize(64).setCreativeTab(MainRegistry.controlTab);
     public static final Item rod_zirnox_tritium = new ItemBase("rod_zirnox_tritium").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_zirnox_empty);
     public static final Item rod_zirnox = new ItemZirnoxRod("rod_zirnox").setCreativeTab(MainRegistry.controlTab);
-    public static final Item full_drive = new ItemVOTVdrive("hard_drive_full").setTranslationKey("hard_drive_full").setCreativeTab(MainRegistry.controlTab);
     //TODO: Make this metaitems
     // for now, let's just make it work before making it metaitems..
     public static final Item rod_zirnox_depleted = new ItemZirnoxRodDepleted("rod_zirnox_depleted").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.rod_zirnox_empty);
@@ -2422,8 +2421,7 @@ public class ModItems {
     public static final Item sat_chip = new ItemSatellite("sat_chip").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
     public static final Item sat_interface = new ItemSatInterface("sat_interface").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
     public static final Item sat_coord = new ItemSatInterface("sat_coord").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
-    public static final Item sat_dyson_relay = new ItemSatellite("sat_dyson_relay").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
-    public static final Item sat_relay = new ItemSatInterface("sat_relay").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
+    public static final Item sat_relay = new ItemSatellite("sat_relay").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
     //Missiles
     public static final Item rangefinder = new ItemRangefinder("rangefinder").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
     public static final Item designator = new ItemDesignator("designator").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
@@ -2465,7 +2463,6 @@ public class ModItems {
     public static final Item missile_stealth = new ItemMissileStandard("missile_stealth", ItemMissileStandard.MissileFormFactor.STRONG, ItemMissileStandard.MissileTier.TIER1).setCreativeTab(MainRegistry.missileTab);
     public static final Item missile_soyuz_lander = new ItemCustomLore("missile_soyuz_lander", "soyuz_lander").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
     public static final Item missile_soyuz = new ItemSoyuz("missile_soyuz").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
-    public static final Item rocket_custom = new ItemCustomRocket("rocket_custom").setMaxStackSize(1).setCreativeTab(null);
     public static final Item warhead_generic_small = new ItemBase("warhead_generic_small").setCreativeTab(MainRegistry.partsTab);
     public static final Item warhead_incendiary_small = new ItemBase("warhead_incendiary_small").setCreativeTab(MainRegistry.partsTab);
     public static final Item warhead_cluster_small = new ItemBase("warhead_cluster_small").setCreativeTab(MainRegistry.partsTab);

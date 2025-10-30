@@ -167,7 +167,6 @@ public class ResourceManager {
 	public static IModelCustom soyuz_launcher_support_base = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/launch_table/soyuz_launcher_support_base.obj")).asVBO();
 	public static IModelCustom soyuz_launcher_support = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/launch_table/soyuz_launcher_support.obj")).asVBO();
 	public static final IModelCustom soyuz_lander_neo = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/module_lander.obj")).asVBO();
-	public static final IModelCustom drop_pod = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/rp_drop_pod.obj")).asVBO();
 
 	//Boxcar
 	public static final IModelCustom boxcar = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/boxcar.obj")).asVBO();
@@ -587,7 +586,6 @@ public class ResourceManager {
 	public static final IModelCustom launch_table_small_scaffold_base = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/launch_table/launch_table_small_scaffold_base.obj")).asVBO();
 	public static final IModelCustom launch_table_small_scaffold_connector = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/launch_table/launch_table_small_scaffold_connector.obj")).asVBO();
 	public static final IModelCustom launch_table_small_scaffold_empty = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/launch_table/launch_table_small_scaffold_empty.obj")).asVBO();
-	public static final IModelCustom docking_port = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/docking_port.obj")).asVBO();
 
 	public static final IModelCustom mp_t_10_kerosene = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_t_10_kerosene.obj")).asVBO();
 	public static final IModelCustom mp_t_10_solid = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_parts/mp_t_10_solid.obj")).asVBO();
@@ -1682,7 +1680,6 @@ public class ResourceManager {
 	public static final ResourceLocation soyuz_launcher_tower_tex = new ResourceLocation(RefStrings.MODID, "textures/models/soyuz_launcher/launcher_tower.png");
 	public static final ResourceLocation soyuz_launcher_support_base_tex = new ResourceLocation(RefStrings.MODID, "textures/models/soyuz_launcher/launcher_support_base.png");
 	public static final ResourceLocation soyuz_launcher_support_tex = new ResourceLocation(RefStrings.MODID, "textures/models/soyuz_launcher/launcher_support.png");
-	public static final ResourceLocation drop_pod_tex = new ResourceLocation(RefStrings.MODID, "textures/models/missile_parts/warheads/rp_drop_pod.png");
 
 	//Missile Parts
 	public static final ResourceLocation missile_pad_tex = new ResourceLocation(RefStrings.MODID, "textures/models/missile_parts/missilePad.png");
@@ -1696,7 +1693,6 @@ public class ResourceManager {
 	public static final ResourceLocation missile_erector_abm_tex = new ResourceLocation(RefStrings.MODID, "textures/models/launchpad/erector_abm.png");
 	public static final ResourceLocation missile_assembly_tex = new ResourceLocation(RefStrings.MODID, "textures/models/missile_parts/missile_assembly.png");
 	public static final ResourceLocation strut_tex = new ResourceLocation(RefStrings.MODID, "textures/models/missile_parts/strut.png");
-	public static final ResourceLocation docking_port_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/docking_port.png");
 	public static final ResourceLocation compact_launcher_tex = new ResourceLocation(RefStrings.MODID, "textures/models/missile_parts/compact_launcher.png");
 	public static final ResourceLocation launch_table_base_tex = new ResourceLocation(RefStrings.MODID, "textures/models/missile_parts/launch_table.png");
 	public static final ResourceLocation launch_table_large_pad_tex = new ResourceLocation(RefStrings.MODID, "textures/models/missile_parts/launch_table_large_pad.png");

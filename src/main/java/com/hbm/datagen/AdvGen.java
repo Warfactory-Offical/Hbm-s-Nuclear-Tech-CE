@@ -489,16 +489,6 @@ public class AdvGen {
                         .frame(FrameType.CHALLENGE),
                 "impossible")
         );
-        batch.add(Templates.impossible("achdrivefail",
-                "hbm:achpolymer",
-                new Display()
-                        .key("driveFail")
-                        .icon(ModItems.full_drive)
-                        .toast(true)
-                        .announce(true)
-                        .frame(FrameType.CHALLENGE),
-                "impossible")
-        );
         batch.add(Templates.impossible("progress_dfc",
                 "hbm:achfusion",
                 new Display()

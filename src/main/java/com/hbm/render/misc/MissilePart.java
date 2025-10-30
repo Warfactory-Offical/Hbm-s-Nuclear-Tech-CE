@@ -5,8 +5,6 @@ import com.hbm.items.weapon.ItemMissile;
 import com.hbm.items.weapon.ItemMissile.PartType;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.amlfrom1710.IModelCustom;
-import com.hbm.render.entity.rocket.part.RenderDropPod;
-import com.hbm.render.entity.rocket.part.RenderRocketPart;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -26,9 +24,7 @@ public class MissilePart {
 	public IModelCustom shroudModel;
 	public ResourceLocation texture;
 	public boolean renderInventoryModel = true;
-	public RenderRocketPart renderer;
-
-	private MissilePart(Item item, PartType type, double height, double guiheight, IModelCustom model, ResourceLocation texture) {
+	protected MissilePart(Item item, PartType type, double height, double guiheight, IModelCustom model, ResourceLocation texture) {
 		this.part = (ItemMissile)item;
 		this.type = type;
 		this.height = height;
@@ -44,11 +40,6 @@ public class MissilePart {
 
 	private MissilePart withShroud(IModelCustom shroudModel) {
 		this.shroudModel = shroudModel;
-		return this;
-	}
-
-	private MissilePart withRenderer(RenderRocketPart renderer) {
-		this.renderer = renderer;
 		return this;
 	}
 
@@ -226,11 +217,6 @@ public class MissilePart {
 		registerPart(ModItems.mp_warhead_15_mirv, PartType.WARHEAD, 3, 2, ResourceManager.mp_w_15_mirv, ResourceManager.mp_w_15_mirv_tex);
 		registerPart(ModItems.mp_warhead_15_turbine, PartType.WARHEAD, 2.25, 2, ResourceManager.mp_w_15_turbine, ResourceManager.mp_w_15_turbine_tex);
 
-		// SPACE
-		registerPart(ModItems.rp_capsule_20, PartType.WARHEAD, 3.5, 2.25, ResourceManager.soyuz_lander_neo, ResourceManager.module_lander_tex);
-		registerPart(ModItems.rp_station_core_20, PartType.WARHEAD, 7, 5, ResourceManager.mp_w_fairing, ResourceManager.mp_w_fairing_tex);
-		registerPart(ModItems.rp_pod_20, PartType.WARHEAD, 3.0, 2.25, ResourceManager.drop_pod, ResourceManager.drop_pod_tex).withRenderer(new RenderDropPod());
-
 		registerPart(ModItems.sat_mapper, PartType.WARHEAD, 7, 5, ResourceManager.mp_w_fairing, ResourceManager.mp_w_fairing_tex).hideInventoryModel();
 		registerPart(ModItems.sat_scanner, PartType.WARHEAD, 7, 5, ResourceManager.mp_w_fairing, ResourceManager.mp_w_fairing_tex).hideInventoryModel();
 		registerPart(ModItems.sat_radar, PartType.WARHEAD, 7, 5, ResourceManager.mp_w_fairing, ResourceManager.mp_w_fairing_tex).hideInventoryModel();
@@ -240,8 +226,7 @@ public class MissilePart {
 		registerPart(ModItems.sat_miner, PartType.WARHEAD, 7, 5, ResourceManager.mp_w_fairing, ResourceManager.mp_w_fairing_tex).hideInventoryModel();
 		registerPart(ModItems.sat_lunar_miner, PartType.WARHEAD, 7, 5, ResourceManager.mp_w_fairing, ResourceManager.mp_w_fairing_tex).hideInventoryModel();
 		registerPart(ModItems.sat_gerald, PartType.WARHEAD, 7, 5, ResourceManager.mp_w_fairing, ResourceManager.mp_w_fairing_tex).hideInventoryModel();
-		registerPart(ModItems.sat_dyson_relay, PartType.WARHEAD, 7, 5, ResourceManager.mp_w_fairing, ResourceManager.mp_w_fairing_tex).hideInventoryModel();
-		
+
 	}
 
 	public static MissilePart registerPart(Item item, PartType type, double height, double guiheight, IModelCustom model, ResourceLocation texture) {

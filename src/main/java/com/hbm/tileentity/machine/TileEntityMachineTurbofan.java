@@ -76,7 +76,6 @@ public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implem
 	public AudioWrapper audio;
 
 	private Fluid oldFluid =Fluids.NONE.getFF();
-    private static boolean converted = false;
 
 	public TileEntityMachineTurbofan() {
 		super(5, 150, true, true);
@@ -84,7 +83,6 @@ public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implem
 		tank = new FluidTankNTM(Fluids.KEROSENE, 24000);
 		blood = new FluidTankNTM(Fluids.BLOOD, 24000);
 		upgradeManager = new UpgradeManagerNT(this);
-		converted = true;
 	}
 	@Override
 	public String getDefaultName() {
@@ -102,16 +100,7 @@ public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implem
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		this.power = compound.getLong("powerTime");
-		converted = compound.getBoolean("converted");
 		tank.readFromNBT(compound,"tank");
-		if (!converted && tank.getTankType() == Fluids.NONE){
-			if(tankOld == null || tankOld.getCapacity() <= 0)
-				tankOld = new FluidTank(64000);
-			tankOld.readFromNBT(compound);
-			if(tankOld.getFluid() != null) {
-				oldFluid = tankOld.getFluid().getFluid();
-			}
-		}
 		if(compound.hasKey("inventory"))
 			inventory.deserializeNBT(compound.getCompoundTag("inventory"));
 		super.readFromNBT(compound);
@@ -120,10 +109,7 @@ public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implem
 	@Override
 	public @NotNull NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		compound.setLong("powerTime", power);
-		if(!converted && tank.getTankType() == Fluids.NONE){
-			tankOld.writeToNBT(compound);
-			compound.setBoolean("converted", true);
-		} else tank.writeToNBT(compound, "tank");
+		tank.writeToNBT(compound, "tank");
 		compound.setTag("inventory", inventory.serializeNBT());
 		return super.writeToNBT(compound);
 	}
@@ -147,11 +133,6 @@ public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implem
 	
 	@Override
 	public void update() {
-		if(!converted && tank.getTankType() == Fluids.NONE) {
-			this.resizeInventory(6);
-			convertAndSetFluid(oldFluid, tankOld, tank);
-			converted = true;
-		}
 		if(!world.isRemote) {
 			this.output = 0;
 			this.consumption = 0;
@@ -170,7 +151,7 @@ public class TileEntityMachineTurbofan extends TileEntityMachinePolluting implem
 
 			long burnValue = 0;
 			int amount = 1 + this.afterburner;
-			int amountToBurn = breatheAir(this.tank.getFill() > 0 ? amount : 0) ? Math.min(amount, this.tank.getFill()) : 0;
+			int amountToBurn = Math.min(amount, this.tank.getFill());
 
 			boolean redstone = false;
 			for(DirPos pos : getConPos()) {

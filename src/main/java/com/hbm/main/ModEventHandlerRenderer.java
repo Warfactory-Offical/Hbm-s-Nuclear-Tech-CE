@@ -2,7 +2,6 @@ package com.hbm.main;
 
 import com.hbm.blocks.ICustomBlockHighlight;
 import com.hbm.config.RadiationConfig;
-import com.hbm.dim.WorldProviderCelestial;
 import com.hbm.handler.pollution.PollutionHandler.PollutionType;
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.sedna.factory.XFactoryDrill;
@@ -62,15 +61,15 @@ public class ModEventHandlerRenderer {
 	}
 	
 	float renderSoot = 0;
-	
+
 	@SubscribeEvent
 	public void worldTick(TickEvent.WorldTickEvent event) {
-		
+
 		if(event.phase == TickEvent.WorldTickEvent.Phase.START && RadiationConfig.enableSootFog) {
 
 			float step = 0.05F;
 			float soot = PermaSyncHandler.pollution[PollutionType.SOOT.ordinal()];
-			
+
 			if(Math.abs(renderSoot - soot) < step) {
 				renderSoot = soot;
 			} else if(renderSoot < soot) {
@@ -83,22 +82,6 @@ public class ModEventHandlerRenderer {
 
 	@SubscribeEvent(priority = EventPriority.LOW)
 	public void thickenFog(FogDensity event) {
-		if(event.getEntity().world.provider instanceof WorldProviderCelestial) {
-			WorldProviderCelestial provider = (WorldProviderCelestial) event.getEntity().world.provider;
-			float fogDensity = provider.fogDensity();
-			
-			if(fogDensity > 0) {
-				if(GLContext.getCapabilities().GL_NV_fog_distance) {
-					GL11.glFogi(34138, 34139);
-				}
-				GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_EXP);
-	
-				event.setDensity(fogDensity);
-				event.setCanceled(true);
-
-				return;
-			}
-		}
 
 		float soot = (float) (renderSoot - RadiationConfig.sootFogThreshold);
 

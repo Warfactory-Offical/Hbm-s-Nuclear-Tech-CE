@@ -272,11 +272,11 @@ public abstract class TileEntityOilDrillBase extends TileEntityMachineBase imple
             BlockPos currentPos = queue.poll();
             nodesVisited++;
             Block currentBlock = world.getBlockState(currentPos).getBlock();
-            if (currentBlock == ModBlocks.ore_oil || currentBlock == ModBlocks.ore_bedrock_oil || currentBlock == ModBlocks.ore_gas) {
+            if (currentBlock == ModBlocks.ore_oil || currentBlock == ModBlocks.ore_bedrock_oil) {
                 doSuck(currentPos);
                 return true;
             }
-            if (currentBlock != ModBlocks.ore_oil_empty && currentBlock != ModBlocks.ore_gas_empty) continue;
+            if (currentBlock != ModBlocks.ore_oil_empty) continue;
             for (ForgeDirection dir : BobMathUtil.getShuffledDirs()) {
                 BlockPos neighborPos = currentPos.add(dir.offsetX, dir.offsetY, dir.offsetZ);
                 if (!processed.contains(neighborPos) && canSuckBlock(world.getBlockState(neighborPos).getBlock())) {
@@ -289,13 +289,13 @@ public abstract class TileEntityOilDrillBase extends TileEntityMachineBase imple
     }
 
     public boolean canSuckBlock(Block b) {
-        return b == ModBlocks.ore_oil || b == ModBlocks.ore_oil_empty || b == ModBlocks.ore_gas || b == ModBlocks.ore_gas_empty;
+        return b == ModBlocks.ore_oil || b == ModBlocks.ore_oil_empty;
     }
 
     public void doSuck(BlockPos pos) {
         Block b = world.getBlockState(pos).getBlock();
 
-        if (b == ModBlocks.ore_oil || b == ModBlocks.ore_gas) {
+        if (b == ModBlocks.ore_oil) {
             onSuck(pos);
         }
     }

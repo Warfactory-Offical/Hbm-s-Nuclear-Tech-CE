@@ -3,7 +3,6 @@ package com.hbm.tileentity.machine.oil;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import com.hbm.blocks.ModBlocks;
-import com.hbm.dim.SolarSystem;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerMachineOilWell;
 import com.hbm.inventory.fluid.Fluids;
@@ -117,33 +116,13 @@ public class TileEntityMachineFrackingTower extends TileEntityOilDrillBase {
         int gas = 0;
 
         if(b == ModBlocks.ore_oil) {
-            if(meta == SolarSystem.Body.DUNA.ordinal()) {
-                tanks[0].setTankType(Fluids.OIL);
+            tanks[0].setTankType(Fluids.OIL);
 
-                oil = oilPerDunaDeposit;
-                gas = gasPerDepositMin + world.rand.nextInt(gasPerDepositMax - gasPerDepositMin + 1);
+            oil = oilPerDeposit;
+            gas = gasPerDepositMin + world.rand.nextInt(gasPerDepositMax - gasPerDepositMin + 1);
 
-                if(world.rand.nextDouble() < DunadrainChance) {
-                    world.setBlockState(pos, ModBlocks.ore_oil_empty.getDefaultState(), 3);
-                }
-            } else if(meta == SolarSystem.Body.LAYTHE.ordinal()) {
-                tanks[0].setTankType(Fluids.OIL_DS);
-
-                oil = oilPerDeposit;
-                gas = gasPerDepositMin + world.rand.nextInt(gasPerDepositMax - gasPerDepositMin + 1);
-
-                if(world.rand.nextDouble() < drainChance) {
-                    world.setBlockState(pos, ModBlocks.ore_oil_empty.getDefaultState(), 3);
-                }
-            } else {
-                tanks[0].setTankType(Fluids.OIL);
-
-                oil = oilPerDeposit;
-                gas = gasPerDepositMin + world.rand.nextInt(gasPerDepositMax - gasPerDepositMin + 1);
-
-                if(world.rand.nextDouble() < drainChance) {
-                    world.setBlockState(pos, ModBlocks.ore_oil_empty.getDefaultState(), 3);
-                }
+            if(world.rand.nextDouble() < drainChance) {
+                world.setBlockState(pos, ModBlocks.ore_oil_empty.getDefaultState(), 3);
             }
         }
 

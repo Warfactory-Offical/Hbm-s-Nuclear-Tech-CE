@@ -2,10 +2,7 @@ package com.hbm.blocks.machine;
 
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ModBlocks;
-import com.hbm.dim.CelestialBody;
-import com.hbm.dim.trait.CBT_Atmosphere;
 import com.hbm.tileentity.machine.TileEntityCondenser;
-import com.hbm.util.BobMathUtil;
 import com.hbm.util.I18nUtil;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -51,13 +48,6 @@ public class MachineCondenser extends BlockContainer implements ILookOverlay {
 		TileEntityCondenser condenser = (TileEntityCondenser) te;
 		
 		List<String> text = new ArrayList<>();
-
-		if(!condenser.vacuumOptimised) {
-			CBT_Atmosphere atmosphere = CelestialBody.getTrait(world, CBT_Atmosphere.class);
-			if(CelestialBody.inOrbit(world) || atmosphere == null || atmosphere.getPressure() < 0.01) {
-				text.add("&[" + (BobMathUtil.getBlink() ? 0xff0000 : 0xffff00) + "&]! ! ! " + I18nUtil.resolveKey("atmosphere.noVacuum") + " ! ! !");
-			}
-		}
 
 		for(int i = 0; i < condenser.tanks.length; i++)
 			text.add((i < 1 ? (TextFormatting.GREEN + "-> ") : (TextFormatting.RED + "<- ")) + TextFormatting.RESET +condenser.tanks[i].getTankType().getLocalizedName() + ": " + condenser.tanks[i].getFill() + "/" + condenser.tanks[i].getMaxFill() + "mB");

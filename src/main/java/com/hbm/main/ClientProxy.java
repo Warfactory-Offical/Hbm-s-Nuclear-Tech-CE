@@ -90,11 +90,13 @@ import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.*;
+import net.minecraft.item.EnumDyeColor;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
@@ -294,7 +296,6 @@ public class ClientProxy extends ServerProxy {
     public void registerMissileItems(IRegistry<ModelResourceLocation, IBakedModel> reg) {
         MissilePart.registerAllParts();
 
-        //Iterator<Map.Entry<Integer, MissilePart>> it = MissilePart.parts.entrySet().iterator();
         MissilePart.parts.values().forEach(part -> {
             registerItemRenderer(part.part, new ItemRenderMissilePart(part), reg);
         });

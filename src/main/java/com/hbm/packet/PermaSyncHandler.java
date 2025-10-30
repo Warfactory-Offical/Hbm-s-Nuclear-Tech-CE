@@ -1,14 +1,9 @@
 package com.hbm.packet;
 
-import com.hbm.dim.CelestialBody;
-import com.hbm.dim.SolarSystemWorldSavedData;
-import com.hbm.dim.WorldProviderCelestial;
-import com.hbm.dim.trait.CelestialBodyTrait;
 import com.hbm.handler.ImpactWorldHandler;
 import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.handler.pollution.PollutionHandler.PollutionData;
 import com.hbm.handler.pollution.PollutionHandler.PollutionType;
-import com.hbm.main.MainRegistry;
 import com.hbm.potion.HbmPotion;
 import com.hbm.saveddata.TomSaveData;
 import com.hbm.saveddata.satellites.Satellite;
@@ -20,8 +15,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
-
-import java.util.*;
 
 /**
  * Utility for permanently synchronizing values every tick with a player in the given context of a world.
@@ -66,35 +59,6 @@ public class PermaSyncHandler {
 		}
 		/// POLLUTION ///
 
-		/// CBT ///
-		if(world.getTotalWorldTime() % 5 == 1) { // update a little less frequently to not blast the players with large packets
-			buf.writeBoolean(true);
-
-			SolarSystemWorldSavedData solarSystemData = SolarSystemWorldSavedData.get(world);
-			for(CelestialBody body : CelestialBody.getAllBodies()) {
-				HashMap<Class<? extends CelestialBodyTrait>, CelestialBodyTrait> traits = solarSystemData.getTraits(body.name);
-				if(traits != null) {
-					buf.writeBoolean(true); // Has traits marker (since we can have an empty list)
-					buf.writeInt(traits.size());
-		
-					for(int i = 0; i < CelestialBodyTrait.traitList.size(); i++) {
-						Class<? extends CelestialBodyTrait> traitClass = CelestialBodyTrait.traitList.get(i);
-						CelestialBodyTrait trait = traits.get(traitClass);
-			
-						if(trait != null) {
-							buf.writeInt(i); // ID of the trait, in order registered
-							trait.writeToBytes(buf);
-						}
-					}
-				} else {
-					buf.writeBoolean(false);
-				}
-			}
-		} else {
-			buf.writeBoolean(false);
-		}
-		/// CBT ///
-
 		/// SATELLITES ///
 		// Only syncs data required for rendering satellites on the client
 		Int2ObjectOpenHashMap<Satellite> sats = SatelliteSavedData.getData(world).sats;
@@ -106,15 +70,6 @@ public class PermaSyncHandler {
             buf.writeInt(entry.getValue().getID());
         }
         /// SATELLITES ///
-
-		/// TIME OF DAY ///
-		if(world.provider instanceof WorldProviderCelestial && world.provider.getDimension() != 0) {
-			buf.writeBoolean(true);
-			((WorldProviderCelestial) world.provider).serialize(buf);
-		} else {
-			buf.writeBoolean(false);
-		}
-		/// TIME OF DAY ///
 
 		/// RIDING DESYNC FIX ///
 		if(player.getRidingEntity() != null) {
@@ -147,40 +102,6 @@ public class PermaSyncHandler {
 		}
 		/// POLLUTION ///
 
-		/// CBT ///
-		if(buf.readBoolean()) {
-			try {
-				HashMap<String, HashMap<Class<? extends CelestialBodyTrait>, CelestialBodyTrait>> traitMap = new HashMap<>();
-	
-				for(CelestialBody body : CelestialBody.getAllBodies()) {
-					if(buf.readBoolean()) {
-						HashMap<Class<? extends CelestialBodyTrait>, CelestialBodyTrait> traits = new HashMap<>();
-	
-						int cbtSize = buf.readInt();
-						for(int i = 0; i < cbtSize; i++) {
-							CelestialBodyTrait trait = CelestialBodyTrait.traitList.get(buf.readInt()).newInstance();
-							trait.readFromBytes(buf);
-			
-							traits.put(trait.getClass(), trait);
-						}
-	
-						traitMap.put(body.name, traits);
-					}
-				}
-	
-				SolarSystemWorldSavedData.updateClientTraits(traitMap);
-			} catch (Exception ex) {
-				// If any exception occurs, stop parsing any more bytes, they'll be unaligned
-				// We'll unset the client trait set to prevent any issues
-	
-				MainRegistry.logger.catching(ex);
-				SolarSystemWorldSavedData.updateClientTraits(null);
-	
-				return;
-			}
-		}
-		/// CBT ///
-
 		/// SATELLITES ///
 		int satSize = buf.readInt();
 		Int2ObjectOpenHashMap<Satellite> sats = new Int2ObjectOpenHashMap<>();
@@ -189,12 +110,6 @@ public class PermaSyncHandler {
 		}
 		SatelliteSavedData.setClientSats(sats);
 		/// SATELLITES ///
-
-		/// TIME OF DAY ///
-		if(buf.readBoolean() && world.provider instanceof WorldProviderCelestial) {
-			((WorldProviderCelestial) world.provider).deserialize(buf);
-		}
-		/// TIME OF DAY ///
 
 		/// RIDING DESYNC FIX ///
 		int ridingId = buf.readInt();

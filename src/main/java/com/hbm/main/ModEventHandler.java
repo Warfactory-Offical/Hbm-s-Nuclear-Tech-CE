@@ -11,11 +11,6 @@ import com.hbm.config.CompatibilityConfig;
 import com.hbm.config.GeneralConfig;
 import com.hbm.config.MobConfig;
 import com.hbm.config.RadiationConfig;
-import com.hbm.dim.CelestialBody;
-import com.hbm.dim.DebugTeleporter;
-import com.hbm.dim.WorldGeneratorCelestial;
-import com.hbm.dim.WorldProviderCelestial;
-import com.hbm.dim.trait.CBT_Atmosphere;
 import com.hbm.entity.logic.IChunkLoader;
 import com.hbm.entity.mob.EntityCreeperTainted;
 import com.hbm.entity.mob.EntityCyberCrab;
@@ -52,7 +47,6 @@ import com.hbm.particle.bullet_hit.EntityHitDataHandler;
 import com.hbm.particle.helper.BlackPowderCreator;
 import com.hbm.potion.HbmDetox;
 import com.hbm.potion.HbmPotion;
-import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.machine.TileEntityMachineRadarNT;
 import com.hbm.tileentity.machine.rbmk.RBMKDials;
 import com.hbm.tileentity.network.RTTYSystem;
@@ -112,7 +106,6 @@ import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerFlyableFallEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
-import net.minecraftforge.event.terraingen.OreGenEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Loader;
@@ -623,23 +616,8 @@ public class ModEventHandler {
             PacketThreading.createSendToAllThreadedPacket(new SurveyPacket(RBMKDials.getColumnHeight(event.world)));
         }
 
-        if (event.phase == Phase.END) {
-            DebugTeleporter.runQueuedTeleport();
-            if (event.world.getTotalWorldTime() % 20 == 0) {
-                CelestialBody.updateChemistry(event.world);
-            }
-        }
-
-
-        if (event.phase == Phase.START && event.world.provider instanceof WorldProviderCelestial && event.world.provider.getDimension() != 0) {
-            if (event.world.getGameRules().getBoolean("doDaylightCycle")) {
-                event.world.provider.setWorldTime(event.world.provider.getWorldTime() + 1L);
-            }
-        }
-
         if (event.phase == Phase.START) {
             BossSpawnHandler.rollTheDice(event.world);
-            updateWaterOpacity(event.world);
         }
 
         for (final Object e : entityList) {
@@ -655,17 +633,6 @@ public class ModEventHandler {
 
             NetworkHandler.flush(); // Flush ALL network packets.
         }
-    }
-
-    private void updateWaterOpacity(World world) {
-        // Per world water opacity!
-        int waterOpacity = 3;
-        if (world.provider instanceof WorldProviderCelestial) {
-            waterOpacity = ((WorldProviderCelestial) world.provider).getWaterOpacity();
-        }
-
-        Blocks.WATER.setLightOpacity(waterOpacity);
-        Blocks.FLOWING_WATER.setLightOpacity(waterOpacity);
     }
 
     @SubscribeEvent
@@ -841,17 +808,6 @@ public class ModEventHandler {
             fsb.handleTick(event);
         }
 
-        if (player.posY > 300 && player.posY < 1000) {
-            Vec3 vec = Vec3.createVectorHelper(3 * rand.nextDouble(), 0, 0);
-            CBT_Atmosphere thatmosphere = CelestialBody.getTrait(player.world, CBT_Atmosphere.class);
-
-            if (thatmosphere != null && thatmosphere.getPressure() > 0.05 && !player.isRiding()) {
-                if (Math.abs(player.motionX) > 1 || Math.abs(player.motionY) > 1 || Math.abs(player.motionZ) > 1) {
-                    ParticleUtil.spawnGasFlame(player.world, player.posX - 1 + vec.xCoord, player.posY + vec.yCoord, player.posZ + vec.zCoord, 0, 0, 0);
-                }
-            }
-        }
-
         if(event.phase == TickEvent.Phase.START) {
             int x = MathHelper.floor(player.posX);
             int y = MathHelper.floor(player.posY - 1);
@@ -988,13 +944,6 @@ public class ModEventHandler {
     public void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
         if (!event.player.world.isRemote) {
             HazardSystem.onPlayerLogout(event.player);
-        }
-    }
-
-    @SubscribeEvent
-    public void onGenerateOre(OreGenEvent.GenerateMinable event) {
-        if (event.getWorld().provider instanceof WorldProviderCelestial && event.getWorld().provider.getDimension() != 0) {
-            WorldGeneratorCelestial.onGenerateOre(event);
         }
     }
 

@@ -17,8 +17,6 @@ import com.hbm.command.CommandRadiation;
 import com.hbm.config.*;
 import com.hbm.creativetabs.*;
 import com.hbm.datagen.AdvGen;
-import com.hbm.dim.CommandSpaceTP;
-import com.hbm.dim.SolarSystem;
 import com.hbm.entity.EntityMappings;
 import com.hbm.entity.logic.IChunkLoader;
 import com.hbm.entity.siege.SiegeTier;
@@ -62,8 +60,6 @@ import com.hbm.util.ChunkUtil;
 import com.hbm.util.CrashHelper;
 import com.hbm.util.DamageResistanceHandler;
 import com.hbm.util.MobUtil;
-import com.hbm.world.ModBiomes;
-import com.hbm.world.PlanetGen;
 import com.hbm.world.feature.OreCave;
 import com.hbm.world.feature.OreLayer3D;
 import com.hbm.world.feature.SchistStratum;
@@ -406,9 +402,6 @@ public class MainRegistry {
     public void postInit(FMLPostInitializationEvent event) {
         ModItems.postInit();
         ModBlocks.postInit();
-        ModBiomes.init();
-        SolarSystem.init();
-        PlanetGen.init();
         DamageResistanceHandler.init();
         BlockCrate.setDrops();
         BedrockOreRegistry.registerBedrockOres();
@@ -467,7 +460,6 @@ public class MainRegistry {
         evt.registerServerCommand(new CommandRadiation());
         evt.registerServerCommand(new CommandHbm());
         evt.registerServerCommand(new CommandLocate());
-        evt.registerServerCommand(new CommandSpaceTP());
         evt.registerServerCommand(new CommandPacketInfo());
         AdvancementManager.init(evt.getServer());
         //MUST be initialized AFTER achievements!!

@@ -4,13 +4,7 @@ import com.hbm.api.tile.IWorldRenameable;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.NTMEnergyCapabilityWrapper;
 import com.hbm.capability.NTMFluidHandlerWrapper;
-import com.hbm.dim.CelestialBody;
-import com.hbm.dim.orbit.WorldProviderOrbit;
-import com.hbm.dim.trait.CBT_Atmosphere;
-import com.hbm.handler.atmosphere.AtmosphereBlob;
-import com.hbm.handler.atmosphere.ChunkAtmosphereManager;
 import com.hbm.interfaces.Spaghetti;
-import com.hbm.inventory.fluid.Fluids;
 import com.hbm.lib.CapabilityContextProvider;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ItemStackHandlerWrapper;
@@ -30,8 +24,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 @Spaghetti("Not spaghetti in itself, but for the love of god please use this base class for all machines")
 public abstract class TileEntityMachineBase extends TileEntityLoadedBase implements IWorldRenameable {
@@ -325,25 +317,5 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase impleme
 
     public boolean isDestroyedByCreativePlayer() {
         return destroyedByCreativePlayer;
-    }
-
-    // TODO: Consume air from connected tanks if available
-    protected boolean breatheAir(int amount) {
-        CBT_Atmosphere atmosphere = world.provider instanceof WorldProviderOrbit ? null : CelestialBody.getTrait(world, CBT_Atmosphere.class);
-        if (atmosphere != null) {
-            if (atmosphere.hasFluid(Fluids.AIR, 0.19) || atmosphere.hasFluid(Fluids.OXYGEN, 0.09)) {
-                return true;
-            }
-        }
-
-        List<AtmosphereBlob> blobs = ChunkAtmosphereManager.proxy.getBlobs(world, pos.getX(), pos.getY(), pos.getZ());
-        for (AtmosphereBlob blob : blobs) {
-            if (blob.hasFluid(Fluids.AIR, 0.19) || blob.hasFluid(Fluids.OXYGEN, 0.09)) {
-                blob.consume(amount);
-                return true;
-            }
-        }
-
-        return false;
     }
 }
