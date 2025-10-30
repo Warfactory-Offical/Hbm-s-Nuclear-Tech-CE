@@ -47,10 +47,7 @@ import com.hbm.lib.Library;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
-import com.hbm.packet.toclient.AuxParticlePacketNT;
-import com.hbm.packet.toclient.PlayerInformPacket;
-import com.hbm.packet.toclient.SerializableRecipePacket;
-import com.hbm.packet.toclient.SurveyPacket;
+import com.hbm.packet.toclient.*;
 import com.hbm.particle.bullet_hit.EntityHitDataHandler;
 import com.hbm.particle.helper.BlackPowderCreator;
 import com.hbm.potion.HbmDetox;
@@ -891,28 +888,43 @@ public class ModEventHandler {
                 }
             }
             /// BETA HEALTH END ///
+
+            /// PU RADIATION START ///
+
+            if(player.getUniqueID().equals(ShadyUtil.Pu_238)) {
+
+                List<EntityLivingBase> entities = player.world.getEntitiesWithinAABB(EntityLivingBase.class, player.getEntityBoundingBox().grow(3, 3, 3));
+
+                for(EntityLivingBase e : entities) {
+
+                    if(e != player) {
+                        e.addPotionEffect(new PotionEffect(HbmPotion.radiation, 300, 2));
+                    }
+                }
+            }
+
+            /// PU RADIATION END ///
+
+            /// SYNC START ///
+            if(!player.world.isRemote && player instanceof EntityPlayerMP playerMP) PacketDispatcher.wrapper.sendTo(new PermaSyncPacket(playerMP), playerMP);
+            /// SYNC END ///
         }
+        // Alcater addition on June 2023
         if (!player.world.isRemote && event.phase == Phase.START) {
             ItemDigammaDiagnostic.playVoices(player.world, player);
         }
 
         if (player.world.isRemote && event.phase == Phase.START && !player.isInvisible() && !player.isSneaking()) {
 
-            if (player.getUniqueID().toString().equals(Library.HbMinecraft)) {
-
-                int i = player.ticksExisted * 3;
-
-                Vec3 vec = Vec3.createVectorHelper(3, 0, 0);
-
-                vec.rotateAroundY((float) (i * Math.PI / 180D));
-                for (int k = 0; k < 5; k++) {
-
-                    vec.rotateAroundY((float) (1F * Math.PI / 180D));
-                    player.world.spawnParticle(EnumParticleTypes.TOWN_AURA, player.posX + vec.xCoord, player.posY + 1 + player.world.rand.nextDouble() * 0.05, player.posZ + vec.zCoord, 0.0, 0.0, 0.0);
-                }
+            if (player.getUniqueID().equals(ShadyUtil.Pu_238)) {
+                MutableVec3d vec = new MutableVec3d(3 * rand.nextDouble(), 0, 0);
+                vec.rotateRollSelf(rand.nextDouble() * Math.PI);
+                vec.rotateYawSelf(rand.nextDouble() * Math.PI * 2);
+                player.world.spawnParticle(EnumParticleTypes.TOWN_AURA, player.posX + vec.x, player.posY + 1 + vec.y, player.posZ + vec.z, 0.0, 0.0, 0.0);
             }
         }
 
+        /// 1.12.2 EXCLUSIVE AKIMBO GHOST START ///
         if (player.world.isRemote && event.phase == TickEvent.Phase.START) {
             ItemStack main = player.getHeldItemMainhand();
             ItemStack off  = player.getHeldItemOffhand();
@@ -956,6 +968,7 @@ public class ModEventHandler {
                 }
             }
         }
+        /// AKIMBO GHOST END ///
     }
 
     @SubscribeEvent

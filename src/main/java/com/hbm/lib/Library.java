@@ -93,6 +93,7 @@ public class Library {
 	
 	//this is a list of UUIDs used for various things, primarily for accessories.
 	//for a comprehensive list, check RenderAccessoryUtility.java
+    //mlbv: Deprecated. Use ShadyUtils instead.
 	public static String HbMinecraft = "192af5d7-ed0f-48d8-bd89-9d41af8524f8";
 	public static String TacoRedneck = "5aee1e3d-3767-4987-a222-e7ce1fbdf88e";
 	// Earl0fPudding

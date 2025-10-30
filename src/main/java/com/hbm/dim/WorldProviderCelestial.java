@@ -24,6 +24,7 @@ import net.minecraftforge.client.IRenderHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+//TODO: Wire TomSaveData onto this class (MainRegistry.proxy.getImpact* / ImpactWorldHandler)
 public abstract class WorldProviderCelestial extends WorldProvider {
 
 	private long localTime = -1;
@@ -440,6 +441,13 @@ public abstract class WorldProviderCelestial extends WorldProvider {
 		//  * sun extinction/modification events (the sun will appear normal even if it has been turned into a black hole)
 		//  * player launched satellites won't be visible
 		//  * artificial moons/rings (once implemented) won't be visible
+        //TODO: implement RenderNTMSkyboxImpact
+//        if(ImpactWorldHandler.getDustForClient(world) > 0 || ImpactWorldHandler.getFireForClient(world) > 0) {
+//            if (!(skyProvider instanceof RenderNTMSkyboxImpact)) {
+//                skyProvider = new RenderNTMSkyboxImpact();
+//            }
+//            return skyProvider;
+//        }
 		if(skyProvider == null) {
 			skyProvider = new SkyProviderCelestial();
 		}

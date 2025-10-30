@@ -9,6 +9,8 @@ import com.hbm.render.Shader;
 import com.hbm.saveddata.satellites.Satellite;
 import com.hbm.saveddata.satellites.SatelliteSavedData;
 import com.hbm.util.BobMathUtil;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -195,10 +197,12 @@ public class SkyProviderCelestial extends IRenderHandler {
 				}
 
 				// Light up the sky
-				for(Map.Entry<Integer, Satellite> entry : SatelliteSavedData.getClientSats().entrySet()) {
-					renderSatellite(partialTicks, world, mc, celestialAngle, entry.getKey(), entry.getValue().getColor());
-				}
-			}
+                ObjectIterator<Int2ObjectMap.Entry<Satellite>> iterator = SatelliteSavedData.getClientSats().int2ObjectEntrySet().fastIterator();
+                while (iterator.hasNext()) {
+                    var entry = iterator.next();
+                    renderSatellite(partialTicks, world, mc, celestialAngle, entry.getIntKey(), entry.getValue().getColor());
+                }
+            }
 		}
 		GlStateManager.popMatrix();
 

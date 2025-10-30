@@ -1,4 +1,4 @@
-package com.hbm.packet.toclient;
+package com.hbm.packet;
 
 import com.hbm.dim.CelestialBody;
 import com.hbm.dim.SolarSystemWorldSavedData;
@@ -14,6 +14,8 @@ import com.hbm.saveddata.TomSaveData;
 import com.hbm.saveddata.satellites.Satellite;
 import com.hbm.saveddata.satellites.SatelliteSavedData;
 import io.netty.buffer.ByteBuf;
+import it.unimi.dsi.fastutil.ints.*;
+import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -28,7 +30,7 @@ import java.util.*;
  */
 public class PermaSyncHandler {
 	
-	public static HashSet<Integer> boykissers = new HashSet<Integer>();
+	public static IntOpenHashSet boykissers = new IntOpenHashSet();
 	public static float[] pollution = new float[PollutionType.values().length];
 
 	public static void writePacket(ByteBuf buf, World world, EntityPlayerMP player) {
@@ -42,16 +44,19 @@ public class PermaSyncHandler {
 		/// TOM IMPACT DATA ///
 		
 		/// SHITTY MEMES ///
-		List<Integer> ids = new ArrayList<Integer>();
-		for(Object o : world.playerEntities) {
-			EntityPlayer p = (EntityPlayer) o;
-			if(p.isPotionActive(HbmPotion.death)) {
+		IntArrayList ids = new IntArrayList();
+		for(EntityPlayer p : world.playerEntities) {
+            if(p.isPotionActive(HbmPotion.death)) {
 				ids.add(p.getEntityId());
 			}
 		}
 		buf.writeShort((short) ids.size());
-		for(Integer i : ids) buf.writeInt(i);
-		/// SHITTY MEMES ///
+        IntListIterator iterator = ids.iterator();
+        while (iterator.hasNext()) {
+            int id = iterator.nextInt();
+            buf.writeInt(id);
+        }
+        /// SHITTY MEMES ///
 
 		/// POLLUTION ///
 		PollutionData pollution = PollutionHandler.getPollutionData(world, player.getPosition());
@@ -92,13 +97,15 @@ public class PermaSyncHandler {
 
 		/// SATELLITES ///
 		// Only syncs data required for rendering satellites on the client
-		HashMap<Integer, Satellite> sats = SatelliteSavedData.getData(world).sats;
+		Int2ObjectOpenHashMap<Satellite> sats = SatelliteSavedData.getData(world).sats;
 		buf.writeInt(sats.size());
-		for(Map.Entry<Integer, Satellite> entry : sats.entrySet()) {
-			buf.writeInt(entry.getKey());
-			buf.writeInt(entry.getValue().getID());
-		}
-		/// SATELLITES ///
+        ObjectIterator<Int2ObjectMap.Entry<Satellite>> iter = sats.int2ObjectEntrySet().fastIterator();
+        while (iter.hasNext()) {
+            Int2ObjectMap.Entry<Satellite> entry = iter.next();
+            buf.writeInt(entry.getIntKey());
+            buf.writeInt(entry.getValue().getID());
+        }
+        /// SATELLITES ///
 
 		/// TIME OF DAY ///
 		if(world.provider instanceof WorldProviderCelestial && world.provider.getDimension() != 0) {
@@ -143,11 +150,11 @@ public class PermaSyncHandler {
 		/// CBT ///
 		if(buf.readBoolean()) {
 			try {
-				HashMap<String, HashMap<Class<? extends CelestialBodyTrait>, CelestialBodyTrait>> traitMap = new HashMap<String, HashMap<Class<? extends CelestialBodyTrait>, CelestialBodyTrait>>();
+				HashMap<String, HashMap<Class<? extends CelestialBodyTrait>, CelestialBodyTrait>> traitMap = new HashMap<>();
 	
 				for(CelestialBody body : CelestialBody.getAllBodies()) {
 					if(buf.readBoolean()) {
-						HashMap<Class<? extends CelestialBodyTrait>, CelestialBodyTrait> traits = new HashMap<Class<? extends CelestialBodyTrait>, CelestialBodyTrait>();
+						HashMap<Class<? extends CelestialBodyTrait>, CelestialBodyTrait> traits = new HashMap<>();
 	
 						int cbtSize = buf.readInt();
 						for(int i = 0; i < cbtSize; i++) {
@@ -176,7 +183,7 @@ public class PermaSyncHandler {
 
 		/// SATELLITES ///
 		int satSize = buf.readInt();
-		HashMap<Integer, Satellite> sats = new HashMap<Integer, Satellite>();
+		Int2ObjectOpenHashMap<Satellite> sats = new Int2ObjectOpenHashMap<>();
 		for(int i = 0; i < satSize; i++) {
 			sats.put(buf.readInt(), Satellite.create(buf.readInt()));
 		}

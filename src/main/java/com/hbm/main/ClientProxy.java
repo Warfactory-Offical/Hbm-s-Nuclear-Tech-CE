@@ -1854,6 +1854,21 @@ public class ClientProxy extends ServerProxy {
     }
 
     @Override
+    public float getImpactDust(World world) {
+        return ImpactWorldHandler.getDustForClient(world);
+    }
+
+    @Override
+    public float getImpactFire(World world) {
+        return ImpactWorldHandler.getFireForClient(world);
+    }
+
+    @Override
+    public boolean getImpact(World world) {
+        return ImpactWorldHandler.getImpactForClient(world);
+    }
+
+    @Override
     public int getStackColor(@NotNull ItemStack stack, boolean amplify) {
         if(stack.isEmpty()) return 0x000000;
         int color;

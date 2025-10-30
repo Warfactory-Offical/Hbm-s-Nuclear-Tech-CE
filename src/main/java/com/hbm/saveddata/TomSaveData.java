@@ -10,6 +10,8 @@ public class TomSaveData extends WorldSavedData {
 	public float dust;
 	public float fire;
 	public boolean impact;
+    // mlbv: fields below this line (except lastCachedUnsafe) does not exist in upstream.. Silze added them in a commit
+    // called "SPACE" so I assume they are present in the space fork? I'll keep them for now.
 	public long time;
 	public long dtime;
 	public int x;

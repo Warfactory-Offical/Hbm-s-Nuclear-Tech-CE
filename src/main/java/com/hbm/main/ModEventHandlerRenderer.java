@@ -6,7 +6,7 @@ import com.hbm.dim.WorldProviderCelestial;
 import com.hbm.handler.pollution.PollutionHandler.PollutionType;
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.sedna.factory.XFactoryDrill;
-import com.hbm.packet.toclient.PermaSyncHandler;
+import com.hbm.packet.PermaSyncHandler;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.render.item.weapon.sedna.ItemRenderWeaponBase;
 import com.hbm.world.biome.BiomeGenCraterBase;
