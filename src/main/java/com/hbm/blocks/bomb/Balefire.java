@@ -34,7 +34,7 @@ public class Balefire extends BlockFire {
 	@Override
 	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
 		if (!world.getGameRules().getBoolean("doFireTick")) return;
-		if (!world.isAreaLoaded(pos, 2)) return;
+		if (!world.isAreaLoaded(pos, 4)) return;
 
 		if (!this.canPlaceBlockAt(world, pos)) {
 			world.setBlockToAir(pos);
