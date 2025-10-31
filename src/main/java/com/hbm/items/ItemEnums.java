@@ -95,7 +95,6 @@ public class ItemEnums {
 
   public enum EnumCircuitType {
     VACUUM_TUBE,
-    NUMITRON,
     CAPACITOR,
     CAPACITOR_TANTALIUM,
     PCB,
@@ -114,6 +113,7 @@ public class ItemEnums {
     CHIP_QUANTUM,
     CONTROLLER_QUANTUM,
     ATOMIC_CLOCK,
+    NUMITRON,
   }
 
   public enum EnumDepletedRTGMaterial {
