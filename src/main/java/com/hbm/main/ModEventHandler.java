@@ -33,6 +33,7 @@ import com.hbm.items.food.ItemConserve;
 import com.hbm.items.gear.ArmorFSB;
 import com.hbm.items.special.ItemHot;
 import com.hbm.items.tool.ItemDigammaDiagnostic;
+import com.hbm.items.tool.ItemGuideBook;
 import com.hbm.items.weapon.ItemGunBase;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
@@ -1260,6 +1261,16 @@ public class ModEventHandler {
             if (GeneralConfig.duckButton) {
                 if (event.player instanceof EntityPlayerMP && !event.player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getBoolean("hasDucked")) {
                     PacketDispatcher.sendTo(new PlayerInformPacket("chat.duck"), (EntityPlayerMP) event.player);
+                }
+            }
+
+            if(GeneralConfig.enableGuideBook) {
+                IHBMData props = HbmCapability.getData(event.player);
+
+                if(!props.hasReceivedBook()) {
+                    event.player.inventory.addItemStackToInventory(new ItemStack(ModItems.book_guide, 1, ItemGuideBook.BookType.STARTER.ordinal()));
+                    event.player.inventoryContainer.detectAndSendChanges();
+                    props.setReceivedBook(true);
                 }
             }
 

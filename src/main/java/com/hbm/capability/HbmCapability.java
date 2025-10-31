@@ -42,6 +42,7 @@ public class HbmCapability {
 		void setKeyPressed(EnumKeybind key, boolean pressed);
 		boolean getEnableBackpack();
 		boolean getEnableHUD();
+        boolean hasReceivedBook();
 		float getShield();
 		float getMaxShield();
 		int getLastDamage();
@@ -52,6 +53,7 @@ public class HbmCapability {
         int getReputation();
 		void setEnableBackpack(boolean b);
 		void setEnableHUD(boolean b);
+        void setReceivedBook(boolean b);
 		void setShield(float f);
 		void setMaxShield(float f);
 		void setLastDamage(int i);
@@ -74,22 +76,22 @@ public class HbmCapability {
 			return getEnableBackpack() && getKeyPressed(EnumKeybind.JETPACK);
 		}
 		default void serialize(ByteBuf buf) {
-//			buf.writeBoolean(this.hasReceivedBook);
+			buf.writeBoolean(this.hasReceivedBook());//mlbv: i don't think we really need to sync this but anyway..
 			buf.writeFloat(this.getShield());
 			buf.writeFloat(this.getMaxShield());
 			buf.writeBoolean(this.getEnableBackpack());
 			buf.writeBoolean(this.getEnableHUD());
-//			buf.writeInt(this.reputation);
+			buf.writeInt(this.getReputation());
 //			buf.writeBoolean(this.enableMagnet);
 		}
 		default void deserialize(ByteBuf buf) {
 			if(buf.readableBytes() > 0) {
-//				this.hasReceivedBook = buf.readBoolean();
+				this.setReceivedBook(buf.readBoolean());
 				this.setShield(buf.readFloat());
 				this.setMaxShield(buf.readFloat());
 				this.setEnableBackpack(buf.readBoolean());
 				this.setEnableHUD(buf.readBoolean());
-//				this.reputation = buf.readInt();
+				this.setReputation(buf.readInt());
 //				this.enableMagnet = buf.readBoolean();
 			}
 		}
@@ -103,8 +105,7 @@ public class HbmCapability {
 		
 		public boolean enableBackpack = true;
 		public boolean enableHUD = true;
-		public boolean isOnLadder = false;
-		public boolean dashActivated = true;
+        public boolean hasReceivedBook = false;
 
 		public int dashCooldown = 0;
 
@@ -161,6 +162,11 @@ public class HbmCapability {
 			return enableHUD;
 		}
 
+        @Override
+        public boolean hasReceivedBook() {
+            return hasReceivedBook;
+        }
+
 		@Override
 		public void setEnableBackpack(boolean b){
 			enableBackpack = b;
@@ -170,6 +176,11 @@ public class HbmCapability {
 		public void setEnableHUD(boolean b){
 			enableHUD = b;
 		}
+
+        @Override
+        public void setReceivedBook(boolean b) {
+            hasReceivedBook = b;
+        }
 
 		@Override
 		public float getShield() {
@@ -260,10 +271,11 @@ public class HbmCapability {
 			for(EnumKeybind key : EnumKeybind.values()){
 				tag.setBoolean(key.name(), instance.getKeyPressed(key));
 			}
+            tag.setBoolean("hasReceivedBook", instance.hasReceivedBook());
+            tag.setFloat("shield", instance.getShield());
+            tag.setFloat("maxShield", instance.getMaxShield());
 			tag.setBoolean("enableBackpack", instance.getEnableBackpack());
 			tag.setBoolean("enableHUD", instance.getEnableHUD());
-			tag.setFloat("shield", instance.getShield());
-			tag.setFloat("maxShield", instance.getMaxShield());
             tag.setInteger("reputation", instance.getReputation());
 			return tag;
 		}
@@ -274,10 +286,11 @@ public class HbmCapability {
                 for(EnumKeybind key : EnumKeybind.values()){
 					instance.setKeyPressed(key, tag.getBoolean(key.name()));
 				}
+                instance.setReceivedBook(tag.getBoolean("hasReceivedBook"));
+                instance.setShield(tag.getFloat("shield"));
+                instance.setMaxShield(tag.getFloat("maxShield"));
 				instance.setEnableBackpack(tag.getBoolean("enableBackpack"));
 				instance.setEnableHUD(tag.getBoolean("enableHUD"));
-				instance.setShield(tag.getFloat("shield"));
-				instance.setMaxShield(tag.getFloat("maxShield"));
                 instance.setReputation(tag.getInteger("reputation"));
 			}
 		}
@@ -307,7 +320,12 @@ public class HbmCapability {
 				return false;
 			}
 
-			@Override
+            @Override
+            public boolean hasReceivedBook() {
+                return true;
+            }
+
+            @Override
 			public void setEnableBackpack(boolean b){
 			}
 
@@ -315,7 +333,11 @@ public class HbmCapability {
 			public void setEnableHUD(boolean b){
 			}
 
-			@Override
+            @Override
+            public void setReceivedBook(boolean b) {
+            }
+
+            @Override
 			public float getShield() {
 				return 0;
 			}

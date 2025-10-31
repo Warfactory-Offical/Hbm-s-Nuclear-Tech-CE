@@ -2,6 +2,8 @@ package com.hbm.inventory.container;
 
 import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotTakeOnly;
+import com.hbm.items.machine.ItemBlades;
+import com.hbm.lib.Library;
 import com.hbm.tileentity.machine.TileEntityMachineShredder;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -89,11 +91,14 @@ public class ContainerMachineShredder extends Container {
 					return ItemStack.EMPTY;
 				}
 			}
-			else
-			{
-				if (!this.mergeItemStack(stack, 0, 9, false))
-					if (!this.mergeItemStack(stack, 27, 30, false))
-						return ItemStack.EMPTY;
+			else {
+                if(Library.isItemBattery(rStack)) {
+                    if(!this.mergeItemStack(stack, 29, 30, false)) return ItemStack.EMPTY;
+                } else if(rStack.getItem() instanceof ItemBlades) {
+                    if(!this.mergeItemStack(stack, 27, 29, false)) return ItemStack.EMPTY;
+                } else {
+                    if(!this.mergeItemStack(stack, 0, 9, false)) return ItemStack.EMPTY;
+                }
 			}
 			
 			if (stack.isEmpty())
