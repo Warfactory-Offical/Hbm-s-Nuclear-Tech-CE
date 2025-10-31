@@ -9,6 +9,7 @@ import com.hbm.blocks.network.FluidDuctBox;
 import com.hbm.blocks.network.FluidDuctStandard;
 import com.hbm.capability.HbmCapability;
 import com.hbm.config.ClientConfig;
+import com.hbm.config.GeneralConfig;
 import com.hbm.entity.mob.EntityHunterChopper;
 import com.hbm.entity.projectile.EntityChopperMine;
 import com.hbm.entity.siege.SiegeTier;
@@ -79,6 +80,7 @@ import com.hbm.render.misc.SoyuzPronter;
 import com.hbm.render.modelrenderer.EgonBackpackRenderer;
 import com.hbm.render.tileentity.*;
 import com.hbm.render.util.RenderOverhead;
+import com.hbm.render.world.RenderNTMSkyboxChainloader;
 import com.hbm.sound.*;
 import com.hbm.sound.MovingSoundPlayerLoop.EnumHbmSound;
 import com.hbm.tileentity.bomb.TileEntityNukeCustom;
@@ -135,6 +137,7 @@ import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.registry.IRegistry;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.client.IRenderHandler;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
@@ -969,6 +972,65 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         JetpackHandler.inputUpdate(e);
     }
 
+    public static boolean renderLodeStar = false;
+    public static long lastStarCheck = 0L;
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onClientTickLast(ClientTickEvent event) {
+        Minecraft mc = Minecraft.getMinecraft();
+        long millis = Clock.get_ms();
+        if(millis == 0) millis = System.currentTimeMillis();
+
+//        if(GeneralConfig.enableLoadScreenReplacement && loadingScreenReplacementRetry < 25 && !(mc.loadingScreen instanceof LoadingScreenRendererNT) && millis > lastLoadScreenReplacement + 5_000) {
+//            mc.loadingScreen = new LoadingScreenRendererNT(mc);
+//            lastLoadScreenReplacement = millis;
+//            loadingScreenReplacementRetry++; // this might not do anything, but at least it should prevent a metric fuckton of framebuffers from being created
+//        }
+
+        if(event.phase == Phase.START && GeneralConfig.enableSkyboxes) {
+
+            World world = mc.world;
+            if (world == null) return;
+            IRenderHandler sky = world.provider.getSkyRenderer();
+            //TODO: implement
+//            if(world.provider instanceof WorldProviderSurface) {
+//
+//                if(ImpactWorldHandler.getDustForClient(world) > 0 || ImpactWorldHandler.getFireForClient(world) > 0) {
+//
+//                    //using a chainloader isn't necessary since none of the sky effects should render anyway
+//                    if(!(sky instanceof RenderNTMSkyboxImpact)) {
+//                        world.provider.setSkyRenderer(new RenderNTMSkyboxImpact());
+//                        return;
+//                    }
+//                }
+//            }
+
+            if(world.provider.getDimension() == 0) {
+                if(!(sky instanceof RenderNTMSkyboxChainloader)) {
+                    world.provider.setSkyRenderer(new RenderNTMSkyboxChainloader(sky));
+                }
+            }
+
+            EntityPlayer player = mc.player;
+
+            if(lastStarCheck + 200 < millis) {
+                renderLodeStar = false;
+                lastStarCheck = millis;
+
+                if(player != null) {
+                    Vec3NT pos = new Vec3NT(player.posX, player.posY, player.posZ);
+                    Vec3NT lodestarHeading = new Vec3NT(0, 0, -1D).rotateAroundXDeg(-15).multiply(25);
+                    Vec3NT nextPos = new Vec3NT(pos).add(lodestarHeading.x, lodestarHeading.y, lodestarHeading.z);
+                    RayTraceResult mop = world.rayTraceBlocks(pos, nextPos, false, true, false);
+                    //noinspection ConstantValue
+                    if(mop != null && mop.typeOfHit == Type.BLOCK && mop.getBlockPos() != null && world.getBlockState(mop.getBlockPos()).getBlock() == ModBlocks.glass_polarized) {
+                        renderLodeStar = true;
+                    }
+                }
+            }
+        }
+    }
+
     @SubscribeEvent
     public void clientTick(ClientTickEvent e) {
         Minecraft mc = Minecraft.getMinecraft();
@@ -1123,6 +1185,7 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void renderWorld(RenderWorldLastEvent evt) {
+        Clock.update();
         HbmShaderManager2.createInvMVP();
         GlStateManager.enableDepth();
         List<Entity> list = Minecraft.getMinecraft().world.loadedEntityList;

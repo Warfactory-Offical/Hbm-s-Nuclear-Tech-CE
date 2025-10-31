@@ -20,7 +20,7 @@ public class GeneralConfig {
 	public static boolean enableTickBasedWorldGenerator = false;
 	public static boolean enableDebugMode = false;
 	public static boolean enableDebugWorldGen = false;
-	public static boolean enableSkybox = true;
+	public static boolean enableSkyboxes = true;
 	public static boolean enableWelcomeMessage = true;
 	public static boolean enableKeybindOverlap = true;
 	public static boolean enableFluidContainerCompat = true;
@@ -120,7 +120,7 @@ public class GeneralConfig {
 		enableTickBasedWorldGenerator = config.get(CATEGORY_GENERAL, "0.06_enableTickBasedWorldGenerator", false, "Use tick-based phased world generator. This eliminates cascading worldgen, but is incompatible with most chunk pre-generators.\n Do not set to true unless you know what you are doing.").getBoolean(false);
 		enableDebugMode = config.get(CATEGORY_GENERAL, "1.00_enableDebugMode", false).getBoolean(false);
 		enableDebugWorldGen = config.get(CATEGORY_GENERAL, "1.00_enableDebugWorldGen", false).getBoolean(false);
-		enableSkybox = config.get(CATEGORY_GENERAL, "1.00_enableSkybox", true, "Do not set it to false unless you know what you are doing.").getBoolean(true);
+		enableSkyboxes = config.get(CATEGORY_GENERAL, "1.00_enableSkybox", true, "If enabled, will try to use NTM's custom skyboxes.").getBoolean(true);
 		enableMycelium = config.get(CATEGORY_GENERAL, "1.01_enableMyceliumSpread", false).getBoolean(false);
 		enablePlutoniumOre = config.get(CATEGORY_GENERAL, "1.02_enablePlutoniumNetherOre", false).getBoolean(false);
 		enableDungeons = config.get(CATEGORY_GENERAL, "1.03_enableDungeonSpawn", true).getBoolean(true);
