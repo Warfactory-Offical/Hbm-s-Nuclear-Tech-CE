@@ -35,7 +35,7 @@ public class HazardTypeToxic extends HazardTypeBase {
             hasToxFilter = ArmorRegistry.hasProtection(player, EntityEquipmentSlot.HEAD, ArmorRegistry.HazardClass.NERVE_AGENT);
 
 			if (hasToxFilter) {
-				ArmorUtil.damageGasMaskFilter(player, 1);
+				ArmorUtil.damageGasMaskFilter(player, hazardRate);
 			}
 
 			hasHazmat = ArmorUtil.checkForHazmat(player);

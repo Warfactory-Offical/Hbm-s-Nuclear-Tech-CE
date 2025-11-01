@@ -29,7 +29,7 @@ public class HazardTypeRadiation extends HazardTypeBase {
         level *= stack.getCount();
 
         if (level > 0) {
-            double rad = (level / 20D) / 2D;
+            double rad = level / 20D;
 
             if (GeneralConfig.enable528 && reacher) {
                 rad = rad / 49D;    //More realistic function for 528: x / distance^2
@@ -37,7 +37,7 @@ public class HazardTypeRadiation extends HazardTypeBase {
                 rad = BobMathUtil.sqrt(rad); //Reworked radiation function: sqrt(x+1/(x+2)^2)-1/(x+2)
             }
 
-            ContaminationUtil.contaminate(target, HazardType.RADIATION, ContaminationType.CREATIVE, (float) (rad * hazardRate));
+            ContaminationUtil.contaminate(target, HazardType.RADIATION, ContaminationType.CREATIVE, rad * hazardRate);
         }
     }
 

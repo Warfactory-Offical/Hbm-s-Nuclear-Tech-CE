@@ -26,9 +26,9 @@ public class HazardTypeAsbestos extends HazardTypeBase {
 			return;
 
         if (ArmorRegistry.hasProtection(target, EntityEquipmentSlot.HEAD, HazardClass.PARTICLE_FINE))
-            ArmorUtil.damageGasMaskFilter(target, (int) level);
+            ArmorUtil.damageGasMaskFilter(target, (int) level * hazardRate);
         else
-            HbmLivingProps.incrementAsbestos(target, (int) Math.min(level, 10));
+            HbmLivingProps.incrementAsbestos(target, (int) Math.min(level, 10) * hazardRate);
     }
 
 

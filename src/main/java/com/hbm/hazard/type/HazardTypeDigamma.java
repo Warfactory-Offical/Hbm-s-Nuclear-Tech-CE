@@ -17,7 +17,7 @@ public class HazardTypeDigamma extends HazardTypeBase {
 
 	@Override
     public void onUpdate(final EntityLivingBase target, final double level, final ItemStack stack) {
-        ContaminationUtil.applyDigammaData(target, (level / 20D) * hazardRate);
+        ContaminationUtil.applyDigammaData(target, (level * stack.getCount() / 20D) * hazardRate);
     }
 
     @Override
