@@ -48,7 +48,8 @@ public class ExplosionBalefire {
 		nbt.setInteger(name + "shell", shell);
 		nbt.setInteger(name + "leg", leg);
 		nbt.setInteger(name + "element", element);
-		nbt.setUniqueId(name + "detonator", detonator);
+        if (detonator != null)
+		    nbt.setUniqueId(name + "detonator", detonator);
 	}
 	
 	public void readFromNbt(NBTTagCompound nbt, String name) {
@@ -64,7 +65,8 @@ public class ExplosionBalefire {
 		shell = nbt.getInteger(name + "shell");
 		leg = nbt.getInteger(name + "leg");
 		element = nbt.getInteger(name + "element");
-		detonator = nbt.getUniqueId(name + "detonator");
+        if (nbt.hasKey(name + "detonator"))
+		    detonator = nbt.getUniqueId(name + "detonator");
 	}
 	
 	public ExplosionBalefire(int x, int y, int z, World world, int rad)
