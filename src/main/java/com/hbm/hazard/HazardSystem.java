@@ -20,7 +20,6 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -35,6 +34,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -252,17 +252,199 @@ public class HazardSystem {
     }
 
     /**
+     * Registers {@link HazardData} for a specific OreDictionary key.
+     * <p>
+     * <b>Priority:</b> OreDictionary mappings are evaluated before item and stack mappings. If multiple ore keys
+     * match a stack, their entries are consulted in the same order as returned by
+     * {@link net.minecraftforge.oredict.OreDictionary#getOreIDs(net.minecraft.item.ItemStack)}.
+     * </p>
+     * <p>
+     * Avoid relying on {@code doesOverride} across different ore keys to fix ordering; prefer using mutex flags or
+     * more specific registrations when keys collide.
+     * </p>
+     *
+     * @param oreName non-null OreDictionary name (e.g. {@code "ingotUranium"}).
+     * @param data    mapping to associate; its {@code entries}, {@code doesOverride}, and {@code mutex} bits control
+     *                how it interacts with previously gathered data.
+     * @apiNote lookup is <em>count-insensitive</em>; stack count is only considered later by modifiers/types at
+     *          application time.
+     */
+    public static void register(final String oreName, final HazardData data) {
+        oreMap.put(oreName, data);
+    }
+
+    /**
+     * Registers {@link HazardData} for all stacks of a given {@link Item} (any damage value).
+     * <p>
+     * This mapping is evaluated after OreDictionary mappings and before exact-stack mappings.
+     * </p>
+     *
+     * @param item target item (non-null).
+     * @param data hazard data to associate.
+     * @apiNote lookup is <em>count-insensitive</em>.
+     */
+    public static void register(final Item item, final HazardData data) {
+        itemMap.put(item, data);
+    }
+
+    /**
+     * Registers {@link HazardData} for an item addressed by a {@link ResourceLocation}.
+     * <p>
+     * If the item is already present in {@link IForgeRegistry} at call time, the
+     * mapping is applied immediately. Otherwise it is queued in {@link #locationRateRegisterList} and applied near the
+     * end of FML loading once the item appears.
+     * </p>
+     *
+     * @param loc  item registry name (e.g. {@code modid:item_name}).
+     * @param data hazard data to associate.
+     * @apiNote lookup is <em>count-insensitive</em>.
+     */
+    public static void register(final ResourceLocation loc, final HazardData data) {
+        retriveAndRegister(loc, data);
+    }
+
+    /**
+     * Registers {@link HazardData} for the {@link Item} form of a {@link Block}.
+     * <p>
+     * Equivalent to calling {@link #register(Item, HazardData)} with {@link Item#getItemFromBlock(Block)}.
+     * </p>
+     *
+     * @param block target block whose item form will be mapped.
+     * @param data  hazard data to associate.
+     * @apiNote lookup is <em>count-insensitive</em>.
+     */
+    public static void register(final Block block, final HazardData data) {
+        itemMap.put(Item.getItemFromBlock(block), data);
+    }
+
+    /**
+     * Registers {@link HazardData} for an exact item/meta pair.
+     * <p>
+     * The key is normalized via {@link ComparableStack#makeSingular()} so the
+     * registration is <em>count-insensitive</em>. <b>NBТ is not considered</b> by the key; to vary hazard level by NBT
+     * use {@link IHazardModifier} (or a transformer) rather than separate registrations.
+     * </p>
+     *
+     * @param stack representative stack; only its item and meta are used to form the key.
+     * @param data  hazard data to associate.
+     */
+    public static void register(final ItemStack stack, final HazardData data) {
+        stackMap.put(ItemStackUtil.comparableStackFrom(stack), data);
+    }
+
+    /**
+     * Registers {@link HazardData} for an exact {@link ComparableStack} key.
+     * <p>
+     * Callers are responsible for providing a <em>singular</em> key if count-insensitivity is desired, e.g.
+     * {@code comp.makeSingular()}.
+     * </p>
+     *
+     * @param comp normalized key (typically {@code makeSingular()}).
+     * @param data hazard data to associate.
+     */
+    public static void register(final ComparableStack comp, final HazardData data) {
+        stackMap.put(comp, data);
+    }
+
+    /**
      * Register hazard data for an object key (ore name, item, block, ItemStack, ComparableStack, or ResourceLocation).
      *
      * @apiNote count insensitive (ItemStack keys normalized via ComparableStack.makeSingular)
      */
     public static void register(final Object o, final HazardData data) {
-        if (o instanceof String) oreMap.put((String) o, data);
-        if (o instanceof Item) itemMap.put((Item) o, data);
-        if (o instanceof ResourceLocation) retriveAndRegister((ResourceLocation) o, data);
-        if (o instanceof Block) itemMap.put(Item.getItemFromBlock((Block) o), data);
-        if (o instanceof ItemStack) stackMap.put(ItemStackUtil.comparableStackFrom((ItemStack) o), data);
-        if (o instanceof ComparableStack) stackMap.put((ComparableStack) o, data);
+        if (o instanceof String s) {
+            register(s, data);
+            return;
+        }
+        if (o instanceof Item i) {
+            register(i, data);
+            return;
+        }
+        if (o instanceof ResourceLocation rl) {
+            register(rl, data);
+            return;
+        }
+        if (o instanceof Block b) {
+            register(b, data);
+            return;
+        }
+        if (o instanceof ItemStack is) {
+            register(is, data);
+            return;
+        }
+        if (o instanceof ComparableStack cs) {
+            register(cs, data);
+            return;
+        }
+        throw new IllegalArgumentException("Unsupported key type for register: " + (o == null ? "null" : o.getClass().getName()));
+    }
+
+    /**
+     * Removes the OreDictionary mapping for {@code oreName}, if present.
+     *
+     * @param oreName target key.
+     * @return {@code true} if a mapping was removed.
+     */
+    public static boolean unregister(final String oreName) {
+        return oreMap.remove(oreName) != null;
+    }
+
+    /**
+     * Removes the item-level mapping for {@code item}, if present.
+     *
+     * @param item target item.
+     * @return {@code true} if a mapping was removed.
+     */
+    public static boolean unregister(final Item item) {
+        return itemMap.remove(item) != null;
+    }
+
+    /**
+     * Removes mappings associated with {@code loc}.
+     * <p>
+     * This removes an already-resolved item mapping and/or a pending entry in
+     * {@link #locationRateRegisterList} if it was queued earlier.
+     * </p>
+     *
+     * @param loc item registry name.
+     * @return {@code true} if anything was removed.
+     */
+    public static boolean unregister(final ResourceLocation loc) {
+        return removeResourceLocation(loc);
+    }
+
+    /**
+     * Removes the mapping for the item form of {@code block}, if present.
+     *
+     * @param block target block.
+     * @return {@code true} if a mapping was removed.
+     */
+    public static boolean unregister(final Block block) {
+        Item item = Item.getItemFromBlock(block);
+        return item != Items.AIR && itemMap.remove(item) != null;
+    }
+
+    /**
+     * Removes the exact-stack mapping corresponding to {@code stack}'s item/meta.
+     * <p>
+     * The lookup key is normalized and does not include NBT.
+     * </p>
+     *
+     * @param stack representative stack; only item/meta are considered.
+     * @return {@code true} if a mapping was removed.
+     */
+    public static boolean unregister(final ItemStack stack) {
+        return stackMap.remove(ItemStackUtil.comparableStackFrom(stack)) != null;
+    }
+
+    /**
+     * Removes the mapping for an exact {@link ComparableStack} key.
+     *
+     * @param comp key to remove.
+     * @return {@code true} if a mapping was removed.
+     */
+    public static boolean unregister(final ComparableStack comp) {
+        return stackMap.remove(comp) != null;
     }
 
     /**
@@ -271,41 +453,32 @@ public class HazardSystem {
      * @apiNote count insensitive (mirrors registration semantics)
      */
     public static boolean unregister(final Object o) {
-        if (o instanceof Collection<?>) {
+        if (o instanceof Collection<?> c) {
             boolean removed = false;
-            for (Object element : (Collection<?>) o) {
+            for (Object element : c) {
                 removed |= unregister(element);
             }
             return removed;
         }
         if (o == null) return false;
 
-        boolean removed = false;
-        if (o instanceof String) {
-            removed |= oreMap.remove(o) != null;
-        } else if (o instanceof Item) {
-            removed |= itemMap.remove(o) != null;
-        } else if (o instanceof ResourceLocation) {
-            removed |= removeResourceLocation((ResourceLocation) o);
-        } else if (o instanceof Block) {
-            Item item = Item.getItemFromBlock((Block) o);
-            if (item != Items.AIR) {
-                removed |= itemMap.remove(item) != null;
-            }
-        } else if (o instanceof ItemStack) {
-            removed |= stackMap.remove(ItemStackUtil.comparableStackFrom((ItemStack) o)) != null;
-        } else if (o instanceof ComparableStack) {
-            removed |= stackMap.remove(o) != null;
-        } else if (o.getClass().isArray()) {
-            int length = java.lang.reflect.Array.getLength(o);
+        if (o instanceof String s) return unregister(s);
+        if (o instanceof Item i) return unregister(i);
+        if (o instanceof ResourceLocation rl) return unregister(rl);
+        if (o instanceof Block b) return unregister(b);
+        if (o instanceof ItemStack is) return unregister(is);
+        if (o instanceof ComparableStack cs) return unregister(cs);
+        if (o.getClass().isArray()) {
+            boolean removed = false;
+            int length = Array.getLength(o);
             for (int i = 0; i < length; i++) {
-                Object element = java.lang.reflect.Array.get(o, i);
+                Object element = Array.get(o, i);
                 removed |= unregister(element);
             }
+            return removed;
         }
-        return removed;
+        throw new IllegalArgumentException("Unsupported key type for unregister: " + o.getClass().getName());
     }
-
 
     /**
      * Attempts to retrive and append an item onto the map from resource location, helpful for groovy users
@@ -341,13 +514,86 @@ public class HazardSystem {
     }
 
     /**
+     * Blacklists an exact item/meta so that <em>no configured hazards</em> are returned for matching stacks.
+     * <p>
+     * The key is normalized via {@link ComparableStack#makeSingular()} and is <b>NBT-agnostic</b>.
+     * </p>
+     *
+     * @param stack representative stack to blacklist (item/meta are used).
+     * @apiNote Blacklisting suppresses configured {@link HazardEntry} evaluation only; neutron contamination (if
+     *          enabled) is handled separately by {@link com.hbm.util.ContaminationUtil} and is not affected.
+     */
+    public static void blacklist(final ItemStack stack) {
+        stackBlacklist.add(ItemStackUtil.comparableStackFrom(stack).makeSingular());
+    }
+
+    /**
+     * Blacklists an OreDictionary key so that stacks with that key yield no configured hazards.
+     *
+     * @param oreName OreDictionary name to blacklist.
+     */
+    public static void blacklist(final String oreName) {
+        dictBlacklist.add(oreName);
+    }
+
+    /**
+     * Blacklists an exact {@link ComparableStack} key (usually {@code makeSingular()}).
+     *
+     * @param comp normalized key to blacklist.
+     */
+    public static void blacklist(final ComparableStack comp) {
+        stackBlacklist.add(comp.makeSingular());
+    }
+
+    /**
      * Prevents the stack from returning any HazardData
      *
      * @apiNote count insensitive (ItemStacks normalized via ComparableStack.makeSingular)
      */
     public static void blacklist(final Object o) {
-        if (o instanceof ItemStack) stackBlacklist.add(ItemStackUtil.comparableStackFrom((ItemStack) o).makeSingular());
-        else if (o instanceof String) dictBlacklist.add((String) o);
+        if (o instanceof ItemStack is) {
+            blacklist(is);
+            return;
+        }
+        if (o instanceof String s) {
+            blacklist(s);
+            return;
+        }
+        if (o instanceof ComparableStack cs) {
+            blacklist(cs);
+            return;
+        }
+        throw new IllegalArgumentException("Unsupported key type for blacklist: " + (o == null ? "null" : o.getClass().getName()));
+    }
+
+    /**
+     * Removes a previous blacklist entry for an exact item/meta pair.
+     *
+     * @param stack representative stack; only item/meta are considered.
+     * @return {@code true} if an entry was removed.
+     */
+    public static boolean unblacklist(final ItemStack stack) {
+        return stackBlacklist.remove(ItemStackUtil.comparableStackFrom(stack).makeSingular());
+    }
+
+    /**
+     * Removes a previous blacklist entry for an OreDictionary key.
+     *
+     * @param oreName key to remove.
+     * @return {@code true} if an entry was removed.
+     */
+    public static boolean unblacklist(final String oreName) {
+        return dictBlacklist.remove(oreName);
+    }
+
+    /**
+     * Removes a previous blacklist entry for an exact {@link ComparableStack} key.
+     *
+     * @param comp key to remove.
+     * @return {@code true} if an entry was removed.
+     */
+    public static boolean unblacklist(final ComparableStack comp) {
+        return stackBlacklist.remove(comp.makeSingular());
     }
 
     /**
@@ -356,30 +602,28 @@ public class HazardSystem {
      * @apiNote count insensitive
      */
     public static boolean unblacklist(final Object o) {
-        if (o instanceof Collection<?>) {
+        if (o instanceof Collection<?> c) {
             boolean removed = false;
-            for (Object element : (Collection<?>) o) {
+            for (Object element : c) {
                 removed |= unblacklist(element);
             }
             return removed;
         }
         if (o == null) return false;
 
-        boolean removed = false;
-        if (o instanceof ItemStack) {
-            removed |= stackBlacklist.remove(ItemStackUtil.comparableStackFrom((ItemStack) o).makeSingular());
-        } else if (o instanceof String) {
-            removed |= dictBlacklist.remove(o);
-        } else if (o instanceof ComparableStack) {
-            removed |= stackBlacklist.remove(((ComparableStack) o).makeSingular());
-        } else if (o.getClass().isArray()) {
-            int length = java.lang.reflect.Array.getLength(o);
+        if (o instanceof ItemStack is) return unblacklist(is);
+        if (o instanceof String s) return unblacklist(s);
+        if (o instanceof ComparableStack cs) return unblacklist(cs);
+        if (o.getClass().isArray()) {
+            boolean removed = false;
+            int length = Array.getLength(o);
             for (int i = 0; i < length; i++) {
-                Object element = java.lang.reflect.Array.get(o, i);
+                Object element = Array.get(o, i);
                 removed |= unblacklist(element);
             }
+            return removed;
         }
-        return removed;
+        throw new IllegalArgumentException("Unsupported key type for unblacklist: " + o.getClass().getName());
     }
 
     /**
