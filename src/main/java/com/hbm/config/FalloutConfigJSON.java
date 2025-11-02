@@ -105,6 +105,7 @@ public class FalloutConfigJSON {
                 .preserve(BlockRotatedPillar.AXIS)
                 .addPrimary(ModBlocks.waste_log.getDefaultState(), 1)
                 .max(woodEffectRange)
+                .solid(true)
                 .build());
 
         entries.add(FalloutEntry.builder()
@@ -112,18 +113,21 @@ public class FalloutConfigJSON {
                 .preserve(BlockRotatedPillar.AXIS)
                 .addPrimary(ModBlocks.waste_log.getDefaultState(), 1)
                 .max(woodEffectRange)
+                .solid(true)
                 .build());
 
         entries.add(FalloutEntry.builder()
                 .matchesState(Blocks.RED_MUSHROOM_BLOCK.getStateFromMeta(10)) // exact state
                 .addPrimary(ModBlocks.waste_log.getDefaultState().withProperty(BlockRotatedPillar.AXIS, EnumFacing.Axis.Y), 1)
                 .max(woodEffectRange)
+                .solid(true)
                 .build());
 
         entries.add(FalloutEntry.builder()
                 .matchesState(Blocks.BROWN_MUSHROOM_BLOCK.getStateFromMeta(10))
                 .addPrimary(ModBlocks.waste_log.getDefaultState().withProperty(BlockRotatedPillar.AXIS, EnumFacing.Axis.Y), 1)
                 .max(woodEffectRange)
+                .solid(true)
                 .build());
 
         entries.add(FalloutEntry.builder()
@@ -148,6 +152,7 @@ public class FalloutConfigJSON {
                 .matchesBlock(Blocks.PLANKS)
                 .addPrimary(ModBlocks.waste_planks.getDefaultState(), 1)
                 .max(woodEffectRange)
+                .solid(true)
                 .build());
 
         // if it can't be petrified, destroy it (wood/leaf/plant/vine)
@@ -196,53 +201,65 @@ public class FalloutConfigJSON {
         entries.add(FalloutEntry.builder()
                 .matchesBlock(Blocks.MOSSY_COBBLESTONE)
                 .addPrimary(Blocks.COAL_ORE.getDefaultState(), 1)
+                .solid(true)
                 .build());
 
         entries.add(FalloutEntry.builder()
                 .matchesBlock(ModBlocks.ore_nether_uranium)
                 .addPrimary(ModBlocks.ore_nether_schrabidium.getDefaultState(), 1)
                 .addPrimary(ModBlocks.ore_nether_uranium_scorched.getDefaultState(), 99)
+                .solid(true)
                 .build());
 
         entries.add(FalloutEntry.builder()
                 .matchesBlock(ModBlocks.glyphid_base)
                 .addPrimary(ModBlocks.glyphid_base.getDefaultState().withProperty(BlockGlyphid.TYPE, BlockGlyphid.Type.RAD), 1)
+                .solid(true)
                 .build());
 
         entries.add(FalloutEntry.builder()
                 .matchesBlock(ModBlocks.glyphid_spawner)
                 .addPrimary(ModBlocks.glyphid_spawner.getDefaultState().withProperty(BlockGlyphidSpawner.TYPE, BlockGlyphidSpawner.Type.RAD), 1)
+                .solid(true)
                 .build());
 
         for (int i = 1; i <= 10; i++) {
             int m = 10 - i;
+
             entries.add(FalloutEntry.builder()
                     .addPrimary(ModBlocks.ore_sellafield_diamond.getStateFromMeta(m), 3)
                     .addPrimary(ModBlocks.ore_sellafield_emerald.getStateFromMeta(m), 2)
                     .primaryChance(0.5)
                     .max(i * 5)
                     .opaque(true)
+                    .solid(true)
                     .matchesBlock(Blocks.COAL_ORE)
                     .build());
+
             entries.add(FalloutEntry.builder()
                     .addPrimary(ModBlocks.ore_sellafield_diamond.getStateFromMeta(m), 1)
                     .primaryChance(0.2)
                     .max(i * 5)
                     .opaque(true)
+                    .solid(true)
                     .matchesBlock(ModBlocks.ore_lignite)
                     .build());
+
             entries.add(FalloutEntry.builder()
                     .addPrimary(ModBlocks.ore_sellafield_emerald.getStateFromMeta(m), 1)
                     .max(i * 5)
                     .opaque(true)
+                    .solid(true)
                     .matchesBlock(ModBlocks.ore_beryllium)
                     .build());
+
             if (m > 4) {
                 entries.add(FalloutEntry.builder()
                         .addPrimary(ModBlocks.ore_sellafield_schrabidium.getStateFromMeta(m), 1)
                         .addPrimary(ModBlocks.ore_sellafield_uranium_scorched.getStateFromMeta(m), 9)
                         .max(i * 5)
                         .opaque(true)
+                        .solid(true)
                         .matchesBlock(ModBlocks.ore_uranium)
                         .build());
             }
@@ -252,68 +269,89 @@ public class FalloutConfigJSON {
                         .addPrimary(ModBlocks.ore_sellafield_uranium_scorched.getStateFromMeta(m), 9)
                         .max(i * 5)
                         .opaque(true)
+                        .solid(true)
                         .matchesBlock(ModBlocks.ore_gneiss_uranium)
                         .build());
             }
+
             entries.add(FalloutEntry.builder()
                     .addPrimary(ModBlocks.ore_sellafield_radgem.getStateFromMeta(m), 1)
                     .max(i * 5)
                     .opaque(true)
+                    .solid(true)
                     .matchesBlock(Blocks.DIAMOND_ORE)
                     .build());
+
             entries.add(FalloutEntry.builder()
                     .addPrimary(ModBlocks.sellafield_bedrock.getStateFromMeta(m), 1)
                     .max(i * 5)
                     .opaque(true)
+                    .solid(true)
                     .matchesBlock(Blocks.BEDROCK)
                     .build());
+
             entries.add(FalloutEntry.builder()
                     .addPrimary(ModBlocks.sellafield_bedrock.getStateFromMeta(m), 1)
                     .max(i * 5)
                     .opaque(true)
+                    .solid(true)
                     .matchesBlock(ModBlocks.ore_bedrock_block)
                     .build());
+
             entries.add(FalloutEntry.builder()
                     .addPrimary(ModBlocks.sellafield_bedrock.getStateFromMeta(m), 1)
                     .max(i * 5)
                     .opaque(true)
+                    .solid(true)
                     .matchesBlock(ModBlocks.ore_bedrock_oil)
                     .build());
+
             entries.add(FalloutEntry.builder()
                     .addPrimary(ModBlocks.sellafield_bedrock.getStateFromMeta(m), 1)
                     .max(i * 5)
                     .opaque(true)
+                    .solid(true)
                     .matchesBlock(ModBlocks.sellafield_bedrock)
                     .build());
+
             entries.add(FalloutEntry.builder()
                     .addPrimary(ModBlocks.sellafield_slaked.getStateFromMeta(m), 1)
                     .max(i * 5)
                     .opaque(true)
+                    .solid(true)
                     .matchingMaterial(Material.IRON)
                     .build());
+
             entries.add(FalloutEntry.builder()
                     .addPrimary(ModBlocks.sellafield_slaked.getStateFromMeta(m), 1)
                     .max(i * 5)
                     .opaque(true)
+                    .solid(true)
                     .matchingMaterial(Material.ROCK)
                     .build());
+
             entries.add(FalloutEntry.builder()
                     .addPrimary(ModBlocks.sellafield_slaked.getStateFromMeta(m), 1)
                     .max(i * 5)
                     .opaque(true)
+                    .solid(true)
                     .matchingMaterial(Material.SAND)
                     .build());
+
             entries.add(FalloutEntry.builder()
                     .addPrimary(ModBlocks.sellafield_slaked.getStateFromMeta(m), 1)
                     .max(i * 5)
                     .opaque(true)
+                    .solid(true)
                     .matchingMaterial(Material.GROUND)
                     .build());
+
             if (i <= 9) {
                 entries.add(FalloutEntry.builder()
                         .addPrimary(ModBlocks.sellafield_slaked.getStateFromMeta(m), 1)
                         .max(i * 5)
                         .opaque(true)
+                        .solid(true)
                         .matchingMaterial(Material.GRASS)
                         .build());
             }
@@ -322,23 +360,27 @@ public class FalloutConfigJSON {
         entries.add(FalloutEntry.builder()
                 .matchesBlock(Blocks.MYCELIUM)
                 .addPrimary(ModBlocks.waste_mycelium.getDefaultState(), 1)
+                .solid(true)
                 .build());
 
         entries.add(FalloutEntry.builder()
                 .matchesState(Blocks.SAND.getDefaultState())
                 .addPrimary(ModBlocks.waste_trinitite.getDefaultState(), 1)
                 .primaryChance(0.05)
+                .solid(true)
                 .build());
 
         entries.add(FalloutEntry.builder()
                 .matchesState(Blocks.SAND.getDefaultState().withProperty(BlockSand.VARIANT, BlockSand.EnumType.RED_SAND))
                 .addPrimary(ModBlocks.waste_trinitite_red.getDefaultState(), 1)
                 .primaryChance(0.05)
+                .solid(true)
                 .build());
 
         entries.add(FalloutEntry.builder()
                 .matchesBlock(Blocks.CLAY)
                 .addPrimary(Blocks.HARDENED_CLAY.getDefaultState(), 1)
+                .solid(true)
                 .build());
     }
 
@@ -357,7 +399,7 @@ public class FalloutConfigJSON {
             writer.endArray();
             writer.endObject();
         } catch (IOException e) {
-            e.printStackTrace();
+            MainRegistry.logger.catching(e);
         }
     }
 
@@ -373,7 +415,7 @@ public class FalloutConfigJSON {
             }
             return conf;
         } catch (Exception ex) {
-            ex.printStackTrace();
+            MainRegistry.logger.catching(ex);
         }
         return null;
     }
@@ -395,7 +437,7 @@ public class FalloutConfigJSON {
         /**
          * Whether the depth value should be decremented when this block is converted
          */
-        private boolean isSolid = false;
+        private boolean solid = false;
 
         public static Builder builder() {
             return new Builder();
@@ -795,11 +837,11 @@ public class FalloutConfigJSON {
         }
 
         public boolean isSolid() {
-            return this.isSolid;
+            return this.solid;
         }
 
         public FalloutEntry setSolid(boolean solid) {
-            this.isSolid = solid;
+            this.solid = solid;
             return this;
         }
 
@@ -816,7 +858,7 @@ public class FalloutConfigJSON {
                     writer.name("matchesMaterial").value(matName);
                 }
             }
-            if (isSolid) writer.name("restrictDepth").value(true);
+            if (solid) writer.name("restrictDepth").value(true);
             if (preservedProperties != null && preservedProperties.length > 0) {
                 writer.name("preserveState");
                 writePreserveStateArray(writer, preservedProperties);
@@ -926,7 +968,7 @@ public class FalloutConfigJSON {
                 e.minDist = this.minDist;
                 e.maxDist = this.maxDist;
                 e.falloffStart = this.falloffStart;
-                e.isSolid = this.isSolid;
+                e.solid = this.isSolid;
                 return e;
             }
         }

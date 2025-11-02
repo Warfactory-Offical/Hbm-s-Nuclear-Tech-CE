@@ -7,10 +7,7 @@ import com.hbm.capability.HbmCapability;
 import com.hbm.capability.HbmCapability.IHBMData;
 import com.hbm.capability.HbmLivingCapability;
 import com.hbm.capability.HbmLivingProps;
-import com.hbm.config.CompatibilityConfig;
-import com.hbm.config.GeneralConfig;
-import com.hbm.config.MobConfig;
-import com.hbm.config.RadiationConfig;
+import com.hbm.config.*;
 import com.hbm.entity.logic.IChunkLoader;
 import com.hbm.entity.mob.EntityCreeperTainted;
 import com.hbm.entity.mob.EntityCyberCrab;
@@ -55,6 +52,7 @@ import com.hbm.tileentity.network.RequestNetwork;
 import com.hbm.uninos.UniNodespace;
 import com.hbm.util.*;
 import com.hbm.util.ArmorRegistry.HazardClass;
+import com.hbm.world.biome.BiomeGenCraterBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.Enchantment;
@@ -89,6 +87,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.storage.loot.*;
 import net.minecraft.world.storage.loot.conditions.LootCondition;
 import net.minecraft.world.storage.loot.conditions.RandomChanceWithLooting;
@@ -1530,6 +1529,18 @@ public class ModEventHandler {
         if (event.getContainer() instanceof IContainerOpenEventListener listener) {
             listener.onContainerOpened(event.getEntityPlayer());
         }
+    }
+
+    @SubscribeEvent
+    public void onBiomeRegister(RegistryEvent.Register<Biome> evt) {
+        if(WorldConfig.enableCraterBiomes) {
+            evt.getRegistry().registerAll(
+                    BiomeGenCraterBase.craterBiome.setRegistryName("hbm", "crater"),
+                    BiomeGenCraterBase.craterInnerBiome.setRegistryName("hbm", "crater_inner"),
+                    BiomeGenCraterBase.craterOuterBiome.setRegistryName("hbm", "crater_outer")
+            );
+        }
+        BiomeGenCraterBase.initDictionary();
     }
 
     private static final String NBT_AKIMBO = "AkimboGhost";
