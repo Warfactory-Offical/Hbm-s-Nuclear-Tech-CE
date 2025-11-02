@@ -451,9 +451,9 @@ public class OreDictManager {
         TC99.rad(HazardRegistry.tc99).nugget(nugget_technetium).billet(billet_technetium).ingot(ingot_technetium);
         RA226.rad(HazardRegistry.ra226).nugget(nugget_ra226).billet(billet_ra226).ingot(ingot_ra226).dust(powder_ra226).block(block_ra226);
         AC227.rad(HazardRegistry.ac227).nugget(nugget_actinium).billet(billet_ac227).ingot(ingot_actinium).dust(powder_actinium).block(block_actinium).dustSmall(powder_actinium_tiny);
-        CO60.rad(HazardRegistry.co60).hot(1).nugget(nugget_co60).billet(billet_co60).ingot(ingot_co60).dust(powder_co60);
-        AU198.rad(HazardRegistry.au198).hot(5).nugget(nugget_au198).billet(billet_au198).ingot(ingot_au198).dust(powder_au198);
-        PB209.rad(HazardRegistry.pb209).blinding(50F).hot(7).nugget(nugget_pb209).billet(billet_pb209).ingot(ingot_pb209);
+        CO60.rad(HazardRegistry.co60).hot(1).nugget(nugget_co60).billet(billet_co60).ingot(ingot_co60).dust(powder_co60).dustSmall(powder_co60_tiny);
+        AU198.rad(HazardRegistry.au198).hot(5).nugget(nugget_au198).billet(billet_au198).ingot(ingot_au198).dust(powder_au198).dustSmall(powder_au198_tiny);
+        PB209.rad(HazardRegistry.pb209).blinding(50F).hot(7).nugget(nugget_pb209).billet(billet_pb209).ingot(ingot_pb209).dust(powder_pb209).dustSmall(powder_pb209_tiny);
         SA326.rad(HazardRegistry.sa326).blinding(50F).nugget(nugget_schrabidium).billet(billet_schrabidium).crystal(crystal_schrabidium).ingot(ingot_schrabidium).dust(powder_schrabidium).plate(plate_schrabidium).plateCast(Mats.MAT_SCHRABIDIUM.make(plate_cast)).block(block_schrabidium).ore(ore_schrabidium, ore_gneiss_schrabidium, ore_nether_schrabidium, ore_sellafield_schrabidium).oreNether(ore_nether_schrabidium);
         SA327.rad(HazardRegistry.sa327).blinding(50F).nugget(nugget_solinium).billet(billet_solinium).ingot(ingot_solinium).block(block_solinium);
         SBD.rad(HazardRegistry.sb).blinding(50F).ingot(ingot_schrabidate).dust(powder_schrabidate).block(block_schrabidate);
@@ -583,12 +583,12 @@ public class OreDictManager {
         /*
          * FISSION FRAGMENTS
          */
-        SR									.hot(1F)	.hydro(1F)	.hazIngot()						.dust(powder_strontium);
+        SR.hot(1F).hydro(1F).hazIngot().dust(powder_strontium);
         SR90.rad(HazardRegistry.sr90).hot(1F).hydro(1F).dustSmall(powder_sr90_tiny).dust(powder_sr90).ingot(ingot_sr90).billet(billet_sr90).nugget(nugget_sr90);
         I131.rad(HazardRegistry.i131).hot(1F).dustSmall(powder_i131_tiny).dust(powder_i131);
         XE135.rad(HazardRegistry.xe135).hot(10F).dustSmall(powder_xe135_tiny).dust(powder_xe135);
         CS137.rad(HazardRegistry.cs137).hot(3F).hydro(3F).dustSmall(powder_cs137_tiny).dust(powder_cs137);
-        AT209.rad(HazardRegistry.at209).hot(20F).dust(powder_at209);
+        AT209.rad(HazardRegistry.at209).hot(20F).dust(powder_at209).dustSmall(powder_at209_tiny);
 
         /*
          * COLLECTIONS

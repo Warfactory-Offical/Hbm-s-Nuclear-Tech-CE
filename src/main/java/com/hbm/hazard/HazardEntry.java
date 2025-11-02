@@ -8,15 +8,17 @@ import net.minecraft.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HazardEntry {
+public class HazardEntry implements Cloneable {
 
-	IHazardType type;
-    double baseLevel;
+    //mlbv: fields made public for the convenience of modders
+	public final IHazardType type;
+    public final double baseLevel;
 	
-	/*
+	/**
 	 * Modifiers are evaluated in the order they're being applied to the entry.
+     * Shared across all cloned instances, be careful.
 	 */
-	List<IHazardModifier> mods = new ArrayList<>();
+	public List<IHazardModifier> mods = new ArrayList<>();
 	
 	public HazardEntry(final IHazardType type) {
         this(type, 1D);
@@ -35,10 +37,15 @@ public class HazardEntry {
 	public void applyHazard(final ItemStack stack, final EntityLivingBase entity) {
 		type.onUpdate(entity, IHazardModifier.evalAllModifiers(stack, entity, baseLevel, mods), stack);
 	}
-	
-	public HazardEntry clone() {
-        return clone(1D);
-	}
+
+    @Override
+    public HazardEntry clone() {
+        try {
+            return (HazardEntry) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError(e);
+        }
+    }
 
     public HazardEntry clone(final double mult) {
 		final HazardEntry clone = new HazardEntry(type, baseLevel * mult);

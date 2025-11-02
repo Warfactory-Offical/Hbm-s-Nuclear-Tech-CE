@@ -393,6 +393,8 @@ public class MainRegistry {
         HazmatRegistry.registerHazmats();
         ControlRegistry.init();
         OreDictManager.registerOres();
+        if(RadiationConfig.enableContaminationOnGround)
+            HazardRegistry.registerContaminatingDrops();
         Fluids.initForgeFluidCompat();
         PacketThreading.init();
         IMCHandler.init();

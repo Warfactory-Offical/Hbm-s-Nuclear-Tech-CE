@@ -20,8 +20,9 @@ public class HazardData {
 	 * -1: oredict ("ingotX")
 	 */
 	int mutexBits = 0b0000_0000_0000_0000_0000_0000_0000_0000;
-	
-	List<HazardEntry> entries = new ArrayList();
+
+    //mlbv: made public so that modders can modify the hazards in the map after registration
+	public List<HazardEntry> entries = new ArrayList<>();
 	
 	public HazardData addEntry(final IHazardType hazard) {
         return this.addEntry(hazard, 1D, false);
