@@ -1421,7 +1421,7 @@ public class ModBlocks {
 
 	public static final Block logic_block = new LogicBlock("logic_block");
 
-    public static final Block toxic_block = new ToxicBlock(ModFluids.toxic_fluid, fluidtoxic, ModDamageSource.radiation, "toxic_block").setResistance(500F);
+    public static final Block toxic_block = new ToxicBlock(ModFluids.toxic_fluid, fluidtoxic, "toxic_block").setResistance(500F);
     public static final Block mud_block = new MudBlock(ModFluids.mud_fluid, fluidmud, ModDamageSource.mudPoisoning, "mud_block").setResistance(500F);
     public static final Block acid_block = new AcidBlock(ModFluids.acid_fluid, fluidacid.setReplaceable(), ModDamageSource.acid, "acid_block").setResistance(500F);
     public static final Block schrabidic_block = new SchrabidicBlock(ModFluids.schrabidic_fluid, fluidschrabidic.setReplaceable(), ModDamageSource.radiation, "schrabidic_block").setResistance(500F);
