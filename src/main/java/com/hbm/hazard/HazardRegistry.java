@@ -186,7 +186,12 @@ public class HazardRegistry {
 
 		HazardSystem.register(insert_polonium, makeData(RADIATION, 100F));
 
-		HazardSystem.register(demon_core_open, makeData(RADIATION, 5F));
+		HazardSystem.register(demon_core_open, makeData(RADIATION, 5F).addEntry(new HazardTypeDangerousDrop((entityItem, level) ->{
+            if(!entityItem.world.isRemote && entityItem.onGround) {
+                entityItem.setItem(new ItemStack(ModItems.demon_core_closed));
+                entityItem.world.spawnEntity(new EntityItem(entityItem.world, entityItem.posX, entityItem.posY, entityItem.posZ, new ItemStack(ModItems.screwdriver)));
+            }
+        })));
 		HazardSystem.register(demon_core_closed, makeData(RADIATION, 100_000F));
 		HazardSystem.register(lamp_demon, makeData(RADIATION, 100_000F));
 
@@ -504,8 +509,6 @@ public class HazardRegistry {
 		//HazardSystem.register(holotape_damaged, makeData(DIGAMMA, 1_000F));
         if(RadiationConfig.enableContaminationOnGround)
 		    registerContaminatingDrops();
-        HazardRegistry.registerDangerousDrops();
-
 
 		/*
 		 * Blacklist
@@ -513,15 +516,6 @@ public class HazardRegistry {
 		for(String ore : TH232.all(MaterialShapes.ORE)) HazardSystem.blacklist(ore);
 		for(String ore : U.all(MaterialShapes.ORE)) HazardSystem.blacklist(ore);
 	}
-
-    private static void registerDangerousDrops(){
-        HazardSystem.register(demon_core_open, makeData().addEntry(new HazardTypeDangerousDrop((entityItem, level) ->{
-            if(!entityItem.world.isRemote && entityItem.onGround) {
-                entityItem.setItem(new ItemStack(ModItems.demon_core_closed));
-                entityItem.world.spawnEntity(new EntityItem(entityItem.world, entityItem.posX, entityItem.posY, entityItem.posZ, new ItemStack(ModItems.screwdriver)));
-            }
-        } )));
-    }
 
 	public static void registerTrafos() {
 		HazardSystem.trafos.add(new HazardTransformerRadiationNBT());

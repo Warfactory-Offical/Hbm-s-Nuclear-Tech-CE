@@ -104,7 +104,11 @@ public class HazardSystem {
         playersToUpdate.add(player.getUniqueID());
     }
 
-    // note: oldStack isn't implemented
+    /**
+     * Records a delta for a single slot in the player's container.
+     *
+     * @apiNote hazard lookup count-insensitive; effects may be count-sensitive via modifiers; neutron handling delegated to ContaminationUtil
+     */
     public static void onInventoryDelta(EntityPlayer player, int serverSlotIndex, ItemStack oldStack, ItemStack newStack) {
         inventoryDeltas.add(new InventoryDelta(player.getUniqueID(), serverSlotIndex, oldStack.copy(), newStack.copy()));
     }
@@ -185,6 +189,8 @@ public class HazardSystem {
 
     /**
      * Calculates the change for a single slot. Runs on a background thread.
+     *
+     * @apiNote hazard presence comparison count-insensitive; applicator effects may be count-sensitive; neutron delta delegated to ContaminationUtil
      */
     private static DeltaUpdate calculateDeltaUpdate(InventoryDelta delta) {
         ItemStack oldStack = delta.oldStack();
@@ -233,6 +239,11 @@ public class HazardSystem {
         volatileItemsBlacklist.clear();
     }
 
+    /**
+     * @return {@code true} if there exists any applicable {@link HazardEntry} for the stack.
+     *
+     * @apiNote count insensitive
+     */
     public static boolean isStackHazardous(@Nullable ItemStack stack) {
         if (stack == null || stack.isEmpty()) {
             return false;
@@ -240,6 +251,11 @@ public class HazardSystem {
         return !getHazardsFromStack(stack).isEmpty();
     }
 
+    /**
+     * Register hazard data for an object key (ore name, item, block, ItemStack, ComparableStack, or ResourceLocation).
+     *
+     * @apiNote count insensitive (ItemStack keys normalized via ComparableStack.makeSingular)
+     */
     public static void register(final Object o, final HazardData data) {
         if (o instanceof String) oreMap.put((String) o, data);
         if (o instanceof Item) itemMap.put((Item) o, data);
@@ -249,6 +265,11 @@ public class HazardSystem {
         if (o instanceof ComparableStack) stackMap.put((ComparableStack) o, data);
     }
 
+    /**
+     * Unregister hazard data for the given key or collection/array of keys.
+     *
+     * @apiNote count insensitive (mirrors registration semantics)
+     */
     public static boolean unregister(final Object o) {
         if (o instanceof Collection<?>) {
             boolean removed = false;
@@ -295,7 +316,7 @@ public class HazardSystem {
         if(registry.containsKey(loc))
             itemMap.put(registry.getValue(loc),data);
         else
-           locationRateRegisterList.add(new Tuple<>(loc,data));
+            locationRateRegisterList.add(new Tuple<>(loc,data));
 
     }
 
@@ -321,12 +342,19 @@ public class HazardSystem {
 
     /**
      * Prevents the stack from returning any HazardData
+     *
+     * @apiNote count insensitive (ItemStacks normalized via ComparableStack.makeSingular)
      */
     public static void blacklist(final Object o) {
         if (o instanceof ItemStack) stackBlacklist.add(ItemStackUtil.comparableStackFrom((ItemStack) o).makeSingular());
         else if (o instanceof String) dictBlacklist.add((String) o);
     }
 
+    /**
+     * Removes a previous blacklist entry. Collections/arrays expanded recursively.
+     *
+     * @apiNote count insensitive
+     */
     public static boolean unblacklist(final Object o) {
         if (o instanceof Collection<?>) {
             boolean removed = false;
@@ -354,6 +382,11 @@ public class HazardSystem {
         return removed;
     }
 
+    /**
+     * Checks whether the given stack is blacklisted by exact (item,meta) or by ore dictionary.
+     *
+     * @apiNote count insensitive
+     */
     public static boolean isItemBlacklisted(final ItemStack stack) {
         if (stackBlacklist.contains(ItemStackUtil.comparableStackFrom(stack).makeSingular())) return true;
         final int[] ids = OreDictionary.getOreIDs(stack);
@@ -376,8 +409,11 @@ public class HazardSystem {
      * Entries that are marked as "overriding" will delete all fetched entries that came before it.
      * Entries that use mutex will prevent subsequent entries from being considered, shall they collide. The mutex system already assumes that
      * two keys are the same in priority, so the flipped order doesn't matter.
+     *
+     * @apiNote count insensitive (matching uses ComparableStack.makeSingular; NBT sensitivity handled via sanitized hash; neutron NBT ignored)<br>
+     * the returned list is transformed by HazardTransformers but hasn't been modified by modifiers yet.
      */
-    private static List<HazardEntry> getHazardsFromStack(final ItemStack stack) {
+    public static List<HazardEntry> getHazardsFromStack(final ItemStack stack) {
         if (stack.isEmpty() || isItemBlacklisted(stack)) {
             return Collections.emptyList();
         }
@@ -413,6 +449,11 @@ public class HazardSystem {
         }
     }
 
+    /**
+     * Builds the final, NBT-aware list of hazard entries for a stack.
+     *
+     * @apiNote count insensitive (chronology keyed by ComparableStack without count; modifiers/types may read count at application time)
+     */
     private static List<HazardEntry> computeHazards(ItemStack stack, ComparableStack compStack) {
         // Get NBT-agnostic base data
         List<HazardData> chronological = hazardDataChronologyCache.computeIfAbsent(compStack, cs -> {
@@ -456,6 +497,11 @@ public class HazardSystem {
         return Collections.unmodifiableList(entries);
     }
 
+    /**
+     * Computes the effective level for a specific hazard type from the stack.
+     *
+     * @apiNote lookup count insensitive; result may be count-sensitive via modifiers
+     */
     public static double getHazardLevelFromStack(ItemStack stack, IHazardType hazard) {
         return getHazardsFromStack(stack).stream().filter(entry -> entry.type == hazard).findFirst().map(entry -> IHazardModifier.evalAllModifiers(stack, null, entry.baseLevel, entry.mods)).orElse(0D);
     }
@@ -464,10 +510,20 @@ public class HazardSystem {
         return getHazardLevelFromStack(new ItemStack(Item.getItemFromBlock(b)), HazardRegistry.RADIATION);
     }
 
+    /**
+     * Radiation from configured entries (pre-contamination).
+     *
+     * @apiNote lookup count insensitive; value may be count-sensitive via modifiers
+     */
     public static double getRawRadsFromStack(ItemStack stack) {
         return getHazardLevelFromStack(stack, HazardRegistry.RADIATION);
     }
 
+    /**
+     * Total radiation = configured radiation + neutron contamination.
+     *
+     * @apiNote configured part may be count-sensitive via modifiers; neutron part delegated to ContaminationUtil
+     */
     public static double getTotalRadsFromStack(ItemStack stack) {
         return getHazardLevelFromStack(stack, HazardRegistry.RADIATION) + ContaminationUtil.getNeutronRads(stack);
     }
@@ -478,6 +534,8 @@ public class HazardSystem {
 
     /**
      * Will grab and iterate through all assigned hazards of the given stack and apply their effects to the holder.
+     *
+     * @apiNote entry selection count insensitive; effect application may be count-sensitive via modifiers/types
      */
     public static void applyHazards(ItemStack stack, EntityLivingBase entity) {
         if (stack.isEmpty()) return;
@@ -487,17 +545,11 @@ public class HazardSystem {
         }
     }
 
-    public static void updateLivingInventory(EntityLivingBase entity) {
-
-        for (EntityEquipmentSlot i : EntityEquipmentSlot.values()) {
-            ItemStack stack = entity.getItemStackFromSlot(i);
-
-            if (!stack.isEmpty()) {
-                applyHazards(stack, entity);
-            }
-        }
-    }
-
+    /**
+     * Updates hazards emitted by a dropped {@link EntityItem}.
+     *
+     * @apiNote entry selection count insensitive; evaluated level may be count-sensitive via modifiers
+     */
     public static void updateDroppedItem(EntityItem entity) {
         if (entity.isDead) return;
         ItemStack stack = entity.getItem();
@@ -507,6 +559,11 @@ public class HazardSystem {
         }
     }
 
+    /**
+     * Adds hazard tooltip info.
+     *
+     * @apiNote entry selection count insensitive; display content may be count-sensitive inside type/modifiers
+     */
     public static void addHazardInfo(ItemStack stack, EntityPlayer player, List<String> list, ITooltipFlag flagIn) {
         for (HazardEntry hazard : getHazardsFromStack(stack)) {
             hazard.type.addHazardInformation(player, list, hazard.baseLevel, stack, hazard.mods);
@@ -523,6 +580,11 @@ public class HazardSystem {
             schedulePlayerUpdate(player);
         }
 
+        /**
+         * Performs a full scan of the player's inventory to build per-slot applicators, and aggregates neutron rads for non-hazardous stacks.
+         *
+         * @apiNote applicator presence count insensitive; neutron accumulation delegated to ContaminationUtil
+         */
         static HazardScanResult calculateHazardScanForPlayer(EntityPlayer player) {
             Map<Integer, Consumer<EntityPlayer>> applicators = new HashMap<>();
             float totalNeutronRads = 0f;
