@@ -168,6 +168,14 @@ public class EntityFalloutRain extends EntityExplosionChunkloading {
         }
     }
 
+    private void enqueueWork(long cp, boolean clamp) {
+        if (clamp) qOuter.add(cp);
+        else qInner.add(cp);
+        if (pool != null && !pool.isShutdown() && !finished.get()) {
+            pool.execute(new WorkerTask());
+        }
+    }
+
     private void loadMissingChunks(int timeBudgetMs) {
         final long deadline = System.nanoTime() + timeBudgetMs * 1_000_000L;
         while (System.nanoTime() < deadline) {
@@ -178,10 +186,7 @@ public class EntityFalloutRain extends EntityExplosionChunkloading {
             int cz = ChunkUtil.getChunkPosZ(ck);
             world.getChunk(cx, cz);
             Boolean clamp = waitingRoom.remove(ck);
-            if (clamp != null) {
-                if (clamp) qOuter.add(ck);
-                else qInner.add(ck);
-            }
+            if (clamp != null) enqueueWork(ck, clamp.booleanValue());
         }
     }
 

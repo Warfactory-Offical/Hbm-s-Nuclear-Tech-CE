@@ -573,19 +573,19 @@ public class OreDictManager {
         /*
          * NITAN
          */
-        I.dust(powder_iodine);
-        AT.dust(powder_astatine);
-        CS.dust(powder_caesium);
-        SR.dust(powder_strontium);
-        BR.dust(powder_bromine);
-        TS.dust(powder_tennessine);
+        I.ingot(ingot_iodine).dust(powder_iodine).dustSmall(powder_iodine_tiny);
+        AT.ingot(ingot_astatine).dust(powder_astatine);
+        CS.ingot(ingot_caesium).dust(powder_caesium);
+        SR.ingot(ingot_strontium).dust(powder_strontium);
+        BR.ingot(ingot_bromine).dust(powder_bromine);
+        TS.ingot(ingot_tennessine).dust(powder_tennessine);
 
         /*
          * FISSION FRAGMENTS
          */
         SR.hot(1F).hydro(1F).hazIngot().dust(powder_strontium);
         SR90.rad(HazardRegistry.sr90).hot(1F).hydro(1F).dustSmall(powder_sr90_tiny).dust(powder_sr90).ingot(ingot_sr90).billet(billet_sr90).nugget(nugget_sr90);
-        I131.rad(HazardRegistry.i131).hot(1F).dustSmall(powder_i131_tiny).dust(powder_i131);
+        I131.rad(HazardRegistry.i131).hot(1F).ingot(ingot_i131).dustSmall(powder_i131_tiny).dust(powder_i131);
         XE135.rad(HazardRegistry.xe135).hot(10F).dustSmall(powder_xe135_tiny).dust(powder_xe135);
         CS137.rad(HazardRegistry.cs137).hot(3F).hydro(3F).dustSmall(powder_cs137_tiny).dust(powder_cs137);
         AT209.rad(HazardRegistry.at209).hot(20F).dust(powder_at209).dustSmall(powder_at209_tiny);
