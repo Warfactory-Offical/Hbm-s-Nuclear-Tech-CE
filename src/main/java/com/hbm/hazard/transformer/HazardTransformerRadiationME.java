@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.Loader;
 
 import java.util.List;
 
-public class HazardTransformerRadiationME extends HazardTransformerBase {
+public class HazardTransformerRadiationME implements IHazardTransformer {
     private static final boolean ae2Loaded = Loader.isModLoaded(Compat.ModIds.AE2);
 
 	@Override

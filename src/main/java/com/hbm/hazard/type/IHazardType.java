@@ -1,7 +1,7 @@
 package com.hbm.hazard.type;
 
 import com.hbm.config.RadiationConfig;
-import com.hbm.hazard.modifier.HazardModifier;
+import com.hbm.hazard.modifier.IHazardModifier;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,22 +11,23 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-public abstract class HazardTypeBase {
-	public static int hazardRate = RadiationConfig.hazardRate;
-	
+//mlbv: made it an interface to be more flexible, was abstract class HazardTypeBase
+public interface IHazardType {
+	int hazardRate = RadiationConfig.hazardRate;
+
 	/**
 	 * Does the thing. Called by HazardEntry.applyHazard
 	 * @param target the holder
 	 * @param level the final level after calculating all the modifiers
 	 */
-    public abstract void onUpdate(EntityLivingBase target, double level, ItemStack stack);
+    void onUpdate(EntityLivingBase target, double level, ItemStack stack);
 
 	/**
 	 * Updates the hazard for dropped items. Used for things like explosive and hydroactive items.
 	 * @param item
 	 * @param level
 	 */
-    public abstract void updateEntity(EntityItem item, double level);
+    void updateEntity(EntityItem item, double level);
 	
 	/**
 	 * Adds item tooltip info. Called by Item.addInformation
@@ -37,10 +38,10 @@ public abstract class HazardTypeBase {
 	 * @param modifiers
 	 */
 	@SideOnly(Side.CLIENT)
-    public abstract void addHazardInformation(EntityPlayer player, List<String> list, double level, ItemStack stack, List<HazardModifier> modifiers);
+    void addHazardInformation(EntityPlayer player, List<String> list, double level, ItemStack stack, List<IHazardModifier> modifiers);
 
     @FunctionalInterface
-    public interface HazardInfoConsumer {
-        void accept(EntityPlayer player, List<String> list, double level, ItemStack stack, List<HazardModifier> modifiers);
+    interface HazardInfoConsumer {
+        void accept(EntityPlayer player, List<String> list, double level, ItemStack stack, List<IHazardModifier> modifiers);
     }
 }

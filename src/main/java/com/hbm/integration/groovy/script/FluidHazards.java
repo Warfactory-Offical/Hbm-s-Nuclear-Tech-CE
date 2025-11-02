@@ -7,9 +7,9 @@ import com.cleanroommc.groovyscript.registry.AbstractReloadableStorage;
 import com.cleanroommc.groovyscript.registry.VirtualizedRegistry;
 import com.hbm.hazard.HazardEntry;
 import com.hbm.hazard.HazardRegistry;
-import com.hbm.hazard.modifier.HazardModifier;
+import com.hbm.hazard.modifier.IHazardModifier;
 import com.hbm.hazard.transformer.HazardTransformerForgeFluid;
-import com.hbm.hazard.type.HazardTypeBase;
+import com.hbm.hazard.type.IHazardType;
 import com.hbm.hazard.type.HazardTypeDangerousDrop;
 import com.hbm.hazard.type.HazardTypeUnstable;
 import com.hbm.lib.ObjObjDoubleConsumer;
@@ -215,7 +215,7 @@ public final class FluidHazards extends VirtualizedRegistry<Tuple<String, Hazard
         }
 
         @MethodDescription(type = MethodDescription.Type.QUERY, description = "Add a generic hazard entry for this fluid. Supply a HazardTypeBase, numeric level, and optional modifiers.")
-        public FluidHazardBuilder entry(HazardTypeBase type, double level, HazardModifier... mods) {
+        public FluidHazardBuilder entry(IHazardType type, double level, IHazardModifier... mods) {
             ensureMutable();
             if (type == null) {
                 GroovyLog.get().warn("Cannot add fluid hazard entry for null type.");
@@ -223,14 +223,14 @@ public final class FluidHazards extends VirtualizedRegistry<Tuple<String, Hazard
             }
             HazardEntry e = new HazardEntry(type, level);
             if (mods != null) {
-                for (HazardModifier m : mods) if (m != null) e.addMod(m);
+                for (IHazardModifier m : mods) if (m != null) e.addMod(m);
             }
             entries.add(e);
             return this;
         }
 
         @MethodDescription(type = MethodDescription.Type.QUERY, description = "Add radiation entry for the fluid.")
-        public FluidHazardBuilder radiation(double level, HazardModifier... mods) {
+        public FluidHazardBuilder radiation(double level, IHazardModifier... mods) {
             return entry(HazardRegistry.RADIATION, level, mods);
         }
 
@@ -290,7 +290,7 @@ public final class FluidHazards extends VirtualizedRegistry<Tuple<String, Hazard
         }
 
         @MethodDescription(type = MethodDescription.Type.QUERY, description = "Add an Unstable hazard with a decay timer and custom tooltip info provider.")
-        public FluidHazardBuilder unstable(double level, int timer, HazardTypeBase.HazardInfoConsumer info) {
+        public FluidHazardBuilder unstable(double level, int timer, IHazardType.HazardInfoConsumer info) {
             return entry(new HazardTypeUnstable(timer, info), level);
         }
 
@@ -300,7 +300,7 @@ public final class FluidHazards extends VirtualizedRegistry<Tuple<String, Hazard
         }
 
         @MethodDescription(type = MethodDescription.Type.QUERY, description = "Add a custom Unstable hazard.")
-        public FluidHazardBuilder unstable(double level, ObjObjDoubleConsumer<EntityLivingBase, ItemStack> onUpdate, ObjDoubleConsumer<EntityItem> onDrop, HazardTypeBase.HazardInfoConsumer customInfo) {
+        public FluidHazardBuilder unstable(double level, ObjObjDoubleConsumer<EntityLivingBase, ItemStack> onUpdate, ObjDoubleConsumer<EntityItem> onDrop, IHazardType.HazardInfoConsumer customInfo) {
             return entry(new HazardTypeUnstable(onUpdate, onDrop, customInfo), level);
         }
 

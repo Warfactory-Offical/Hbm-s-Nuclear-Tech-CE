@@ -3,7 +3,7 @@ package com.hbm.hazard.type;
 import com.hbm.config.BombConfig;
 import com.hbm.entity.effect.EntityNukeTorex;
 import com.hbm.entity.logic.EntityNukeExplosionMK5;
-import com.hbm.hazard.modifier.HazardModifier;
+import com.hbm.hazard.modifier.IHazardModifier;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.lib.ObjObjDoubleConsumer;
@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.function.ObjDoubleConsumer;
 
-public class HazardTypeUnstable extends HazardTypeBase {
+public class HazardTypeUnstable implements IHazardType {
     public static final String NBT_TAG_TIMER = "timer";
     private final ObjObjDoubleConsumer<EntityLivingBase, ItemStack> onUpdate;
     private final ObjDoubleConsumer<EntityItem> onDrop;
@@ -95,7 +95,7 @@ public class HazardTypeUnstable extends HazardTypeBase {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addHazardInformation(EntityPlayer player, List<String> tooltip, double level, ItemStack stack, List<HazardModifier> modifiers) {
+    public void addHazardInformation(EntityPlayer player, List<String> tooltip, double level, ItemStack stack, List<IHazardModifier> modifiers) {
         if(customInfo != null){
             customInfo.accept(player, tooltip, level, stack, modifiers);
         } else if (this.timer != -1){

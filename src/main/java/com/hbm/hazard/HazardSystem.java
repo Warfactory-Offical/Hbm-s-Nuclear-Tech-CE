@@ -3,13 +3,12 @@ package com.hbm.hazard;
 import com.github.bsideup.jabel.Desugar;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.hbm.capability.HbmLivingProps;
 import com.hbm.config.GeneralConfig;
 import com.hbm.config.RadiationConfig;
-import com.hbm.hazard.modifier.HazardModifier;
-import com.hbm.hazard.transformer.HazardTransformerBase;
-import com.hbm.hazard.type.HazardTypeBase;
+import com.hbm.hazard.modifier.IHazardModifier;
+import com.hbm.hazard.transformer.IHazardTransformer;
+import com.hbm.hazard.type.IHazardType;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.ContaminationUtil;
@@ -79,7 +78,7 @@ public class HazardSystem {
     /**
      * List of hazard transformers, called in order before and after unrolling all the HazardEntries.
      */
-    public static final List<HazardTransformerBase> trafos = new ArrayList<>();
+    public static final List<IHazardTransformer> trafos = new ArrayList<>();
     private static final int VOLATILITY_THRESHOLD = 16;
     private static final int VOLATILITY_WINDOW_SECONDS = 30;
     private static final int FINAL_HAZARD_CACHE_SIZE = 2048;
@@ -437,7 +436,7 @@ public class HazardSystem {
 
         // Apply NBT-sensitive transformers and build the final list
         final List<HazardEntry> entries = new ArrayList<>();
-        for (final HazardTransformerBase trafo : trafos) {
+        for (final IHazardTransformer trafo : trafos) {
             trafo.transformPre(stack, entries);
         }
 
@@ -450,15 +449,15 @@ public class HazardSystem {
             }
         }
 
-        for (final HazardTransformerBase trafo : trafos) {
+        for (final IHazardTransformer trafo : trafos) {
             trafo.transformPost(stack, entries);
         }
 
         return Collections.unmodifiableList(entries);
     }
 
-    public static double getHazardLevelFromStack(ItemStack stack, HazardTypeBase hazard) {
-        return getHazardsFromStack(stack).stream().filter(entry -> entry.type == hazard).findFirst().map(entry -> HazardModifier.evalAllModifiers(stack, null, entry.baseLevel, entry.mods)).orElse(0D);
+    public static double getHazardLevelFromStack(ItemStack stack, IHazardType hazard) {
+        return getHazardsFromStack(stack).stream().filter(entry -> entry.type == hazard).findFirst().map(entry -> IHazardModifier.evalAllModifiers(stack, null, entry.baseLevel, entry.mods)).orElse(0D);
     }
 
     public static double getRawRadsFromBlock(Block b) {
@@ -504,7 +503,7 @@ public class HazardSystem {
         ItemStack stack = entity.getItem();
         if (stack.isEmpty() || stack.getCount() <= 0) return;
         for (HazardEntry entry : getHazardsFromStack(stack)) {
-            entry.type.updateEntity(entity, HazardModifier.evalAllModifiers(stack, null, entry.baseLevel, entry.mods));
+            entry.type.updateEntity(entity, IHazardModifier.evalAllModifiers(stack, null, entry.baseLevel, entry.mods));
         }
     }
 

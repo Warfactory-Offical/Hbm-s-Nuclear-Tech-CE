@@ -20,7 +20,7 @@ import java.util.function.BiFunction;
 
 import static com.hbm.util.ContaminationUtil.NTM_NEUTRON_NBT_KEY;
 
-public class HazardTransformerPostCustom extends HazardTransformerBase {
+public class HazardTransformerPostCustom implements IHazardTransformer {
 
     private static final Object2DoubleOpenHashMap<Item> ITEM_MULTIPLIERS = new Object2DoubleOpenHashMap<>();
     private static final Map<Item, ObjectArrayList<BiFunction<ItemStack, List<HazardEntry>, List<HazardEntry>>>> ITEM_POST = new Object2ObjectOpenHashMap<>();

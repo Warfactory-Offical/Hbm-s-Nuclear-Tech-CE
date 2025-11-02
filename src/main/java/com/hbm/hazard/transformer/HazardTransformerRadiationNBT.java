@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 
 import java.util.List;
 
-public class HazardTransformerRadiationNBT extends HazardTransformerBase {
+public class HazardTransformerRadiationNBT implements IHazardTransformer {
 	
 	public static final String RAD_KEY = "hfrHazRadiation";
 

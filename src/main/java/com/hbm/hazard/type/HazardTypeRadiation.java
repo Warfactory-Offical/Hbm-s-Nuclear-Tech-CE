@@ -2,7 +2,7 @@ package com.hbm.hazard.type;
 
 import com.hbm.config.GeneralConfig;
 import com.hbm.hazard.helper.HazardHelper;
-import com.hbm.hazard.modifier.HazardModifier;
+import com.hbm.hazard.modifier.IHazardModifier;
 import com.hbm.lib.Library;
 import com.hbm.util.BobMathUtil;
 import com.hbm.util.ContaminationUtil;
@@ -18,7 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-public class HazardTypeRadiation extends HazardTypeBase {
+public class HazardTypeRadiation implements IHazardType {
 
 	@Override
     public void onUpdate(final EntityLivingBase target, double level, final ItemStack stack) {
@@ -47,9 +47,9 @@ public class HazardTypeRadiation extends HazardTypeBase {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-    public void addHazardInformation(final EntityPlayer player, final List<String> list, double level, final ItemStack stack, final List<HazardModifier> modifiers) {
+    public void addHazardInformation(final EntityPlayer player, final List<String> list, double level, final ItemStack stack, final List<IHazardModifier> modifiers) {
 
-        level = HazardModifier.evalAllModifiers(stack, player, level, modifiers);
+        level = IHazardModifier.evalAllModifiers(stack, player, level, modifiers);
 		if(level == 0) return;
 		list.add("§a[" + I18nUtil.resolveKey("trait.radioactive") + "]");
 		list.add(" §e" + (Library.roundFloat(getNewValue(level), 3)+ getSuffix(level) + " " + I18nUtil.resolveKey("desc.rads")));

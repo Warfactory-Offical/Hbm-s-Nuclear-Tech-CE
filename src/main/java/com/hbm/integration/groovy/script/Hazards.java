@@ -14,7 +14,7 @@ import com.hbm.hazard.HazardSystem;
 import com.hbm.hazard.modifier.*;
 import com.hbm.hazard.transformer.HazardTransformerPostCustom;
 import com.hbm.hazard.transformer.HazardTransformerPostCustom.StackKey;
-import com.hbm.hazard.type.HazardTypeBase;
+import com.hbm.hazard.type.IHazardType;
 import com.hbm.hazard.type.HazardTypeDangerousDrop;
 import com.hbm.hazard.type.HazardTypeUnstable;
 import com.hbm.inventory.RecipesCommon;
@@ -210,7 +210,7 @@ public final class Hazards extends VirtualizedRegistry<Hazards.HazardRecipe> {
     }
 
     @MethodDescription(type = MethodDescription.Type.QUERY, description = "Compute hazard level for the given ItemStack and HazardType. Returns 0 if stack/type invalid.")
-    public double hazardLevel(ItemStack stack, HazardTypeBase type) {
+    public double hazardLevel(ItemStack stack, IHazardType type) {
         if (stack == null || stack.isEmpty() || type == null) return 0D;
         return HazardSystem.getHazardLevelFromStack(stack, type);
     }
@@ -629,7 +629,7 @@ public final class Hazards extends VirtualizedRegistry<Hazards.HazardRecipe> {
 
     @SuppressWarnings("MethodMayBeStatic")
     public static final class HazardTypeFacade {
-        private final Map<String, HazardTypeBase> lookup;
+        private final Map<String, IHazardType> lookup;
 
         HazardTypeFacade() {
             lookup = new LinkedHashMap<>();
@@ -648,9 +648,9 @@ public final class Hazards extends VirtualizedRegistry<Hazards.HazardRecipe> {
         }
 
         @MethodDescription(type = MethodDescription.Type.QUERY, description = "Lookup a built-in hazard type by name or alias (e.g., 'radiation', 'rad', 'hot').")
-        public HazardTypeBase get(String name) {
+        public IHazardType get(String name) {
             if (name == null) return null;
-            HazardTypeBase type = lookup.get(name.toLowerCase(Locale.ENGLISH));
+            IHazardType type = lookup.get(name.toLowerCase(Locale.ENGLISH));
             if (type == null) {
                 GroovyLog.get().warn("Unknown HBM hazard type '{}'.", name);
             }
@@ -658,76 +658,76 @@ public final class Hazards extends VirtualizedRegistry<Hazards.HazardRecipe> {
         }
 
         @MethodDescription(type = MethodDescription.Type.QUERY, description = "Ionizing radiation. Level typically in µSv/h-scaled units used by the mod.")
-        public HazardTypeBase radiation() {
+        public IHazardType radiation() {
             return HazardRegistry.RADIATION;
         }
 
         @MethodDescription(type = MethodDescription.Type.QUERY, description = "Applies contamination on use/hold; may persist on entities/blocks depending on rules.")
-        public HazardTypeBase contaminating() {
+        public IHazardType contaminating() {
             return HazardRegistry.CONTAMINATING;
         }
 
         @MethodDescription(type = MethodDescription.Type.QUERY, description = "High-energy DIGAMMA effect. Rare, specialized radiation channel.")
-        public HazardTypeBase digamma() {
+        public IHazardType digamma() {
             return HazardRegistry.DIGAMMA;
         }
 
         @MethodDescription(type = MethodDescription.Type.QUERY, description = "Heat hazard (burning/hot). Often used for fresh-forged metals or engine parts.")
-        public HazardTypeBase hot() {
+        public IHazardType hot() {
             return HazardRegistry.HOT;
         }
 
         @MethodDescription(type = MethodDescription.Type.QUERY, description = "Temporary blindness/flash effects.")
-        public HazardTypeBase blinding() {
+        public IHazardType blinding() {
             return HazardRegistry.BLINDING;
         }
 
         @MethodDescription(type = MethodDescription.Type.QUERY, description = "Asbestos fiber hazard—causes contamination on exposure.")
-        public HazardTypeBase asbestos() {
+        public IHazardType asbestos() {
             return HazardRegistry.ASBESTOS;
         }
 
         @MethodDescription(type = MethodDescription.Type.QUERY, description = "Coal dust hazard.")
-        public HazardTypeBase coal() {
+        public IHazardType coal() {
             return HazardRegistry.COAL;
         }
 
         @MethodDescription(type = MethodDescription.Type.QUERY, description = "Water-reactive hazard (e.g., alkali metals).")
-        public HazardTypeBase hydroactive() {
+        public IHazardType hydroactive() {
             return HazardRegistry.HYDROACTIVE;
         }
 
         @MethodDescription(type = MethodDescription.Type.QUERY, description = "Explosive hazard channel for volatile items.")
-        public HazardTypeBase explosive() {
+        public IHazardType explosive() {
             return HazardRegistry.EXPLOSIVE;
         }
 
         @MethodDescription(type = MethodDescription.Type.QUERY, description = "Poison/toxin exposure.")
-        public HazardTypeBase toxic() {
+        public IHazardType toxic() {
             return HazardRegistry.TOXIC;
         }
 
         @MethodDescription(type = MethodDescription.Type.QUERY, description = "Cryogenic/cold exposure.")
-        public HazardTypeBase cold() {
+        public IHazardType cold() {
             return HazardRegistry.COLD;
         }
 
         @MethodDescription(type = MethodDescription.Type.QUERY, description = "Create an Unstable hazard type with a decay timer in ticks.")
-        public HazardTypeBase unstable(int timer) {
+        public IHazardType unstable(int timer) {
             return new HazardTypeUnstable(timer);
         }
 
         @MethodDescription(type = MethodDescription.Type.QUERY, description = "Create an Unstable hazard with custom update/drop handlers.")
-        public HazardTypeBase unstable(ObjObjDoubleConsumer<EntityLivingBase, ItemStack> onUpdate, ObjDoubleConsumer<EntityItem> onDrop) {
+        public IHazardType unstable(ObjObjDoubleConsumer<EntityLivingBase, ItemStack> onUpdate, ObjDoubleConsumer<EntityItem> onDrop) {
             return new HazardTypeUnstable(onUpdate, onDrop);
         }
 
         @MethodDescription(type = MethodDescription.Type.QUERY, description = "Create a hazard that only acts when the item is dropped.")
-        public HazardTypeBase dangerousDrop(ObjDoubleConsumer<EntityItem> onDrop) {
+        public IHazardType dangerousDrop(ObjDoubleConsumer<EntityItem> onDrop) {
             return new HazardTypeDangerousDrop(onDrop);
         }
 
-        private void register(String name, HazardTypeBase type, String... aliases) {
+        private void register(String name, IHazardType type, String... aliases) {
             lookup.put(name, type);
             for (String alias : aliases) lookup.put(alias, type);
         }
@@ -784,7 +784,7 @@ public final class Hazards extends VirtualizedRegistry<Hazards.HazardRecipe> {
         }
 
         @MethodDescription(type = MethodDescription.Type.QUERY, description = "Add a hazard entry (type + numeric level). Optional modifiers refine behavior.")
-        public HazardDataBuilder entry(HazardTypeBase type, double level, HazardModifier... modifiers) {
+        public HazardDataBuilder entry(IHazardType type, double level, IHazardModifier... modifiers) {
             ensureMutable();
             if (type == null) {
                 GroovyLog.get().warn("Cannot add hazard entry for null type.");
@@ -792,7 +792,7 @@ public final class Hazards extends VirtualizedRegistry<Hazards.HazardRecipe> {
             }
             HazardEntry entry = new HazardEntry(type, level);
             if (modifiers != null) {
-                for (HazardModifier modifier : modifiers) {
+                for (IHazardModifier modifier : modifiers) {
                     if (modifier != null) entry.addMod(modifier);
                 }
             }
@@ -801,7 +801,7 @@ public final class Hazards extends VirtualizedRegistry<Hazards.HazardRecipe> {
         }
 
         @MethodDescription(type = MethodDescription.Type.QUERY, description = "Add radiation entry.")
-        public HazardDataBuilder radiation(double level, HazardModifier... modifiers) {
+        public HazardDataBuilder radiation(double level, IHazardModifier... modifiers) {
             return entry(HazardRegistry.RADIATION, level, modifiers);
         }
 
@@ -861,7 +861,7 @@ public final class Hazards extends VirtualizedRegistry<Hazards.HazardRecipe> {
         }
 
         @MethodDescription(type = MethodDescription.Type.QUERY, description = "Add an Unstable hazard with a decay timer and custom tooltip info provider.")
-        public HazardDataBuilder unstable(double level, int timer, HazardTypeBase.HazardInfoConsumer info) {
+        public HazardDataBuilder unstable(double level, int timer, IHazardType.HazardInfoConsumer info) {
             return entry(new HazardTypeUnstable(timer, info), level);
         }
 
@@ -871,7 +871,7 @@ public final class Hazards extends VirtualizedRegistry<Hazards.HazardRecipe> {
         }
 
         @MethodDescription(type = MethodDescription.Type.QUERY, description = "Add a custom Unstable hazard.")
-        public HazardDataBuilder unstable(double level, ObjObjDoubleConsumer<EntityLivingBase, ItemStack> onUpdate, ObjDoubleConsumer<EntityItem> onDrop, HazardTypeBase.HazardInfoConsumer customInfo) {
+        public HazardDataBuilder unstable(double level, ObjObjDoubleConsumer<EntityLivingBase, ItemStack> onUpdate, ObjDoubleConsumer<EntityItem> onDrop, IHazardType.HazardInfoConsumer customInfo) {
             return entry(new HazardTypeUnstable(onUpdate, onDrop, customInfo), level);
         }
 

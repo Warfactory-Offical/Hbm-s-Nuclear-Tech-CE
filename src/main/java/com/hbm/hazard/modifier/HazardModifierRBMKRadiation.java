@@ -6,7 +6,7 @@ import com.hbm.items.machine.ItemRBMKRod;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 
-public class HazardModifierRBMKRadiation extends HazardModifier {
+public class HazardModifierRBMKRadiation implements IHazardModifier {
 
     double target;
 	boolean linear = false;

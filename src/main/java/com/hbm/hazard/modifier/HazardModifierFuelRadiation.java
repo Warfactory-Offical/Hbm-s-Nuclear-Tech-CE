@@ -3,7 +3,7 @@ package com.hbm.hazard.modifier;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 
-public class HazardModifierFuelRadiation extends HazardModifier {
+public class HazardModifierFuelRadiation implements IHazardModifier {
 
     double target;
 	

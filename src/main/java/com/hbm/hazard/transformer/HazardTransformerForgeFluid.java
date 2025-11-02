@@ -12,7 +12,7 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
 import java.util.List;
 
-public class HazardTransformerForgeFluid extends HazardTransformerBase {
+public class HazardTransformerForgeFluid implements IHazardTransformer {
     // <Fluid's registry name, List of hazards>
     public static final Object2ObjectOpenHashMap<String, ObjectArrayList<HazardEntry>> FLUID_HAZARDS = new Object2ObjectOpenHashMap<>();
     public static boolean applyToNTMContainer = true;

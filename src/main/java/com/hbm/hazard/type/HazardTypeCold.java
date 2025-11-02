@@ -3,7 +3,7 @@ package com.hbm.hazard.type;
 import com.hbm.config.RadiationConfig;
 import com.hbm.handler.ArmorUtil;
 import com.hbm.hazard.helper.HazardHelper;
-import com.hbm.hazard.modifier.HazardModifier;
+import com.hbm.hazard.modifier.IHazardModifier;
 import com.hbm.util.I18nUtil;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -18,7 +18,7 @@ import java.util.List;
 
 import static com.hbm.hazard.helper.HazardHelper.applyPotionEffect;
 
-public class HazardTypeCold extends HazardTypeBase {
+public class HazardTypeCold implements IHazardType {
 
 
     @Override
@@ -47,7 +47,7 @@ public class HazardTypeCold extends HazardTypeBase {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addHazardInformation(final EntityPlayer player, final List<String> list, final double level, final ItemStack stack, final List<HazardModifier> modifiers) {
+    public void addHazardInformation(final EntityPlayer player, final List<String> list, final double level, final ItemStack stack, final List<IHazardModifier> modifiers) {
         list.add(TextFormatting.AQUA + "[" + I18nUtil.resolveKey("trait.cryogenic") + "]");
 
     }

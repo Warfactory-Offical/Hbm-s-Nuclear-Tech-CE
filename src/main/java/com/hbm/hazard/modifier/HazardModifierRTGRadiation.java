@@ -4,7 +4,7 @@ import com.hbm.items.machine.ItemRTGPellet;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 
-public class HazardModifierRTGRadiation extends HazardModifier {
+public class HazardModifierRTGRadiation implements IHazardModifier {
 
     double target;
 			

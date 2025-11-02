@@ -152,17 +152,17 @@ public class HazardRegistry {
 	public static final float rod_quad = rod * 4;
 	public static final float rod_rbmk = rod * 8;
 
-	public static final HazardTypeBase RADIATION = new HazardTypeRadiation();
-	public static final HazardTypeBase CONTAMINATING = new HazardTypeContaminating();
-	public static final HazardTypeBase DIGAMMA = new HazardTypeDigamma();
-	public static final HazardTypeBase HOT = new HazardTypeHot();
-	public static final HazardTypeBase BLINDING = new HazardTypeBlinding();
-	public static final HazardTypeBase ASBESTOS = new HazardTypeAsbestos();
-	public static final HazardTypeBase COAL = new HazardTypeCoal();
-	public static final HazardTypeBase HYDROACTIVE = new HazardTypeHydroactive();
-	public static final HazardTypeBase EXPLOSIVE = new HazardTypeExplosive();
-	public static final HazardTypeBase TOXIC = new HazardTypeToxic();
-	public static final HazardTypeBase COLD = new HazardTypeCold();
+	public static final IHazardType RADIATION = new HazardTypeRadiation();
+	public static final IHazardType CONTAMINATING = new HazardTypeContaminating();
+	public static final IHazardType DIGAMMA = new HazardTypeDigamma();
+	public static final IHazardType HOT = new HazardTypeHot();
+	public static final IHazardType BLINDING = new HazardTypeBlinding();
+	public static final IHazardType ASBESTOS = new HazardTypeAsbestos();
+	public static final IHazardType COAL = new HazardTypeCoal();
+	public static final IHazardType HYDROACTIVE = new HazardTypeHydroactive();
+	public static final IHazardType EXPLOSIVE = new HazardTypeExplosive();
+	public static final IHazardType TOXIC = new HazardTypeToxic();
+	public static final IHazardType COLD = new HazardTypeCold();
 
 	public static void registerItems() {
 
@@ -534,9 +534,9 @@ public class HazardRegistry {
 	}
 
 	private static HazardData makeData() { return new HazardData(); }
-	private static HazardData makeData(HazardTypeBase hazard) { return new HazardData().addEntry(hazard); }
-	private static HazardData makeData(HazardTypeBase hazard, float level) { return new HazardData().addEntry(hazard, level); }
-	private static HazardData makeData(HazardTypeBase hazard, float level, boolean override) { return new HazardData().addEntry(hazard, level, override); }
+	private static HazardData makeData(IHazardType hazard) { return new HazardData().addEntry(hazard); }
+	private static HazardData makeData(IHazardType hazard, float level) { return new HazardData().addEntry(hazard, level); }
+	private static HazardData makeData(IHazardType hazard, float level, boolean override) { return new HazardData().addEntry(hazard, level, override); }
 
 	private static void registerPWRFuel(EnumPWRFuel fuel, float baseRad) {
 		HazardSystem.register(DictFrame.fromOne(ModItems.pwr_fuel, fuel), makeData(RADIATION, baseRad));

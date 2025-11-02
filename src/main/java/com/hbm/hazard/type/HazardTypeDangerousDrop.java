@@ -1,6 +1,6 @@
 package com.hbm.hazard.type;
 
-import com.hbm.hazard.modifier.HazardModifier;
+import com.hbm.hazard.modifier.IHazardModifier;
 import com.hbm.util.I18nUtil;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.function.ObjDoubleConsumer;
 
-public class HazardTypeDangerousDrop extends HazardTypeBase {
+public class HazardTypeDangerousDrop implements IHazardType {
     private final ObjDoubleConsumer<EntityItem> onDroppedItemUpdate;
 
     public HazardTypeDangerousDrop(@NotNull ObjDoubleConsumer<EntityItem> onDrop) {
@@ -33,7 +33,7 @@ public class HazardTypeDangerousDrop extends HazardTypeBase {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void addHazardInformation(EntityPlayer player, List<String> list, double level, ItemStack stack, List<HazardModifier> modifiers) {
+    public void addHazardInformation(EntityPlayer player, List<String> list, double level, ItemStack stack, List<IHazardModifier> modifiers) {
         list.add(TextFormatting.RED + "[" + I18nUtil.resolveKey("trait.drop") + "]");
     }
 }

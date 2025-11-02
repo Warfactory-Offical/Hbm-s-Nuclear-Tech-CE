@@ -5,9 +5,10 @@ import net.minecraft.item.ItemStack;
 
 import java.util.List;
 
-public abstract class HazardModifier {
+//mlbv: made it an interface to be more flexible. was abstract class HazardModifier
+public interface IHazardModifier {
 
-    public abstract double modify(ItemStack stack, EntityLivingBase holder, double level);
+    double modify(ItemStack stack, EntityLivingBase holder, double level);
 	
 	/**
 	 * Returns the level after applying all modifiers to it, in order.
@@ -17,8 +18,8 @@ public abstract class HazardModifier {
 	 * @param mods
 	 * @return
 	 */
-    public static double evalAllModifiers(final ItemStack stack, final EntityLivingBase entity, double level, final List<HazardModifier> mods) {
-		for(final HazardModifier mod : mods) {
+    static double evalAllModifiers(final ItemStack stack, final EntityLivingBase entity, double level, final List<IHazardModifier> mods) {
+		for(final IHazardModifier mod : mods) {
 			level = mod.modify(stack, entity, level);
 		}
 		return level;

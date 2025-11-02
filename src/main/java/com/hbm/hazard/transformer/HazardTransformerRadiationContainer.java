@@ -9,11 +9,10 @@ import com.hbm.util.BobMathUtil;
 import com.hbm.util.ItemStackUtil;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.List;
 
-public class HazardTransformerRadiationContainer extends HazardTransformerBase {
+public class HazardTransformerRadiationContainer implements IHazardTransformer {
 
 	@Override
 	public void transformPre(final ItemStack stack, final List<HazardEntry> entries) { }
