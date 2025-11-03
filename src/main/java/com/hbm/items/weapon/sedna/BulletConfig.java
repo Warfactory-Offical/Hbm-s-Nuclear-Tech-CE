@@ -4,6 +4,7 @@ package com.hbm.items.weapon.sedna;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.bomb.BlockDetonatable;
 import com.hbm.blocks.generic.BlockMeta;
+import com.hbm.blocks.generic.RedBarrel;
 import com.hbm.entity.projectile.EntityBulletBaseMK4;
 import com.hbm.entity.projectile.EntityBulletBeamBase;
 import com.hbm.inventory.OreDictManager;
@@ -50,6 +51,9 @@ public class BulletConfig implements Cloneable {
                 bullet.world.destroyBlock(mop.getBlockPos(), false);
                 bullet.setPosition(mop.hitVec.x, mop.hitVec.y, mop.hitVec.z);
                 return;
+            }
+            if (b.getBlock() == ModBlocks.red_barrel) {
+                ((RedBarrel) ModBlocks.red_barrel).explode(bullet.world, mop.getBlockPos().getX(), mop.getBlockPos().getY(), mop.getBlockPos().getZ());
             }
             if (b instanceof BlockDetonatable detonatable) {
                 detonatable.onShot(bullet.world, mop.getBlockPos());

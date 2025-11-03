@@ -590,8 +590,8 @@ public class EntityBulletBase extends Entity implements IProjectile {
 			if (blockstate.getBlockHardness(world, pos) <= 120)
 				world.destroyBlock(pos, false);
 		} else if (config.doesBreakGlass && !world.isRemote) {
-			if (block == Blocks.GLASS || block == Blocks.GLASS_PANE || block == Blocks.STAINED_GLASS || block == Blocks.STAINED_GLASS_PANE)
-				world.destroyBlock(pos, false);
+            if (blockstate.getMaterial() == Material.GLASS && block.getExplosionResistance(null) < 0.6f)
+                world.destroyBlock(pos, false);
             if(block == ModBlocks.red_barrel)
                 ((RedBarrel) ModBlocks.red_barrel).explode(world, pos.getX(), pos.getY(), pos.getZ());
             if(block instanceof BlockDetonatable detonatable) detonatable.onShot(world, pos);

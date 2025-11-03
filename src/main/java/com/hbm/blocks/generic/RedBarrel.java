@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Random;
 
 // FIXME: extend BlockDetonatable
+// don't forget to delete == ModBlocks.red_barrel manual detonation checks when this got fixed, that's a temporary solution
 public class RedBarrel extends BaseBarrel {
 
     //MrNorwood: This is pretty much required to prevent infinite recursion issues

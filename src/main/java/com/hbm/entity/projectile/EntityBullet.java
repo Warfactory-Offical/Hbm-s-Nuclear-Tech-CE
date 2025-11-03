@@ -312,8 +312,8 @@ public class EntityBullet extends Entity implements IProjectile {
             }
             if(block instanceof BlockDetonatable detonatable) detonatable.onShot(world, bulletTilePos);
 
-			if (block == Blocks.GLASS || block == Blocks.STAINED_GLASS || block == Blocks.GLASS_PANE || block == Blocks.STAINED_GLASS_PANE) {
-				this.world.setBlockToAir(new BlockPos(this.field_145791_d, this.field_145792_e, this.field_145789_f));
+            if (blockstate.getMaterial() == Material.GLASS && block.getExplosionResistance(null) < 0.6f) {
+				this.world.setBlockToAir(bulletTilePos);
 				//Drillgon200: add particle burst packet so the glass doesn't just disappear.
 				PacketDispatcher.wrapper.sendToAll(new ParticleBurstPacket(field_145791_d, field_145792_e, field_145789_f, Block.getIdFromBlock(block), block.getMetaFromState(blockstate)));
 				this.world.playSound(this.field_145791_d, this.field_145792_e, this.field_145789_f, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F, true);
