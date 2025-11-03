@@ -10,6 +10,7 @@ import com.hbm.entity.grenade.EntityGrenadeASchrab;
 import com.hbm.entity.grenade.EntityGrenadeNuclear;
 import com.hbm.entity.logic.EntityNukeExplosionMK5;
 import com.hbm.entity.missile.EntityMIRV;
+import com.hbm.entity.mob.EntityCreeperNuclear;
 import com.hbm.entity.mob.EntityQuackos;
 import com.hbm.entity.projectile.EntityBulletBase;
 import com.hbm.entity.projectile.EntityExplosiveBeam;
@@ -59,6 +60,19 @@ public class ContaminationUtil {
 
 	public static final String NTM_NEUTRON_NBT_KEY = "ntmNeutron";
     public static final String RAD_MULT_KEY = "hbmradmultiplier";
+    public static Class<?>[] immuneEntities  = new Class<?>[]{
+            EntityCreeperNuclear.class,
+            EntityMooshroom.class,
+            EntityZombie.class,
+            EntitySkeleton.class,
+            EntityQuackos.class,
+            EntityOcelot.class,
+            IRadiationImmune.class,
+            // 1.12.2 Addition
+            EntityZombieHorse.class,
+            EntitySkeletonHorse.class,
+            EntityArmorStand.class
+    };
 
     /**
 	 * Calculates how much radiation can be applied to this entity by calculating resistance
@@ -399,18 +413,13 @@ public class ContaminationUtil {
 	}
 	
 	public static boolean isRadImmune(Entity e) {
-		if(e instanceof EntityLivingBase && ((EntityLivingBase)e).isPotionActive(HbmPotion.mutation))
+		if(e instanceof EntityLivingBase livingBase && livingBase.isPotionActive(HbmPotion.mutation))
 			return true;
-		
-		return 	e instanceof EntityZombie ||
-				e instanceof EntitySkeleton ||
-				e instanceof EntityQuackos ||
-				e instanceof EntityOcelot ||
-				e instanceof EntityMooshroom ||
-				e instanceof EntityZombieHorse ||
-				e instanceof EntitySkeletonHorse ||
-				e instanceof EntityArmorStand ||
-				e instanceof IRadiationImmune || checkConfigEntityImmunity(e);
+		Class<? extends Entity> entityClass = e.getClass();
+        for (Class<?> radImmuneClass : immuneEntities) {
+            if (radImmuneClass.isAssignableFrom(entityClass)) return true;
+        }
+		return checkConfigEntityImmunity(e);
 	}
 	
 	/// ASBESTOS ///

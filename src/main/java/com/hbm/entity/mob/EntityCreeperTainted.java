@@ -3,15 +3,11 @@ package com.hbm.entity.mob;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.bomb.BlockTaint;
 import com.hbm.config.GeneralConfig;
-import com.hbm.entity.mob.ai.EntityAITaintedCreeperSwell;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IRadiationImmune;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.entity.passive.EntityOcelot;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
@@ -25,21 +21,6 @@ public class EntityCreeperTainted extends EntityCreeper implements IRadiationImm
 
     public EntityCreeperTainted(World world) {
         super(world);
-        this.fuseTime = 30;
-        this.explosionRadius = 20;
-    }
-
-    @Override
-    protected void initEntityAI() {
-        this.tasks.addTask(1, new EntityAISwimming(this));
-        this.tasks.addTask(2, new EntityAITaintedCreeperSwell(this));
-        this.tasks.addTask(3, new EntityAIAttackMelee(this, 1.0D, false));
-        this.tasks.addTask(4, new EntityAIWander(this, 0.8D));
-        this.tasks.addTask(5, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
-        this.tasks.addTask(6, new EntityAILookIdle(this));
-        this.targetTasks.addTask(1, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, true));
-        this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false));
-        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this, EntityOcelot.class, true));
     }
 
     @Override
@@ -68,7 +49,7 @@ public class EntityCreeperTainted extends EntityCreeper implements IRadiationImm
     }
 
     @Override
-    public void explode() {
+    protected void explode() {
         if (!this.world.isRemote) {
             boolean isPowered = this.getPowered();
             boolean griefing = ForgeEventFactory.getMobGriefingEvent(this.world, this);

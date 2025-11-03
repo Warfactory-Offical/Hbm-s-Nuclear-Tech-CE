@@ -1,56 +1,44 @@
 package com.hbm.entity.mob;
 
-import com.hbm.entity.effect.EntityNukeTorex;
 import com.hbm.entity.logic.EntityNukeExplosionMK5;
-import com.hbm.entity.mob.ai.EntityAINuclearCreeperSwell;
 import com.hbm.explosion.ExplosionNukeGeneric;
 import com.hbm.explosion.ExplosionNukeSmall;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.interfaces.IRadiationImmune;
 import com.hbm.inventory.OreDictManager;
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.sedna.factory.GunFactory;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.main.AdvancementManager;
+import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.util.ContaminationUtil;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntitySkeleton;
-import net.minecraft.entity.passive.EntityOcelot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 @AutoRegister(name = "entity_nuclear_creeper", trackingRange = 80, eggColors = {0x204131, 0x75CE00})
-public class EntityCreeperNuclear extends EntityCreeper implements IRadiationImmune {
+public class EntityCreeperNuclear extends EntityCreeper {
 
 	public EntityCreeperNuclear(World worldIn) {
 		super(worldIn);
 		this.fuseTime = 75;
-		this.explosionRadius = 20;
-	}
-
-	@Override
-	protected void initEntityAI() {
-		this.tasks.addTask(1, new EntityAISwimming(this));
-		this.tasks.addTask(2, new EntityAINuclearCreeperSwell(this));
-		this.tasks.addTask(3, new EntityAIAttackMelee(this, 1.0D, false));
-		this.tasks.addTask(4, new EntityAIWander(this, 0.8D));
-		this.tasks.addTask(5, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
-		this.tasks.addTask(6, new EntityAILookIdle(this));
-
-		this.targetTasks.addTask(1, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, true));
-		this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, false));
-		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this, EntityOcelot.class, true));
 	}
 
 	@Override
@@ -79,13 +67,19 @@ public class EntityCreeperNuclear extends EntityCreeper implements IRadiationImm
 
 	@Override
 	public void onUpdate() {
+        if (!world.isRemote) {
+            List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().grow(5, 5, 5));
+
+            for (Entity e : list) {
+                if (e instanceof EntityLivingBase livingBase) {
+                    ContaminationUtil.contaminate(livingBase, ContaminationUtil.HazardType.RADIATION, ContaminationUtil.ContaminationType.CREATIVE, 0.25F);
+                }
+            }
+        }
 		super.onUpdate();
-		if (this.isEntityAlive()) {
-			ContaminationUtil.radiate(world, posX, posY, posZ, 32, this.timeSinceIgnited + 25);
-			if (this.getHealth() < this.getMaxHealth() && this.ticksExisted % 10 == 0) {
-				this.heal(1.0F);
-			}
-		}
+        if (!world.isRemote && this.isEntityAlive() && this.getHealth() < this.getMaxHealth() && this.ticksExisted % 10 == 0) {
+            this.heal(1.0F);
+        }
 	}
 
     @Override
@@ -115,13 +109,17 @@ public class EntityCreeperNuclear extends EntityCreeper implements IRadiationImm
 	}
 
 	@Override
-	public void explode() {
+	protected void explode() {
 		if (!this.world.isRemote) {
 			boolean flag = ForgeEventFactory.getMobGriefingEvent(this.world, this);
 
 			if (this.getPowered()) {
-				EntityNukeTorex.statFac(world, posX, posY, posZ, 50);
-				if (flag) {
+                NBTTagCompound data = new NBTTagCompound();
+                data.setString("type", "muke");
+                PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, posX, posY + 0.5, posZ), new NetworkRegistry.TargetPoint(dimension, posX, posY, posZ, 250));
+                world.playSound(null, posX, posY + 0.5, posZ, HBMSoundHandler.mukeExplosion, SoundCategory.HOSTILE, 15.0F, 1.0F);
+
+                if (flag) {
 					world.spawnEntity(EntityNukeExplosionMK5.statFac(world, 50, posX, posY, posZ).setDetonator(this));
 				} else {
                     ExplosionNukeGeneric.dealDamage(world, posX, posY + 0.5, posZ, 100);

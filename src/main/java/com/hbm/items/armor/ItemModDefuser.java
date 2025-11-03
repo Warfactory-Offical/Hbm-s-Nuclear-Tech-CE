@@ -33,7 +33,7 @@ public class ItemModDefuser extends ItemArmorMod {
     }
 
     @Override
-    public void addDesc(List list, ItemStack stack, ItemStack armor) {
+    public void addDesc(List<String> list, ItemStack stack, ItemStack armor) {
         list.add(TextFormatting.YELLOW + "  " + stack.getDisplayName() + " (Defuses creepers)");
     }
 
@@ -42,7 +42,7 @@ public class ItemModDefuser extends ItemArmorMod {
 
         if(entity.world.isRemote || entity.world.getTotalWorldTime() % 20 != 0) return;
 
-        List<EntityCreeper> creepers = entity.world.getEntitiesWithinAABB(EntityCreeper.class, entity.getEntityBoundingBox().expand(5, 5, 5));
+        List<EntityCreeper> creepers = entity.world.getEntitiesWithinAABB(EntityCreeper.class, entity.getEntityBoundingBox().grow(5, 5, 5));
 
         for(EntityCreeper creeper : creepers) {
 
@@ -53,8 +53,8 @@ public class ItemModDefuser extends ItemArmorMod {
                 EntityAICreeperSwell toRem = null;
                 for(EntityAITasks.EntityAITaskEntry o : creeper.tasks.taskEntries) {
 
-                    if(o.action instanceof EntityAICreeperSwell) {
-                        toRem = (EntityAICreeperSwell) o.action;
+                    if(o.action instanceof EntityAICreeperSwell swell) {
+                        toRem = swell;
                         break;
                     }
                 }
@@ -64,7 +64,8 @@ public class ItemModDefuser extends ItemArmorMod {
                     creeper.world.playSound(creeper.posX, creeper.posY, creeper.posZ, HBMSoundHandler.pinBreak, SoundCategory.PLAYERS, 1.0F, 1.0F, false);
                     creeper.dropItem(ModItems.safety_fuse, 1);
                     creeper.attackEntityFrom(DamageSource.causeMobDamage(entity), 1.0F);
-                    creeper.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 0, 200));
+                    // mlbv: upstream has duration 0 and amplifier 200 here, probably a bug
+                    creeper.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 200, 1));
                 }
             }
         }
