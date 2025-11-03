@@ -450,7 +450,7 @@ public class OreDictManager {
         PO210.rad(HazardRegistry.po210).hot(3).nugget(nugget_polonium).billet(billet_polonium).ingot(ingot_polonium).dust(powder_polonium).block(block_polonium);
         TC99.rad(HazardRegistry.tc99).nugget(nugget_technetium).billet(billet_technetium).ingot(ingot_technetium);
         RA226.rad(HazardRegistry.ra226).nugget(nugget_ra226).billet(billet_ra226).ingot(ingot_ra226).dust(powder_ra226).block(block_ra226);
-        AC227.rad(HazardRegistry.ac227).nugget(nugget_actinium).billet(billet_ac227).ingot(ingot_actinium).dust(powder_actinium).block(block_actinium).dustSmall(powder_actinium_tiny);
+        AC227.rad(HazardRegistry.ac227).nugget(nugget_actinium).billet(billet_actinium).ingot(ingot_actinium).dust(powder_actinium).block(block_actinium).dustSmall(powder_actinium_tiny);
         CO60.rad(HazardRegistry.co60).hot(1).nugget(nugget_co60).billet(billet_co60).ingot(ingot_co60).dust(powder_co60).dustSmall(powder_co60_tiny);
         AU198.rad(HazardRegistry.au198).hot(5).nugget(nugget_au198).billet(billet_au198).ingot(ingot_au198).dust(powder_au198).dustSmall(powder_au198_tiny);
         PB209.rad(HazardRegistry.pb209).blinding(50F).hot(7).nugget(nugget_pb209).billet(billet_pb209).ingot(ingot_pb209).dust(powder_pb209).dustSmall(powder_pb209_tiny);

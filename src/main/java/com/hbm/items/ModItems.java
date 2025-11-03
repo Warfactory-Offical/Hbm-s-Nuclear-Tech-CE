@@ -831,7 +831,6 @@ public class ModItems {
     public static final Item ingot_au198 = new ItemBakedBase("ingot_au198").setCreativeTab(MainRegistry.partsTab);
     public static final Item ingot_pb209 = new ItemBakedBase("ingot_pb209").setCreativeTab(MainRegistry.partsTab);
     public static final Item ingot_ra226 = new ItemBakedBase("ingot_ra226").setCreativeTab(MainRegistry.partsTab);
-    public static final Item ingot_ac227 = new ItemBakedBase("ingot_ac227").setCreativeTab(MainRegistry.partsTab);
     public static final Item ingot_gh336 = new ItemCustomLore("ingot_gh336").setRarity(EnumRarity.EPIC).setCreativeTab(MainRegistry.partsTab);
     public static final Item ingot_electronium = new ItemUnstable(30, 6000, "ingot_electronium").setCreativeTab(MainRegistry.partsTab);
     public static final Item ingot_reiium = new ItemCustomLore("ingot_reiium").setCreativeTab(MainRegistry.partsTab);
@@ -870,7 +869,6 @@ public class ModItems {
     public static final Item billet_pb209 = new ItemCustomLore("billet_pb209").setCreativeTab(MainRegistry.partsTab);
     public static final Item billet_ra226 = new ItemCustomLore("billet_ra226").setCreativeTab(MainRegistry.partsTab);
     public static final Item billet_actinium = new ItemCustomLore("billet_actinium").setCreativeTab(MainRegistry.partsTab);
-    public static final Item billet_ac227 = new ItemCustomLore("billet_ac227").setCreativeTab(MainRegistry.partsTab);
     public static final Item billet_gh336 = new ItemCustomLore("billet_gh336").setCreativeTab(MainRegistry.partsTab);
     public static final Item billet_beryllium = new ItemBakedBase("billet_beryllium").setCreativeTab(MainRegistry.partsTab);
     public static final Item billet_bismuth = new ItemBakedBase("billet_bismuth").setCreativeTab(MainRegistry.partsTab);
@@ -944,7 +942,6 @@ public class ModItems {
     public static final Item nugget_niobium = new ItemBakedBase("nugget_niobium").setCreativeTab(MainRegistry.partsTab);
     public static final Item nugget_silicon = new ItemBakedBase("nugget_silicon").setCreativeTab(MainRegistry.partsTab);
     public static final Item nugget_actinium = new ItemBakedBase("nugget_actinium").setCreativeTab(MainRegistry.partsTab);
-    public static final Item nugget_ac227 = new ItemCustomLore("nugget_ac227").setCreativeTab(MainRegistry.partsTab);
     public static final Item nugget_cobalt = new ItemCustomLore("nugget_cobalt").setCreativeTab(MainRegistry.partsTab);
     public static final Item nugget_co60 = new ItemCustomLore("nugget_co60").setCreativeTab(MainRegistry.partsTab);
     public static final Item nugget_strontium = new ItemCustomLore("nugget_strontium").setCreativeTab(MainRegistry.partsTab);
@@ -1089,8 +1086,6 @@ public class ModItems {
     public static final Item powder_au198 = new ItemCustomLore("powder_au198").setCreativeTab(MainRegistry.partsTab);
     public static final Item powder_au198_tiny = new ItemCustomLore("powder_au198_tiny").setCreativeTab(MainRegistry.partsTab);
     public static final Item powder_ra226 = new ItemCustomLore("powder_ra226").setCreativeTab(MainRegistry.partsTab);
-    public static final Item powder_ac227 = new ItemCustomLore("powder_ac227").setCreativeTab(MainRegistry.partsTab);
-    public static final Item powder_ac227_tiny = new ItemCustomLore("powder_ac227_tiny").setCreativeTab(MainRegistry.partsTab);
     public static final Item sulfur = new ItemBase("sulfur").setCreativeTab(MainRegistry.partsTab);
     public static final Item nitra = new ItemBakedBase("nitra").setCreativeTab(MainRegistry.partsTab);
     public static final Item nitra_small = new ItemBakedBase("nitra_small").setCreativeTab(MainRegistry.partsTab);
