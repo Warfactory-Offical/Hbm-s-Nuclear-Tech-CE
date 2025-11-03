@@ -4,6 +4,7 @@ import baubles.api.BaublesApi;
 import com.google.common.collect.Queues;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.bomb.Balefire;
 import com.hbm.blocks.generic.TrappedBrick.Trap;
 import com.hbm.blocks.network.FluidDuctBox;
 import com.hbm.blocks.network.FluidDuctStandard;
@@ -645,6 +646,7 @@ Object object6 = evt.getModelRegistry().getObject(com.hbm.items.tool.ItemCaniste
         FluidDuctBox.registerColorHandler(evt);
         FluidDuctStandard.registerColorHandler(evt);
         IDynamicModels.registerBlockColorHandlers(evt);
+        Balefire.registerColorHandler(evt);
     }
 
     @SubscribeEvent

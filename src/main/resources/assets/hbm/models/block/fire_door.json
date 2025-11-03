@@ -1,5 +1,5 @@
 {
-	"parent": "block/cube_all",
+	"parent": "hbm:block/cube_all_tinted",
 	"textures": {
 		"all": "hbm:blocks/block_steel"
 	}

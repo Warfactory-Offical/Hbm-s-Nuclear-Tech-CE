@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockFire;
 import net.minecraft.block.BlockTNT;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -14,7 +15,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.ColorHandlerEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.awt.*;
 import java.util.Random;
 
 public class Balefire extends BlockFire {
@@ -137,7 +142,6 @@ public class Balefire extends BlockFire {
             livingBase.addPotionEffect(new PotionEffect(HbmPotion.radiation, 5 * 20, 9));
     }
 
-    /* TODO
     @SideOnly(Side.CLIENT)
     public static void registerColorHandler(ColorHandlerEvent.Block evt) {
         IBlockColor balefireColor = (state, world, pos, tintIndex) -> {
@@ -146,5 +150,4 @@ public class Balefire extends BlockFire {
         };
         evt.getBlockColors().registerBlockColorHandler(balefireColor, ModBlocks.balefire);
     }
-    */
 }

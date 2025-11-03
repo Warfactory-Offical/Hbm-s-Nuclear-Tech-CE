@@ -121,20 +121,13 @@ public class BlockBakeFrame {
     }
 
     public enum BlockForm {
-        ALL("minecraft:block/cube_all", 1, new String[]{"all"}),
+        ALL("hbm:block/cube_all_tinted", 1, new String[]{"all"}),
         CROP("minecraft:block/crop", 1, new String[]{"crop"}),
         LAYER("hbm:block/block_layering", 1, new String[]{"texture"}),
-        CROSS("minecraft:block/cross", 1, new String[]{"cross"}),
-        PILLAR("minecraft:block/cube_column", 2, new String[]{"end", "side"}),
-        PILLAR_BOTTOM("minecraft:block/cube_column", 3, new String[]{"end", "side", "bottom"}),
-        FULL_CUSTOM("minecraft:block/cube", 6, new String[]{
-                "up",
-                "down",
-                "north",
-                "south",
-                "west",
-                "east"
-        });
+        CROSS("hbm:block/cross_tinted", 1, new String[]{"cross"}),
+        PILLAR("hbm:block/cube_column_tinted", 2, new String[]{"end", "side"}),
+        PILLAR_BOTTOM("hbm:block/cube_column_tinted", 3, new String[]{"end", "side", "bottom"}),
+        FULL_CUSTOM("hbm:block/cube_tinted", 6, new String[]{"up","down","north","south","west","east"});
 
         public final String baseBakedModel;
         public final int textureNum;

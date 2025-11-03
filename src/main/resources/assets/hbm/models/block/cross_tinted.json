@@ -1,0 +1,11 @@
+{
+  "parent": "block/cross",
+  "render_type": "cutout",
+  "elements": [{
+    "from": [0,0,0], "to": [16,16,16],
+    "faces": {
+      "north": { "texture": "#cross", "tintindex": 0 },
+      "south": { "texture": "#cross", "tintindex": 0 }
+    }
+  }]
+}
