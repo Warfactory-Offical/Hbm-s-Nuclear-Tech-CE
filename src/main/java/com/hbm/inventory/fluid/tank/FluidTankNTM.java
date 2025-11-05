@@ -332,8 +332,12 @@ public class FluidTankNTM implements IFluidHandler, IFluidTank, Cloneable {
         pressure = buf.readShort();
     }
 
+    /**
+     * @deprecated use {@link #getTankType()}, {@link #getFill()}, {@link #getMaxFill()} whenever possible
+     */
     @NotNull
     @Override
+    @Deprecated
     public IFluidTankProperties[] getTankProperties() {
         Fluid fluid = getTankTypeFF();
         int amount = getFill();
@@ -344,8 +348,12 @@ public class FluidTankNTM implements IFluidHandler, IFluidTank, Cloneable {
         return new IFluidTankProperties[]{new FluidTankProperties(stack, capacity)};
     }
 
+    /**
+     * @deprecated use {@link #getTankType()} whenever possible
+     */
     @Nullable
     @Override
+    @Deprecated
     public FluidStack getFluid() {
         Fluid fluid = getTankTypeFF();
         int amount = getFill();
@@ -353,23 +361,39 @@ public class FluidTankNTM implements IFluidHandler, IFluidTank, Cloneable {
         return (fluid != null && amount > 0) ? new FluidStack(fluid, amount) : null;
     }
 
+    /**
+     * @deprecated use {@link #getFill()} whenever possible
+     */
     @Override
+    @Deprecated
     public int getFluidAmount() {
         return getFill();
     }
 
+    /**
+     * @deprecated use {@link #getMaxFill()} whenever possible
+     */
     @Override
+    @Deprecated
     public int getCapacity() {
         return getMaxFill();
     }
 
+    /**
+     * @deprecated use {@link #getTankType()}, {@link #getFill()}, {@link #getMaxFill()} whenever possible
+     */
     @NotNull
     @Override
+    @Deprecated
     public FluidTankInfo getInfo() {
         return new FluidTankInfo(getFluid(), getCapacity());
     }
 
+    /**
+     * @deprecated use {@link #fill(FluidType, int, boolean)} and {@link #setFill(int)} whenever possible
+     */
     @Override
+    @Deprecated
     public int fill(@Nullable FluidStack resource, boolean doFill) {
         if (resource == null || resource.amount <= 0) {
             return 0;
@@ -414,8 +438,12 @@ public class FluidTankNTM implements IFluidHandler, IFluidTank, Cloneable {
         }
     }
 
+    /**
+     * @deprecated use {@link #setFill(int)} whenever possible
+     */
     @Nullable
     @Override
+    @Deprecated
     public FluidStack drain(@Nullable FluidStack resource, boolean doDrain) {
         Fluid currentType = getTankTypeFF();
         if (resource == null || !resource.getFluid().equals(currentType)) return null;
@@ -427,8 +455,12 @@ public class FluidTankNTM implements IFluidHandler, IFluidTank, Cloneable {
         return drained;
     }
 
+    /**
+     * @deprecated use {@link #setFill(int)} whenever possible
+     */
     @Nullable
     @Override
+    @Deprecated
     public FluidStack drain(int maxDrain, boolean doDrain) {
         if (getTankType() == Fluids.NONE || getTankTypeFF() == null || getFill() == 0) return null;
         int toDrain = Math.min(maxDrain, getFill());
