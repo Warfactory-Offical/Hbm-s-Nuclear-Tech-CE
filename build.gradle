@@ -1,4 +1,4 @@
-//version: 1753288091
+//version: 1762213476
 /*
  * DO NOT CHANGE THIS FILE! fuck off
  * Also, you may replace this file at any time if there is an update available.
@@ -317,15 +317,6 @@ tasks.withType(ScalaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 
-
-// Allow others using this buildscript to have custom gradle code run
-if (getFile('addon.gradle').exists()) {
-    apply from: 'addon.gradle'
-} else if (getFile('addon.gradle.kts').exists()) {
-    apply from: 'addon.gradle.kts'
-}
-
-
 // Configure Minecraft
 
 // Try to gather mod version from git tags if version is not manually specified
@@ -372,6 +363,10 @@ minecraft {
 
     // JVM arguments
     extraRunJvmArguments.add("-ea:${modGroup}")
+
+    // enable JLine Terminal since idea_rt.jar is no longer added to the classpath
+    extraRunJvmArguments.add('-Dterminal.jline=true')
+
     if (usesMixins.toBoolean()) {
         extraRunJvmArguments.addAll([
             '-Dmixin.hotSwap=true',
@@ -1548,6 +1543,13 @@ def getLastTag() {
     def githubTag = providers.environmentVariable('GITHUB_TAG')
     return runShell('git describe --abbrev=0 --tags ' +
             (githubTag.isPresent() ? runShell('git rev-list --tags --skip=1 --max-count=1') : ''))
+}
+
+// Allow others using this buildscript to have custom gradle code run
+if (getFile('addon.gradle').exists()) {
+    apply from: 'addon.gradle'
+} else if (getFile('addon.gradle.kts').exists()) {
+    apply from: 'addon.gradle.kts'
 }
 
 def sourceBackupDir = file("build/tmp/sourceBackup")
