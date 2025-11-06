@@ -98,7 +98,7 @@ public class ModBlocks {
 	public static final Block ducrete = new BlockRadResistant(Material.ROCK, "ducrete").setCreativeTab(MainRegistry.blockTab).setHardness(20.0F).setResistance(500.0F);
 	public static final Block brick_ducrete = new BlockRadResistant(Material.ROCK, "ducrete_brick").setCreativeTab(MainRegistry.blockTab).setHardness(15.0F).setResistance(750.0F);
 	public static final Block reinforced_ducrete = new BlockRadResistant(Material.ROCK, "ducrete_reinforced").setCreativeTab(MainRegistry.blockTab).setHardness(20.0F).setResistance(1000.0F);
-	public static final Block lightstone = new BlockLightstone(Material.ROCK, SoundType.STONE, "lightstone", BlockEnums.LightstoneType.class,  true, true).setCreativeTab(MainRegistry.blockTab).setHardness(20.0F).setResistance(1000.0F);
+	public static final Block lightstone = new BlockLightstone(Material.ROCK, SoundType.STONE, "lightstone", BlockEnums.LightstoneType.class,  true, true).setCreativeTab(MainRegistry.blockTab).setHardness(20.0F).setResistance(20F);
 	public static final Block vinyl_tile = new BlockEnumMeta(Material.ROCK, SoundType.GLASS, "vinyl_tile", BlockEnums.TileType.class, true, true).setCreativeTab(MainRegistry.blockTab).setHardness(10.0F).setResistance(60.0F);
 	public static final Block tile_lab = new BlockClean(Material.ROCK, "tile_lab").setSoundType(SoundType.GLASS).setCreativeTab(MainRegistry.blockTab).setHardness(1.0F).setResistance(20.0F);
 	public static final Block tile_lab_cracked = new BlockClean(Material.ROCK, "tile_lab_cracked").setSoundType(SoundType.GLASS).setCreativeTab(MainRegistry.blockTab).setHardness(1.0F).setResistance(20.0F);
