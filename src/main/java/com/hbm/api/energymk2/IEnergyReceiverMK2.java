@@ -128,6 +128,8 @@ public interface IEnergyReceiverMK2 extends IEnergyHandlerMK2 {
         LOW,
         NORMAL,
         HIGH,
-        HIGHEST
+        HIGHEST;
+
+        public static final ConnectionPriority[] VALUES = new ConnectionPriority[]{LOWEST, LOW, NORMAL, HIGH, HIGHEST};
     }
 }

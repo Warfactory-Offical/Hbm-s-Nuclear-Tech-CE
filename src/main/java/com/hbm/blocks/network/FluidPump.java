@@ -493,7 +493,7 @@ public class FluidPump extends BlockContainerBakeable implements INBTBlockTransf
 
             if (this.buttonPriority.mousePressed(this.mc, mouseX, mouseY)) {
                 this.priority++;
-                if (this.priority >= IEnergyReceiverMK2.ConnectionPriority.values().length) {
+                if (this.priority >= IEnergyReceiverMK2.ConnectionPriority.VALUES.length) {
                     this.priority = 0;
                 }
                 this.buttonPriority.displayString = EnumUtil.grabEnumSafely(IEnergyReceiverMK2.ConnectionPriority.class, this.priority).name();

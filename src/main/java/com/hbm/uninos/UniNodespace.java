@@ -1,11 +1,12 @@
 package com.hbm.uninos;
 
 import com.hbm.lib.DirPos;
+import it.unimi.dsi.fastutil.objects.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
-import java.util.*;
+import java.util.Collection;
 
 /**
  * Unified Nodespace, a Nodespace for all applications.
@@ -18,7 +19,7 @@ import java.util.*;
  */
 public final class UniNodespace {
 
-    private static final Map<INetworkProvider<?>, PerTypeNodeManager<?, ?, ?, ?>> managers = new HashMap<>();
+    private static final Object2ObjectOpenHashMap<INetworkProvider<?>, PerTypeNodeManager<?, ?, ?, ?>> managers = new Object2ObjectOpenHashMap<>();
 
     private UniNodespace() {
     }
@@ -38,7 +39,9 @@ public final class UniNodespace {
     public static void updateNodespace() {
         World[] currentWorlds = FMLCommonHandler.instance().getMinecraftServerInstance().worlds;
         for (World world : currentWorlds) {
-            for (PerTypeNodeManager<?, ?, ?, ?> manager : managers.values()) {
+            ObjectIterator<Object2ObjectMap.Entry<INetworkProvider<?>, PerTypeNodeManager<?, ?, ?, ?>>> iterator = managers.object2ObjectEntrySet().fastIterator();
+            while (iterator.hasNext()) {
+                PerTypeNodeManager<?, ?, ?, ?> manager = iterator.next().getValue();
                 manager.updateForWorld(world);
             }
         }
@@ -47,7 +50,9 @@ public final class UniNodespace {
 
     static void removeActiveNet(NodeNet<?, ?, ?, ?> net) {
         if (net.links.isEmpty()) {
-            for (PerTypeNodeManager<?, ?, ?, ?> manager : managers.values()) {
+            ObjectIterator<Object2ObjectMap.Entry<INetworkProvider<?>, PerTypeNodeManager<?, ?, ?, ?>>> iterator = managers.object2ObjectEntrySet().fastIterator();
+            while (iterator.hasNext()) {
+                PerTypeNodeManager<?, ?, ?, ?> manager = iterator.next().getValue();
                 manager.removeActiveNet(net);
             }
             return;
@@ -75,8 +80,8 @@ public final class UniNodespace {
 
     private static class PerTypeNodeManager<R, P, L extends GenNode<N>, N extends NodeNet<R, P, L, N>> {
 
-        private final Map<World, UniNodeWorld<N, L>> worlds = new HashMap<>();
-        private final Set<N> activeNodeNets = new HashSet<>();
+        private final Object2ObjectOpenHashMap<World, UniNodeWorld<N, L>> worlds = new Object2ObjectOpenHashMap<>();
+        private final ObjectOpenHashSet<N> activeNodeNets = new ObjectOpenHashSet<>();
         private final INetworkProvider<N> provider;
 
         PerTypeNodeManager(INetworkProvider<N> provider) {
@@ -134,9 +139,10 @@ public final class UniNodespace {
         }
 
         void updateNetworks() {
-            Set<N> netsToUpdate = new HashSet<>(activeNodeNets);
-            for (N net : netsToUpdate) net.resetTrackers();
-            for (N net : netsToUpdate) {
+            for (N net : activeNodeNets) {
+                net.resetTrackers();
+            }
+            for (N net : activeNodeNets) {
                 if (net.isValid()) net.update();
             }
         }
@@ -177,7 +183,7 @@ public final class UniNodespace {
      * Holds all nodes of a single network type for a specific World.
      */
     private static class UniNodeWorld<N extends NodeNet<?, ?, L, N>, L extends GenNode<N>> {
-        private final Map<BlockPos, L> nodesByPosition = new LinkedHashMap<>();
+        private final Object2ObjectLinkedOpenHashMap<BlockPos, L> nodesByPosition = new Object2ObjectLinkedOpenHashMap<>();
 
         L getNode(BlockPos pos) {
             return nodesByPosition.get(pos);
@@ -199,8 +205,9 @@ public final class UniNodespace {
             node.expired = true;
         }
 
-        Set<L> getAllNodes() {
-            return new HashSet<>(nodesByPosition.values());
+        /** @return a view of all nodes in this world, do not modify */
+        Collection<L> getAllNodes() {
+            return nodesByPosition.values();
         }
     }
 }
