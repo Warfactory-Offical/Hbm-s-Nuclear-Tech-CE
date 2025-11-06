@@ -50,16 +50,16 @@ jobs:
           echo "TAG=v${MOD_VERSION}" >> "$GITHUB_ENV"
           echo "tag=v${MOD_VERSION}" >> "$GITHUB_OUTPUT"
 
-#      - name: Ensure tag doesn't already exist on origin
-#        run: |
-#          set -euo pipefail
-#          if git ls-remote --exit-code --tags origin "refs/tags/${TAG}" >/dev/null 2>&1; then
-#            echo "::error::Tag ${TAG} already exists on origin. Canceling."; exit 1
-#          fi
-#
+      #      - name: Ensure tag doesn't already exist on origin
+      #        run: |
+      #          set -euo pipefail
+      #          if git ls-remote --exit-code --tags origin "refs/tags/${TAG}" >/dev/null 2>&1; then
+      #            echo "::error::Tag ${TAG} already exists on origin. Canceling."; exit 1
+      #          fi
+      #
       - name: Build with Gradle
         run: ./gradlew clean build --no-daemon
-#
+      #
       - name: Find mod jar (non-dev/non-sources/non-api)
         run: |
           set -euo pipefail
@@ -68,40 +68,46 @@ jobs:
             echo "::error::No release jar found in build/libs"; ls -al build/libs || true; exit 1
           fi
           echo "FILE=${FILE}" >> "$GITHUB_ENV"
-#
-#      - name: Create and push tag
-#        run: |
-#          set -euo pipefail
-#          git config user.name github-actions
-#          git config user.email github-actions@github.com
-#          git tag "${TAG}"
-#          git push origin "${TAG}"
-#
-#      - name: Create GitHub Release
-#        uses: softprops/action-gh-release@v2
-#        with:
-#          tag_name: ${{ env.TAG }}
-#          name: "Beta ${{ env.TAG }}"
-#          prerelease: true
-#          generate_release_notes: true
-#          files: ${{ env.FILE }}
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+      #
+      #      - name: Create and push tag
+      #        run: |
+      #          set -euo pipefail
+      #          git config user.name github-actions
+      #          git config user.email github-actions@github.com
+      #          git tag "${TAG}"
+      #          git push origin "${TAG}"
+      #
+      #      - name: Create GitHub Release
+      #        uses: softprops/action-gh-release@v2
+      #        with:
+      #          tag_name: ${{ env.TAG }}
+      #          name: "Beta ${{ env.TAG }}"
+      #          prerelease: true
+      #          generate_release_notes: true
+      #          files: ${{ env.FILE }}
+      #        env:
+      #          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish to CurseForge
-        uses: Kir-Antipov/mc-publish@v3.3
-        with:
-          curseforge-id: ${{ env.CF_PROJECT_ID }}
-          curseforge-token: ${{ secrets.CF_API_TOKEN }}
-          curseforge-version-type: beta
-          curseforge-game-versions: 6756
-          curseforge-files-primary: ${{ env.FILE }}
-          curseforge-files-secondary: |
-            build/libs/*-dev.jar
-            build/libs/*-sources.jar
-          curseforge-changelog: "See GitHub release ${{ env.TAG }} for notes."
-          loaders: forge
-          game-versions: 1.12.2
-          game-version-filter: any
-          curseforge-dependencies: |
-            267602(recommended)
+        env:
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          TAG: ${{ env.TAG }}
+          FILE: ${{ env.FILE }}
+        run: |
+          curl -X POST "https://minecraft.curseforge.com/api/projects/1312314/upload-file" \
+            -H "x-api-token: ${CF_API_TOKEN}" \
+            -F "metadata={
+              \"changelog\": \"See GitHub release ${TAG} for notes.\",
+              \"changelogType\": \"text\",
+              \"displayName\": \"${TAG}\",
+              \"releaseType\": \"beta\",
+              \"gameVersions\": [6756],
+              \"relations\": {
+                \"projects\": [
+                  {\"slug\": \"267602\", \"type\": \"requiredDependency\"}
+                ]
+              }
+            };type=application/json" \
+            -F "file=@${FILE}" \
+            -F "additionalFiles=@build/libs/*-dev.jar" \
+            -F "additionalFiles=@build/libs/*-sources.jar"
+
