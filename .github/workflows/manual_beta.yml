@@ -101,11 +101,6 @@ jobs:
               \"displayName\": \"${TAG}\",
               \"releaseType\": \"beta\",
               \"gameVersions\": [6756],
-              \"relations\": {
-                \"projects\": [
-                  {\"slug\": \"2915363\", \"type\": 2}
-                ]
-              }
             };type=application/json" \
             -F "file=@${FILE}"
 #            -F "additionalFiles=@build/libs/*-dev.jar" \
