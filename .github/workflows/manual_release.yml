@@ -99,4 +99,4 @@ jobs:
           curseforge-files-secondary: |
             build/libs/*-dev.jar
             build/libs/*-sources.jar
-          curseforge-changelog: "See GitHub release ${{ env.TAG }} for notes.""
+          curseforge-changelog: "See GitHub release ${{ env.TAG }} for notes."
