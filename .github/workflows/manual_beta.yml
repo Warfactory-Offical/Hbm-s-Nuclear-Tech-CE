@@ -101,6 +101,6 @@ jobs:
             build/libs/*-sources.jar
           curseforge-changelog: "See GitHub release ${{ env.TAG }} for notes."
           loaders: forge
-          game-versions: ["1.12.2"]
+          game-versions: 1.12.2
           curseforge-dependencies: |
             267602(recommended)
