@@ -123,7 +123,7 @@ public class RenderLoot extends TileEntitySpecialRenderer<TileEntityLoot> {
 
     private static void renderStandardItem(ItemStack stack) {
         GlStateManager.translate(0.25, 0.0, 0.25);
-        GlStateManager.scale(0.5, 0.5, 0.5);
+        GlStateManager.scale(1,1,1);
         GlStateManager.rotate(90, 1, 0, 0);
         GlStateManager.enableRescaleNormal();
         GlStateManager.color(1F, 1F, 1F, 1F);
