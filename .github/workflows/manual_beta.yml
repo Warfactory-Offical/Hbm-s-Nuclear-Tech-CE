@@ -107,7 +107,7 @@ jobs:
                 ]
               }
             };type=application/json" \
-            -F "file=@build/libs/${FILE}"
+            -F "file=@${FILE}"
 #            -F "additionalFiles=@build/libs/*-dev.jar" \
 #            -F "additionalFiles=@build/libs/*-sources.jar"
 
