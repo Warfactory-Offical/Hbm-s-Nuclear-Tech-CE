@@ -103,7 +103,7 @@ jobs:
               \"gameVersions\": [6756],
               \"relations\": {
                 \"projects\": [
-                  {\"slug\": \"267602\", \"type\": \"requiredDependency\"}
+                  {\"slug\": \"2915363\", \"type\": 2}
                 ]
               }
             };type=application/json" \
