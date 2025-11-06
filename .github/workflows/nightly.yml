@@ -77,13 +77,3 @@ jobs:
           delete_tag_pattern: '^nightly-'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name:  Upload release to CF
-        env:
-          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
-        run: |
-          curl -X POST \
-            -H "x-api-token: $CF_API_TOKEN" \
-            -F "metadata={\"changelog\":\"${{ github.event.release.body }}\",\"changelogType\":\"markdown\",\"releaseType\":\"beta\",\"gameVersions\":[6756]}" \
-            -F "file=@build/libs/${FILE}" \
-            https://minecraft.curseforge.com/api/projects/1312314/upload-file
