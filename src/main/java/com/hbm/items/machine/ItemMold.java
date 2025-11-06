@@ -33,6 +33,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -193,6 +194,7 @@ public class ItemMold extends Item {
             this.name = name;
         }
 
+        @NotNull //FOR FUCKS SAKE IF OUTPUT IS ITEMSTACK, IT SHOULD NEVER BE NULL
         public abstract ItemStack getOutput(NTMMaterial mat);
         public abstract int getCost();
         public abstract String getTitle();
@@ -214,7 +216,7 @@ public class ItemMold extends Item {
         }
 
         @Override
-        public ItemStack getOutput(NTMMaterial mat) {
+        public @NotNull ItemStack getOutput(NTMMaterial mat) {
 
             for(String name : mat.names) {
                 String od = shape.name() + name;
@@ -235,7 +237,7 @@ public class ItemMold extends Item {
                 }
             }
 
-            return null;
+            return ItemStack.EMPTY;
         }
 
         @Override
@@ -256,7 +258,7 @@ public class ItemMold extends Item {
         }
 
         @Override
-        public ItemStack getOutput(NTMMaterial mat) {
+        public @NotNull ItemStack getOutput(NTMMaterial mat) {
 
             ItemStack override = blockOverrides.get(mat);
 
@@ -285,7 +287,7 @@ public class ItemMold extends Item {
         }
 
         @Override
-        public ItemStack getOutput(NTMMaterial mat) {
+        public @NotNull ItemStack getOutput(NTMMaterial mat) {
             if (this.mat != mat) return ItemStack.EMPTY;
             ItemStack s = outSupplier.get();
             return s.isEmpty() ? ItemStack.EMPTY : s.copy();
@@ -349,7 +351,7 @@ public class ItemMold extends Item {
         }
 
         @Override
-        public ItemStack getOutput(NTMMaterial mat) {
+        public @NotNull ItemStack getOutput(NTMMaterial mat) {
             Supplier<ItemStack> sup = this.map.get(mat);
             if (sup == null) return ItemStack.EMPTY;
             ItemStack out = sup.get();

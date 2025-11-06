@@ -157,7 +157,7 @@ public class TileEntityMachineStrandCaster extends TileEntityFoundryCastingBase 
 
   private int maxProcessable() {
     ItemMold.Mold mold = this.getInstalledMold();
-    if (type == null || mold == null || mold.getOutput(type) == null) {
+    if (type == null || mold == null || mold.getOutput(type).isEmpty()) {
       return 0;
     }
 
