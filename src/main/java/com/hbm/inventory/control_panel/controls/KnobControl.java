@@ -1,5 +1,6 @@
 package com.hbm.inventory.control_panel.controls;
 
+import com.hbm.hfr.render.loader.WaveFrontObjectVAO;
 import com.hbm.inventory.control_panel.*;
 import com.hbm.inventory.control_panel.nodes.*;
 import com.hbm.main.ClientProxy;
@@ -57,46 +58,47 @@ public class KnobControl extends Control {
 
     @Override
     public void render() {
-//        GlStateManager.shadeModel(GL11.GL_SMOOTH);
-//        Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.ctrl_knob_control_tex);
-//        Tessellator tes = Tessellator.instance;
-//        IModelCustom model = getModel();
-//
-//        int value = (int) getVar("value").getNumber();
-//
-//        tes.startDrawing(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-//        tes.setTranslation(posX, 0, posY);
-//        tes.setColorRGBA_F(1, 1, 1, 1);
-//        model.tessellatePart(tes, "base");
-//        tes.draw();
-//
-//        GlStateManager.pushMatrix();
-//            Matrix4f rot_mat = new Matrix4f().rotate((float) -(value*((2*Math.PI)/11F)), new Vector3f(0, 1, 0));
-//            Matrix4f.mul(new Matrix4f().translate(new Vector3f(posX, -.04F, posY)), rot_mat, new Matrix4f()).store(ClientProxy.AUX_GL_BUFFER);
-//            ClientProxy.AUX_GL_BUFFER.rewind();
-//            GlStateManager.multMatrix(ClientProxy.AUX_GL_BUFFER);
-//            tes.startDrawing(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-//            tes.setColorRGBA_F(1, 1, 1, 1);
-//            model.tessellatePart(tes, "knob");
-//            tes.draw();
-//        GlStateManager.popMatrix();
-//
-//        GlStateManager.pushMatrix();
-//            GlStateManager.translate(posX, .07F, posY);
-//            GlStateManager.scale(.028F, .028F, .028F);
-//            GL11.glNormal3f(0.0F, 0.0F, -1.0F);
-//            GlStateManager.rotate(90, 1, 0, 0);
-//
-//            FontRenderer font = Minecraft.getMinecraft().fontRenderer;
-//
-//            for (int i=0; i<positions; i++) {
-//                double angle = (Math.PI*2)/11F * i;
-//                float r = 28;
-//                double x = r * Math.cos(angle-Math.PI/2);
-//                double y = r * Math.sin(angle-Math.PI/2);
-//                font.drawString(Integer.toString(i), (float) (((i==10)?-6.5 : -2.5F)+x), (float) (-3F+y), 0x282828, false);
-//            }
-//        GlStateManager.popMatrix();
+        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.ctrl_knob_control_tex);
+
+        WaveFrontObjectVAO model = (WaveFrontObjectVAO) getModel();
+        FontRenderer font = Minecraft.getMinecraft().fontRenderer;
+
+        int value = (int) getVar("value").getNumber();
+        int positions = 11;
+
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(posX, 0.0, posY);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        model.renderPart("base");
+        GlStateManager.popMatrix();
+
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(posX, -0.04F, posY);
+        GlStateManager.rotate((float) -(value * (360F / 11F)), 0.0F, 1.0F, 0.0F);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        model.renderPart("knob");
+        GlStateManager.popMatrix();
+
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(posX, 0.07F, posY);
+        GlStateManager.scale(0.028F, 0.028F, 0.028F);
+        GlStateManager.rotate(90.0F, 1.0F, 0.0F, 0.0F);
+        GlStateManager.color(0.0F, 0.0F, -1.0F);
+
+        for (int i = 0; i < positions; i++) {
+            double angle = (Math.PI * 2) / positions * i;
+            float r = 28.0F;
+            double x = r * Math.cos(angle - Math.PI / 2);
+            double y = r * Math.sin(angle - Math.PI / 2);
+            float xOffset = (i == 10 ? -6.5F : -2.5F);
+            font.drawString(Integer.toString(i), (float) (xOffset + x), (float) (-3.0F + y), 0x282828, false);
+        }
+
+        GlStateManager.popMatrix();
+
+        GlStateManager.shadeModel(GL11.GL_FLAT);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
     @Override

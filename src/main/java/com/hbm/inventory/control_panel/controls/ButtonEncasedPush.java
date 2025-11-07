@@ -1,5 +1,6 @@
 package com.hbm.inventory.control_panel.controls;
 
+import com.hbm.hfr.render.loader.WaveFrontObjectVAO;
 import com.hbm.inventory.control_panel.*;
 import com.hbm.inventory.control_panel.nodes.*;
 import com.hbm.main.ClientProxy;
@@ -44,71 +45,57 @@ public class ButtonEncasedPush extends Control {
 
     @Override
     public void render() {
-//        GlStateManager.shadeModel(GL11.GL_SMOOTH);
-//        Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.ctrl_button_encased_push_tex);
-//        IModelCustom model = getModel();
-//
-//        boolean isPushed = getVar("isPushed").getBoolean();
-//        boolean isLit = getVar("isLit").getBoolean();
-//        boolean isCoverOpen = getVar("isCoverOpen").getBoolean();
-//
-//        float lX = OpenGlHelper.lastBrightnessX;
-//        float lY = OpenGlHelper.lastBrightnessY;
-//
-//        GlStateManager.(posX, 0, posY);
-//        tes.setColorRGBA_F(1, 1, 1, 1);
-//        model.tessellatePart(tes, "base");
-//        tes.draw();
-//
-//        if (isLit) {
-//            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-//        }
-//
-//        float[] color = EnumDyeColor.RED.getColorComponentValues();
-//        float cMul = 0.6F;
-//        if (isLit) {
-//            cMul = 1;
-//        }
-//
-//        tes.startDrawing(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-//        tes.setTranslation(posX, (isPushed)?-.1F:0, posY);
-//        tes.setColorRGBA_F(color[0]*cMul, color[1]*cMul, color[2]*cMul, 1F);
-//        model.tessellatePart(tes, "btn_top");
-//        tes.draw();
-//
-//        tes.startDrawing(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-//        tes.setTranslation(posX, (isPushed)?-.1F:0, posY);
-//        tes.setColorRGBA_F(color[0]*cMul, color[1]*cMul, color[2]*cMul, 1F);
-//        model.tessellatePart(tes, "btn_top_top");
-//        tes.draw();
-//
-//        if (isLit) {
-//            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lX, lY);
-//        }
-//
-//        GlStateManager.enableBlend();
-//        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-//
-//        Matrix4f rot_mat = new Matrix4f().rotate((float) ((isCoverOpen) ? Math.toRadians(-75) : 0), new Vector3f(1, 0, 0));
-//        Matrix4f trans_mat = new Matrix4f().translate(new Vector3f(posX, .625F, posY-.75F));
-//        Matrix4f transform_mat = new Matrix4f();
-//        Matrix4f.mul(trans_mat, rot_mat, transform_mat);
-//        transform_mat.store(ClientProxy.AUX_GL_BUFFER);
-//        ClientProxy.AUX_GL_BUFFER.rewind();
-//        GlStateManager.multMatrix(ClientProxy.AUX_GL_BUFFER);
-//
-//        tes.startDrawing(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-//        tes.setColorRGBA_F(1, 1, 1, 1);
-//        model.tessellatePart(tes, "cover");
-//        tes.draw();
-//
-//        tes.startDrawing(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-//        tes.setColorRGBA_F(1, 1, 1, 1);
-//        model.tessellatePart(tes, "cover2");
-//        tes.draw();
-//
-//        GlStateManager.disableBlend();
-//        GlStateManager.shadeModel(GL11.GL_FLAT);
+        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.ctrl_button_encased_push_tex);
+        WaveFrontObjectVAO model = (WaveFrontObjectVAO) getModel();
+
+        boolean isPushed = getVar("isPushed").getBoolean();
+        boolean isLit = getVar("isLit").getBoolean();
+        boolean isCoverOpen = getVar("isCoverOpen").getBoolean();
+
+        float lX = OpenGlHelper.lastBrightnessX;
+        float lY = OpenGlHelper.lastBrightnessY;
+
+        // --- Base ---
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(posX, 0, posY);
+        model.renderPart("base");
+        GlStateManager.popMatrix();
+
+        // --- Button ---
+        float[] color = EnumDyeColor.RED.getColorComponentValues();
+        float cMul = isLit ? 1F : 0.6F;
+
+        if (isLit) {
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+        }
+
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(posX, (isPushed ? -0.1F : 0F), posY);
+        GlStateManager.color(color[0] * cMul, color[1] * cMul, color[2] * cMul, 1F);
+        model.renderPart("btn_top");
+        model.renderPart("btn_top_top");
+        GlStateManager.popMatrix();
+
+        if (isLit) {
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lX, lY);
+        }
+
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(posX, 0.625F, posY - 0.75F);
+        if (isCoverOpen) {
+            GlStateManager.rotate(-75F, 1F, 0F, 0F);
+        }
+
+        model.renderPart("cover");
+        model.renderPart("cover2");
+        GlStateManager.popMatrix();
+
+        GlStateManager.disableBlend();
+        GlStateManager.shadeModel(GL11.GL_FLAT);
     }
 
     @Override

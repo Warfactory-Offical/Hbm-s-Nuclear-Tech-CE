@@ -1,5 +1,6 @@
 package com.hbm.inventory.control_panel.controls;
 
+import com.hbm.hfr.render.loader.WaveFrontObjectVAO;
 import com.hbm.inventory.control_panel.*;
 import com.hbm.inventory.control_panel.nodes.*;
 import com.hbm.main.ResourceManager;
@@ -40,24 +41,23 @@ public class ButtonEmergencyPush extends Control {
 
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
         Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.ctrl_button_emergency_push_tex);
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
 
-        IModelCustom model = getModel();
+        WaveFrontObjectVAO model = (WaveFrontObjectVAO) getModel();
 
-        buffer.begin(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-        buffer.setTranslation(posX, 0, posY);
-        buffer.color(1, 1, 1, 1);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(posX, 0.0F, posY);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         model.renderPart("base");
-        tessellator.draw();
+        GlStateManager.popMatrix();
 
-        buffer.begin(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-        buffer.setTranslation(posX, (isPushed)?-0.125F:0, posY);
-        buffer.color(1, 1, 1, 1);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(posX, isPushed ? -0.125F : 0.0F, posY);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         model.renderPart("top");
-        tessellator.draw();
+        GlStateManager.popMatrix();
 
         GlStateManager.shadeModel(GL11.GL_FLAT);
+        GlStateManager.color(1F, 1F, 1F, 1F);
     }
 
     @Override

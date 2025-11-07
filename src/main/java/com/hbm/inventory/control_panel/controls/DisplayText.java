@@ -89,7 +89,7 @@ public class DisplayText extends Control {
 
         GlStateManager.translate(0, .03F, 0);
         GlStateManager.scale(s, -s, s);
-        GL11.glNormal3f(0.0F, 0.0F, -1.0F);
+        GlStateManager.color(0.0F, 0.0F, -1.0F);
         GlStateManager.rotate(90, 1, 0, 0);
 
         if (isLit) {

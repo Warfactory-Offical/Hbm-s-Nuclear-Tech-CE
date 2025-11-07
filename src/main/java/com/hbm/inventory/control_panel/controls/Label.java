@@ -95,7 +95,7 @@ public class Label extends Control {
 
         float s = scale/500F;
         GlStateManager.scale(s, -s, s);
-        GL11.glNormal3f(0.0F, 0.0F, -1.0F);
+        GlStateManager.color(0.0F, 0.0F, -1.0F);
         GlStateManager.rotate(90, 1, 0, 0);
         GlStateManager.translate(0, 0, .1F);
 
