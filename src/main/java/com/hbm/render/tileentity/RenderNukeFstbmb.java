@@ -73,7 +73,7 @@ public class RenderNukeFstbmb extends TileEntitySpecialRenderer<TileEntityNukeBa
       float f3 = 0.04F;
       GlStateManager.translate(0.815F, 0.9275F, 0.5F);
       GlStateManager.scale(f3, -f3, f3);
-      GL11.glNormal3f(0.0F, 0.0F, -1.0F * f3);
+      GlStateManager.color(0.0F, 0.0F, -1.0F * f3);
       GlStateManager.rotate(90, 0, 1, 0);
       GlStateManager.depthMask(false);
       GlStateManager.translate(0, 1, 0);

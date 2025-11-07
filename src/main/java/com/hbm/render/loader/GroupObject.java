@@ -1,24 +1,24 @@
-package com.hbm.hfr.render.loader;
+package com.hbm.render.loader;
 
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
 import java.util.ArrayList;
 
-public class S_GroupObject {
+public class GroupObject {
 	public String name;
-	public ArrayList<S_Face> faces = new ArrayList<S_Face>();
+	public ArrayList<Face> faces = new ArrayList<Face>();
 	public int glDrawingMode;
 
-	public S_GroupObject() {
+	public GroupObject() {
 		this("");
 	}
 
-	public S_GroupObject(String name) {
+	public GroupObject(String name) {
 		this(name, -1);
 	}
 
-	public S_GroupObject(String name, int glDrawingMode) {
+	public GroupObject(String name, int glDrawingMode) {
 		this.name = name;
 		this.glDrawingMode = glDrawingMode;
 	}
@@ -34,7 +34,7 @@ public class S_GroupObject {
 
 	public void render(Tessellator tessellator) {
 		if (this.faces.size() > 0) {
-			for (S_Face face : this.faces) {
+			for (Face face : this.faces) {
 				face.addFaceForRender(tessellator.getBuffer());
 			}
 		}

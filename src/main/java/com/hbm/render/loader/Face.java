@@ -1,14 +1,12 @@
-package com.hbm.hfr.render.loader;
+package com.hbm.render.loader;
 
-import com.hbm.render.amlfrom1710.TextureCoordinate;
-import com.hbm.render.amlfrom1710.Vertex;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class S_Face {
+public class Face {
 	
 	public int[] verticesID;
 	public Vertex[] vertices;

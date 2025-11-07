@@ -1,10 +1,10 @@
 package com.hbm.particle;
 
-import com.hbm.hfr.render.loader.HFRWavefrontObject;
+import com.hbm.render.loader.HFRWavefrontObject;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.particle.helper.SkeletonCreator;
-import com.hbm.render.amlfrom1710.IModelCustom;
+import com.hbm.render.loader.IModelCustom;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;

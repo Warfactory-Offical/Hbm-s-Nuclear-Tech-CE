@@ -5,7 +5,7 @@ import com.hbm.blocks.bomb.*;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.ResourceManager;
-import com.hbm.render.amlfrom1710.IModelCustom;
+import com.hbm.render.loader.IModelCustom;
 import com.hbm.render.item.ItemRenderBase;
 import com.hbm.tileentity.bomb.TileEntityCharge;
 import net.minecraft.block.state.IBlockState;

@@ -1,4 +1,4 @@
-package com.hbm.render.amlfrom1710;
+package com.hbm.render.loader;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -11,8 +11,5 @@ public interface IModelCustom
     public void renderOnly(String... groupNames);
     public void renderPart(String partName);
     public void renderAllExcept(String... excludedGroupNames);
-    public void tessellateAll(Tessellator tes);
-    public void tessellatePart(Tessellator tes, String name);
-    public void tessellateOnly(Tessellator tes, String... names);
-    public void tessellateAllExcept(Tessellator tes, String... excluded);
+
 }

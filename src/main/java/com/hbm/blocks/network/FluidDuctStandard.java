@@ -4,6 +4,7 @@ import com.hbm.blocks.ICustomBlockItem;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.ModSoundTypes;
+import com.hbm.render.loader.HFRWavefrontObject;
 import com.hbm.interfaces.IBlockSpecialPlacementAABB;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
@@ -14,7 +15,6 @@ import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
-import com.hbm.render.amlfrom1710.WavefrontObject;
 import com.hbm.render.model.DuctNeoBakedModel;
 import com.hbm.tileentity.network.TileEntityPipeBaseNT;
 import com.hbm.util.I18nUtil;
@@ -409,9 +409,9 @@ public class FluidDuctStandard extends FluidDuctBase implements IDynamicModels, 
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void bakeModel(ModelBakeEvent event) {
-		WavefrontObject wavefront = null;
+		HFRWavefrontObject wavefront = null;
 		try {
-			wavefront = new WavefrontObject(objModelLocation);
+			wavefront = new HFRWavefrontObject(objModelLocation);
 		} catch (Exception ignored) {}
 
 		TextureAtlasSprite missing = Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();

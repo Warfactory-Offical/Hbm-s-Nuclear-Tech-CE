@@ -70,7 +70,7 @@ public class RenderOverhead {
 			float scale = 0.016666668F * f;
 			GlStateManager.pushMatrix();
 			GlStateManager.translate((float) x + 0.0F, (float) y + entity.height + 0.75F, (float) z);
-			GL11.glNormal3f(0.0F, 1.0F, 0.0F);
+			GlStateManager.color(0.0F, 1.0F, 0.0F);
 			GlStateManager.rotate(-Minecraft.getMinecraft().getRenderManager().playerViewY, 0.0F, 1.0F, 0.0F);
 			GlStateManager.rotate(Minecraft.getMinecraft().getRenderManager().playerViewX, 1.0F, 0.0F, 0.0F);
 			GlStateManager.scale(-scale, -scale, scale);
@@ -119,7 +119,7 @@ public class RenderOverhead {
 			float scale = 0.016666668F * f;
 			GlStateManager.pushMatrix();
 			GlStateManager.translate((float) x + 0.0F, (float) y + offset, (float) z);
-			GL11.glNormal3f(0.0F, 1.0F, 0.0F);
+			GlStateManager.color(0.0F, 1.0F, 0.0F);
 			GlStateManager.rotate(-Minecraft.getMinecraft().getRenderManager().playerViewY, 0.0F, 1.0F, 0.0F);
 			GlStateManager.rotate(Minecraft.getMinecraft().getRenderManager().playerViewX, 1.0F, 0.0F, 0.0F);
 			GlStateManager.scale(-scale, -scale, scale);

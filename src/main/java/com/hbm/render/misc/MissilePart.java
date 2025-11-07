@@ -4,7 +4,7 @@ import com.hbm.items.ModItems;
 import com.hbm.items.weapon.ItemMissile;
 import com.hbm.items.weapon.ItemMissile.PartType;
 import com.hbm.main.ResourceManager;
-import com.hbm.render.amlfrom1710.IModelCustom;
+import com.hbm.render.loader.IModelCustom;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;

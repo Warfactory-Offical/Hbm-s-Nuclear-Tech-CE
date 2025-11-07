@@ -1,8 +1,8 @@
 package com.hbm.blocks.generic;
 
 import com.hbm.blocks.BlockEnums;
+import com.hbm.render.loader.HFRWavefrontObject;
 import com.hbm.lib.RefStrings;
-import com.hbm.render.amlfrom1710.WavefrontObject;
 import com.hbm.render.model.BlockDecoBakedModel;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -44,7 +44,7 @@ public class BlockDecoCRT extends BlockDecoModel {
     @Override
     @SideOnly(Side.CLIENT)
     public void bakeModel(ModelBakeEvent event) {
-        WavefrontObject wavefront = new WavefrontObject(new ResourceLocation(RefStrings.MODID, "models/blocks/crt.obj"));
+        HFRWavefrontObject wavefront = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/blocks/crt.obj"));
         TextureMap atlas = Minecraft.getMinecraft().getTextureMapBlocks();
 
         String[] variants = new String[]{"crt_clean", "crt_broken", "crt_blinking", "crt_bsod"};

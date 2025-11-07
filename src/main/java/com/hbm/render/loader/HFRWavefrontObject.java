@@ -1,11 +1,14 @@
-package com.hbm.render.amlfrom1710;
+package com.hbm.render.loader;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,11 +18,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- *  Wavefront Object importer
- *  Based heavily off of the specifications found at http://en.wikipedia.org/wiki/Wavefront_.obj_file
- */
-public class WavefrontObject implements IModelCustom
+public class HFRWavefrontObject implements IModelCustom
 {
     private static Pattern vertexPattern = Pattern.compile("(v( (\\-){0,1}\\d+(\\.\\d+)?){3,4} *\\n)|(v( (\\-){0,1}\\d+(\\.\\d+)?){3,4} *$)");
     private static Pattern vertexNormalPattern = Pattern.compile("(vn( (\\-){0,1}\\d+(\\.\\d+)?){3,4} *\\n)|(vn( (\\-){0,1}\\d+(\\.\\d+)?){3,4} *$)");
@@ -41,7 +40,7 @@ public class WavefrontObject implements IModelCustom
     private GroupObject currentGroupObject;
     private String fileName;
 
-    public WavefrontObject(ResourceLocation resource) throws ModelFormatException
+    public HFRWavefrontObject(ResourceLocation resource) throws ModelFormatException
     {
         this.fileName = resource.toString();
 
@@ -56,7 +55,7 @@ public class WavefrontObject implements IModelCustom
         }
     }
 
-    public WavefrontObject(String filename, InputStream inputStream) throws ModelFormatException
+    public HFRWavefrontObject(String filename, InputStream inputStream) throws ModelFormatException
     {
         this.fileName = filename;
         loadObjModel(inputStream);
@@ -123,7 +122,7 @@ public class WavefrontObject implements IModelCustom
                 }
                 else if (currentLine.startsWith("g ") | currentLine.startsWith("o "))
                 {
-                    GroupObject group = parseGroupObject(currentLine, lineCount);
+                	GroupObject group = parseGroupObject(currentLine, lineCount);
 
                     if (group != null)
                     {
@@ -169,22 +168,22 @@ public class WavefrontObject implements IModelCustom
     @SideOnly(Side.CLIENT)
     public void renderAll()
     {
-        Tessellator tessellator = Tessellator.instance;
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder buf = tessellator.getBuffer();
 
         if (currentGroupObject != null)
         {
-        	tessellator.startDrawing(currentGroupObject.glDrawingMode);
+            buf.begin(currentGroupObject.glDrawingMode, DefaultVertexFormats.POSITION_TEX_NORMAL);
         }
         else
         {
-            tessellator.startDrawing(GL11.GL_TRIANGLES);
+            buf.begin(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_NORMAL);
         }
         tessellateAll(tessellator);
 
         tessellator.draw();
     }
 
-    @Override
     @SideOnly(Side.CLIENT)
     public void tessellateAll(Tessellator tessellator)
     {
@@ -209,8 +208,8 @@ public class WavefrontObject implements IModelCustom
             }
         }
     }
+    
 
-    @Override
     @SideOnly(Side.CLIENT)
     public void tessellateOnly(Tessellator tessellator, String... groupNames) {
         for (GroupObject groupObject : groupObjects)
@@ -238,18 +237,6 @@ public class WavefrontObject implements IModelCustom
         }
     }
 
-    @SideOnly(Side.CLIENT)
-    public void tessellatePartSplit(Tessellator tessellator, String partName, float splitHeight, float scale) {
-        for (GroupObject groupObject : groupObjects)
-        {
-            if (partName.equalsIgnoreCase(groupObject.name))
-            {
-                groupObject.renderSplit(tessellator, splitHeight, scale);
-            }
-        }
-    }
-
-    @Override
     @SideOnly(Side.CLIENT)
     public void tessellatePart(Tessellator tessellator, String partName) {
         for (GroupObject groupObject : groupObjects)
@@ -282,7 +269,6 @@ public class WavefrontObject implements IModelCustom
         }
     }
 
-    @Override
     @SideOnly(Side.CLIENT)
     public void tessellateAllExcept(Tessellator tessellator, String... excludedGroupNames)
     {
@@ -395,7 +381,7 @@ public class WavefrontObject implements IModelCustom
 
     private Face parseFace(String line, int lineCount) throws ModelFormatException
     {
-        Face face = null;
+    	Face face = null;
 
         if (isValidFaceLine(line))
         {
@@ -505,7 +491,7 @@ public class WavefrontObject implements IModelCustom
 
     private GroupObject parseGroupObject(String line, int lineCount) throws ModelFormatException
     {
-        GroupObject group = null;
+    	GroupObject group = null;
 
         if (isValidGroupObjectLine(line))
         {
@@ -524,11 +510,6 @@ public class WavefrontObject implements IModelCustom
         return group;
     }
 
-    /***
-     * Verifies that the given line from the model file is a valid vertex
-     * @param line the line being validated
-     * @return true if the line is a valid vertex, false otherwise
-     */
     private static boolean isValidVertexLine(String line)
     {
         if (vertexMatcher != null)
@@ -540,11 +521,6 @@ public class WavefrontObject implements IModelCustom
         return vertexMatcher.matches();
     }
 
-    /***
-     * Verifies that the given line from the model file is a valid vertex normal
-     * @param line the line being validated
-     * @return true if the line is a valid vertex normal, false otherwise
-     */
     private static boolean isValidVertexNormalLine(String line)
     {
         if (vertexNormalMatcher != null)
@@ -556,11 +532,6 @@ public class WavefrontObject implements IModelCustom
         return vertexNormalMatcher.matches();
     }
 
-    /***
-     * Verifies that the given line from the model file is a valid texture coordinate
-     * @param line the line being validated
-     * @return true if the line is a valid texture coordinate, false otherwise
-     */
     private static boolean isValidTextureCoordinateLine(String line)
     {
         if (textureCoordinateMatcher != null)
@@ -572,11 +543,6 @@ public class WavefrontObject implements IModelCustom
         return textureCoordinateMatcher.matches();
     }
 
-    /***
-     * Verifies that the given line from the model file is a valid face that is described by vertices, texture coordinates, and vertex normals
-     * @param line the line being validated
-     * @return true if the line is a valid face that matches the format "f v1/vt1/vn1 ..." (with a minimum of 3 points in the face, and a maximum of 4), false otherwise
-     */
     private static boolean isValidFace_V_VT_VN_Line(String line)
     {
         if (face_V_VT_VN_Matcher != null)
@@ -588,11 +554,6 @@ public class WavefrontObject implements IModelCustom
         return face_V_VT_VN_Matcher.matches();
     }
 
-    /***
-     * Verifies that the given line from the model file is a valid face that is described by vertices and texture coordinates
-     * @param line the line being validated
-     * @return true if the line is a valid face that matches the format "f v1/vt1 ..." (with a minimum of 3 points in the face, and a maximum of 4), false otherwise
-     */
     private static boolean isValidFace_V_VT_Line(String line)
     {
         if (face_V_VT_Matcher != null)
@@ -604,11 +565,6 @@ public class WavefrontObject implements IModelCustom
         return face_V_VT_Matcher.matches();
     }
 
-    /***
-     * Verifies that the given line from the model file is a valid face that is described by vertices and vertex normals
-     * @param line the line being validated
-     * @return true if the line is a valid face that matches the format "f v1//vn1 ..." (with a minimum of 3 points in the face, and a maximum of 4), false otherwise
-     */
     private static boolean isValidFace_V_VN_Line(String line)
     {
         if (face_V_VN_Matcher != null)
@@ -620,11 +576,6 @@ public class WavefrontObject implements IModelCustom
         return face_V_VN_Matcher.matches();
     }
 
-    /***
-     * Verifies that the given line from the model file is a valid face that is described by only vertices
-     * @param line the line being validated
-     * @return true if the line is a valid face that matches the format "f v1 ..." (with a minimum of 3 points in the face, and a maximum of 4), false otherwise
-     */
     private static boolean isValidFace_V_Line(String line)
     {
         if (face_V_Matcher != null)
@@ -636,21 +587,11 @@ public class WavefrontObject implements IModelCustom
         return face_V_Matcher.matches();
     }
 
-    /***
-     * Verifies that the given line from the model file is a valid face of any of the possible face formats
-     * @param line the line being validated
-     * @return true if the line is a valid face that matches any of the valid face formats, false otherwise
-     */
     private static boolean isValidFaceLine(String line)
     {
         return isValidFace_V_VT_VN_Line(line) || isValidFace_V_VT_Line(line) || isValidFace_V_VN_Line(line) || isValidFace_V_Line(line);
     }
 
-    /***
-     * Verifies that the given line from the model file is a valid group (or object)
-     * @param line the line being validated
-     * @return true if the line is a valid group (or object), false otherwise
-     */
     private static boolean isValidGroupObjectLine(String line)
     {
         if (groupObjectMatcher != null)
@@ -662,9 +603,16 @@ public class WavefrontObject implements IModelCustom
         return groupObjectMatcher.matches();
     }
 
+    public WaveFrontObjectVAO asVBO() {
+        return new WaveFrontObjectVAO(this);
+    }
+
     @Override
     public String getType()
     {
         return "obj";
     }
+
+    //TODO implement
+
 }

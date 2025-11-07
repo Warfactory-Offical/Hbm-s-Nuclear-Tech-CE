@@ -7,6 +7,7 @@ import net.minecraft.util.math.Vec3d;
 
 import javax.vecmath.Matrix3f;
 
+@Deprecated
 public class Vec3
 {
     /** X coordinate of Vec3D */
