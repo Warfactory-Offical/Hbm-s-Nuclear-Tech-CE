@@ -133,7 +133,7 @@ public class BobmazonOfferFactory {
 				new ItemStack(ModBlocks.red_pylon_large, 8),
 				new ItemStack(ModBlocks.substation, 4),
 				new ItemStack(ModBlocks.red_pylon, 16),
-				//new ItemStack(ModBlocks.red_connector, 64), TODO: red_connector
+				new ItemStack(ModBlocks.red_connector, 64),
 				new ItemStack(ModItems.wiring_red_copper, 1),
 				new ItemStack(ModBlocks.machine_chungus, 1),
 				new ItemStack(ModBlocks.machine_large_turbine, 3),

@@ -327,6 +327,7 @@ public class ResourceManager {
 	public static final IModelCustom cable_neo = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/blocks/cable_neo.obj")).asVBO();
 
 	//Big Cables
+    public static final IModelCustom connector = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/network/connector.obj")).asVBO();
 	public static final IModelCustom pylon_large = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/network/pylon_large.obj")).asVBO();
 	public static final IModelCustom pylon_medium = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/network/pylon_medium.obj")).asVBO();
 	public static final IModelCustom substation = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/network/substation.obj")).asVBO();
@@ -652,7 +653,6 @@ public class ResourceManager {
 	public static final ResourceLocation rbmk_autoloader_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/rbmk_autoloader.png");
 	public static final ResourceLocation mini_nuke_tex = new ResourceLocation(RefStrings.MODID, "textures/models/projectiles/mini_nuke.png");
 
-	//TODO: Move this off of old Tess
 	public static final IModelCustom rbmk_element = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/rbmk/rbmk_element.obj")).asVBO();
 	public static final IModelCustom rbmk_reflector = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/rbmk/rbmk_reflector.obj")).asVBO();
 	public static final IModelCustom rbmk_rods = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/rbmk/rbmk_rods.obj")).asVBO();
@@ -951,6 +951,8 @@ public class ResourceManager {
 
 	public static final ResourceLocation pylon_medium_tex = new ResourceLocation(RefStrings.MODID, "textures/models/network/pylon_medium.png");
 	public static final ResourceLocation pylon_medium_steel_tex = new ResourceLocation(RefStrings.MODID, "textures/models/network/pylon_medium_steel.png");
+
+    public static final ResourceLocation connector_tex = new ResourceLocation(RefStrings.MODID, "textures/models/network/connector.png");
 
 	//Pipe
 	public static final ResourceLocation pipe_neo_tex = new ResourceLocation(RefStrings.MODID, "textures/blocks/pipe_neo.png");
