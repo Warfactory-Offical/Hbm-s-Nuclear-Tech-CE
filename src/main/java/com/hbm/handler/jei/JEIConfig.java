@@ -356,6 +356,7 @@ public class JEIConfig implements IModPlugin {
         blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.statue_elb_f));
         blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.cheater_virus));
         blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.cheater_virus_seed));
+        blacklist.addIngredientToBlacklist(new ItemStack(ModItems.chemistry_icon, 1, 0));
         // blacklist.addIngredientToBlacklist(new ItemStack(ModItems.euphemium_helmet));
         // blacklist.addIngredientToBlacklist(new ItemStack(ModItems.euphemium_plate));
         // blacklist.addIngredientToBlacklist(new ItemStack(ModItems.euphemium_legs));

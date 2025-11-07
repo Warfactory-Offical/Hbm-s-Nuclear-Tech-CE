@@ -66,7 +66,7 @@ public class FluidDuctPaintable extends FluidDuctBase implements IToolable, ILoo
     public FluidDuctPaintable(String name) {
         super(Material.IRON);
         this.setRegistryName(RefStrings.MODID, name);
-        this.setTranslationKey(RefStrings.MODID + "." + name);
+        this.setTranslationKey(name);
         this.setDefaultState(this.blockState.getBaseState());
         this.setSoundType(ModSoundTypes.pipe);
         this.useNeighborBrightness = true;

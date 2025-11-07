@@ -6087,6 +6087,7 @@ jei.silexvisible=SILEX рецепты (видимые лучи)
 jei.silexxray=SILEX рецепты (рентгеновские)
 jei.smithing=Ковка
 jei.wastedrum=Бочка с отходами
+jei.rtg.name=РИТЭГ
 key.categories.hbm.ability=Переключение способностей инструмента
 key.categories.hbm.abilityAlt=Изменить способности инструмента
 key.categories.hbm.calculator=Калькулятор

@@ -47,7 +47,7 @@ public class EntityGlyphidScout extends EntityGlyphid {
 
     //extreme measures for anti-scout bullying
     @Override
-    public boolean attackEntityAsMob(Entity victim) {
+    public boolean attackEntityAsMob(@NotNull Entity victim) {
         if(super.attackEntityAsMob(victim) && victim instanceof EntityLivingBase){
             ((EntityLivingBase)victim).addPotionEffect(new PotionEffect(Objects.requireNonNull(Potion.getPotionFromResourceLocation("poison")), 10 * 20, 3));
             return true;

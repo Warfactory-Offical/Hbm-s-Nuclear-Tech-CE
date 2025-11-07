@@ -337,7 +337,7 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider {
     }
 
     @Override
-    public void onDeath(DamageSource source) {
+    public void onDeath(@NotNull DamageSource source) {
         super.onDeath(source);
 
         if(!world.isRemote && doesInfectedSpawnMaggots() && this.dataManager.get(SUBTYPE) == TYPE_INFECTED) {
@@ -466,7 +466,7 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider {
     }
 
     @Override
-    public boolean attackEntityAsMob(Entity victim) {
+    public boolean attackEntityAsMob(@NotNull Entity victim) {
         if (!this.isSwingInProgress)
             this.swingArm(EnumHand.MAIN_HAND);
 
@@ -480,7 +480,7 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider {
 
 
     @Override
-    public EnumCreatureAttribute getCreatureAttribute() {
+    public @NotNull EnumCreatureAttribute getCreatureAttribute() {
         return EnumCreatureAttribute.ARTHROPOD;
     }
 
@@ -523,18 +523,15 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider {
     public void carryOutTask(){
         int task = getCurrentTask();
 
-        switch(task){
-
-            case TASK_RETREAT_FOR_REINFORCEMENTS:
-                if(taskWaypoint != null) {
+        switch (task) {
+            case TASK_RETREAT_FOR_REINFORCEMENTS -> {
+                if (taskWaypoint != null) {
                     communicate(TASK_FOLLOW, taskWaypoint);
                     setCurrentTask(TASK_FOLLOW, taskWaypoint);
                 }
-                break;
-
-            case TASK_INITIATE_RETREAT:
-
-                if(!world.isRemote && taskWaypoint == null) {
+            }
+            case TASK_INITIATE_RETREAT -> {
+                if (!world.isRemote && taskWaypoint == null) {
 
                     // Then, Come back later
                     EntityWaypoint home = getHomeWaypoint();
@@ -544,18 +541,11 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider {
                     communicate(TASK_FOLLOW, home);
                     setCurrentTask(TASK_FOLLOW, taskWaypoint);
 
-                    break;
                 }
-
-                break;
-
-            case TASK_DIG:
-                shouldDig = true;
-                break;
-
-            default:
-                break;
-
+            }
+            case TASK_DIG -> shouldDig = true;
+            default -> {
+            }
         }
 
     }
@@ -640,7 +630,7 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider {
     ///DIGGING END
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound nbt) {
+    public void writeEntityToNBT(@NotNull NBTTagCompound nbt) {
         super.writeEntityToNBT(nbt);
         nbt.setByte("armor", this.dataManager.get(ARMOR));
         nbt.setByte("subtype", this.dataManager.get(SUBTYPE));
@@ -659,7 +649,7 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider {
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound nbt) {
+    public void readEntityFromNBT(@NotNull NBTTagCompound nbt) {
         super.readEntityFromNBT(nbt);
         this.dataManager.set(ARMOR, nbt.getByte("armor"));
         this.dataManager.set(SUBTYPE, nbt.getByte("subtype"));
@@ -682,6 +672,6 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider {
         return this.world.getDifficulty() != EnumDifficulty.PEACEFUL &&
                 this.world.checkNoEntityCollision(this.getEntityBoundingBox()) &&
                 this.world.getCollisionBoxes(this, this.getEntityBoundingBox()).isEmpty() &&
-                !this.isOffsetPositionInLiquid(0, 0, 0);
+                !this.world.containsAnyLiquid(this.getEntityBoundingBox());
     }
 }

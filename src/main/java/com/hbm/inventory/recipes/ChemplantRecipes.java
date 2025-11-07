@@ -243,10 +243,6 @@ public class ChemplantRecipes extends SerializableRecipe {
 		recipes.add(new ChemRecipe(60, "XENON_OXY", 20)
 				.inputFluids(new FluidStack(Fluids.OXYGEN, 250))
 				.outputFluids(new FluidStack(Fluids.XENON, 50)));
-		recipes.add(new ChemRecipe(20 ,"PERFLUOROMETHYL", 100)
-				.inputItems(new OreDictStack(F.dust()))
-				.inputFluids(new FluidStack(Fluids.PETROLEUM, 1_000), new FluidStack(Fluids.UNSATURATEDS, 500))
-				.outputFluids(new FluidStack(Fluids.PERFLUOROMETHYL, 1_000)));
 		recipes.add(new ChemRecipe(62, "BALEFIRE", 100)
 				.inputItems(new ComparableStack(ModItems.egg_balefire_shard))
 				.inputFluids(new FluidStack(Fluids.KEROSENE, 6000))

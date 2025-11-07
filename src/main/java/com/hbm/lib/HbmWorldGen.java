@@ -350,7 +350,8 @@ public class HbmWorldGen implements IWorldGenerator {
             j += 8;
             Biome biome = world.getBiome(new BlockPos(i, 0, j));
 
-            if(MobConfig.enableHives && rand.nextInt(MobConfig.hiveSpawn) == 0) { //FIXME: this should probably use the phased structure system
+            if(MobConfig.enableHives && rand.nextInt(MobConfig.hiveSpawn) == 0 && world.provider.getDimension() == 0) { //FIXME: this should probably use the phased structure system
+                // dude, this at least should spawn NOT EVERYWHERE ffs
                 int x = i + rand.nextInt(16) + 8;
                 int z = j + rand.nextInt(16) + 8;
                 int y = world.getHeight(x, z);
@@ -405,7 +406,7 @@ public class HbmWorldGen implements IWorldGenerator {
                 }
             }
 
-            if(rand.nextInt(2000) == 0) {
+            if(rand.nextInt(2000) == 0 && world.provider.getDimension() == 0) {
                 int x = i + rand.nextInt(16);
                 int z = j + rand.nextInt(16);
                 int y = world.getHeight(x, z);

@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
 @AutoRegister(name = "entity_glyphid_brenda", eggColors = {0x4FC0C0, 0xA0A0A0})
 public class EntityGlyphidBrenda extends EntityGlyphid {
@@ -51,7 +52,7 @@ public class EntityGlyphidBrenda extends EntityGlyphid {
     }
 
     @Override
-    public void onDeath(DamageSource source) {
+    public void onDeath(@NotNull DamageSource source) {
         super.onDeath(source);
         if(!this.world.isRemote && this.getHealth() <= 0.0F) {
             EntityMist mist = new EntityMist(world);

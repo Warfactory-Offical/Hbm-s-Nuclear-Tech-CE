@@ -6111,6 +6111,7 @@ jei.silexvisible=SILEX Visible Recipes
 jei.silexxray=SILEX X-Ray Recipes
 jei.smithing=Smithing
 jei.wastedrum=Waste Drum
+jei.rtg.name=RTG
 key.categories.hbm.ability=Cycle Tool Abilities
 key.categories.hbm.abilityAlt=Configure Tool Abilities
 key.categories.hbm.calculator=Calculator

@@ -17,6 +17,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -76,7 +77,7 @@ public class EntityGlyphidBehemoth extends EntityGlyphid {
     }
 
     @Override
-    public void onDeath(DamageSource source) {
+    public void onDeath(@NotNull DamageSource source) {
         super.onDeath(source);
         if (!world.isRemote) {
             EntityMist mist = new EntityMist(world);
