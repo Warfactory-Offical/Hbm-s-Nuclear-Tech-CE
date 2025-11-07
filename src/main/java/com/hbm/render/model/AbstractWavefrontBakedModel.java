@@ -1,5 +1,8 @@
 package com.hbm.render.model;
 
+import com.hbm.hfr.render.loader.HFRWavefrontObject;
+import com.hbm.hfr.render.loader.S_Face;
+import com.hbm.hfr.render.loader.S_GroupObject;
 import com.hbm.render.amlfrom1710.*;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
@@ -22,14 +25,14 @@ import java.util.*;
 @SideOnly(Side.CLIENT)
 public abstract class AbstractWavefrontBakedModel extends AbstractBakedModel {
 
-    protected final WavefrontObject model;
+    protected final HFRWavefrontObject model;
     protected final VertexFormat format;
     protected final float baseScale;
     protected final float tx;
     protected final float ty;
     protected final float tz;
 
-    protected AbstractWavefrontBakedModel(WavefrontObject model, VertexFormat format, float baseScale, float tx, float ty, float tz, ItemCameraTransforms transforms) {
+    protected AbstractWavefrontBakedModel(HFRWavefrontObject model, VertexFormat format, float baseScale, float tx, float ty, float tz, ItemCameraTransforms transforms) {
         super(transforms);
         this.model = model;
         this.format = format;
@@ -98,12 +101,12 @@ public abstract class AbstractWavefrontBakedModel extends AbstractBakedModel {
         List<FaceGeometry> geometries = new ArrayList<>();
         Set<String> filter = prepareFilter(partNames);
 
-        for (GroupObject group : model.groupObjects) {
+        for (S_GroupObject group : model.groupObjects) {
             if (filter != null && !filter.contains(group.name)) {
                 continue;
             }
 
-            for (Face face : group.faces) {
+            for (S_Face face : group.faces) {
                 Vertex normal = face.faceNormal;
 
                 double[] n1 = rotateX(normal.x, normal.y, normal.z, roll);

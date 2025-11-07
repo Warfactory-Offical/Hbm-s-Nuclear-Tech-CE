@@ -164,25 +164,7 @@ public class WaveFrontObjectVAO implements IModelCustom {
         }
     }
 
-    @Override
-    public void tessellateAll(com.hbm.render.amlfrom1710.Tessellator tes) {
-        throw new RuntimeException("Tessellate not supported on HFR model");
-    }
 
-    @Override
-    public void tessellatePart(com.hbm.render.amlfrom1710.Tessellator tes, String name) {
-        throw new RuntimeException("Tessellate not supported on HFR model");
-    }
-
-    @Override
-    public void tessellateOnly(com.hbm.render.amlfrom1710.Tessellator tes, String... names) {
-        throw new RuntimeException("Tessellate not supported on HFR model");
-    }
-
-    @Override
-    public void tessellateAllExcept(com.hbm.render.amlfrom1710.Tessellator tes, String... excluded) {
-        throw new RuntimeException("Tessellate not supported on HFR model");
-    }
 
     class VBOBufferData {
         String name;

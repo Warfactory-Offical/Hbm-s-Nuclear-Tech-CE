@@ -1,7 +1,7 @@
 package com.hbm.render.model;
 
 import com.hbm.blocks.network.FluidDuctStandard;
-import com.hbm.render.amlfrom1710.WavefrontObject;
+import com.hbm.hfr.render.loader.HFRWavefrontObject;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -24,7 +24,7 @@ public class DuctNeoBakedModel extends AbstractWavefrontBakedModel {
     private final Map<Integer, List<BakedQuad>> cacheByMask = new HashMap<>();
     private List<BakedQuad> itemQuads;
 
-    private DuctNeoBakedModel(WavefrontObject model, TextureAtlasSprite baseSprite, TextureAtlasSprite overlaySprite, boolean forBlock, float baseScale, float tx, float ty, float tz, float itemYaw) {
+    private DuctNeoBakedModel(HFRWavefrontObject model, TextureAtlasSprite baseSprite, TextureAtlasSprite overlaySprite, boolean forBlock, float baseScale, float tx, float ty, float tz, float itemYaw) {
         super(model, forBlock ? DefaultVertexFormats.BLOCK : DefaultVertexFormats.ITEM, baseScale, tx, ty, tz, BakedModelTransforms.pipeItem());
         this.baseSprite = baseSprite;
         this.overlaySprite = overlaySprite;
@@ -32,16 +32,16 @@ public class DuctNeoBakedModel extends AbstractWavefrontBakedModel {
         this.itemYaw = itemYaw;
     }
 
-    public static DuctNeoBakedModel forBlock(WavefrontObject model, TextureAtlasSprite baseSprite, TextureAtlasSprite overlaySprite) {
+    public static DuctNeoBakedModel forBlock(HFRWavefrontObject model, TextureAtlasSprite baseSprite, TextureAtlasSprite overlaySprite) {
         return new DuctNeoBakedModel(model, baseSprite, overlaySprite, true, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F);
     }
 
-    public static DuctNeoBakedModel forItem(WavefrontObject model, TextureAtlasSprite baseSprite, TextureAtlasSprite overlaySprite, float baseScale, float tx, float ty, float tz, float yaw) {
+    public static DuctNeoBakedModel forItem(HFRWavefrontObject model, TextureAtlasSprite baseSprite, TextureAtlasSprite overlaySprite, float baseScale, float tx, float ty, float tz, float yaw) {
         return new DuctNeoBakedModel(model, baseSprite, overlaySprite, false, baseScale, tx, ty, tz, yaw);
     }
 
     public static DuctNeoBakedModel empty(TextureAtlasSprite sprite) {
-        return new DuctNeoBakedModel(new WavefrontObject(new ResourceLocation("minecraft:empty")), sprite, sprite, true, 1.0F, 0, 0, 0, 0);
+        return new DuctNeoBakedModel(new HFRWavefrontObject(new ResourceLocation("minecraft:empty")), sprite, sprite, true, 1.0F, 0, 0, 0, 0);
     }
 
     @Override

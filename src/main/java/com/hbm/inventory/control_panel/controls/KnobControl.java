@@ -5,7 +5,6 @@ import com.hbm.inventory.control_panel.nodes.*;
 import com.hbm.main.ClientProxy;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.amlfrom1710.IModelCustom;
-import com.hbm.render.amlfrom1710.Tessellator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -13,7 +12,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -58,46 +57,46 @@ public class KnobControl extends Control {
 
     @Override
     public void render() {
-        GlStateManager.shadeModel(GL11.GL_SMOOTH);
-        Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.ctrl_knob_control_tex);
-        Tessellator tes = Tessellator.instance;
-        IModelCustom model = getModel();
-
-        int value = (int) getVar("value").getNumber();
-
-        tes.startDrawing(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-        tes.setTranslation(posX, 0, posY);
-        tes.setColorRGBA_F(1, 1, 1, 1);
-        model.tessellatePart(tes, "base");
-        tes.draw();
-
-        GlStateManager.pushMatrix();
-            Matrix4f rot_mat = new Matrix4f().rotate((float) -(value*((2*Math.PI)/11F)), new Vector3f(0, 1, 0));
-            Matrix4f.mul(new Matrix4f().translate(new Vector3f(posX, -.04F, posY)), rot_mat, new Matrix4f()).store(ClientProxy.AUX_GL_BUFFER);
-            ClientProxy.AUX_GL_BUFFER.rewind();
-            GlStateManager.multMatrix(ClientProxy.AUX_GL_BUFFER);
-            tes.startDrawing(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-            tes.setColorRGBA_F(1, 1, 1, 1);
-            model.tessellatePart(tes, "knob");
-            tes.draw();
-        GlStateManager.popMatrix();
-
-        GlStateManager.pushMatrix();
-            GlStateManager.translate(posX, .07F, posY);
-            GlStateManager.scale(.028F, .028F, .028F);
-            GL11.glNormal3f(0.0F, 0.0F, -1.0F);
-            GlStateManager.rotate(90, 1, 0, 0);
-
-            FontRenderer font = Minecraft.getMinecraft().fontRenderer;
-
-            for (int i=0; i<positions; i++) {
-                double angle = (Math.PI*2)/11F * i;
-                float r = 28;
-                double x = r * Math.cos(angle-Math.PI/2);
-                double y = r * Math.sin(angle-Math.PI/2);
-                font.drawString(Integer.toString(i), (float) (((i==10)?-6.5 : -2.5F)+x), (float) (-3F+y), 0x282828, false);
-            }
-        GlStateManager.popMatrix();
+//        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+//        Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.ctrl_knob_control_tex);
+//        Tessellator tes = Tessellator.instance;
+//        IModelCustom model = getModel();
+//
+//        int value = (int) getVar("value").getNumber();
+//
+//        tes.startDrawing(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
+//        tes.setTranslation(posX, 0, posY);
+//        tes.setColorRGBA_F(1, 1, 1, 1);
+//        model.tessellatePart(tes, "base");
+//        tes.draw();
+//
+//        GlStateManager.pushMatrix();
+//            Matrix4f rot_mat = new Matrix4f().rotate((float) -(value*((2*Math.PI)/11F)), new Vector3f(0, 1, 0));
+//            Matrix4f.mul(new Matrix4f().translate(new Vector3f(posX, -.04F, posY)), rot_mat, new Matrix4f()).store(ClientProxy.AUX_GL_BUFFER);
+//            ClientProxy.AUX_GL_BUFFER.rewind();
+//            GlStateManager.multMatrix(ClientProxy.AUX_GL_BUFFER);
+//            tes.startDrawing(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
+//            tes.setColorRGBA_F(1, 1, 1, 1);
+//            model.tessellatePart(tes, "knob");
+//            tes.draw();
+//        GlStateManager.popMatrix();
+//
+//        GlStateManager.pushMatrix();
+//            GlStateManager.translate(posX, .07F, posY);
+//            GlStateManager.scale(.028F, .028F, .028F);
+//            GL11.glNormal3f(0.0F, 0.0F, -1.0F);
+//            GlStateManager.rotate(90, 1, 0, 0);
+//
+//            FontRenderer font = Minecraft.getMinecraft().fontRenderer;
+//
+//            for (int i=0; i<positions; i++) {
+//                double angle = (Math.PI*2)/11F * i;
+//                float r = 28;
+//                double x = r * Math.cos(angle-Math.PI/2);
+//                double y = r * Math.sin(angle-Math.PI/2);
+//                font.drawString(Integer.toString(i), (float) (((i==10)?-6.5 : -2.5F)+x), (float) (-3F+y), 0x282828, false);
+//            }
+//        GlStateManager.popMatrix();
     }
 
     @Override

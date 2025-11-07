@@ -1,7 +1,7 @@
 package com.hbm.render.model;
 
 import com.hbm.blocks.BlockEnumMeta;
-import com.hbm.render.amlfrom1710.WavefrontObject;
+import com.hbm.hfr.render.loader.HFRWavefrontObject;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -21,17 +21,17 @@ public class BlockDecoBakedModel extends AbstractWavefrontBakedModel {
     private final Map<EnumFacing, List<BakedQuad>> cacheByFacing = new EnumMap<>(EnumFacing.class);
     private List<BakedQuad> itemQuads;
 
-    public BlockDecoBakedModel(WavefrontObject model, TextureAtlasSprite sprite, boolean forBlock, float baseScale, float tx, float ty, float tz) {
+    public BlockDecoBakedModel(HFRWavefrontObject model, TextureAtlasSprite sprite, boolean forBlock, float baseScale, float tx, float ty, float tz) {
         super(model, DefaultVertexFormats.ITEM, baseScale, tx, ty, tz, BakedModelTransforms.forDeco(BakedModelTransforms.standardBlock()));
         this.sprite = sprite;
         this.forBlock = forBlock;
     }
 
-    public static BlockDecoBakedModel forBlock(WavefrontObject model, TextureAtlasSprite sprite) {
+    public static BlockDecoBakedModel forBlock(HFRWavefrontObject model, TextureAtlasSprite sprite) {
         return new BlockDecoBakedModel(model, sprite, true, 1.0F, 0.0F, 0.0F, 0.0F);
     }
 
-    public static BlockDecoBakedModel forBlock(WavefrontObject model, TextureAtlasSprite sprite, float ty) {
+    public static BlockDecoBakedModel forBlock(HFRWavefrontObject model, TextureAtlasSprite sprite, float ty) {
         return new BlockDecoBakedModel(model, sprite, true, 1.0F, 0.0F, ty, 0.0F);
     }
 

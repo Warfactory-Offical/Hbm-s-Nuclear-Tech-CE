@@ -4,7 +4,6 @@ import com.hbm.inventory.control_panel.*;
 import com.hbm.inventory.control_panel.nodes.*;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.amlfrom1710.IModelCustom;
-import com.hbm.render.amlfrom1710.Tessellator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -12,7 +11,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -38,43 +37,43 @@ public class SliderVertical extends Control {
 
     @Override
     public void render() {
-        GlStateManager.shadeModel(GL11.GL_SMOOTH);
-        Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.ctrl_slider_vertical_tex);
-        Tessellator tes = Tessellator.instance;
-        IModelCustom model = getModel();
-
-        int position = (int) Math.abs(getVar("value").getNumber()) % 6;
-
-        tes.startDrawing(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-        tes.setTranslation(posX, 0, posY);
-        tes.setColorRGBA_F(1, 1, 1, 1);
-        model.tessellatePart(tes, "base");
-        tes.draw();
-
-        GlStateManager.disableTexture2D();
-
-        tes.startDrawing(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-        tes.setTranslation(posX, 0, posY-(.3125F*position));
-        tes.setColorRGBA_F(51/255F, 51/255F, 51/255F, 1);
-        model.tessellatePart(tes, "slider");
-        tes.draw();
-
-        float lX = OpenGlHelper.lastBrightnessX;
-        float lY = OpenGlHelper.lastBrightnessY;
-
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-
-        for (int i=0; i<=position; i++) {
-            tes.startDrawing(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
-            tes.setTranslation(posX, 0, posY);
-            tes.setColorRGBA_F(0, 1, 0, 1);
-            model.tessellatePart(tes, "light"+i);
-            tes.draw();
-        }
-
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lX, lY);
-        GlStateManager.enableTexture2D();
-        GlStateManager.shadeModel(GL11.GL_FLAT);
+//        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+//        Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.ctrl_slider_vertical_tex);
+//        Tessellator tes = Tessellator.instance;
+//        IModelCustom model = getModel();
+//
+//        int position = (int) Math.abs(getVar("value").getNumber()) % 6;
+//
+//        tes.startDrawing(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
+//        tes.setTranslation(posX, 0, posY);
+//        tes.setColorRGBA_F(1, 1, 1, 1);
+//        model.tessellatePart(tes, "base");
+//        tes.draw();
+//
+//        GlStateManager.disableTexture2D();
+//
+//        tes.startDrawing(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
+//        tes.setTranslation(posX, 0, posY-(.3125F*position));
+//        tes.setColorRGBA_F(51/255F, 51/255F, 51/255F, 1);
+//        model.tessellatePart(tes, "slider");
+//        tes.draw();
+//
+//        float lX = OpenGlHelper.lastBrightnessX;
+//        float lY = OpenGlHelper.lastBrightnessY;
+//
+//        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+//
+//        for (int i=0; i<=position; i++) {
+//            tes.startDrawing(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
+//            tes.setTranslation(posX, 0, posY);
+//            tes.setColorRGBA_F(0, 1, 0, 1);
+//            model.tessellatePart(tes, "light"+i);
+//            tes.draw();
+//        }
+//
+//        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lX, lY);
+//        GlStateManager.enableTexture2D();
+//        GlStateManager.shadeModel(GL11.GL_FLAT);
     }
 
     @Override

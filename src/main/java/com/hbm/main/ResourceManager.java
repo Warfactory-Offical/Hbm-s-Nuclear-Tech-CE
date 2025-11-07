@@ -13,7 +13,6 @@ import com.hbm.render.GLCompat;
 import com.hbm.render.Vbo;
 import com.hbm.render.WavefrontObjDisplayList;
 import com.hbm.render.amlfrom1710.IModelCustom;
-import com.hbm.render.amlfrom1710.WavefrontObject;
 import com.hbm.render.anim.sedna.AnimationLoader;
 import com.hbm.render.anim.sedna.BusAnimationSedna;
 import com.hbm.render.misc.LensVisibilityHandler;
@@ -2150,19 +2149,19 @@ public class ResourceManager {
 	}
 	
 	public static void init() {
-		if(GeneralConfig.callListModels && soyuz instanceof WavefrontObject) {
-			soyuz = new WavefrontObjDisplayList((WavefrontObject) soyuz);
-			soyuz_launcher_legs = new WavefrontObjDisplayList((WavefrontObject) soyuz_launcher_legs);
-			soyuz_launcher_table = new WavefrontObjDisplayList((WavefrontObject) soyuz_launcher_table);
-			soyuz_launcher_tower_base = new WavefrontObjDisplayList((WavefrontObject) soyuz_launcher_tower_base);
-			soyuz_launcher_tower = new WavefrontObjDisplayList((WavefrontObject) soyuz_launcher_tower);
-			soyuz_launcher_support_base = new WavefrontObjDisplayList((WavefrontObject) soyuz_launcher_support_base);
-			soyuz_launcher_support = new WavefrontObjDisplayList((WavefrontObject) soyuz_launcher_support);
+		if(GeneralConfig.callListModels && soyuz instanceof HFRWavefrontObject) {
+			soyuz = new WavefrontObjDisplayList((HFRWavefrontObject) soyuz);
+			soyuz_launcher_legs = new WavefrontObjDisplayList((HFRWavefrontObject) soyuz_launcher_legs);
+			soyuz_launcher_table = new WavefrontObjDisplayList((HFRWavefrontObject) soyuz_launcher_table);
+			soyuz_launcher_tower_base = new WavefrontObjDisplayList((HFRWavefrontObject) soyuz_launcher_tower_base);
+			soyuz_launcher_tower = new WavefrontObjDisplayList((HFRWavefrontObject) soyuz_launcher_tower);
+			soyuz_launcher_support_base = new WavefrontObjDisplayList((HFRWavefrontObject) soyuz_launcher_support_base);
+			soyuz_launcher_support = new WavefrontObjDisplayList((HFRWavefrontObject) soyuz_launcher_support);
 			sphere_hq = new WavefrontObjDisplayList((HFRWavefrontObject)sphere_hq);
 			egon_hose = new WavefrontObjDisplayList((HFRWavefrontObject)egon_hose);
 			egon_backpack = new WavefrontObjDisplayList((HFRWavefrontObject)egon_backpack);
 			spinny_light = new WavefrontObjDisplayList((HFRWavefrontObject)spinny_light);
-			sphere_uv = new WavefrontObjDisplayList((WavefrontObject)sphere_uv);
+			sphere_uv = new WavefrontObjDisplayList((HFRWavefrontObject)sphere_uv);
 		}
 		water_door = new WavefrontObjDisplayList(new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/doors/water_door.obj")));
 		large_vehicle_door = new WavefrontObjDisplayList(new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/doors/large_vehicle_door.obj")));
@@ -2175,7 +2174,7 @@ public class ResourceManager {
 		sliding_seal_door = new WavefrontObjDisplayList(new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/doors/sliding_seal_door.obj")));
 		KeypadClient.load();
 		
-		LensVisibilityHandler.checkSphere = new WavefrontObjDisplayList(new WavefrontObject(new ResourceLocation(RefStrings.MODID, "models/diffractionspikechecker.obj"))).getListForName("sphere");
+		LensVisibilityHandler.checkSphere = new WavefrontObjDisplayList(new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/diffractionspikechecker.obj"))).getListForName("sphere");
 		Minecraft.getMinecraft().getTextureManager().bindTexture(fresnel_ms);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(noise_1);

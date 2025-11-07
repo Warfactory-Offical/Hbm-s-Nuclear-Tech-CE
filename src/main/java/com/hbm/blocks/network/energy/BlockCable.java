@@ -1,11 +1,11 @@
 package com.hbm.blocks.network.energy;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.hfr.render.loader.HFRWavefrontObject;
 import com.hbm.items.IDynamicModels;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
 import com.hbm.lib.RefStrings;
-import com.hbm.render.amlfrom1710.WavefrontObject;
 import com.hbm.render.model.BlockCableBakedModel;
 import com.hbm.tileentity.network.energy.TileEntityCableBaseNT;
 import net.minecraft.block.BlockContainer;
@@ -211,9 +211,9 @@ public class BlockCable extends BlockContainer implements IDynamicModels {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void bakeModel(ModelBakeEvent event) {
-		WavefrontObject wavefront = null;
+		HFRWavefrontObject wavefront = null;
 		try {
-			wavefront = new WavefrontObject(objModelLocation);
+			wavefront = new HFRWavefrontObject(objModelLocation);
 		} catch (Exception ignored) {}
 
 		TextureAtlasSprite sprite;
