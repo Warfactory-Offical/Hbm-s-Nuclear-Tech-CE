@@ -59,10 +59,10 @@ dependencies {
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:mixin-booter-419286:7049694")
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:flare-692142:6598523")
     runtimeOnlyNonPublishable rfg.deobf("curse.maven:ctm-267602:2915363")
-    runtimeOnlyNonPublishable rfg.deobf("curse.maven:gregtech-ce-unofficial-557242:5519022")
-    runtimeOnlyNonPublishable rfg.deobf("curse.maven:the-one-probe-245211:2667280")
-    runtimeOnlyNonPublishable rfg.deobf("curse.maven:gregic-probe-ceu-1109784:6393352")
-    runtimeOnlyNonPublishable rfg.deobf("curse.maven:codechicken-lib-1-8-242818:2779848")
+//    runtimeOnlyNonPublishable rfg.deobf("curse.maven:gregtech-ce-unofficial-557242:5519022")
+//    runtimeOnlyNonPublishable rfg.deobf("curse.maven:the-one-probe-245211:2667280")
+//    runtimeOnlyNonPublishable rfg.deobf("curse.maven:gregic-probe-ceu-1109784:6393352")
+//    runtimeOnlyNonPublishable rfg.deobf("curse.maven:codechicken-lib-1-8-242818:2779848")
 //    runtimeOnlyNonPublishable rfg.deobf("curse.maven:mekanism-ce-unofficial-840735:6958488")//DO NOT COMMENT! Needed for FE compatibility testing
     //And I don't want game to take 5 min to start
 //    runtimeOnlyNonPublishable rfg.deobf("curse.maven:universal-tweaks-705000:6675988")
