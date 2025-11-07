@@ -4,7 +4,6 @@ import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ResourceManager;
 import com.hbm.tileentity.network.TileEntityConnector;
 import com.hbm.tileentity.network.energy.TileEntityPylonBase;
-import com.hbm.tileentity.network.energy.TileEntityPylonMedium;
 import net.minecraft.client.renderer.GlStateManager;
 
 @AutoRegister(tileentity = TileEntityConnector.class)
