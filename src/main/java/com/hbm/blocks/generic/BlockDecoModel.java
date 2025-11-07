@@ -2,7 +2,7 @@ package com.hbm.blocks.generic;
 
 import com.hbm.blocks.BlockEnumMeta;
 import com.hbm.blocks.ModBlocks;
-import com.hbm.hfr.render.loader.HFRWavefrontObject;
+import com.hbm.render.loader.HFRWavefrontObject;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.model.BlockDecoBakedModel;
 import com.hbm.world.gen.nbt.INBTBlockTransformable;

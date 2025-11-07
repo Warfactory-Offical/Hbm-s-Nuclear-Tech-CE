@@ -1,8 +1,8 @@
 package com.hbm.render;
 
-import com.hbm.hfr.render.loader.HFRWavefrontObject;
-import com.hbm.hfr.render.loader.S_GroupObject;
-import com.hbm.render.amlfrom1710.IModelCustom;
+import com.hbm.render.loader.HFRWavefrontObject;
+import com.hbm.render.loader.GroupObject;
+import com.hbm.render.loader.IModelCustom;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
@@ -17,7 +17,7 @@ public class WavefrontObjDisplayList implements IModelCustom {
 
 	
 	public WavefrontObjDisplayList(HFRWavefrontObject obj) {
-		for(S_GroupObject g : obj.groupObjects){
+		for(GroupObject g : obj.groupObjects){
 			int list = GL11.glGenLists(1);
 			GL11.glNewList(list, GL11.GL_COMPILE);
 			g.render();

@@ -1,9 +1,5 @@
-package com.hbm.hfr.render.loader;
+package com.hbm.render.loader;
 
-import com.hbm.render.amlfrom1710.IModelCustom;
-import com.hbm.render.amlfrom1710.ModelFormatException;
-import com.hbm.render.amlfrom1710.TextureCoordinate;
-import com.hbm.render.amlfrom1710.Vertex;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
@@ -40,8 +36,8 @@ public class HFRWavefrontObject implements IModelCustom
     public ArrayList<Vertex> vertices = new ArrayList<Vertex>();
     public ArrayList<Vertex> vertexNormals = new ArrayList<Vertex>();
     public ArrayList<TextureCoordinate> textureCoordinates = new ArrayList<TextureCoordinate>();
-    public ArrayList<S_GroupObject> groupObjects = new ArrayList<S_GroupObject>();
-    private S_GroupObject currentGroupObject;
+    public ArrayList<GroupObject> groupObjects = new ArrayList<GroupObject>();
+    private GroupObject currentGroupObject;
     private String fileName;
 
     public HFRWavefrontObject(ResourceLocation resource) throws ModelFormatException
@@ -114,10 +110,10 @@ public class HFRWavefrontObject implements IModelCustom
 
                     if (currentGroupObject == null)
                     {
-                        currentGroupObject = new S_GroupObject("Default");
+                        currentGroupObject = new GroupObject("Default");
                     }
 
-                    S_Face face = parseFace(currentLine, lineCount);
+                    Face face = parseFace(currentLine, lineCount);
 
                     if (face != null)
                     {
@@ -126,7 +122,7 @@ public class HFRWavefrontObject implements IModelCustom
                 }
                 else if (currentLine.startsWith("g ") | currentLine.startsWith("o "))
                 {
-                	S_GroupObject group = parseGroupObject(currentLine, lineCount);
+                	GroupObject group = parseGroupObject(currentLine, lineCount);
 
                     if (group != null)
                     {
@@ -191,7 +187,7 @@ public class HFRWavefrontObject implements IModelCustom
     @SideOnly(Side.CLIENT)
     public void tessellateAll(Tessellator tessellator)
     {
-        for (S_GroupObject groupObject : groupObjects)
+        for (GroupObject groupObject : groupObjects)
         {
             groupObject.render(tessellator);
         }
@@ -201,7 +197,7 @@ public class HFRWavefrontObject implements IModelCustom
     @SideOnly(Side.CLIENT)
     public void renderOnly(String... groupNames)
     {
-        for (S_GroupObject groupObject : groupObjects)
+        for (GroupObject groupObject : groupObjects)
         {
             for (String groupName : groupNames)
             {
@@ -216,7 +212,7 @@ public class HFRWavefrontObject implements IModelCustom
 
     @SideOnly(Side.CLIENT)
     public void tessellateOnly(Tessellator tessellator, String... groupNames) {
-        for (S_GroupObject groupObject : groupObjects)
+        for (GroupObject groupObject : groupObjects)
         {
             for (String groupName : groupNames)
             {
@@ -232,7 +228,7 @@ public class HFRWavefrontObject implements IModelCustom
     @SideOnly(Side.CLIENT)
     public void renderPart(String partName)
     {
-        for (S_GroupObject groupObject : groupObjects)
+        for (GroupObject groupObject : groupObjects)
         {
             if (partName.equalsIgnoreCase(groupObject.name))
             {
@@ -243,7 +239,7 @@ public class HFRWavefrontObject implements IModelCustom
 
     @SideOnly(Side.CLIENT)
     public void tessellatePart(Tessellator tessellator, String partName) {
-        for (S_GroupObject groupObject : groupObjects)
+        for (GroupObject groupObject : groupObjects)
         {
             if (partName.equalsIgnoreCase(groupObject.name))
             {
@@ -256,7 +252,7 @@ public class HFRWavefrontObject implements IModelCustom
     @SideOnly(Side.CLIENT)
     public void renderAllExcept(String... excludedGroupNames)
     {
-        for (S_GroupObject groupObject : groupObjects)
+        for (GroupObject groupObject : groupObjects)
         {
             boolean skipPart=false;
             for (String excludedGroupName : excludedGroupNames)
@@ -277,7 +273,7 @@ public class HFRWavefrontObject implements IModelCustom
     public void tessellateAllExcept(Tessellator tessellator, String... excludedGroupNames)
     {
         boolean exclude;
-        for (S_GroupObject groupObject : groupObjects)
+        for (GroupObject groupObject : groupObjects)
         {
             exclude=false;
             for (String excludedGroupName : excludedGroupNames)
@@ -383,13 +379,13 @@ public class HFRWavefrontObject implements IModelCustom
         return textureCoordinate;
     }
 
-    private S_Face parseFace(String line, int lineCount) throws ModelFormatException
+    private Face parseFace(String line, int lineCount) throws ModelFormatException
     {
-    	S_Face face = null;
+    	Face face = null;
 
         if (isValidFaceLine(line))
         {
-            face = new S_Face();
+            face = new Face();
 
             String trimmedLine = line.substring(line.indexOf(" ") + 1);
             String[] tokens = trimmedLine.split(" ");
@@ -493,9 +489,9 @@ public class HFRWavefrontObject implements IModelCustom
         return face;
     }
 
-    private S_GroupObject parseGroupObject(String line, int lineCount) throws ModelFormatException
+    private GroupObject parseGroupObject(String line, int lineCount) throws ModelFormatException
     {
-    	S_GroupObject group = null;
+    	GroupObject group = null;
 
         if (isValidGroupObjectLine(line))
         {
@@ -503,7 +499,7 @@ public class HFRWavefrontObject implements IModelCustom
 
             if (trimmedLine.length() > 0)
             {
-                group = new S_GroupObject(trimmedLine);
+                group = new GroupObject(trimmedLine);
             }
         }
         else

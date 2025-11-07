@@ -1,7 +1,7 @@
 package com.hbm.blocks.network.energy;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.hfr.render.loader.HFRWavefrontObject;
+import com.hbm.render.loader.HFRWavefrontObject;
 import com.hbm.items.IDynamicModels;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;

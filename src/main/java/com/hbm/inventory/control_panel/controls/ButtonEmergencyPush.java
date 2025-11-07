@@ -1,19 +1,16 @@
 package com.hbm.inventory.control_panel.controls;
 
-import com.hbm.hfr.render.loader.WaveFrontObjectVAO;
+import com.hbm.render.loader.WaveFrontObjectVAO;
 import com.hbm.inventory.control_panel.*;
 import com.hbm.inventory.control_panel.nodes.*;
 import com.hbm.main.ResourceManager;
-import com.hbm.render.amlfrom1710.IModelCustom;
+import com.hbm.render.loader.IModelCustom;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 import java.util.Collections;
 import java.util.List;
@@ -32,7 +29,7 @@ public class ButtonEmergencyPush extends Control {
 
     @Override
     public float[] getSize() {
-        return new float[] {1.5F, 1.5F, 1.13F};
+        return new float[]{1.5F, 1.5F, 1.13F};
     }
 
     @Override

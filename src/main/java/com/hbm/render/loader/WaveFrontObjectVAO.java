@@ -1,8 +1,5 @@
-package com.hbm.hfr.render.loader;
+package com.hbm.render.loader;
 
-import com.hbm.render.amlfrom1710.IModelCustom;
-import com.hbm.render.amlfrom1710.TextureCoordinate;
-import com.hbm.render.amlfrom1710.Vertex;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -24,7 +21,7 @@ public class WaveFrontObjectVAO implements IModelCustom {
     static int VERTEX_SIZE = 3;
     List<VBOBufferData> groups = new ArrayList<>();
     public WaveFrontObjectVAO(HFRWavefrontObject obj) {
-        for (S_GroupObject g : obj.groupObjects) {
+        for (GroupObject g : obj.groupObjects) {
 
             VBOBufferData data = new VBOBufferData();
             data.name = g.name;
@@ -34,7 +31,7 @@ public class WaveFrontObjectVAO implements IModelCustom {
             List<Float> normalData = new ArrayList<>(g.faces.size() * 3 * VERTEX_SIZE);
 
 
-            for (S_Face face : g.faces) {
+            for (Face face : g.faces) {
                 for (int i = 0; i < face.vertices.length; i++) {
                     Vertex vert = face.vertices[i];
                     TextureCoordinate tex = new TextureCoordinate(0, 0);

@@ -1,4 +1,4 @@
-package com.hbm.render.amlfrom1710;
+package com.hbm.render.loader;
 
 public class ModelFormatException extends RuntimeException {
 

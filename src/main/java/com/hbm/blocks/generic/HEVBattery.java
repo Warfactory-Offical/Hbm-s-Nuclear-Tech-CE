@@ -1,7 +1,7 @@
 package com.hbm.blocks.generic;
 
 import com.hbm.api.energymk2.IBatteryItem;
-import com.hbm.hfr.render.loader.HFRWavefrontObject;
+import com.hbm.render.loader.HFRWavefrontObject;
 import com.hbm.items.armor.ArmorFSBPowered;
 import com.hbm.items.gear.ArmorFSB;
 import com.hbm.lib.HBMSoundHandler;

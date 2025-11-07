@@ -1,9 +1,6 @@
 package com.hbm.render.model;
 
-import com.hbm.hfr.render.loader.HFRWavefrontObject;
-import com.hbm.hfr.render.loader.S_Face;
-import com.hbm.hfr.render.loader.S_GroupObject;
-import com.hbm.render.amlfrom1710.*;
+import com.hbm.render.loader.*;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -101,12 +98,12 @@ public abstract class AbstractWavefrontBakedModel extends AbstractBakedModel {
         List<FaceGeometry> geometries = new ArrayList<>();
         Set<String> filter = prepareFilter(partNames);
 
-        for (S_GroupObject group : model.groupObjects) {
+        for (GroupObject group : model.groupObjects) {
             if (filter != null && !filter.contains(group.name)) {
                 continue;
             }
 
-            for (S_Face face : group.faces) {
+            for (Face face : group.faces) {
                 Vertex normal = face.faceNormal;
 
                 double[] n1 = rotateX(normal.x, normal.y, normal.z, roll);
