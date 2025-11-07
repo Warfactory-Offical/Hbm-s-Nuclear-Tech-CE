@@ -50,13 +50,13 @@ jobs:
           echo "TAG=v${MOD_VERSION}" >> "$GITHUB_ENV"
           echo "tag=v${MOD_VERSION}" >> "$GITHUB_OUTPUT"
 
-#      - name: Ensure tag doesn't already exist on origin
-#        run: |
-#          set -euo pipefail
-#          if git ls-remote --exit-code --tags origin "refs/tags/${TAG}" >/dev/null 2>&1; then
-#            echo "::error::Tag ${TAG} already exists on origin. Canceling."; exit 1
-#          fi
-#
+      - name: Ensure tag doesn't already exist on origin
+        run: |
+          set -euo pipefail
+          if git ls-remote --exit-code --tags origin "refs/tags/${TAG}" >/dev/null 2>&1; then
+            echo "::error::Tag ${TAG} already exists on origin. Canceling."; exit 1
+          fi
+
       - name: Build with Gradle
         run: ./gradlew clean build --no-daemon
 
@@ -69,38 +69,38 @@ jobs:
           fi
           echo "FILE=${FILE}" >> "$GITHUB_ENV"
 
-#      - name: Create and push tag
-#        run: |
-#          set -euo pipefail
-#          git config user.name github-actions
-#          git config user.email github-actions@github.com
-#          git tag "${TAG}"
-#          git push origin "${TAG}"
-#
-#      - name: Create GitHub Release
-#        uses: softprops/action-gh-release@v2
-#        with:
-#          tag_name: ${{ env.TAG }}
-#          name: "Release ${{ env.TAG }}"
-#          prerelease: false
-#          generate_release_notes: true
-#          files: ${{ env.FILE }}
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create and push tag
+        run: |
+          set -euo pipefail
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git tag "${TAG}"
+          git push origin "${TAG}"
 
-      - name: Publish to CurseForge
-        uses: Kir-Antipov/mc-publish@v3.3
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
-          curseforge-id: ${{ env.CF_PROJECT_ID }}
-          curseforge-token: ${{ secrets.CF_API_TOKEN }}
-          curseforge-version-type: release
-          curseforge-game-versions: 6756
-          curseforge-files-primary: ${{ env.FILE }}
-          curseforge-files-secondary: |
-            build/libs/*-dev.jar
-            build/libs/*-sources.jar
-          curseforge-changelog: "See GitHub release ${{ env.TAG }} for notes."
-          loaders: forge
-          game-versions: ["1.12.2"]
-          curseforge-dependencies: |
-            267602(recommended)
+          tag_name: ${{ env.TAG }}
+          name: "Release ${{ env.TAG }}"
+          prerelease: false
+          generate_release_notes: true
+          files: ${{ env.FILE }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+#      - name: Publish to CurseForge
+#        uses: Kir-Antipov/mc-publish@v3.3
+#        with:
+#          curseforge-id: ${{ env.CF_PROJECT_ID }}
+#          curseforge-token: ${{ secrets.CF_API_TOKEN }}
+#          curseforge-version-type: release
+#          curseforge-game-versions: 6756
+#          curseforge-files-primary: ${{ env.FILE }}
+#          curseforge-files-secondary: |
+#            build/libs/*-dev.jar
+#            build/libs/*-sources.jar
+#          curseforge-changelog: "See GitHub release ${{ env.TAG }} for notes."
+#          loaders: forge
+#          game-versions: ["1.12.2"]
+#          curseforge-dependencies: |
+#            267602(recommended)
