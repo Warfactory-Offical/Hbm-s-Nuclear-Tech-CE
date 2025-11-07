@@ -7,8 +7,10 @@ import com.hbm.entity.effect.EntityNukeTorex;
 import com.hbm.entity.logic.EntityBalefire;
 import com.hbm.entity.logic.EntityNukeExplosionMK5;
 import com.hbm.entity.logic.IChunkLoader;
+import com.hbm.entity.projectile.EntityBulletBaseNT;
 import com.hbm.explosion.ExplosionChaos;
 import com.hbm.explosion.ExplosionLarge;
+import com.hbm.handler.BulletConfigSyncingUtil;
 import com.hbm.handler.MissileStruct;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
@@ -17,6 +19,7 @@ import com.hbm.items.weapon.ItemMissile.FuelType;
 import com.hbm.items.weapon.ItemMissile.PartSize;
 import com.hbm.items.weapon.ItemMissile.WarheadType;
 import com.hbm.main.MainRegistry;
+import com.hbm.util.MutableVec3d;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -25,6 +28,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -69,10 +73,10 @@ public class EntityMissileCustom extends EntityMissileBaseNT implements IChunkLo
 			this.dataManager.set(FINS, Integer.valueOf(0));
 		}
 
-		ItemMissile fuselage = (ItemMissile) template.fuselage;
-		ItemMissile thruster = (ItemMissile) template.thruster;
+		ItemMissile fuselage = template.fuselage;
+		ItemMissile thruster = template.thruster;
 
-		this.fuel = (float) fuselage.getTankSize();
+		this.fuel = fuselage.getTankSize();
 		this.consumption = (Float) thruster.attributes[1];
 
 		this.setSize(1.5F, 1.5F);
@@ -157,12 +161,12 @@ public class EntityMissileCustom extends EntityMissileBaseNT implements IChunkLo
 			case HYDRAZINE:
 			case METHALOX: smoke = "exKerosene"; break;
 		}
-
+		//mlbv: TODO move particle mk1 and mk2 to effectNT and replace the reference here
 		if(!smoke.isEmpty()) for(int i = 0; i < velocity; i++) MainRegistry.proxy.spawnParticle(posX - v.x * i, posY - v.y * i, posZ - v.z * i, smoke, null);
 	}
 
 	@Override
-	public void onImpact() { //TODO: demolish this steaming pile of shit
+	public void onMissileImpact(RayTraceResult mop) { //TODO: demolish this steaming pile of shit
 
 		ItemMissile part = (ItemMissile) Item.getItemById(this.dataManager.get(WARHEAD));
 
@@ -226,19 +230,17 @@ public class EntityMissileCustom extends EntityMissileBaseNT implements IChunkLo
 				break;
 			case TURBINE:
 				ExplosionLarge.explode(world, thrower, posX, posY, posZ, 10, true, false, true);
-				/*
 				int count = (int) strength;
-				Vec3d vec = new Vec3d(0.5, 0, 0);
+				MutableVec3d vec = new MutableVec3d(0.5, 0, 0);
 
 				for(int i = 0; i < count; i++) {
 					EntityBulletBaseNT blade = new EntityBulletBaseNT(world, BulletConfigSyncingUtil.TURBINE);
 					blade.setPositionAndRotation(this.posX - this.motionX, this.posY - this.motionY + rand.nextGaussian(), this.posZ - this.motionZ, 0, 0);
-					blade.motionX = vec.xCoord;
-					blade.motionZ = vec.zCoord;
-					world.spawnEntityInWorld(blade);
-					vec.rotateAroundY((float) (Math.PI * 2F / (float) count));
-				}*/ // TODO: can do this shit only after ammo/gun rework
-
+					blade.motionX = vec.x;
+					blade.motionZ = vec.z;
+					world.spawnEntity(blade);
+					vec.rotateYawSelf((float) (Math.PI * 2F / (float) count));
+				}
 				break;
 			default:
 				break;

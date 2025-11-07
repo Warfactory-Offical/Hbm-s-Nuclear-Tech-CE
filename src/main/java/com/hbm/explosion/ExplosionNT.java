@@ -64,6 +64,11 @@ public class ExplosionNT extends Explosion {
 		atttributes.addAll(attrib);
 		return this;
 	}
+
+	public ExplosionNT addAllAttrib(ExAttrib... attrib) {
+        Collections.addAll(atttributes, attrib);
+		return this;
+	}
 	
 	public ExplosionNT overrideResolution(int res) {
 		field_77289_h = res;
