@@ -96,9 +96,8 @@ public class RenderDecoBlock extends TileEntitySpecialRenderer<TileEntityDecoBlo
 			}
 			GlStateManager.enableCull();
 			bindTexture(ResourceManager.boxcar_tex);
-			// ResourceManager.boxcar.renderAll();
+			 ResourceManager.boxcar.renderAll();
 			// RenderHelper.renderAll(ClientProxy.boxcar);
-			GL11.glCallList(ClientProxy.boxcarCalllist);
 
 			GlStateManager.enableCull();
 		} else if(block == ModBlocks.steel_roof) {

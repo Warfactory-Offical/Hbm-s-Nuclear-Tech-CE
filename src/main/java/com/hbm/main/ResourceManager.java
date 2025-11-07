@@ -7,6 +7,7 @@ import com.hbm.config.GeneralConfig;
 import com.hbm.handler.HbmShaderManager2;
 import com.hbm.handler.HbmShaderManager2.Shader;
 import com.hbm.hfr.render.loader.HFRWavefrontObject;
+import com.hbm.hfr.render.loader.WaveFrontObjectVAO;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.GLCompat;
 import com.hbm.render.Vbo;
@@ -21,6 +22,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.client.SplashProgress;
 import org.lwjgl.opengl.GL11;
 
 import java.util.HashMap;
@@ -2180,6 +2182,13 @@ public class ResourceManager {
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(noise_2);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+
+        //Drillgon discovered that it messes with GL context
+		SplashProgress.pause();
+		for(WaveFrontObjectVAO obj : WaveFrontObjectVAO.allVBOs){
+			obj.generate_vaos();
+		}
+		SplashProgress.resume();
 	}
 
 }

@@ -15,12 +15,15 @@ import java.util.List;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
 
-public class WavefrontObjVBO implements IModelCustom {
+public class WaveFrontObjectVAO implements IModelCustom {
+
+    public static ArrayList<WaveFrontObjectVAO> allVBOs = new ArrayList<>();
+
     private static final int FLOAT_SIZE = 4;
     private static final int STRIDE = 9 * FLOAT_SIZE;
     static int VERTEX_SIZE = 3;
     List<VBOBufferData> groups = new ArrayList<>();
-    public WavefrontObjVBO(HFRWavefrontObject obj) {
+    public WaveFrontObjectVAO(HFRWavefrontObject obj) {
         for (S_GroupObject g : obj.groupObjects) {
 
             VBOBufferData data = new VBOBufferData();
@@ -76,11 +79,22 @@ public class WavefrontObjVBO implements IModelCustom {
             buffer.put(combinedData);
             buffer.flip();
 
-            data.vaoHandle = GL30.glGenVertexArrays();
+
             data.vboHandle = glGenBuffers();
-            GL30.glBindVertexArray(data.vaoHandle);
             glBindBuffer(GL_ARRAY_BUFFER, data.vboHandle);
             glBufferData(GL_ARRAY_BUFFER, buffer, GL_STATIC_DRAW);
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+            groups.add(data);
+        }
+        allVBOs.add(this);
+    }
+
+    public void generate_vaos(){
+        for (VBOBufferData data : groups) {
+            data.vaoHandle = GL30.glGenVertexArrays();
+            GL30.glBindVertexArray(data.vaoHandle);
+            glBindBuffer(GL_ARRAY_BUFFER, data.vboHandle);
 
             GL11.glVertexPointer(3, GL11.GL_FLOAT, STRIDE, 0L);
             glEnableClientState(GL_VERTEX_ARRAY);
@@ -93,13 +107,12 @@ public class WavefrontObjVBO implements IModelCustom {
 
             GL30.glBindVertexArray(0);
             glBindBuffer(GL_ARRAY_BUFFER, 0);
-            groups.add(data);
         }
     }
 
     @Override
     public String getType() {
-        return "obj_vbo";
+        return "obj_vao";
     }
 
     private void renderVBO(VBOBufferData data) {

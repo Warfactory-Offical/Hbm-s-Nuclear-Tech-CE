@@ -152,7 +152,6 @@ public class ClientProxy extends ServerProxy {
     public static KeyBinding craneLoadKey;
     //Drillgon200: This is stupid, but I'm lazy
     public static boolean renderingConstant = false;
-    public static int boxcarCalllist;
     public RenderInfoSystemLegacy theInfoSystem = new RenderInfoSystemLegacy();
     private static final Int2LongOpenHashMap vanished = new Int2LongOpenHashMap();
 
@@ -1821,11 +1820,6 @@ public class ClientProxy extends ServerProxy {
 
     @Override
     public void postInit(FMLPostInitializationEvent e) {
-
-        boxcarCalllist = GL11.glGenLists(1);
-        GL11.glNewList(boxcarCalllist, GL11.GL_COMPILE);
-        ResourceManager.boxcar.renderAll();
-        GL11.glEndList();
         ResourceManager.loadAnimatedModels();
         Minecraft.getMinecraft().getRenderManager().getSkinMap().forEach((p, r) -> {
             r.addLayer(new JetpackHandler.JetpackLayer());
