@@ -43,6 +43,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.OreIngredient;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -927,8 +928,8 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(Items.LEAD, 4), "RSR", 'R', DictFrame.fromOne(ModItems.plant_item, ItemEnums.EnumPlantType.ROPE), 'S', KEY_SLIME );
 		addRecipeAuto(new ItemStack(ModItems.rag, 4), "SW", "WS", 'S', Items.STRING, 'W', Blocks.WOOL );
 
-		addShapelessAuto(new ItemStack(ModItems.solid_fuel, 3), Fluids.HEATINGOIL.getDict(16000), KEY_TOOL_CHEMISTRYSET );
-		addShapelessAuto(new ItemStack(ModItems.canister_full, 2, Fluids.LUBRICANT.getID()), Fluids.HEATINGOIL.getDict(1000), Fluids.UNSATURATEDS.getDict(1000), ModItems.canister_empty, ModItems.canister_empty, KEY_TOOL_CHEMISTRYSET );
+		addShapelessAuto(new ItemStack(ModItems.solid_fuel, 3), Fluids.HEATINGOIL.getDict(16000), new ComplexOreIngredient(KEY_TOOL_CHEMISTRYSET));
+		addShapelessAuto(new ItemStack(ModItems.canister_full, 2, Fluids.LUBRICANT.getID()), Fluids.HEATINGOIL.getDict(1000), Fluids.UNSATURATEDS.getDict(1000), ModItems.canister_empty, ModItems.canister_empty, new ComplexOreIngredient(KEY_TOOL_CHEMISTRYSET));
 
 		addRecipeAuto(new ItemStack(ModBlocks.machine_condenser), "SIS", "ICI", "SIS", 'S', STEEL.ingot(), 'I', IRON.plate(), 'C', CU.plateCast() );
 
@@ -1432,7 +1433,10 @@ public class CraftingManager {
 		boolean shouldUseOD = false;
 		boolean patternEnded = false;
         for (Object arg : args) {
-            if (arg instanceof String) {
+			if (arg instanceof OreIngredient) {
+				shouldUseOD = true;
+				break;
+			} else if (arg instanceof String) {
                 if (patternEnded) {
                     shouldUseOD = true;
                     break;
@@ -1457,7 +1461,7 @@ public class CraftingManager {
 	public static void addRecipeAutoOreShapeless(ItemStack output, Object... args) {
 		boolean shouldUseOD = false;
 		for (Object arg : args) {
-			if (arg instanceof String) {
+			if (arg instanceof String || arg instanceof OreIngredient) {
 				shouldUseOD = true;
 				break;
 			}
@@ -1487,7 +1491,7 @@ public class CraftingManager {
 		boolean shouldUseOD = false;
 
         for (Object arg : args) {
-            if (arg instanceof String) {
+            if (arg instanceof String || arg instanceof OreIngredient) {
                 shouldUseOD = true;
                 break;
             }
@@ -1558,4 +1562,15 @@ public class CraftingManager {
 		}
 	}
 
+	public static class ComplexOreIngredient extends OreIngredient {
+		public ComplexOreIngredient(String ore) {
+			super(ore);
+		}
+
+		@Override
+		public boolean isSimple() {
+			//mlbv: with isSimple() == true it fucking ignores apply()
+			return false;
+		}
+	}
 }
