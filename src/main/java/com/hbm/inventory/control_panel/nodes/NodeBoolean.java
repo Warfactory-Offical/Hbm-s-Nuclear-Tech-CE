@@ -2,6 +2,7 @@ package com.hbm.inventory.control_panel.nodes;
 
 import com.hbm.inventory.control_panel.*;
 import com.hbm.inventory.control_panel.DataValue.DataType;
+import com.hbm.inventory.control_panel.modular.StockNodesRegister;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class NodeBoolean extends Node {
@@ -25,8 +26,8 @@ public class NodeBoolean extends Node {
     }
 
     @Override
-    public NodeType getType() {
-        return NodeType.BOOLEAN;
+    public float[] getColor() {
+        return StockNodesRegister.colorBoolean;
     }
 
     @Override

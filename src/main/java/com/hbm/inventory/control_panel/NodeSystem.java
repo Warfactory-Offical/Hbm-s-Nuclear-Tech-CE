@@ -38,7 +38,7 @@ public class NodeSystem {
 	@SideOnly(Side.CLIENT)
 	public NodeConnection connectionInProgress;
 	@SideOnly(Side.CLIENT)
-	public NodeConnection currentTypingBox;
+	public ITypableNode currentTypingBox;
 	@SideOnly(Side.CLIENT)
 	protected boolean drag;
 	@SideOnly(Side.CLIENT)
@@ -298,6 +298,20 @@ public class NodeSystem {
 					}
 				}
 			}
+			for (NodeElement o : n.otherElements) {
+				if (o instanceof NodeTextBox b) {
+					if(intersectsBox && NTMRenderHelper.intersects2DBox(gridMX, gridMY, b.getValueBox())){
+						if(currentTypingBox != b){
+							b.isTyping = true;
+							b.startTyping();
+							if(currentTypingBox != null){
+								currentTypingBox.stopTyping();
+							}
+							currentTypingBox = b;
+						}
+					}
+				}
+			}
 			if(intersectsBox){
 				clear = false;
 				if(activeNode == n && selectedNodes.size() <= 1){
@@ -369,7 +383,7 @@ public class NodeSystem {
 	public void keyTyped(char c, int key){
 		if(currentTypingBox != null){
 			currentTypingBox.keyTyped(c, key);
-			if(!currentTypingBox.isTyping)
+			if(!currentTypingBox.isTyping())
 				currentTypingBox = null;
 		}
 	}
