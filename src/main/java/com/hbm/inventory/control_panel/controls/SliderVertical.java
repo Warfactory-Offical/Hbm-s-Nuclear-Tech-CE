@@ -110,11 +110,11 @@ public class SliderVertical extends Control {
             node2.inputs.get(1).setDefault(new DataValueFloat(-1));
             node2.inputs.get(2).setDefault(new DataValueFloat(1));
             ctrl_press.addNode(node2);
-            NodeMath node3 = new NodeMath(290, 130).setData(NodeMath.Operation.ADD);
+            NodeMath node3 = new NodeMath(290, 130, "add");
             node3.inputs.get(0).setData(node2, 0, true);
             node3.inputs.get(1).setData(node1, 0, true);
             ctrl_press.addNode(node3);
-            NodeMath node4 = new NodeMath(350, 130).setData(NodeMath.Operation.CLAMP);
+            NodeMath node4 = new NodeMath(350, 130, "clamp");
             node4.inputs.get(0).setData(node3, 0, true);
             node4.inputs.get(1).setDefault(new DataValueFloat(0));
             node4.inputs.get(2).setDefault(new DataValueFloat(5));

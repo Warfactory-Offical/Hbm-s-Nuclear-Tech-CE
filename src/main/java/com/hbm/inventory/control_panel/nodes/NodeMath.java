@@ -2,183 +2,179 @@ package com.hbm.inventory.control_panel.nodes;
 
 import com.hbm.inventory.control_panel.*;
 import com.hbm.inventory.control_panel.DataValue.DataType;
+import com.hbm.inventory.control_panel.nodes.registry.MathOpRegistry;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.MathHelper;
+
+import java.util.Arrays;
+import java.util.Objects;
 
 public class NodeMath extends Node {
 
-	public Operation op = Operation.ADD;
-	
-	public NodeMath(float x, float y){
-		super(x, y);
-		this.outputs.add(new NodeConnection("Output", this, outputs.size(), false, DataType.NUMBER, new DataValueFloat(0)));
-		NodeDropdown opSelector = new NodeDropdown(this, otherElements.size(), s -> {
-			Operation op = Operation.getByName(s);
-			if(op != null){
-				setOperation(op);
-			}
-			return null;
-		}, () -> op.name);
-		for(Operation op : Operation.values()){
-			opSelector.list.addItems(op.name);
-		}
-		this.otherElements.add(opSelector);
-		setOperation(Operation.ADD);
-		evalCache = new DataValue[1];
-	}
-	
-	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound tag, NodeSystem sys){
-		tag.setString("nodeType", "math");
-		tag.setInteger("op", op.ordinal());
-		return super.writeToNBT(tag, sys);
-	}
-	
-	@Override
-	public void readFromNBT(NBTTagCompound tag, NodeSystem sys){
-		op = Operation.values()[tag.getInteger("op")%Operation.values().length];
-		super.readFromNBT(tag, sys);
-	}
-	
-	@Override
-	public DataValue evaluate(int idx){
-		if(cacheValid)
-			return evalCache[0];
-		cacheValid = true;
-		DataValue[] evals = new DataValue[inputs.size()];
-		for(int i = 0; i < evals.length; i ++){
-			evals[i] = inputs.get(i).evaluate();
-			if(evals[i] == null)
-				return null;
-		}
-		switch(op) {
-			case ADD:
-				return evalCache[0] = new DataValueFloat(evals[0].getNumber()+evals[1].getNumber());
-			case SUB:
-				return evalCache[0] = new DataValueFloat(evals[0].getNumber()-evals[1].getNumber());
-			case MULT:
-				return evalCache[0] = new DataValueFloat(evals[0].getNumber()*evals[1].getNumber());
-			case DIV:
-				return evalCache[0] = new DataValueFloat(evals[0].getNumber()/evals[1].getNumber());
-			case MOD:
-				return evalCache[0] = new DataValueFloat(evals[0].getNumber()%evals[1].getNumber());
-			case POW:
-				return evalCache[0] = new DataValueFloat((float)Math.pow(evals[0].getNumber(), evals[1].getNumber()));
-			case LOG:
-				return evalCache[0] = new DataValueFloat((float)(Math.log(evals[0].getNumber())/Math.log(evals[1].getNumber())));
-			case EXP:
-				return evalCache[0] = new DataValueFloat((float)Math.exp(evals[0].getNumber()));
-			case SQRT:
-				return evalCache[0] = new DataValueFloat((float)Math.sqrt(evals[0].getNumber()));
-			case ABS:
-				return evalCache[0] = new DataValueFloat(Math.abs(evals[0].getNumber()));
-			case EQUAL:
-				return evalCache[0] = new DataValueFloat(evals[0].getNumber() == evals[1].getNumber() ? 1 : 0);
-			case GREATER:
-				return evalCache[0] = new DataValueFloat(evals[0].getNumber() > evals[1].getNumber() ? 1 : 0);
-			case LESS:
-				return evalCache[0] = new DataValueFloat(evals[0].getNumber() < evals[1].getNumber() ? 1 : 0);
-			case GEQUAL:
-				return evalCache[0] = new DataValueFloat(evals[0].getNumber() >= evals[1].getNumber() ? 1 : 0);
-			case LEQUAL:
-				return evalCache[0] = new DataValueFloat(evals[0].getNumber() <= evals[1].getNumber() ? 1 : 0);
-			case CLAMP:
-				return evalCache[0] = new DataValueFloat(MathHelper.clamp(evals[0].getNumber(), evals[1].getNumber(), evals[2].getNumber()));
-		}
-		return evalCache[0] = null;
-	}
+    private MathOp op;
+    private String opId;
 
-	public NodeMath setData(Operation op) {
-		setOperation(op);
-		return this;
-	}
+    public NodeMath(float x, float y) {
+        this(x, y, "add");
+    }
 
-	public void setOperation(Operation op){
-		this.op = op;
-		for(NodeConnection c : inputs){
-			c.removeConnection();
-		}
-		this.inputs.clear();
-		String s1 = "Input 1";
-		String s2 = "Input 2";
-		switch(op) {
-			case EQUAL:
-			case GREATER:
-			case LESS:
-			case GEQUAL:
-			case LEQUAL:
-			case ADD:
-			case SUB:
-			case MULT:
-			case DIV:
-			case MOD:
-			case POW:
-			case LOG:
-				if(op == Operation.POW){
-					s1 = "Base";
-					s2 = "Exponent";
-				} else if(op == Operation.LOG){
-					s1 = "Value";
-					s2 = "Base";
-				}
-				inputs.add(new NodeConnection(s1, this, inputs.size(), true, DataType.NUMBER, new DataValueFloat(0)));
-				inputs.add(new NodeConnection(s2, this, inputs.size(), true, DataType.NUMBER, new DataValueFloat(0)));
-				break;
-			case EXP:
-			case SQRT:
-			case ABS:
-				inputs.add(new NodeConnection("Input", this, inputs.size(), true, DataType.NUMBER, new DataValueFloat(0)));
-				break;
-			case CLAMP:
-				inputs.add(new NodeConnection("Value", this, inputs.size(), true, DataType.NUMBER, new DataValueFloat(0)));
-				inputs.add(new NodeConnection("Min", this, inputs.size(), true, DataType.NUMBER, new DataValueFloat(0)));
-				inputs.add(new NodeConnection("Max", this, inputs.size(), true, DataType.NUMBER, new DataValueFloat(0)));
-				break;
-		}
-		recalcSize();
-	}
-	
-	@Override
-	public NodeType getType(){
-		return NodeType.MATH;
-	}
-	
-	@Override
-	public String getDisplayName(){
-		return op.name;
-	}
-	
-	public static enum Operation {
-		ADD("Add"),
-		SUB("Subtract"),
-		MULT("Multiply"),
-		DIV("Divide"),
-		MOD("Modulo"),
-		POW("Power"),
-		LOG("Logarithm"),
-		EXP("Exponent"),
-		SQRT("Square root"),
-		ABS("Absolute"),
-		EQUAL("Equal"),
-		GREATER("Greater"),
-		LESS("Less"),
-		GEQUAL("Greater/equal"),
-		LEQUAL("Less/equal"),
-		CLAMP("Clamp");
+    public NodeMath(float x, float y, String opId) {
+        super(x, y);
+        this.outputs.add(new NodeConnection("Output", this, outputs.size(), false, DataType.NUMBER, new DataValueFloat(0)));
+        NodeDropdown opSelector = new NodeDropdown(this, otherElements.size(), s -> {
+            MathOp chosen = MathOpRegistry.byDisplayName(s);
+            if (chosen != null) setOperation(chosen);
+            return null;
+        }, () -> op != null ? op.displayName : "Add");
 
-		public String name;
-		private Operation(String name){
-			this.name = name;
-		}
-		
-		public static Operation getByName(String name){
-			for(Operation o : values()){
-				if(o.name.equals(name)){
-					return o;
-				}
-			}
-			return null;
-		}
-	}
+        for (MathOp m : MathOpRegistry.all()) {
+            opSelector.list.addItems(m.displayName);
+        }
+        this.otherElements.add(opSelector);
 
+        setOperation(MathOpRegistry.byId(opId));
+        evalCache = new DataValue[1];
+    }
+
+    private void setOperation(MathOp newOp) {
+        if (newOp == null) newOp = MathOpRegistry.byId("add");
+        this.op = newOp;
+        this.opId = newOp.id;
+        for (NodeConnection c : inputs) c.removeConnection();
+        this.inputs.clear();
+        for (int i = 0; i < op.arity; i++) {
+            String label = op.inputLabels[i];
+            this.inputs.add(new NodeConnection(label, this, inputs.size(), true, DataType.NUMBER, new DataValueFloat(0)));
+        }
+        recalcSize();
+        invalidateCache();
+    }
+
+    public NodeMath setData(MathOp op) {
+        setOperation(op);
+        return this;
+    }
+
+    private void invalidateCache() {
+        cacheValid = false;
+        evalCache[0] = null;
+    }
+
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound tag, NodeSystem sys) {
+        tag.setString("nodeType", "math");
+        tag.setString("opId", opId);
+        return super.writeToNBT(tag, sys);
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound tag, NodeSystem sys) {
+        MathOp candidate = MathOpRegistry.byId(tag.getString("opId"));
+        setOperation(candidate);
+        super.readFromNBT(tag, sys);
+    }
+
+    @Override
+    public DataValue evaluate(int idx) {
+        if (cacheValid) return evalCache[0];
+        cacheValid = true;
+
+        final int n = inputs.size();
+        float[] args = new float[n];
+        for (int i = 0; i < n; i++) {
+            DataValue v = inputs.get(i).evaluate();
+            if (v == null) {
+                cacheValid = false;
+                return null;
+            }
+            args[i] = v.getNumber();
+        }
+
+        float out = op.eval(args);
+        return evalCache[0] = new DataValueFloat(out);
+    }
+
+    @Override
+    public NodeType getType() {
+        return NodeType.MATH;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return op != null ? op.displayName : "Math";
+    }
+
+    public static final class MathOp {
+        public final String id;
+        public final String displayName;
+        public final int arity;
+        public final String[] inputLabels;
+        private final FloatN fn;
+
+        private MathOp(String id, String displayName, int arity, String[] inputLabels, FloatN fn) {
+            this.id = Objects.requireNonNull(id);
+            this.displayName = Objects.requireNonNull(displayName);
+            this.arity = arity;
+            this.inputLabels = inputLabels != null ? inputLabels.clone() : defaultLabels(arity);
+            this.fn = Objects.requireNonNull(fn);
+            if (this.inputLabels.length != arity) {
+                throw new IllegalArgumentException("inputLabels length must equal arity");
+            }
+        }
+
+        private static String[] defaultLabels(int n) {
+            String[] names = new String[n];
+            for (int i = 0; i < n; i++) names[i] = "Input " + (i + 1);
+            return names;
+        }
+
+        public static Builder builder(String id, String displayName) {
+            return new Builder(id, displayName);
+        }
+
+        public float eval(float[] in) {
+            return fn.eval(in);
+        }
+
+        @Override
+        public String toString() {
+            return "MathOp{" + id + ", " + displayName + ", arity=" + arity + ", labels=" + Arrays.toString(inputLabels) + "}";
+        }
+
+        @FunctionalInterface
+        public interface FloatN {
+            float eval(float[] a);
+        }
+
+        public static final class Builder {
+            private final String id;
+            private final String name;
+            private int arity = 2;
+            private String[] labels = null;
+            private FloatN fn;
+
+            private Builder(String id, String name) {
+                this.id = id;
+                this.name = name;
+            }
+
+            public Builder arity(int n) {
+                this.arity = n;
+                return this;
+            }
+
+            public Builder labels(String... labels) {
+                this.labels = labels;
+                return this;
+            }
+
+            public Builder eval(FloatN fn) {
+                this.fn = fn;
+                return this;
+            }
+
+            public MathOp build() {
+                return new MathOp(id, name, arity, labels, fn);
+            }
+        }
+    }
 }

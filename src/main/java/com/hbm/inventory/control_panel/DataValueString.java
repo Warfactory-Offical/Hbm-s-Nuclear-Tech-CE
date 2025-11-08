@@ -3,7 +3,7 @@ package com.hbm.inventory.control_panel;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagString;
 
-public class DataValueString extends DataValue {
+public class DataValueString implements DataValue {
 
 	public String str;
 	private float floatVal;

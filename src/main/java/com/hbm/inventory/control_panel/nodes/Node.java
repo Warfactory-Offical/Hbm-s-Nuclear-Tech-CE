@@ -1,6 +1,8 @@
 package com.hbm.inventory.control_panel.nodes;
 
 import com.hbm.inventory.control_panel.*;
+import com.hbm.inventory.control_panel.nodes.registry.BoolOpRegistry;
+import com.hbm.inventory.control_panel.nodes.registry.MathOpRegistry;
 import com.hbm.render.NTMRenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -24,9 +26,17 @@ public abstract class Node {
 
 	public boolean cacheValid = false;
 	public DataValue[] evalCache = null;
+
+	public static void registerOps(){
+		MathOpRegistry.init();
+		BoolOpRegistry.init();
+	}
 	
 	public abstract DataValue evaluate(int idx);
 	public abstract NodeType getType();
+	public float[] getColor() {
+		return getType().getColor();
+	}
 	public abstract String getDisplayName();
 	
 	public Node(float x, float y){
@@ -147,7 +157,7 @@ public abstract class Node {
 			NTMRenderHelper.drawGuiRectBatchedColor(posX-edge, posY+6+size, 0, 0.984375F, 40+edge*2, 1+edge, 0.625F, 1, color[0], color[1], color[2], 1);
 			Tessellator.getInstance().draw();
 		}
-		color = getType().getColor();
+		color = getColor();
 		Tessellator.getInstance().getBuffer().begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
 		NTMRenderHelper.drawGuiRectBatchedColor(posX, posY, 0, 0, 40, 6, 0.625F, 0.09375F, 1, 1, 1, 1);
 		NTMRenderHelper.drawGuiRectBatchedColor(posX, posY+6, 0, 0.09375F, 40, size, 0.625F, 0.109375F, 1, 1, 1, 1);

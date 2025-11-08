@@ -124,7 +124,7 @@ public class ButtonEncasedPush extends Control {
             {
                 NodeGetVar node1_0 = new NodeGetVar(170, 100, this).setData("isCoverOpen", false);
                 node1_subsystem.addNode(node1_0);
-                NodeBoolean node1_1 = new NodeBoolean(230, 120).setData(NodeBoolean.BoolOperation.NOT);
+                NodeBoolean node1_1 = new NodeBoolean(230, 120, "not");
                 node1_1.inputs.get(0).setData(node1_0, 0, true);
                 node1_subsystem.addNode(node1_1);
                 NodeSetVar node1_2 = new NodeSetVar(290, 140, this).setData("isCoverOpen", false);
@@ -134,12 +134,12 @@ public class ButtonEncasedPush extends Control {
             node1.inputs.get(0).setData(node0, 1, true);
             ctrl_press.subSystems.put(node1, node1_subsystem);
             ctrl_press.addNode(node1);
-            NodeBoolean node2 = new NodeBoolean(230, 120).setData(NodeBoolean.BoolOperation.NOT);
+            NodeBoolean node2 = new NodeBoolean(230, 120, "not");
             node2.inputs.get(0).setData(node0, 1, true);
             ctrl_press.addNode(node2);
             NodeGetVar node3 = new NodeGetVar(170, 160, this).setData("isCoverOpen", false);
             ctrl_press.addNode(node3);
-            NodeBoolean node4 = new NodeBoolean(290, 130).setData(NodeBoolean.BoolOperation.AND);
+            NodeBoolean node4 = new NodeBoolean(290, 130, "and");
             node4.inputs.get(0).setData(node2, 0, true);
             node4.inputs.get(1).setData(node3, 0, true);
             ctrl_press.addNode(node4);
@@ -148,7 +148,7 @@ public class ButtonEncasedPush extends Control {
             {
                 NodeGetVar node5_0 = new NodeGetVar(170, 100, this).setData("isPushed", false);
                 node5_subsystem.addNode(node5_0);
-                NodeBoolean node5_1 = new NodeBoolean(230, 120).setData(NodeBoolean.BoolOperation.NOT);
+                NodeBoolean node5_1 = new NodeBoolean(230, 120, "not");
                 node5_1.inputs.get(0).setData(node5_0, 0, true);
                 node5_subsystem.addNode(node5_1);
                 NodeSetVar node5_2 = new NodeSetVar(290, 140, this).setData("isPushed", false);

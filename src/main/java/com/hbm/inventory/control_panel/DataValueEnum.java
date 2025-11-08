@@ -3,7 +3,7 @@ package com.hbm.inventory.control_panel;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class DataValueEnum<T extends Enum<T>> extends DataValue {
+public class DataValueEnum<T extends Enum<T>> implements DataValue {
 
 	public Enum<T> value;
 	public Class<T> enumClass;

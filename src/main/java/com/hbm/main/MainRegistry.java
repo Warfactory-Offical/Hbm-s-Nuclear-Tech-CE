@@ -37,6 +37,8 @@ import com.hbm.inventory.OreDictManager;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.control_panel.ControlEvent;
 import com.hbm.inventory.control_panel.ControlRegistry;
+import com.hbm.inventory.control_panel.nodes.Node;
+import com.hbm.inventory.control_panel.nodes.registry.MathOpRegistry;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.recipes.*;
 import com.hbm.inventory.recipes.anvil.AnvilRecipes;
@@ -398,6 +400,7 @@ public class MainRegistry {
         Fluids.initForgeFluidCompat();
         PacketThreading.init();
         IMCHandler.init();
+        Node.registerOps();
     }
 
     @EventHandler

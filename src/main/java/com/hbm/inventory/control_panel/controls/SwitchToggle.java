@@ -105,7 +105,7 @@ public class SwitchToggle extends Control {
         {
             NodeGetVar node0 = new NodeGetVar(170, 100, this).setData("isOn", false);
             ctrl_press.addNode(node0);
-            NodeBoolean node1 = new NodeBoolean(230, 120).setData(NodeBoolean.BoolOperation.NOT);
+            NodeBoolean node1 = new NodeBoolean(230, 120, "not");
             node1.inputs.get(0).setData(node0, 0, true);
             ctrl_press.addNode(node1);
             NodeSetVar node2 = new NodeSetVar(290, 140, this).setData("isOn", false);
