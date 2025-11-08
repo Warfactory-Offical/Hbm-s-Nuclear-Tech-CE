@@ -3,12 +3,15 @@ package com.hbm.inventory.control_panel.nodes;
 import com.hbm.inventory.control_panel.*;
 import com.hbm.inventory.control_panel.nodes.registry.BoolOpRegistry;
 import com.hbm.inventory.control_panel.nodes.registry.MathOpRegistry;
+import com.hbm.inventory.control_panel.modular.INodeLoader;
+import com.hbm.inventory.control_panel.modular.NTMControlPanelRegistry;
 import com.hbm.render.NTMRenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.nbt.NBTTagCompound;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.ArrayList;
@@ -31,7 +34,7 @@ public abstract class Node {
 		MathOpRegistry.init();
 		BoolOpRegistry.init();
 	}
-	
+
 	public abstract DataValue evaluate(int idx);
 	public abstract NodeType getType();
 	public float[] getColor() {
@@ -55,7 +58,7 @@ public abstract class Node {
 			outputs.setTag("con"+i, this.outputs.get(i).writeToNBT(new NBTTagCompound(), sys));
 		}
 		tag.setTag("out", outputs);
-		
+
 		tag.setInteger("T", getType().ordinal());
 		tag.setFloat("X", posX);
 		tag.setFloat("Y", posY);
@@ -87,51 +90,12 @@ public abstract class Node {
 	}
 	
 	public static Node nodeFromNBT(NBTTagCompound tag, NodeSystem sys){
-		Node node = null;
-		switch(tag.getString("nodeType")){
-		case "cancelEvent":
-			node = new NodeCancelEvent(0, 0);
-			break;
-		case "eventBroadcast":
-			NBTTagCompound list = tag.getCompoundTag("itemList");
-			List<ControlEvent> l = new ArrayList<>();
-			for(int i = 0; i < list.getKeySet().size(); i ++){
-				l.add(ControlEvent.getRegisteredEvent(list.getString("item"+i)));
-			}
-			node = new NodeEventBroadcast(0, 0, l);
-			break;
-		case "getVar":
-			int ctrlIdx = tag.getInteger("controlIdx");
-			node = new NodeGetVar(0, 0, sys.parent.panel.controls.get(ctrlIdx));
-			break;
-		case "queryBlock":
-			ctrlIdx = tag.getInteger("controlIdx");
-			node = new NodeQueryBlock(0, 0, sys.parent.panel.controls.get(ctrlIdx));
-			break;
-			case "math":
-			node = new NodeMath(0, 0);
-			break;
-		case "boolean":
-			node = new NodeBoolean(0, 0);
-			break;
-		case "function":
-			node = new NodeFunction(0, 0);
-			break;
-		case "buffer":
-			node = new NodeBuffer(0, 0);
-			break;
-		case "conditional":
-			node = new NodeConditional(0, 0);
-			break;
-		case "setVar":
-			int ctrlIdx2 = tag.getInteger("controlIdx");
-			node = new NodeSetVar(0, 0, sys.parent.panel.controls.get(ctrlIdx2));
-			break;
-		case "input":
-			node = new NodeInput(0, 0, null);
-			break;
+		for (INodeLoader loader : NTMControlPanelRegistry.nbtNodeLoaders) {
+			Node node = loader.nodeFromNBT(tag,sys);
+			if (node != null)
+				return node;
 		}
-		return node;
+		return null;
 	}
 	
 	public void setPosition(float x, float y){

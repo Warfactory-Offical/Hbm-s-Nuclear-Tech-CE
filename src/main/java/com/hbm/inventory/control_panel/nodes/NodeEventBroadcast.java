@@ -95,7 +95,7 @@ public class NodeEventBroadcast extends NodeOutput {
 		inputs.add(new NodeConnection("Cancel", this, inputs.size(), true, DataType.GENERIC, new DataValueFloat(0)));
 		recalcSize();
 	}
-	
+
 	@Override
 	public NodeType getType(){
 		return NodeType.OUTPUT;

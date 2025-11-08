@@ -37,6 +37,7 @@ import com.hbm.inventory.OreDictManager;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.control_panel.ControlEvent;
 import com.hbm.inventory.control_panel.ControlRegistry;
+import com.hbm.inventory.control_panel.modular.StockNodesRegister;
 import com.hbm.inventory.control_panel.nodes.Node;
 import com.hbm.inventory.control_panel.nodes.registry.MathOpRegistry;
 import com.hbm.inventory.fluid.Fluids;
@@ -323,6 +324,8 @@ public class MainRegistry {
         HbmWorld.mainRegistry();
         proxy.preInit(event);
         Library.initSuperusers();
+
+        StockNodesRegister.register();
 
         enumArmorMaterialSchrabidium.setRepairItem(new ItemStack(ModItems.ingot_schrabidium));
         enumArmorMaterialHazmat.setRepairItem(new ItemStack(ModItems.hazmat_cloth));

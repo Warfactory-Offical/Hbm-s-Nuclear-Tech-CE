@@ -6,6 +6,7 @@ import com.hbm.inventory.control_panel.Control;
 import com.hbm.inventory.control_panel.ControlEvent;
 import com.hbm.inventory.control_panel.ControlPanel;
 import com.hbm.inventory.control_panel.DataValueFloat;
+import com.hbm.items.ModItems;
 import com.hbm.main.ClientProxy;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.toserver.NBTControlPacket;
@@ -62,7 +63,9 @@ public class BlockControlPanel extends BlockContainer implements ICustomSelectio
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		if(!worldIn.isRemote){
-			FMLNetworkHandler.openGui(playerIn, MainRegistry.instance, 0, worldIn, pos.getX(), pos.getY(), pos.getZ());
+			// without this attempting to press buttons will open the damned GUI
+			if(playerIn.getHeldItem(hand).getItem() == ModItems.screwdriver || playerIn.getHeldItem(hand).getItem() == ModItems.screwdriver_desh)
+				FMLNetworkHandler.openGui(playerIn, MainRegistry.instance, 0, worldIn, pos.getX(), pos.getY(), pos.getZ());
 		} else {
 			TileEntityControlPanel control = (TileEntityControlPanel)worldIn.getTileEntity(pos);
 			Control ctrl = control.panel.getSelectedControl(playerIn.getPositionEyes(1), playerIn.getLook(1));

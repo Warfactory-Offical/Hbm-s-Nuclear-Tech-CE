@@ -36,7 +36,7 @@ public class NodeInput extends Node {
 		this.name = tag.getString(name);
 		super.readFromNBT(tag, sys);
 	}
-	
+
 	@Override
 	public NodeType getType(){
 		return NodeType.INPUT;
