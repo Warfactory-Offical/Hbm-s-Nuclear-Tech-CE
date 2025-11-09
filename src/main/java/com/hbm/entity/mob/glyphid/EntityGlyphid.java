@@ -224,7 +224,6 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider {
     @Override
     protected void initEntityAI() {
         this.tasks.addTask(1, new EntityAISwimming(this));
-        this.tasks.addTask(1, new EntityAIPanic(this, 2.0D));
         this.tasks.addTask(2, new EntityAIAttackMelee(this, 1.0D, false));
         this.tasks.addTask(4, new EntityAIConditionalWander<>(this, 0.8D, glyphid -> glyphid.getCurrentTask() == TASK_IDLE));
         this.tasks.addTask(5, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
