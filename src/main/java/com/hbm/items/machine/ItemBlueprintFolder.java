@@ -138,10 +138,7 @@ public class ItemBlueprintFolder extends ItemBakedBase {
             String chosen = pools.get(player.getRNG().nextInt(pools.size()));
             ItemStack blueprint = ItemBlueprints.make(chosen);
 
-            if (!player.inventory.addItemStackToInventory(blueprint)) {
-                player.dropItem(blueprint, false);
-            }
-            return new ActionResult<>(EnumActionResult.SUCCESS, stack);
+            return new ActionResult<>(EnumActionResult.SUCCESS, blueprint);
         }
 
         return new ActionResult<>(EnumActionResult.PASS, stack);

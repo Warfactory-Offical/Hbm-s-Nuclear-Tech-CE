@@ -141,6 +141,15 @@ public class ShredderRecipes extends SerializableRecipe {
                         setRecipe(new ComparableStack(stack), dust);
                     }
                 }
+            } else if (name.length() > 5 && name.startsWith("plate")) {
+                ItemStack dust = getDustByName(name.substring(5));
+
+                if (dust.getItem() != ModItems.scrap) {
+
+                    for (ItemStack stack : matches) {
+                        setRecipe(new ComparableStack(stack), dust);
+                    }
+                }
             } else if (name.length() > 6 && name.startsWith("nugget")) {
                 ItemStack dust = getTinyDustByName(name.substring(6));
 

@@ -4,7 +4,7 @@ import com.hbm.entity.missile.EntityMissileTier3;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.NTMRenderHelper;
-import com.hbm.render.tileentity.RenderLaunchPadTier1;
+import com.hbm.render.tileentity.RenderLaunchPad;
 import com.hbm.util.RenderUtil;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
@@ -32,7 +32,7 @@ public class RenderMissileRain extends Render<EntityMissileTier3.EntityMissileRa
 		y = renderPos[1];
 		z = renderPos[2];
 		GlStateManager.translate(x, y, z);
-        GlStateManager.scale(RenderLaunchPadTier1.h_3, RenderLaunchPadTier1.h_3, RenderLaunchPadTier1.h_3);
+        GlStateManager.scale(RenderLaunchPad.h_3, RenderLaunchPad.h_3, RenderLaunchPad.h_3);
         GlStateManager.rotate(missile.prevRotationYaw + (missile.rotationYaw - missile.prevRotationYaw) * partialTicks - 90.0F, 0.0F, 1.0F, 0.0F);
         GlStateManager.rotate(missile.prevRotationPitch + (missile.rotationPitch - missile.prevRotationPitch) * partialTicks, 0.0F, 0.0F, 1.0F);
 

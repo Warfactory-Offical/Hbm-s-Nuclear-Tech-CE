@@ -76,7 +76,6 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 	public boolean beam;
 	private double breakProgress;
 	private final UpgradeManager manager;
-	private static boolean converted = false;
 	private double clientBreakProgress = 0;
 
 	public TileEntityMachineMiningLaser() {
@@ -100,7 +99,6 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 		tankNew = new FluidTankNTM(Fluids.OIL, 64000);
 		tank = new FluidTank(64000);
 		manager = new UpgradeManager();
-		converted = true;
 	}
 
 	@Override
@@ -111,10 +109,6 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 	@Override
 	public void update() {
 		if(!world.isRemote) {
-			if(!converted){
-				convertAndSetFluid(Fluids.OIL.getFF(), tank, tankNew);
-				converted = true;
-			}
 			this.trySubscribe(world, pos.getX(), pos.getY() + 2, pos.getZ(), ForgeDirection.UP);
 
 			this.sendFluid(tankNew, world, pos.getX() + 2, pos.getY(), pos.getZ(), Library.POS_X);
@@ -505,7 +499,10 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 	public int getProgressScaled(int i) {
 		return (int) (breakProgress * i);
 	}
-
+	@Override
+	public boolean canInsertItem(int i, ItemStack itemStack) {
+		return this.isItemValidForSlot(i, itemStack);
+	}
 	@Override
 	public boolean canExtractItem(int i, ItemStack itemStack, int j) {
 		return i >= 9 && i <= 29;
@@ -541,18 +538,14 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
-		if(!converted) {
-			tank.readFromNBT(compound.getCompoundTag("tank"));
-		} else {
-			tankNew.readFromNBT(compound, "oil");
-			if(compound.hasKey("tank")) compound.removeTag("tank");
-		}
+		tankNew.readFromNBT(compound, "oil");
+		if(compound.hasKey("tank")) compound.removeTag("tank");
 		isOn = compound.getBoolean("isOn");
 	}
 
 	@Override
 	public @NotNull NBTTagCompound writeToNBT(NBTTagCompound compound) {
-		if(!converted) compound.setTag("tank", tank.writeToNBT(new NBTTagCompound())); else tankNew.writeToNBT(compound, "oil");
+		tankNew.writeToNBT(compound, "oil");
 		compound.setBoolean("isOn", isOn);
 		return super.writeToNBT(compound);
 	}

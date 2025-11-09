@@ -13,9 +13,12 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -28,7 +31,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockDecoCRT extends BlockDecoModel {
 
     public BlockDecoCRT(Material mat, SoundType type, String registryName) {
-        super(mat, type, registryName, BlockEnums.DecoCRTEnum.class, true, true,
+        super(mat, type, registryName, BlockEnums.DecoCRTEnum.class, false, true,
                 new ResourceLocation(RefStrings.MODID, "models/blocks/crt.obj"));
     }
 
@@ -50,11 +53,11 @@ public class BlockDecoCRT extends BlockDecoModel {
         String[] variants = new String[]{"crt_clean", "crt_broken", "crt_blinking", "crt_bsod"};
         for (int m = 0; m < variants.length; m++) {
             TextureAtlasSprite sprite = atlas.getAtlasSprite(new ResourceLocation(RefStrings.MODID, "blocks/" + variants[m]).toString());
-            IBakedModel bakedWorld = BlockDecoBakedModel.forBlock(wavefront, sprite, -0.5F);
+            IBakedModel bakedWorld = BlockDecoBakedModel.forBlock(wavefront, sprite, -0.5F, -1);
             ModelResourceLocation mrlWorld = new ModelResourceLocation(getRegistryName(), "meta=" + m);
             event.getModelRegistry().putObject(mrlWorld, bakedWorld);
 
-            IBakedModel bakedItem = new BlockDecoBakedModel(wavefront, sprite, false, 1.0F, 0.0F, -0.5F, 0.0F);
+            IBakedModel bakedItem = new BlockDecoBakedModel(wavefront, sprite, false, 1.0F, 0.0F, -0.5F, 0.0F, 2);
             ModelResourceLocation mrlItem = new ModelResourceLocation(new ResourceLocation(RefStrings.MODID, getRegistryName().getPath() + "_item_" + m), "inventory");
             event.getModelRegistry().putObject(mrlItem, bakedItem);
         }

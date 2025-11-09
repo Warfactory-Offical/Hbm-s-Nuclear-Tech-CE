@@ -2795,9 +2795,6 @@ public class ModItems {
     public static void preInit() {
         GunFactory.init();
         excludeNEI.add(item_secret);
-        for (Item item : ALL_ITEMS) {
-            ForgeRegistries.ITEMS.register(item);
-        }
 
         for (Block block : ModBlocks.ALL_BLOCKS) {
             if (block instanceof ICustomBlockItem) {
@@ -2808,6 +2805,10 @@ public class ModItems {
             } else {
                 ForgeRegistries.ITEMS.register(new ItemBlock(block).setRegistryName(block.getRegistryName()));
             }
+        }
+
+        for (Item item : ALL_ITEMS) {
+            ForgeRegistries.ITEMS.register(item);
         }
     }
 
