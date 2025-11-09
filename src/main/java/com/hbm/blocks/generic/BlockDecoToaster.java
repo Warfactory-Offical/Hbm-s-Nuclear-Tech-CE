@@ -23,8 +23,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockDecoToaster extends BlockDecoModel {
 
     public BlockDecoToaster(Material mat, SoundType type, String registryName) {
-        super(mat, type, registryName, BlockEnums.DecoToasterEnum.class, true, true,
+        super(mat, type, registryName, BlockEnums.DecoToasterEnum.class, false, true,
                 new ResourceLocation(RefStrings.MODID, "models/blocks/toaster.obj"));
+        this.setBlockBoundsTo(0.25F, 0.0F, 0.375F, 0.75F, 0.325F, 0.625F);
     }
 
     @Override
@@ -44,11 +45,11 @@ public class BlockDecoToaster extends BlockDecoModel {
         for (int m = 0; m < variants.length; m++) {
             TextureAtlasSprite sprite = atlas.getAtlasSprite(new ResourceLocation(RefStrings.MODID, "blocks/" + variants[m]).toString());
             // World/block model (centered, shaded)
-            IBakedModel bakedWorld = BlockDecoBakedModel.forBlock(wavefront, sprite, -0.5F);
+            IBakedModel bakedWorld = BlockDecoBakedModel.forBlock(wavefront, sprite, -0.5F, 1);
             ModelResourceLocation mrlWorld = new ModelResourceLocation(getRegistryName(), "meta=" + m);
             event.getModelRegistry().putObject(mrlWorld, bakedWorld);
 
-            IBakedModel bakedItem = new BlockDecoBakedModel(wavefront, sprite, false, 1.0F, 0.0F, -0.5F, 0.0F);
+            IBakedModel bakedItem = new BlockDecoBakedModel(wavefront, sprite, false, 1.0F, 0.0F, -0.5F, 0.0F, 0);
             ModelResourceLocation mrlItem = new ModelResourceLocation(new ResourceLocation(RefStrings.MODID, getRegistryName().getPath() + "_item_" + m), "inventory");
             event.getModelRegistry().putObject(mrlItem, bakedItem);
         }

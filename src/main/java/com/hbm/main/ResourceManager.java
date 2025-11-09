@@ -468,7 +468,6 @@ public class ResourceManager {
     //Derrick
     public static final IModelCustom derrick = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/derrick.obj")).asVBO();
     //Missile Parts
-    public static final IModelCustom missile_pad_old = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missilePad.obj")).asVBO();
     public static final IModelCustom missile_pad = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/weapons/launch_pad_silo.obj")).asVBO();
     public static final IModelCustom missile_erector = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/weapons/launch_pad_erector.obj")).asVBO();
     public static final IModelCustom missile_assembly = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/missile_assembly.obj")).asVBO();
@@ -1408,7 +1407,7 @@ public class ResourceManager {
     public static final ResourceLocation soyuz_launcher_support_base_tex = new ResourceLocation(RefStrings.MODID, "textures/models/soyuz_launcher/launcher_support_base.png");
     public static final ResourceLocation soyuz_launcher_support_tex = new ResourceLocation(RefStrings.MODID, "textures/models/soyuz_launcher/launcher_support.png");
     //Missile Parts
-    public static final ResourceLocation missile_pad_tex = new ResourceLocation(RefStrings.MODID, "textures/models/missile_parts/missilePad.png");
+    public static final ResourceLocation missile_pad_tex = new ResourceLocation(RefStrings.MODID, "textures/models/launchpad/silo.png");
     public static final ResourceLocation missile_pad_rusted_tex = new ResourceLocation(RefStrings.MODID, "textures/models/launchpad/silo_rusted.png");
     public static final ResourceLocation missile_erector_tex = new ResourceLocation(RefStrings.MODID, "textures/models/launchpad/pad.png");
     public static final ResourceLocation missile_erector_micro_tex = new ResourceLocation(RefStrings.MODID, "textures/models/launchpad/erector_micro.png");

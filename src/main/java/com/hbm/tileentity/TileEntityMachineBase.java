@@ -76,7 +76,6 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase impleme
         };
     }
 
-    // This is for cases like barrels - in 2.0.3 there are 6 slots instead of 4
     protected void resizeInventory(int newSlotCount) {
         ItemStackHandler newInventory = getNewInventory(newSlotCount, inventory.getSlotLimit(0));
         for (int i = 0; i < Math.min(inventory.getSlots(), newSlotCount); i++) {

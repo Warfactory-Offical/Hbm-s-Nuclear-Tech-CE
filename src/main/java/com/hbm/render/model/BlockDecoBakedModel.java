@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -20,23 +21,28 @@ public class BlockDecoBakedModel extends AbstractWavefrontBakedModel {
 
     private final Map<EnumFacing, List<BakedQuad>> cacheByFacing = new EnumMap<>(EnumFacing.class);
     private List<BakedQuad> itemQuads;
+    private int rotation;
 
-    public BlockDecoBakedModel(HFRWavefrontObject model, TextureAtlasSprite sprite, boolean forBlock, float baseScale, float tx, float ty, float tz) {
+    public BlockDecoBakedModel(HFRWavefrontObject model, TextureAtlasSprite sprite, boolean forBlock, float baseScale, float tx, float ty, float tz, int rotation) {
         super(model, DefaultVertexFormats.ITEM, baseScale, tx, ty, tz, BakedModelTransforms.forDeco(BakedModelTransforms.standardBlock()));
         this.sprite = sprite;
         this.forBlock = forBlock;
+        this.rotation = rotation;
     }
 
     public static BlockDecoBakedModel forBlock(HFRWavefrontObject model, TextureAtlasSprite sprite) {
-        return new BlockDecoBakedModel(model, sprite, true, 1.0F, 0.0F, 0.0F, 0.0F);
+        return new BlockDecoBakedModel(model, sprite, true, 1.0F, 0.0F, 0.0F, 0.0F, 0);
     }
 
     public static BlockDecoBakedModel forBlock(HFRWavefrontObject model, TextureAtlasSprite sprite, float ty) {
-        return new BlockDecoBakedModel(model, sprite, true, 1.0F, 0.0F, ty, 0.0F);
+        return new BlockDecoBakedModel(model, sprite, true, 1.0F, 0.0F, ty, 0.0F, 0);
+    }
+    public static BlockDecoBakedModel forBlock(HFRWavefrontObject model, TextureAtlasSprite sprite, float ty, int rotation) {
+        return new BlockDecoBakedModel(model, sprite, true, 1.0F, 0.0F, ty, 0.0F, rotation);
     }
 
     @Override
-    public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
+    public @NotNull List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
         if (side != null) return Collections.emptyList();
 
         if (forBlock) {
@@ -62,10 +68,10 @@ public class BlockDecoBakedModel extends AbstractWavefrontBakedModel {
 
     private List<BakedQuad> buildQuadsForFacing(EnumFacing facing) {
         float yaw = switch (facing) {
-            case NORTH -> (float) Math.PI;
-            case WEST -> 1.5F * (float) Math.PI;
-            case EAST -> 0.5F * (float) Math.PI;
-            default -> 0.0F;
+            case NORTH -> (0.5F * rotation + 1.0F) *(float) Math.PI;
+            case WEST -> (0.5F * rotation + 1.5F) * (float) Math.PI;
+            case EAST -> (0.5F * rotation + 0.5F) * (float) Math.PI;
+            default -> (0.5F * rotation + 0.0F) * (float) Math.PI;
         };
         // World: shadow enabled, center model to block (+0.5)
         return super.bakeSimpleQuads(null, 0.0F, 0.0F, yaw, true, true, sprite);
@@ -77,7 +83,7 @@ public class BlockDecoBakedModel extends AbstractWavefrontBakedModel {
     }
 
     @Override
-    public TextureAtlasSprite getParticleTexture() {
+    public @NotNull TextureAtlasSprite getParticleTexture() {
         return sprite;
     }
 }
