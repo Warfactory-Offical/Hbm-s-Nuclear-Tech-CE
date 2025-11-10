@@ -336,6 +336,11 @@ public class RecipesCommon {
         public List<ItemStack> extractForJEI() {
             return Collections.singletonList(this.toStack());
         }
+
+        @Contract(pure = true)
+        public boolean isEmpty() {
+            return item == Items.AIR || stacksize <= 0 || meta < -32768 || meta > 65535;
+        }
     }
 
     /**

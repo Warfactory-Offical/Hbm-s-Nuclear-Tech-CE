@@ -699,6 +699,11 @@ public class HazardSystem {
      * @apiNote count insensitive (chronology keyed by ComparableStack without count; modifiers/types may read count at application time)
      */
     private static List<HazardEntry> computeHazards(ItemStack stack, ComparableStack compStack) {
+        if (stack.isEmpty() || compStack.isEmpty()) {
+            MainRegistry.logger.debug("HazardSystem.computeHazards got an empty stack or compStack(ItemStack: {}, ComparableStack: {}). " +
+                    "This is not supposed to happen, please check for mod incompatibilities.", stack, compStack);
+            return Collections.emptyList();
+        }
         // Get NBT-agnostic base data
         List<HazardData> chronological = hazardDataChronologyCache.computeIfAbsent(compStack, cs -> {
             final List<HazardData> data = new ArrayList<>();
