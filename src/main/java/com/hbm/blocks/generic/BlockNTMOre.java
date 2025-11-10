@@ -1,5 +1,6 @@
 package com.hbm.blocks.generic;
 
+import com.hbm.blocks.IOreType;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.hazard.HazardSystem;
 import com.hbm.main.MainRegistry;
@@ -28,9 +29,9 @@ public class BlockNTMOre extends BlockOre {
 
 
     public static int xp;
-    protected final OreEnum oreEnum;
+    protected final IOreType oreEnum;
 
-    public BlockNTMOre(String name, OreEnum oreEnum, int harvestLvl, int xp) {
+    public BlockNTMOre(String name, IOreType oreEnum, int harvestLvl, int xp) {
         super();
         BlockNTMOre.xp = xp;
         this.oreEnum = oreEnum;
@@ -42,7 +43,7 @@ public class BlockNTMOre extends BlockOre {
         ModBlocks.ALL_BLOCKS.add(this);
     }
 
-    public BlockNTMOre(String name, @Nullable OreEnum oreEnum, int harvestLvl) {
+    public BlockNTMOre(String name, @Nullable IOreType oreEnum, int harvestLvl) {
         this(name, oreEnum, harvestLvl, 2);
     }
 
@@ -51,7 +52,7 @@ public class BlockNTMOre extends BlockOre {
     }
 
 
-    public BlockNTMOre(SoundType sound, String name, OreEnum oreEnum, int harvestLvl) {
+    public BlockNTMOre(SoundType sound, String name, IOreType oreEnum, int harvestLvl) {
         this(name, oreEnum, harvestLvl);
         super.setSoundType(sound);
     }
@@ -72,7 +73,7 @@ public class BlockNTMOre extends BlockOre {
         //For the time, just normal blocks
 
 
-        int count = (oreEnum == null) ? quantityDropped(state, fortune, rand) : oreEnum.quantityFunction.apply(state, fortune, rand);
+        int count = (oreEnum == null) ? quantityDropped(state, fortune, rand) : oreEnum.getQuantityFunction().apply(state, fortune, rand);
 
         for (int i = 0; i < count; i++)
         {
@@ -81,7 +82,7 @@ public class BlockNTMOre extends BlockOre {
             if(oreEnum  == null) {
                 droppedItem = new ItemStack(this.getItemDropped(state, rand, fortune), 1, this.damageDropped(state));
             } else {
-                droppedItem =  oreEnum.dropFunction.apply(state, rand);
+                droppedItem = oreEnum.getDropFunction().apply(state, rand);
             }
 
             if (!droppedItem.isEmpty())
