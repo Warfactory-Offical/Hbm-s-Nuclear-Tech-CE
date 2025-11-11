@@ -103,6 +103,23 @@ jobs:
               \"gameVersions\": [6756],
             };type=application/json" \
             -F "file=@${FILE}"
-#            -F "additionalFiles=@build/libs/*-dev.jar" \
-#            -F "additionalFiles=@build/libs/*-sources.jar"
 
+      - name: Publish to Modrinth
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MPR_TOKEN }}
+          TAG: ${{ env.TAG }}
+          FILE: ${{ env.FILE }}
+        run: |
+          curl -X POST "https://api.modrinth.com/v2/version" \
+            -H "Authorization: ${MODRINTH_TOKEN}" \
+            -F "data={
+              \"name\": \"${TAG}\",
+              \"version_number\": \"${TAG}\",
+              \"changelog\": \"See GitHub release ${TAG} for notes.\",
+              \"version_type\": \"beta\",
+              \"game_versions\": [\"1.12.2\"],
+              \"loaders\": [\"forge\"],
+              \"featured\": false,
+              \"project_id\": \"ntm-ce\"
+            };type=application/json" \
+            -F "files=@${FILE}"
