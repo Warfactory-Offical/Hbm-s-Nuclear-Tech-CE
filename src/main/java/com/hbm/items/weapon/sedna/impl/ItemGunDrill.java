@@ -66,8 +66,24 @@ public class ItemGunDrill extends ItemGunBaseNT implements IFillableItem, IBatte
         // Only accept if it's a fluid magazine and supports this type
         if (mag instanceof MagazineFluid) {
             MagazineFluid engine = (MagazineFluid) mag;
-            return Arrays.asList(engine.acceptedTypes).contains(type)
-                    || getMagCount(stack) == 0; // Empty = can initialize with this type
+            FluidType[] allowedFluids = new FluidType[] { Fluids.GASOLINE, Fluids.GASOLINE_LEADED, Fluids.COALGAS, Fluids.COALGAS_LEADED };
+            boolean isSupportedType = false;
+            for (FluidType accepted : engine.acceptedTypes) {
+                if (accepted == type) {
+                    isSupportedType = true;
+                    break;
+                }
+            }
+            boolean canInitializeEmpty = false;
+            if (getMagCount(stack) == 0) {
+                for (FluidType allowed : allowedFluids) {
+                    if (allowed == type && isSupportedType) {
+                        canInitializeEmpty = true;
+                        break;
+                    }
+                }
+            }
+            return isSupportedType || canInitializeEmpty;
         }
 
         return false;
@@ -120,9 +136,9 @@ public class ItemGunDrill extends ItemGunBaseNT implements IFillableItem, IBatte
             int capacity = engine.getCapacity(stack);
 
             if (type == Fluids.NONE || amount <= 0) {
-                tooltip.add(TextFormatting.GRAY + "Fuel: Empty (" + capacity + " mB)");
+                tooltip.add(TextFormatting.RED + "Fuel: Empty (" + capacity + " mB)");
             } else {
-                tooltip.add(TextFormatting.GRAY + "Fuel: " + type.getName() + " " + amount + "/" + capacity + " mB");
+                tooltip.add(TextFormatting.GREEN + "Fuel: " + type.getName() + " " + amount + "/" + capacity + " mB");
             }
         }
     }
