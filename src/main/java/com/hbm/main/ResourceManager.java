@@ -23,6 +23,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.SplashProgress;
 import org.lwjgl.opengl.GL11;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 
 public class ResourceManager {
@@ -1907,11 +1908,32 @@ public class ResourceManager {
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 
         //Drillgon discovered that it messes with GL context
-        SplashProgress.pause();
+        if (splashNotTerminated()) SplashProgress.pause();
         for (WaveFrontObjectVAO obj : WaveFrontObjectVAO.allVBOs) {
             obj.generate_vaos();
         }
-        SplashProgress.resume();
+        if (splashNotTerminated()) SplashProgress.resume();
     }
 
+    //mlbv: yes, i hate reflections as much as you do, but somehow AccessTransformer doesn't work on this
+    private static final Field splashThread;
+
+    static {
+        try {
+            splashThread = SplashProgress.class.getDeclaredField("thread");
+        } catch (NoSuchFieldException e) {
+            throw new AssertionError(e);
+        }
+        splashThread.setAccessible(true);
+    }
+
+    private static boolean splashNotTerminated() {
+        Thread splashThread;
+        try {
+            splashThread = (Thread) ResourceManager.splashThread.get(null);
+        } catch (IllegalAccessException e) {
+            throw new AssertionError(e);
+        }
+        return splashThread.getState() != Thread.State.TERMINATED;
+    }
 }
