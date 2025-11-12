@@ -85,6 +85,10 @@ public class NodeMath extends Node {
 				return evalCache[0] = new DataValueFloat(evals[0].getNumber() <= evals[1].getNumber() ? 1 : 0);
 			case CLAMP:
 				return evalCache[0] = new DataValueFloat(MathHelper.clamp(evals[0].getNumber(), evals[1].getNumber(), evals[2].getNumber()));
+			case MAX:
+				return evalCache[0] = new DataValueFloat(Math.max(evals[0].getNumber(),evals[1].getNumber()));
+			case MIN:
+				return evalCache[0] = new DataValueFloat(Math.min(evals[0].getNumber(),evals[1].getNumber()));
 			case FLOOR:
 				return evalCache[0] = new DataValueFloat((float)Math.floor(evals[0].getNumber()));
 			case CEIL:
@@ -120,6 +124,8 @@ public class NodeMath extends Node {
 			case DIV:
 			case MOD:
 			case POW:
+			case MIN:
+			case MAX:
 			case LOG:
 				if(op == Operation.POW){
 					s1 = "Base";
@@ -177,6 +183,8 @@ public class NodeMath extends Node {
 		GEQUAL("Greater/equal"),
 		LEQUAL("Less/equal"),
 		CLAMP("Clamp"),
+		MAX("Max"),
+		MIN("Min"),
 		FLOOR("Floor"),
 		CEIL("Ceil"),
 		ROUND("Round");
