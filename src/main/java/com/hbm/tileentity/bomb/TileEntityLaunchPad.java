@@ -22,7 +22,7 @@ import java.util.List;
 @AutoRegister
 public class TileEntityLaunchPad extends TileEntityLaunchPadBase {
     private static boolean updated = false; // so the update won't result in a crash, though I'd recommend people to just create a new world idk
-    public TileEntityLaunchPad() { super(7); updated = true; }
+    public TileEntityLaunchPad() { super(7); updated = false; }
 
     @Override
     public boolean isReadyForLaunch() { return delay <= 0; }
