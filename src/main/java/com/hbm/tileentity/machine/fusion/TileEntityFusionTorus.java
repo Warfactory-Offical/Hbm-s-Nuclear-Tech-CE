@@ -1,12 +1,14 @@
 package com.hbm.tileentity.machine.fusion;
 
+import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.DirPos;
-import com.hbm.tileentity.machine.albion.TileEntityCooledBase;
+import com.hbm.tileentity.TileEntityMachineBase;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TileEntityFusionTorus extends TileEntityCooledBase {
+@AutoRegister
+public class TileEntityFusionTorus extends TileEntityMachineBase {
 
     public TileEntityFusionTorus() {
         super(3);
@@ -21,12 +23,10 @@ public class TileEntityFusionTorus extends TileEntityCooledBase {
 
     }
 
-    @Override
     public long getMaxPower() {
         return 0;
     }
-
-    @Override
+    
     public DirPos[] getConPos() {
         return null;
     }

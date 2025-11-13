@@ -8,6 +8,8 @@ import com.hbm.blocks.generic.*;
 import com.hbm.blocks.generic.BlockHazard.ExtDisplayEffect;
 import com.hbm.blocks.machine.*;
 import com.hbm.blocks.machine.albion.*;
+import com.hbm.blocks.machine.fusion.MachineFusionBreeder;
+import com.hbm.blocks.machine.fusion.MachineFusionKlystron;
 import com.hbm.blocks.machine.fusion.MachineFusionTorus;
 import com.hbm.blocks.machine.pile.*;
 import com.hbm.blocks.machine.rbmk.*;
@@ -1167,6 +1169,7 @@ public class ModBlocks {
 	public static final Block struct_soyuz_core = new BlockStruct(Material.IRON, "struct_soyuz_core", TileEntitySoyuzStruct.class).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.missileTab);
 	public static final Block struct_iter_core = new BlockStruct(Material.IRON, "struct_iter_core", TileEntityITERStruct.class).setLightLevel(1F).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block struct_plasma_core = new BlockPlasmaStruct(Material.IRON, "struct_plasma_core", TileEntityPlasmaStruct.class).setLightLevel(1F).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+    public static final Block struct_torus_core = new BlockFusionTorusStruct(Material.IRON, "struct_torus_core", TileEntityFusionTorusStruct.class).setLightLevel(1F).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block struct_watz_core = new BlockStruct(Material.IRON, "struct_watz_core", TileEntityWatzStruct.class).setLightLevel(1F).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block struct_icf_core = new BlockPlasmaStruct(Material.IRON, "struct_icf_core", TileEntityICFStruct.class).setLightLevel(1F).setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 
@@ -1202,7 +1205,8 @@ public class ModBlocks {
 
     public static final Block fusion_torus = new MachineFusionTorus("fusion_torus").setHardness(5.0F).setResistance(60.0F).setCreativeTab(MainRegistry.machineTab);
     public static final Block fusion_component = new BlockFusionComponent().setHardness(5.0F).setResistance(30.0F).setCreativeTab(MainRegistry.machineTab);
-
+    public static final Block fusion_klystron = new MachineFusionKlystron("fusion_klystron").setHardness(5.0F).setResistance(60.0F).setCreativeTab(MainRegistry.machineTab);
+    public static final Block fusion_breeder = new MachineFusionBreeder("fusion_breeder").setHardness(5.0F).setResistance(60.0F).setCreativeTab(MainRegistry.machineTab);
 
     public static final Block machine_icf_press = new MachineICFPress().setHardness(5.0F).setResistance(60.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block icf = new MachineICF("icf").setHardness(5.0F).setResistance(60.0F).setCreativeTab(MainRegistry.machineTab);
