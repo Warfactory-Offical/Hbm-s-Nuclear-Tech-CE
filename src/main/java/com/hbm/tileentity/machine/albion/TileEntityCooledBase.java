@@ -2,6 +2,7 @@ package com.hbm.tileentity.machine.albion;
 
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.api.fluid.IFluidStandardTransceiver;
+import com.hbm.api.fluidmk2.IFluidStandardTransceiverMK2;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.lib.DirPos;
@@ -13,7 +14,10 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class TileEntityCooledBase extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IFluidStandardTransceiver {
+import java.util.Collections;
+import java.util.List;
+
+public abstract class TileEntityCooledBase extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IFluidStandardTransceiverMK2 {
 
     public FluidTankNTM[] tanks;
 
@@ -45,11 +49,17 @@ public abstract class TileEntityCooledBase extends TileEntityMachineBase impleme
 
         if(!world.isRemote) {
 
-            for(DirPos dir : this.getConPos()) {
-                BlockPos pos = dir.getPos();
-                this.trySubscribe(world, pos.getX(), pos.getY(), pos.getZ(), dir.getDir());
-                this.trySubscribe(tanks[0].getTankType(), world, pos.getX(), pos.getY(), pos.getZ(), dir.getDir());
-                this.sendFluid(tanks[1], world, pos.getX(), pos.getY(), pos.getZ(), dir.getDir());
+            DirPos[] conPos = this.getConPos();
+            if (conPos != null) {
+                for (DirPos dir : conPos) {
+                    if (dir == null || dir.getPos() == null) continue;
+                    BlockPos pos = dir.getPos();
+                    this.trySubscribe(world, pos.getX(), pos.getY(), pos.getZ(), dir.getDir());
+                    if (tanks[0] != null)
+                        this.trySubscribe(tanks[0].getTankType(), world, pos.getX(), pos.getY(), pos.getZ(), dir.getDir());
+                    if (tanks[1] != null)
+                        this.tryProvide(tanks[1], world, pos.getX(), pos.getY(), pos.getZ(), dir.getDir());
+                }
             }
 
             this.temperature += temp_passive_heating;

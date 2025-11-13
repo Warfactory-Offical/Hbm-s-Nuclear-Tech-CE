@@ -7,15 +7,14 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @AutoRegister
-public class TileEntityFusionBreeder extends TileEntity {
+public class TileEntityFusionCollector extends TileEntity {
 
     AxisAlignedBB bb = null;
 
-
-	@Override
+    @Override
     public AxisAlignedBB getRenderBoundingBox() {
 
-		if(bb == null) {
+        if(bb == null) {
             bb = new AxisAlignedBB(
                     pos.getX() - 2,
                     pos.getY(),
@@ -23,15 +22,15 @@ public class TileEntityFusionBreeder extends TileEntity {
                     pos.getX() + 3,
                     pos.getY() + 4,
                     pos.getZ() + 3
-					);
-		}
+            );
+        }
 
-		return bb;
-	}
+        return bb;
+    }
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public double getMaxRenderDistanceSquared() {
-		return 65536.0D;
-	}
+    @Override
+    @SideOnly(Side.CLIENT)
+    public double getMaxRenderDistanceSquared() {
+        return 65536.0D;
+    }
 }
