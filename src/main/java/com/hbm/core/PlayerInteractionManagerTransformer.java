@@ -53,6 +53,7 @@ public class PlayerInteractionManagerTransformer implements IClassTransformer {
             coreLogger.error("Failed to find tileentity local or spectator PASS return in processRightClickBlock");
             return false;
         }
+
         InsnList patch = new InsnList();
         patch.add(new VarInsnNode(ALOAD, 1));//player
         patch.add(new VarInsnNode(ALOAD, 2));//worldIn
@@ -65,8 +66,9 @@ public class PlayerInteractionManagerTransformer implements IClassTransformer {
         patch.add(new VarInsnNode(FLOAD, 9));//hitZ
         patch.add(new VarInsnNode(ALOAD, tileEntityVar));//tileentity
 
-        patch.add(new MethodInsnNode(INVOKESTATIC, "com/hbm/core/PlayerInteractionManagerHook", "onSpectatorRightClickBlock", "(Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/world/World;Lnet/minecraft/item/ItemStack;Lnet/minecraft/util/EnumHand;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/EnumFacing;FFFLnet/minecraft/tileentity/TileEntity;)V", false));
+        patch.add(new MethodInsnNode(INVOKESTATIC, "com/hbm/core/PlayerInteractionManagerHook", "onSpectatorRightClickBlock", "(Lnet/minecraft/entity/player/EntityPlayer;" + "Lnet/minecraft/world/World;" + "Lnet/minecraft/item/ItemStack;" + "Lnet/minecraft/util/EnumHand;" + "Lnet/minecraft/util/math/BlockPos;" + "Lnet/minecraft/util/EnumFacing;FFF" + "Lnet/minecraft/tileentity/TileEntity;)" + "Lnet/minecraft/util/EnumActionResult;", false));
         method.instructions.insertBefore(spectatorReturnGetStatic, patch);
+        method.instructions.remove(spectatorReturnGetStatic);
 
         coreLogger.info("Injected PlayerInteractionManagerHook.onSpectatorRightClickBlock before spectator PASS return");
         return true;
