@@ -53,12 +53,12 @@ public class HbmCorePlugin implements IFMLLoadingPlugin {
 
     @Override
     public String[] getASMTransformerClass() {
-        return new String[]{GlStateManagerTransformer.class.getName(), ContainerTransformer.class.getName(), InventoryPlayerTransformer.class.getName(), ForgeHooksTransformer.class.getName(), ChunkTransformer.class.getName(), WorldTransformer.class.getName(), WorldServerTransformer.class.getName()};
+        return new String[]{GlStateManagerTransformer.class.getName(), ContainerTransformer.class.getName(), InventoryPlayerTransformer.class.getName(), ForgeHooksTransformer.class.getName(), ChunkTransformer.class.getName(), WorldTransformer.class.getName(), WorldServerTransformer.class.getName(), PlayerInteractionManagerTransformer.class.getName()};
     }
 
     @Override
     public String getModContainerClass() {
-        return "com.hbm.core.HbmCoreModContainer";
+        return HbmCoreModContainer.class.getName();
     }
 
     @Override

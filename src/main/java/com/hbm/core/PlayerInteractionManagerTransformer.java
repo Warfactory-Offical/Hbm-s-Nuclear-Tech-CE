@@ -1,0 +1,115 @@
+package com.hbm.core;
+
+import net.minecraft.launchwrapper.IClassTransformer;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.tree.*;
+
+import static com.hbm.core.HbmCorePlugin.coreLogger;
+import static com.hbm.core.HbmCorePlugin.fail;
+import static org.objectweb.asm.Opcodes.*;
+
+public class PlayerInteractionManagerTransformer implements IClassTransformer {
+    private static final ObfSafeName processRightClickBlock = new ObfSafeName("processRightClickBlock", "func_187251_a");
+    private static final ObfSafeName getTileEntity = new ObfSafeName("getTileEntity", "func_175625_s");
+
+    private static boolean patchSpectatorRightClickBlock(MethodNode method) {
+        Integer tileEntityVar = null;
+        AbstractInsnNode spectatorReturnGetStatic = null;
+
+        AbstractInsnNode[] insns = method.instructions.toArray();
+
+        for (AbstractInsnNode n : insns) {
+            if (n.getOpcode() == INVOKEVIRTUAL && n instanceof MethodInsnNode mi) {
+                if ("net/minecraft/world/World".equals(mi.owner) && getTileEntity.matches(mi.name) && "(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/tileentity/TileEntity;".equals(mi.desc)) {
+
+                    AbstractInsnNode next = mi.getNext();
+                    while (next instanceof LabelNode || next instanceof LineNumberNode || next instanceof FrameNode) {
+                        next = next.getNext();
+                    }
+
+                    if (next instanceof VarInsnNode && next.getOpcode() == ASTORE) {
+                        tileEntityVar = ((VarInsnNode) next).var;
+                    }
+                }
+            }
+            if (tileEntityVar != null && n.getOpcode() == GETSTATIC && n instanceof FieldInsnNode f) {
+                if ("net/minecraft/util/EnumActionResult".equals(f.owner) && "PASS".equals(f.name) && "Lnet/minecraft/util/EnumActionResult;".equals(f.desc)) {
+
+                    AbstractInsnNode next = f.getNext();
+                    while (next instanceof LabelNode || next instanceof LineNumberNode || next instanceof FrameNode) {
+                        next = next.getNext();
+                    }
+
+                    if (next != null && next.getOpcode() == ARETURN) {
+                        spectatorReturnGetStatic = f;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (tileEntityVar == null || spectatorReturnGetStatic == null) {
+            coreLogger.error("Failed to find tileentity local or spectator PASS return in processRightClickBlock");
+            return false;
+        }
+        InsnList patch = new InsnList();
+        patch.add(new VarInsnNode(ALOAD, 1));//player
+        patch.add(new VarInsnNode(ALOAD, 2));//worldIn
+        patch.add(new VarInsnNode(ALOAD, 3));//stack
+        patch.add(new VarInsnNode(ALOAD, 4));//hand
+        patch.add(new VarInsnNode(ALOAD, 5));//pos
+        patch.add(new VarInsnNode(ALOAD, 6));//facing
+        patch.add(new VarInsnNode(FLOAD, 7));//hitX
+        patch.add(new VarInsnNode(FLOAD, 8));//hitY
+        patch.add(new VarInsnNode(FLOAD, 9));//hitZ
+        patch.add(new VarInsnNode(ALOAD, tileEntityVar));//tileentity
+
+        patch.add(new MethodInsnNode(INVOKESTATIC, "com/hbm/core/PlayerInteractionManagerHook", "onSpectatorRightClickBlock", "(Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/world/World;Lnet/minecraft/item/ItemStack;Lnet/minecraft/util/EnumHand;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/EnumFacing;FFFLnet/minecraft/tileentity/TileEntity;)V", false));
+        method.instructions.insertBefore(spectatorReturnGetStatic, patch);
+
+        coreLogger.info("Injected PlayerInteractionManagerHook.onSpectatorRightClickBlock before spectator PASS return");
+        return true;
+    }
+
+    @Override
+    public byte[] transform(String name, String transformedName, byte[] basicClass) {
+        if (basicClass == null || !"net.minecraft.server.management.PlayerInteractionManager".equals(transformedName)) {
+            return basicClass;
+        }
+
+        coreLogger.info("Patching class {} / {}", transformedName, name);
+
+        try {
+            ClassNode cn = new ClassNode();
+            new ClassReader(basicClass).accept(cn, 0);
+
+            boolean patched = false;
+
+            for (MethodNode mn : cn.methods) {
+                if (processRightClickBlock.matches(mn.name) && "(Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/world/World;Lnet/minecraft/item/ItemStack;Lnet/minecraft/util/EnumHand;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/EnumFacing;FFF)Lnet/minecraft/util/EnumActionResult;".equals(mn.desc)) {
+
+                    coreLogger.info("Patching method: {}{}", processRightClickBlock.getName(), mn.desc);
+
+                    if (!patchSpectatorRightClickBlock(mn)) {
+                        throw new IllegalStateException("Failed to inject onSpectatorRightClickBlock hook");
+                    }
+
+                    patched = true;
+                    break;
+                }
+            }
+
+            if (!patched) {
+                throw new IllegalStateException("Did not find processRightClickBlock to patch");
+            }
+
+            ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+            cn.accept(cw);
+            return cw.toByteArray();
+        } catch (Throwable t) {
+            fail("net.minecraft.server.management.PlayerInteractionManager", t);
+            return basicClass;
+        }
+    }
+}
