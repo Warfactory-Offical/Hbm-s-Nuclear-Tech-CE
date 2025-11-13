@@ -5,21 +5,19 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.item.ItemRenderBase;
-import com.hbm.tileentity.machine.fusion.TileEntityFusionKlystron;
+import com.hbm.tileentity.machine.fusion.TileEntityFusionBoiler;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import org.lwjgl.opengl.GL11;
 
 @AutoRegister
-public class RenderFusionKlystron extends TileEntitySpecialRenderer<TileEntityFusionKlystron>
+public class RenderFusionBoiler extends TileEntitySpecialRenderer<TileEntityFusionBoiler>
         implements IItemRendererProvider {
 
-
-
-	@Override
+    @Override
     public void render(
-            TileEntityFusionKlystron klystron,
+            TileEntityFusionBoiler boiler,
             double x,
             double y,
             double z,
@@ -27,47 +25,45 @@ public class RenderFusionKlystron extends TileEntitySpecialRenderer<TileEntityFu
             int destroyStage,
             float alpha) {
         GlStateManager.pushMatrix();
-        GlStateManager.translate(x + 0.5, y, z + 0.5);
+        GlStateManager.translate(x + 0.5F, y, z + 0.5F);
         GlStateManager.enableLighting();
         GlStateManager.enableCull();
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
 
-        switch (klystron.getBlockMetadata() - BlockDummyable.offset) {
-		case 2: GlStateManager.rotate(90, 0F, 1F, 0F);
-		case 4: GlStateManager.rotate(180, 0F, 1F, 0F);
-		case 3: GlStateManager.rotate(270, 0F, 1F, 0F);
-		case 5: GlStateManager.rotate(0, 0F, 1F, 0F);
-		}
+        switch (boiler.getBlockMetadata() - BlockDummyable.offset) {
+            case 2: GlStateManager.rotate(90, 0F, 1F, 0F);
+            case 4: GlStateManager.rotate(180, 0F, 1F, 0F);
+            case 3: GlStateManager.rotate(270, 0F, 1F, 0F);
+            case 5: GlStateManager.rotate(0, 0F, 1F, 0F);
+        }
 
-        GlStateManager.translate(-1, 0, 0);
-
-		bindTexture(ResourceManager.fusion_klystron_tex);
-		ResourceManager.fusion_klystron.renderAll();
+        bindTexture(ResourceManager.fusion_boiler_tex);
+        ResourceManager.fusion_boiler.renderAll();
 
         GlStateManager.shadeModel(GL11.GL_FLAT);
         GlStateManager.popMatrix();
-	}
+    }
 
-	@Override
-	public Item getItemForRenderer() {
-		return Item.getItemFromBlock(ModBlocks.fusion_klystron);
-	}
+    @Override
+    public Item getItemForRenderer() {
+        return Item.getItemFromBlock(ModBlocks.fusion_boiler);
+    }
 
-	@Override
-	public ItemRenderBase getRenderer(Item item) {
-		return new ItemRenderBase() {
-			public void renderInventory() {
-                GlStateManager.translate(0, -3, 1);
+    @Override
+    public ItemRenderBase getRenderer(Item item) {
+        return new ItemRenderBase() {
+            public void renderInventory() {
+                GlStateManager.translate(0, -1, 0);
                 GlStateManager.scale(3.5, 3.5, 3.5);
                 GlStateManager.rotate(90, 0, 1, 0);
-			}
-			public void renderCommon() {
+            }
+            public void renderCommon() {
                 GlStateManager.scale(0.5, 0.5, 0.5);
                 GlStateManager.rotate(90, 0F, 1F, 0F);
                 GlStateManager.shadeModel(GL11.GL_SMOOTH);
-				bindTexture(ResourceManager.fusion_klystron_tex);
-				ResourceManager.fusion_klystron.renderAll();
+                bindTexture(ResourceManager.fusion_boiler_tex);
+                ResourceManager.fusion_boiler.renderAll();
                 GlStateManager.shadeModel(GL11.GL_FLAT);
-			}};
-	}
+            }};
+    }
 }

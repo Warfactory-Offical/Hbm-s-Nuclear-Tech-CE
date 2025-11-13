@@ -7,31 +7,31 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @AutoRegister
-public class TileEntityFusionBreeder extends TileEntity {
+public class TileEntityFusionBoiler extends TileEntity {
 
     AxisAlignedBB bb = null;
 
-
-	@Override
+    @Override
     public AxisAlignedBB getRenderBoundingBox() {
 
-		if(bb == null) {
+        if(bb == null) {
             bb = new AxisAlignedBB(
-                    pos.getX() - 2,
+                    pos.getX() - 4,
                     pos.getY(),
-                    pos.getZ() - 2,
-                    pos.getX() + 3,
+                    pos.getZ() - 4,
+                    pos.getX() + 5,
                     pos.getY() + 4,
-                    pos.getZ() + 3
-					);
-		}
+                    pos.getZ() + 5
+            );
+        }
 
-		return bb;
-	}
+        return bb;
+    }
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public double getMaxRenderDistanceSquared() {
-		return 65536.0D;
-	}
+    @Override
+    @SideOnly(Side.CLIENT)
+    public double getMaxRenderDistanceSquared() {
+        return 65536.0D;
+    }
 }
+

@@ -7,6 +7,7 @@ import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.TileEntityProxyCombo;
 import com.hbm.tileentity.machine.fusion.TileEntityFusionTorus;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
@@ -76,6 +77,10 @@ public class MachineFusionTorus extends BlockDummyable {
         if(meta >= 6) return new TileEntityProxyCombo().inventory().power().fluid();
 
         return null;
+    }
+
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
+        return super.standardOpenBehavior(world, x, y, z, player, 0);
     }
 
     @Override
