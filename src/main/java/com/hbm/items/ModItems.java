@@ -2626,14 +2626,6 @@ public class ModItems {
     public static final Item mp_chip_3 = new ItemMissile("mp_c_3").makeChip(0.01F).setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
     public static final Item mp_chip_4 = new ItemMissile("mp_c_4").makeChip(0.005F).setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
     public static final Item mp_chip_5 = new ItemMissile("mp_c_5").makeChip(0.0F).setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
-    public static final Item rp_fuselage_20_12 = new ItemMissile("rp_f_20_12").makeFuselage(FuelType.ANY, 64_000, 4000, PartSize.SIZE_20, PartSize.SIZE_20);
-    public static final Item rp_fuselage_20_6 = new ItemMissile("rp_f_20_6").makeFuselage(FuelType.ANY, 32_000, 2100, PartSize.SIZE_20, PartSize.SIZE_20);
-    public static final Item rp_fuselage_20_3 = new ItemMissile("rp_f_20_3").makeFuselage(FuelType.ANY, 16_000, 1200, PartSize.SIZE_20, PartSize.SIZE_20);
-    public static final Item rp_fuselage_20_1 = new ItemMissile("rp_f_20_1").makeFuselage(FuelType.ANY, 6_000, 500, PartSize.SIZE_20, PartSize.SIZE_20);
-    public static final Item rp_legs_20 = new ItemMissile("rp_l_20").makeStability(0, PartSize.SIZE_20).setMaxStackSize(1);
-    public static final Item rp_capsule_20 = new ItemMissile("rp_c_20").makeWarhead(WarheadType.APOLLO, 15F, 8_000, PartSize.SIZE_20).setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
-    public static final Item rp_station_core_20 = new ItemMissile("rp_sc_20").makeWarhead(WarheadType.SATELLITE, 15F, 64_000, PartSize.SIZE_20).setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
-    public static final Item rp_pod_20 = new ItemMissile("rp_pod_20").makeWarhead(WarheadType.APOLLO, 15F, 4_000, PartSize.SIZE_20).setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
     public static final Item missile_skin_camo = new ItemCustomLore("missile_skin_camo").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
     public static final Item missile_skin_desert = new ItemCustomLore("missile_skin_desert").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
     public static final Item missile_skin_flames = new ItemCustomLore("missile_skin_flames").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);

@@ -379,15 +379,6 @@ public class JEIConfig implements IModPlugin {
             blacklist.addIngredientToBlacklist(new ItemStack(ModItems.ammo_debug));
             blacklist.addIngredientToBlacklist(new ItemStack(ModItems.gun_debug));
             blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.keypad_test));
-            // TODO
-            blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rp_capsule_20));
-            blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rp_fuselage_20_1));
-            blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rp_fuselage_20_3));
-            blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rp_fuselage_20_6));
-            blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rp_fuselage_20_12));
-            blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rp_legs_20));
-            blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rp_pod_20));
-            blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rp_station_core_20));
         }
         if (MainRegistry.polaroidID != 11) {
             blacklist.addIngredientToBlacklist(new ItemStack(ModItems.book_secret));

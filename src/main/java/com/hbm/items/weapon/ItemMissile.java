@@ -25,9 +25,9 @@ public class ItemMissile extends Item {
 	public Rarity rarity;
 	public float health;
 	public int mass = 0;
-	private String title;
-	private String author;
-	private String witty;
+	protected String title;
+	protected String author;
+	protected String witty;
 	
 	public ItemMissile(String s) {
 		this.setTranslationKey(s);
@@ -146,7 +146,7 @@ public class ItemMissile extends Item {
 		LEGENDARY("rarity.legendary"),
 		SEWS_CLOTHES_AND_SUCKS_HORSE_COCK("rarity.strange");
 		
-		String name;
+		public String name;
 		
 		Rarity(String name) {
 			this.name = name;
