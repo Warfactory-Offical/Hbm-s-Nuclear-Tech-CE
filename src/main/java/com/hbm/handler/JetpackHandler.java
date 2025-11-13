@@ -9,6 +9,7 @@ import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.items.ModItems;
 import com.hbm.items.gear.JetpackGlider;
 import com.hbm.lib.HBMSoundHandler;
+import com.hbm.lib.MethodHandleHelper;
 import com.hbm.main.ClientProxy;
 import com.hbm.main.MainRegistry;
 import com.hbm.main.ResourceManager;
@@ -50,15 +51,14 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector4f;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodType;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -66,7 +66,7 @@ public class JetpackHandler {
 
 	public static final String JETPACK_NBT = "hbmJetpackAdvanced";
 	
-	public static Method r_setSize;
+	private static final MethodHandle r_setSize = MethodHandleHelper.findVirtual(Entity.class, "setSize", "func_70105_a", MethodType.methodType(void.class, float.class, float.class));
 	
 	private static boolean jet_key_down = false;
 	private static boolean hover_key_down = false;
@@ -383,37 +383,34 @@ public class JetpackHandler {
 		JetpackInfo j = get(player);
 		if(j == null)
 			return;
-		if(r_setSize == null){
-			r_setSize = ReflectionHelper.findMethod(Entity.class, "setSize", "func_70105_a", float.class, float.class);
-		}
 		if(jetpackActive(player) && !player.onGround && j.failureTicks <= 0 && getTank(player).getFluidAmount() > 0){
 			if(isHovering(player)){
 				try {
-					r_setSize.invoke(player, player.width, 1.8F);
-				} catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-					e.printStackTrace();
+					r_setSize.invokeExact(player, player.width, 1.8F);
+				} catch(Throwable e) {
+					throw new RuntimeException(e);
 				}
-				if(j != null && j.jetpackFlyTime >= 0 && player.world.isRemote){
+				if(j.jetpackFlyTime >= 0 && player.world.isRemote){
 					j.jetpackFlyTime = -1;
 				}
 			} else {
 				try {
 					//The magic number 0.6 seems to also make sure the eye height is set correctly automatically in getEyeHeight.
-					r_setSize.invoke(player, player.width, 0.6F);
-				} catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-					e.printStackTrace();
+                    r_setSize.invokeExact(player, player.width, 0.6F);
+				} catch(Throwable e) {
+					throw new RuntimeException(e);
 				}
-				if(j != null && player.world.isRemote){
+				if(j.jetpackFlyTime >= 0 && player.world.isRemote){
 					j.jetpackFlyTime ++;
 				}
 			}
 		} else {
-			if(j != null && j.jetpackFlyTime >= 0 && player.world.isRemote){
+			if(j.jetpackFlyTime >= 0 && player.world.isRemote){
 				j.jetpackFlyTime = -1;
 				try {
-					r_setSize.invoke(player, player.width, 1.8F);
-				} catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-					e.printStackTrace();
+                    r_setSize.invokeExact(player, player.width, 1.8F);
+				} catch(Throwable e) {
+					throw new RuntimeException(e);
 				}
 			}
 		}

@@ -43,6 +43,10 @@ public class HbmCorePlugin implements IFMLLoadingPlugin {
         return runtimeDeobfEnabled;
     }
 
+    public static String chooseName(String mcp, String srg) {
+        return runtimeDeobfEnabled ? srg : mcp;
+    }
+
     public static Brand getBrand() {
         return brand;
     }

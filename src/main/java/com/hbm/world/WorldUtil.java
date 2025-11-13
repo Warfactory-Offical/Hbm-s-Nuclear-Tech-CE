@@ -1,6 +1,7 @@
 package com.hbm.world;
 
 import com.google.common.base.Predicate;
+import com.hbm.lib.MethodHandleHelper;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.BiomeSyncPacket;
@@ -23,20 +24,22 @@ import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodType;
 import java.util.ArrayList;
 import java.util.List;
 
 public class WorldUtil {
-    private static final Method getIntBiomeArray;
+    private static final MethodHandle getIntBiomeArray;
 
     static {
-        Method method = null;
+        MethodHandle method = null;
         if (Compat.isIDExtensionModLoaded()) {
+            //see https://github.com/TerraFirmaCraft-The-Final-Frontier/RoughlyEnoughIDs/blob/master/src/main/java/org/dimdev/jeid/mixin/core/world/MixinChunk.java
             try {
-                method = Chunk.class.getMethod("getIntBiomeArray");
-            } catch (NoSuchMethodException ignored) {
+                method = MethodHandleHelper.findVirtual(Chunk.class, "getIntBiomeArray", MethodType.methodType(int[].class));
+            } catch (RuntimeException ex) {
+                MainRegistry.logger.error("JEID/REID/NEID is loaded but failed to find getIntBiomeArray method", ex);
             }
         }
         getIntBiomeArray = method;
@@ -100,8 +103,9 @@ public class WorldUtil {
         int[] arr = null;
         if (getIntBiomeArray != null) {
             try {
-                arr = (int[]) getIntBiomeArray.invoke(chunk);
-            } catch (IllegalAccessException | InvocationTargetException ignored) {
+                arr = (int[]) getIntBiomeArray.invokeExact(chunk);
+            } catch (Throwable ex) {
+                MainRegistry.logger.catching(ex);
             }
         }
         if (arr != null && arr.length == 256) {

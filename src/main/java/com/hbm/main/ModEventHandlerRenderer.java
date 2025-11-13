@@ -26,7 +26,6 @@ import net.minecraftforge.client.event.EntityViewRenderEvent.FogColors;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FogDensity;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.common.ForgeModContainer;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -119,7 +118,7 @@ public class ModEventHandlerRenderer {
 
 		//can't use plaxer.getHeldItem() here because the item rendering persists for a few frames after hitting the switch key
 		ItemRenderer itemRenderer = Minecraft.getMinecraft().entityRenderer.itemRenderer;
-		ItemStack toRender = ObfuscationReflectionHelper.getPrivateValue(ItemRenderer.class, itemRenderer, "field_187467_d");
+		ItemStack toRender = itemRenderer.itemStackMainHand;
 
 		if(toRender != null) {
 			TileEntityItemStackRenderer render = toRender.getItem().getTileEntityItemStackRenderer();

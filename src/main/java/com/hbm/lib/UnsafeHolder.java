@@ -9,6 +9,12 @@ import java.lang.invoke.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 
+/**
+ * Remove this class and replace existing usages with VarHandle/FFM if we ever migrate to Java 26+
+ * Or just open java.base/jdk.internal.misc and use the Unsafe there XD
+ *
+ * @author mlbv
+ */
 @ApiStatus.Internal
 public class UnsafeHolder {
     public static final Unsafe U;
@@ -72,7 +78,7 @@ public class UnsafeHolder {
         SPIN_WAITER.run();
     }
 
-    public static long fieldOffset(Class<?> clz, String fieldName) throws RuntimeException {
+    public static long fieldOffset(Class<?> clz, String fieldName) {
         try {
             return U.objectFieldOffset(clz.getDeclaredField(fieldName));
         } catch (NoSuchFieldException e) {
@@ -89,9 +95,9 @@ public class UnsafeHolder {
         }
     }
 
-    public static long fieldOffset(Class<?> clz, String mcp, String srg) throws RuntimeException {
+    public static long fieldOffset(Class<?> clz, String mcp, String srg) {
         try {
-            return U.objectFieldOffset(clz.getDeclaredField(HbmCorePlugin.runtimeDeobfEnabled() ? srg : mcp));
+            return U.objectFieldOffset(clz.getDeclaredField(HbmCorePlugin.chooseName(mcp, srg)));
         } catch (NoSuchFieldException e) {
             throw new RuntimeException(e);
         }

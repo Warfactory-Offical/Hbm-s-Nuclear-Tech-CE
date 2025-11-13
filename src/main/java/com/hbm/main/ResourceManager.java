@@ -6,6 +6,7 @@ import com.hbm.animloader.ColladaLoader;
 import com.hbm.config.GeneralConfig;
 import com.hbm.handler.HbmShaderManager2;
 import com.hbm.handler.HbmShaderManager2.Shader;
+import com.hbm.lib.MethodHandleHelper;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.GLCompat;
 import com.hbm.render.WavefrontObjDisplayList;
@@ -23,7 +24,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.SplashProgress;
 import org.lwjgl.opengl.GL11;
 
-import java.lang.reflect.Field;
+import java.lang.invoke.MethodHandle;
 import java.util.HashMap;
 
 public class ResourceManager {
@@ -1915,24 +1916,14 @@ public class ResourceManager {
         if (splashNotTerminated()) SplashProgress.resume();
     }
 
-    //mlbv: yes, i hate reflections as much as you do, but somehow AccessTransformer doesn't work on this
-    private static final Field splashThread;
-
-    static {
-        try {
-            splashThread = SplashProgress.class.getDeclaredField("thread");
-        } catch (NoSuchFieldException e) {
-            throw new AssertionError(e);
-        }
-        splashThread.setAccessible(true);
-    }
+    private static final MethodHandle splashThreadGetter = MethodHandleHelper.findStaticGetter(SplashProgress.class, "thread", Thread.class);
 
     private static boolean splashNotTerminated() {
         Thread splashThread;
         try {
-            splashThread = (Thread) ResourceManager.splashThread.get(null);
-        } catch (IllegalAccessException e) {
-            throw new AssertionError(e);
+            splashThread = (Thread) splashThreadGetter.invokeExact();
+        } catch (Throwable t) {
+            throw new RuntimeException(t);
         }
         return splashThread.getState() != Thread.State.TERMINATED;
     }

@@ -15,6 +15,7 @@ import com.hbm.items.IDynamicModels;
 import com.hbm.items.IItemControlReceiver;
 import com.hbm.items.IKeybindReceiver;
 import com.hbm.items.ModItems;
+import com.hbm.lib.MethodHandleHelper;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.PacketDispatcher;
@@ -46,6 +47,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.play.server.SPacketBlockChange;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
@@ -56,12 +58,11 @@ import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.IShearable;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodType;
 import java.util.*;
 
 import static com.hbm.items.ItemEnumMulti.ROOT_PATH;
@@ -393,7 +394,7 @@ public class ItemToolAbility extends ItemTool implements IDepthRockTool, IGUIPro
 		}
 	} */
 
-	private static final Method blockCaptureDrops = ReflectionHelper.findMethod(Block.class, "captureDrops", null, boolean.class);
+	private static final MethodHandle blockCaptureDrops = MethodHandleHelper.findVirtual(Block.class, "captureDrops", MethodType.methodType(NonNullList.class, boolean.class));
 
 	public static void standardDigPost(World world, int x, int y, int z, EntityPlayerMP player) {
 
@@ -425,19 +426,19 @@ public class ItemToolAbility extends ItemTool implements IDepthRockTool, IGUIPro
 
 			if (removedByPlayer && canHarvest) {
 				try {
-					blockCaptureDrops.invoke(block, true);
+                    //noinspection unchecked
+					NonNullList<ItemStack> ignored = (NonNullList<ItemStack>) blockCaptureDrops.invokeExact(block, true);
 					block.harvestBlock(world, player, pos, state, world.getTileEntity(pos), itemstack);
-					@SuppressWarnings("unchecked")
-					List<ItemStack> drops = (List<ItemStack>) blockCaptureDrops.invoke(block, false);
+					//noinspection unchecked
+					List<ItemStack> drops = (NonNullList<ItemStack>) blockCaptureDrops.invokeExact(block, false);
 					for (ItemStack stack : drops) {
 						Block.spawnAsEntity(world, new BlockPos(dropX, dropY, dropZ), stack);
 					}
-				} catch (IllegalAccessException e) {
-					MainRegistry.logger.error("Failed to capture drops for block " + block, e);
-				} catch (InvocationTargetException e) {
-					MainRegistry.logger.error("Failed to capture drops for block " + block, e);
-				}
-			}
+				} catch (Throwable e) {
+                    MainRegistry.logger.error("Failed to capture drops for block {}", block, e);
+                    throw new RuntimeException(e);
+                }
+            }
 		}
 	}
 
