@@ -51,9 +51,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -561,9 +561,9 @@ public class TileEntityMachineRadarNT extends TileEntityMachineBase implements I
 
 	/** List of lambdas that are supplied a Pair with the entity and radar in question to generate a RadarEntry
 	 The converters coming first have the highest priority */
-	public static List<Function<Tuple.Triplet<Entity, Object, IRadarDetectableNT.RadarScanParams>, RadarEntry>> converters = new ArrayList();
-	public static List<Class> classes = new ArrayList();
-	public static List<Entity> matchingEntities = new ArrayList();
+	public static List<Function<Tuple.Triplet<Entity, Object, IRadarDetectableNT.RadarScanParams>, RadarEntry>> converters = new ArrayList<>();
+	public static List<Class<?>> classes = new ArrayList<>();
+	public static List<Entity> matchingEntities = new ArrayList<>();
 
 	/**
 	 * Iterates over every entity in the world and add them to the matchingEntities list if the class is in the detectable list
@@ -571,12 +571,12 @@ public class TileEntityMachineRadarNT extends TileEntityMachineBase implements I
 	 */
 	public static void updateSystem() {
 		matchingEntities.clear();
-
-		for(WorldServer world : FMLCommonHandler.instance().getMinecraftServerInstance().worlds) {
-			for(Object entity : new ArrayList<>(world.loadedEntityList)) {
-				for(Class clazz : classes) {
+        WorldServer[] worlds = DimensionManager.getWorlds();
+		for(WorldServer world : worlds) {
+			for(Entity entity : world.loadedEntityList) {
+				for(Class<?> clazz : classes) {
 					if(clazz.isAssignableFrom(entity.getClass())) {
-						matchingEntities.add((Entity) entity);
+						matchingEntities.add(entity);
 						break;
 					}
 				}
