@@ -82,6 +82,10 @@ public class HbmCorePlugin implements IFMLLoadingPlugin {
     }
 
     public enum Brand {
-        FORGE, CAT_SERVER, MOHIST, MAGMA, CLEANROOM
+        FORGE, CAT_SERVER, MOHIST, MAGMA, CLEANROOM;
+
+        public boolean isHybrid() {
+            return this == CAT_SERVER || this == MOHIST || this == MAGMA;
+        }
     }
 }
