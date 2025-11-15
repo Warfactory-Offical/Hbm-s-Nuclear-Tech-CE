@@ -544,6 +544,7 @@ public class ClientProxy extends ServerProxy {
         World world = Minecraft.getMinecraft().world;
         if (world == null)
             return;
+        TextureManager man = Minecraft.getMinecraft().renderEngine;
         EntityPlayer player = Minecraft.getMinecraft().player;
         int particleSetting = Minecraft.getMinecraft().gameSettings.particleSetting;
         Random rand = world.rand;
@@ -558,6 +559,54 @@ public class ClientProxy extends ServerProxy {
             return;
         }
         switch (type) {
+            // Old MK1 system ported to MK3:
+            case "waterSplash" -> {
+                for (int i = 0; i < 10; i++) {
+                    EntityCloudFX smoke = new EntityCloudFX(world, x + world.rand.nextGaussian(), y + world.rand.nextGaussian(), z + world.rand.nextGaussian(), 0.0, 0.0, 0.0);
+                    Minecraft.getMinecraft().effectRenderer.addEffect(smoke);
+                }
+            }
+            case "cloudFX2" -> { // i have genuinely no idea what used this
+                EntityCloudFX smoke = new EntityCloudFX(world, x, y, z, 0.0, 0.1, 0.0);
+                Minecraft.getMinecraft().effectRenderer.addEffect(smoke);
+            }
+            case "ABMContrail" -> {
+                ParticleContrail contrail = new ParticleContrail(man, world, x, y, z);
+                Minecraft.getMinecraft().effectRenderer.addEffect(contrail);
+            }
+            // End MK1 porting.
+
+            // Old MK2 system ported to MK3:
+            case "launchSmoke" -> {
+                ParticleSmokePlume contrail = new ParticleSmokePlume(man, world, x, y, z);
+                contrail.motionX = data.getDouble("moX");
+                contrail.motionY = data.getDouble("moY");
+                contrail.motionZ = data.getDouble("moZ");
+                Minecraft.getMinecraft().effectRenderer.addEffect(contrail);
+            }
+            case "exKerosene" -> {
+                ParticleContrail contrail = new ParticleContrail(man, world, x, y, z, 0F, 0F, 0F, 1F);
+                Minecraft.getMinecraft().effectRenderer.addEffect(contrail);
+            }
+            case "exSolid" -> {
+                ParticleContrail contrail = new ParticleContrail(man, world, x, y, z, 0.3F, 0.2F, 0.05F, 1F);
+                Minecraft.getMinecraft().effectRenderer.addEffect(contrail);
+            }
+            case "exHydrogen" -> {
+                ParticleContrail contrail = new ParticleContrail(man, world, x, y, z, 0.7F, 0.7F, 0.7F, 1F);
+                Minecraft.getMinecraft().effectRenderer.addEffect(contrail);
+            }
+            case "exBalefire" -> {
+                ParticleContrail contrail = new ParticleContrail(man, world, x, y, z, 0.2F, 0.7F, 0.2F, 1F);
+                Minecraft.getMinecraft().effectRenderer.addEffect(contrail);
+            }
+            case "radFog", "radiationfog" -> {
+                ParticleRadiationFog contrail = new ParticleRadiationFog(world, x, y, z);
+                Minecraft.getMinecraft().effectRenderer.addEffect(contrail);
+            }
+
+            // End MK2 porting.
+
             case "missileContrail" -> {
                 if (new Vec3d(player.posX - x, player.posY - y, player.posZ - z).length() > 350) return;
 
@@ -619,22 +668,22 @@ public class ClientProxy extends ServerProxy {
                         }
                     }
                     case "radialDigamma" -> {
-                        Vec3d vec = new Vec3d(2, 0, 0);
-                        vec = vec.rotateYaw(rand.nextFloat() * (float) Math.PI * 2F);
+                        MutableVec3d vec = new MutableVec3d(2, 0, 0);
+                        vec.rotateYawSelf(rand.nextFloat() * (float) Math.PI * 2F);
 
                         for (int i = 0; i < count; i++) {
                             ParticleDigammaSmoke fx = new ParticleDigammaSmoke(world, x, y, z);
                             fx.motion((float) vec.x, 0, (float) vec.z);
                             Minecraft.getMinecraft().effectRenderer.addEffect(fx);
 
-                            vec = vec.rotateYaw((float) Math.PI * 2F / (float) count);
+                            vec.rotateYawSelf((float) Math.PI * 2F / (float) count);
                         }
                     }
                     case "shock" -> {
                         double strength = data.getDouble("strength");
 
-                        Vec3d vec = new Vec3d(strength, 0, 0);
-                        vec = vec.rotateYaw(rand.nextInt(360));
+                        MutableVec3d vec = new MutableVec3d(strength, 0, 0);
+                        vec.rotateYawSelf(rand.nextInt(360));
 
                         for (int i = 0; i < count; i++) {
                             if (GeneralConfig.instancedParticles) {
@@ -647,14 +696,14 @@ public class ClientProxy extends ServerProxy {
                                 Minecraft.getMinecraft().effectRenderer.addEffect(fx);
                             }
 
-                            vec = vec.rotateYaw(360F / count);
+                            vec.rotateYawSelf((float) Math.PI * 2F / count);
                         }
                     }
                     case "shockRand" -> {
                         double strength = data.getDouble("strength");
 
-                        Vec3d vec = new Vec3d(strength, 0, 0);
-                        vec = vec.rotateYaw(rand.nextInt(360));
+                        MutableVec3d vec = new MutableVec3d(strength, 0, 0);
+                        vec.rotateYawSelf(rand.nextInt(360));
                         double r;
 
                         for (int i = 0; i < count; i++) {
@@ -669,17 +718,17 @@ public class ClientProxy extends ServerProxy {
                                 Minecraft.getMinecraft().effectRenderer.addEffect(fx);
                             }
 
-                            vec = vec.rotateYaw(360F / count);
+                            vec.rotateYawSelf(360F / count);
                         }
                     }
                     case "wave" -> {
                         double strength = data.getDouble("range");
 
-                        Vec3d vec = new Vec3d(strength, 0, 0);
+                        MutableVec3d vec = new MutableVec3d(strength, 0, 0);
 
                         for (int i = 0; i < count; i++) {
 
-                            vec = vec.rotateYaw((float) Math.toRadians(rand.nextFloat() * 360F));
+                            vec.rotateYawSelf((float) Math.toRadians(rand.nextFloat() * 360F));
 
                             if (GeneralConfig.instancedParticles) {
                                 ParticleExSmokeInstanced fx = new ParticleExSmokeInstanced(world, x + vec.x, y,
@@ -694,17 +743,17 @@ public class ClientProxy extends ServerProxy {
                                 Minecraft.getMinecraft().effectRenderer.addEffect(fx);
                             }
 
-                            vec = vec.rotateYaw(360F / count);
+                            vec.rotateYawSelf(360F / count);
                         }
                     }
                     case "foamSplash" -> {
                         double strength = data.getDouble("range");
 
-                        Vec3d vec = new Vec3d(strength, 0, 0);
+                        MutableVec3d vec = new MutableVec3d(strength, 0, 0);
 
                         for(int i = 0; i < count; i++) {
 
-                            vec = vec.rotateYaw((float) Math.toRadians(rand.nextFloat() * 360F));
+                            vec.rotateYawSelf((float) Math.toRadians(rand.nextFloat() * 360F));
                             // TODO
                             /*ParticleFoam fx = new ParticleFoam(man, world, x + vec.xCoord, y, z + vec.zCoord);
                             fx.maxAge = 50;
@@ -713,7 +762,7 @@ public class ClientProxy extends ServerProxy {
                             fx.motionZ = 0;
                             Minecraft.getMinecraft().effectRenderer.addEffect(fx);
 
-                            vec.rotateAroundY(360 / count);*/
+                            vec.rotateYawSelf(360 / count);*/
                         }
                     }
                     default -> throw new IllegalStateException("Unexpected value: " + mode);
@@ -802,7 +851,7 @@ public class ClientProxy extends ServerProxy {
                     default -> throw new IllegalStateException("Unexpected value: " + mode);
                 }
             }
-            case "muke" -> { // muted nuke
+            case "muke" -> { // mini nuke, without sound
                 ParticleMukeWave wave = new ParticleMukeWave(world, x, y, z);
                 ParticleMukeFlash flash = new ParticleMukeFlash(world, x, y, z, data.getBoolean("balefire"));
 
@@ -996,10 +1045,6 @@ public class ClientProxy extends ServerProxy {
                     flash.motionZ = rand.nextGaussian();
                     Minecraft.getMinecraft().effectRenderer.addEffect(flash);
                 }
-            }
-            case "radiationfog" -> {
-                ParticleRadiationFog fog = new ParticleRadiationFog(world, x, y, z);
-                Minecraft.getMinecraft().effectRenderer.addEffect(fog);
             }
             case "vanillaburst" -> {
                 double motion = data.getDouble("motion");
