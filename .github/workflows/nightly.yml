@@ -25,7 +25,7 @@ jobs:
           cache: gradle
           cache-dependency-path: |
             **/*.gradle*
-            **/gradle.properties
+            **/buildscript.properties
             **/gradle-wrapper.properties
             **/gradle.lockfile
             src/main/resources/hbm_at.cfg

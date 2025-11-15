@@ -18,9 +18,6 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Compat {
 	private static final boolean MOD_EIDS = Loader.isModLoaded("jeid") || Loader.isModLoaded("neid");
 
@@ -58,5 +55,6 @@ public class Compat {
         public static final String OPEN_COMPUTERS = "opencomputers";
         public static final String CTM = "ctm";
         public static final String AE2 = "appliedenergistics2";
+        public static final String MODERN_SPLASH = "modernsplash";
     }
 }
