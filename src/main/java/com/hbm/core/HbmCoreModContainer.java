@@ -16,7 +16,7 @@ public class HbmCoreModContainer extends DummyModContainer {
         meta.name = "NTMCore";
         meta.description = "Hbm core mod";
         //versioning scheme = MAJOR.MINOR.PATCH
-        meta.version = "1.12.2-2.1.2";
+        meta.version = "1.12.2-2.2.0";
         meta.authorList = Collections.singletonList("Movblock");
 	}
 
