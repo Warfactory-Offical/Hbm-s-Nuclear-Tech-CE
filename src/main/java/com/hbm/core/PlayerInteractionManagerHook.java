@@ -1,6 +1,5 @@
 package com.hbm.core;
 
-import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.util.CompatExternal;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,17 +25,17 @@ public final class PlayerInteractionManagerHook {
         //mlbv: in case somehow a spectator is able to move an item: add a check in com.hbm.handler.GuiHandler.getServerGuiElement and wrap the returned Container
         //with a delegation container that makes methods like slotClick no-op
         //currently it works as intended; if it ever breaks, add that check and it should be fine.
-        if (tileentity instanceof IGUIProvider) {
-            FMLNetworkHandler.openGui(player, MainRegistry.instance, 0, worldIn, pos.getX(), pos.getY(), pos.getZ());
+        if (tileentity instanceof IGUIProvider provider) {
+            FMLNetworkHandler.openGui(player, provider.getModInstanceForGui(), 0, worldIn, pos.getX(), pos.getY(), pos.getZ());
             return EnumActionResult.SUCCESS;
         }
-        if (worldIn.getBlockState(pos).getBlock() instanceof IGUIProvider) {
-            FMLNetworkHandler.openGui(player, MainRegistry.instance, 0, worldIn, pos.getX(), pos.getY(), pos.getZ());
+        if (worldIn.getBlockState(pos).getBlock() instanceof IGUIProvider provider) {
+            FMLNetworkHandler.openGui(player, provider.getModInstanceForGui(), 0, worldIn, pos.getX(), pos.getY(), pos.getZ());
             return EnumActionResult.SUCCESS;
         }
         TileEntity core = CompatExternal.getCoreFromPos(worldIn, pos);
-        if (core instanceof IGUIProvider) {
-            FMLNetworkHandler.openGui(player, MainRegistry.instance, 0, worldIn, core.getPos().getX(), core.getPos().getY(), core.getPos().getZ());
+        if (core instanceof IGUIProvider provider) {
+            FMLNetworkHandler.openGui(player, provider.getModInstanceForGui(), 0, worldIn, core.getPos().getX(), core.getPos().getY(), core.getPos().getZ());
             return EnumActionResult.SUCCESS;
         }
         return EnumActionResult.PASS;
