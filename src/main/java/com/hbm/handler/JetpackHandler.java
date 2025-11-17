@@ -386,7 +386,7 @@ public class JetpackHandler {
 		if(jetpackActive(player) && !player.onGround && j.failureTicks <= 0 && getTank(player).getFluidAmount() > 0){
 			if(isHovering(player)){
 				try {
-					r_setSize.invokeExact(player, player.width, 1.8F);
+					r_setSize.invokeExact((Entity) player, player.width, 1.8F);
 				} catch(Throwable e) {
 					throw new RuntimeException(e);
 				}
@@ -396,7 +396,7 @@ public class JetpackHandler {
 			} else {
 				try {
 					//The magic number 0.6 seems to also make sure the eye height is set correctly automatically in getEyeHeight.
-                    r_setSize.invokeExact(player, player.width, 0.6F);
+                    r_setSize.invokeExact((Entity) player, player.width, 0.6F);
 				} catch(Throwable e) {
 					throw new RuntimeException(e);
 				}
@@ -408,7 +408,7 @@ public class JetpackHandler {
 			if(j.jetpackFlyTime >= 0 && player.world.isRemote){
 				j.jetpackFlyTime = -1;
 				try {
-                    r_setSize.invokeExact(player, player.width, 1.8F);
+                    r_setSize.invokeExact((Entity) player, player.width, 1.8F);
 				} catch(Throwable e) {
 					throw new RuntimeException(e);
 				}
