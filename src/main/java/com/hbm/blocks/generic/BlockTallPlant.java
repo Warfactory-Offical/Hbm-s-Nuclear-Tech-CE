@@ -211,7 +211,6 @@ public class BlockTallPlant extends BlockPlantEnumMeta implements IGrowable, IPl
         }
     }
 
-
     @Override
     public List<ItemStack> getDrops(IBlockAccess blockAccess, BlockPos pos, IBlockState state, int fortune) {
         World world = (World) blockAccess;
@@ -219,6 +218,8 @@ public class BlockTallPlant extends BlockPlantEnumMeta implements IGrowable, IPl
         EnumTallPlantType type = (EnumTallPlantType) getEnumFromState(state);
         switch (type) {
             case HEMP_LOWER:
+                drops.add(new ItemStack(EnumMetaBlockItem.getItemFromBlock(ModBlocks.plant_flower), 2, HEMP.ordinal()));
+                break;
             case HEMP_UPPER:
                 drops.add(new ItemStack(EnumMetaBlockItem.getItemFromBlock(ModBlocks.plant_flower), 1, HEMP.ordinal()));
                 break;

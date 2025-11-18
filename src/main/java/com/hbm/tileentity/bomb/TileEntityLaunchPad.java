@@ -21,8 +21,9 @@ import java.util.List;
 
 @AutoRegister
 public class TileEntityLaunchPad extends TileEntityLaunchPadBase {
-    private static boolean updated = false; // so the update won't result in a crash, though I'd recommend people to just create a new world idk
-    public TileEntityLaunchPad() { super(7); updated = false; }
+    public TileEntityLaunchPad() {
+        super(7);
+    }
 
     @Override
     public boolean isReadyForLaunch() { return delay <= 0; }
@@ -34,10 +35,6 @@ public class TileEntityLaunchPad extends TileEntityLaunchPadBase {
     @Override
     public void update() {
         if(!world.isRemote) {
-            if(!updated) {
-                resizeInventory(7);
-                updated = true;
-            }
 
             if(this.delay > 0) delay--;
 
@@ -108,6 +105,9 @@ public class TileEntityLaunchPad extends TileEntityLaunchPadBase {
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         this.delay = nbt.getInteger("delay");
+        if (inventory.getSlots() != 7) {
+            resizeInventory(7);
+        }
     }
 
     @Override
