@@ -35,6 +35,7 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
@@ -131,7 +132,7 @@ public class PneumoTubePaintableBlock extends BlockBakeBase implements IToolable
     @Override
     @SideOnly(Side.CLIENT)
     public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer) {
-        return layer == BlockRenderLayer.CUTOUT_MIPPED;
+        return true;
     }
 
     @Override
@@ -395,22 +396,24 @@ public class PneumoTubePaintableBlock extends BlockBakeBase implements IToolable
         @Override
         public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
             List<BakedQuad> quads = new ArrayList<>();
+            BlockRenderLayer layer = MinecraftForgeClient.getRenderLayer();
+            boolean renderTube = layer == null || layer == BlockRenderLayer.CUTOUT_MIPPED;
+
             IBlockState disguiseState = null;
             EnumFacing insertion = null;
             EnumFacing ejection = null;
 
-            if (state instanceof IExtendedBlockState ext) {
+            if (state instanceof IExtendedBlockState) {
+                IExtendedBlockState ext = (IExtendedBlockState) state;
                 disguiseState = ext.getValue(DISGUISED_STATE);
                 insertion = ext.getValue(INSERTION_DIR);
                 ejection = ext.getValue(EJECTION_DIR);
             }
 
-            boolean disguised = disguiseState != null;
-
-            if (disguised) {
+            if (disguiseState != null) {
                 IBakedModel disguiseModel = Minecraft.getMinecraft().getBlockRendererDispatcher().getModelForState(disguiseState);
                 quads.addAll(disguiseModel.getQuads(disguiseState, side, rand));
-            } else {
+            } else if (renderTube) {
                 if (side == null) {
                     quads.addAll(baseGeneral);
                 } else {
@@ -418,12 +421,14 @@ public class PneumoTubePaintableBlock extends BlockBakeBase implements IToolable
                 }
             }
 
-            if (side == null) {
-                for (EnumFacing face : EnumFacing.values()) {
-                    quads.add(selectOverlay(face, insertion, ejection));
+            if (renderTube) {
+                if (side == null) {
+                    for (EnumFacing face : EnumFacing.values()) {
+                        quads.add(selectOverlay(face, insertion, ejection));
+                    }
+                } else {
+                    quads.add(selectOverlay(side, insertion, ejection));
                 }
-            } else {
-                quads.add(selectOverlay(side, insertion, ejection));
             }
 
             return quads;

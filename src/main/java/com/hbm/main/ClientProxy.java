@@ -1894,6 +1894,17 @@ public class ClientProxy extends ServerProxy {
     }
 
     @Override
+    public List<ItemStack> getSubItems(ItemStack stack) {
+
+        NonNullList<ItemStack> list = NonNullList.create();
+        stack.getItem().getSubItems(stack.getItem().getCreativeTab(), list);
+        for(ItemStack sta : list) {
+            sta.setCount(stack.getCount());
+        }
+        return list;
+    }
+
+    @Override
     public float getImpactDust(World world) {
         return ImpactWorldHandler.getDustForClient(world);
     }

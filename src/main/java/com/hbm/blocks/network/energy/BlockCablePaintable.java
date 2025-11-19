@@ -31,6 +31,7 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
@@ -120,7 +121,7 @@ public class BlockCablePaintable extends BlockBakeBase implements IToolable {
     @Override
     @SideOnly(Side.CLIENT)
     public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer) {
-        return layer == BlockRenderLayer.CUTOUT_MIPPED;
+        return true;
     }
 
     @Override
@@ -326,18 +327,18 @@ public class BlockCablePaintable extends BlockBakeBase implements IToolable {
         @Override
         public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
             List<BakedQuad> quads = new ArrayList<>();
-            IBlockState disguiseState = null;
+            BlockRenderLayer layer = MinecraftForgeClient.getRenderLayer();
+            boolean renderCable = layer == null || layer == BlockRenderLayer.CUTOUT_MIPPED;
 
-            if (state instanceof IExtendedBlockState ext) {
-                disguiseState = ext.getValue(DISGUISED_STATE);
+            IBlockState disguiseState = null;
+            if (state instanceof IExtendedBlockState) {
+                disguiseState = ((IExtendedBlockState) state).getValue(DISGUISED_STATE);
             }
 
-            boolean disguised = disguiseState != null;
-
-            if (disguised) {
+            if (disguiseState != null) {
                 IBakedModel disguiseModel = Minecraft.getMinecraft().getBlockRendererDispatcher().getModelForState(disguiseState);
                 quads.addAll(disguiseModel.getQuads(disguiseState, side, rand));
-            } else {
+            } else if (renderCable) {
                 if (side == null) {
                     quads.addAll(baseGeneral);
                 } else {
@@ -345,10 +346,12 @@ public class BlockCablePaintable extends BlockBakeBase implements IToolable {
                 }
             }
 
-            if (side == null) {
-                quads.addAll(overlayGeneral);
-            } else {
-                quads.addAll(overlayFaces.get(side));
+            if (renderCable) {
+                if (side == null) {
+                    quads.addAll(overlayGeneral);
+                } else {
+                    quads.addAll(overlayFaces.get(side));
+                }
             }
 
             return quads;

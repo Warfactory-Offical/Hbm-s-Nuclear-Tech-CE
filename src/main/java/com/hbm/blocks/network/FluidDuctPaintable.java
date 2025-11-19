@@ -35,6 +35,7 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.model.ModelLoader;
@@ -138,7 +139,7 @@ public class FluidDuctPaintable extends FluidDuctBase implements IToolable, ILoo
     @Override
     @SideOnly(Side.CLIENT)
     public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer) {
-        return layer == BlockRenderLayer.CUTOUT_MIPPED;
+        return true;
     }
 
     @Override
@@ -416,18 +417,19 @@ public class FluidDuctPaintable extends FluidDuctBase implements IToolable, ILoo
         @Override
         public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
             List<BakedQuad> quads = new ArrayList<>();
+            BlockRenderLayer layer = MinecraftForgeClient.getRenderLayer();
+            boolean renderPipe = layer == null || layer == BlockRenderLayer.CUTOUT_MIPPED;
+
             IBlockState disguiseState = null;
 
-            if (state instanceof IExtendedBlockState ext) {
-                disguiseState = ext.getValue(DISGUISED_STATE);
+            if (state instanceof IExtendedBlockState) {
+                disguiseState = ((IExtendedBlockState) state).getValue(DISGUISED_STATE);
             }
 
-            boolean disguised = disguiseState != null;
-
-            if (disguised) {
+            if (disguiseState != null) {
                 IBakedModel disguiseModel = Minecraft.getMinecraft().getBlockRendererDispatcher().getModelForState(disguiseState);
                 quads.addAll(disguiseModel.getQuads(disguiseState, side, rand));
-            } else {
+            } else if (renderPipe) {
                 if (side == null) {
                     quads.addAll(baseGeneral);
                 } else {
@@ -435,17 +437,19 @@ public class FluidDuctPaintable extends FluidDuctBase implements IToolable, ILoo
                 }
             }
 
-            if (disguised) {
-                if (side == null) {
-                    quads.addAll(overlayGeneral);
+            if (renderPipe) {
+                if (disguiseState != null) {
+                    if (side == null) {
+                        quads.addAll(overlayGeneral);
+                    } else {
+                        quads.addAll(overlayFaces.get(side));
+                    }
                 } else {
-                    quads.addAll(overlayFaces.get(side));
-                }
-            } else {
-                if (side == null) {
-                    quads.addAll(overlayTintGeneral);
-                } else {
-                    quads.addAll(overlayTintFaces.get(side));
+                    if (side == null) {
+                        quads.addAll(overlayTintGeneral);
+                    } else {
+                        quads.addAll(overlayTintFaces.get(side));
+                    }
                 }
             }
 

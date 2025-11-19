@@ -43,7 +43,7 @@ public class ItemAutogen extends Item {
     public static List<ItemAutogen> INSTANCES = new ArrayList<>();
     MaterialShapes shape;
     private HashMap<NTMMaterial, String> textureOverrides = new HashMap<>();
-    private static HashMap<NTMMaterial, TextureAtlasSprite> iconMap = new HashMap<>();
+    public static HashMap<NTMMaterial, TextureAtlasSprite> iconMap = new HashMap<>();
     private String overrideUnlocalizedName = null;
 
     public ItemAutogen(MaterialShapes shape, String s) {
@@ -132,7 +132,7 @@ public class ItemAutogen extends Item {
         }
     }
 
-    protected String getTexturePath(NTMMaterial mat) {
+    public String getTexturePath(NTMMaterial mat) {
         if (textureOverrides.containsKey(mat)) {
             return "items/" + textureOverrides.get(mat);
         } else {
