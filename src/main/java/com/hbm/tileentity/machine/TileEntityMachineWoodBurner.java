@@ -28,6 +28,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -194,12 +195,12 @@ public class TileEntityMachineWoodBurner extends TileEntityMachinePolluting impl
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-		super.writeToNBT(nbt);
 		nbt.setLong("power", power);
 		nbt.setInteger("burnTime", burnTime);
 		nbt.setInteger("maxBurnTime", maxBurnTime);
 		nbt.setBoolean("isOn", isOn);
 		nbt.setBoolean("liquidBurn", liquidBurn);
+        tank.writeToNBT(nbt, "t");
 		return super.writeToNBT(nbt);
 	}
 	
@@ -249,7 +250,8 @@ public class TileEntityMachineWoodBurner extends TileEntityMachinePolluting impl
 		return new GUIMachineWoodBurner(player.inventory, this);
 	}
 
-	public int[] getAccessibleSlotsFromSide(int meta) {
+    @Override
+	public int[] getAccessibleSlotsFromSide(EnumFacing facing) {
 		return new int[] { 0, 1 };
 	}
 	

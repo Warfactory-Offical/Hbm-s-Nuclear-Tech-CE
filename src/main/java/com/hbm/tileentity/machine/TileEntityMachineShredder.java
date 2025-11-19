@@ -42,7 +42,7 @@ public class TileEntityMachineShredder extends TileEntityMachineBase implements 
 	private static final int[] slots_bottom = new int[] {9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26};
 
 	public TileEntityMachineShredder() {
-		super(30);
+		super(30, false, true);
 	}
 
 	@Override
@@ -58,6 +58,8 @@ public class TileEntityMachineShredder extends TileEntityMachineBase implements 
 
 	@Override
 	public boolean canInsertItem(int slot, ItemStack itemStack){
+        if (slot != 27 && slot != 28 && itemStack.getItem() instanceof ItemBlades) return false;
+        if (slot != 29 && Library.isItemDischargeableBattery(itemStack)) return false;
 		return this.isItemValidForSlot(slot, itemStack);
 	}
 
@@ -326,23 +328,5 @@ public class TileEntityMachineShredder extends TileEntityMachineBase implements 
 	@SideOnly(Side.CLIENT)
 	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
     	return new GUIMachineShredder(player.inventory, this);
-	}
-
-	@Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-		if (capability == CapabilityEnergy.ENERGY) {
-			return true;
-		}
-		return super.hasCapability(capability, facing);
-	}
-
-	@Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-		if (capability == CapabilityEnergy.ENERGY) {
-			return CapabilityEnergy.ENERGY.cast(
-					new NTMEnergyCapabilityWrapper(this)
-			);
-		}
-		return super.getCapability(capability, facing);
 	}
 }

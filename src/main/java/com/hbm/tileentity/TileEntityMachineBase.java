@@ -33,6 +33,7 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase impleme
      * Consider making this protected in the future.
      */
     public ItemStackHandler inventory;
+    private IItemHandlerModifiable checkedInventory;
     private boolean enablefluidWrapper = false;
     private boolean enableEnergyWrapper = false;
     private String customName;
@@ -229,12 +230,9 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase impleme
      * @return a checked wrapper around the inventory. Intended for Container and GUI class.
      */
     public IItemHandlerModifiable getCheckedInventory() {
-        return new ItemStackHandlerWrapper(inventory) {
-            @Override
-            public boolean isItemValid(int slot, ItemStack stack) {
-                return isItemValidForSlot(slot, stack);
-            }
-        };
+        if (checkedInventory == null)
+            checkedInventory = new CheckedInventory();
+        return checkedInventory;
     }
 
     @Override
@@ -316,5 +314,45 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase impleme
 
     public boolean isDestroyedByCreativePlayer() {
         return destroyedByCreativePlayer;
+    }
+
+    private final class CheckedInventory implements IItemHandlerModifiable {
+        @Override
+        public int getSlots() {
+            return inventory.getSlots();
+        }
+
+        @Override
+        public @NotNull ItemStack getStackInSlot(int slot) {
+            return inventory.getStackInSlot(slot);
+        }
+
+        @Override
+        public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
+            if (stack.isEmpty()) return ItemStack.EMPTY;
+            if (!isItemValidForSlot(slot, stack)) return stack;
+            return inventory.insertItem(slot, stack, simulate);
+        }
+
+        @Override
+        public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
+            if (amount <= 0) return ItemStack.EMPTY;
+            return inventory.extractItem(slot, amount, simulate);
+        }
+
+        @Override
+        public int getSlotLimit(int slot) {
+            return inventory.getSlotLimit(slot);
+        }
+
+        @Override
+        public void setStackInSlot(int slot, @NotNull ItemStack stack) {
+            inventory.setStackInSlot(slot, stack);
+        }
+
+        @Override
+        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+            return isItemValidForSlot(slot, stack);
+        }
     }
 }
