@@ -1,7 +1,6 @@
 package com.hbm.items.weapon.sedna;
 
 import com.hbm.handler.HbmKeybinds;
-import com.hbm.interfaces.IGunClickable;
 import com.hbm.interfaces.IItemHUD;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.gui.GUIWeaponTable;
@@ -19,7 +18,6 @@ import com.hbm.render.misc.RenderScreenOverlay;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.util.BobMathUtil;
 import com.hbm.util.EnumUtil;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
@@ -32,8 +30,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -42,6 +38,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.text.DecimalFormat;
@@ -164,7 +161,7 @@ public class ItemGunBaseNT extends Item implements IKeybindReceiver, IEquipRecei
     }
 
     @Override
-    public String getItemStackDisplayName(ItemStack stack) {
+    public @NotNull String getItemStackDisplayName(@NotNull ItemStack stack) {
 
         if(this.LAMBDA_NAME_MUTATOR != null) {
             String unloc = this.LAMBDA_NAME_MUTATOR.apply(stack);
@@ -176,7 +173,7 @@ public class ItemGunBaseNT extends Item implements IKeybindReceiver, IEquipRecei
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+    public void addInformation(@NotNull ItemStack stack, @Nullable World worldIn, @NotNull List<String> tooltip, @NotNull ITooltipFlag flagIn) {
         EntityPlayer player = Minecraft.getMinecraft().player;
         if (player == null) {
             tooltip.add("Error: Player not found");
@@ -226,10 +223,10 @@ public class ItemGunBaseNT extends Item implements IKeybindReceiver, IEquipRecei
     }
 
     @Override
-    public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, EntityPlayer player) { return true; }
+    public boolean onBlockStartBreak(@NotNull ItemStack itemstack, @NotNull BlockPos pos, @NotNull EntityPlayer player) { return true; }
 
     @Override
-    public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity) { return true; }
+    public boolean onLeftClickEntity(@NotNull ItemStack stack, @NotNull EntityPlayer player, @NotNull Entity entity) { return true; }
 
     @Override
     public boolean canHandleKeybind(EntityPlayer player, ItemStack stack, HbmKeybinds.EnumKeybind keybind) {
@@ -280,7 +277,7 @@ public class ItemGunBaseNT extends Item implements IKeybindReceiver, IEquipRecei
     }
 
     @Override
-    public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean isHeld) {
+    public void onUpdate(@NotNull ItemStack stack, @NotNull World world, @NotNull Entity entity, int slot, boolean isHeld) {
 
         if(!(entity instanceof EntityLivingBase)) return;
         EntityPlayer player = entity instanceof EntityPlayer ? (EntityPlayer) entity : null;

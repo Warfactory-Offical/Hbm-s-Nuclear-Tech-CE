@@ -105,6 +105,16 @@ public class HbmKeybinds {
 				onPressedClient(player, EnumKeybind.ABILITY_CYCLE, current);
 			}
 		}
+
+		if(!player.getHeldItemMainhand().isEmpty() && player.getHeldItemMainhand().getItem() instanceof ItemGunBaseNT
+				&& props.getKeyPressed(EnumKeybind.GUN_PRIMARY)) {
+			Minecraft mc = Minecraft.getMinecraft();
+			KeyBinding.setKeyBindState(mc.gameSettings.keyBindAttack.getKeyCode(), false);
+			mc.leftClickCounter = 2;
+			if(mc.playerController != null) {
+				mc.playerController.resetBlockRemoving();
+			}
+		}
 	}
 	
 	public static enum EnumKeybind {
@@ -153,7 +163,8 @@ public class HbmKeybinds {
 			}
 
 			/// GUN HANDLING ///
-			boolean gunKey = keyCode == HbmKeybinds.gunSecondaryKey.getKeyCode() ||
+			boolean gunKey = keyCode == mc.gameSettings.keyBindAttack.getKeyCode() ||
+					keyCode == HbmKeybinds.gunSecondaryKey.getKeyCode() ||
 					keyCode == HbmKeybinds.gunTertiaryKey.getKeyCode() || keyCode == HbmKeybinds.reloadKey.getKeyCode();
 
 			EntityPlayer player = mc.player;
