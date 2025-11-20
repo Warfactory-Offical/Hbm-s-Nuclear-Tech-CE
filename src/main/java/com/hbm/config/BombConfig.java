@@ -163,7 +163,9 @@ public class BombConfig {
 		disableNuclearP.setComment("Disable the nuclear part of nukes");
 		disableNuclear = disableNuclearP.getBoolean();
 
-		enableNukeClouds = config.get(CATEGORY_NUKE, "6.08_enableMushroomClouds", true).getBoolean(true);
+		Property enableNukeCloudsP = config.get(CATEGORY_NUKE, "6.08_enableMushroomClouds", true);
+		enableNukeCloudsP.setComment("WARNING: AN OLD CONFIG OPTION. Allows for nuclear explosion to even happen.");
+		enableNukeClouds = enableNukeCloudsP.getBoolean(true);
 
 		Property enableNukeNBTSavingP = config.get(CATEGORY_NUKE, "6.09_enableNukeNBTSaving", true);
 		enableNukeNBTSavingP.setComment("If true then nukes will save the blocks they want to destroy so they can resume work rather then restart after a crash/reload. For big nukes this can take a while tho.");

@@ -5,7 +5,6 @@ import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.network.energy.TileEntityPylonBase;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.Vec3d;
 
 @AutoRegister
@@ -28,7 +27,6 @@ public class TileEntityConnector extends TileEntityPylonBase {
 
     @Override
     public Nodespace.PowerNode createNode() {
-        TileEntity tile = this;
         ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata()).getOpposite();
         Nodespace.PowerNode node = new Nodespace.PowerNode(getPos()).setConnections(
                 new DirPos(getPos(), ForgeDirection.UNKNOWN),

@@ -62,10 +62,6 @@ public class GeneralConfig {
 	public static boolean bloom = true;
 	public static boolean heatDistortion = true;
 	public static boolean recipes = true;
-	public static boolean shapeless = true;
-	public static boolean oredict = true;
-	public static boolean shaped = true;
-	public static boolean nonoredict = true;
 	public static boolean jei = true;
 	public static boolean changelog = true;
 	public static boolean registerTanks = true;
@@ -121,43 +117,31 @@ public class GeneralConfig {
 		enableServerRecipeSync = config.get(CATEGORY_GENERAL, "0.05_enableServerRecipeSync", true, "Syncs any recipes customised via JSON to clients connecting to the server.").getBoolean(true);
 		enableTickBasedWorldGenerator = config.get(CATEGORY_GENERAL, "0.06_enableTickBasedWorldGenerator", false, "Use tick-based phased world generator. This eliminates cascading worldgen, but is incompatible with most chunk pre-generators.\n Do not set to true unless you know what you are doing.").getBoolean(false);
 		enableThreadedNodeSpaceUpdate = config.get(CATEGORY_GENERAL, "0.07_enableThreadedNodeSpaceUpdate", true, "Enables threaded updating of the nodespace. This can improve performance, but may cause issues with certain mods.").getBoolean(true);
-        enableDebugMode = config.get(CATEGORY_GENERAL, "1.00_enableDebugMode", false).getBoolean(false);
-		enableDebugWorldGen = config.get(CATEGORY_GENERAL, "1.00_enableDebugWorldGen", false).getBoolean(false);
+		enableDebugMode = config.get(CATEGORY_GENERAL, "1.00_enableDebugMode", false, "Enable debugging mode").getBoolean(false);
+		enableDebugWorldGen = config.get(CATEGORY_GENERAL, "1.00_enableDebugWorldGen", false, "Enable debugging mode for phased structure generation. Separate from the previous option!").getBoolean(false);
 		enableSkyboxes = config.get(CATEGORY_GENERAL, "1.00_enableSkybox", true, "If enabled, will try to use NTM's custom skyboxes.").getBoolean(true);
-		enableMycelium = config.get(CATEGORY_GENERAL, "1.01_enableMyceliumSpread", false).getBoolean(false);
-		enablePlutoniumOre = config.get(CATEGORY_GENERAL, "1.02_enablePlutoniumNetherOre", false).getBoolean(false);
-		enableDungeons = config.get(CATEGORY_GENERAL, "1.03_enableDungeonSpawn", true).getBoolean(true);
-		enableMDOres = config.get(CATEGORY_GENERAL, "1.04_enableOresInModdedDimensions", true).getBoolean(true);
-		enableMines = config.get(CATEGORY_GENERAL, "1.05_enableLandmineSpawn", true).getBoolean(true);
-		enableRad = config.get(CATEGORY_GENERAL, "1.06_enableRadHotspotSpawn", true).getBoolean(true);
-		enableNITAN = config.get(CATEGORY_GENERAL, "1.07_enableNITANChestSpawn", true).getBoolean(true);
-		enableAutoCleanup = config.get(CATEGORY_GENERAL, "1.09_enableAutomaticRadCleanup", false).getBoolean(false);
-		enableMeteorStrikes = config.get(CATEGORY_GENERAL, "1.10_enableMeteorStrikes", true).getBoolean(true);
-		enableMeteorShowers = config.get(CATEGORY_GENERAL, "1.11_enableMeteorShowers", true).getBoolean(true);
-		enableMeteorTails = config.get(CATEGORY_GENERAL, "1.12_enableMeteorTails", true).getBoolean(true);
-		enableSpecialMeteors = config.get(CATEGORY_GENERAL, "1.13_enableSpecialMeteors", false).getBoolean(false);
-		enableBomberShortMode = config.get(CATEGORY_GENERAL, "1.14_enableBomberShortMode", false).getBoolean(false);
-		enableVaults = config.get(CATEGORY_GENERAL, "1.15_enableVaultSpawn", true).getBoolean(true);
-		enableRads = CommonConfig.createConfigBool(config, CATEGORY_GENERAL, "1.16_enableNewRadiation", "Toggles the world radiation system (primarly chunk radiation system)", true);
-		enableCataclysm = config.get(CATEGORY_GENERAL, "1.17_enableCataclysm", false).getBoolean(false);
-		enableExtendedLogging = config.get(CATEGORY_GENERAL, "1.18_enableExtendedLogging", false).getBoolean(false);
-		enableHardcoreTaint = config.get(CATEGORY_GENERAL, "1.19_enableHardcoreTaint", false).getBoolean(false);
-		enableGuns = config.get(CATEGORY_GENERAL, "1.20_enableGuns", true).getBoolean(true);
-		enableVirus = config.get(CATEGORY_GENERAL, "1.21_enableVirus", false).getBoolean(false);
-        enableCrosshairs = config.get(CATEGORY_GENERAL, "1.22_enableCrosshairs", true).getBoolean(true);
-		Property shaders = config.get(CATEGORY_GENERAL, "1.23_enableShaders", false);
-		shaders.setComment("Experimental, don't use");
-		useShaders = shaders.getBoolean(false);
-		if(FMLCommonHandler.instance().getSide() == Side.CLIENT)
-			if(!OpenGlHelper.shadersSupported) {
-				MainRegistry.logger.log(Level.WARN, "GLSL shaders are not supported; not using shaders");
-				useShaders = false;
-			} else if(!GLContext.getCapabilities().OpenGL30) {
-				MainRegistry.logger.log(Level.WARN, "OpenGL 3.0 is not supported; not using shaders");
-				useShaders = false;
-			}
-		useShaders = false;
-		useShaders2 = config.get(CATEGORY_GENERAL, "1.23_enableShaders2", false).getBoolean(false);
+		enableMycelium = config.get(CATEGORY_GENERAL, "1.01_enableMyceliumSpread", false, "Allows glowing mycelium to spread").getBoolean(false);
+		enablePlutoniumOre = config.get(CATEGORY_GENERAL, "1.02_enablePlutoniumNetherOre", false, "Enables plutonium ore generation in the nether").getBoolean(false);
+		enableDungeons = config.get(CATEGORY_GENERAL, "1.03_enableDungeonSpawn", true, "Allows structures and dungeons to spawn.").getBoolean(true);
+		enableMDOres = config.get(CATEGORY_GENERAL, "1.04_enableOresInModdedDimensions", true, "Allows NTM ores to generate in modded dimensions").getBoolean(true);
+		enableMines = config.get(CATEGORY_GENERAL, "1.05_enableLandmineSpawn", true, "Allows landmines to generate").getBoolean(true);
+		enableRad = config.get(CATEGORY_GENERAL, "1.06_enableRadHotspotSpawn", true, "Allows radiation hotspots to generate").getBoolean(true);
+		enableNITAN = config.get(CATEGORY_GENERAL, "1.07_enableNITANChestSpawn", true, "Allows chests to spawn at specific coordinates full of powders").getBoolean(true);
+		enableAutoCleanup = config.get(CATEGORY_GENERAL, "1.09_enableAutomaticRadCleanup", false, "Allows for waste earth blocks (dirt, grass, mycellium) to turn back into dirt immediately.").getBoolean(false);
+		enableMeteorStrikes = config.get(CATEGORY_GENERAL, "1.10_enableMeteorStrikes", true, "Enables the singular meteor strikes. If set to false, meteorites will never spawn.").getBoolean(true);
+		enableMeteorShowers = config.get(CATEGORY_GENERAL, "1.11_enableMeteorShowers", true, "Enables the meteor shower event. Separate from the previous option!").getBoolean(true);
+		enableMeteorTails = config.get(CATEGORY_GENERAL, "1.12_enableMeteorTails", true, "Enables the meteor smoke trail effect behind it.").getBoolean(true);
+		enableSpecialMeteors = config.get(CATEGORY_GENERAL, "1.13_enableSpecialMeteors", false, "Allows for special meteors to spawn. NOT RECOMMENDED FOR REGULAR SURVIVAL").getBoolean(false);
+		enableBomberShortMode = config.get(CATEGORY_GENERAL, "1.14_enableBomberShortMode", false, "Has bomber planes spawn in closer to the target for use with smaller render distances").getBoolean(false);
+		enableVaults = config.get(CATEGORY_GENERAL, "1.15_enableVaultSpawn", true, "Allows locked safes to spawn").getBoolean(true);
+		enableRads = CommonConfig.createConfigBool(config, CATEGORY_GENERAL, "1.16_enableRadiation", "GENERAL SWITCH: Enables radiation system", true);
+		enableCataclysm = config.get(CATEGORY_GENERAL, "1.17_enableCataclysm", false, "Causes satellites to fall whenever a mob dies").getBoolean(false);
+		enableExtendedLogging = config.get(CATEGORY_GENERAL, "1.18_enableExtendedLogging", false, "Logs uses of the detonator, nuclear explosions, missile launches, grenades, etc.").getBoolean(false);
+		enableHardcoreTaint = config.get(CATEGORY_GENERAL, "1.19_enableHardcoreTaint", false, "Allows taint blocks to basically be unstoppable. NOT RECOMMENDED FOR REGULAR SURVIVAL").getBoolean(false);
+		enableGuns = config.get(CATEGORY_GENERAL, "1.20_enableGuns", true, "Prevents new system guns to be fired").getBoolean(true);
+		enableVirus = config.get(CATEGORY_GENERAL, "1.21_enableVirus", false, "Allows virus blocks to spread").getBoolean(false);
+		enableCrosshairs = config.get(CATEGORY_GENERAL, "1.22_enableCrosshairs", true, "Shows custom crosshairs when an NTM gun is being held").getBoolean(true);
+		useShaders2 = config.get(CATEGORY_GENERAL, "1.23_enableShaders2", false, "Enables old NTM Reloaded shaders, courtesy of Drillgon. NOT RECOMMENDED TO TURN IT ON").getBoolean(false);
 		Property ssg_anim = config.get(CATEGORY_GENERAL, "1.24_ssgAnimType", true);
 		ssg_anim.setComment("Which supershotgun reload animation to use. True is Drillgon's animation, false is Bob's animation");
 		ssgAnim = ssg_anim.getBoolean();
@@ -169,30 +153,26 @@ public class GeneralConfig {
 		flowingDecalAmountMax = CommonConfig.createConfigInt(config, CATEGORY_GENERAL, "1.25_flowing_decal_max", "The maximum number of 'flowing' decals that can exist at once (eg blood that can flow down walls)", 20);
 		
 		callListModels = CommonConfig.createConfigBool(config, CATEGORY_GENERAL, "1.26_callListModels", "Enables call lists for a few models, making them render extremely fast", true);
-		enableReflectorCompat = config.get(CATEGORY_GENERAL, "1.24_enableReflectorCompat", false).getBoolean(false);
+		enableReflectorCompat = config.get(CATEGORY_GENERAL, "1.24_enableReflectorCompat", false, "Enable old reflector oredict name (\"plateDenseLead\") instead of new \"plateTungCar\"").getBoolean(false);
 		
-		enableCoalGas = config.get(CATEGORY_GENERAL, "1.26_enableCoalDust", true).getBoolean(true);
-		enableAsbestosDust = config.get(CATEGORY_GENERAL, "1.26_enableAsbestosDust", true).getBoolean(true);
-        enableRadon = config.get(CATEGORY_GENERAL, "1.26_enableRadonGas", true).getBoolean(true);
-        enableCarbonMonoxide = config.get(CATEGORY_GENERAL, "1.26_enableCarbonMonoxide", true).getBoolean(true);
-        enableFlammableGas = config.get(CATEGORY_GENERAL, "1.26_enableFlammableGas", true).getBoolean(true);
-        enableExplosiveGas = config.get(CATEGORY_GENERAL, "1.26_enableExplosiveGas", true).getBoolean(true);
-        enableMeltdownGas = config.get(CATEGORY_GENERAL, "1.26_enableMeltdownGas", true).getBoolean(true);
+		enableCoalGas = config.get(CATEGORY_GENERAL, "1.26_enableCoalDust", true, "Allows the coal gas to spawn (e.g. after breaking coal ore).").getBoolean(true);
+		enableAsbestosDust = config.get(CATEGORY_GENERAL, "1.26_enableAsbestosDust", true, "Allows the asbestos gas to spawn (e.g. after breaking asbestos ore or chrysotile).").getBoolean(true);
+        enableRadon = config.get(CATEGORY_GENERAL, "1.26_enableRadonGas", true, "Allows the radon gas to spawn (e.g. after breaking uranium ore).").getBoolean(true);
+        enableCarbonMonoxide = config.get(CATEGORY_GENERAL, "1.26_enableCarbonMonoxide", true, "Allows the carbon monoxide gas to spawn (e.g. after breaking nether coal ore).").getBoolean(true);
+        enableFlammableGas = config.get(CATEGORY_GENERAL, "1.26_enableFlammableGas", true, "Allows the flammable gas to spawn in the world.").getBoolean(true);
+        enableExplosiveGas = config.get(CATEGORY_GENERAL, "1.26_enableExplosiveGas", true, "Allows the explosive gas to spawn in the world.").getBoolean(true);
+        enableMeltdownGas = config.get(CATEGORY_GENERAL, "1.26_enableMeltdownGas", true, "Allows the meltdown gas to spawn (e.g. after ZIRNOX explosion).").getBoolean(true);
 		enableReEval = config.get(CATEGORY_GENERAL, "1.27_enableReEval", true, "Allows re-evaluating power networks on link remove instead of destroying and recreating").getBoolean(true);
 		enableSteamParticles = config.get(CATEGORY_GENERAL, "1.27.1_enableSteamParticles", true, "If disabled, auxiliary cooling towers and large cooling towers will not emit steam particles when in use.").getBoolean(true);
 		
-		recipes = config.get(CATEGORY_GENERAL, "1.28_enableRecipes", true).getBoolean(true);
-		shapeless = config.get(CATEGORY_GENERAL, "1.28_enableShapeless", true).getBoolean(true);
-		oredict = config.get(CATEGORY_GENERAL, "1.28_enableOreDict", true).getBoolean(true);
-		shaped = config.get(CATEGORY_GENERAL, "1.28_enableShaped", true).getBoolean(true);
-		nonoredict = config.get(CATEGORY_GENERAL, "1.28_enableNonOreDict", true).getBoolean(true);
-		registerTanks = config.get(CATEGORY_GENERAL, "1.28_registerTanks", true).getBoolean(true);
+		recipes = config.get(CATEGORY_GENERAL, "1.28_enableRecipes", true, "A general switch for ALL crafting table/smelting recipes. If set to false, all recipes will be disabled.").getBoolean(true);
+		registerTanks = config.get(CATEGORY_GENERAL, "1.28_registerTanks", true, "A general switch for ALL the tanks items in the mod (e.g. universal fluid, lead, barrels, packed containers). If set to false, they won't be registered as items in the game." ).getBoolean(true);
 		
-		jei = config.get(CATEGORY_GENERAL, "1.28_enableJei", true).getBoolean(true);
-		changelog = config.get(CATEGORY_GENERAL, "1.28_enableChangelog", true).getBoolean(true);
-		duckButton = config.get(CATEGORY_GENERAL, "1.28_enableDuckButton", true).getBoolean(true);
-		bloom = config.get(CATEGORY_GENERAL, "1.30_enableBloom", true).getBoolean(true);
-		heatDistortion = config.get(CATEGORY_GENERAL, "1.30_enableHeatDistortion", true).getBoolean(true);
+		jei = config.get(CATEGORY_GENERAL, "1.28_enableJei", true, "Enables JEI compatibility").getBoolean(true);
+		changelog = config.get(CATEGORY_GENERAL, "1.28_enableChangelog", true, "Enables the update notification in the chat. NOT USED FOR NOW").getBoolean(true);
+		duckButton = config.get(CATEGORY_GENERAL, "1.28_enableDuckButton", true, "Allows you to summon the duck via pressing O").getBoolean(true);
+		bloom = config.get(CATEGORY_GENERAL, "1.30_enableBloom", true, "Enables the bloom effect which can be visible on the Crucible. Only active if enableShaders2 is set to true.").getBoolean(true);
+		heatDistortion = config.get(CATEGORY_GENERAL, "1.30_enableHeatDistortion", true, "Enables the heat distortion effect. Only active if enableShaders2 is set to true.").getBoolean(true);
 		
 		Property adv_rads = config.get(CATEGORY_GENERAL, "1.31_enableAdvancedRadiation", true);
 		adv_rads.setComment("Enables a 3 dimensional version of the radiation system that also allows some blocks (like concrete bricks) to stop it from spreading");
@@ -279,5 +259,28 @@ public class GeneralConfig {
 		enableLBSMIGen = CommonConfig.createConfigBool(config, CATEGORY_LBSM, "LBSM_iGen", "When enabled, restores the industrial generator to pre-nerf power", true);
 
 		if(enable528) enableLBSM = false;
+		// Th3_Sl1ze: I'll temporarily move it here, if no one minds
+		// TODO: remove/rework Alc's parser to smth managable and bring these parameters back to WorldConfig
+		final String CATEGORY_OREGEN = CommonConfig.CATEGORY_ORES;
+
+		WorldConfig.newBedrockOres = CommonConfig.createConfigBool(config, CATEGORY_OREGEN, "2.NB_newBedrockOres", "Enables the generation of bedrock ores", true);
+		WorldConfig.limestoneSpawn = CommonConfig.createConfigInt(config, CATEGORY_OREGEN, "2.L02_limestoneSpawn", "Amount of limestone block veins per chunk", 1);
+
+		WorldConfig.enableHematite = CommonConfig.createConfigBool(config, CATEGORY_OREGEN, "2.L00_enableHematite", "Toggles hematite deposits", true);
+		WorldConfig.enableMalachite = CommonConfig.createConfigBool(config, CATEGORY_OREGEN, "2.L01_enableMalachite", "Toggles malachite deposits", true);
+		WorldConfig.enableBauxite = CommonConfig.createConfigBool(config, CATEGORY_OREGEN, "2.L02_enableBauxite", "Toggles bauxite deposits", true);
+
+		WorldConfig.enableSulfurCave = CommonConfig.createConfigBool(config, CATEGORY_OREGEN, "2.C00_enableSulfurCave", "Toggles sulfur caves", true);
+		WorldConfig.enableAsbestosCave = CommonConfig.createConfigBool(config, CATEGORY_OREGEN, "2.C01_enableAsbestosCave", "Toggles asbestos caves", true);
+
+		final String CATEGORY_BIOMES = CommonConfig.CATEGORY_BIOMES;
+		WorldConfig.enableCraterBiomes = CommonConfig.createConfigBool(config, CATEGORY_BIOMES, "17.B_toggle", "Enables the biome change caused by nuclear explosions", true);
+		WorldConfig.craterBiomeId = CommonConfig.createConfigInt(config, CATEGORY_BIOMES, "17.B00_craterBiomeId", "The numeric ID for the crater biome", 80);
+		WorldConfig.craterBiomeInnerId = CommonConfig.createConfigInt(config, CATEGORY_BIOMES, "17.B01_craterBiomeInnerId", "The numeric ID for the inner crater biome", 81);
+		WorldConfig.craterBiomeOuterId = CommonConfig.createConfigInt(config, CATEGORY_BIOMES, "17.B02_craterBiomeOuterId", "The numeric ID for the outer crater biome", 82);
+		WorldConfig.craterBiomeRad = (float) CommonConfig.createConfigDouble(config, CATEGORY_BIOMES, "17.R00_craterBiomeRad", "RAD/s for the crater biome", 5D);
+		WorldConfig.craterBiomeInnerRad = (float) CommonConfig.createConfigDouble(config, CATEGORY_BIOMES, "17.R01_craterBiomeInnerRad", "RAD/s for the inner crater biome", 25D);
+		WorldConfig.craterBiomeOuterRad = (float) CommonConfig.createConfigDouble(config, CATEGORY_BIOMES, "17.R02_craterBiomeOuterRad", "RAD/s for the outer crater biome", 0.5D);
+		WorldConfig.craterBiomeWaterMult = (float) CommonConfig.createConfigDouble(config, CATEGORY_BIOMES, "17.R03_craterBiomeWaterMult", "Multiplier for RAD/s in crater biomes when in water", 5D);
 	}
 }

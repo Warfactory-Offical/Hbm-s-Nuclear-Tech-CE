@@ -128,8 +128,8 @@ public class ItemICFPellet extends Item {
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         boolean muon = stack.hasTagCompound() && stack.getTagCompound().getBoolean("muon");
         tooltip.add(TextFormatting.GREEN + "Depletion: " + String.format(Locale.US, "%.1f", getDurabilityForDisplay(stack) * 100D) + "%");
-        tooltip.add(TextFormatting.YELLOW + "Fuel: " + I18nUtil.resolveKey("hbm.icffuel." + getType(stack, true).name().toLowerCase(Locale.US)) +
-                " / " + I18nUtil.resolveKey("hbm.icffuel." + getType(stack, false).name().toLowerCase(Locale.US)));
+        tooltip.add(TextFormatting.YELLOW + "Fuel: " + I18nUtil.resolveKey("icffuel." + getType(stack, true).name().toLowerCase(Locale.US)) +
+                " / " + I18nUtil.resolveKey("icffuel." + getType(stack, false).name().toLowerCase(Locale.US)));
         tooltip.add(TextFormatting.YELLOW + "Heat required: " + BobMathUtil.getShortNumber(getFusingDifficulty(stack)) + "TU");
         tooltip.add(TextFormatting.YELLOW + "Reactivity multiplier: x" + (int) (getType(stack, true).reactionMult * getType(stack, false).reactionMult * 100) / 100D);
         if (muon) tooltip.add(TextFormatting.DARK_AQUA + "Muon catalyzed!");

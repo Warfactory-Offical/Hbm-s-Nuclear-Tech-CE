@@ -2,11 +2,13 @@ package com.hbm.packet.toclient;
 
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.threading.ThreadedPacket;
+import com.hbm.util.I18nUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -63,6 +65,9 @@ public class AuxParticlePacketNT extends ThreadedPacket {
 					return;
 
 				if(m.nbt != null) {
+					if(m.nbt.hasKey("label", Constants.NBT.TAG_STRING)) {
+						m.nbt.setString("label", I18nUtil.resolveKey(m.nbt.getString("label")));
+					}
 					MainRegistry.proxy.effectNT(m.nbt);
 				}
 			});

@@ -3,10 +3,12 @@ package com.hbm.particle.helper;
 import com.hbm.particle.ParticleSpentCasing;
 import com.hbm.particle.SpentCasing;
 import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.util.Vec3NT;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -35,21 +37,21 @@ public class CasingCreator implements IParticleCreator {
         if(player == null || world == null) return;//Fixes crashes whenever mobs pickup weapons
         if(player.isSneaking()) heightOffset -= 0.075F;
 
-        Vec3 offset = Vec3.createVectorHelper(sideOffset, heightOffset, frontOffset);
-        offset.rotateAroundX(-player.rotationPitch / 180F * (float) Math.PI);
-        offset.rotateAroundY(-player.rotationYaw / 180F * (float) Math.PI);
+        Vec3NT offset = new Vec3NT(sideOffset, heightOffset, frontOffset);
+        offset.rotateAroundXRad(player.rotationPitch / 180F * (float) Math.PI);
+        offset.rotateAroundYRad(-player.rotationYaw / 180F * (float) Math.PI);
 
-        double x = player.posX + offset.xCoord;
-        double y = player.posY + player.getEyeHeight() + offset.yCoord;
-        double z = player.posZ + offset.zCoord;
+        double x = player.posX + offset.x;
+        double y = player.posY + player.getEyeHeight() + offset.y;
+        double z = player.posZ + offset.z;
 
-        Vec3 motion = Vec3.createVectorHelper(sideMotion, heightMotion, frontMotion);
-        motion.rotateAroundX(-player.rotationPitch / 180F * (float) Math.PI);
-        motion.rotateAroundY(-player.rotationYaw / 180F * (float) Math.PI);
+        Vec3NT motion = new Vec3NT(sideMotion, heightMotion, frontMotion);
+        motion.rotateAroundXRad(-player.rotationPitch / 180F * (float) Math.PI);
+        motion.rotateAroundYRad(-player.rotationYaw / 180F * (float) Math.PI);
 
-        double mX = player.motionX + motion.xCoord + player.getRNG().nextGaussian() * motionVariance;
-        double mY = player.motionY + motion.yCoord + player.getRNG().nextGaussian() * motionVariance;
-        double mZ = player.motionZ + motion.zCoord + player.getRNG().nextGaussian() * motionVariance;
+        double mX = player.motionX + motion.x + player.getRNG().nextGaussian() * motionVariance;
+        double mY = player.motionY + motion.y + player.getRNG().nextGaussian() * motionVariance;
+        double mZ = player.motionZ + motion.z + player.getRNG().nextGaussian() * motionVariance;
 
         NBTTagCompound data = new NBTTagCompound();
         data.setString("type", "casingNT");

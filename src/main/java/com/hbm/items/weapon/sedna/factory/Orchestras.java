@@ -15,7 +15,6 @@ import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.particle.SpentCasing;
 import com.hbm.particle.helper.CasingCreator;
-import com.hbm.render.anim.HbmAnimations;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.util.EntityDamageUtil;
@@ -641,7 +640,7 @@ public class Orchestras {
         if(type == HbmAnimationsSedna.AnimType.CYCLE) {
             if(timer == 1) {
                 SpentCasing casing = ctx.config.getReceivers(stack)[0].getMagazine(stack).getCasing(stack, ctx.inventory);
-                if(casing != null) CasingCreator.composeEffect(entity.world, ctx.getPlayer(), 0.375, aiming ? 0 : -0.125, aiming ? 0 : -0.25D, 0, 0.18, -0.12, 0.01, -2.5F + (float)entity.getRNG().nextGaussian() * 5F, 10F + (float)entity.getRNG().nextFloat() * 15F, casing.getName());
+                if(casing != null) CasingCreator.composeEffect(entity.world, ctx.getPlayer(), 0.375, aiming ? 0 : -0.125, aiming ? 0 : -0.25D, 0, 0.18, -0.12, 0.01, -2.5F + (float)entity.getRNG().nextGaussian() * 5F, 10F + entity.getRNG().nextFloat() * 15F, casing.getName());
             }
         }
         if(type == HbmAnimationsSedna.AnimType.CYCLE_DRY) {
@@ -673,7 +672,7 @@ public class Orchestras {
             if(timer == 1) {
                 int mult = ctx.configIndex == 0 ? -1 : 1;
                 SpentCasing casing = ctx.config.getReceivers(stack)[0].getMagazine(stack).getCasing(stack, ctx.inventory);
-                if(casing != null) CasingCreator.composeEffect(entity.world, ctx.getPlayer(), 0.375, -0.125, -0.375D * mult, 0, 0.18, -0.12 * mult, 0.01, -2.5F + (float)entity.getRNG().nextGaussian() * 5F, (10F + (float)entity.getRNG().nextFloat() * 15F) * mult, casing.getName());
+                if(casing != null) CasingCreator.composeEffect(entity.world, ctx.getPlayer(), 0.375, -0.125, -0.375D * mult, 0, 0.18, -0.12 * mult, 0.01, -2.5F + (float)entity.getRNG().nextGaussian() * 5F, (10F + entity.getRNG().nextFloat() * 15F) * mult, casing.getName());
             }
         }
         if(type == HbmAnimationsSedna.AnimType.CYCLE_DRY) {
@@ -753,7 +752,7 @@ public class Orchestras {
         if(type == HbmAnimationsSedna.AnimType.CYCLE) {
             if(timer == 0) {
                 SpentCasing casing = ctx.config.getReceivers(stack)[0].getMagazine(stack).getCasing(stack, ctx.inventory);
-                if(casing != null) CasingCreator.composeEffect(entity.world, ctx.getPlayer(), 0.5, aiming ? 0 : -0.125, aiming ? 0 : -0.25D, 0, 0.18, -0.12, 0.01, (float)entity.getRNG().nextGaussian() * 5F, 12.5F + (float)entity.getRNG().nextFloat() * 5F, casing.getName());
+                if(casing != null) CasingCreator.composeEffect(entity.world, ctx.getPlayer(), 0.5, -0.125, -0.3D, 0, 0.18, -0.12, 0.01, (float)entity.getRNG().nextGaussian() * 5F, 12.5F + entity.getRNG().nextFloat() * 5F, casing.getName());
             }
         }
         if(type == HbmAnimationsSedna.AnimType.CYCLE_DRY) {
@@ -1122,7 +1121,7 @@ public class Orchestras {
             if(type == HbmAnimationsSedna.AnimType.CYCLE) {
                 if(timer == 0) {
                     SpentCasing casing = ctx.config.getReceivers(stack)[0].getMagazine(stack).getCasing(stack, ctx.inventory);
-                    if(casing != null) CasingCreator.composeEffect(entity.world, ctx.getPlayer(), aiming ? 0.125 : 0.125, aiming ? -0.125 : -0.25, aiming ? -0.125 : -0.25D, 0, 0.18, -0.12, 0.01, (float)entity.getRNG().nextGaussian() * 5F, 7.5F + entity.getRNG().nextFloat() * 5F, casing.getName());
+                    if(casing != null) CasingCreator.composeEffect(entity.world, ctx.getPlayer(), 0.125, aiming ? -0.125 : -0.25, aiming ? -0.125 : -0.25D, 0, 0.18, -0.12, 0.01, (float)entity.getRNG().nextGaussian() * 5F, 7.5F + entity.getRNG().nextFloat() * 5F, casing.getName());
                 }
                 if(timer == 40) entity.world.playSound(null, entity.getPosition(), HBMSoundHandler.dryFireClick, SoundCategory.PLAYERS, 0.25F, 1.25F);
             }
