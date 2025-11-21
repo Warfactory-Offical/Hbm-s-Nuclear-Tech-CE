@@ -64,18 +64,18 @@ Alcater 在 CurseForge 上的版本已**超过 1.5 年**没有更新。他的版
 <p align="center"><img src="./github/dev_guide.png" alt="Development Guide" width="700"></p>
 <br>
 
-## **开发环境使用 Java 17/21！**
+## **开发环境使用 Java 25！**
 
-我们使用 [Jabel](https://github.com/bsideup/jabel) 来在使用现代Java语法时无缝地编译出 Java 8 字节码（请确保**不要**使用 Java 9+ 才引入的 API）。
+我们使用 [JvmDowngrader](https://github.com/unimined/JvmDowngrader) 来在使用现代 Java 语法与 API 的同时，无缝地生成面向 1.12.2 的 Java 8 字节码。
 
 ### 快速上手
 
 1. 克隆此仓库
-2. 准备 JDK（**建议 17+**）
+2. 准备 **JDK 25**
 3. 运行任务 `setupDecompWorkspace`（会完成工作区初始化与 MC 源码的反编译/反混淆）
 4. 确认一切正常后，运行任务 `runClient`（应启动 Minecraft 客户端）
 
-- 请**始终**使用 `gradlew`（Linux/macOS）或 `gradlew.bat`（Windows）来执行任务，而不是系统的 `gradle`，以确保所有开发者环境一致。
+* 请**始终**使用 `gradlew`（Linux/macOS）或 `gradlew.bat`（Windows）来执行任务，而不是系统的 `gradle`，以确保所有开发者环境一致。
 
 ### Apple M 系列机器的开发注意事项
 

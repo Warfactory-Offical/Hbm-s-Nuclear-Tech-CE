@@ -1,6 +1,5 @@
 package com.hbm.util;
 
-import com.github.bsideup.jabel.Desugar;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -488,7 +487,6 @@ public final class RenderUtil {
         return null;
     }
 
-    @Desugar
     public record EnableAttrib(boolean alphaTest, boolean blend, boolean cull, boolean depthTest, boolean fog, boolean lighting, boolean normalize,
                                boolean rescaleNormal, boolean colorMaterial, boolean polygonOffsetFill, boolean polygonOffsetLine,
                                boolean colorLogicOp) {
@@ -522,7 +520,6 @@ public final class RenderUtil {
         }
     }
 
-    @Desugar
     public record LightingAttrib(boolean lightingEnabled, boolean[] lightEnabled, // length 8
                                  boolean colorMaterialEnabled, int colorMaterialFace, int colorMaterialMode) {
         static LightingAttrib capture() {
@@ -544,7 +541,6 @@ public final class RenderUtil {
         }
     }
 
-    @Desugar
     public record TextureAttrib(int activeUnit, boolean[] tex2DEnabled, int[] boundTex2D) {
         static TextureAttrib capture() {
             int n = GlStateManager.textureState.length;
@@ -568,7 +564,6 @@ public final class RenderUtil {
         }
     }
 
-    @Desugar
     public record ColorBufferAttrib(float r, float g, float b, float a, boolean maskR, boolean maskG, boolean maskB, boolean maskA,
                                     boolean blendEnabled, int srcRGB, int dstRGB, int srcA, int dstA, boolean colorLogicEnabled, int colorLogicOpcode,
                                     float clearR, float clearG, float clearB, float clearA) {
@@ -589,7 +584,6 @@ public final class RenderUtil {
         }
     }
 
-    @Desugar
     public record DepthBufferAttrib(boolean depthEnabled, int depthFunc, boolean maskEnabled, double clearDepth) {
         static DepthBufferAttrib capture() {
             return new DepthBufferAttrib(GlStateManager.depthState.depthTest.currentState, GlStateManager.depthState.depthFunc, GlStateManager.depthState.maskEnabled, GlStateManager.clearState.depth);
@@ -604,7 +598,6 @@ public final class RenderUtil {
         }
     }
 
-    @Desugar
     public record PolygonAttrib(boolean cullEnabled, int cullMode, boolean polyOffsetFill, boolean polyOffsetLine, float polyOffsetFactor,
                                 float polyOffsetUnits) {
         static PolygonAttrib capture() {
@@ -622,7 +615,6 @@ public final class RenderUtil {
         }
     }
 
-    @Desugar
     public record FogAttrib(boolean fogEnabled, int mode, float density, float start, float end) {
         static FogAttrib capture() {
             return new FogAttrib(GlStateManager.fogState.fog.currentState, GlStateManager.fogState.mode, GlStateManager.fogState.density, GlStateManager.fogState.start, GlStateManager.fogState.end);
@@ -644,7 +636,6 @@ public final class RenderUtil {
         }
     }
 
-    @Desugar
     public record ShadeAttrib(int shadeModel) {
         static ShadeAttrib capture() {
             return new ShadeAttrib(GlStateManager.activeShadeModel);

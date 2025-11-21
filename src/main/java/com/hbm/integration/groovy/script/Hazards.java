@@ -6,7 +6,6 @@ import com.cleanroommc.groovyscript.api.documentation.annotations.MethodDescript
 import com.cleanroommc.groovyscript.api.documentation.annotations.RegistryDescription;
 import com.cleanroommc.groovyscript.registry.AbstractReloadableStorage;
 import com.cleanroommc.groovyscript.registry.VirtualizedRegistry;
-import com.github.bsideup.jabel.Desugar;
 import com.hbm.hazard.HazardData;
 import com.hbm.hazard.HazardEntry;
 import com.hbm.hazard.HazardRegistry;
@@ -476,7 +475,6 @@ public final class Hazards extends VirtualizedRegistry<Hazards.HazardRecipe> {
 
         Object unwrap();
 
-        @Desugar
         record OreDict(String name) implements HazardTarget {
             @Override
             public Object unwrap() {
@@ -494,7 +492,6 @@ public final class Hazards extends VirtualizedRegistry<Hazards.HazardRecipe> {
             }
         }
 
-        @Desugar
         record ItemKey(Item item) implements HazardTarget {
 
             @Override
@@ -518,7 +515,6 @@ public final class Hazards extends VirtualizedRegistry<Hazards.HazardRecipe> {
             }
         }
 
-        @Desugar
         record ResourceKey(ResourceLocation location) implements HazardTarget {
 
             @Override
@@ -537,7 +533,6 @@ public final class Hazards extends VirtualizedRegistry<Hazards.HazardRecipe> {
             }
         }
 
-        @Desugar
         record BlockKey(Block block) implements HazardTarget {
 
             @Override
@@ -566,7 +561,6 @@ public final class Hazards extends VirtualizedRegistry<Hazards.HazardRecipe> {
          *
          * @param stack expected already singular
          */
-        @Desugar
         record ComparableStackTarget(RecipesCommon.ComparableStack stack) implements HazardTarget {
             public ComparableStackTarget(RecipesCommon.ComparableStack stack) {
                 this.stack = stack == null ? null : stack.makeSingular();
@@ -593,7 +587,6 @@ public final class Hazards extends VirtualizedRegistry<Hazards.HazardRecipe> {
          *
          * @param stack stored as count=1 copy
          */
-        @Desugar
         record ItemStackTarget(ItemStack stack) implements HazardTarget {
             public ItemStackTarget(ItemStack stack) {
                 ItemStack s = stack == null ? ItemStack.EMPTY : stack.copy();
@@ -888,25 +881,20 @@ public final class Hazards extends VirtualizedRegistry<Hazards.HazardRecipe> {
         }
     }
 
-    @Desugar
     private record MapEntry(HazardTarget target, HazardData data) implements HazardRecipe {
     }
 
-    @Desugar
     private record BlacklistEntry(HazardTarget target) implements HazardRecipe {
     }
 
-    @Desugar
     private record ItemPostTransformer(Item item,
                                        BiFunction<ItemStack, List<HazardEntry>, List<HazardEntry>> fn) implements HazardRecipe {
     }
 
-    @Desugar
     private record StackPostTransformer(StackKey key,
                                         BiFunction<ItemStack, List<HazardEntry>, List<HazardEntry>> fn) implements HazardRecipe {
     }
 
-    @Desugar
     private record ItemMultiplier(Item item, double multiplier) implements HazardRecipe {
     }
 }

@@ -75,14 +75,14 @@ our efforts on one version at a time.
 <p align="center"><img src="./github/dev_guide.png" alt="Development Guide" width="700"></p>
 <br>
 
-## **For development Java 17/21 is used!**
+## **For development Java 25 is used!**
 
-We have [Jabel](https://github.com/bsideup/jabel) to target Java 8 bytecode seamlessly while still using modern syntax (make sure you don't use APIs introduced in Java 9+)
+We have [JvmDowngrader](https://github.com/unimined/JvmDowngrader) to target Java 8 bytecode seamlessly while still using modern syntax and apis.
 
 
 ### General quickstart
 1. Clone this repository.
-2. Prepare JDK (preferably 17+).
+2. Prepare JDK 25
 3. Run task `setupDecompWorkspace` (this will setup workspace, including MC sources deobfuscation)
 4. Ensure everything is OK. Run task `runClient` (should open minecraft client with mod loaded)
 

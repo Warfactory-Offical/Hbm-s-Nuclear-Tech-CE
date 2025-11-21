@@ -1,6 +1,5 @@
 package com.hbm.entity.effect;
 
-import com.github.bsideup.jabel.Desugar;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.BombConfig;
 import com.hbm.config.CompatibilityConfig;
@@ -623,12 +622,10 @@ public class EntityFalloutRain extends EntityExplosionChunkloading {
         for (int i = 0; i < outerList.size(); i++) outerChunksToProcess.add(outerList.getLong(i));
     }
 
-    @Desugar
     private record SubUpdate(int subY, Int2ObjectOpenHashMap<IBlockState> toUpdate, ExtendedBlockStorage expected,
                              ExtendedBlockStorage prepared, Long2ObjectOpenHashMap<IBlockState> oldStates) {
     }
 
-    @Desugar
     private record ApplyOutcome(int mask, Long2ObjectOpenHashMap<IBlockState> oldStates) {
     }
 

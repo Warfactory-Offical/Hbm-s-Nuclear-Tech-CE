@@ -1,6 +1,5 @@
 package com.hbm.hazard;
 
-import com.github.bsideup.jabel.Desugar;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.hbm.capability.HbmLivingProps;
@@ -921,28 +920,22 @@ public class HazardSystem {
             }
         }
 
-        @Desugar
         record HazardScanResult(Map<Integer, Consumer<EntityPlayer>> applicatorMap, float totalNeutronRads) {
         }
     }
 
-    @Desugar
     private record NbtSensitiveCacheKey(ComparableStack stack, int nbtHash) {
     }
 
-    @Desugar
     private record InventoryDelta(UUID playerUUID, int serverSlotIndex, ItemStack oldStack, ItemStack newStack) {
     }
 
-    @Desugar
     private record DeltaUpdate(Optional<Consumer<EntityPlayer>> applicator, float neutronRadsDelta) {
     }
 
-    @Desugar
     private record PlayerDeltaResult(Map<Integer, Optional<Consumer<EntityPlayer>>> finalApplicators, float totalNeutronDelta) {
     }
 
-    @Desugar
     private record HazardUpdateResult(Map<UUID, PlayerHazardData.HazardScanResult> fullScanResults, Map<UUID, PlayerDeltaResult> deltaResults) {
     }
 }

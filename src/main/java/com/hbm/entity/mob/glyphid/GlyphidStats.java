@@ -1,6 +1,5 @@
 package com.hbm.entity.mob.glyphid;
 
-import com.github.bsideup.jabel.Desugar;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.potion.HbmPotion;
 import net.minecraft.util.DamageSource;
@@ -27,7 +26,6 @@ public abstract class GlyphidStats {
     /**
      * @param thresholdMultForArmor Base threshold is calculated using this number * the glyphid's armor
      */
-    @Desugar
     public record StatBundle(double health, double speed, double damage, @Deprecated float divisor,
                              @Deprecated float damageThreshold, float thresholdMultForArmor, float resistanceMult) {
             public StatBundle(double health, double speed, double damage, float divisor, float damageThreshold) {

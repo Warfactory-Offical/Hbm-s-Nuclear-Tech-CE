@@ -1,6 +1,5 @@
 package com.hbm.explosion;
 
-import com.github.bsideup.jabel.Desugar;
 import com.hbm.config.BombConfig;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.interfaces.BitMask;
@@ -846,7 +845,6 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         }
     }
 
-    @Desugar
     private record PendingCarve(long chunkPos, List<CarveSubTask> tasks) {
     }
 

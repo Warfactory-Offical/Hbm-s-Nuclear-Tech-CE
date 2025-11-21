@@ -1,6 +1,5 @@
 package com.hbm.inventory;
 
-import com.github.bsideup.jabel.Desugar;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.NTMFluidCapabilityHandler;
 import com.hbm.config.GeneralConfig;
@@ -243,7 +242,6 @@ public class FluidContainerRegistry {
         return bucket == null ? 0 : bucket.maxCapacity;
     }
 
-    @Desugar
     public record FluidContainer(@NotNull ItemStack fullContainer, @Nullable ItemStack emptyContainer,
                                  @NotNull FluidType type, int content) {
     }

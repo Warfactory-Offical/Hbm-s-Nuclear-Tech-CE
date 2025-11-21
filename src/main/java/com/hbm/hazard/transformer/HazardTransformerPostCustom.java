@@ -1,6 +1,5 @@
 package com.hbm.hazard.transformer;
 
-import com.github.bsideup.jabel.Desugar;
 import com.hbm.hazard.HazardEntry;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.main.MainRegistry;
@@ -148,7 +147,6 @@ public class HazardTransformerPostCustom implements IHazardTransformer {
         applyStackPostList(nbtKey, stack, entries);
     }
 
-    @Desugar
     public record StackKey(RecipesCommon.ComparableStack base, NBTTagCompound nbt) {
         public static StackKey of(ItemStack stack, boolean respectNbt) {
             RecipesCommon.ComparableStack cs = ItemStackUtil.comparableStackFrom(stack).makeSingular();
