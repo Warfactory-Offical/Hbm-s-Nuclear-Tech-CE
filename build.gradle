@@ -17,7 +17,6 @@ import com.modrinth.minotaur.dependencies.ModDependency
 import com.modrinth.minotaur.dependencies.VersionDependency
 import de.undercouch.gradle.tasks.download.DownloadExtension
 import org.apache.commons.io.FileUtils
-import org.gradle.api.internal.artifacts.configurations.DefaultUnlockedConfiguration
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.gradle.internal.logging.text.StyledTextOutputFactory
@@ -34,7 +33,7 @@ plugins {
     id 'eclipse'
     id 'maven-publish'
     id 'org.jetbrains.gradle.plugin.idea-ext' version '1.2'
-    id 'com.gtnewhorizons.retrofuturagradle' version '1.4.0'
+    id 'com.gtnewhorizons.retrofuturagradle' version '2.0.0'
     id 'net.darkhax.curseforgegradle' version '1.1.24' apply false
     id 'com.modrinth.minotaur' version '2.8.7' apply false
     id 'com.diffplug.spotless' version '6.13.0' apply false
@@ -878,11 +877,11 @@ if (enableJava17RunTasks.toBoolean()) {
         spec.vendor.set(JvmVendorSpec.matching("jetbrains"))
     }
 
-    ext.java17DependenciesCfg = (DefaultUnlockedConfiguration) configurations.create("java17Dependencies") {
+    ext.java17DependenciesCfg = configurations.create("java17Dependencies") {
         extendsFrom(configurations.getByName("runtimeClasspath")) // Ensure consistent transitive dependency resolution
         canBeConsumed = false
     }
-    ext.java17PatchDependenciesCfg = (DefaultUnlockedConfiguration) configurations.create("java17PatchDependencies") {
+    ext.java17PatchDependenciesCfg = configurations.create("java17PatchDependencies") {
         canBeConsumed = false
     }
 
@@ -1409,7 +1408,7 @@ def getChangelog() {
 
 // Buildscript updating
 
-def buildscriptGradleVersion = '8.9'
+def buildscriptGradleVersion = '9.2.1'
 
 tasks.named('wrapper', Wrapper).configure {
     gradleVersion = buildscriptGradleVersion
@@ -1573,6 +1572,93 @@ if (getFile('addon.gradle').exists()) {
     apply from: 'addon.gradle.kts'
 }
 
+// Obfuscated Java 25 jar for cleanroom users
+tasks.register('jarJava25', Jar) {
+    group = 'build'
+    description = 'Packages the Java 25 classes into a temporary jar.'
+    destinationDirectory.set(layout.buildDirectory.dir("libs"))
+    archiveClassifier.set('dev-java25')
+    from sourceSets.main.output
+    if (useSrcApiPath && apiPackage) {
+        from sourceSets.api.output
+        dependsOn apiClasses
+
+        include "${modGroupPath}/**"
+        include "assets/**"
+        include "mcmod.info"
+        include "pack.mcmeta"
+        if (accessTransformersFile) {
+            include "META-INF/${accessTransformersFile}"
+        }
+    }
+    from provider {
+        configurations.embed.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    manifest {
+        attributes(getManifestAttributes())
+    }
+}
+
+def cleanroomInputTask = tasks.named('jarJava25')
+
+if (usesShadowedDependencies.toBoolean()) {
+    tasks.register('shadowJarJava25', ShadowJar) {
+        group = 'build'
+        destinationDirectory.set(layout.buildDirectory.dir("libs"))
+        archiveClassifier.set('dev-java25')
+
+        from sourceSets.main.output
+        if (useSrcApiPath && apiPackage) {
+            from sourceSets.api.output
+        }
+        configurations = [
+                project.configurations.shadowImplementation,
+                project.configurations.shadowCompile
+        ]
+
+        manifest {
+            attributes(getManifestAttributes())
+        }
+
+        if (minimizeShadowedDependencies.toBoolean()) {
+            minimize()
+        }
+        if (relocateShadowedDependencies.toBoolean()) {
+            relocationPrefix = modGroup + '.shadow'
+            enableRelocation = true
+        }
+    }
+    cleanroomInputTask = tasks.named('shadowJarJava25')
+}
+
+def mainReobfProv = tasks.named('reobfJar', ReobfuscatedJar)
+tasks.register('reobfJarJava25', ReobfuscatedJar) { t ->
+    group = 'deployment'
+    description = 'Creates a reobfuscated JAR with Java 25 bytecode for Cleanroom.'
+
+    inputJar.set(cleanroomInputTask.flatMap { it.archiveFile })
+    archiveClassifier.set('java25')
+
+    mcVersion.set(mainReobfProv.flatMap { it.mcVersion })
+    srg.set(mainReobfProv.flatMap { it.srg })
+    fieldCsv.set(mainReobfProv.flatMap { it.fieldCsv })
+    methodCsv.set(mainReobfProv.flatMap { it.methodCsv })
+    exceptorCfg.set(mainReobfProv.flatMap { it.exceptorCfg })
+    recompMcJar.set(mainReobfProv.flatMap { it.recompMcJar })
+    extraSrgEntries.set(mainReobfProv.flatMap { it.extraSrgEntries })
+    def main = mainReobfProv.get()
+    t.referenceClasspath.setFrom(main.referenceClasspath)
+    t.extraSrgFiles.setFrom(main.extraSrgFiles)
+
+    dependsOn(cleanroomInputTask)
+}
+
+tasks.named('build').configure {
+    dependsOn('reobfJarJava25')
+}
+// End Obfuscated Java 25 jar
+
+// GlStateManager hack
 def sourceBackupDir = file("build/tmp/sourceBackup")
 
 tasks.register('patchAndBackupSources') {
@@ -1651,3 +1737,4 @@ tasks.named('compilePatchedMcJava').configure {it.dependsOn(tasks.named('patchAn
 tasks.named('restoreOriginalSources').configure {it.dependsOn(tasks.named('classes'))}
 tasks.named('reobfJar').configure {it.dependsOn(tasks.named('restoreOriginalSources'))}
 tasks.named('build').configure {it.finalizedBy(tasks.named('repatchSourcesForIDE'))}
+// End GlStateManager hack
