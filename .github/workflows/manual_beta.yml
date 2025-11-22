@@ -122,4 +122,4 @@ jobs:
               \"featured\": true,
               \"project_id\": \"oKqJzTkl\"
             };type=application/json" \
-            -F "primary_file=@${FILE}"
+            -F "file_parts[]=@${FILE}"
