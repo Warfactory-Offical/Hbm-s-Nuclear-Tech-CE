@@ -120,6 +120,6 @@ jobs:
               \"game_versions\": [\"1.12.2\"],
               \"loaders\": [\"forge\"],
               \"featured\": false,
-              \"project_id\": \"ntm-ce\"
+              \"project_id\": \"oKqJzTkl\"
             };type=application/json" \
             -F "files=@${FILE}"
