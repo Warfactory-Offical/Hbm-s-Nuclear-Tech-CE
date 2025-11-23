@@ -1054,7 +1054,7 @@ public class ModBlocks {
 	public static final Block machine_excavator = new MachineExcavator(Material.IRON, "machine_excavator").setHardness(5.0F).setResistance(100.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block machine_ore_slopper = new MachineOreSlopper("machine_ore_slopper").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 	public static final Block machine_mining_laser = new MachineMiningLaser(Material.IRON, "machine_mining_laser").setHardness(5.0F).setResistance(100.0F).setCreativeTab(MainRegistry.machineTab);
-	public static final Block sandbags = new BlockNoDrop(Material.SAND, "sandbags").setHardness(1.0F).setResistance(2.5F).setCreativeTab(null);
+	public static final Block sandbags = new BlockSandbags(Material.GROUND, "sandbags").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(30.0F);
 
 	public static final Block machine_turbofan = new MachineTurbofan(Material.IRON, "machine_turbofan").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 

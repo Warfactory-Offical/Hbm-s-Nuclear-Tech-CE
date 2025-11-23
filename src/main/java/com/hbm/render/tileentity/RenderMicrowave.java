@@ -42,11 +42,14 @@ public class RenderMicrowave extends TileEntitySpecialRenderer<TileEntityMicrowa
         GlStateManager.rotate(180, 0F, 1F, 0F);
         break;
       case 4:
+        offsetX = 0.5D;
         offsetZ = 0.49D;
         GlStateManager.translate(x + offsetX, y + offsetY, z + offsetZ);
         GlStateManager.rotate(90, 0F, 1F, 0F);
         break;
       case 5:
+        offsetX = 0.5D;
+        offsetZ = 0.51D;
         GlStateManager.translate(x + offsetX, y + offsetY, z + offsetZ);
         GlStateManager.rotate(270, 0F, 1F, 0F);
         break;

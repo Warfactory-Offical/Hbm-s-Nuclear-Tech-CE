@@ -3,16 +3,11 @@ package com.hbm.render.model;
 import com.hbm.blocks.generic.BlockBarrier;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.BlockFaceUV;
-import net.minecraft.client.renderer.block.model.BlockPartFace;
-import net.minecraft.client.renderer.block.model.FaceBakery;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.util.vector.Vector3f;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -108,68 +103,5 @@ public class BlockBarrierBakedModel extends AbstractBakedModel {
     @Override
     public TextureAtlasSprite getParticleTexture() {
         return sprite;
-    }
-
-    private static void addBox(List<BakedQuad> quads, float minX, float minY, float minZ, float maxX, float maxY, float maxZ, TextureAtlasSprite sprite) {
-        FaceBakery bakery = new FaceBakery();
-
-        Vector3f from = new Vector3f(minX * 16.0f, minY * 16.0f, minZ * 16.0f);
-        Vector3f to   = new Vector3f(maxX * 16.0f, maxY * 16.0f, maxZ * 16.0f);
-
-        for (EnumFacing face : EnumFacing.values()) {
-            BlockFaceUV uv = makeFaceUV(face, from, to);
-            BlockPartFace partFace = new BlockPartFace(face, -1, "", uv);
-            BakedQuad quad = bakery.makeBakedQuad(from, to, partFace, sprite, face, TRSRTransformation.identity(), null, true, true);
-            quads.add(quad);
-        }
-    }
-
-    private static BlockFaceUV makeFaceUV(EnumFacing face, Vector3f from, Vector3f to) {
-        float u1, v1, u2, v2;
-        switch (face) {
-            case DOWN -> {
-                u1 = from.x;
-                v1 = 16f - to.z;
-                u2 = to.x;
-                v2 = 16f - from.z;
-            }
-            case UP -> {
-                u1 = from.x;
-                v1 = from.z;
-                u2 = to.x;
-                v2 = to.z;
-            }
-            case NORTH -> { // Z-
-                u1 = 16f - to.x;
-                v1 = 16f - to.y;
-                u2 = 16f - from.x;
-                v2 = 16f - from.y;
-            }
-            case SOUTH -> { // Z+
-                u1 = from.x;
-                v1 = 16f - to.y;
-                u2 = to.x;
-                v2 = 16f - from.y;
-            }
-            case WEST -> {  // X-
-                u1 = from.z;
-                v1 = 16f - to.y;
-                u2 = to.z;
-                v2 = 16f - from.y;
-            }
-            case EAST -> {  // X+
-                u1 = 16f - to.z;
-                v1 = 16f - to.y;
-                u2 = 16f - from.z;
-                v2 = 16f - from.y;
-            }
-            default -> {
-                u1 = 0f;
-                v1 = 0f;
-                u2 = 16f;
-                v2 = 16f;
-            }
-        }
-        return new BlockFaceUV(new float[] {u1, v1, u2, v2}, 0);
     }
 }

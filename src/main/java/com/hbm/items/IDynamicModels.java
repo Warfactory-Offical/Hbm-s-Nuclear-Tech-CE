@@ -43,7 +43,7 @@ public interface IDynamicModels {
     }
 
     @SideOnly(Side.CLIENT)
-    public static void registerCustomStateMappers() {
+    static void registerCustomStateMappers() {
         for (IDynamicModels model : INSTANCES) {
             if (model.getSelf() == null || !(model.getSelf() instanceof Block block)) continue;
             StateMapperBase mapper = model.getStateMapper(block.getRegistryName());
