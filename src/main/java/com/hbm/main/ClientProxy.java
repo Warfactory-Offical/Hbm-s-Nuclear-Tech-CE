@@ -53,6 +53,7 @@ import com.hbm.render.item.ItemRenderMissile;
 import com.hbm.render.item.ItemRenderMissileGeneric;
 import com.hbm.render.item.ItemRenderMissileGeneric.RenderMissileType;
 import com.hbm.render.item.ItemRenderMissilePart;
+import com.hbm.render.item.weapon.ItemRenderGunAnim;
 import com.hbm.render.item.weapon.sedna.*;
 import com.hbm.render.misc.MissilePart;
 import com.hbm.render.modelrenderer.EgonBackpackRenderer;
@@ -363,6 +364,7 @@ public class ClientProxy extends ServerProxy {
         registerItemRenderer(ModItems.missile_doomsday, new ItemRenderMissileGeneric(RenderMissileType.TYPE_DOOMSDAY), reg);
         registerItemRenderer(ModItems.missile_doomsday_rusted, new ItemRenderMissileGeneric(RenderMissileType.TYPE_DOOMSDAY), reg);
         registerItemRenderer(ModItems.missile_carrier, new ItemRenderMissileGeneric(RenderMissileType.TYPE_CARRIER), reg);
+        registerItemRenderer(ModItems.gun_b92, ItemRenderGunAnim.INSTANCE, reg);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.hbm.render.item.weapon;
 
-import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
 import com.hbm.items.special.weapon.GunB92;
 import com.hbm.lib.RefStrings;
@@ -13,10 +12,9 @@ import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
-@AutoRegister(item = "gun_b92")
+
 public class ItemRenderGunAnim extends TileEntityItemStackRenderer {
 
-	
 	public static final ItemRenderGunAnim INSTANCE = new ItemRenderGunAnim();
 
 	protected ModelB92 b92;
@@ -24,14 +22,13 @@ public class ItemRenderGunAnim extends TileEntityItemStackRenderer {
 	public TransformType type;
 	public IBakedModel b92ItemModel;
 
-	public ItemRenderGunAnim(){
+	private ItemRenderGunAnim(){
 		b92 = new ModelB92();
 	}
 	
 	@Override
 	public void renderByItem(ItemStack item) {
-		if (type == null) return; // mlbv: for some reason this can be called before a value is assigned to type
-		float lever = 0;
+        float lever = 0;
 		
 		GlStateManager.popMatrix();
 		switch(type) {
