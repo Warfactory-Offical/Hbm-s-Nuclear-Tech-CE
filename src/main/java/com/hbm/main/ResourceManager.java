@@ -379,7 +379,7 @@ public class ResourceManager {
     public static final IModelCustom radgen_body = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/radgen.obj")).asVBO();
     public static final IModelCustom geiger = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/blocks/geiger_counter.obj")).asVBO();
     //Pumpjack
-    public static final IModelCustom pumpjack = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/pumpjack.obj")).asVBO();
+    public static final IModelCustom pumpjack = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/pumpjack.obj")).asVBO();
     // Fracking Tower
     public static final IModelCustom fracking_tower = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/fracking_tower.obj")).asVBO();
     //TELEX
