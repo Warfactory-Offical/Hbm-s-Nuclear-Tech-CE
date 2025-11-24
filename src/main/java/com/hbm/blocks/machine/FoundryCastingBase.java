@@ -124,6 +124,7 @@ public abstract class FoundryCastingBase extends BlockContainer implements ICruc
                 ItemStack newMold = heldItem.copy();
                 newMold.setCount(1);
                 cast.inventory.setStackInSlot(0, newMold); // Set mold in Slot 0
+                if(!player.isCreative())
                 heldItem.shrink(1);
 
                 world.playSound(null, pos, HBMSoundHandler.upgradePlug, SoundCategory.BLOCKS, 1.5F, 1.0F);
