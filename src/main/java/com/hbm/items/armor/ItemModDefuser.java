@@ -15,6 +15,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -45,31 +46,35 @@ public class ItemModDefuser extends ItemArmorMod {
         List<EntityCreeper> creepers = entity.world.getEntitiesWithinAABB(EntityCreeper.class, entity.getEntityBoundingBox().grow(5, 5, 5));
 
         for(EntityCreeper creeper : creepers) {
+            defuse(creeper, entity, true);
+        }
+    }
 
-            if(creeper.getCreeperState() == 1 || creeper.hasIgnited()) {
-                creeper.setCreeperState(-1);
-                creeper.getDataManager().set(EntityCreeper.IGNITED, false);
+    public static boolean defuse(EntityCreeper creeper, @Nullable EntityLivingBase entity, boolean dropItem) {
+        creeper.setCreeperState(-1);
+        creeper.getDataManager().set(EntityCreeper.IGNITED, false);
 
-                EntityAICreeperSwell toRem = null;
-                for(EntityAITasks.EntityAITaskEntry o : creeper.tasks.taskEntries) {
-
-                    if(o.action instanceof EntityAICreeperSwell swell) {
-                        toRem = swell;
-                        break;
-                    }
-                }
-
-                if(toRem != null) {
-                    creeper.tasks.removeTask(toRem);
-                    if (!entity.world.isRemote) { //mlbv: moved isRemote check here to avoid swelling desync
-                        creeper.world.playSound(creeper.posX, creeper.posY, creeper.posZ, HBMSoundHandler.pinBreak, SoundCategory.PLAYERS, 1.0F, 1.0F, false);
-                        creeper.dropItem(ModItems.safety_fuse, 1);
-                        creeper.attackEntityFrom(DamageSource.causeMobDamage(entity), 1.0F);
-                        // mlbv: upstream has duration 0 and amplifier 200 here, probably a bug
-                        creeper.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 200, 1));
-                    }
-                }
+        EntityAICreeperSwell toRem = null;
+        for(EntityAITasks.EntityAITaskEntry o : creeper.tasks.taskEntries) {
+            if(o.action instanceof EntityAICreeperSwell swell) {
+                toRem = swell;
+                break;
             }
         }
+
+        if(toRem != null) {
+            creeper.tasks.removeTask(toRem);
+            //mlbv: moved isRemote check here to avoid swelling desync
+            if (!creeper.world.isRemote && dropItem) {
+                creeper.world.playSound(creeper.posX, creeper.posY, creeper.posZ, HBMSoundHandler.pinBreak, SoundCategory.PLAYERS, 1.0F, 1.0F, false);
+                creeper.dropItem(ModItems.safety_fuse, 1);
+                creeper.attackEntityFrom(DamageSource.causeMobDamage(entity), 1.0F);
+                // mlbv: upstream has duration 0 and amplifier 200 here, probably a bug
+                creeper.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 200, 1));
+            }
+            creeper.getEntityData().setBoolean("hfr_defused", true);
+            return true;
+        }
+        return false;
     }
 }

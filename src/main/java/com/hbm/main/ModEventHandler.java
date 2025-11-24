@@ -1117,6 +1117,9 @@ public class ModEventHandler {
     public void onLivingUpdate(LivingUpdateEvent event) {
         if (event.isCancelable() && event.isCanceled())
             return;
+        if(event.getEntityLiving() instanceof EntityCreeper creeper && creeper.getEntityData().getBoolean("hfr_defused")) {
+            ItemModDefuser.defuse(creeper, null, false);
+        }
         NonNullList<ItemStack> handInventory = event.getEntityLiving().handInventory;
         NonNullList<ItemStack> armorArray =event.getEntityLiving().armorArray;
 
