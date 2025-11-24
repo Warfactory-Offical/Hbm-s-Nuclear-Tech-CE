@@ -814,7 +814,6 @@ public class ModItems {
     public static final Item ingot_smore = new ItemFoodBase(10, 20F, false, "ingot_smore").setCreativeTab(MainRegistry.partsTab);
     public static final Item ingot_niobium = new ItemCustomLore("ingot_niobium").setCreativeTab(MainRegistry.partsTab);
     public static final Item ingot_actinium = new ItemCustomLore("ingot_actinium").setCreativeTab(MainRegistry.partsTab);
-    public static final Item ingot_neodymium = new ItemCustomLore("ingot_neodymium").setCreativeTab(MainRegistry.partsTab);
     public static final Item ingot_bromine = new ItemCustomLore("ingot_bromine").setCreativeTab(MainRegistry.partsTab);
     public static final Item ingot_caesium = new ItemBakedBase("ingot_caesium").setCreativeTab(MainRegistry.partsTab);
     public static final Item ingot_cerium = new ItemCustomLore("ingot_cerium").setCreativeTab(MainRegistry.partsTab);
@@ -824,7 +823,6 @@ public class ModItems {
     public static final Item ingot_firebrick = new ItemBakedBase("ingot_firebrick").setCreativeTab(MainRegistry.partsTab);
     public static final Item ingot_cobalt = new ItemCustomLore("ingot_cobalt").setCreativeTab(MainRegistry.partsTab);
     public static final Item ingot_co60 = new ItemBakedBase("ingot_co60").setCreativeTab(MainRegistry.partsTab);
-    public static final Item ingot_strontium = new ItemBakedBase("ingot_strontium").setCreativeTab(MainRegistry.partsTab);
     public static final Item ingot_sr90 = new ItemBakedBase("ingot_sr90").setCreativeTab(MainRegistry.partsTab);
     public static final Item ingot_iodine = new ItemCustomLore("ingot_iodine").setCreativeTab(MainRegistry.partsTab);
     public static final Item ingot_i131 = new ItemBakedBase("ingot_i131").setCreativeTab(MainRegistry.partsTab);

@@ -576,7 +576,7 @@ public class OreDictManager {
         I.ingot(ingot_iodine).dust(powder_iodine).dustSmall(powder_iodine_tiny);
         AT.ingot(ingot_astatine).dust(powder_astatine);
         CS.ingot(ingot_caesium).dust(powder_caesium);
-        SR.ingot(ingot_strontium).dust(powder_strontium);
+//        SR.ingot(ingot_strontium).dust(powder_strontium);
         BR.ingot(ingot_bromine).dust(powder_bromine);
         TS.ingot(ingot_tennessine).dust(powder_tennessine);
 
