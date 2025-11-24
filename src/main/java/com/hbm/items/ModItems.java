@@ -285,7 +285,7 @@ public class ModItems {
     public static final Item piston_selenium = new ItemBase("piston_selenium").setCreativeTab(MainRegistry.controlTab);
     public static final Item piston_set = new ItemPistons("piston_set").setCreativeTab(MainRegistry.controlTab).setMaxStackSize(1);
     public static final Item drillbit = new ItemDrillbit("drillbit").setCreativeTab(MainRegistry.controlTab).setMaxStackSize(1);
-    public static final Item thermo_element = new ItemBase("thermo_element").setMaxStackSize(16).setCreativeTab(MainRegistry.controlTab);
+    public static final Item thermo_element = new ItemBase("thermo_element").setCreativeTab(MainRegistry.controlTab);
     public static final Item catalytic_converter = new ItemBase("catalytic_converter").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
     public static final Item part_lithium = new ItemBase("part_lithium").setCreativeTab(MainRegistry.controlTab);
     public static final Item part_beryllium = new ItemBase("part_beryllium").setCreativeTab(MainRegistry.controlTab);
