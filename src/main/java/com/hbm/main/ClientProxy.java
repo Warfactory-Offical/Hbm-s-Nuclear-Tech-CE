@@ -25,6 +25,7 @@ import com.hbm.items.weapon.sedna.factory.GunFactoryClient;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.RecoilHandler;
 import com.hbm.lib.RefStrings;
+import com.hbm.main.client.NTMClientRegistry;
 import com.hbm.particle.*;
 import com.hbm.particle.bfg.*;
 import com.hbm.particle.bullet_hit.ParticleBloodParticle;
@@ -123,7 +124,6 @@ import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 import paulscode.sound.SoundSystemConfig;
 
@@ -158,7 +158,7 @@ public class ClientProxy extends ServerProxy {
 
     public static void registerItemRenderer(Item i, TileEntityItemStackRenderer render, IRegistry<ModelResourceLocation, IBakedModel> reg) {
         i.setTileEntityItemStackRenderer(render);
-        ModEventHandlerClient.swapModels(i, reg);
+        NTMClientRegistry.swapModels(i, reg);
     }
 
     @Override
@@ -179,6 +179,7 @@ public class ClientProxy extends ServerProxy {
             Minecraft.getMinecraft().getFramebuffer().enableStencil();
 
         MinecraftForge.EVENT_BUS.register(new ModEventHandlerClient());
+        MinecraftForge.EVENT_BUS.register(new NTMClientRegistry());
         MinecraftForge.EVENT_BUS.register(new ModEventHandlerRenderer());
         MinecraftForge.EVENT_BUS.register(new PlacementPreviewHandler());
         MinecraftForge.EVENT_BUS.register(theInfoSystem);
@@ -753,7 +754,7 @@ public class ClientProxy extends ServerProxy {
 
                         MutableVec3d vec = new MutableVec3d(strength, 0, 0);
 
-                        for(int i = 0; i < count; i++) {
+                        for (int i = 0; i < count; i++) {
 
                             vec.rotateYawSelf((float) Math.toRadians(rand.nextFloat() * 360F));
                             // TODO
@@ -773,7 +774,7 @@ public class ClientProxy extends ServerProxy {
             case "debugdrone" -> {
                 Item held = player.getHeldItem(EnumHand.MAIN_HAND) == ItemStack.EMPTY ? null : player.getHeldItem(EnumHand.MAIN_HAND).getItem();
 
-                if(held == ModItems.drone ||
+                if (held == ModItems.drone ||
                         held == Item.getItemFromBlock(ModBlocks.drone_crate_provider) ||
                         held == Item.getItemFromBlock(ModBlocks.drone_crate_requester) ||
                         held == Item.getItemFromBlock(ModBlocks.drone_dock) ||
@@ -1020,10 +1021,10 @@ public class ClientProxy extends ServerProxy {
                 }
             }
             case "splash" -> {
-                if(particleSetting == 0 || (particleSetting == 1 && rand.nextBoolean())) {
+                if (particleSetting == 0 || (particleSetting == 1 && rand.nextBoolean())) {
                     ParticleLiquidSplash fx = new ParticleLiquidSplash(world, x, y, z);
 
-                    if(data.hasKey("color")) {
+                    if (data.hasKey("color")) {
                         Color color = new Color(data.getInteger("color"));
                         float f = 1F - rand.nextFloat() * 0.2F;
                         fx.setRBGColorF(color.getRed() / 255F * f, color.getGreen() / 255F * f, color.getBlue() / 255F * f);
@@ -1063,10 +1064,12 @@ public class ClientProxy extends ServerProxy {
                         case "cloud" -> new ParticleCloud.Factory().createParticle(-1, world, x, y, z, mX, mY, mZ);
                         case "reddust" -> new ParticleRedstone.Factory().createParticle(-1, world, x, y, z, 0.0F, 0.0F,
                                 0.0F);
-                        case "bluedust" -> new ParticleRedstone.Factory().createParticle(-1, world, x, y, z, 0.01F, 0.01F,
-                                1F);
-                        case "greendust" -> new ParticleRedstone.Factory().createParticle(-1, world, x, y, z, 0.01F, 0.5F,
-                                0.1F);
+                        case "bluedust" ->
+                                new ParticleRedstone.Factory().createParticle(-1, world, x, y, z, 0.01F, 0.01F,
+                                        1F);
+                        case "greendust" ->
+                                new ParticleRedstone.Factory().createParticle(-1, world, x, y, z, 0.01F, 0.5F,
+                                        0.1F);
                         case "blockdust" -> {
                             Block b = Block.getBlockById(data.getInteger("block"));
                             Particle particle = new ParticleBlockDust.Factory().createParticle(-1, world, x, y, z, mX, mY + 0.2, mZ,
@@ -1103,8 +1106,10 @@ public class ClientProxy extends ServerProxy {
                     case "cloud" -> new ParticleCloud.Factory().createParticle(-1, world, x, y, z, mX, mY, mZ);
                     case "reddust" -> new ParticleRedstone.Factory().createParticle(-1, world, x, y, z, (float) mX,
                             (float) mY, (float) mZ);
-                    case "bluedust" -> new ParticleRedstone.Factory().createParticle(-1, world, x, y, z, 0.01F, 0.01F, 1F);
-                    case "greendust" -> new ParticleRedstone.Factory().createParticle(-1, world, x, y, z, 0.01F, 0.5F, 0.1F);
+                    case "bluedust" ->
+                            new ParticleRedstone.Factory().createParticle(-1, world, x, y, z, 0.01F, 0.01F, 1F);
+                    case "greendust" ->
+                            new ParticleRedstone.Factory().createParticle(-1, world, x, y, z, 0.01F, 0.5F, 0.1F);
                     case "fireworks" -> {
                         world.spawnParticle(EnumParticleTypes.FIREWORKS_SPARK, x, y, z, 0, 0, 0);
                         yield null;
@@ -1551,7 +1556,7 @@ public class ClientProxy extends ServerProxy {
                                 int sideways = 100;
                                 int retire = 200;
 
-                                if(HbmAnimationsSedna.getRelevantAnim() == null) {
+                                if (HbmAnimationsSedna.getRelevantAnim() == null) {
 
                                     BusAnimationSedna animation = new BusAnimationSedna()
                                             .addBus("SWING_ROT", new BusAnimationSequenceSedna()
@@ -1571,7 +1576,8 @@ public class ClientProxy extends ServerProxy {
                                     double[] rot = HbmAnimationsSedna.getRelevantTransformation("SWING_ROT");
                                     double[] trans = HbmAnimationsSedna.getRelevantTransformation("SWING_TRANS");
 
-                                    if(System.currentTimeMillis() - HbmAnimationsSedna.getRelevantAnim().startMillis < 50) return;
+                                    if (System.currentTimeMillis() - HbmAnimationsSedna.getRelevantAnim().startMillis < 50)
+                                        return;
 
                                     BusAnimationSedna animation = new BusAnimationSedna()
                                             .addBus("SWING_ROT", new BusAnimationSequenceSedna()
@@ -1819,6 +1825,7 @@ public class ClientProxy extends ServerProxy {
             }
         }
     }
+
     @Deprecated
     @Override
     public AudioWrapper getLoopedSound(SoundEvent sound, SoundCategory cat, float x, float y, float z, float volume, float pitch) {
@@ -1836,6 +1843,7 @@ public class ClientProxy extends ServerProxy {
         audio.setKeepAlive(keepAlive);
         return audio;
     }
+
     @Override
     public AudioWrapper getLoopedSound(SoundEvent sound, SoundCategory cat, float x, float y, float z, float volume, float range, float pitch) {
         AudioWrapperClient audio = new AudioWrapperClient(sound, cat, true);
@@ -1891,8 +1899,8 @@ public class ClientProxy extends ServerProxy {
 
     @Override
     public float partialTicks() {
-            boolean paused = Minecraft.getMinecraft().isGamePaused();
-            return paused ?  Minecraft.getMinecraft().renderPartialTicksPaused : Minecraft.getMinecraft().getRenderPartialTicks();
+        boolean paused = Minecraft.getMinecraft().isGamePaused();
+        return paused ? Minecraft.getMinecraft().renderPartialTicksPaused : Minecraft.getMinecraft().getRenderPartialTicks();
     }
 
     @Override
@@ -1900,7 +1908,7 @@ public class ClientProxy extends ServerProxy {
 
         NonNullList<ItemStack> list = NonNullList.create();
         stack.getItem().getSubItems(stack.getItem().getCreativeTab(), list);
-        for(ItemStack sta : list) {
+        for (ItemStack sta : list) {
             sta.setCount(stack.getCount());
         }
         return list;
@@ -1923,7 +1931,7 @@ public class ClientProxy extends ServerProxy {
 
     @Override
     public int getStackColor(@NotNull ItemStack stack, boolean amplify) {
-        if(stack.isEmpty()) return 0x000000;
+        if (stack.isEmpty()) return 0x000000;
         int color;
         if (stack.getItem() instanceof ItemBlock) {
             try {
@@ -1934,12 +1942,12 @@ public class ClientProxy extends ServerProxy {
                 color = 0xCCCCCC;
             }
         } else color = ColorUtil.getAverageColorFromStack(stack);
-        if(amplify) color = ColorUtil.amplifyColor(color);
+        if (amplify) color = ColorUtil.amplifyColor(color);
         return color;
     }
 
 
-    public void onLoadComplete(FMLLoadCompleteEvent event){
-        if (!Loader.isModLoaded(Compat.ModIds.CTM)) ModEventHandlerClient.ctmWarning = true;
+    public void onLoadComplete(FMLLoadCompleteEvent event) {
+        if (!Loader.isModLoaded(Compat.ModIds.CTM)) NTMClientRegistry.ctmWarning = true;
     }
 }

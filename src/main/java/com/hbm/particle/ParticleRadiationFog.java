@@ -1,6 +1,6 @@
 package com.hbm.particle;
 
-import com.hbm.main.ModEventHandlerClient;
+import com.hbm.main.client.NTMClientRegistry;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.entity.Entity;
@@ -24,7 +24,7 @@ public class ParticleRadiationFog extends Particle {
         this.particleGreen = 0.8F;
         this.particleBlue = 0.8F;
         this.particleScale = 7.5F;
-        this.particleTexture = ModEventHandlerClient.fog;
+        this.particleTexture = NTMClientRegistry.fog;
 	}
 	
 	@Override

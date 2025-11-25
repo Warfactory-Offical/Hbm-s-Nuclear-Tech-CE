@@ -4,8 +4,8 @@ import com.google.common.collect.Lists;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.handler.HbmShaderManager2;
 import com.hbm.lib.RefStrings;
-import com.hbm.main.ModEventHandlerClient;
 import com.hbm.main.ResourceManager;
+import com.hbm.main.client.NTMClientRegistry;
 import com.hbm.render.GLCompat;
 import com.hbm.world.*;
 import com.hbm.world.dungeon.LibraryDungeon;
@@ -229,7 +229,7 @@ public class CommandHbm extends CommandBase {
 							shader.uniform1i("particleData0", 2);
 							shader.uniform1i("particleData1", 3);
 							shader.uniform1i("particleData2", 4);
-							shader.uniform4f("particleTypeTexCoords[0]", ModEventHandlerClient.contrail.getMinU(), ModEventHandlerClient.contrail.getMinV(), ModEventHandlerClient.contrail.getMaxU() - ModEventHandlerClient.contrail.getMinU(), ModEventHandlerClient.contrail.getMaxV() - ModEventHandlerClient.contrail.getMinV());
+							shader.uniform4f("particleTypeTexCoords[0]", NTMClientRegistry.contrail.getMinU(), NTMClientRegistry.contrail.getMinV(), NTMClientRegistry.contrail.getMaxU() - NTMClientRegistry.contrail.getMinU(), NTMClientRegistry.contrail.getMaxV() - NTMClientRegistry.contrail.getMinV());
 						});
 
 						ResourceManager.gpu_particle_udpate = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/gpu_particle_update")).withUniforms(shader -> {

@@ -8,6 +8,7 @@ import com.hbm.handler.HbmShaderManager2;
 import com.hbm.handler.HbmShaderManager2.Shader;
 import com.hbm.lib.MethodHandleHelper;
 import com.hbm.lib.RefStrings;
+import com.hbm.main.client.NTMClientRegistry;
 import com.hbm.render.GLCompat;
 import com.hbm.render.WavefrontObjDisplayList;
 import com.hbm.render.anim.sedna.AnimationLoader;
@@ -1833,7 +1834,7 @@ public class ResourceManager {
         shader.uniform1i("particleData0", 2);
         shader.uniform1i("particleData1", 3);
         shader.uniform1i("particleData2", 4);
-        shader.uniform4f("particleTypeTexCoords[0]", ModEventHandlerClient.contrail.getMinU(), ModEventHandlerClient.contrail.getMinV(), ModEventHandlerClient.contrail.getMaxU() - ModEventHandlerClient.contrail.getMinU(), ModEventHandlerClient.contrail.getMaxV() - ModEventHandlerClient.contrail.getMinV());
+        shader.uniform4f("particleTypeTexCoords[0]", NTMClientRegistry.contrail.getMinU(), NTMClientRegistry.contrail.getMinV(), NTMClientRegistry.contrail.getMaxU() - NTMClientRegistry.contrail.getMinU(), NTMClientRegistry.contrail.getMaxV() - NTMClientRegistry.contrail.getMinV());
     });
 
     public static Shader gpu_particle_udpate = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/gpu_particle_update")).withUniforms(shader -> {
