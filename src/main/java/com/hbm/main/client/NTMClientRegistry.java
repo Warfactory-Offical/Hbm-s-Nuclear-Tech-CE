@@ -597,7 +597,8 @@ public class NTMClientRegistry {
     }
 
     @SubscribeEvent
-    public void modelBaking(ModelBakeEvent evt) {
+    @SuppressWarnings("unused")
+    public void onModelBake(ModelBakeEvent evt) {
         ItemBedrockOreNew.bakeModels(evt);
         ItemAutogen.bakeModels(evt);
         ItemMold.bakeModels(evt);

@@ -179,7 +179,7 @@ public class AutoRegisterProcessor extends AbstractProcessor {
         ClassName RESOURCE_LOCATION = ClassName.get("net.minecraft.util", "ResourceLocation");
         ClassName SIDE_ONLY = ClassName.get("net.minecraftforge.fml.relauncher", "SideOnly");
         ClassName SIDE = ClassName.get("net.minecraftforge.fml.relauncher", "Side");
-        ClassName REF_STRINGS = ClassName.get("com.hbm.lib", "RefStrings");
+        ClassName REF_STRINGS = ClassName.get("com.hbm", "Tags");
         ClassName MAIN_REGISTRY = ClassName.get("com.hbm.main", "MainRegistry");
         ClassName MOD_ITEMS = ClassName.get("com.hbm.items", "ModItems");
         ClassName ICONFIGURABLE_MACHINE = ClassName.get("com.hbm.tileentity", "IConfigurableMachine");
