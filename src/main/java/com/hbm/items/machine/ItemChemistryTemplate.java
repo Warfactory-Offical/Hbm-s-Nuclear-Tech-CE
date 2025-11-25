@@ -9,6 +9,7 @@ import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.gui.GUIChemfac;
 import com.hbm.inventory.gui.GUIMachineChemplant;
 import com.hbm.inventory.recipes.ChemplantRecipes;
+import com.hbm.items.IDynamicModels;
 import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.I18nUtil;
@@ -16,6 +17,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -23,6 +25,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
@@ -36,7 +40,7 @@ import java.util.Map;
 import static com.hbm.items.machine.ItemAssemblyTemplate.checkAndConsume;
 import static com.hbm.items.machine.ItemAssemblyTemplate.countItem;
 
-public class ItemChemistryTemplate extends Item implements IHasCustomModel {
+public class ItemChemistryTemplate extends Item implements IHasCustomModel, IDynamicModels {
 
 	public static final ModelResourceLocation location = new ModelResourceLocation(Tags.MODID + ":chemistry_template", "inventory");
 	
@@ -48,6 +52,7 @@ public class ItemChemistryTemplate extends Item implements IHasCustomModel {
 		this.setCreativeTab(MainRegistry.templateTab);
 		
 		ModItems.ALL_ITEMS.add(this);
+        IDynamicModels.INSTANCES.add(this);
 	}
 	
 	@Override
@@ -179,4 +184,22 @@ public class ItemChemistryTemplate extends Item implements IHasCustomModel {
 	public ModelResourceLocation getResourceLocation() {
 		return location;
 	}
+
+    @Override
+    public void bakeModel(ModelBakeEvent event) {
+
+    }
+
+    @Override
+    public void registerModel() {
+        ChemplantRecipes.register();
+            for (int i : ChemplantRecipes.recipeNames.keySet()) {
+                ModelLoader.setCustomModelResourceLocation(this, i, new ModelResourceLocation(this.getRegistryName(), "inventory"));
+            }
+    }
+
+    @Override
+    public void registerSprite(TextureMap map) {
+
+    }
 }

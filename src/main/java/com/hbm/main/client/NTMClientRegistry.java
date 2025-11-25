@@ -75,7 +75,6 @@ public class NTMClientRegistry {
 
     @SubscribeEvent
     public void itemColorsEvent(ColorHandlerEvent.Item evt) {
-        ItemBedrockOreNew.registerColorHandlers(evt);
         IDynamicModels.registerItemColorHandlers(evt);
         ItemChemicalDye.registerColorHandlers(evt);
     }
@@ -88,9 +87,6 @@ public class NTMClientRegistry {
     @SubscribeEvent
     public void textureStitch(TextureStitchEvent.Pre evt) {
         TextureMap map = evt.getMap();
-        ItemBedrockOreNew.registerSprites(map);
-        ItemMold.registerSprites(map);
-
         IDynamicModels.registerSprites(map);
         RegistrationUtils.registerInFolder(map, "textures/blocks/forgefluid");
 
@@ -205,6 +201,10 @@ public class NTMClientRegistry {
 
     @SubscribeEvent
     public void registerModels(ModelRegistryEvent event) {
+        IDynamicModels.registerModels();
+        IDynamicModels.registerCustomStateMappers();
+        IMetaItemTesr.redirectModels();
+
         int i = 0;
         ResourceLocation[] list = new ResourceLocation[SpecialContainerFillLists.EnumCell.values().length];
         for (SpecialContainerFillLists.EnumCell e : SpecialContainerFillLists.EnumCell.values()) {
@@ -212,12 +212,6 @@ public class NTMClientRegistry {
             i++;
         }
         ModelLoader.registerItemVariants(ModItems.cell, list);
-
-        ModelResourceLocation[] locations = new ModelResourceLocation[ItemAmmoArty.itemTypes.length];
-        for (i = 0; i < ItemAmmoArty.itemTypes.length; i++) {
-            locations[i] = new ModelResourceLocation(ModItems.ammo_arty.getRegistryName() + "_" + i, "inventory");
-        }
-        ModelLoader.registerItemVariants(ModItems.ammo_arty, locations);
 
         FluidType[] order = Fluids.getInNiceOrder();
         for (i = 0; i < order.length; i++) {
@@ -229,7 +223,6 @@ public class NTMClientRegistry {
             }
         }
         ModelLoader.setCustomModelResourceLocation(ModItems.canister_empty, 0, ItemCanister.fluidCanisterModel);
-        ModelLoader.setCustomModelResourceLocation(ModItems.icf_pellet, 0, new ModelResourceLocation(ModItems.icf_pellet.getRegistryName(), "inventory"));
 
         ModelResourceLocation clayTabletModel = new ModelResourceLocation(ModItems.clay_tablet.getRegistryName(), "inventory");
 
@@ -249,18 +242,9 @@ public class NTMClientRegistry {
         }
 
 
-        ((ItemBedrockOreNew) ModItems.bedrock_ore).registerModels();
-        ((ItemAmmoArty) ModItems.ammo_arty).registerModels();
-        ((ItemMold) ModItems.mold).registerModels();
-        IDynamicModels.registerModels();
-        IDynamicModels.registerCustomStateMappers();
-        IMetaItemTesr.redirectModels();
 
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ModBlocks.fence_metal), 1, new ModelResourceLocation("hbm:fence_metal_post", "inventory"));
 
-        //FIXME: this is a dogshit solution
-        // now 2 dogshit solutions!
-        //Someone will be executed for this
 
 
     }
@@ -276,47 +260,14 @@ public class NTMClientRegistry {
 
         //Drillgon200: I hate myself for making this
         //Th3_Sl1ze: Don't worry, I hate myself too
-        if (item == ModItems.chemistry_template) {
-            ChemplantRecipes.register();
-        }
+        //Norwood: I will fix it, after 5 years
 
-
-        if (item instanceof ItemDepletedFuel) {
-            for (int i = 0; i <= 1; i++) {
-                ModelLoader.setCustomModelResourceLocation(item, i,
-                        new ModelResourceLocation(Objects.requireNonNull(item.getRegistryName()), "inventory"));
-            }
-            return;
-        }
         if (item instanceof IModelRegister) {
             ((IModelRegister) item).registerModels();
             return;
         }
 
-        if (item == ModItems.chemistry_icon) {
-            for (int i : ChemplantRecipes.recipeNames.keySet()) {
-                ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(Tags.MODID + ":chem_icon_" + ChemplantRecipes.getName(i).toLowerCase(), "inventory"));
-            }
-        } else if (item == ModItems.chemistry_template) {
-            for (int i : ChemplantRecipes.recipeNames.keySet()) {
-                ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(item.getRegistryName(), "inventory"));
-            }
-        } else if (item == ModItems.crucible_template) {
-            for (int i = 0; i < 32; i++) { // FIXME: figure out a better way of doing this
-                ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(item.getRegistryName(), "inventory"));
-            }
-        } else if (item == ModItems.siren_track) {
-            for (int i = 0; i < ItemCassette.TrackType.values().length; i++) {
-                ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(item.getRegistryName(), "inventory"));
-            }
-        } else if (item == ModItems.ingot_u238m2) {
-            ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
-            ModelLoader.setCustomModelResourceLocation(item, 1, new ModelResourceLocation(Tags.MODID + ":hs-elements", "inventory"));
-            ModelLoader.setCustomModelResourceLocation(item, 2, new ModelResourceLocation(Tags.MODID + ":hs-arsenic", "inventory"));
-            ModelLoader.setCustomModelResourceLocation(item, 3, new ModelResourceLocation(Tags.MODID + ":hs-vault", "inventory"));
-        } else if (item == ModItems.polaroid || item == ModItems.glitch) {
-            ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName() + "_" + MainRegistry.polaroidID, "inventory"));
-        } else if (item == Item.getItemFromBlock(ModBlocks.brick_jungle_glyph)) {
+        if (item == Item.getItemFromBlock(ModBlocks.brick_jungle_glyph)) {
             for (int i = 0; i < 16; i++)
                 ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(item.getRegistryName().toString() + i, "inventory"));
         } else if (item == Item.getItemFromBlock(ModBlocks.brick_jungle_trap)) {
@@ -325,16 +276,6 @@ public class NTMClientRegistry {
         } else if (item instanceof ItemGuideBook) {
             for (int i = 0; i < ItemGuideBook.BookType.values().length; i++)
                 ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(item.getRegistryName(), "inventory"));
-        } else if (item instanceof ItemHot) {
-            for (int i = 0; i < 15; i++)
-                ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(item.getRegistryName(), "inventory"));
-            ModelLoader.setCustomModelResourceLocation(item, 15, new ModelResourceLocation(item.getRegistryName() + "_hot", "inventory"));
-        } else if (item instanceof ItemRBMKPellet) {
-            for (int xe = 0; xe < 2; xe++) {
-                for (int en = 0; en < 5; en++) {
-                    ModelLoader.setCustomModelResourceLocation(item, en + xe * 5, new ModelResourceLocation(item.getRegistryName() + "_e" + en + (xe > 0 ? "_xe" : ""), "inventory"));
-                }
-            }
         } else if (item instanceof ItemWasteLong) {
             for (int i = 0; i < ItemWasteLong.WasteClass.values().length; i++) {
                 ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(item.getRegistryName(), "inventory"));
@@ -343,20 +284,13 @@ public class NTMClientRegistry {
             for (int i = 0; i < ItemWasteShort.WasteClass.values().length; i++) {
                 ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(item.getRegistryName(), "inventory"));
             }
-        } else if (item == ModItems.coin_siege) {
-            for (int i = 0; i < SiegeTier.getLength(); i++) {
-                ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(Tags.MODID + ":coin_siege_" + SiegeTier.tiers[i].name, "inventory"));
-            }
         } else if (item == Item.getItemFromBlock(ModBlocks.volcano_core)) {
             for (int i = 0; i < 4; i++) {
                 ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(item.getRegistryName(), "inventory"));
             }
-        } else if (item == ModItems.fluid_identifier_multi) {
-            ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
         } else if (item instanceof IHasCustomModel) {
             ModelLoader.setCustomModelResourceLocation(item, meta, ((IHasCustomModel) item).getResourceLocation());
-        } else if (item instanceof IDynamicModels dyn && dyn.INSTANCES.contains(item)) { // we are literally registering them manually, why do it twice?..
-        } else {
+        } else if (!(item instanceof IDynamicModels) ){
             ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(item.getRegistryName(), "inventory"));
         }
     }
@@ -364,9 +298,6 @@ public class NTMClientRegistry {
     @SubscribeEvent
     @SuppressWarnings("unused")
     public void onModelBake(ModelBakeEvent evt) {
-        ItemBedrockOreNew.bakeModels(evt);
-//        ItemAutogen.bakeModels(evt);
-        ItemMold.bakeModels(evt);
         IDynamicModels.bakeModels(evt);
 
         for (SpecialContainerFillLists.EnumCanister e : SpecialContainerFillLists.EnumCanister.values()) {
