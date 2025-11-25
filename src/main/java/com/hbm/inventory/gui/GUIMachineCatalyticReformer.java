@@ -1,8 +1,8 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerMachineCatalyticReformer;
 import com.hbm.items.ModItems;
-import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.oil.TileEntityMachineCatalyticReformer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class GUIMachineCatalyticReformer extends GuiInfoContainer {
 
-    private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/processing/gui_catalytic_reformer.png");
+    private static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/processing/gui_catalytic_reformer.png");
     private TileEntityMachineCatalyticReformer refinery;
 
     public GUIMachineCatalyticReformer(InventoryPlayer invPlayer, TileEntityMachineCatalyticReformer tedf) {

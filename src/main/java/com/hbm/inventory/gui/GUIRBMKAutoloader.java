@@ -1,10 +1,10 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import net.minecraft.init.SoundEvents;
 import org.lwjgl.opengl.GL11;
 
 import com.hbm.inventory.container.ContainerRBMKAutoloader;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKAutoloader;
@@ -20,7 +20,7 @@ import java.io.IOException;
 
 public class GUIRBMKAutoloader extends GuiInfoContainer {
 
-    private static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/machine/gui_autoloader.png");
+    private static final ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/machine/gui_autoloader.png");
     private final TileEntityRBMKAutoloader loader;
 
     public GUIRBMKAutoloader(InventoryPlayer invPlayer, TileEntityRBMKAutoloader tile) {

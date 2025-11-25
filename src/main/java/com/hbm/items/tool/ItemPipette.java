@@ -1,12 +1,12 @@
 package com.hbm.items.tool;
 
 import com.google.common.collect.ImmutableMap;
+import com.hbm.Tags;
 import com.hbm.api.fluidmk2.IFillableItem;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ItemBakedBase;
 import com.hbm.items.ModItems;
-import com.hbm.lib.RefStrings;
 import com.hbm.util.I18nUtil;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelBakery;
@@ -232,9 +232,9 @@ public class ItemPipette extends ItemBakedBase implements IFillableItem {
     @Override
     @SideOnly(Side.CLIENT)
     public void bakeModel(ModelBakeEvent event) {
-        ResourceLocation baseTexture = new ResourceLocation(RefStrings.MODID, ROOT_PATH + baseTexturePath);
-        ResourceLocation overlayTexture = new ResourceLocation(RefStrings.MODID, ROOT_PATH + getOverlayTexturePath());
-        ResourceLocation emptyTexture = new ResourceLocation(RefStrings.MODID, ROOT_PATH + EMPTY_OVERLAY_PATH);
+        ResourceLocation baseTexture = new ResourceLocation(Tags.MODID, ROOT_PATH + baseTexturePath);
+        ResourceLocation overlayTexture = new ResourceLocation(Tags.MODID, ROOT_PATH + getOverlayTexturePath());
+        ResourceLocation emptyTexture = new ResourceLocation(Tags.MODID, ROOT_PATH + EMPTY_OVERLAY_PATH);
 
         try {
             IModel parent = ModelLoaderRegistry.getModel(new ResourceLocation("minecraft", "item/generated"));
@@ -275,8 +275,8 @@ public class ItemPipette extends ItemBakedBase implements IFillableItem {
     @SideOnly(Side.CLIENT)
     public void registerSprite(TextureMap map) {
         super.registerSprite(map);
-        map.registerSprite(new ResourceLocation(RefStrings.MODID, ROOT_PATH + getOverlayTexturePath()));
-        map.registerSprite(new ResourceLocation(RefStrings.MODID, ROOT_PATH + EMPTY_OVERLAY_PATH));
+        map.registerSprite(new ResourceLocation(Tags.MODID, ROOT_PATH + getOverlayTexturePath()));
+        map.registerSprite(new ResourceLocation(Tags.MODID, ROOT_PATH + EMPTY_OVERLAY_PATH));
     }
 
     @Override
@@ -310,11 +310,11 @@ public class ItemPipette extends ItemBakedBase implements IFillableItem {
 
     @SideOnly(Side.CLIENT)
     private ModelResourceLocation getFilledModelLocation() {
-        return new ModelResourceLocation(new ResourceLocation(RefStrings.MODID, ROOT_PATH + baseTexturePath + "_filled"), "inventory");
+        return new ModelResourceLocation(new ResourceLocation(Tags.MODID, ROOT_PATH + baseTexturePath + "_filled"), "inventory");
     }
 
     @SideOnly(Side.CLIENT)
     private ModelResourceLocation getEmptyModelLocation() {
-        return new ModelResourceLocation(new ResourceLocation(RefStrings.MODID, ROOT_PATH + baseTexturePath + "_empty"), "inventory");
+        return new ModelResourceLocation(new ResourceLocation(Tags.MODID, ROOT_PATH + baseTexturePath + "_empty"), "inventory");
     }
 }

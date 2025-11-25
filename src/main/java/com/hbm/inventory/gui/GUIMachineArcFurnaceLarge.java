@@ -1,8 +1,8 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerMachineArcFurnaceLarge;
 import com.hbm.inventory.material.Mats;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.machine.TileEntityMachineArcFurnaceLarge;
@@ -25,7 +25,7 @@ import java.util.List;
 
 public class GUIMachineArcFurnaceLarge extends GuiInfoContainer {
 
-    private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/processing/gui_arc_furnace.png");
+    private static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/processing/gui_arc_furnace.png");
     private TileEntityMachineArcFurnaceLarge arc;
 
     public GUIMachineArcFurnaceLarge(InventoryPlayer invPlayer, TileEntityMachineArcFurnaceLarge arc) {

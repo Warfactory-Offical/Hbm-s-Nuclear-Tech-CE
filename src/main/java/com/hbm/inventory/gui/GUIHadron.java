@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerHadron;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.toserver.AuxButtonPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.machine.TileEntityHadron;
@@ -21,7 +21,7 @@ import java.util.List;
 
 public class GUIHadron extends GuiInfoContainer {
 
-	public static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/machine/gui_hadron.png");
+	public static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/machine/gui_hadron.png");
 	private TileEntityHadron hadron;
 
 	public GUIHadron(InventoryPlayer invPlayer, TileEntityHadron laser) {

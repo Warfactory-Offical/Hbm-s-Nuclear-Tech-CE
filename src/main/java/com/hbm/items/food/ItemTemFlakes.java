@@ -1,9 +1,9 @@
 package com.hbm.items.food;
 
 import com.google.common.collect.ImmutableMap;
+import com.hbm.Tags;
 import com.hbm.items.IDynamicModels;
 import com.hbm.items.ModItems;
-import com.hbm.lib.RefStrings;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.model.ModelRotation;
@@ -66,7 +66,7 @@ public class ItemTemFlakes extends ItemFood implements IDynamicModels {
 	public void bakeModel(ModelBakeEvent event) {
 		try {
 			IModel baseModel = ModelLoaderRegistry.getModel(new ResourceLocation("minecraft", "item/generated"));
-			ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, ROOT_PATH + textureName);
+			ResourceLocation spriteLoc = new ResourceLocation(Tags.MODID, ROOT_PATH + textureName);
 			IModel retexturedModel = baseModel.retexture(ImmutableMap.of("layer0", spriteLoc.toString()));
 			IBakedModel bakedModel = retexturedModel.bake(ModelRotation.X0_Y0, DefaultVertexFormats.ITEM, ModelLoader.defaultTextureGetter());
 			ModelResourceLocation bakedModelLocation = new ModelResourceLocation(spriteLoc, "inventory");
@@ -79,7 +79,7 @@ public class ItemTemFlakes extends ItemFood implements IDynamicModels {
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void registerModel() {
-		ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, ROOT_PATH + textureName);
+		ResourceLocation spriteLoc = new ResourceLocation(Tags.MODID, ROOT_PATH + textureName);
 		ModelResourceLocation mrl = new ModelResourceLocation(spriteLoc, "inventory");
 		ModelLoader.setCustomModelResourceLocation(this, 0, mrl);
 		ModelLoader.setCustomModelResourceLocation(this, 1, mrl);
@@ -89,6 +89,6 @@ public class ItemTemFlakes extends ItemFood implements IDynamicModels {
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void registerSprite(TextureMap map) {
-		map.registerSprite(new ResourceLocation(RefStrings.MODID, ROOT_PATH + textureName));
+		map.registerSprite(new ResourceLocation(Tags.MODID, ROOT_PATH + textureName));
 	}
 }

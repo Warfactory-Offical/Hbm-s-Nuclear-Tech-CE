@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerBarrel;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.AuxButtonPacket;
 import com.hbm.tileentity.machine.TileEntityBarrel;
@@ -12,13 +12,12 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 
 public class GUIBarrel extends GuiInfoContainer {
 	
-	private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/storage/gui_barrel.png");
+	private static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/storage/gui_barrel.png");
 	private TileEntityBarrel tank;
 
 	public GUIBarrel(InventoryPlayer invPlayer, TileEntityBarrel tedf) {

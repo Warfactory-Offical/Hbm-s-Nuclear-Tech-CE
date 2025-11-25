@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerPneumoTube;
-import com.hbm.lib.RefStrings;
 import com.hbm.modules.ModulePatternMatcher;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 public class GUIPneumoTube extends GuiInfoContainer {
-    private static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID, "textures/gui/storage/gui_pneumatic_pipe.png");
+    private static final ResourceLocation texture = new ResourceLocation(Tags.MODID, "textures/gui/storage/gui_pneumatic_pipe.png");
     public TileEntityPneumoTube tube;
 
     public GUIPneumoTube(InventoryPlayer invPlayer, TileEntityPneumoTube tube) {

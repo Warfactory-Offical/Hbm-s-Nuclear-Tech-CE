@@ -1,11 +1,11 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerMachineTurbineGas;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.trait.FT_Combustible;
 import com.hbm.inventory.fluid.trait.FT_Combustible.FuelGrade;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.machine.TileEntityMachineTurbineGas;
@@ -29,8 +29,8 @@ import java.util.List;
 
 public class GUIMachineTurbineGas extends GuiInfoContainer {
 
-    private static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/generators/gui_turbinegas.png");
-    private static final ResourceLocation gauge_tex = new ResourceLocation(RefStrings.MODID + ":textures/gui/gauges/button_big.png");
+    private static final ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/generators/gui_turbinegas.png");
+    private static final ResourceLocation gauge_tex = new ResourceLocation(Tags.MODID + ":textures/gui/gauges/button_big.png");
     private final TileEntityMachineTurbineGas turbinegas;
 
     private int yStart;

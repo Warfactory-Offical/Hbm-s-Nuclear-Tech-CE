@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerElectrolyserFluid;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.machine.TileEntityElectrolyser;
@@ -19,7 +19,7 @@ import java.io.IOException;
 
 public class GUIElectrolyserFluid extends GuiInfoContainer {
 
-    public static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/processing/gui_electrolyser_fluid.png");
+    public static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/processing/gui_electrolyser_fluid.png");
     private TileEntityElectrolyser electrolyser;
 
     public GUIElectrolyserFluid(InventoryPlayer invPlayer, TileEntityElectrolyser electrolyser) {

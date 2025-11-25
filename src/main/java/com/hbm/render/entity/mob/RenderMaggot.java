@@ -1,8 +1,8 @@
 package com.hbm.render.entity.mob;
 
+import com.hbm.Tags;
 import com.hbm.entity.mob.EntityParasiteMaggot;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.lib.RefStrings;
 import net.minecraft.client.model.ModelSilverfish;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -12,7 +12,7 @@ import net.minecraftforge.fml.client.registry.IRenderFactory;
 @AutoRegister(entity = EntityParasiteMaggot.class, factory = "FACTORY")
 public class RenderMaggot extends RenderLiving<EntityParasiteMaggot> {
     public static final IRenderFactory<EntityParasiteMaggot> FACTORY = RenderMaggot::new;
-    public static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID, "textures/entity/parasite_maggot.png");
+    public static final ResourceLocation texture = new ResourceLocation(Tags.MODID, "textures/entity/parasite_maggot.png");
 
     public RenderMaggot(RenderManager renderManager) {
         super(renderManager, new ModelSilverfish(), 0.3F);

@@ -1,13 +1,13 @@
 package com.hbm.items.machine;
 
 import com.google.common.collect.ImmutableMap;
+import com.hbm.Tags;
 import com.hbm.config.GeneralConfig;
 import com.hbm.inventory.FluidContainerRegistry;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ItemBakedBase;
 import com.hbm.items.ModItems;
-import com.hbm.lib.RefStrings;
 import com.hbm.util.I18nUtil;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -48,8 +48,8 @@ public class ItemFluidTank extends ItemBakedBase {
 		// and we also have names like 'disperser_canister', that's why the check was made
 		String texName = name.endsWith("_full") ? name.substring(0, name.length() - 5) : name;
 
-		this.baseTextureLocation = new ResourceLocation(RefStrings.MODID, ROOT_PATH + texName);
-		this.overlayTextureLocation = new ResourceLocation(RefStrings.MODID, ROOT_PATH + texName + "_overlay");
+		this.baseTextureLocation = new ResourceLocation(Tags.MODID, ROOT_PATH + texName);
+		this.overlayTextureLocation = new ResourceLocation(Tags.MODID, ROOT_PATH + texName + "_overlay");
 		this.modelLocation = new ModelResourceLocation(this.baseTextureLocation, "inventory");
 		this.cap = cap;
 	}

@@ -1,7 +1,7 @@
 package com.hbm.render.block;
 
 import com.google.common.collect.ImmutableMap;
-import com.hbm.lib.RefStrings;
+import com.hbm.Tags;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -93,14 +93,14 @@ public class BlockBakeFrame {
 
     public void registerBlockTextures(TextureMap map) {
         for (String texture : this.textureArray) {
-            ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, ROOT_PATH + texture);
+            ResourceLocation spriteLoc = new ResourceLocation(Tags.MODID, ROOT_PATH + texture);
             map.registerSprite(spriteLoc);
         }
     }
 
     public ResourceLocation getSpriteLoc(int index) {
         return new
-                ResourceLocation(RefStrings.MODID, ROOT_PATH + textureArray[index]);
+                ResourceLocation(Tags.MODID, ROOT_PATH + textureArray[index]);
     }
 
     public static BlockBakeFrame bottomTop(String side, String top, String bottom) {

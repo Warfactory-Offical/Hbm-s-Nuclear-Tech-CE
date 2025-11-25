@@ -2,13 +2,13 @@ package com.hbm.blocks.network;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.hbm.Tags;
 import com.hbm.api.block.IToolable;
 import com.hbm.blocks.ModSoundTypes;
 import com.hbm.blocks.generic.BlockBakeBase;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.ICopiable;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.render.block.BlockBakeFrame;
 import com.hbm.render.model.BakedModelTransforms;
@@ -249,19 +249,19 @@ public class PneumoTubePaintableBlock extends BlockBakeBase implements IToolable
     @SideOnly(Side.CLIENT)
     public void registerSprite(TextureMap map) {
         super.registerSprite(map);
-        baseSprite = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/pneumatic_tube_paintable"));
-        overlaySprite = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/pneumatic_tube_paintable_overlay"));
-        overlayInSprite = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/pneumatic_tube_paintable_overlay_in"));
-        overlayOutSprite = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/pneumatic_tube_paintable_overlay_out"));
+        baseSprite = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/pneumatic_tube_paintable"));
+        overlaySprite = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/pneumatic_tube_paintable_overlay"));
+        overlayInSprite = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/pneumatic_tube_paintable_overlay_in"));
+        overlayOutSprite = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/pneumatic_tube_paintable_overlay_out"));
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void bakeModel(ModelBakeEvent event) {
-        TextureAtlasSprite base = baseSprite != null ? baseSprite : Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(new ResourceLocation(RefStrings.MODID, "blocks/pneumatic_tube_paintable").toString());
-        TextureAtlasSprite overlay = overlaySprite != null ? overlaySprite : Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(new ResourceLocation(RefStrings.MODID, "blocks/pneumatic_tube_paintable_overlay").toString());
-        TextureAtlasSprite overlayIn = overlayInSprite != null ? overlayInSprite : Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(new ResourceLocation(RefStrings.MODID, "blocks/pneumatic_tube_paintable_overlay_in").toString());
-        TextureAtlasSprite overlayOut = overlayOutSprite != null ? overlayOutSprite : Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(new ResourceLocation(RefStrings.MODID, "blocks/pneumatic_tube_paintable_overlay_out").toString());
+        TextureAtlasSprite base = baseSprite != null ? baseSprite : Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(new ResourceLocation(Tags.MODID, "blocks/pneumatic_tube_paintable").toString());
+        TextureAtlasSprite overlay = overlaySprite != null ? overlaySprite : Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(new ResourceLocation(Tags.MODID, "blocks/pneumatic_tube_paintable_overlay").toString());
+        TextureAtlasSprite overlayIn = overlayInSprite != null ? overlayInSprite : Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(new ResourceLocation(Tags.MODID, "blocks/pneumatic_tube_paintable_overlay_in").toString());
+        TextureAtlasSprite overlayOut = overlayOutSprite != null ? overlayOutSprite : Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(new ResourceLocation(Tags.MODID, "blocks/pneumatic_tube_paintable_overlay_out").toString());
 
         PneumoTubePaintableModel model = new PneumoTubePaintableModel(base, overlay, overlayIn, overlayOut);
         ModelResourceLocation inventory = new ModelResourceLocation(Objects.requireNonNull(getRegistryName()), "inventory");

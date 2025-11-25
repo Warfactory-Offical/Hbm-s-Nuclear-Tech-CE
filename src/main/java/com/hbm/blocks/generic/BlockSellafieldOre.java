@@ -1,13 +1,13 @@
 package com.hbm.blocks.generic;
 
 import com.google.common.collect.ImmutableMap;
+import com.hbm.Tags;
 import com.hbm.blocks.BlockEnums;
 import com.hbm.blocks.ICustomBlockItem;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.items.IDynamicModels;
 import com.hbm.items.IModelRegister;
 import com.hbm.items.ModItems;
-import com.hbm.lib.RefStrings;
 import com.hbm.render.block.BlockBakeFrame;
 import com.hbm.render.icon.TextureAtlasSpriteMultipass;
 import com.hbm.render.model.VariantBakedModel;
@@ -90,7 +90,7 @@ public class BlockSellafieldOre extends BlockSellafieldSlaked implements ICustom
     @SideOnly(Side.CLIENT)
     public void registerSprite(TextureMap map) {
         for (int i = 0; i < sellafieldTextures.length; i++) {
-            ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, BlockBakeFrame.ROOT_PATH + this.getRegistryName().getPath() + "_" + i);
+            ResourceLocation spriteLoc = new ResourceLocation(Tags.MODID, BlockBakeFrame.ROOT_PATH + this.getRegistryName().getPath() + "_" + i);
             TextureAtlasSpriteMultipass layeredSprite = new TextureAtlasSpriteMultipass(spriteLoc.toString(), "blocks/" + sellafieldTextures[i].textureArray[0], "blocks/" + "ore_overlay_" + oreType.getName());
             map.setTextureEntry(layeredSprite);
         }
@@ -106,7 +106,7 @@ public class BlockSellafieldOre extends BlockSellafieldSlaked implements ICustom
                 IModel baseModel = ModelLoaderRegistry.getModel(new ResourceLocation(blockFrame.getBaseModel()));
                 ImmutableMap.Builder<String, String> textureMap = ImmutableMap.builder();
 
-                ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, BlockBakeFrame.ROOT_PATH + this.getRegistryName().getPath() + "_" + i);
+                ResourceLocation spriteLoc = new ResourceLocation(Tags.MODID, BlockBakeFrame.ROOT_PATH + this.getRegistryName().getPath() + "_" + i);
                 textureMap.put("all", spriteLoc.toString());
                 IModel retexturedModel = baseModel.retexture(textureMap.build());
                 IBakedModel bakedModel = retexturedModel.bake(ModelRotation.X0_Y0, DefaultVertexFormats.BLOCK, ModelLoader.defaultTextureGetter());

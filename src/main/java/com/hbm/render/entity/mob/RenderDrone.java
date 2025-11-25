@@ -1,8 +1,8 @@
 package com.hbm.render.entity.mob;
 
+import com.hbm.Tags;
 import com.hbm.entity.mob.EntityFBIDrone;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.ResourceManager;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
@@ -42,6 +42,6 @@ public class RenderDrone extends Render<EntityFBIDrone> {
 
     @Override
     protected ResourceLocation getEntityTexture(EntityFBIDrone entity) {
-        return new ResourceLocation(RefStrings.MODID, "textures/entity/quadcopter.png");
+        return new ResourceLocation(Tags.MODID, "textures/entity/quadcopter.png");
     }
 }

@@ -1,12 +1,12 @@
 package com.hbm.items.machine;
 
 import com.google.common.collect.ImmutableMap;
+import com.hbm.Tags;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.gui.GUIScreenFluid;
 import com.hbm.items.IItemControlReceiver;
 import com.hbm.items.ItemBakedBase;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.PlayerInformPacketLegacy;
@@ -52,9 +52,9 @@ public class ItemFluidIDMulti extends ItemBakedBase implements IItemFluidIdentif
     private final ModelResourceLocation modelLocation;
     public ItemFluidIDMulti(String s) {
         super(s);
-        this.baseTextureLocation = new ResourceLocation(RefStrings.MODID, ROOT_PATH + s);
+        this.baseTextureLocation = new ResourceLocation(Tags.MODID, ROOT_PATH + s);
         String overlayName = s.substring(0, s.length() - 6) + "_overlay";
-        this.overlayTextureLocation = new ResourceLocation(RefStrings.MODID, ROOT_PATH + overlayName);
+        this.overlayTextureLocation = new ResourceLocation(Tags.MODID, ROOT_PATH + overlayName);
         this.modelLocation = new ModelResourceLocation(this.baseTextureLocation, "inventory");
     }
     // this is only for display purposes, it doesn't need to have metadata at all

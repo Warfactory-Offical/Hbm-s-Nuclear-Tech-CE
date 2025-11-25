@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerICF;
-import com.hbm.lib.RefStrings;
 import com.hbm.render.util.GaugeUtil;
 import com.hbm.tileentity.machine.TileEntityICF;
 import com.hbm.util.BobMathUtil;
@@ -14,7 +14,7 @@ import java.util.Collections;
 
 public class GUIICF extends GuiInfoContainer {
 
-    private static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/reactors/gui_icf.png");
+    private static final ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/reactors/gui_icf.png");
     private final TileEntityICF icf;
 
     public GUIICF(InventoryPlayer invPlayer, TileEntityICF icf) {

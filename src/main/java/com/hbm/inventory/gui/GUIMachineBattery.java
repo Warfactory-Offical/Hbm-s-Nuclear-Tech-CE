@@ -1,9 +1,9 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.inventory.container.ContainerMachineBattery;
 import com.hbm.lib.Library;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.toserver.AuxButtonPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.machine.TileEntityMachineBattery;
@@ -24,7 +24,7 @@ import java.util.List;
 
 public class GUIMachineBattery extends GuiInfoContainer {
 
-	private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/storage/gui_battery.png");
+	private static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/storage/gui_battery.png");
 	private TileEntityMachineBattery battery;
 
 	private IEnergyReceiverMK2.ConnectionPriority lastPrio = IEnergyReceiverMK2.ConnectionPriority.LOW;

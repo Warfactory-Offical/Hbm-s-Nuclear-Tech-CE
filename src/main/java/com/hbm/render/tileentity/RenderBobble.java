@@ -1,5 +1,6 @@
 package com.hbm.render.tileentity;
 
+import com.hbm.Tags;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockBobble;
 import com.hbm.blocks.generic.BlockBobble.BobbleType;
@@ -7,7 +8,6 @@ import com.hbm.blocks.generic.BlockBobble.TileEntityBobble;
 import com.hbm.render.loader.HFRWavefrontObject;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ModItems;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.loader.IModelCustom;
 import com.hbm.render.item.ItemRenderBase;
@@ -31,31 +31,31 @@ public class RenderBobble extends TileEntitySpecialRenderer<TileEntityBobble> im
 
     public static RenderBobble instance = new RenderBobble();
 
-    public static final IModelCustom bobble = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/trinkets/bobble.obj")).asVBO();
-    public static final ResourceLocation socket = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/socket.png");
-    public static final ResourceLocation glow = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/glow.png");
-    public static final ResourceLocation lamp = new ResourceLocation(RefStrings.MODID, "textures/blocks/fluorescent_lamp.png");
+    public static final IModelCustom bobble = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/trinkets/bobble.obj")).asVBO();
+    public static final ResourceLocation socket = new ResourceLocation(Tags.MODID, "textures/models/trinkets/socket.png");
+    public static final ResourceLocation glow = new ResourceLocation(Tags.MODID, "textures/models/trinkets/glow.png");
+    public static final ResourceLocation lamp = new ResourceLocation(Tags.MODID, "textures/blocks/fluorescent_lamp.png");
 
-    public static final ResourceLocation bobble_vaultboy = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/vaultboy.png");
-    public static final ResourceLocation bobble_hbm = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/hbm.png");
-    public static final ResourceLocation bobble_pu238 = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/pellet.png");
-    public static final ResourceLocation bobble_frizzle = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/frizzle.png");
-    public static final ResourceLocation bobble_vt = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/vt.png");
-    public static final ResourceLocation bobble_doc = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/doctor17ph.png");
-    public static final ResourceLocation bobble_blue = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/thebluehat.png");
-    public static final ResourceLocation bobble_pheo = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/pheo.png");
-    public static final ResourceLocation bobble_adam = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/adam29.png");
-    public static final ResourceLocation bobble_uffr = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/uffr.png");
-    public static final ResourceLocation bobble_vaer = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/vaer.png");
-    public static final ResourceLocation bobble_nos = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/nos.png");
-    public static final ResourceLocation bobble_drillgon = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/drillgon200.png");
-    public static final ResourceLocation bobble_cirno = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/cirno.png");
-    public static final ResourceLocation bobble_microwave = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/microwave.png");
-    public static final ResourceLocation bobble_peep = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/peep.png");
-    public static final ResourceLocation bobble_mellow = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/mellowrpg8.png");
-    public static final ResourceLocation bobble_mellow_glow = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/mellowrpg8_glow.png");
-    public static final ResourceLocation bobble_abel = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/abel.png");
-    public static final ResourceLocation bobble_abel_glow = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/abel_glow.png");
+    public static final ResourceLocation bobble_vaultboy = new ResourceLocation(Tags.MODID, "textures/models/trinkets/vaultboy.png");
+    public static final ResourceLocation bobble_hbm = new ResourceLocation(Tags.MODID, "textures/models/trinkets/hbm.png");
+    public static final ResourceLocation bobble_pu238 = new ResourceLocation(Tags.MODID, "textures/models/trinkets/pellet.png");
+    public static final ResourceLocation bobble_frizzle = new ResourceLocation(Tags.MODID, "textures/models/trinkets/frizzle.png");
+    public static final ResourceLocation bobble_vt = new ResourceLocation(Tags.MODID, "textures/models/trinkets/vt.png");
+    public static final ResourceLocation bobble_doc = new ResourceLocation(Tags.MODID, "textures/models/trinkets/doctor17ph.png");
+    public static final ResourceLocation bobble_blue = new ResourceLocation(Tags.MODID, "textures/models/trinkets/thebluehat.png");
+    public static final ResourceLocation bobble_pheo = new ResourceLocation(Tags.MODID, "textures/models/trinkets/pheo.png");
+    public static final ResourceLocation bobble_adam = new ResourceLocation(Tags.MODID, "textures/models/trinkets/adam29.png");
+    public static final ResourceLocation bobble_uffr = new ResourceLocation(Tags.MODID, "textures/models/trinkets/uffr.png");
+    public static final ResourceLocation bobble_vaer = new ResourceLocation(Tags.MODID, "textures/models/trinkets/vaer.png");
+    public static final ResourceLocation bobble_nos = new ResourceLocation(Tags.MODID, "textures/models/trinkets/nos.png");
+    public static final ResourceLocation bobble_drillgon = new ResourceLocation(Tags.MODID, "textures/models/trinkets/drillgon200.png");
+    public static final ResourceLocation bobble_cirno = new ResourceLocation(Tags.MODID, "textures/models/trinkets/cirno.png");
+    public static final ResourceLocation bobble_microwave = new ResourceLocation(Tags.MODID, "textures/models/trinkets/microwave.png");
+    public static final ResourceLocation bobble_peep = new ResourceLocation(Tags.MODID, "textures/models/trinkets/peep.png");
+    public static final ResourceLocation bobble_mellow = new ResourceLocation(Tags.MODID, "textures/models/trinkets/mellowrpg8.png");
+    public static final ResourceLocation bobble_mellow_glow = new ResourceLocation(Tags.MODID, "textures/models/trinkets/mellowrpg8_glow.png");
+    public static final ResourceLocation bobble_abel = new ResourceLocation(Tags.MODID, "textures/models/trinkets/abel.png");
+    public static final ResourceLocation bobble_abel_glow = new ResourceLocation(Tags.MODID, "textures/models/trinkets/abel_glow.png");
 
     private long time;
 
@@ -393,7 +393,7 @@ public class RenderBobble extends TileEntitySpecialRenderer<TileEntityBobble> im
         bobble.renderPart("Drillgon");
     }
 
-    private final ResourceLocation shot_tex = new ResourceLocation(RefStrings.MODID + ":textures/models/ModelUboinik.png");
+    private final ResourceLocation shot_tex = new ResourceLocation(Tags.MODID + ":textures/models/ModelUboinik.png");
 
     /* RENDER ADDITIONAL ITEMS */
     @SuppressWarnings("incomplete-switch")

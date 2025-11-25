@@ -1,16 +1,15 @@
 package com.hbm.items.special;
 
 import com.google.common.collect.ImmutableMap;
+import com.hbm.Tags;
 import com.hbm.inventory.material.MaterialShapes;
 import com.hbm.inventory.material.NTMMaterial;
 import com.hbm.items.ModItems;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.render.icon.RGBMutatorInterpolatedComponentRemap;
 import com.hbm.render.icon.TextureAtlasSpriteMutatable;
 import com.hbm.util.EnumUtil;
 import com.hbm.util.I18nUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.model.ModelRotation;
@@ -79,7 +78,7 @@ public class ItemBedrockOreNew extends Item {
             BedrockOreGrade grade = BedrockOreGrade.values()[i];
             for (int j = 0; j < BedrockOreType.values().length; j++) {
                 BedrockOreType type = BedrockOreType.values()[j];
-                String placeholderName = RefStrings.MODID + ":items/bedrock_ore_" + grade.prefix + "_" + type.suffix + "-" + (i * BedrockOreType.values().length + j);
+                String placeholderName = Tags.MODID + ":items/bedrock_ore_" + grade.prefix + "_" + type.suffix + "-" + (i * BedrockOreType.values().length + j);
                 ModelLoader.setCustomModelResourceLocation(this, grade.ordinal() << 4 | type.ordinal(), new ModelResourceLocation(placeholderName, "inventory"));
             }
         }
@@ -92,7 +91,7 @@ public class ItemBedrockOreNew extends Item {
 
             Map<ProcessingTrait, ResourceLocation> overlayLocations = new HashMap<>();
             for (ProcessingTrait trait : ProcessingTrait.values()) {
-                String overlayName = RefStrings.MODID + ":items/bedrock_ore_overlay." + trait.name().toLowerCase(Locale.US);
+                String overlayName = Tags.MODID + ":items/bedrock_ore_overlay." + trait.name().toLowerCase(Locale.US);
                 overlayLocations.put(trait, new ResourceLocation(overlayName));
             }
 
@@ -100,7 +99,7 @@ public class ItemBedrockOreNew extends Item {
                 BedrockOreGrade grade = BedrockOreGrade.values()[i];
                 for (int j = 0; j < BedrockOreType.values().length; j++) {
                     BedrockOreType type = BedrockOreType.values()[j];
-                    String placeholderName = RefStrings.MODID + ":items/bedrock_ore_" + grade.prefix + "_" + type.suffix + "-" + (i * BedrockOreType.values().length + j);
+                    String placeholderName = Tags.MODID + ":items/bedrock_ore_" + grade.prefix + "_" + type.suffix + "-" + (i * BedrockOreType.values().length + j);
                     ResourceLocation spriteLoc = new ResourceLocation(placeholderName);
                     ImmutableMap.Builder<String, String> textureMapBuilder = ImmutableMap.builder();
                     textureMapBuilder.put("layer0", spriteLoc.toString());
@@ -129,14 +128,14 @@ public class ItemBedrockOreNew extends Item {
             BedrockOreGrade grade = BedrockOreGrade.values()[i];
             for (int j = 0; j < BedrockOreType.values().length; j++) {
                 BedrockOreType type = BedrockOreType.values()[j];
-                ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID + ":items/bedrock_ore_" + grade.prefix + "_" + type.suffix + "-" + (i * BedrockOreType.values().length + j));
+                ResourceLocation spriteLoc = new ResourceLocation(Tags.MODID + ":items/bedrock_ore_" + grade.prefix + "_" + type.suffix + "-" + (i * BedrockOreType.values().length + j));
                 TextureAtlasSprite sprite = new TextureAtlasSpriteMutatable(spriteLoc.toString(), new RGBMutatorInterpolatedComponentRemap(0xFFFFFF, 0x505050, type.light, type.dark));
                 map.setTextureEntry(sprite);
             }
         }
 
         for (ProcessingTrait trait : ProcessingTrait.values()) {
-            String overlayName = RefStrings.MODID + ":items/bedrock_ore_overlay." + trait.name().toLowerCase(Locale.US);
+            String overlayName = Tags.MODID + ":items/bedrock_ore_overlay." + trait.name().toLowerCase(Locale.US);
             map.registerSprite(new ResourceLocation(overlayName));
         }
     }

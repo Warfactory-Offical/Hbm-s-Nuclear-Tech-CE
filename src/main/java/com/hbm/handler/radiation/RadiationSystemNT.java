@@ -1,5 +1,6 @@
 package com.hbm.handler.radiation;
 
+import com.hbm.Tags;
 import com.hbm.capability.HbmLivingProps;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.config.GeneralConfig;
@@ -11,7 +12,6 @@ import com.hbm.entity.mob.EntityRADBeast;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.IRadResistantBlock;
 import com.hbm.lib.ModDamageSource;
-import com.hbm.lib.RefStrings;
 import com.hbm.lib.maps.NonBlockingHashMapLong;
 import com.hbm.main.AdvancementManager;
 import com.hbm.main.MainRegistry;
@@ -71,7 +71,7 @@ import java.util.function.Supplier;
  *
  * @author Drillgon, Zach2039, mlbv
  */
-@Mod.EventBusSubscriber(modid = RefStrings.MODID)
+@Mod.EventBusSubscriber(modid = Tags.MODID)
 public final class RadiationSystemNT {
 
     /**

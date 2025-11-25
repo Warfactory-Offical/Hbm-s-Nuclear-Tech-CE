@@ -1,8 +1,8 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerOilburner;
 import com.hbm.inventory.fluid.trait.FT_Flammable;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.machine.TileEntityHeaterOilburner;
@@ -20,7 +20,7 @@ import java.util.Locale;
 
 public class GUIOilburner extends GuiInfoContainer {
 
-    private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/machine/gui_oilburner.png");
+    private static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/machine/gui_oilburner.png");
     private TileEntityHeaterOilburner heater;
 
     public GUIOilburner(InventoryPlayer player, TileEntityHeaterOilburner heater) {

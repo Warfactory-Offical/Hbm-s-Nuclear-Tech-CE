@@ -1,8 +1,8 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerReactorZirnox;
 import com.hbm.lib.HBMSoundHandler;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.machine.TileEntityReactorZirnox;
@@ -19,7 +19,7 @@ import java.io.IOException;
 
 public class GUIReactorZirnox extends GuiInfoContainer {
 
-    private static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID, "textures/gui/reactors/gui_zirnox.png");
+    private static final ResourceLocation texture = new ResourceLocation(Tags.MODID, "textures/gui/reactors/gui_zirnox.png");
     private final TileEntityReactorZirnox zirnox;
 
     public GUIReactorZirnox(InventoryPlayer invPlayer, TileEntityReactorZirnox tile) {

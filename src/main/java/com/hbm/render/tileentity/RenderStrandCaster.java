@@ -1,9 +1,9 @@
 package com.hbm.render.tileentity;
 
+import com.hbm.Tags;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.item.ItemRenderBase;
 import com.hbm.tileentity.machine.TileEntityMachineStrandCaster;
@@ -20,7 +20,7 @@ import java.nio.DoubleBuffer;
 
 @AutoRegister
 public class RenderStrandCaster extends TileEntitySpecialRenderer<TileEntityMachineStrandCaster> implements IItemRendererProvider {
-    public static final ResourceLocation lava = new ResourceLocation(RefStrings.MODID, "textures/models/machines/lava_gray.png");
+    public static final ResourceLocation lava = new ResourceLocation(Tags.MODID, "textures/models/machines/lava_gray.png");
     private static DoubleBuffer buf = null;
 
     @Override

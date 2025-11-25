@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerSoyuzLauncher;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.toserver.AuxButtonPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.machine.TileEntitySoyuzLauncher;
@@ -17,7 +17,7 @@ import java.io.IOException;
 
 public class GUISoyuzLauncher extends GuiInfoContainer {
 
-	private static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/gui_soyuz.png");
+	private static final ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/gui_soyuz.png");
 	private final TileEntitySoyuzLauncher launcher;
 	
 	public GUISoyuzLauncher(InventoryPlayer invPlayer, TileEntitySoyuzLauncher tedf) {

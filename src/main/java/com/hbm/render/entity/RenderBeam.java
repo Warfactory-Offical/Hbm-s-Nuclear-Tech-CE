@@ -1,8 +1,8 @@
 package com.hbm.render.entity;
 
+import com.hbm.Tags;
 import com.hbm.entity.projectile.EntityPlasmaBeam;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.lib.RefStrings;
 import com.hbm.util.RenderUtil;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -20,7 +20,7 @@ public class RenderBeam extends Render<EntityPlasmaBeam> {
 
     public static final IRenderFactory<EntityPlasmaBeam> FACTORY = RenderBeam::new;
 
-    protected ResourceLocation beam_rl = new ResourceLocation(RefStrings.MODID + ":textures/models/projectiles/PlasmaBeam.png");
+    protected ResourceLocation beam_rl = new ResourceLocation(Tags.MODID + ":textures/models/projectiles/PlasmaBeam.png");
 
     protected RenderBeam(RenderManager renderManager) {
         super(renderManager);

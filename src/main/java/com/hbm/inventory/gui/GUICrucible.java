@@ -1,9 +1,9 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerCrucible;
 import com.hbm.inventory.material.Mats;
 import com.hbm.inventory.material.NTMMaterial;
-import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.TileEntityCrucible;
 import com.hbm.util.I18nUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
@@ -21,7 +21,7 @@ import org.lwjgl.opengl.GL11;
 
 public class GUICrucible extends GuiInfoContainer {
 
-    private static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/processing/gui_crucible.png");
+    private static final ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/processing/gui_crucible.png");
     private final TileEntityCrucible crucible;
 
     public GUICrucible(InventoryPlayer invPlayer, TileEntityCrucible tile) {

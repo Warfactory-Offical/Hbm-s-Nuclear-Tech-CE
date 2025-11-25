@@ -1,9 +1,9 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.handler.ability.*;
 import com.hbm.items.tool.ItemToolAbility;
 import com.hbm.lib.HBMSoundHandler;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTItemControlPacket;
@@ -24,7 +24,7 @@ import java.util.List;
 
 public class GUIScreenToolAbility extends GuiScreen {
 
-    public static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/tool/gui_tool_ability.png");
+    public static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/tool/gui_tool_ability.png");
 
     protected int guiLeft;
     protected int guiTop;

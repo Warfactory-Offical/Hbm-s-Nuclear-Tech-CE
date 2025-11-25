@@ -1,6 +1,7 @@
 package com.hbm.items.machine;
 
 import com.google.common.collect.ImmutableMap;
+import com.hbm.Tags;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.inventory.OreDictManager;
 import com.hbm.inventory.material.MaterialShapes;
@@ -8,7 +9,6 @@ import com.hbm.inventory.material.Mats;
 import com.hbm.inventory.material.NTMMaterial;
 import com.hbm.items.ItemEnums;
 import com.hbm.items.ModItems;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.I18nUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
@@ -133,14 +133,14 @@ public class ItemMold extends Item {
     @SideOnly(Side.CLIENT)
     public void registerModels() {
         for (Mold mold : molds) {
-            ModelLoader.setCustomModelResourceLocation(this, mold.id, new ModelResourceLocation(RefStrings.MODID + ":items/mold_" + mold.name, "inventory"));
+            ModelLoader.setCustomModelResourceLocation(this, mold.id, new ModelResourceLocation(Tags.MODID + ":items/mold_" + mold.name, "inventory"));
         }
     }
 
     @SideOnly(Side.CLIENT)
     public static void registerSprites(TextureMap map){
         for (Mold mold : molds) {
-            ResourceLocation loc = new ResourceLocation(RefStrings.MODID + ":items/mold_" + mold.name);
+            ResourceLocation loc = new ResourceLocation(Tags.MODID + ":items/mold_" + mold.name);
             map.registerSprite(loc);
         }
     }
@@ -150,14 +150,14 @@ public class ItemMold extends Item {
         try {
             IModel baseModel = ModelLoaderRegistry.getModel(new ResourceLocation("minecraft", "item/generated"));
             for (Mold mold : molds) {
-                ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, "items/mold_" + mold.name);
+                ResourceLocation spriteLoc = new ResourceLocation(Tags.MODID, "items/mold_" + mold.name);
                 IModel retexturedModel = baseModel.retexture(
                         ImmutableMap.of(
                                 "layer0", spriteLoc.toString()
                         )
                 );
                 IBakedModel bakedModel = retexturedModel.bake(ModelRotation.X0_Y0, DefaultVertexFormats.ITEM, ModelLoader.defaultTextureGetter());
-                ModelResourceLocation bakedModelLocation = new ModelResourceLocation(new ResourceLocation(RefStrings.MODID, "items/mold_" + mold.name), "inventory");
+                ModelResourceLocation bakedModelLocation = new ModelResourceLocation(new ResourceLocation(Tags.MODID, "items/mold_" + mold.name), "inventory");
                 event.getModelRegistry().putObject(bakedModelLocation, bakedModel);
             }
         } catch (Exception e) {
@@ -224,7 +224,7 @@ public class ItemMold extends Item {
                 if(!ores.isEmpty()) {
                     //prioritize NTM items
                     for(ItemStack ore : ores) {
-                        if(Item.REGISTRY.getNameForObject(ore.getItem()).toString().startsWith(RefStrings.MODID)) {
+                        if(Item.REGISTRY.getNameForObject(ore.getItem()).toString().startsWith(Tags.MODID)) {
                             ItemStack copy = ore.copy();
                             copy.setCount(this.amount);
                             return copy;

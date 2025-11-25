@@ -1,8 +1,8 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerFEL;
 import com.hbm.items.machine.ItemFELCrystal.EnumWavelengths;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.toserver.AuxButtonPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.machine.TileEntityFEL;
@@ -23,7 +23,7 @@ import java.io.IOException;
 
 public class GUIFEL extends GuiInfoContainer {
 
-	public static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/machine/gui_fel.png");
+	public static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/machine/gui_fel.png");
 	private TileEntityFEL fel;
 
 	public GUIFEL(InventoryPlayer invPlayer, TileEntityFEL laser) {

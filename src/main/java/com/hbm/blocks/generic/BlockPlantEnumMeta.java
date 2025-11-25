@@ -1,9 +1,9 @@
 package com.hbm.blocks.generic;
 
 import com.google.common.collect.ImmutableMap;
+import com.hbm.Tags;
 import com.hbm.blocks.BlockEnumMeta;
 import com.hbm.blocks.ModBlocks;
-import com.hbm.lib.RefStrings;
 import com.hbm.render.block.BlockBakeFrame;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -169,7 +169,7 @@ public abstract class BlockPlantEnumMeta extends BlockEnumMeta {
 
                 IModel itemModel = ModelLoaderRegistry.getModel(new ResourceLocation("minecraft", "item/generated"));
                 ImmutableMap.Builder<String, String> itemTextureMap = ImmutableMap.builder();
-                ResourceLocation itemTexture = new ResourceLocation(RefStrings.MODID, BlockBakeFrame.ROOT_PATH + blockFrame.textureArray[0]);
+                ResourceLocation itemTexture = new ResourceLocation(Tags.MODID, BlockBakeFrame.ROOT_PATH + blockFrame.textureArray[0]);
                 itemTextureMap.put("layer0", itemTexture.toString());
                 IModel retexturedItemModel = itemModel.retexture(itemTextureMap.build());
                 IBakedModel bakedItemModel = retexturedItemModel.bake(

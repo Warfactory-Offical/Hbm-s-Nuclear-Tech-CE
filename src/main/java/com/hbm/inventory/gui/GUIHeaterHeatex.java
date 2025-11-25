@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerHeaterHeatex;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.machine.TileEntityHeaterHeatex;
@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 public class GUIHeaterHeatex extends GuiInfoContainer {
-    private final static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/machine/gui_heatex.png");
+    private final static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/machine/gui_heatex.png");
     private final TileEntityHeaterHeatex heater;
     private GuiTextField fieldCycles;
     private GuiTextField fieldDelay;

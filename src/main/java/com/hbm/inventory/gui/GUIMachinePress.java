@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerMachinePress;
-import com.hbm.lib.RefStrings;
 import com.hbm.render.util.GaugeUtil;
 import com.hbm.tileentity.machine.TileEntityMachinePress;
 import net.minecraft.client.resources.I18n;
@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import java.util.Collections;
 
 public class GUIMachinePress extends GuiInfoContainer {
-	private static final ResourceLocation TEXTURE = new ResourceLocation(RefStrings.MODID + ":textures/gui/gui_press.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(Tags.MODID + ":textures/gui/gui_press.png");
 	private final TileEntityMachinePress press;
 
 	public GUIMachinePress(InventoryPlayer invPlayer, TileEntityMachinePress te) {

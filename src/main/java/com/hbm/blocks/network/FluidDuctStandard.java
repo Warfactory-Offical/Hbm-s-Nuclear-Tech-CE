@@ -1,5 +1,6 @@
 package com.hbm.blocks.network;
 
+import com.hbm.Tags;
 import com.hbm.blocks.ICustomBlockItem;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ModBlocks;
@@ -13,7 +14,6 @@ import com.hbm.items.ModItems;
 import com.hbm.items.block.ItemBlockSpecialAABB;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.render.model.DuctNeoBakedModel;
 import com.hbm.tileentity.network.TileEntityPipeBaseNT;
@@ -79,7 +79,7 @@ public class FluidDuctStandard extends FluidDuctBase implements IDynamicModels, 
 	@SideOnly(Side.CLIENT)
 	public static TextureAtlasSprite[] overlaySprites; // overlay[]
 
-	private final ResourceLocation objModelLocation = new ResourceLocation(RefStrings.MODID, "models/blocks/pipe_neo.obj");
+	private final ResourceLocation objModelLocation = new ResourceLocation(Tags.MODID, "models/blocks/pipe_neo.obj");
 
 	public FluidDuctStandard(Material materialIn, String reg) {
 		super(materialIn);
@@ -390,16 +390,16 @@ public class FluidDuctStandard extends FluidDuctBase implements IDynamicModels, 
 		// meta 0: use block name as base
 		String base0 = "blocks/" + this.getRegistryName().getPath();
 		String overlay0 = base0 + "_overlay";
-		baseSprites[0] = map.registerSprite(new ResourceLocation(RefStrings.MODID, base0));
-		overlaySprites[0] = map.registerSprite(new ResourceLocation(RefStrings.MODID, overlay0));
+		baseSprites[0] = map.registerSprite(new ResourceLocation(Tags.MODID, base0));
+		overlaySprites[0] = map.registerSprite(new ResourceLocation(Tags.MODID, overlay0));
 
 		// meta 1: silver
-		baseSprites[1] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/pipe_silver"));
-		overlaySprites[1] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/pipe_silver_overlay"));
+		baseSprites[1] = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/pipe_silver"));
+		overlaySprites[1] = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/pipe_silver_overlay"));
 
 		// meta 2: colored
-		baseSprites[2] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/pipe_colored"));
-		overlaySprites[2] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/pipe_colored_overlay"));
+		baseSprites[2] = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/pipe_colored"));
+		overlaySprites[2] = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/pipe_colored_overlay"));
 	}
 
 	// do we need to separate inv meta models from block meta models? maybe not.

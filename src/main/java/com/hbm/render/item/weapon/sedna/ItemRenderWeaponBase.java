@@ -1,9 +1,9 @@
 package com.hbm.render.item.weapon.sedna;
 
+import com.hbm.Tags;
 import com.hbm.config.ClientConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT.SmokeNode;
-import com.hbm.lib.RefStrings;
 import com.hbm.render.item.TEISRBase;
 import com.hbm.render.util.ViewModelPositonDebugger;
 import com.hbm.util.RenderUtil;
@@ -35,8 +35,8 @@ public abstract class ItemRenderWeaponBase extends TEISRBase {
             .get(ItemCameraTransforms.TransformType.GROUND)
             .setScale(0.85f).setPosition(-0.5, 0.6, -0.5).getHelper();
 
-    public static final ResourceLocation flash_plume =  new ResourceLocation(RefStrings.MODID, "textures/models/weapons/lilmac_plume.png");
-    public static final ResourceLocation laser_flash = new ResourceLocation(RefStrings.MODID, "textures/models/weapons/laser_flash.png");
+    public static final ResourceLocation flash_plume =  new ResourceLocation(Tags.MODID, "textures/models/weapons/lilmac_plume.png");
+    public static final ResourceLocation laser_flash = new ResourceLocation(Tags.MODID, "textures/models/weapons/laser_flash.png");
     public static float interp;
 
     public boolean isAkimbo() { return false; }

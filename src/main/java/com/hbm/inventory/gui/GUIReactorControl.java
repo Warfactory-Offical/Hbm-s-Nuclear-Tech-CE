@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerReactorControl;
-import com.hbm.lib.RefStrings;
 import com.hbm.modules.NumberDisplay;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
@@ -26,7 +26,7 @@ import java.io.IOException;
 
 public class GUIReactorControl extends GuiInfoContainer {
 
-    private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/gui_reactor_control.png");
+    private static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/gui_reactor_control.png");
     private TileEntityReactorControl control;
 
     private final NumberDisplay[] displays = new NumberDisplay[3];

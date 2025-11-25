@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerPASource;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.machine.albion.TileEntityPASource;
@@ -23,7 +23,7 @@ import java.util.Locale;
 
 public class GUIPASource extends GuiInfoContainer {
 
-    private static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/particleaccelerator/gui_source.png");
+    private static final ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/particleaccelerator/gui_source.png");
     private final TileEntityPASource source;
 
     public GUIPASource(InventoryPlayer player, TileEntityPASource source) {

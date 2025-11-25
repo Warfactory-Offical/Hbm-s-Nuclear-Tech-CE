@@ -3,6 +3,7 @@ package com.hbm.main;
 //FIXME This may have gotten mangled in a merge
 
 import com.google.common.collect.ImmutableList;
+import com.hbm.Tags;
 import com.hbm.blocks.BlockEnums;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.fluid.ModFluids;
@@ -48,7 +49,6 @@ import com.hbm.items.weapon.sedna.mods.WeaponModManager;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.HbmWorld;
 import com.hbm.lib.Library;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.potion.HbmDetox;
 import com.hbm.potion.HbmPotion;
@@ -100,14 +100,14 @@ import java.io.File;
 import java.util.List;
 import java.util.Random;
 
-@Mod(modid = RefStrings.MODID, version = RefStrings.VERSION, name = RefStrings.NAME
+@Mod(modid = Tags.MODID, version = Tags.VERSION, name = Tags.MODNAME
 )
 @Spaghetti("Total cluserfuck")
 public class MainRegistry {
 
-    @SidedProxy(clientSide = RefStrings.CLIENTSIDE, serverSide = RefStrings.SERVERSIDE)
+    @SidedProxy(clientSide = "com.hbm.main.ClientProxy", serverSide = "com.hbm.main.ServerProxy")
     public static ServerProxy proxy;
-    @Mod.Instance(RefStrings.MODID)
+    @Mod.Instance(Tags.MODID)
     public static MainRegistry instance;
     public static Logger logger;
     // Creative Tabs
@@ -146,57 +146,57 @@ public class MainRegistry {
     // Armor Materials
     // Drillgon200: I have no idea what the two strings and the number at the
     // end are.
-    public static ArmorMaterial enumArmorMaterialT51 = EnumHelper.addArmorMaterial(RefStrings.MODID + ":T51", RefStrings.MODID + ":T51", 150, new int[] {3, 8, 6, 3 }, 0, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
-    public static ArmorMaterial aMatBJ = EnumHelper.addArmorMaterial(RefStrings.MODID + ":BLACKJACK", RefStrings.MODID + ":HBM_BLACKJACK", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
-    public static ArmorMaterial aMatAJR = EnumHelper.addArmorMaterial(RefStrings.MODID + ":T45AJR", RefStrings.MODID + ":T45AJR", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
-    public static ArmorMaterial aMatSteamsuit = EnumHelper.addArmorMaterial(RefStrings.MODID + ":Steamsuit", RefStrings.MODID + ":Steamsuit", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
-    public static ArmorMaterial aMatDieselsuit = EnumHelper.addArmorMaterial(RefStrings.MODID + ":Dieselsuit", RefStrings.MODID + ":Dieselsuit", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
-    public static ArmorMaterial aMatTrench = EnumHelper.addArmorMaterial(RefStrings.MODID + ":Trenchmaster", RefStrings.MODID + ":Trenchmaster", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
-    public static ArmorMaterial aMatTaurun = EnumHelper.addArmorMaterial(RefStrings.MODID + ":Taurun", RefStrings.MODID + ":Taurun", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
-    public static ArmorMaterial aMatBismuth = EnumHelper.addArmorMaterial(RefStrings.MODID + ":Bismuth", RefStrings.MODID + ":Bismuth", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
-    public static ArmorMaterial aMatZirconium = EnumHelper.addArmorMaterial(RefStrings.MODID + ":Zirconium", RefStrings.MODID + ":Zirconium", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
-    public static ArmorMaterial aMatDNT = EnumHelper.addArmorMaterial(RefStrings.MODID + ":DNT", RefStrings.MODID + ":DNT", 3, new int[]{1, 1, 1, 1}, 0, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F);
-    public static ArmorMaterial aMatEnvsuit = EnumHelper.addArmorMaterial(RefStrings.MODID + ":Envsuit", RefStrings.MODID + ":Envsuit", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
-    public static ArmorMaterial aMatRPA = EnumHelper.addArmorMaterial(RefStrings.MODID + ":RPA", RefStrings.MODID + ":RPA", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
-    public static ArmorMaterial aMatHEV = EnumHelper.addArmorMaterial(RefStrings.MODID + ":HEV", RefStrings.MODID + ":HEV", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
-    public static ArmorMaterial enumArmorMaterialHazmat = EnumHelper.addArmorMaterial(RefStrings.MODID + ":HAZMAT", RefStrings.MODID + ":HAZMAT", 60, new int[]{1, 4, 5, 2}, 5, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F);
-    public static ArmorMaterial enumArmorMaterialHazmat2 = EnumHelper.addArmorMaterial(RefStrings.MODID + ":HAZMAT2", RefStrings.MODID + ":HAZMAT2", 60, new int[]{1, 4, 5, 2}, 5, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F);
-    public static ArmorMaterial enumArmorMaterialHazmat3 = EnumHelper.addArmorMaterial(RefStrings.MODID + ":HAZMAT3", RefStrings.MODID + ":HAZMAT3", 60, new int[]{1, 4, 5, 2}, 5, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F);
-    public static ArmorMaterial enumArmorMaterialPaa = EnumHelper.addArmorMaterial(RefStrings.MODID + ":PAA", RefStrings.MODID + ":PAA", 75, new int[]{3, 6, 8, 3}, 25, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
-    public static ArmorMaterial enumArmorMaterialSchrabidium = EnumHelper.addArmorMaterial(RefStrings.MODID + ":SCHRABIDIUM", RefStrings.MODID + ":SCHRABIDIUM", 100, new int[]{3, 6, 8, 3}, 50, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
-    public static ArmorMaterial enumArmorMaterialEuphemium = EnumHelper.addArmorMaterial(RefStrings.MODID + ":EUPHEMIUM", RefStrings.MODID + ":EUPHEMIUM", 15000000, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
-    public static ArmorMaterial enumArmorMaterialSteel = EnumHelper.addArmorMaterial(RefStrings.MODID + ":STEEL", RefStrings.MODID + ":STEEL", 20, new int[]{2, 5, 6, 2}, 5, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F);
-    public static ArmorMaterial enumArmorMaterialAlloy = EnumHelper.addArmorMaterial(RefStrings.MODID + ":ALLOY", RefStrings.MODID + ":ALLOY", 40, new int[]{3, 6, 8, 3}, 12, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F);
-    public static ArmorMaterial enumArmorMaterialAusIII = EnumHelper.addArmorMaterial(RefStrings.MODID + ":AUSIII", RefStrings.MODID + ":AUSIII", 375, new int[]{2, 5, 6, 2}, 0, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F);
-    public static ArmorMaterial enumArmorMaterialTitanium = EnumHelper.addArmorMaterial(RefStrings.MODID + ":TITANIUM", RefStrings.MODID + ":TITANIUM", 25, new int[]{3, 6, 8, 3}, 9, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
-    public static ArmorMaterial enumArmorMaterialCmb = EnumHelper.addArmorMaterial(RefStrings.MODID + ":CMB", RefStrings.MODID + ":CMB", 60, new int[]{3, 6, 8, 3}, 50, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
-    public static ArmorMaterial enumArmorMaterialSecurity = EnumHelper.addArmorMaterial(RefStrings.MODID + ":SECURITY", RefStrings.MODID + ":SECURITY", 100, new int[]{3, 6, 8, 3}, 15, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
-    public static ArmorMaterial enumArmorMaterialAsbestos = EnumHelper.addArmorMaterial(RefStrings.MODID + ":ASBESTOS", RefStrings.MODID + ":ASBESTOS", 20, new int[]{1, 3, 4, 1}, 5, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F);
-    public static ArmorMaterial aMatCobalt = EnumHelper.addArmorMaterial(RefStrings.MODID + ":COBALT", RefStrings.MODID + ":COBALT", 70, new int[]{3, 6, 8, 3}, 25, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
-    public static ArmorMaterial aMatStarmetal = EnumHelper.addArmorMaterial(RefStrings.MODID + ":STARMETAL", RefStrings.MODID + ":STARMETAL", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
-    public static ArmorMaterial aMatLiquidator = EnumHelper.addArmorMaterial(RefStrings.MODID + ":LIQUIDATOR", RefStrings.MODID + ":LIQUIDATOR", 750, new int[]{3, 6, 8, 3}, 10, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
-    public static ArmorMaterial aMatFau = EnumHelper.addArmorMaterial(RefStrings.MODID + ":DIGAMMA", RefStrings.MODID + ":DIGAMMA", 150, new int[]{3, 8, 6, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
-    public static ArmorMaterial aMatDNS = EnumHelper.addArmorMaterial(RefStrings.MODID + ":DNT_NANO", RefStrings.MODID + ":DNT_NANO", 150, new int[]{3, 8, 6, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
+    public static ArmorMaterial enumArmorMaterialT51 = EnumHelper.addArmorMaterial(Tags.MODID + ":T51", Tags.MODID + ":T51", 150, new int[] {3, 8, 6, 3 }, 0, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
+    public static ArmorMaterial aMatBJ = EnumHelper.addArmorMaterial(Tags.MODID + ":BLACKJACK", Tags.MODID + ":HBM_BLACKJACK", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
+    public static ArmorMaterial aMatAJR = EnumHelper.addArmorMaterial(Tags.MODID + ":T45AJR", Tags.MODID + ":T45AJR", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
+    public static ArmorMaterial aMatSteamsuit = EnumHelper.addArmorMaterial(Tags.MODID + ":Steamsuit", Tags.MODID + ":Steamsuit", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
+    public static ArmorMaterial aMatDieselsuit = EnumHelper.addArmorMaterial(Tags.MODID + ":Dieselsuit", Tags.MODID + ":Dieselsuit", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
+    public static ArmorMaterial aMatTrench = EnumHelper.addArmorMaterial(Tags.MODID + ":Trenchmaster", Tags.MODID + ":Trenchmaster", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
+    public static ArmorMaterial aMatTaurun = EnumHelper.addArmorMaterial(Tags.MODID + ":Taurun", Tags.MODID + ":Taurun", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
+    public static ArmorMaterial aMatBismuth = EnumHelper.addArmorMaterial(Tags.MODID + ":Bismuth", Tags.MODID + ":Bismuth", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
+    public static ArmorMaterial aMatZirconium = EnumHelper.addArmorMaterial(Tags.MODID + ":Zirconium", Tags.MODID + ":Zirconium", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
+    public static ArmorMaterial aMatDNT = EnumHelper.addArmorMaterial(Tags.MODID + ":DNT", Tags.MODID + ":DNT", 3, new int[]{1, 1, 1, 1}, 0, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F);
+    public static ArmorMaterial aMatEnvsuit = EnumHelper.addArmorMaterial(Tags.MODID + ":Envsuit", Tags.MODID + ":Envsuit", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
+    public static ArmorMaterial aMatRPA = EnumHelper.addArmorMaterial(Tags.MODID + ":RPA", Tags.MODID + ":RPA", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
+    public static ArmorMaterial aMatHEV = EnumHelper.addArmorMaterial(Tags.MODID + ":HEV", Tags.MODID + ":HEV", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
+    public static ArmorMaterial enumArmorMaterialHazmat = EnumHelper.addArmorMaterial(Tags.MODID + ":HAZMAT", Tags.MODID + ":HAZMAT", 60, new int[]{1, 4, 5, 2}, 5, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F);
+    public static ArmorMaterial enumArmorMaterialHazmat2 = EnumHelper.addArmorMaterial(Tags.MODID + ":HAZMAT2", Tags.MODID + ":HAZMAT2", 60, new int[]{1, 4, 5, 2}, 5, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F);
+    public static ArmorMaterial enumArmorMaterialHazmat3 = EnumHelper.addArmorMaterial(Tags.MODID + ":HAZMAT3", Tags.MODID + ":HAZMAT3", 60, new int[]{1, 4, 5, 2}, 5, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F);
+    public static ArmorMaterial enumArmorMaterialPaa = EnumHelper.addArmorMaterial(Tags.MODID + ":PAA", Tags.MODID + ":PAA", 75, new int[]{3, 6, 8, 3}, 25, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
+    public static ArmorMaterial enumArmorMaterialSchrabidium = EnumHelper.addArmorMaterial(Tags.MODID + ":SCHRABIDIUM", Tags.MODID + ":SCHRABIDIUM", 100, new int[]{3, 6, 8, 3}, 50, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
+    public static ArmorMaterial enumArmorMaterialEuphemium = EnumHelper.addArmorMaterial(Tags.MODID + ":EUPHEMIUM", Tags.MODID + ":EUPHEMIUM", 15000000, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
+    public static ArmorMaterial enumArmorMaterialSteel = EnumHelper.addArmorMaterial(Tags.MODID + ":STEEL", Tags.MODID + ":STEEL", 20, new int[]{2, 5, 6, 2}, 5, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F);
+    public static ArmorMaterial enumArmorMaterialAlloy = EnumHelper.addArmorMaterial(Tags.MODID + ":ALLOY", Tags.MODID + ":ALLOY", 40, new int[]{3, 6, 8, 3}, 12, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F);
+    public static ArmorMaterial enumArmorMaterialAusIII = EnumHelper.addArmorMaterial(Tags.MODID + ":AUSIII", Tags.MODID + ":AUSIII", 375, new int[]{2, 5, 6, 2}, 0, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F);
+    public static ArmorMaterial enumArmorMaterialTitanium = EnumHelper.addArmorMaterial(Tags.MODID + ":TITANIUM", Tags.MODID + ":TITANIUM", 25, new int[]{3, 6, 8, 3}, 9, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
+    public static ArmorMaterial enumArmorMaterialCmb = EnumHelper.addArmorMaterial(Tags.MODID + ":CMB", Tags.MODID + ":CMB", 60, new int[]{3, 6, 8, 3}, 50, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
+    public static ArmorMaterial enumArmorMaterialSecurity = EnumHelper.addArmorMaterial(Tags.MODID + ":SECURITY", Tags.MODID + ":SECURITY", 100, new int[]{3, 6, 8, 3}, 15, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
+    public static ArmorMaterial enumArmorMaterialAsbestos = EnumHelper.addArmorMaterial(Tags.MODID + ":ASBESTOS", Tags.MODID + ":ASBESTOS", 20, new int[]{1, 3, 4, 1}, 5, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F);
+    public static ArmorMaterial aMatCobalt = EnumHelper.addArmorMaterial(Tags.MODID + ":COBALT", Tags.MODID + ":COBALT", 70, new int[]{3, 6, 8, 3}, 25, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
+    public static ArmorMaterial aMatStarmetal = EnumHelper.addArmorMaterial(Tags.MODID + ":STARMETAL", Tags.MODID + ":STARMETAL", 150, new int[]{3, 6, 8, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
+    public static ArmorMaterial aMatLiquidator = EnumHelper.addArmorMaterial(Tags.MODID + ":LIQUIDATOR", Tags.MODID + ":LIQUIDATOR", 750, new int[]{3, 6, 8, 3}, 10, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
+    public static ArmorMaterial aMatFau = EnumHelper.addArmorMaterial(Tags.MODID + ":DIGAMMA", Tags.MODID + ":DIGAMMA", 150, new int[]{3, 8, 6, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
+    public static ArmorMaterial aMatDNS = EnumHelper.addArmorMaterial(Tags.MODID + ":DNT_NANO", Tags.MODID + ":DNT_NANO", 150, new int[]{3, 8, 6, 3}, 100, SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 2.0F);
     // Tool Materials
-    public static ToolMaterial enumToolMaterialSchrabidium = EnumHelper.addToolMaterial(RefStrings.MODID + ":SCHRABIDIUM", 4, 10000, 50.0F, 100.0F, 200);
-    public static ToolMaterial enumToolMaterialHammer = EnumHelper.addToolMaterial(RefStrings.MODID + ":SCHRABIDIUMHAMMER", 3, 0, 50.0F, 999999996F, 200);
-    public static ToolMaterial enumToolMaterialChainsaw = EnumHelper.addToolMaterial(RefStrings.MODID + ":CHAINSAW", 3, 1500, 50.0F, 22.0F, 0);
-    public static ToolMaterial enumToolMaterialSteel = EnumHelper.addToolMaterial(RefStrings.MODID + ":STEEL", 2, 500, 7.5F, 2.0F, 10);
-    public static ToolMaterial enumToolMaterialTitanium = EnumHelper.addToolMaterial(RefStrings.MODID + ":TITANIUM", 2, 750, 9.0F, 2.5F, 15);
-    public static ToolMaterial enumToolMaterialAlloy = EnumHelper.addToolMaterial(RefStrings.MODID + ":ALLOY", 3, 2000, 15.0F, 5.0F, 5);
-    public static ToolMaterial enumToolMaterialCmb = EnumHelper.addToolMaterial(RefStrings.MODID + ":CMB", 4, 8500, 40.0F, 55F, 100);
-    public static ToolMaterial enumToolMaterialElec = EnumHelper.addToolMaterial(RefStrings.MODID + ":ELEC", 2, 0, 30.0F, 12.0F, 2);
-    public static ToolMaterial enumToolMaterialDesh = EnumHelper.addToolMaterial(RefStrings.MODID + ":DESH", 2, 0, 7.5F, 2.0F, 10);
-    public static ToolMaterial enumToolMaterialCobalt = EnumHelper.addToolMaterial(RefStrings.MODID + ":COBALT", 4, 750, 9.0F, 2.5F, 15);
-    public static ToolMaterial enumToolMaterialSaw = EnumHelper.addToolMaterial(RefStrings.MODID + ":SAW", 2, 750, 2.0F, 3.5F, 25);
-    public static ToolMaterial enumToolMaterialBat = EnumHelper.addToolMaterial(RefStrings.MODID + ":BAT", 0, 500, 1.5F, 3F, 25);
-    public static ToolMaterial enumToolMaterialBatNail = EnumHelper.addToolMaterial(RefStrings.MODID + ":BATNAIL", 0, 450, 1.0F, 4F, 25);
-    public static ToolMaterial enumToolMaterialGolfClub = EnumHelper.addToolMaterial(RefStrings.MODID + ":GOLFCLUB", 1, 1000, 2.0F, 5F, 25);
-    public static ToolMaterial enumToolMaterialPipeRusty = EnumHelper.addToolMaterial(RefStrings.MODID + ":PIPERUSTY", 1, 350, 1.5F, 4.5F, 25);
-    public static ToolMaterial enumToolMaterialPipeLead = EnumHelper.addToolMaterial(RefStrings.MODID + ":PIPELEAD", 1, 250, 1.5F, 5.5F, 25);
-    public static ToolMaterial enumToolMaterialBottleOpener = EnumHelper.addToolMaterial(RefStrings.MODID + ":OPENER", 1, 250, 1.5F, 0.5F, 200);
-    public static ToolMaterial enumToolMaterialSledge = EnumHelper.addToolMaterial(RefStrings.MODID + ":SHIMMERSLEDGE", 1, 0, 25.0F, 26F, 200);
-    public static ToolMaterial enumToolMaterialMultitool = EnumHelper.addToolMaterial(RefStrings.MODID + ":MULTITOOL", 3, 5000, 25F, 5.5F, 25);
+    public static ToolMaterial enumToolMaterialSchrabidium = EnumHelper.addToolMaterial(Tags.MODID + ":SCHRABIDIUM", 4, 10000, 50.0F, 100.0F, 200);
+    public static ToolMaterial enumToolMaterialHammer = EnumHelper.addToolMaterial(Tags.MODID + ":SCHRABIDIUMHAMMER", 3, 0, 50.0F, 999999996F, 200);
+    public static ToolMaterial enumToolMaterialChainsaw = EnumHelper.addToolMaterial(Tags.MODID + ":CHAINSAW", 3, 1500, 50.0F, 22.0F, 0);
+    public static ToolMaterial enumToolMaterialSteel = EnumHelper.addToolMaterial(Tags.MODID + ":STEEL", 2, 500, 7.5F, 2.0F, 10);
+    public static ToolMaterial enumToolMaterialTitanium = EnumHelper.addToolMaterial(Tags.MODID + ":TITANIUM", 2, 750, 9.0F, 2.5F, 15);
+    public static ToolMaterial enumToolMaterialAlloy = EnumHelper.addToolMaterial(Tags.MODID + ":ALLOY", 3, 2000, 15.0F, 5.0F, 5);
+    public static ToolMaterial enumToolMaterialCmb = EnumHelper.addToolMaterial(Tags.MODID + ":CMB", 4, 8500, 40.0F, 55F, 100);
+    public static ToolMaterial enumToolMaterialElec = EnumHelper.addToolMaterial(Tags.MODID + ":ELEC", 2, 0, 30.0F, 12.0F, 2);
+    public static ToolMaterial enumToolMaterialDesh = EnumHelper.addToolMaterial(Tags.MODID + ":DESH", 2, 0, 7.5F, 2.0F, 10);
+    public static ToolMaterial enumToolMaterialCobalt = EnumHelper.addToolMaterial(Tags.MODID + ":COBALT", 4, 750, 9.0F, 2.5F, 15);
+    public static ToolMaterial enumToolMaterialSaw = EnumHelper.addToolMaterial(Tags.MODID + ":SAW", 2, 750, 2.0F, 3.5F, 25);
+    public static ToolMaterial enumToolMaterialBat = EnumHelper.addToolMaterial(Tags.MODID + ":BAT", 0, 500, 1.5F, 3F, 25);
+    public static ToolMaterial enumToolMaterialBatNail = EnumHelper.addToolMaterial(Tags.MODID + ":BATNAIL", 0, 450, 1.0F, 4F, 25);
+    public static ToolMaterial enumToolMaterialGolfClub = EnumHelper.addToolMaterial(Tags.MODID + ":GOLFCLUB", 1, 1000, 2.0F, 5F, 25);
+    public static ToolMaterial enumToolMaterialPipeRusty = EnumHelper.addToolMaterial(Tags.MODID + ":PIPERUSTY", 1, 350, 1.5F, 4.5F, 25);
+    public static ToolMaterial enumToolMaterialPipeLead = EnumHelper.addToolMaterial(Tags.MODID + ":PIPELEAD", 1, 250, 1.5F, 5.5F, 25);
+    public static ToolMaterial enumToolMaterialBottleOpener = EnumHelper.addToolMaterial(Tags.MODID + ":OPENER", 1, 250, 1.5F, 0.5F, 200);
+    public static ToolMaterial enumToolMaterialSledge = EnumHelper.addToolMaterial(Tags.MODID + ":SHIMMERSLEDGE", 1, 0, 25.0F, 26F, 200);
+    public static ToolMaterial enumToolMaterialMultitool = EnumHelper.addToolMaterial(Tags.MODID + ":MULTITOOL", 3, 5000, 25F, 5.5F, 25);
     public static ToolMaterial matMeteorite = EnumHelper.addToolMaterial("HBM_METEORITE", 4, 0, 50F, 0.0F, 200);
     public static ToolMaterial matCrucible = EnumHelper.addToolMaterial("CRUCIBLE", 3, 10000, 50.0F, 100.0F, 200);
     public static ToolMaterial matHS = EnumHelper.addToolMaterial("CRUCIBLE", 3, 10000, 50.0F, 100.0F, 200);

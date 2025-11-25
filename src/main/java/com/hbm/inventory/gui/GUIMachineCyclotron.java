@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerMachineCyclotron;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.AuxButtonPacket;
 import com.hbm.tileentity.machine.TileEntityMachineCyclotron;
@@ -17,7 +17,7 @@ import java.io.IOException;
 
 public class GUIMachineCyclotron extends GuiInfoContainer {
 
-	private static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/machine/gui_cyclotron.png");
+	private static final ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/machine/gui_cyclotron.png");
 	private final TileEntityMachineCyclotron cyclotron;
 
 	public GUIMachineCyclotron(InventoryPlayer invPlayer, TileEntityMachineCyclotron tile) {

@@ -1,9 +1,9 @@
 package com.hbm.render.entity;
 
+import com.hbm.Tags;
 import com.hbm.entity.effect.EntityCloudFleijaRainbow;
 import com.hbm.render.loader.HFRWavefrontObject;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.lib.RefStrings;
 import com.hbm.render.loader.IModelCustom;
 import com.hbm.util.RenderUtil;
 import net.minecraft.client.renderer.GlStateManager;
@@ -16,7 +16,7 @@ import org.lwjgl.opengl.GL11;
 
 @AutoRegister(factory = "FACTORY")
 public class RenderCloudRainbow extends Render<EntityCloudFleijaRainbow> {
-    private static final ResourceLocation OBJ_SPHERE = new ResourceLocation(RefStrings.MODID, "models/sphere.obj");
+    private static final ResourceLocation OBJ_SPHERE = new ResourceLocation(Tags.MODID, "models/sphere.obj");
     //Drillgon200: Hey I figured out how to use a lambda!
     public static final IRenderFactory<EntityCloudFleijaRainbow> FACTORY = RenderCloudRainbow::new;
     private final IModelCustom blastModel;

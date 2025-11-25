@@ -1,8 +1,8 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerMachineStrandCaster;
 import com.hbm.inventory.material.Mats;
-import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.TileEntityMachineStrandCaster;
 import com.hbm.util.I18nUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
@@ -15,12 +15,12 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 public class GUIMachineStrandCaster extends GuiInfoContainer {
 
   private static final ResourceLocation texture =
-      new ResourceLocation(RefStrings.MODID + ":textures/gui/processing/gui_strand_caster.png");
+      new ResourceLocation(Tags.MODID + ":textures/gui/processing/gui_strand_caster.png");
   private final TileEntityMachineStrandCaster caster;
 
   public GUIMachineStrandCaster(InventoryPlayer invPlayer, TileEntityMachineStrandCaster tile) {

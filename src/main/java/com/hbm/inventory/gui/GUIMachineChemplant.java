@@ -1,9 +1,9 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerMachineChemplant;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.items.ModItems;
-import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.TileEntityMachineChemplant;
 import com.hbm.util.I18nUtil;
 import net.minecraft.client.Minecraft;
@@ -18,7 +18,7 @@ import org.lwjgl.opengl.GL11;
 public class GUIMachineChemplant extends GuiInfoContainer {
 
 	
-	private static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/gui_chemplant.png");
+	private static final ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/gui_chemplant.png");
 	private final TileEntityMachineChemplant chemplant;
 	
 	public GUIMachineChemplant(InventoryPlayer invPlayer, TileEntityMachineChemplant tile) {

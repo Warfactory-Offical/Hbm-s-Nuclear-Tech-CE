@@ -1,8 +1,8 @@
 package com.hbm.render.entity.mob;
 
+import com.hbm.Tags;
 import com.hbm.entity.mob.glyphid.*;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.ResourceManager;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.GlStateManager;
@@ -24,7 +24,7 @@ import net.minecraftforge.fml.client.registry.IRenderFactory;
 @AutoRegister(entity = EntityGlyphidDigger.class, factory = "FACTORY")
 @AutoRegister(entity = EntityGlyphidScout.class, factory = "FACTORY")
 public class RenderGlyphid extends RenderLiving<EntityGlyphid> {
-    public static final ResourceLocation glyphid_infested_tex = new ResourceLocation(RefStrings.MODID, "textures/entity/glyphid_infestation.png");
+    public static final ResourceLocation glyphid_infested_tex = new ResourceLocation(Tags.MODID, "textures/entity/glyphid_infestation.png");
 
     public static final IRenderFactory<EntityGlyphid> FACTORY = RenderGlyphid::new;
 

@@ -4,6 +4,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
+import com.hbm.Tags;
 import com.hbm.api.item.IDepthRockTool;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockBedrockOre;
@@ -16,7 +17,6 @@ import com.hbm.items.IItemControlReceiver;
 import com.hbm.items.IKeybindReceiver;
 import com.hbm.items.ModItems;
 import com.hbm.lib.MethodHandleHelper;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.PlayerInformPacketLegacy;
@@ -139,7 +139,7 @@ public class ItemToolAbility extends ItemTool implements IDepthRockTool, IGUIPro
 	public void bakeModel(ModelBakeEvent event) {
 		try {
 			IModel baseModel = ModelLoaderRegistry.getModel(new ResourceLocation("minecraft", "item/handheld"));
-			ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, ROOT_PATH + texturePath);
+			ResourceLocation spriteLoc = new ResourceLocation(Tags.MODID, ROOT_PATH + texturePath);
 			IModel retexturedModel = baseModel.retexture(
 					ImmutableMap.of(
 							"layer0", spriteLoc.toString()
@@ -158,12 +158,12 @@ public class ItemToolAbility extends ItemTool implements IDepthRockTool, IGUIPro
 
 	@Override
 	public void registerModel() {
-		ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(new ResourceLocation(RefStrings.MODID, ROOT_PATH + texturePath), "inventory"));
+		ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(new ResourceLocation(Tags.MODID, ROOT_PATH + texturePath), "inventory"));
 	}
 
 	@Override
 	public void registerSprite(TextureMap map) {
-		map.registerSprite(new ResourceLocation(RefStrings.MODID, ROOT_PATH + texturePath));
+		map.registerSprite(new ResourceLocation(Tags.MODID, ROOT_PATH + texturePath));
 	}
 
 	public ItemToolAbility addAbility(IBaseAbility ability, int level) {

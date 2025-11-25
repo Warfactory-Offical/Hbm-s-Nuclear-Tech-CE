@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
+import com.hbm.Tags;
 import com.hbm.blocks.fluid.FluidNTM;
 import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.inventory.fluid.trait.*;
@@ -15,7 +16,6 @@ import com.hbm.inventory.fluid.trait.FT_Toxin.ToxinDirectDamage;
 import com.hbm.inventory.fluid.trait.FT_Toxin.ToxinEffects;
 import com.hbm.inventory.fluid.trait.FluidTraitSimple.*;
 import com.hbm.lib.ModDamageSource;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.potion.HbmPotion;
 import com.hbm.render.misc.EnumSymbol;
@@ -1210,7 +1210,7 @@ public class Fluids {
             MainRegistry.logger.info("[NTM Fluid<=>ForgeFluid Compat] Forge Fluid not found for: " + fluid.getName() + ". Registering under: " + fluid.getFFName());
 
             // Determine texture path based on fluid's stringId
-            String texturePath = RefStrings.MODID + ":/blocks/forgefluid" + fluid.getName().toLowerCase();
+            String texturePath = Tags.MODID + ":/blocks/forgefluid" + fluid.getName().toLowerCase();
             //Note: we are not using FF name since the old texture names seem to follow the NTMF naming schema
             //TODO: Fix that
 
@@ -1219,10 +1219,10 @@ public class Fluids {
             ResourceLocation textureFlowing = new ResourceLocation(texturePath + "_flowing");
 
             // Default texture if custom one is not found
-            ResourceLocation defaultTexture = fluid.hasTrait(FT_Gaseous.class) ? new ResourceLocation(RefStrings.MODID, "blocks/forgefluid/gas_default") :
-                    new ResourceLocation(RefStrings.MODID, "blocks/forgefluid/fluid_default_still");
+            ResourceLocation defaultTexture = fluid.hasTrait(FT_Gaseous.class) ? new ResourceLocation(Tags.MODID, "blocks/forgefluid/gas_default") :
+                    new ResourceLocation(Tags.MODID, "blocks/forgefluid/fluid_default_still");
             if (fluid.hasTrait(FT_Viscous.class))
-                defaultTexture = new ResourceLocation(RefStrings.MODID, "blocks/forgefluid/fluid_viscous_default_still");
+                defaultTexture = new ResourceLocation(Tags.MODID, "blocks/forgefluid/fluid_viscous_default_still");
 
             // Try loading the custom texture
             int color;

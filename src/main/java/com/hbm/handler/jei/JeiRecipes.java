@@ -1,5 +1,6 @@
 package com.hbm.handler.jei;
 
+import com.hbm.Tags;
 import com.hbm.inventory.FluidContainerRegistry;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
@@ -15,7 +16,6 @@ import com.hbm.items.machine.ItemAssemblyTemplate;
 import com.hbm.items.machine.ItemFELCrystal.EnumWavelengths;
 import com.hbm.items.machine.ItemFluidIcon;
 import com.hbm.lib.Library;
-import com.hbm.lib.RefStrings;
 import com.hbm.util.I18nUtil;
 import com.hbm.util.WeightedRandomObject;
 import mezz.jei.api.ingredients.IIngredients;
@@ -191,7 +191,7 @@ public class JeiRecipes {
 			minecraft.fontRenderer.drawString(centrifuges, x, y, 0x00FF00);
 
 			if (isHighSpeed) {
-				minecraft.getTextureManager().bindTexture(new ResourceLocation(RefStrings.MODID, "textures/gui/jei/gui_jei_gas_centrifuge.png"));
+				minecraft.getTextureManager().bindTexture(new ResourceLocation(Tags.MODID, "textures/gui/jei/gui_jei_gas_centrifuge.png"));
 				GlStateManager.color(1f, 1f, 1f, 1f);
 				Gui.drawModalRectWithCustomSizedTexture(23, 19, 184, 37, 16, 16, 256, 256);
 			}
@@ -499,7 +499,7 @@ public class JeiRecipes {
 		@Override
 		public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
 			GlStateManager.color(1.0F, 1.0F, 1.0F);
-			ResourceLocation GUI_TEXTURE = new ResourceLocation(RefStrings.MODID, "textures/gui/jei/gui_nei.png");
+			ResourceLocation GUI_TEXTURE = new ResourceLocation(Tags.MODID, "textures/gui/jei/gui_nei.png");
 			minecraft.getTextureManager().bindTexture(GUI_TEXTURE);
 
 			Gui.drawModalRectWithCustomSizedTexture(74, 14, 59, 87, 18, 36, 256, 256);

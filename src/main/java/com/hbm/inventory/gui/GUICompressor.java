@@ -1,10 +1,10 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.SoundEvents;
 
 import com.hbm.inventory.container.ContainerCompressor;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.machine.TileEntityMachineCompressorBase;
@@ -20,7 +20,7 @@ import java.io.IOException;
 
 public class GUICompressor extends GuiInfoContainer {
 
-    private static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/processing/gui_compressor.png");
+    private static final ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/processing/gui_compressor.png");
     private final TileEntityMachineCompressorBase compressor;
 
     public GUICompressor(InventoryPlayer invPlayer, TileEntityMachineCompressorBase tedf) {

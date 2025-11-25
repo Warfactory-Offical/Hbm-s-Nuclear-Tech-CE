@@ -1,7 +1,7 @@
 package com.hbm.util;
 
+import com.hbm.Tags;
 import com.hbm.render.loader.HFRWavefrontObject;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.main.ResourceManager;
 import com.hbm.packet.toserver.KeypadServerPacket;
@@ -127,7 +127,7 @@ public class KeypadClient extends Keypad {
 	}
 	
 	public static void load(){
-		WavefrontObjDisplayList model = new WavefrontObjDisplayList(new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/keypad.obj")));
+		WavefrontObjDisplayList model = new WavefrontObjDisplayList(new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/keypad.obj")));
 		mainModel = model.getListForName("Keypad");
 		displayModel = model.getListForName("Display");
 		for(int i = 0; i < 9; i++){

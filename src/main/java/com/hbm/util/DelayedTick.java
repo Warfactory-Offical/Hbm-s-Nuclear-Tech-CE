@@ -1,7 +1,7 @@
 package com.hbm.util;
 
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
-import com.hbm.lib.RefStrings;
+import com.hbm.Tags;
 import com.hbm.lib.maps.NonBlockingHashMapLong;
 import com.hbm.main.MainRegistry;
 import net.minecraft.server.MinecraftServer;
@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.util.List;
 
-@Mod.EventBusSubscriber(modid = RefStrings.MODID)
+@Mod.EventBusSubscriber(modid = Tags.MODID)
 public final class DelayedTick {
 
     private static final NonBlockingHashMapLong<MpscCollector<Ticket>> SERVER_TASKS = new NonBlockingHashMapLong<>();

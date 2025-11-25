@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerCoreStabilizer;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.toserver.AuxButtonPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.machine.TileEntityCoreStabilizer;
@@ -21,7 +21,7 @@ import java.io.IOException;
 
 public class GUICoreStabilizer extends GuiInfoContainer {
 
-	private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/dfc/gui_stabilizer.png");
+	private static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/dfc/gui_stabilizer.png");
 	private TileEntityCoreStabilizer stabilizer;
     private GuiTextField field;
 

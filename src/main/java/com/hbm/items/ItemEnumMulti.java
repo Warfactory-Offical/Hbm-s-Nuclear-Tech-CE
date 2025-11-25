@@ -1,7 +1,7 @@
 package com.hbm.items;
 
 import com.google.common.collect.ImmutableMap;
-import com.hbm.lib.RefStrings;
+import com.hbm.Tags;
 import com.hbm.util.EnumUtil;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -65,14 +65,14 @@ public class ItemEnumMulti extends ItemBase implements IDynamicModels {
     @SideOnly(Side.CLIENT)
     public void registerSprite(TextureMap map) {
         for (String texture : textures) {
-            map.registerSprite(new ResourceLocation(RefStrings.MODID, ROOT_PATH + texture));
+            map.registerSprite(new ResourceLocation(Tags.MODID, ROOT_PATH + texture));
         }
     }
 
     @SideOnly(Side.CLIENT)
     public void registerModel() {
         for (int i = 0; i < theEnum.getEnumConstants().length; i++) {
-            ModelLoader.setCustomModelResourceLocation(this, i, new ModelResourceLocation(new ResourceLocation(RefStrings.MODID, ROOT_PATH + (multiTexture ? textures[i] : textures[0])), "inventory"));
+            ModelLoader.setCustomModelResourceLocation(this, i, new ModelResourceLocation(new ResourceLocation(Tags.MODID, ROOT_PATH + (multiTexture ? textures[i] : textures[0])), "inventory"));
         }
     }
 
@@ -92,7 +92,7 @@ public class ItemEnumMulti extends ItemBase implements IDynamicModels {
             IModel baseModel = ModelLoaderRegistry.getModel(new ResourceLocation("minecraft", "item/generated"));
             for (int i = 0; i < theEnum.getEnumConstants().length; i++) {
                 String textureName = multiTexture ? textures[i] : textures[0];
-                ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, ROOT_PATH + textureName);
+                ResourceLocation spriteLoc = new ResourceLocation(Tags.MODID, ROOT_PATH + textureName);
 
                 IModel retexturedModel = baseModel.retexture(ImmutableMap.of("layer0", spriteLoc.toString()));
                 IBakedModel bakedModel = retexturedModel.bake(ModelRotation.X0_Y0, DefaultVertexFormats.ITEM, ModelLoader.defaultTextureGetter());

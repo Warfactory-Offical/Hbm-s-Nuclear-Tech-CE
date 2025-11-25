@@ -1,9 +1,9 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerLaunchTable;
 import com.hbm.items.weapon.ItemCustomMissile;
 import com.hbm.items.weapon.ItemMissile.PartSize;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.toserver.AuxButtonPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.render.misc.MissileMultipart;
@@ -23,7 +23,7 @@ import java.io.IOException;
 
 public class GUIMachineLaunchTable extends GuiInfoContainer {
 
-	private static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/gui_launch_table.png");
+	private static final ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/gui_launch_table.png");
 	private final TileEntityLaunchTable launcher;
 	
 	public GUIMachineLaunchTable(InventoryPlayer invPlayer, TileEntityLaunchTable tedf) {

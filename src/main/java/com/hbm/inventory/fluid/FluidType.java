@@ -1,12 +1,12 @@
 package com.hbm.inventory.fluid;
 
+import com.hbm.Tags;
 import com.hbm.api.fluidmk2.FluidNetMK2;
 import com.hbm.config.GeneralConfig;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.fluid.trait.FT_Corrosive;
 import com.hbm.inventory.fluid.trait.FluidTrait;
 import com.hbm.inventory.fluid.trait.FluidTraitSimple;
-import com.hbm.lib.RefStrings;
 import com.hbm.render.misc.EnumSymbol;
 import com.hbm.uninos.INetworkProvider;
 import com.hbm.util.I18nUtil;
@@ -70,7 +70,7 @@ public class FluidType {
 		this.flammability = f;
 		this.reactivity = r;
 		this.symbol = symbol;
-		this.texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/fluids/" + name.toLowerCase(Locale.US) + ".png");
+		this.texture = new ResourceLocation(Tags.MODID + ":textures/gui/fluids/" + name.toLowerCase(Locale.US) + ".png");
 		
 		this.id = Fluids.registerSelf(this);
 	}
@@ -83,7 +83,7 @@ public class FluidType {
 		this.flammability = f;
 		this.reactivity = r;
 		this.symbol = symbol;
-		this.texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/fluids/" + texName + ".png");
+		this.texture = new ResourceLocation(Tags.MODID + ":textures/gui/fluids/" + texName + ".png");
 		this.guiTint = tint;
 		this.localizedOverride = displayName;
 		this.customFluid = true;

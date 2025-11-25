@@ -1,5 +1,6 @@
 package com.hbm.blocks;
 
+import com.hbm.Tags;
 import com.hbm.blocks.bomb.*;
 import com.hbm.blocks.fluid.*;
 import com.hbm.blocks.gas.*;
@@ -18,7 +19,6 @@ import com.hbm.blocks.turret.*;
 import com.hbm.hazard.HazardRegistry;
 import com.hbm.hazard.HazardSystem;
 import com.hbm.lib.ModDamageSource;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.render.block.BlockBakeFrame;
 import com.hbm.tileentity.DoorDecl;
@@ -344,7 +344,7 @@ public class ModBlocks {
     public static final Block door_red = new BlockModDoor(Material.IRON, "door_red").setHardness(10.0F).setResistance(100.0F);
 
 	public static final Block deco_computer = new BlockDecoModel(Material.IRON, SoundType.METAL, "deco_computer", BlockEnums.DecoComputerEnum.class, true, false,
-			new ResourceLocation(RefStrings.MODID, "models/blocks/puter.obj")).setBlockBoundsTo(.125F, 0F, 0F, .875F, .875F, .625F).setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);
+			new ResourceLocation(Tags.MODID, "models/blocks/puter.obj")).setBlockBoundsTo(.125F, 0F, 0F, .875F, .875F, .625F).setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);
     public static final Block deco_crt = new BlockDecoCRT(Material.IRON, SoundType.METAL, "deco_crt").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);
     public static final Block deco_toaster = new BlockDecoToaster(Material.IRON, SoundType.METAL, "deco_toaster").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);
 	public static final Block filing_cabinet = new BlockDecoContainer<>(Material.IRON, SoundType.METAL, "filing_cabinet", BlockEnums.DecoCabinetEnum.class, true, false,

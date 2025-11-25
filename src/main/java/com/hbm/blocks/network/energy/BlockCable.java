@@ -1,11 +1,11 @@
 package com.hbm.blocks.network.energy;
 
+import com.hbm.Tags;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.render.loader.HFRWavefrontObject;
 import com.hbm.items.IDynamicModels;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
-import com.hbm.lib.RefStrings;
 import com.hbm.render.model.BlockCableBakedModel;
 import com.hbm.tileentity.network.energy.TileEntityCableBaseNT;
 import net.minecraft.block.BlockContainer;
@@ -50,8 +50,8 @@ public class BlockCable extends BlockContainer implements IDynamicModels {
 	public static final PropertyBool POS_Z = PropertyBool.create("posz");
 	public static final PropertyBool NEG_Z = PropertyBool.create("negz");
 
-	private final ResourceLocation objModelLocation = new ResourceLocation(RefStrings.MODID, "models/blocks/cable_neo.obj");
-	private final ResourceLocation textureLocation = new ResourceLocation(RefStrings.MODID, "blocks/cable_neo");
+	private final ResourceLocation objModelLocation = new ResourceLocation(Tags.MODID, "models/blocks/cable_neo.obj");
+	private final ResourceLocation textureLocation = new ResourceLocation(Tags.MODID, "blocks/cable_neo");
 
 	public BlockCable(Material material, String registryName) {
 		super(material);

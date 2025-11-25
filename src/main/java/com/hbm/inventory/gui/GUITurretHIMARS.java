@@ -1,6 +1,6 @@
 package com.hbm.inventory.gui;
 
-import com.hbm.lib.RefStrings;
+import com.hbm.Tags;
 import com.hbm.packet.toserver.AuxButtonPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.turret.TileEntityTurretBaseNT;
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 public class GUITurretHIMARS extends GUITurretBase {
   private static final ResourceLocation texture =
-      new ResourceLocation(RefStrings.MODID + ":textures/gui/weapon/gui_turret_himars.png");
+      new ResourceLocation(Tags.MODID + ":textures/gui/weapon/gui_turret_himars.png");
 
   public GUITurretHIMARS(InventoryPlayer invPlayer, TileEntityTurretBaseNT turretBaseNT) {
     super(invPlayer, turretBaseNT);

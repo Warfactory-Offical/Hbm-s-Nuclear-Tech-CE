@@ -1,5 +1,6 @@
 package com.hbm.blocks.machine.rbmk;
 
+import com.hbm.Tags;
 import com.hbm.api.block.IToolable;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ITooltipProvider;
@@ -7,7 +8,6 @@ import com.hbm.handler.MultiblockHandlerXR;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemRBMKLid;
 import com.hbm.lib.ForgeDirection;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.machine.rbmk.RBMKDials;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKBase;
@@ -45,8 +45,8 @@ public abstract class RBMKBase extends BlockDummyable implements IToolable, IToo
 	
 	public RBMKBase(String s, String columnTexture){
 		super(Material.IRON, s);
-		coverTexture = new ResourceLocation(RefStrings.MODID, "textures/blocks/rbmk/" + s + ".png");
-		this.columnTexture = new ResourceLocation(RefStrings.MODID, "textures/blocks/rbmk/" + columnTexture +".png");
+		coverTexture = new ResourceLocation(Tags.MODID, "textures/blocks/rbmk/" + s + ".png");
+		this.columnTexture = new ResourceLocation(Tags.MODID, "textures/blocks/rbmk/" + columnTexture +".png");
 	}
 	
 	@Override

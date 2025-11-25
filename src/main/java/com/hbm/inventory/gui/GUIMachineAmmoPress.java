@@ -1,11 +1,11 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.container.ContainerMachineAmmoPress;
 import com.hbm.inventory.recipes.AmmoPressRecipes;
 import com.hbm.inventory.recipes.AmmoPressRecipes.AmmoPressRecipe;
 import com.hbm.items.ModItems;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.machine.TileEntityMachineAmmoPress;
@@ -33,7 +33,7 @@ import static com.hbm.main.ModEventHandlerClient.getMouseOverStack;
 
 public class GUIMachineAmmoPress extends GuiInfoContainer {
   private static final ResourceLocation texture =
-      new ResourceLocation(RefStrings.MODID + ":textures/gui/processing/gui_ammo_press.png");
+      new ResourceLocation(Tags.MODID + ":textures/gui/processing/gui_ammo_press.png");
   private final TileEntityMachineAmmoPress press;
 
   private final ArrayList<AmmoPressRecipe> recipes = new ArrayList<>();

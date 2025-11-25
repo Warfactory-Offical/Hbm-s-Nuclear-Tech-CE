@@ -3,6 +3,7 @@ package com.hbm.inventory.gui;
 import java.io.IOException;
 import java.util.Locale;
 
+import com.hbm.Tags;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.math.MathHelper;
@@ -12,7 +13,6 @@ import org.lwjgl.input.Keyboard;
 
 import com.hbm.inventory.container.ContainerPWR;
 import com.hbm.items.ModItems;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.render.util.GaugeUtil;
@@ -31,7 +31,7 @@ import net.minecraft.util.ResourceLocation;
 public class GUIPWR extends GuiInfoContainer {
 
     protected TileEntityPWRController controller;
-    private final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/reactors/gui_pwr.png");
+    private final ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/reactors/gui_pwr.png");
 
     private GuiTextField field;
 

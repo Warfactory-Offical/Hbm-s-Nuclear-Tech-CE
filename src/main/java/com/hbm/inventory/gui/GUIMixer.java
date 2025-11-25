@@ -1,8 +1,8 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerMixer;
 import com.hbm.inventory.recipes.MixerRecipes;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.machine.TileEntityMachineMixer;
@@ -22,7 +22,7 @@ import java.util.List;
 
 public class GUIMixer extends GuiInfoContainer {
 
-	private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/processing/gui_mixer.png");
+	private static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/processing/gui_mixer.png");
 	private TileEntityMachineMixer mixer;
 
 	public GUIMixer(InventoryPlayer player, TileEntityMachineMixer mixer) {

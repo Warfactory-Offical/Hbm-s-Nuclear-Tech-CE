@@ -1,9 +1,9 @@
 package com.hbm.render.entity;
 
+import com.hbm.Tags;
 import com.hbm.entity.effect.EntityEMPBlast;
 import com.hbm.render.loader.HFRWavefrontObject;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.lib.RefStrings;
 import com.hbm.render.loader.IModelCustom;
 import com.hbm.util.RenderUtil;
 import net.minecraft.client.renderer.GlStateManager;
@@ -15,7 +15,7 @@ import net.minecraftforge.fml.client.registry.IRenderFactory;
 @AutoRegister(factory = "FACTORY")
 public class RenderEMPBlast extends Render<EntityEMPBlast> {
 
-    private static final ResourceLocation RING_MODEL_RL = new ResourceLocation(RefStrings.MODID, "models/Ring.obj");
+    private static final ResourceLocation RING_MODEL_RL = new ResourceLocation(Tags.MODID, "models/Ring.obj");
     public static final IRenderFactory<EntityEMPBlast> FACTORY = RenderEMPBlast::new;
     private final IModelCustom ringModel;
     private final ResourceLocation ringTexture;
@@ -24,7 +24,7 @@ public class RenderEMPBlast extends Render<EntityEMPBlast> {
         super(renderManager);
         // TODO: move to ResourceManager
         this.ringModel = new HFRWavefrontObject(RING_MODEL_RL);
-        this.ringTexture = new ResourceLocation(RefStrings.MODID, "textures/models/explosion/EMPBlast.png");
+        this.ringTexture = new ResourceLocation(Tags.MODID, "textures/models/explosion/EMPBlast.png");
     }
 
     @Override

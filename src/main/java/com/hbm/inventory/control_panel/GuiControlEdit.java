@@ -1,6 +1,6 @@
 package com.hbm.inventory.control_panel;
 
-import com.hbm.lib.RefStrings;
+import com.hbm.Tags;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.machine.TileEntityControlPanel;
@@ -22,7 +22,7 @@ import java.util.List;
 
 public class GuiControlEdit extends GuiContainer {
 
-	public static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/control_panel/gui_placement_back.png");
+	public static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/control_panel/gui_placement_back.png");
 
 	public float mouseX, mouseY;
 	

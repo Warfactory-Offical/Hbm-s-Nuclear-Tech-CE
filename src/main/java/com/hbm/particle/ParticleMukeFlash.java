@@ -1,6 +1,6 @@
 package com.hbm.particle;
 
-import com.hbm.lib.RefStrings;
+import com.hbm.Tags;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -20,7 +20,7 @@ import java.util.Random;
 @SideOnly(Side.CLIENT)
 public class ParticleMukeFlash extends Particle {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(RefStrings.MODID, "textures/particle/flare.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(Tags.MODID, "textures/particle/flare.png");
     private final boolean bf;
 
     public ParticleMukeFlash(World world, double x, double y, double z, boolean bf) {

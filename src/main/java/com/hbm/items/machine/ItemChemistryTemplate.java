@@ -1,5 +1,6 @@
 package com.hbm.items.machine;
 
+import com.hbm.Tags;
 import com.hbm.interfaces.IHasCustomModel;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
@@ -9,7 +10,6 @@ import com.hbm.inventory.gui.GUIChemfac;
 import com.hbm.inventory.gui.GUIMachineChemplant;
 import com.hbm.inventory.recipes.ChemplantRecipes;
 import com.hbm.items.ModItems;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.I18nUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
@@ -38,7 +38,7 @@ import static com.hbm.items.machine.ItemAssemblyTemplate.countItem;
 
 public class ItemChemistryTemplate extends Item implements IHasCustomModel {
 
-	public static final ModelResourceLocation location = new ModelResourceLocation(RefStrings.MODID + ":chemistry_template", "inventory");
+	public static final ModelResourceLocation location = new ModelResourceLocation(Tags.MODID + ":chemistry_template", "inventory");
 	
 	public ItemChemistryTemplate(String s){
 		this.setTranslationKey(s);

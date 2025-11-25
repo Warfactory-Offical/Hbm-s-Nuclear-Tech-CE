@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerCrystallizer;
-import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.TileEntityMachineCrystallizer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -12,7 +12,7 @@ import org.lwjgl.opengl.GL11;
 
 public class GUICrystallizer extends GuiInfoContainer {
 
-	public static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/processing/gui_crystallizer_alt.png");
+	public static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/processing/gui_crystallizer_alt.png");
 	private TileEntityMachineCrystallizer acidomatic;
 
 	public GUICrystallizer(InventoryPlayer invPlayer, TileEntityMachineCrystallizer acidomatic) {

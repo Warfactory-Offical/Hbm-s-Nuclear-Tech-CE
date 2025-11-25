@@ -1,6 +1,6 @@
 package com.hbm.inventory.gui;
 
-import com.hbm.lib.RefStrings;
+import com.hbm.Tags;
 import com.hbm.packet.toserver.AuxButtonPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.turret.TileEntityTurretArty;
@@ -15,7 +15,7 @@ import java.io.IOException;
 
 public class GUITurretArty extends GUITurretBase {
 
-    private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/weapon/gui_turret_arty.png");
+    private static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/weapon/gui_turret_arty.png");
 
     public GUITurretArty(InventoryPlayer invPlayer, TileEntityTurretBaseNT tedf) {
         super(invPlayer, tedf);

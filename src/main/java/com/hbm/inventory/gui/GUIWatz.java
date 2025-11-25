@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerWatz;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.render.util.GaugeUtil;
@@ -23,7 +23,7 @@ import java.util.Locale;
 
 public class GUIWatz extends GuiInfoContainer {
 
-	private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/reactors/gui_watz.png");
+	private static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/reactors/gui_watz.png");
 	private TileEntityWatz watz;
 
 	public GUIWatz(InventoryPlayer invPlayer, TileEntityWatz watz) {

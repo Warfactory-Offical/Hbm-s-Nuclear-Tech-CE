@@ -1,9 +1,9 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.recipes.loader.GenericRecipe;
 import com.hbm.inventory.recipes.loader.GenericRecipes;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import net.minecraft.client.Minecraft;
@@ -30,7 +30,7 @@ import java.util.List;
 
 public class GUIScreenRecipeSelector extends GuiScreen {
 
-    protected static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/processing/gui_recipe_selector.png");
+    protected static final ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/processing/gui_recipe_selector.png");
 
     //basic GUI setup
     protected int xSize = 176;

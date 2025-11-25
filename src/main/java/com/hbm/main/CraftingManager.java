@@ -1,5 +1,6 @@
 package com.hbm.main;
 
+import com.hbm.Tags;
 import com.hbm.blocks.BlockEnums;
 import com.hbm.blocks.BlockEnums.LightstoneType;
 import com.hbm.blocks.ModBlocks;
@@ -25,7 +26,6 @@ import com.hbm.items.tool.ItemConveyorWand;
 import com.hbm.items.tool.ItemDrone;
 import com.hbm.items.tool.ItemGuideBook;
 import com.hbm.lib.Library;
-import com.hbm.lib.RefStrings;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -73,10 +73,10 @@ public class CraftingManager {
 		ConsumableRecipes.register();
 		PowderRecipes.register();
 
-		hack.getRegistry().register(new RBMKFuelCraftingHandler().setRegistryName(new ResourceLocation(RefStrings.MODID, "rbmk_fuel_crafting_handler")));
-		hack.getRegistry().register(new MKUCraftingHandler().setRegistryName(new ResourceLocation(RefStrings.MODID, "mku_crafting_handler")));
-		hack.getRegistry().register(new CargoShellCraftingHandler().setRegistryName(new ResourceLocation(RefStrings.MODID, "cargo_shell_crafting_handler")));
-		hack.getRegistry().register(new ScrapsCraftingHandler().setRegistryName(new ResourceLocation(RefStrings.MODID, "scraps_crafting_handler")));
+		hack.getRegistry().register(new RBMKFuelCraftingHandler().setRegistryName(new ResourceLocation(Tags.MODID, "rbmk_fuel_crafting_handler")));
+		hack.getRegistry().register(new MKUCraftingHandler().setRegistryName(new ResourceLocation(Tags.MODID, "mku_crafting_handler")));
+		hack.getRegistry().register(new CargoShellCraftingHandler().setRegistryName(new ResourceLocation(Tags.MODID, "cargo_shell_crafting_handler")));
+		hack.getRegistry().register(new ScrapsCraftingHandler().setRegistryName(new ResourceLocation(Tags.MODID, "scraps_crafting_handler")));
 		addUpgradeContainers(hack.getRegistry());
 	}
 
@@ -1163,28 +1163,28 @@ public class CraftingManager {
 	public static void addUpgradeContainers(IForgeRegistry<IRecipe> registry){
 		registry.register(
 				new ContainerUpgradeCraftingHandler(new ItemStack(ModBlocks.crate_desh, 1), " D ", "DSD", " D ", 'D', ModItems.plate_desh, 'S', ModBlocks.crate_steel)
-						.setRegistryName(new ResourceLocation(RefStrings.MODID, "crate_desh_upgrade"))
+						.setRegistryName(new ResourceLocation(Tags.MODID, "crate_desh_upgrade"))
 		);
 
 		registry.register(
 				new ContainerUpgradeCraftingHandler(new ItemStack(ModBlocks.crate_tungsten, 1), "BPB", "PCP", "BPB", 'B', W.block(), 'P', CU.plateCast(), 'C', ModBlocks.crate_steel)
-						.setRegistryName(new ResourceLocation(RefStrings.MODID, "crate_tungsten_upgrade"))
+						.setRegistryName(new ResourceLocation(Tags.MODID, "crate_tungsten_upgrade"))
 		);
 
 		// Note: voids the last few slots when placed, because a safe's inventory is smaller than a crate's one
 		registry.register(
 				new ContainerUpgradeCraftingHandler(new ItemStack(ModBlocks.safe, 1), "LAL", "ACA", "LAL", 'L', PB.plate(), 'A', ALLOY.plate(), 'C', ModBlocks.crate_steel)
-						.setRegistryName(new ResourceLocation(RefStrings.MODID, "safe_upgrade"))
+						.setRegistryName(new ResourceLocation(Tags.MODID, "safe_upgrade"))
 		);
 
 		registry.register(
 				new ContainerUpgradeCraftingHandler(new ItemStack(ModBlocks.mass_storage_desh, 1), " C ", "PMP", " P ", 'P', DESH.ingot(), 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.CHIP), 'M', new ItemStack(ModBlocks.mass_storage_iron))
-						.setRegistryName(new ResourceLocation(RefStrings.MODID, "mass_storage_upgrade_1"))
+						.setRegistryName(new ResourceLocation(Tags.MODID, "mass_storage_upgrade_1"))
 		);
 
 		registry.register(
 				new ContainerUpgradeCraftingHandler(new ItemStack(ModBlocks.mass_storage, 1), " C ", "PMP", " P ", 'P', ANY_RESISTANTALLOY.ingot(), 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.ADVANCED), 'M', new ItemStack(ModBlocks.mass_storage_desh))
-						.setRegistryName(new ResourceLocation(RefStrings.MODID, "mass_storage_upgrade_2"))
+						.setRegistryName(new ResourceLocation(Tags.MODID, "mass_storage_upgrade_2"))
 		);
 	}
 
@@ -1224,7 +1224,7 @@ public class CraftingManager {
 	}
 
 	public static void addBilletFragmentForODM(ItemStack billet, ItemStack nugget) {
-		ResourceLocation name = new ResourceLocation(RefStrings.MODID, Objects.requireNonNull(billet.getItem().getRegistryName()).getPath() + "_billet_odm_" + billet.getMetadata());
+		ResourceLocation name = new ResourceLocation(Tags.MODID, Objects.requireNonNull(billet.getItem().getRegistryName()).getPath() + "_billet_odm_" + billet.getMetadata());
 		GameRegistry.addShapedRecipe(name, null, billet.copy(), "###", "###", '#', nugget);
 	}
 
@@ -1389,7 +1389,7 @@ public class CraftingManager {
 	}
 
 	public static void add9To1ForODM(ItemStack nine, ItemStack one){
-		ResourceLocation name = new ResourceLocation(RefStrings.MODID, Objects.requireNonNull(one.getItem().getRegistryName()).getPath() + "_9to1_odm_" + one.getMetadata());
+		ResourceLocation name = new ResourceLocation(Tags.MODID, Objects.requireNonNull(one.getItem().getRegistryName()).getPath() + "_9to1_odm_" + one.getMetadata());
 		GameRegistry.addShapedRecipe(name, null, one, "###", "###", "###", '#', nine );
 	}
 
@@ -1509,12 +1509,12 @@ public class CraftingManager {
 	}
 
 	public static ResourceLocation getRecipeName(ItemStack output){
-		ResourceLocation loc = new ResourceLocation(RefStrings.MODID, Objects.requireNonNull(output.getItem().getRegistryName()).getPath());
+		ResourceLocation loc = new ResourceLocation(Tags.MODID, Objects.requireNonNull(output.getItem().getRegistryName()).getPath());
 		int i = 0;
 		ResourceLocation r_loc = loc;
 		while(net.minecraft.item.crafting.CraftingManager.REGISTRY.containsKey(r_loc)) {
 			i++;
-			r_loc = new ResourceLocation(RefStrings.MODID, loc.getPath() + "_" + i);
+			r_loc = new ResourceLocation(Tags.MODID, loc.getPath() + "_" + i);
 		}
 		return r_loc;
 	}

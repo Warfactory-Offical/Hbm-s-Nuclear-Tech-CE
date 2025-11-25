@@ -1,8 +1,8 @@
 package com.hbm.render.entity.mob;
 
+import com.hbm.Tags;
 import com.hbm.entity.mob.EntityPigeon;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.lib.RefStrings;
 import com.hbm.render.model.ModelPigeon;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RenderLiving;
@@ -21,7 +21,7 @@ public class RenderPigeon extends RenderLiving<EntityPigeon> {
 
     @Override
     protected ResourceLocation getEntityTexture(EntityPigeon entity) {
-        return new ResourceLocation(RefStrings.MODID, "textures/entity/pigeon.png");
+        return new ResourceLocation(Tags.MODID, "textures/entity/pigeon.png");
     }
 
     @Override

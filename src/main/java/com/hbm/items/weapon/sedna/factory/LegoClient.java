@@ -1,12 +1,12 @@
 package com.hbm.items.weapon.sedna.factory;
 
+import com.hbm.Tags;
 import com.hbm.entity.projectile.EntityBulletBaseMK4;
 import com.hbm.entity.projectile.EntityBulletBeamBase;
 import com.hbm.items.ModItems;
 import com.hbm.items.weapon.sedna.hud.HUDComponentAmmoCounter;
 import com.hbm.items.weapon.sedna.hud.HUDComponentDurabilityBar;
 import com.hbm.items.weapon.sedna.impl.ItemGunChargeThrower;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.item.weapon.sedna.ItemRenderFatMan;
 import com.hbm.render.misc.BeamPronter;
@@ -151,7 +151,7 @@ public class LegoClient {
     public static BiConsumer<EntityBulletBaseMK4, Float> RENDER_FLARE_SUPPLY = (bullet, interp) -> { renderFlare(bullet, interp, 0.5F, 0.5F, 1F); };
     public static BiConsumer<EntityBulletBaseMK4, Float> RENDER_FLARE_WEAPON = (bullet, interp) -> { renderFlare(bullet, interp, 0.5F, 1F, 0.5F); };
 
-    private static final ResourceLocation flare = new ResourceLocation(RefStrings.MODID + ":textures/particle/flare.png");
+    private static final ResourceLocation flare = new ResourceLocation(Tags.MODID + ":textures/particle/flare.png");
     public static void renderFlare(Entity bullet, float interp, float r, float g, float b) {
 
         if(bullet.ticksExisted < 2) return;

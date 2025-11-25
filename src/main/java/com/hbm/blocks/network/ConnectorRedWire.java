@@ -2,10 +2,10 @@ package com.hbm.blocks.network;
 
 
 import com.google.common.collect.ImmutableMap;
+import com.hbm.Tags;
 import com.hbm.blocks.ICustomBlockItem;
 import com.hbm.blocks.network.energy.PylonBase;
 import com.hbm.items.IDynamicModels;
-import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.network.TileEntityConnector;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -143,7 +143,7 @@ public class ConnectorRedWire extends PylonBase implements ICustomBlockItem {
         public void bakeModel(ModelBakeEvent event) {
             try {
                 IModel baseModel = ModelLoaderRegistry.getModel(new ResourceLocation("minecraft", "item/generated"));
-                ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, ROOT_PATH + texturePath);
+                ResourceLocation spriteLoc = new ResourceLocation(Tags.MODID, ROOT_PATH + texturePath);
                 IModel retexturedModel = baseModel.retexture(ImmutableMap.of("layer0", spriteLoc.toString()));
                 IBakedModel bakedModel = retexturedModel.bake(ModelRotation.X0_Y0, DefaultVertexFormats.ITEM, ModelLoader.defaultTextureGetter());
                 ModelResourceLocation bakedModelLocation = new ModelResourceLocation(spriteLoc, "inventory");
@@ -155,12 +155,12 @@ public class ConnectorRedWire extends PylonBase implements ICustomBlockItem {
 
         @Override
         public void registerModel() {
-            ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(new ResourceLocation(RefStrings.MODID, ROOT_PATH + texturePath), "inventory"));
+            ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(new ResourceLocation(Tags.MODID, ROOT_PATH + texturePath), "inventory"));
         }
 
         @Override
         public void registerSprite(TextureMap map) {
-            map.registerSprite(new ResourceLocation(RefStrings.MODID, ROOT_PATH + texturePath));
+            map.registerSprite(new ResourceLocation(Tags.MODID, ROOT_PATH + texturePath));
         }
     }
 }

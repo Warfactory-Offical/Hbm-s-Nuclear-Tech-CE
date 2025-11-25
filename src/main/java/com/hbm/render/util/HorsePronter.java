@@ -1,7 +1,7 @@
 package com.hbm.render.util;
 
+import com.hbm.Tags;
 import com.hbm.render.loader.HFRWavefrontObject;
-import com.hbm.lib.RefStrings;
 import com.hbm.render.loader.IModelCustom;
 import com.hbm.render.amlfrom1710.Vec3;
 import net.minecraft.util.ResourceLocation;
@@ -9,9 +9,9 @@ import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManage
 
 public class HorsePronter {
 
-    public static final IModelCustom horse = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/mobs/horse.obj")).asVBO();
+    public static final IModelCustom horse = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/mobs/horse.obj")).asVBO();
 
-    public static final ResourceLocation tex_demohorse = new ResourceLocation(RefStrings.MODID, "textures/models/horse/horse_demo.png");
+    public static final ResourceLocation tex_demohorse = new ResourceLocation(Tags.MODID, "textures/models/horse/horse_demo.png");
 
     private static Vec3[] pose = new Vec3[] {
             Vec3.createVectorHelper(0, 0, 0), //head

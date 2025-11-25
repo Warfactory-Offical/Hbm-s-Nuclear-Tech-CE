@@ -1,6 +1,6 @@
 package com.hbm.particle;
 
-import com.hbm.lib.RefStrings;
+import com.hbm.Tags;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.*;
@@ -17,7 +17,7 @@ import java.util.Random;
 
 public class ParticleHaze extends Particle {
 
-	private static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/particle/haze.png");
+	private static final ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/particle/haze.png");
 	private int maxAge;
 	
 	public ParticleHaze(World worldIn, double posXIn, double posYIn, double posZIn){

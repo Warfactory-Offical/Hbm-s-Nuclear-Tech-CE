@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerAutocrafter;
-import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.TileEntityMachineAutocrafter;
 import com.hbm.util.I18nUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
@@ -17,7 +17,7 @@ import java.util.Arrays;
 
 public class GUIAutocrafter extends GuiInfoContainer {
 
-    private static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/processing/gui_autocrafter.png");
+    private static final ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/processing/gui_autocrafter.png");
     private final TileEntityMachineAutocrafter diFurnace;
 
     public GUIAutocrafter(InventoryPlayer invPlayer, TileEntityMachineAutocrafter tedf) {

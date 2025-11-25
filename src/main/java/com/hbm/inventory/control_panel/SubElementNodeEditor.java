@@ -1,9 +1,9 @@
 package com.hbm.inventory.control_panel;
 
+import com.hbm.Tags;
 import com.hbm.inventory.control_panel.modular.INodeMenuCreator;
 import com.hbm.inventory.control_panel.modular.NTMControlPanelRegistry;
 import com.hbm.inventory.control_panel.nodes.*;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.ClientProxy;
 import com.hbm.render.NTMRenderHelper;
 import net.minecraft.client.gui.GuiButton;
@@ -19,8 +19,8 @@ import java.util.*;
 
 public class SubElementNodeEditor extends SubElement {
 
-	public static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/control_panel/gui_placement_front.png");
-	public static ResourceLocation grid = new ResourceLocation(RefStrings.MODID + ":textures/gui/control_panel/grid.png");
+	public static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/control_panel/gui_placement_front.png");
+	public static ResourceLocation grid = new ResourceLocation(Tags.MODID + ":textures/gui/control_panel/grid.png");
 	
 	public GuiButton btn_back;
 	public GuiButton btn_variables;

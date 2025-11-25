@@ -1,6 +1,6 @@
 package com.hbm.packet;
 
-import com.hbm.lib.RefStrings;
+import com.hbm.Tags;
 import com.hbm.main.NetworkHandler;
 import com.hbm.packet.toclient.*;
 import com.hbm.packet.toserver.*;
@@ -10,7 +10,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class PacketDispatcher {
 	
-	public static final NetworkHandler wrapper = new NetworkHandler(RefStrings.MODID);
+	public static final NetworkHandler wrapper = new NetworkHandler(Tags.MODID);
 	
 	public static void registerPackets(){
 		int i = 0;

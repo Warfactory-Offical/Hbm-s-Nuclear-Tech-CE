@@ -1,6 +1,6 @@
 package com.hbm.particle;
 
-import com.hbm.lib.RefStrings;
+import com.hbm.Tags;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -18,7 +18,7 @@ import org.lwjgl.opengl.GL11;
 @SideOnly(Side.CLIENT)
 public class ParticleMukeWave extends Particle {
 
-    private static final ResourceLocation TEXTURE = new ResourceLocation(RefStrings.MODID, "textures/particle/shockwave.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(Tags.MODID, "textures/particle/shockwave.png");
     private float waveScale = 45.0F;
 
     public ParticleMukeWave(World world, double x, double y, double z) {

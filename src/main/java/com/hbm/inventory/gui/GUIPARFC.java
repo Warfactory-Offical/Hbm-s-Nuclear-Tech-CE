@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerPARFC;
-import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.albion.TileEntityPARFC;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -12,7 +12,7 @@ import org.lwjgl.opengl.GL11;
 
 public class GUIPARFC extends GuiInfoContainer {
 
-    private static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/particleaccelerator/gui_rfc.png");
+    private static final ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/particleaccelerator/gui_rfc.png");
     private final TileEntityPARFC quadrupole;
 
     public GUIPARFC(InventoryPlayer player, TileEntityPARFC slopper) {

@@ -1,5 +1,6 @@
 package com.hbm.items.weapon.sedna.factory;
 
+import com.hbm.Tags;
 import com.hbm.capability.HbmLivingCapability;
 import com.hbm.capability.HbmLivingProps;
 import com.hbm.entity.effect.EntityFireLingering;
@@ -16,13 +17,9 @@ import com.hbm.items.weapon.sedna.mags.MagazineBelt;
 import com.hbm.items.weapon.sedna.mags.MagazineFullReload;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
-import com.hbm.render.anim.BusAnimation;
-import com.hbm.render.anim.BusAnimationSequence;
-import com.hbm.render.anim.HbmAnimations;
 import com.hbm.render.anim.sedna.BusAnimationKeyframeSedna.IType;
 import com.hbm.render.anim.sedna.BusAnimationSedna;
 import com.hbm.render.anim.sedna.BusAnimationSequenceSedna;
@@ -48,7 +45,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
 public class XFactoryEnergy {
-    public static final ResourceLocation scope_luna = new ResourceLocation(RefStrings.MODID, "textures/misc/scope_luna.png");
+    public static final ResourceLocation scope_luna = new ResourceLocation(Tags.MODID, "textures/misc/scope_luna.png");
 
     public static BulletConfig energy_tesla;
     public static BulletConfig energy_tesla_overcharge;

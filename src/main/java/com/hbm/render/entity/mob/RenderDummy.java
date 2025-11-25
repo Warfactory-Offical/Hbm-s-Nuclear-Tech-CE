@@ -1,8 +1,8 @@
 package com.hbm.render.entity.mob;
 
+import com.hbm.Tags;
 import com.hbm.entity.mob.EntityDummy;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.lib.RefStrings;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -28,6 +28,6 @@ public class RenderDummy extends RenderBiped<EntityDummy> {
 
     @Override
     protected ResourceLocation getEntityTexture(EntityDummy entity) {
-        return new ResourceLocation(RefStrings.MODID, "textures/entity/dummy.png");
+        return new ResourceLocation(Tags.MODID, "textures/entity/dummy.png");
     }
 }

@@ -1,10 +1,10 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerCombustionEngine;
 import com.hbm.inventory.fluid.trait.FT_Combustible;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemPistons;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.machine.TileEntityMachineCombustionEngine;
@@ -25,7 +25,7 @@ import net.minecraft.util.math.MathHelper;
 public class GUICombustionEngine extends GuiInfoContainer {
 
   private static final ResourceLocation texture =
-      new ResourceLocation(RefStrings.MODID + ":textures/gui/generators/gui_combustion.png");
+      new ResourceLocation(Tags.MODID + ":textures/gui/generators/gui_combustion.png");
   private final TileEntityMachineCombustionEngine engine;
   private int setting;
   private boolean isMouseLocked = false;

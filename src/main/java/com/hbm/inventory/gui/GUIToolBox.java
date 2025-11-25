@@ -1,8 +1,8 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerToolBox;
 import com.hbm.items.tool.ItemToolBox.InventoryToolBox;
-import com.hbm.lib.RefStrings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -11,7 +11,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 
 public class GUIToolBox extends GuiContainer {
-    private final static ResourceLocation texture = new ResourceLocation(RefStrings.MODID, "textures/gui/gui_toolbox.png");
+    private final static ResourceLocation texture = new ResourceLocation(Tags.MODID, "textures/gui/gui_toolbox.png");
     private final InventoryToolBox inventory;
 
     public GUIToolBox(InventoryPlayer invPlayer, InventoryToolBox box) {

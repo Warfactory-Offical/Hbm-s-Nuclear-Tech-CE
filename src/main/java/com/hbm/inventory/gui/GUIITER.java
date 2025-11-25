@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerITER;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.AuxButtonPacket;
 import com.hbm.tileentity.machine.TileEntityITER;
@@ -18,7 +18,7 @@ import java.io.IOException;
 
 public class GUIITER extends GuiInfoContainer {
 
-	public static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/reactors/gui_fusion_multiblock.png");
+	public static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/reactors/gui_fusion_multiblock.png");
 	private TileEntityITER iter;
 
 	public GUIITER(InventoryPlayer invPlayer, TileEntityITER laser) {
