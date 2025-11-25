@@ -25,15 +25,13 @@ import java.util.List;
 
 public class ItemDepletedFuel extends ItemNuclearWaste implements IDynamicModels {
 
-    private static final List<ItemDepletedFuel> INSTANCES = new ArrayList<>();
 
     public ItemDepletedFuel(String s) {
         super(s);
         this.setHasSubtypes(true);
         this.setMaxDamage(0);
-        if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
-            INSTANCES.add(this);
-        }
+        IDynamicModels.INSTANCES.add(this);
+
     }
 
     @Override
