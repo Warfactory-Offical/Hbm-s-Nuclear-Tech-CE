@@ -1,6 +1,7 @@
 package com.hbm.main;
 
 import com.google.common.collect.Multimap;
+import com.hbm.Tags;
 import com.hbm.blocks.IStepTickReceiver;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.HbmCapability;
@@ -38,7 +39,6 @@ import com.hbm.items.weapon.sedna.factory.XFactory12ga;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.lib.ModDamageSource;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.*;
 import com.hbm.particle.bullet_hit.EntityHitDataHandler;
@@ -131,8 +131,8 @@ import java.util.Map.Entry;
 
 public class ModEventHandler {
 
-    public static final ResourceLocation ENT_HBM_PROP_ID = new ResourceLocation(RefStrings.MODID, "HBMLIVINGPROPS");
-    public static final ResourceLocation DATA_LOC = new ResourceLocation(RefStrings.MODID, "HBMDATA");
+    public static final ResourceLocation ENT_HBM_PROP_ID = new ResourceLocation(Tags.MODID, "HBMLIVINGPROPS");
+    public static final ResourceLocation DATA_LOC = new ResourceLocation(Tags.MODID, "HBMDATA");
     private static final Set<String> hashes = new HashSet();
     public static boolean showMessage = true;
     public static Random rand = new Random();
@@ -1246,7 +1246,7 @@ public class ModEventHandler {
 
             if (HTTPHandler.newVersion && GeneralConfig.changelog) {
                 event.player.sendMessage(new TextComponentTranslation("chat.newver", HTTPHandler.versionNumber));
-                event.player.sendMessage(new TextComponentTranslation("chat.curver", RefStrings.VERSION));
+                event.player.sendMessage(new TextComponentTranslation("chat.curver", Tags.VERSION));
 
                 if (HTTPHandler.changes != "") {
                     String[] lines = HTTPHandler.changes.split("\\$");
@@ -1315,7 +1315,7 @@ public class ModEventHandler {
 
     @SubscribeEvent
     public void onDataSerializerRegister(RegistryEvent.Register<DataSerializerEntry> evt) {
-        evt.getRegistry().register(new DataSerializerEntry(MissileStruct.SERIALIZER).setRegistryName(new ResourceLocation(RefStrings.MODID, "missile_struct")));
+        evt.getRegistry().register(new DataSerializerEntry(MissileStruct.SERIALIZER).setRegistryName(new ResourceLocation(Tags.MODID, "missile_struct")));
     }
 
     @SubscribeEvent

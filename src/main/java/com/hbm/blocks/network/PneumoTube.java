@@ -1,5 +1,6 @@
 package com.hbm.blocks.network;
 
+import com.hbm.Tags;
 import com.hbm.api.block.IToolable;
 import com.hbm.blocks.ITooltipProvider;
 import com.hbm.blocks.ModBlocks;
@@ -7,7 +8,6 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.IDynamicModels;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.render.model.PneumoTubeBakedModel;
 import com.hbm.tileentity.network.TileEntityPneumoTube;
@@ -268,11 +268,11 @@ public class PneumoTube extends BlockContainer implements IToolable, ITooltipPro
     @Override
     @SideOnly(Side.CLIENT)
     public void registerSprite(TextureMap map) {
-        iconBase = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/pneumatic_tube"));
-        iconStraight = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/pneumatic_tube_straight"));
-        iconIn = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/pneumatic_tube_in"));
-        iconOut = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/pneumatic_tube_out"));
-        iconConnector = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/pneumatic_tube_connector"));
+        iconBase = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/pneumatic_tube"));
+        iconStraight = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/pneumatic_tube_straight"));
+        iconIn = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/pneumatic_tube_in"));
+        iconOut = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/pneumatic_tube_out"));
+        iconConnector = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/pneumatic_tube_connector"));
     }
 
     @Override

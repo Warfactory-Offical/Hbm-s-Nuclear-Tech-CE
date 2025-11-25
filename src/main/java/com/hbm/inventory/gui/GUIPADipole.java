@@ -1,8 +1,8 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerPADipole;
 import com.hbm.items.ModItems;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.machine.albion.TileEntityPADipole;
@@ -28,7 +28,7 @@ import java.io.IOException;
 
 public class GUIPADipole extends GuiInfoContainer {
 
-    private static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/particleaccelerator/gui_dipole.png");
+    private static final ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/particleaccelerator/gui_dipole.png");
     private final TileEntityPADipole dipole;
 
     protected GuiTextField threshold;

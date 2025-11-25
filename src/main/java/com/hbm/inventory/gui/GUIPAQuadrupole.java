@@ -1,8 +1,8 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerPAQuadrupole;
 import com.hbm.items.ModItems;
-import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.albion.TileEntityPAQuadrupole;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -13,7 +13,7 @@ import net.minecraft.util.text.TextFormatting;
 
 public class GUIPAQuadrupole extends GuiInfoContainer {
 
-    private static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/particleaccelerator/gui_quadrupole.png");
+    private static final ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/particleaccelerator/gui_quadrupole.png");
     private final TileEntityPAQuadrupole quadrupole;
 
     public GUIPAQuadrupole(InventoryPlayer player, TileEntityPAQuadrupole slopper) {

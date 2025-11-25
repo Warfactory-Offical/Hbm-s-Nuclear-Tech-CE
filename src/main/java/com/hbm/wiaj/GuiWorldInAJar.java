@@ -1,13 +1,12 @@
 package com.hbm.wiaj;
 
-import com.hbm.lib.RefStrings;
+import com.hbm.Tags;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.I18nUtil;
 import com.hbm.wiaj.actors.ActorFancyPanel;
 import com.hbm.wiaj.actors.ActorFancyPanel.Orientation;
 import com.hbm.wiaj.actors.ISpecialActor;
 import com.hbm.wiaj.cannery.CanneryBase;
-import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -21,7 +20,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
@@ -35,7 +33,7 @@ import java.util.Map.Entry;
 //krass
 public class GuiWorldInAJar extends GuiScreen {
 
-    private static final ResourceLocation guiUtil = new ResourceLocation(RefStrings.MODID + ":textures/gui/gui_utility.png");
+    private static final ResourceLocation guiUtil = new ResourceLocation(Tags.MODID + ":textures/gui/gui_utility.png");
 
     BlockRendererDispatcher renderer;
     BlockFluidRenderer fluidRenderer;

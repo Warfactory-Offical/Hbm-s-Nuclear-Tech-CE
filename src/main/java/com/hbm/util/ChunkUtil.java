@@ -1,11 +1,11 @@
 package com.hbm.util;
 
+import com.hbm.Tags;
 import com.hbm.config.GeneralConfig;
 import com.hbm.interfaces.BitMask;
 import com.hbm.interfaces.ServerThread;
 import com.hbm.interfaces.ThreadSafeMethod;
 import com.hbm.lib.Library;
-import com.hbm.lib.RefStrings;
 import com.hbm.lib.UnsafeHolder;
 import com.hbm.lib.maps.NonBlockingHashMapLong;
 import com.hbm.main.MainRegistry;
@@ -110,7 +110,7 @@ import static com.hbm.lib.UnsafeHolder.U;
  *
  * @author mlbv
  */
-@Mod.EventBusSubscriber(modid = RefStrings.MODID)
+@Mod.EventBusSubscriber(modid = Tags.MODID)
 public final class ChunkUtil {
 
     private static final long ARR_BASE = U.arrayBaseOffset(ExtendedBlockStorage[].class);

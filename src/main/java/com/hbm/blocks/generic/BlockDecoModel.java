@@ -1,9 +1,9 @@
 package com.hbm.blocks.generic;
 
+import com.hbm.Tags;
 import com.hbm.blocks.BlockEnumMeta;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.render.loader.HFRWavefrontObject;
-import com.hbm.lib.RefStrings;
 import com.hbm.render.model.BlockDecoBakedModel;
 import com.hbm.world.gen.nbt.INBTBlockTransformable;
 import net.minecraft.block.Block;
@@ -181,7 +181,7 @@ public class BlockDecoModel extends BlockEnumMeta implements INBTBlockTransforma
 
     @SideOnly(Side.CLIENT)
     public void registerSprite(TextureMap map) {
-        map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/deco_computer"));
+        map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/deco_computer"));
     }
 
     @Override

@@ -1,8 +1,8 @@
 package com.hbm.blocks.generic;
 
+import com.hbm.Tags;
 import com.hbm.blocks.BlockEnums;
 import com.hbm.render.loader.HFRWavefrontObject;
-import com.hbm.lib.RefStrings;
 import com.hbm.render.model.BlockDecoBakedModel;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -13,12 +13,9 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -32,33 +29,33 @@ public class BlockDecoCRT extends BlockDecoModel {
 
     public BlockDecoCRT(Material mat, SoundType type, String registryName) {
         super(mat, type, registryName, BlockEnums.DecoCRTEnum.class, false, true,
-                new ResourceLocation(RefStrings.MODID, "models/blocks/crt.obj"));
+                new ResourceLocation(Tags.MODID, "models/blocks/crt.obj"));
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void registerSprite(TextureMap map) {
-        map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/crt_clean"));
-        map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/crt_broken"));
-        map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/crt_blinking"));
-        map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/crt_bsod"));
+        map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crt_clean"));
+        map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crt_broken"));
+        map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crt_blinking"));
+        map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/crt_bsod"));
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void bakeModel(ModelBakeEvent event) {
-        HFRWavefrontObject wavefront = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/blocks/crt.obj"));
+        HFRWavefrontObject wavefront = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/blocks/crt.obj"));
         TextureMap atlas = Minecraft.getMinecraft().getTextureMapBlocks();
 
         String[] variants = new String[]{"crt_clean", "crt_broken", "crt_blinking", "crt_bsod"};
         for (int m = 0; m < variants.length; m++) {
-            TextureAtlasSprite sprite = atlas.getAtlasSprite(new ResourceLocation(RefStrings.MODID, "blocks/" + variants[m]).toString());
+            TextureAtlasSprite sprite = atlas.getAtlasSprite(new ResourceLocation(Tags.MODID, "blocks/" + variants[m]).toString());
             IBakedModel bakedWorld = BlockDecoBakedModel.forBlock(wavefront, sprite, -0.5F, -1);
             ModelResourceLocation mrlWorld = new ModelResourceLocation(getRegistryName(), "meta=" + m);
             event.getModelRegistry().putObject(mrlWorld, bakedWorld);
 
             IBakedModel bakedItem = new BlockDecoBakedModel(wavefront, sprite, false, 1.0F, 0.0F, -0.5F, 0.0F, 2);
-            ModelResourceLocation mrlItem = new ModelResourceLocation(new ResourceLocation(RefStrings.MODID, getRegistryName().getPath() + "_item_" + m), "inventory");
+            ModelResourceLocation mrlItem = new ModelResourceLocation(new ResourceLocation(Tags.MODID, getRegistryName().getPath() + "_item_" + m), "inventory");
             event.getModelRegistry().putObject(mrlItem, bakedItem);
         }
     }
@@ -86,7 +83,7 @@ public class BlockDecoCRT extends BlockDecoModel {
         Item item = Item.getItemFromBlock(this);
         int count = 4; // CLEAN, BROKEN, BLINKING, BSOD
         for (int m = 0; m < count; m++) {
-            ModelResourceLocation inv = new ModelResourceLocation(new ResourceLocation(RefStrings.MODID, getRegistryName().getPath() + "_item_" + m), "inventory");
+            ModelResourceLocation inv = new ModelResourceLocation(new ResourceLocation(Tags.MODID, getRegistryName().getPath() + "_item_" + m), "inventory");
             ModelLoader.setCustomModelResourceLocation(item, m, inv);
         }
     }

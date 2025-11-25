@@ -1,11 +1,11 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.recipes.AssemblerRecipes;
 import com.hbm.inventory.recipes.CrucibleRecipes;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemCassette;
 import com.hbm.items.machine.ItemStamp;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.ItemFolderPacket;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -29,8 +29,8 @@ import java.util.Locale;
 
 public class GUIScreenTemplateFolder extends GuiScreen {
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(RefStrings.MODID, "textures/gui/gui_planner.png");
-	private static final ResourceLocation TEXTURE_JOURNAL = new ResourceLocation(RefStrings.MODID, "textures/gui/gui_planner_journal.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(Tags.MODID, "textures/gui/gui_planner.png");
+	private static final ResourceLocation TEXTURE_JOURNAL = new ResourceLocation(Tags.MODID, "textures/gui/gui_planner_journal.png");
 	private final boolean isJournal;
 	private final List<ItemStack> allStacks = new ArrayList<>();
 	private final List<ItemStack> stacks = new ArrayList<>();

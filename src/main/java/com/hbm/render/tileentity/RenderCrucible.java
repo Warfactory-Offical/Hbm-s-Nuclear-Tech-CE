@@ -1,10 +1,10 @@
 package com.hbm.render.tileentity;
 
+import com.hbm.Tags;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.material.Mats;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.item.ItemRenderBase;
 import com.hbm.tileentity.machine.TileEntityCrucible;
@@ -31,7 +31,7 @@ public class RenderCrucible extends TileEntitySpecialRenderer<TileEntityCrucible
     implements IItemRendererProvider, ITileActorRenderer {
 
   public static final ResourceLocation lava =
-      new ResourceLocation(RefStrings.MODID, "textures/models/machines/lava.png");
+      new ResourceLocation(Tags.MODID, "textures/models/machines/lava.png");
 
   @Override
   public void render(

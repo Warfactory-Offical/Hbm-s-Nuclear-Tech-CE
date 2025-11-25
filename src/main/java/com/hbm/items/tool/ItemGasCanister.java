@@ -1,9 +1,9 @@
 package com.hbm.items.tool;
 
+import com.hbm.Tags;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ModItems;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.color.IItemColor;
@@ -24,7 +24,7 @@ import java.util.List;
 public class ItemGasCanister extends Item {
 
 	public static final ModelResourceLocation gasCansiterFullModel = new ModelResourceLocation(
-			RefStrings.MODID + ":gas_full", "inventory");
+			Tags.MODID + ":gas_full", "inventory");
 	
 
 	public ItemGasCanister(String s){

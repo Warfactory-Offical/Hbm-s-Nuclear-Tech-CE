@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.api.entity.RadarEntry;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.render.amlfrom1710.Vec3;
@@ -18,14 +18,14 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 import java.util.Arrays;
 
 public class GUIMachineRadarNT extends GuiScreen {
 
-    public static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/machine/gui_radar_nt.png");
+    public static final ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/machine/gui_radar_nt.png");
 
     protected TileEntityMachineRadarNT radar;
     protected int xSize = 216;

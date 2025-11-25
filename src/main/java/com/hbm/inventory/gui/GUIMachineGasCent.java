@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerMachineGasCent;
-import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.TileEntityMachineGasCent;
 import com.hbm.util.I18nUtil;
 import com.hbm.util.RenderUtil;
@@ -19,7 +19,7 @@ import org.lwjgl.opengl.GL11;
 public class GUIMachineGasCent extends GuiInfoContainer {
 
   private static final ResourceLocation TEXTURE =
-      new ResourceLocation(RefStrings.MODID + ":textures/gui/processing/gui_centrifuge_gas.png");
+      new ResourceLocation(Tags.MODID + ":textures/gui/processing/gui_centrifuge_gas.png");
 
   private final TileEntityMachineGasCent gasCent;
 

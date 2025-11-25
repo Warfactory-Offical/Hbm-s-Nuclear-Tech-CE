@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerMachineWoodBurner;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.machine.TileEntityMachineWoodBurner;
@@ -24,7 +24,7 @@ import java.util.List;
 public class GUIMachineWoodBurner extends GuiInfoContainer {
 	
 	private TileEntityMachineWoodBurner burner;
-	private final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/generators/gui_wood_burner_alt.png");
+	private final ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/generators/gui_wood_burner_alt.png");
 
 	public GUIMachineWoodBurner(InventoryPlayer invPlayer, TileEntityMachineWoodBurner tedf) {
 		super(new ContainerMachineWoodBurner(invPlayer, tedf));

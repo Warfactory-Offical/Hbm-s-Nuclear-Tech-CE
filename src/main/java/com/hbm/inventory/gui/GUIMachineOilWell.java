@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerMachineOilWell;
-import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.oil.TileEntityOilDrillBase;
 import com.hbm.util.I18nUtil;
 import net.minecraft.client.Minecraft;
@@ -13,7 +13,7 @@ import org.lwjgl.opengl.GL11;
 
 public class GUIMachineOilWell extends GuiInfoContainer {
 
-	private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/machine/gui_well.png");
+	private static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/machine/gui_well.png");
 	private TileEntityOilDrillBase derrick;
 	
 	public GUIMachineOilWell(InventoryPlayer invPlayer, TileEntityOilDrillBase tedf) {

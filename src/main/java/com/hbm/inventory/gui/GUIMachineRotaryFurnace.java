@@ -1,8 +1,8 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerMachineRotaryFurnace;
 import com.hbm.inventory.material.Mats;
-import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.TileEntityMachineRotaryFurnace;
 import com.hbm.util.I18nUtil;
 import com.hbm.util.RenderUtil;
@@ -22,7 +22,7 @@ import java.util.List;
 public class GUIMachineRotaryFurnace extends GuiInfoContainer {
 
   private static final ResourceLocation texture =
-      new ResourceLocation(RefStrings.MODID + ":textures/gui/processing/gui_rotary_furnace.png");
+      new ResourceLocation(Tags.MODID + ":textures/gui/processing/gui_rotary_furnace.png");
   private final TileEntityMachineRotaryFurnace furnace;
 
   public GUIMachineRotaryFurnace(InventoryPlayer playerInv, TileEntityMachineRotaryFurnace tile) {

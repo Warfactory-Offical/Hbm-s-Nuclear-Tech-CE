@@ -1,11 +1,11 @@
 package com.hbm.blocks.network;
 
+import com.hbm.Tags;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
-import com.hbm.lib.RefStrings;
 import com.hbm.render.model.DuctBakedModel;
 import com.hbm.tileentity.network.TileEntityPipeExhaust;
 import com.hbm.util.I18nUtil;
@@ -104,14 +104,14 @@ public class FluidDuctBoxExhaust extends FluidDuctBox {
     @SideOnly(Side.CLIENT)
     @Override
     public void registerSprite(TextureMap map) {
-        iconStraight[0] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/boxduct_exhaust_straight"));
-        iconEnd[0] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/boxduct_exhaust_end"));
-        iconCurveTL[0] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/boxduct_exhaust_curve_tl"));
-        iconCurveTR[0] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/boxduct_exhaust_curve_tr"));
-        iconCurveBL[0] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/boxduct_exhaust_curve_bl"));
-        iconCurveBR[0] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/boxduct_exhaust_curve_br"));
+        iconStraight[0] = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/boxduct_exhaust_straight"));
+        iconEnd[0] = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/boxduct_exhaust_end"));
+        iconCurveTL[0] = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/boxduct_exhaust_curve_tl"));
+        iconCurveTR[0] = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/boxduct_exhaust_curve_tr"));
+        iconCurveBL[0] = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/boxduct_exhaust_curve_bl"));
+        iconCurveBR[0] = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/boxduct_exhaust_curve_br"));
         for (int j = 0; j < 5; j++) {
-            iconJunction[0][j] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/boxduct_exhaust_junction_" + j));
+            iconJunction[0][j] = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/boxduct_exhaust_junction_" + j));
         }
     }
 

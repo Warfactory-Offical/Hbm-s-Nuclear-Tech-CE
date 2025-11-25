@@ -1,9 +1,9 @@
 package com.hbm.command;
 
 import com.google.common.collect.Lists;
+import com.hbm.Tags;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.handler.HbmShaderManager2;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.ResourceManager;
 import com.hbm.main.client.NTMClientRegistry;
 import com.hbm.render.GLCompat;
@@ -78,7 +78,7 @@ public class CommandHbm extends CommandBase {
 				if(FMLCommonHandler.instance().getSide() == Side.CLIENT){
 					Minecraft.getMinecraft().addScheduledTask(() -> {
 						ResourceManager.loadAnimatedModels();
-						ResourceManager.lit_particles = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/lit_particles"), shader -> {
+						ResourceManager.lit_particles = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/lit_particles"), shader -> {
 							GLCompat.bindAttribLocation(shader, 0, "pos");
 							GLCompat.bindAttribLocation(shader, 1, "offsetPos");
 							GLCompat.bindAttribLocation(shader, 2, "scale");
@@ -87,7 +87,7 @@ public class CommandHbm extends CommandBase {
 							GLCompat.bindAttribLocation(shader, 5, "lightmap");
 						}).withUniforms(HbmShaderManager2.MODELVIEW_MATRIX, HbmShaderManager2.PROJECTION_MATRIX, HbmShaderManager2.INV_PLAYER_ROT_MATRIX, HbmShaderManager2.LIGHTMAP);
 						
-						ResourceManager.gluon_beam = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/gluon_beam"))
+						ResourceManager.gluon_beam = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/gluon_beam"))
 								.withUniforms(shader -> {
 									GLCompat.activeTexture(GLCompat.GL_TEXTURE0+3);
 									Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.noise_1);
@@ -101,7 +101,7 @@ public class CommandHbm extends CommandBase {
 									shader.uniform1f("time", time);
 								});
 						
-						ResourceManager.gluon_spiral = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/gluon_spiral"))
+						ResourceManager.gluon_spiral = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/gluon_spiral"))
 								.withUniforms(shader -> {
 									//Well, I accidentally uniformed the same noise sampler twice. That explains why the second noise didn't work.
 									GLCompat.activeTexture(GLCompat.GL_TEXTURE0+3);
@@ -117,13 +117,13 @@ public class CommandHbm extends CommandBase {
 								});
 						
 						//Drillgon200: Did I need a shader for this? No, not really, but it's somewhat easier to create a sin wave pattern programmatically than to do it in paint.net.
-						ResourceManager.tau_ray = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/tau_ray"));
+						ResourceManager.tau_ray = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/tau_ray"));
 						
-						ResourceManager.book_circle = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/book/circle"));
+						ResourceManager.book_circle = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/book/circle"));
 						
-						ResourceManager.normal_fadeout = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/normal_fadeout"));
+						ResourceManager.normal_fadeout = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/normal_fadeout"));
 						
-						ResourceManager.heat_distortion = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/heat_distortion"))
+						ResourceManager.heat_distortion = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/heat_distortion"))
 								.withUniforms(shader -> {
 									Framebuffer buffer = Minecraft.getMinecraft().getFramebuffer();
 									GLCompat.activeTexture(GLCompat.GL_TEXTURE0+3);
@@ -139,18 +139,18 @@ public class CommandHbm extends CommandBase {
 									shader.uniform2f("windowSize", Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
 								});
 						
-						ResourceManager.desaturate = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/desaturate"));
-						ResourceManager.test_trail = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/trail"), shader ->{
+						ResourceManager.desaturate = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/desaturate"));
+						ResourceManager.test_trail = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/trail"), shader ->{
 							GLCompat.bindAttribLocation(shader, 0, "pos");
 							GLCompat.bindAttribLocation(shader, 1, "tex");
 							GLCompat.bindAttribLocation(shader, 2, "color");
 						});
-						ResourceManager.blit = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/blit"));
-						ResourceManager.downsample = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/downsample"));
-						ResourceManager.bloom_h = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/bloom_h"));
-						ResourceManager.bloom_v = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/bloom_v"));
-						ResourceManager.bloom_test = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/bloom_test"));
-						ResourceManager.lightning = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/lightning"), shader ->{
+						ResourceManager.blit = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/blit"));
+						ResourceManager.downsample = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/downsample"));
+						ResourceManager.bloom_h = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/bloom_h"));
+						ResourceManager.bloom_v = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/bloom_v"));
+						ResourceManager.bloom_test = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/bloom_test"));
+						ResourceManager.lightning = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/lightning"), shader ->{
 							GLCompat.bindAttribLocation(shader, 0, "pos");
 							GLCompat.bindAttribLocation(shader, 1, "tex");
 							GLCompat.bindAttribLocation(shader, 2, "color");
@@ -160,38 +160,38 @@ public class CommandHbm extends CommandBase {
 							shader.uniform1i("noise", 4);
 							GLCompat.activeTexture(GLCompat.GL_TEXTURE0);
 						});
-						ResourceManager.maxdepth = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/maxdepth"));
-						ResourceManager.lightning_gib = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/lightning_gib")).withUniforms(HbmShaderManager2.LIGHTMAP, shader -> {
+						ResourceManager.maxdepth = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/maxdepth"));
+						ResourceManager.lightning_gib = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/lightning_gib")).withUniforms(HbmShaderManager2.LIGHTMAP, shader -> {
 							GLCompat.activeTexture(GLCompat.GL_TEXTURE0+4);
 							Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.noise_2);
 							shader.uniform1i("noise", 4);
 							GLCompat.activeTexture(GLCompat.GL_TEXTURE0);
 						});
-						ResourceManager.testlut = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/testlut"));
-						ResourceManager.flashlight_nogeo = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/flashlight_nogeo"));
-						ResourceManager.flashlight_deferred = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/flashlight_deferred")).withUniforms(shader -> {
+						ResourceManager.testlut = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/testlut"));
+						ResourceManager.flashlight_nogeo = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/flashlight_nogeo"));
+						ResourceManager.flashlight_deferred = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/flashlight_deferred")).withUniforms(shader -> {
 							shader.uniform2f("windowSize", Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
 						});
 						
 						
 						//The actual shaders used in flashlight rendering, not experimental
-						ResourceManager.albedo = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/lighting/albedo"));
-						ResourceManager.flashlight_depth = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/lighting/flashlight_depth"));
-						ResourceManager.flashlight_post = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/lighting/flashlight_post")).withUniforms(shader -> {
+						ResourceManager.albedo = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/lighting/albedo"));
+						ResourceManager.flashlight_depth = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/lighting/flashlight_depth"));
+						ResourceManager.flashlight_post = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/lighting/flashlight_post")).withUniforms(shader -> {
 							shader.uniform2f("windowSize", Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
 						});
-						ResourceManager.pointlight_post = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/lighting/pointlight_post")).withUniforms(shader -> {
+						ResourceManager.pointlight_post = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/lighting/pointlight_post")).withUniforms(shader -> {
 							shader.uniform2f("windowSize", Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
 						});
-						ResourceManager.cone_volume = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/lighting/cone_volume")).withUniforms(shader -> {
+						ResourceManager.cone_volume = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/lighting/cone_volume")).withUniforms(shader -> {
 							shader.uniform2f("windowSize", Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
 						});
-						ResourceManager.flashlight_blit = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/lighting/blit"));
-						ResourceManager.volume_upscale = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/lighting/volume_upscale")).withUniforms(shader -> {
+						ResourceManager.flashlight_blit = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/lighting/blit"));
+						ResourceManager.volume_upscale = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/lighting/volume_upscale")).withUniforms(shader -> {
 							shader.uniform2f("windowSize", Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
 						});
 						
-						ResourceManager.heat_distortion_post = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/heat_distortion_post")).withUniforms(shader ->{
+						ResourceManager.heat_distortion_post = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/heat_distortion_post")).withUniforms(shader ->{
 							shader.uniform2f("windowSize", Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight);
 							GlStateManager.setActiveTexture(GLCompat.GL_TEXTURE0+4);
 							Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.noise_2);
@@ -201,8 +201,8 @@ public class CommandHbm extends CommandBase {
 							shader.uniform1f("time", time);
 						});
 						
-						ResourceManager.heat_distortion_new = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/heat_distortion_new"));
-						ResourceManager.crucible_lightning = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/crucible_lightning"), shader ->{
+						ResourceManager.heat_distortion_new = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/heat_distortion_new"));
+						ResourceManager.crucible_lightning = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/crucible_lightning"), shader ->{
 							GLCompat.bindAttribLocation(shader, 0, "pos");
 							GLCompat.bindAttribLocation(shader, 1, "tex");
 							GLCompat.bindAttribLocation(shader, 2, "in_color");
@@ -212,19 +212,19 @@ public class CommandHbm extends CommandBase {
 							shader.uniform1i("noise", 4);
 							GLCompat.activeTexture(GLCompat.GL_TEXTURE0);
 						});
-						ResourceManager.flash_lmap = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/flash_lmap")).withUniforms(HbmShaderManager2.LIGHTMAP);
-						ResourceManager.bimpact = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/bimpact"), shader -> {
+						ResourceManager.flash_lmap = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/flash_lmap")).withUniforms(HbmShaderManager2.LIGHTMAP);
+						ResourceManager.bimpact = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/bimpact"), shader -> {
 							GLCompat.bindAttribLocation(shader, 0, "pos");
 							GLCompat.bindAttribLocation(shader, 1, "vColor");
 							GLCompat.bindAttribLocation(shader, 3, "tex");
 							GLCompat.bindAttribLocation(shader, 4, "lightTex");
 							GLCompat.bindAttribLocation(shader, 5, "projTex");
 						}).withUniforms(HbmShaderManager2.LIGHTMAP, HbmShaderManager2.WINDOW_SIZE);
-						ResourceManager.blood_dissolve = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/blood/blood")).withUniforms(HbmShaderManager2.LIGHTMAP);
-						ResourceManager.gravitymap_render = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/blood/gravitymap"));
-						ResourceManager.blood_flow_update = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/blood/blood_flow_update"));
+						ResourceManager.blood_dissolve = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/blood/blood")).withUniforms(HbmShaderManager2.LIGHTMAP);
+						ResourceManager.gravitymap_render = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/blood/gravitymap"));
+						ResourceManager.blood_flow_update = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/blood/blood_flow_update"));
 						
-						ResourceManager.gpu_particle_render = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/gpu_particle_render")).withUniforms(HbmShaderManager2.MODELVIEW_MATRIX, HbmShaderManager2.PROJECTION_MATRIX, HbmShaderManager2.INV_PLAYER_ROT_MATRIX, shader -> {
+						ResourceManager.gpu_particle_render = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/gpu_particle_render")).withUniforms(HbmShaderManager2.MODELVIEW_MATRIX, HbmShaderManager2.PROJECTION_MATRIX, HbmShaderManager2.INV_PLAYER_ROT_MATRIX, shader -> {
 							shader.uniform1i("lightmap", 1);
 							shader.uniform1i("particleData0", 2);
 							shader.uniform1i("particleData1", 3);
@@ -232,7 +232,7 @@ public class CommandHbm extends CommandBase {
 							shader.uniform4f("particleTypeTexCoords[0]", NTMClientRegistry.contrail.getMinU(), NTMClientRegistry.contrail.getMinV(), NTMClientRegistry.contrail.getMaxU() - NTMClientRegistry.contrail.getMinU(), NTMClientRegistry.contrail.getMaxV() - NTMClientRegistry.contrail.getMinV());
 						});
 
-						ResourceManager.gpu_particle_udpate = HbmShaderManager2.loadShader(new ResourceLocation(RefStrings.MODID, "shaders/gpu_particle_update")).withUniforms(shader -> {
+						ResourceManager.gpu_particle_udpate = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/gpu_particle_update")).withUniforms(shader -> {
 							shader.uniform1i("particleData0", 2);
 							shader.uniform1i("particleData1", 3);
 							shader.uniform1i("particleData2", 4);

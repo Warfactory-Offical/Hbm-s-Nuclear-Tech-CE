@@ -1,9 +1,9 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemMachineUpgrade.UpgradeType;
 import com.hbm.lib.Library;
-import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.IUpgradeInfoProvider;
 import com.hbm.util.I18nUtil;
 import net.minecraft.client.Minecraft;
@@ -28,7 +28,7 @@ import java.util.List;
 public abstract class GuiInfoContainer extends GuiContainer {
 
   ResourceLocation guiUtil =
-      new ResourceLocation(RefStrings.MODID + ":textures/gui/gui_utility.png");
+      new ResourceLocation(Tags.MODID + ":textures/gui/gui_utility.png");
 
   public GuiInfoContainer(Container inventorySlotsIn) {
     super(inventorySlotsIn);

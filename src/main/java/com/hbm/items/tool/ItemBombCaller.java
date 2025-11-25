@@ -1,11 +1,11 @@
 package com.hbm.items.tool;
 
+import com.hbm.Tags;
 import com.hbm.entity.logic.EntityBomber;
 import com.hbm.items.IDynamicModels;
 import com.hbm.items.ItemBakedBase;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
-import com.hbm.lib.RefStrings;
 import com.hbm.util.I18nUtil;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
@@ -199,7 +199,7 @@ public class ItemBombCaller extends ItemBakedBase implements IDynamicModels {
           this,
           i,
           new ModelResourceLocation(
-              new ResourceLocation(RefStrings.MODID, ROOT_PATH + texturePath), "inventory"));
+              new ResourceLocation(Tags.MODID, ROOT_PATH + texturePath), "inventory"));
     }
   }
 }

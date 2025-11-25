@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerCraneRouter;
-import com.hbm.lib.RefStrings;
 import com.hbm.modules.ModulePatternMatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.packet.PacketDispatcher;
@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 public class GUICraneRouter extends GuiInfoContainer {
-    private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/storage/gui_crane_router.png");
+    private static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/storage/gui_crane_router.png");
     private TileEntityCraneRouter router;
 
     public GUICraneRouter(InventoryPlayer invPlayer, TileEntityCraneRouter tedf) {

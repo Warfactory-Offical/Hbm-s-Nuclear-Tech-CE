@@ -1,8 +1,8 @@
 package com.hbm.render.tileentity;
 
+import com.hbm.Tags;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.item.ItemRenderBase;
 import com.hbm.tileentity.machine.oil.TileEntityMachineFrackingTower;
@@ -14,7 +14,7 @@ import org.lwjgl.opengl.GL11;
 @AutoRegister
 public class RenderFrackingTower extends TileEntitySpecialRenderer<TileEntityMachineFrackingTower>
     implements IItemRendererProvider {
-    public static final ResourceLocation pipe_tex = new ResourceLocation(RefStrings.MODID, "textures/blocks/pipe_silver.png");
+    public static final ResourceLocation pipe_tex = new ResourceLocation(Tags.MODID, "textures/blocks/pipe_silver.png");
 
   @Override
   public boolean isGlobalRenderer(TileEntityMachineFrackingTower te) {

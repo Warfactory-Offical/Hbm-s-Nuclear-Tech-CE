@@ -1,8 +1,8 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.lib.HBMSoundHandler;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKConsole;
@@ -34,7 +34,7 @@ import java.util.Locale;
 
 public class GUIRBMKConsole extends GuiScreen {
 
-	private static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/reactors/gui_rbmk_console.png");
+	private static final ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/reactors/gui_rbmk_console.png");
 	private final TileEntityRBMKConsole console;
 	protected int guiLeft;
 	protected int guiTop;

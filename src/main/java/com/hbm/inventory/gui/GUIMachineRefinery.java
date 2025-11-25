@@ -1,10 +1,10 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerMachineRefinery;
 import com.hbm.inventory.fluid.FluidStack;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.recipes.RefineryRecipes;
-import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.oil.TileEntityMachineRefinery;
 import com.hbm.util.RenderUtil;
 import com.hbm.util.Tuple;
@@ -20,7 +20,7 @@ import java.awt.*;
 
 public class GUIMachineRefinery extends GuiInfoContainer {
 
-	private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/gui_refinery.png");
+	private static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/gui_refinery.png");
 	private TileEntityMachineRefinery refinery;
 
 	public GUIMachineRefinery(InventoryPlayer invPlayer, TileEntityMachineRefinery tedf) {

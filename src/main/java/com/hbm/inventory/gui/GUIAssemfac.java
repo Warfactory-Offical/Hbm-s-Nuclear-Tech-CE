@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerAssemfac;
-import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.TileEntityMachineAssemfac;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -14,8 +14,8 @@ import org.lwjgl.opengl.GL11;
 
 public class GUIAssemfac extends GuiInfoContainer {
 
-    private static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/processing/gui_assemfac.png");
-    private static final ResourceLocation chemfac = new ResourceLocation(RefStrings.MODID + ":textures/gui/processing/gui_chemfac.png");
+    private static final ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/processing/gui_assemfac.png");
+    private static final ResourceLocation chemfac = new ResourceLocation(Tags.MODID + ":textures/gui/processing/gui_chemfac.png");
     private final TileEntityMachineAssemfac assemfac;
 
     public GUIAssemfac(InventoryPlayer invPlayer, TileEntityMachineAssemfac tedf) {

@@ -1,7 +1,7 @@
 package com.hbm.items;
 
 import com.google.common.collect.ImmutableMap;
-import com.hbm.lib.RefStrings;
+import com.hbm.Tags;
 import com.hbm.util.EnumUtil;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -39,7 +39,7 @@ public class ItemEnumMultiFood<E extends Enum<E> & ItemEnumMultiFood.FoodSpec> e
     public ItemEnumMultiFood(String registryName, Class<E> theEnum, boolean multiName, boolean multiTexture) {
         super(0, 0.0F, false);
         this.setHasSubtypes(true);
-        this.setRegistryName(new ResourceLocation(RefStrings.MODID, registryName));
+        this.setRegistryName(new ResourceLocation(Tags.MODID, registryName));
         this.setTranslationKey(registryName);
         this.theEnum = theEnum;
         this.multiName = multiName;
@@ -53,7 +53,7 @@ public class ItemEnumMultiFood<E extends Enum<E> & ItemEnumMultiFood.FoodSpec> e
     public ItemEnumMultiFood(String registryName, Class<E> theEnum, boolean multiName, String texture) {
         super(0, 0.0F, false);
         this.setHasSubtypes(true);
-        this.setRegistryName(new ResourceLocation(RefStrings.MODID, registryName));
+        this.setRegistryName(new ResourceLocation(Tags.MODID, registryName));
         this.setTranslationKey(registryName);
         this.theEnum = theEnum;
         this.multiName = multiName;
@@ -129,7 +129,7 @@ public class ItemEnumMultiFood<E extends Enum<E> & ItemEnumMultiFood.FoodSpec> e
     @SideOnly(Side.CLIENT)
     public void registerSprite(TextureMap map) {
         for (String texture : textures) {
-            map.registerSprite(new ResourceLocation(RefStrings.MODID, ROOT_PATH + texture));
+            map.registerSprite(new ResourceLocation(Tags.MODID, ROOT_PATH + texture));
         }
     }
 
@@ -138,7 +138,7 @@ public class ItemEnumMultiFood<E extends Enum<E> & ItemEnumMultiFood.FoodSpec> e
         for (int i = 0; i < theEnum.getEnumConstants().length; i++) {
             String tex = multiTexture ? textures[i] : textures[0];
             ModelLoader.setCustomModelResourceLocation(this, i,
-                    new ModelResourceLocation(new ResourceLocation(RefStrings.MODID, ROOT_PATH + tex), "inventory"));
+                    new ModelResourceLocation(new ResourceLocation(Tags.MODID, ROOT_PATH + tex), "inventory"));
         }
     }
 
@@ -148,7 +148,7 @@ public class ItemEnumMultiFood<E extends Enum<E> & ItemEnumMultiFood.FoodSpec> e
             IModel baseModel = ModelLoaderRegistry.getModel(new ResourceLocation("minecraft", "item/generated"));
             for (int i = 0; i < theEnum.getEnumConstants().length; i++) {
                 String texName = multiTexture ? textures[i] : textures[0];
-                ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, ROOT_PATH + texName);
+                ResourceLocation spriteLoc = new ResourceLocation(Tags.MODID, ROOT_PATH + texName);
                 IModel retextured = baseModel.retexture(ImmutableMap.of("layer0", spriteLoc.toString()));
                 IBakedModel baked = retextured.bake(ModelRotation.X0_Y0, DefaultVertexFormats.ITEM, ModelLoader.defaultTextureGetter());
                 ModelResourceLocation bakedLoc = new ModelResourceLocation(spriteLoc, "inventory");

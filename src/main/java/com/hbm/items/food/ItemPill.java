@@ -1,13 +1,13 @@
 package com.hbm.items.food;
 
 import com.google.common.collect.ImmutableMap;
+import com.hbm.Tags;
 import com.hbm.capability.HbmLivingCapability.EntityHbmProps;
 import com.hbm.capability.HbmLivingProps;
 import com.hbm.config.VersatileConfig;
 import com.hbm.items.IDynamicModels;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ModDamageSource;
-import com.hbm.lib.RefStrings;
 import com.hbm.potion.HbmPotion;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -168,7 +168,7 @@ public class ItemPill extends ItemFood implements IDynamicModels {
 	public void bakeModel(ModelBakeEvent event) {
 		try {
 			IModel baseModel = ModelLoaderRegistry.getModel(new ResourceLocation("minecraft", "item/generated"));
-			ResourceLocation spriteLoc = new ResourceLocation(RefStrings.MODID, ROOT_PATH + texturePath);
+			ResourceLocation spriteLoc = new ResourceLocation(Tags.MODID, ROOT_PATH + texturePath);
 			IModel retexturedModel = baseModel.retexture(
 					ImmutableMap.of(
 							"layer0", spriteLoc.toString()
@@ -187,11 +187,11 @@ public class ItemPill extends ItemFood implements IDynamicModels {
 
 	@Override
 	public void registerModel() {
-		ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(new ResourceLocation(RefStrings.MODID, ROOT_PATH + texturePath), "inventory"));
+		ModelLoader.setCustomModelResourceLocation(this, 0, new ModelResourceLocation(new ResourceLocation(Tags.MODID, ROOT_PATH + texturePath), "inventory"));
 	}
 
 	@Override
 	public void registerSprite(TextureMap map) {
-		map.registerSprite(new ResourceLocation(RefStrings.MODID, ROOT_PATH + texturePath));
+		map.registerSprite(new ResourceLocation(Tags.MODID, ROOT_PATH + texturePath));
 	}
 }

@@ -1,10 +1,10 @@
 package com.hbm.render.tileentity;
 
+import com.hbm.Tags;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.rbmk.RBMKBase;
 import com.hbm.blocks.machine.rbmk.RBMKRod;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.loader.IModelCustom;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKBase;
@@ -23,8 +23,8 @@ import org.lwjgl.opengl.GL11;
 @AutoRegister
 public class RenderRBMKLid extends TileEntitySpecialRenderer<TileEntityRBMKBase> {
 
-	private static final ResourceLocation texture_glass = new ResourceLocation(RefStrings.MODID + ":textures/blocks/rbmk/rbmk_blank_glass.png");
-	private static final ResourceLocation texture_rods = new ResourceLocation(RefStrings.MODID + ":textures/blocks/rbmk/rbmk_element_colorable.png");
+	private static final ResourceLocation texture_glass = new ResourceLocation(Tags.MODID + ":textures/blocks/rbmk/rbmk_blank_glass.png");
+	private static final ResourceLocation texture_rods = new ResourceLocation(Tags.MODID + ":textures/blocks/rbmk/rbmk_element_colorable.png");
 	
 	@Override
 	public boolean isGlobalRenderer(TileEntityRBMKBase te){

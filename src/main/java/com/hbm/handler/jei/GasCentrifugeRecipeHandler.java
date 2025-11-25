@@ -1,7 +1,7 @@
 package com.hbm.handler.jei;
 
+import com.hbm.Tags;
 import com.hbm.handler.jei.JeiRecipes.GasCentrifugeRecipe;
-import com.hbm.lib.RefStrings;
 import com.hbm.util.I18nUtil;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.*;
@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 public class GasCentrifugeRecipeHandler implements IRecipeCategory<GasCentrifugeRecipe> {
 
   public static final ResourceLocation gui_rl =
-      new ResourceLocation(RefStrings.MODID, "textures/gui/jei/gui_jei_gas_centrifuge.png");
+      new ResourceLocation(Tags.MODID, "textures/gui/jei/gui_jei_gas_centrifuge.png");
 
   protected final IDrawable background;
   protected final IDrawableStatic powerStatic;
@@ -45,7 +45,7 @@ public class GasCentrifugeRecipeHandler implements IRecipeCategory<GasCentrifuge
 
   @Override
   public @NotNull String getModName() {
-    return RefStrings.MODID;
+    return Tags.MODID;
   }
 
   @Override

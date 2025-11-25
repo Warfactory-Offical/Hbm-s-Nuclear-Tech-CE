@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerPADetector;
-import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.albion.TileEntityPADetector;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -12,7 +12,7 @@ import org.lwjgl.opengl.GL11;
 
 public class GUIPADetector extends GuiInfoContainer {
 
-    private static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/particleaccelerator/gui_detector.png");
+    private static final ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/particleaccelerator/gui_detector.png");
     private final TileEntityPADetector source;
 
     public GUIPADetector(InventoryPlayer player, TileEntityPADetector source) {

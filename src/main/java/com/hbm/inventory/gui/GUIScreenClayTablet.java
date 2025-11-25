@@ -1,9 +1,9 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.recipes.PedestalRecipes;
 import com.hbm.items.ModItems;
-import com.hbm.lib.RefStrings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
@@ -24,7 +24,7 @@ public class GUIScreenClayTablet extends GuiScreen {
     protected int guiTop;
     protected int tabletMeta = 0;
 
-    protected static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID, "textures/gui/guide_pedestal.png");
+    protected static final ResourceLocation texture = new ResourceLocation(Tags.MODID, "textures/gui/guide_pedestal.png");
 
     public GUIScreenClayTablet() { }
 

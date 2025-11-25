@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerMachineRadarNT;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.machine.TileEntityMachineRadarNT;
 import com.hbm.util.I18nUtil;
@@ -20,7 +20,7 @@ import java.util.Arrays;
 
 public class GUIMachineRadarNTSlots extends GuiInfoContainer {
 
-    private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/machine/gui_radar_link.png");
+    private static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/machine/gui_radar_link.png");
     private TileEntityMachineRadarNT radar;
 
     public GUIMachineRadarNTSlots(InventoryPlayer invPlayer, TileEntityMachineRadarNT tedf) {

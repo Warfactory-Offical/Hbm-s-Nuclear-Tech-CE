@@ -2,6 +2,7 @@ package com.hbm.blocks.network;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.hbm.Tags;
 import com.hbm.api.block.IToolable;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ModBlocks;
@@ -10,7 +11,6 @@ import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.ICopiable;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.items.IDynamicModels;
-import com.hbm.lib.RefStrings;
 import com.hbm.render.model.BakedModelTransforms;
 import com.hbm.tileentity.network.TileEntityPipeBaseNT;
 import com.hbm.util.I18nUtil;
@@ -66,7 +66,7 @@ public class FluidDuctPaintable extends FluidDuctBase implements IToolable, ILoo
 
     public FluidDuctPaintable(String name) {
         super(Material.IRON);
-        this.setRegistryName(RefStrings.MODID, name);
+        this.setRegistryName(Tags.MODID, name);
         this.setTranslationKey(name);
         this.setDefaultState(this.blockState.getBaseState());
         this.setSoundType(ModSoundTypes.pipe);
@@ -226,17 +226,17 @@ public class FluidDuctPaintable extends FluidDuctBase implements IToolable, ILoo
     @Override
     @SideOnly(Side.CLIENT)
     public void registerSprite(TextureMap map) {
-        baseSprite = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/fluid_duct_paintable"));
-        overlaySprite = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/fluid_duct_paintable_overlay"));
-        overlayColorSprite = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/fluid_duct_paintable_color"));
+        baseSprite = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/fluid_duct_paintable"));
+        overlaySprite = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/fluid_duct_paintable_overlay"));
+        overlayColorSprite = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/fluid_duct_paintable_color"));
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void bakeModel(ModelBakeEvent event) {
-        TextureAtlasSprite base = baseSprite != null ? baseSprite : Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(new ResourceLocation(RefStrings.MODID, "blocks/fluid_duct_paintable").toString());
-        TextureAtlasSprite overlay = overlaySprite != null ? overlaySprite : Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(new ResourceLocation(RefStrings.MODID, "blocks/fluid_duct_paintable_overlay").toString());
-        TextureAtlasSprite overlayColor = overlayColorSprite != null ? overlayColorSprite : Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(new ResourceLocation(RefStrings.MODID, "blocks/fluid_duct_paintable_color").toString());
+        TextureAtlasSprite base = baseSprite != null ? baseSprite : Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(new ResourceLocation(Tags.MODID, "blocks/fluid_duct_paintable").toString());
+        TextureAtlasSprite overlay = overlaySprite != null ? overlaySprite : Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(new ResourceLocation(Tags.MODID, "blocks/fluid_duct_paintable_overlay").toString());
+        TextureAtlasSprite overlayColor = overlayColorSprite != null ? overlayColorSprite : Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(new ResourceLocation(Tags.MODID, "blocks/fluid_duct_paintable_color").toString());
 
         FluidDuctPaintableModel model = new FluidDuctPaintableModel(base, overlay, overlayColor);
         ModelResourceLocation inventory = new ModelResourceLocation(Objects.requireNonNull(getRegistryName()), "inventory");

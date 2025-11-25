@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerMachineMiningLaser;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.AuxButtonPacket;
 import com.hbm.render.NTMRenderHelper;
@@ -19,7 +19,7 @@ import java.io.IOException;
 
 public class GUIMachineMiningLaser extends GuiInfoContainer {
 
-	public static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/machine/gui_laser_miner.png");
+	public static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/machine/gui_laser_miner.png");
 	private TileEntityMachineMiningLaser laser;
 
 	public GUIMachineMiningLaser(InventoryPlayer invPlayer, TileEntityMachineMiningLaser laser) {

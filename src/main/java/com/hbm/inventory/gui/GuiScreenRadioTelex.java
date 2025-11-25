@@ -1,6 +1,6 @@
 package com.hbm.inventory.gui;
 
-import com.hbm.lib.RefStrings;
+import com.hbm.Tags;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.network.TileEntityRadioTelex;
@@ -26,7 +26,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class GuiScreenRadioTelex extends GuiScreen {
-    protected static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID, "textures/gui/machine/gui_telex.png");
+    protected static final ResourceLocation texture = new ResourceLocation(Tags.MODID, "textures/gui/machine/gui_telex.png");
     protected TileEntityRadioTelex telex;
     protected int xSize = 256;
     protected int ySize = 244;

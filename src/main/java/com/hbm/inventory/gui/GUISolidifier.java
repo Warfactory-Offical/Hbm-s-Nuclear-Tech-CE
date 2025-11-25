@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerSolidifier;
-import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.oil.TileEntityMachineSolidifier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -12,7 +12,7 @@ import org.lwjgl.opengl.GL11;
 
 public class GUISolidifier extends GuiInfoContainer {
 
-    private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/processing/gui_solidifier.png");
+    private static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/processing/gui_solidifier.png");
     private TileEntityMachineSolidifier solidifier;
 
     public GUISolidifier(InventoryPlayer invPlayer, TileEntityMachineSolidifier tedf) {

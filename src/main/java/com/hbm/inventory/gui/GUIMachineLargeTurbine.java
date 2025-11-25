@@ -1,8 +1,8 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerMachineLargeTurbine;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.TileEntityMachineLargeTurbine;
 import com.hbm.util.I18nUtil;
 import net.minecraft.client.Minecraft;
@@ -14,7 +14,7 @@ import org.lwjgl.opengl.GL11;
 
 public class GUIMachineLargeTurbine extends GuiInfoContainer {
 
-	public static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/generators/gui_turbine_large.png");
+	public static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/generators/gui_turbine_large.png");
 	private TileEntityMachineLargeTurbine turbine;
 
 	public GUIMachineLargeTurbine(InventoryPlayer invPlayer, TileEntityMachineLargeTurbine tedf) {

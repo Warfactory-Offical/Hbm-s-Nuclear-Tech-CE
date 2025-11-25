@@ -1,5 +1,6 @@
 package com.hbm.items.weapon;
 
+import com.hbm.Tags;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.entity.effect.EntityNukeTorex;
 import com.hbm.entity.logic.EntityNukeExplosionMK5;
@@ -11,7 +12,6 @@ import com.hbm.explosion.vanillant.standard.*;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.items.ModItems;
 import com.hbm.lib.HBMSoundHandler;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.particle.helper.ExplosionCreator;
@@ -165,7 +165,7 @@ public class ItemAmmoHIMARS extends Item implements IMetaItemTesr {
       this.name = name;
       this.texture =
           new ResourceLocation(
-              RefStrings.MODID, "textures/models/projectiles/himars_" + name + ".png");
+                  Tags.MODID, "textures/models/projectiles/himars_" + name + ".png");
       this.amount = type == Type.Standard ? 6 : 1;
       this.modelType = type;
     }

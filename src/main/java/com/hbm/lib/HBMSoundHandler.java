@@ -1,5 +1,6 @@
 package com.hbm.lib;
 
+import com.hbm.Tags;
 import com.hbm.handler.GunConfiguration;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -755,14 +756,14 @@ public final class HBMSoundHandler {
     }
 
     public static SoundEvent register(String name) {
-        SoundEvent e = new SoundEvent(new ResourceLocation(RefStrings.MODID, name));
+        SoundEvent e = new SoundEvent(new ResourceLocation(Tags.MODID, name));
         e.setRegistryName(name);
         ALL_SOUNDS.add(e);
         return e;
     }
 
     public static SoundEvent registerBypass(String name) {
-        SoundEvent e = new SoundEvent(new ResourceLocation(RefStrings.MODID, name));
+        SoundEvent e = new SoundEvent(new ResourceLocation(Tags.MODID, name));
         e.setRegistryName(name);
         ForgeRegistries.SOUND_EVENTS.register(e);
         return e;

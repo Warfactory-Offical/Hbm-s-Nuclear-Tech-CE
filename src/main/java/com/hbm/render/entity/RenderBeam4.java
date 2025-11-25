@@ -1,8 +1,8 @@
 package com.hbm.render.entity;
 
+import com.hbm.Tags;
 import com.hbm.entity.projectile.EntitySparkBeam;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.lib.RefStrings;
 import com.hbm.util.RenderUtil;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -19,7 +19,7 @@ public class RenderBeam4 extends Render<EntitySparkBeam> {
 
     public static final IRenderFactory<EntitySparkBeam> FACTORY = RenderBeam4::new;
 
-    private final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/models/projectiles/PlasmaBeam.png");
+    private final ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/models/projectiles/PlasmaBeam.png");
 
     protected RenderBeam4(RenderManager renderManager) {
         super(renderManager);

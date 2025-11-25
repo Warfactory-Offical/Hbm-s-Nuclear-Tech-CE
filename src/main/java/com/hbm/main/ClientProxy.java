@@ -1,5 +1,6 @@
 package com.hbm.main;
 
+import com.hbm.Tags;
 import com.hbm.animloader.AnimationWrapper.EndResult;
 import com.hbm.animloader.AnimationWrapper.EndType;
 import com.hbm.blocks.BlockDummyable;
@@ -24,7 +25,6 @@ import com.hbm.items.RBMKItemRenderers;
 import com.hbm.items.weapon.sedna.factory.GunFactoryClient;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.RecoilHandler;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.client.NTMClientRegistry;
 import com.hbm.particle.*;
 import com.hbm.particle.bfg.*;
@@ -1801,7 +1801,7 @@ public class ClientProxy extends ServerProxy {
         if (SoundSystemConfig.getNumberNormalChannels() < 128) {
             SoundSystemConfig.setNumberNormalChannels(128);
         }
-        OBJLoader.INSTANCE.addDomain(RefStrings.MODID);
+        OBJLoader.INSTANCE.addDomain(Tags.MODID);
 
         AutoRegistry.preInitClient();
         for (Map.Entry<Item, TileEntityItemStackRenderer> entry : RBMKItemRenderers.itemRenderers.entrySet()) {

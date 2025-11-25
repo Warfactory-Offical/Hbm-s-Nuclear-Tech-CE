@@ -1,11 +1,11 @@
 package com.hbm.blocks.generic;
 
+import com.hbm.Tags;
 import com.hbm.api.energymk2.IBatteryItem;
 import com.hbm.render.loader.HFRWavefrontObject;
 import com.hbm.items.armor.ArmorFSBPowered;
 import com.hbm.items.gear.ArmorFSB;
 import com.hbm.lib.HBMSoundHandler;
-import com.hbm.lib.RefStrings;
 import com.hbm.render.model.BlockDecoBakedModel;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockFaceShape;
@@ -99,7 +99,7 @@ public class HEVBattery extends BlockBakeBase {
     public void bakeModel(ModelBakeEvent event) {
         HFRWavefrontObject wavefront = null;
         try {
-            wavefront = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/blocks/battery.obj"));
+            wavefront = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/blocks/battery.obj"));
         } catch (Exception ignored) {}
 
         if (wavefront == null) {

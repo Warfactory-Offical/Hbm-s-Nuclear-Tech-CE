@@ -1,8 +1,8 @@
 package com.hbm.render.entity;
 
+import com.hbm.Tags;
 import com.hbm.entity.mob.*;
 import com.hbm.interfaces.AutoRegister;
-import com.hbm.lib.RefStrings;
 import com.hbm.render.entity.layers.LayerCreeperChargeUniversal;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderCreeper;
@@ -20,13 +20,13 @@ import net.minecraftforge.fml.client.registry.IRenderFactory;
 @AutoRegister(entity = EntityCreeperVolatile.class, factory = "factoryVolatile")
 @AutoRegister(entity = EntityCreeperGold.class, factory = "factoryGold")
 public class RenderCreeperUniversal extends RenderCreeper {
-    private static final ResourceLocation TEX_NUCLEAR = new ResourceLocation(RefStrings.MODID, "textures/entity/creeper.png");
-    private static final ResourceLocation ARMOR = new ResourceLocation(RefStrings.MODID, "textures/entity/creeper_armor.png");
-    private static final ResourceLocation TEX_TAINTED = new ResourceLocation(RefStrings.MODID, "textures/entity/creeper_tainted.png");
-    private static final ResourceLocation ARMOR_TAINTED = new ResourceLocation(RefStrings.MODID,"textures/entity/creeper_armor_taint.png");
-    private static final ResourceLocation TEX_PHOSGENE = new ResourceLocation(RefStrings.MODID, "textures/entity/creeper_phosgene.png");
-    private static final ResourceLocation TEX_VOLATILE = new ResourceLocation(RefStrings.MODID, "textures/entity/creeper_volatile.png");
-    private static final ResourceLocation TEX_GOLD = new ResourceLocation(RefStrings.MODID, "textures/entity/creeper_gold.png");
+    private static final ResourceLocation TEX_NUCLEAR = new ResourceLocation(Tags.MODID, "textures/entity/creeper.png");
+    private static final ResourceLocation ARMOR = new ResourceLocation(Tags.MODID, "textures/entity/creeper_armor.png");
+    private static final ResourceLocation TEX_TAINTED = new ResourceLocation(Tags.MODID, "textures/entity/creeper_tainted.png");
+    private static final ResourceLocation ARMOR_TAINTED = new ResourceLocation(Tags.MODID,"textures/entity/creeper_armor_taint.png");
+    private static final ResourceLocation TEX_PHOSGENE = new ResourceLocation(Tags.MODID, "textures/entity/creeper_phosgene.png");
+    private static final ResourceLocation TEX_VOLATILE = new ResourceLocation(Tags.MODID, "textures/entity/creeper_volatile.png");
+    private static final ResourceLocation TEX_GOLD = new ResourceLocation(Tags.MODID, "textures/entity/creeper_gold.png");
     public static final IRenderFactory<EntityCreeperNuclear> factoryNuclear = manager -> new RenderCreeperUniversal(manager, TEX_NUCLEAR, ARMOR, 5.0F);
     public static final IRenderFactory<EntityCreeperTainted> factoryTainted = manager -> new RenderCreeperUniversal(manager, TEX_TAINTED, ARMOR_TAINTED);
     public static final IRenderFactory<EntityCreeperPhosgene> factoryPhosgene = manager -> new RenderCreeperUniversal(manager, TEX_PHOSGENE, ARMOR);

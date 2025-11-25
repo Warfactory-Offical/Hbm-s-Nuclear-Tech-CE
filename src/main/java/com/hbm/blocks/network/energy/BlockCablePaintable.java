@@ -2,12 +2,12 @@ package com.hbm.blocks.network.energy;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.hbm.Tags;
 import com.hbm.api.block.IToolable;
 import com.hbm.blocks.generic.BlockBakeBase;
 import com.hbm.blocks.network.SimpleUnlistedProperty;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.ICopiable;
-import com.hbm.lib.RefStrings;
 import com.hbm.render.block.BlockBakeFrame;
 import com.hbm.render.model.BakedModelTransforms;
 import com.hbm.tileentity.network.energy.TileEntityCableBaseNT;
@@ -192,15 +192,15 @@ public class BlockCablePaintable extends BlockBakeBase implements IToolable {
     @SideOnly(Side.CLIENT)
     public void registerSprite(TextureMap map) {
         super.registerSprite(map);
-        baseSprite = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/red_cable_base"));
-        overlaySprite = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/red_cable_overlay"));
+        baseSprite = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/red_cable_base"));
+        overlaySprite = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/red_cable_overlay"));
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void bakeModel(ModelBakeEvent event) {
-        TextureAtlasSprite base = baseSprite != null ? baseSprite : Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(new ResourceLocation(RefStrings.MODID, "blocks/red_cable_base").toString());
-        TextureAtlasSprite overlay = overlaySprite != null ? overlaySprite : Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(new ResourceLocation(RefStrings.MODID, "blocks/red_cable_overlay").toString());
+        TextureAtlasSprite base = baseSprite != null ? baseSprite : Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(new ResourceLocation(Tags.MODID, "blocks/red_cable_base").toString());
+        TextureAtlasSprite overlay = overlaySprite != null ? overlaySprite : Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(new ResourceLocation(Tags.MODID, "blocks/red_cable_overlay").toString());
 
         CablePaintableModel model = new CablePaintableModel(base, overlay);
         ModelResourceLocation inventory = new ModelResourceLocation(Objects.requireNonNull(getRegistryName()), "inventory");

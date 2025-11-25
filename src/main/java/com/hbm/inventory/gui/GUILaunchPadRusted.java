@@ -1,9 +1,9 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.container.ContainerLaunchPadRusted;
 import com.hbm.items.ModItems;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.render.item.ItemRenderMissileGeneric;
@@ -28,7 +28,7 @@ import java.util.function.Consumer;
 
 public class GUILaunchPadRusted extends GuiInfoContainer {
 
-    private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/weapon/gui_launch_pad_rusted.png");
+    private static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/weapon/gui_launch_pad_rusted.png");
     private TileEntityLaunchPadRusted launchpad;
 
     public GUILaunchPadRusted(InventoryPlayer invPlayer, TileEntityLaunchPadRusted tedf) {

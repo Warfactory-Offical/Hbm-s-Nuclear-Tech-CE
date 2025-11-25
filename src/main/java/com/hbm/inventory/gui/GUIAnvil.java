@@ -1,5 +1,6 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.RecipesCommon.OreDictStack;
@@ -7,7 +8,6 @@ import com.hbm.inventory.container.ContainerAnvil;
 import com.hbm.inventory.recipes.anvil.AnvilRecipes;
 import com.hbm.inventory.recipes.anvil.AnvilRecipes.AnvilConstructionRecipe;
 import com.hbm.inventory.recipes.anvil.AnvilRecipes.AnvilOutput;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.AnvilCraftPacket;
 import com.hbm.util.I18nUtil;
@@ -37,7 +37,7 @@ import java.util.List;
 
 public class GUIAnvil extends GuiContainer {
 
-	public static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/processing/gui_anvil.png");
+	public static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/processing/gui_anvil.png");
 	
 	private int tier;
 	private List<AnvilConstructionRecipe> originList = new ArrayList<>();

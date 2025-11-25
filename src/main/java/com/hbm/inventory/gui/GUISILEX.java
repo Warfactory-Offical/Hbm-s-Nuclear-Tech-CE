@@ -1,11 +1,11 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.recipes.SILEXRecipes;
 import com.hbm.inventory.container.ContainerSILEX;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemFELCrystal.EnumWavelengths;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.toserver.AuxButtonPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.machine.TileEntitySILEX;
@@ -28,7 +28,7 @@ import java.io.IOException;
 
 public class GUISILEX extends GuiInfoContainer {
 
-    public static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/processing/gui_silex.png");
+    public static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/processing/gui_silex.png");
     private TileEntitySILEX silex;
 
     public GUISILEX(InventoryPlayer invPlayer, TileEntitySILEX laser) {

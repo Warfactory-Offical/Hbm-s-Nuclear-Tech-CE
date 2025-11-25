@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerDroneCrate;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.network.TileEntityDroneCrate;
@@ -17,7 +17,7 @@ import net.minecraft.util.ResourceLocation;
 import java.io.IOException;
 
 public class GUIDroneCrate extends GuiInfoContainer {
-    private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID, "textures/gui/storage/gui_crate_drone.png");
+    private static ResourceLocation texture = new ResourceLocation(Tags.MODID, "textures/gui/storage/gui_crate_drone.png");
     private TileEntityDroneCrate crate;
 
     public GUIDroneCrate(InventoryPlayer invPlayer, TileEntityDroneCrate crate) {

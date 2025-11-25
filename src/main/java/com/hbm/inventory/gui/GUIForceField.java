@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerForceField;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.AuxButtonPacket;
 import com.hbm.tileentity.machine.TileEntityForceField;
@@ -18,7 +18,7 @@ import java.io.IOException;
 
 public class GUIForceField extends GuiInfoContainer {
 
-	public static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/gui_field.png");
+	public static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/gui_field.png");
 	private TileEntityForceField diFurnace;
 	
 	public GUIForceField(InventoryPlayer invPlayer, TileEntityForceField tedf) {

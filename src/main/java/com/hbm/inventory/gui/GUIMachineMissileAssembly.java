@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerMachineMissileAssembly;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.toserver.AuxButtonPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.render.misc.MissileMultipart;
@@ -20,7 +20,7 @@ import java.io.IOException;
 
 public class GUIMachineMissileAssembly extends GuiInfoContainer {
 
-	private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/gui_missile_assembly.png");
+	private static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/gui_missile_assembly.png");
 	private TileEntityMachineMissileAssembly assembler;
 	
 	public GUIMachineMissileAssembly(InventoryPlayer invPlayer, TileEntityMachineMissileAssembly tedf) {

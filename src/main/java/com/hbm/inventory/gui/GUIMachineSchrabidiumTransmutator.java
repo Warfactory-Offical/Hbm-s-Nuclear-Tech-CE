@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerMachineSchrabidiumTransmutator;
-import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.TileEntityMachineSchrabidiumTransmutator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.GlStateManager;
 
 public class GUIMachineSchrabidiumTransmutator extends GuiInfoContainer {
 
-	private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/gui_transmutator.png");
+	private static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/gui_transmutator.png");
 	private TileEntityMachineSchrabidiumTransmutator diFurnace;
 
 	public GUIMachineSchrabidiumTransmutator(InventoryPlayer invPlayer, TileEntityMachineSchrabidiumTransmutator tedf) {

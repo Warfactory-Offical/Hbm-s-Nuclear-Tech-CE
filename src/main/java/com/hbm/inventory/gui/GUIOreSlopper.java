@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerOreSlopper;
-import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.TileEntityMachineOreSlopper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -12,7 +12,7 @@ import org.lwjgl.opengl.GL11;
 
 public class GUIOreSlopper extends GuiInfoContainer {
 
-    private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/processing/gui_ore_slopper.png");
+    private static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/processing/gui_ore_slopper.png");
     private TileEntityMachineOreSlopper slopper;
 
     public GUIOreSlopper(InventoryPlayer player, TileEntityMachineOreSlopper slopper) {

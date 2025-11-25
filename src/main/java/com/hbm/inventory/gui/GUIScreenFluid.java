@@ -1,10 +1,10 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemFluidIDMulti;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.toserver.NBTItemControlPacket;
 import com.hbm.packet.PacketDispatcher;
 import net.minecraft.client.Minecraft;
@@ -17,7 +17,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -25,7 +25,7 @@ import java.util.Locale;
 
 public class GUIScreenFluid extends GuiScreen {
 
-    protected static final ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/machine/gui_fluid.png");
+    protected static final ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/machine/gui_fluid.png");
     protected int xSize = 176;
     protected int ySize = 54;
     protected int guiLeft;

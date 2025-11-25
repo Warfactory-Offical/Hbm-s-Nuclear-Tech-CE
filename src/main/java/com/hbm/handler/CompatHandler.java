@@ -1,10 +1,10 @@
 package com.hbm.handler;
 
+import com.hbm.Tags;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import li.cil.oc.api.Items;
 import li.cil.oc.api.fs.FileSystem;
@@ -82,7 +82,7 @@ public class CompatHandler {
         @Override
         @Optional.Method(modid = "opencomputers")
         public li.cil.oc.api.fs.FileSystem call() throws Exception {
-            return asReadOnly(fromClass(MainRegistry.class, RefStrings.MODID, "disks/" + FloppyDisk.sanitizeName(name)));
+            return asReadOnly(fromClass(MainRegistry.class, Tags.MODID, "disks/" + FloppyDisk.sanitizeName(name)));
         }
     }
 
@@ -158,17 +158,17 @@ public class CompatHandler {
             disks.forEach((s, disk) -> {
 
                 // Test if the disk path even exists.
-                FileSystem fs = fromClass(MainRegistry.class, RefStrings.MODID, "disks/" + disk.fs.name);
+                FileSystem fs = fromClass(MainRegistry.class, Tags.MODID, "disks/" + disk.fs.name);
 
                 if (fs == null) { // Disk path does NOT exist, and it should not be loaded.
 
-                    logger.error("Error loading disk: {} at /assets/" + RefStrings.MODID + "/disks/{}", s, disk.fs.name);
+                    logger.error("Error loading disk: {} at /assets/" + Tags.MODID + "/disks/{}", s, disk.fs.name);
                     logger.error("This is likely due to the path to the disk being non-existent.");
 
                 } else { // Disk path DOES exist, and it should be loaded.
 
                     disk.item = Items.registerFloppy(s, disk.color, disk.fs, true); // The big part, actually registering the floppies!
-                    logger.info("Registered disk: {} at /assets/" + RefStrings.MODID + "/disks/{}", s, disk.fs.name);
+                    logger.info("Registered disk: {} at /assets/" + Tags.MODID + "/disks/{}", s, disk.fs.name);
 
                 }
             });

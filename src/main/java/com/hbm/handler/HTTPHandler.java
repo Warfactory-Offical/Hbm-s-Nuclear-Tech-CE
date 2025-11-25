@@ -1,7 +1,7 @@
 package com.hbm.handler;
 
+import com.hbm.Tags;
 import com.hbm.interfaces.Untested;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 
 import java.io.BufferedReader;
@@ -77,7 +77,7 @@ public class HTTPHandler {
 
             	String sub = line.substring(begin + 1, end);
 
-            	newVersion = !RefStrings.VERSION.equals(sub);
+            	newVersion = !Tags.VERSION.equals(sub);
             	versionNumber = sub;
     	        MainRegistry.logger.info("Found version " + sub);
             }

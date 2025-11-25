@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerCraneExtractor;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.network.TileEntityCraneExtractor;
@@ -22,7 +22,7 @@ import java.util.Arrays;
 
 public class GUICraneExtractor extends GuiInfoContainer {
 
-    private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/storage/gui_crane_ejector.png");
+    private static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/storage/gui_crane_ejector.png");
     public TileEntityCraneExtractor ejector;
 
     public GUICraneExtractor(InventoryPlayer invPlayer, TileEntityCraneExtractor tedf) {

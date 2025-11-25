@@ -2,6 +2,7 @@ package com.hbm.blocks.network;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.hbm.Tags;
 import com.hbm.api.block.IToolable;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ModBlocks;
@@ -10,7 +11,6 @@ import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.ICopiable;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.IDynamicModels;
-import com.hbm.lib.RefStrings;
 import com.hbm.render.model.BakedModelTransforms;
 import com.hbm.tileentity.network.TileEntityPipeExhaust;
 import com.hbm.util.I18nUtil;
@@ -64,7 +64,7 @@ public class FluidDuctPaintableBlockExhaust extends FluidDuctBase implements ITo
 
     public FluidDuctPaintableBlockExhaust(String name) {
         super(Material.IRON);
-        this.setRegistryName(RefStrings.MODID, name);
+        this.setRegistryName(Tags.MODID, name);
         this.setTranslationKey(name);
         this.setDefaultState(this.blockState.getBaseState());
         this.setSoundType(ModSoundTypes.pipe);
@@ -218,15 +218,15 @@ public class FluidDuctPaintableBlockExhaust extends FluidDuctBase implements ITo
     @Override
     @SideOnly(Side.CLIENT)
     public void registerSprite(TextureMap map) {
-        baseSprite = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/fluid_duct_paintable_block_exhaust"));
-        overlaySprite = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/fluid_duct_paintable_overlay"));
+        baseSprite = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/fluid_duct_paintable_block_exhaust"));
+        overlaySprite = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/fluid_duct_paintable_overlay"));
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void bakeModel(ModelBakeEvent event) {
-        TextureAtlasSprite base = baseSprite != null ? baseSprite : Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(new ResourceLocation(RefStrings.MODID, "blocks/fluid_duct_paintable_block_exhaust").toString());
-        TextureAtlasSprite overlay = overlaySprite != null ? overlaySprite : Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(new ResourceLocation(RefStrings.MODID, "blocks/fluid_duct_paintable_overlay").toString());
+        TextureAtlasSprite base = baseSprite != null ? baseSprite : Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(new ResourceLocation(Tags.MODID, "blocks/fluid_duct_paintable_block_exhaust").toString());
+        TextureAtlasSprite overlay = overlaySprite != null ? overlaySprite : Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(new ResourceLocation(Tags.MODID, "blocks/fluid_duct_paintable_overlay").toString());
 
         FluidDuctPaintableExhaustModel model = new FluidDuctPaintableExhaustModel(base, overlay);
         ModelResourceLocation inventory = new ModelResourceLocation(Objects.requireNonNull(getRegistryName()), "inventory");

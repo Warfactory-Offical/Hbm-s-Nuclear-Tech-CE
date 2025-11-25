@@ -2,6 +2,7 @@ package com.hbm.main;
 
 import baubles.api.BaublesApi;
 import com.google.common.collect.Queues;
+import com.hbm.Tags;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.HbmCapability;
@@ -29,7 +30,6 @@ import com.hbm.items.weapon.sedna.ItemGunBaseSedna;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.lib.RecoilHandler;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.AuxButtonPacket;
 import com.hbm.packet.toserver.GunButtonPacket;
@@ -130,7 +130,7 @@ public class ModEventHandlerClient {
 
     public static final int flashDuration = 5_000;
     public static final int shakeDuration = 1_500;
-    private static final ResourceLocation poster = new ResourceLocation(RefStrings.MODID + ":textures/models/misc/poster.png");
+    private static final ResourceLocation poster = new ResourceLocation(Tags.MODID + ":textures/models/misc/poster.png");
     public static Set<EntityLivingBase> specialDeathEffectEntities = new HashSet<>();
     public static ArrayDeque<ParticleFirstPerson> firstPersonAuxParticles = Queues.newArrayDeque();
     public static float deltaMouseX;

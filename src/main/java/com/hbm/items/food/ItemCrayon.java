@@ -1,10 +1,10 @@
 package com.hbm.items.food;
 
 import com.google.common.collect.ImmutableMap;
+import com.hbm.Tags;
 import com.hbm.items.IDynamicModels;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemChemicalDye;
-import com.hbm.lib.RefStrings;
 import com.hbm.util.EnumUtil;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -45,8 +45,8 @@ public class ItemCrayon extends ItemFood implements IDynamicModels {
     @Override
     @SideOnly(Side.CLIENT)
     public void registerSprite(TextureMap map) {
-        ResourceLocation base = new ResourceLocation(RefStrings.MODID, ROOT_PATH + baseName);
-        ResourceLocation overlay = new ResourceLocation(RefStrings.MODID, ROOT_PATH + baseName + "_overlay");
+        ResourceLocation base = new ResourceLocation(Tags.MODID, ROOT_PATH + baseName);
+        ResourceLocation overlay = new ResourceLocation(Tags.MODID, ROOT_PATH + baseName + "_overlay");
 
         map.registerSprite(base);
         map.registerSprite(overlay);
@@ -55,7 +55,7 @@ public class ItemCrayon extends ItemFood implements IDynamicModels {
     @SideOnly(Side.CLIENT)
     public void registerModel() {
         ModelResourceLocation mrl = new ModelResourceLocation(
-                new ResourceLocation(RefStrings.MODID, ROOT_PATH + baseName),
+                new ResourceLocation(Tags.MODID, ROOT_PATH + baseName),
                 "inventory"
         );
 
@@ -69,8 +69,8 @@ public class ItemCrayon extends ItemFood implements IDynamicModels {
         try {
             IModel baseModel = ModelLoaderRegistry.getModel(new ResourceLocation("minecraft", "item/generated"));
 
-            ResourceLocation layer0 = new ResourceLocation(RefStrings.MODID, ROOT_PATH + baseName);
-            ResourceLocation layer1 = new ResourceLocation(RefStrings.MODID, ROOT_PATH + baseName + "_overlay");
+            ResourceLocation layer0 = new ResourceLocation(Tags.MODID, ROOT_PATH + baseName);
+            ResourceLocation layer1 = new ResourceLocation(Tags.MODID, ROOT_PATH + baseName + "_overlay");
 
             IModel retexturedModel = baseModel.retexture(ImmutableMap.of(
                     "layer0", layer0.toString(),
@@ -80,7 +80,7 @@ public class ItemCrayon extends ItemFood implements IDynamicModels {
             IBakedModel bakedModel = retexturedModel.bake(ModelRotation.X0_Y0, DefaultVertexFormats.ITEM, ModelLoader.defaultTextureGetter());
 
             ModelResourceLocation bakedModelLocation = new ModelResourceLocation(
-                    new ResourceLocation(RefStrings.MODID, ROOT_PATH + baseName),
+                    new ResourceLocation(Tags.MODID, ROOT_PATH + baseName),
                     "inventory"
             );
 

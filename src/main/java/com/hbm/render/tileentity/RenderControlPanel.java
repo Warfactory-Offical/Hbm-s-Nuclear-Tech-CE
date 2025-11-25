@@ -1,9 +1,9 @@
 package com.hbm.render.tileentity;
 
+import com.hbm.Tags;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.control_panel.ControlPanel;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.ClientProxy;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.item.ItemRenderBase;
@@ -14,7 +14,8 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
+
 @AutoRegister
 public class RenderControlPanel extends TileEntitySpecialRenderer<TileEntityControlPanel>
     implements IItemRendererProvider {
@@ -138,7 +139,7 @@ public class RenderControlPanel extends TileEntitySpecialRenderer<TileEntityCont
     if (height != 0) {
       GlStateManager.disableLighting();
       ResourceLocation texxy =
-          new ResourceLocation(RefStrings.MODID + ":textures/models/misc/control_panel.png");
+          new ResourceLocation(Tags.MODID + ":textures/models/misc/control_panel.png");
       bindTexture(texxy);
       net.minecraft.client.renderer.Tessellator tess =
           net.minecraft.client.renderer.Tessellator.getInstance();
@@ -212,7 +213,7 @@ public class RenderControlPanel extends TileEntitySpecialRenderer<TileEntityCont
     GlStateManager.pushMatrix();
     bindTexture(
         new ResourceLocation(
-            RefStrings.MODID + ":textures/models/control_panel/control_panel_front.png"));
+            Tags.MODID + ":textures/models/control_panel/control_panel_front.png"));
     ResourceManager.control_panel_front.renderAll();
     GlStateManager.popMatrix();
 

@@ -1,11 +1,11 @@
 package com.hbm.items.machine;
 
+import com.hbm.Tags;
 import com.hbm.inventory.fluid.FluidStack;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ItemBakedBase;
 import com.hbm.items.ModItems;
-import com.hbm.lib.RefStrings;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
@@ -49,7 +49,7 @@ public class ItemFluidIcon extends ItemBakedBase {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerModel() {
-		ResourceLocation loc = new ResourceLocation(RefStrings.MODID, "items/" + texturePath);
+		ResourceLocation loc = new ResourceLocation(Tags.MODID, "items/" + texturePath);
 		ModelResourceLocation mrl = new ModelResourceLocation(loc, "inventory");
 
 		for (FluidType ft : Fluids.getInNiceOrder()) {

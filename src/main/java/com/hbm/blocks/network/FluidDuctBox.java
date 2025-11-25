@@ -1,5 +1,6 @@
 package com.hbm.blocks.network;
 
+import com.hbm.Tags;
 import com.hbm.blocks.ICustomBlockItem;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ModBlocks;
@@ -11,7 +12,6 @@ import com.hbm.items.IDynamicModels;
 import com.hbm.items.block.ItemBlockSpecialAABB;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.render.model.DuctBakedModel;
 import com.hbm.tileentity.network.TileEntityPipeBaseNT;
@@ -351,14 +351,14 @@ public class FluidDuctBox extends FluidDuctBase implements IDynamicModels, ILook
     public void registerSprite(TextureMap map) {
         for (int i = 0; i < 3; i++) {
             String mat = materials[i];
-            iconStraight[i] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/boxduct_" + mat + "_straight"));
-            iconEnd[i] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/boxduct_" + mat + "_end"));
-            iconCurveTL[i] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/boxduct_" + mat + "_curve_tl"));
-            iconCurveTR[i] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/boxduct_" + mat + "_curve_tr"));
-            iconCurveBL[i] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/boxduct_" + mat + "_curve_bl"));
-            iconCurveBR[i] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/boxduct_" + mat + "_curve_br"));
+            iconStraight[i] = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/boxduct_" + mat + "_straight"));
+            iconEnd[i] = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/boxduct_" + mat + "_end"));
+            iconCurveTL[i] = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/boxduct_" + mat + "_curve_tl"));
+            iconCurveTR[i] = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/boxduct_" + mat + "_curve_tr"));
+            iconCurveBL[i] = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/boxduct_" + mat + "_curve_bl"));
+            iconCurveBR[i] = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/boxduct_" + mat + "_curve_br"));
             for (int j = 0; j < 5; j++) {
-                iconJunction[i][j] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "blocks/boxduct_" + mat + "_junction_" + j));
+                iconJunction[i][j] = map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/boxduct_" + mat + "_junction_" + j));
             }
         }
     }

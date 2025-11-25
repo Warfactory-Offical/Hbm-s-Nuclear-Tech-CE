@@ -1,10 +1,10 @@
 package com.hbm.items.machine;
 
+import com.hbm.Tags;
 import com.hbm.interfaces.IHasCustomModel;
 import com.hbm.inventory.material.Mats;
 import com.hbm.inventory.recipes.CrucibleRecipes;
 import com.hbm.items.ModItems;
-import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.I18nUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
@@ -25,7 +25,7 @@ import java.util.List;
 public class ItemCrucibleTemplate extends Item implements IHasCustomModel {
 
     public static final ModelResourceLocation location = new ModelResourceLocation(
-            RefStrings.MODID + ":crucible_template", "inventory");
+            Tags.MODID + ":crucible_template", "inventory");
 
     public ItemCrucibleTemplate(String s) {
         this.setTranslationKey(s);

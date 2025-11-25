@@ -1,8 +1,8 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerReactorResearch;
 import com.hbm.lib.HBMSoundHandler;
-import com.hbm.lib.RefStrings;
 import com.hbm.modules.NumberDisplay;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
@@ -24,7 +24,7 @@ import java.io.IOException;
 
 public class GUIReactorResearch extends GuiInfoContainer {
 
-    private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/reactors/gui_research_reactor.png");
+    private static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/reactors/gui_research_reactor.png");
     private TileEntityReactorResearch reactor;
     private final NumberDisplay[] displays = new NumberDisplay[3];
     byte timer;

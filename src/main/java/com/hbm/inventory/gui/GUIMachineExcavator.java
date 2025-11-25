@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
+import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerMachineExcavator;
-import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.machine.TileEntityMachineExcavator;
@@ -20,7 +20,7 @@ import java.io.IOException;
 
 public class GUIMachineExcavator extends GuiInfoContainer {
 
-	private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/machine/gui_mining_drill.png");
+	private static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/machine/gui_mining_drill.png");
 	private TileEntityMachineExcavator drill;
 
 	public GUIMachineExcavator(InventoryPlayer inventory, TileEntityMachineExcavator tile) {
