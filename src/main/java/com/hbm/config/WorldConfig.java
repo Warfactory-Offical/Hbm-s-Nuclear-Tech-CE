@@ -167,7 +167,6 @@ public class WorldConfig {
 
 
 		geyserVapor = convertToInt(CompatibilityConfig.geyserVapor.get(0));
-		meteorStructure = convertToInt(CompatibilityConfig.meteorStructure.get(0));
 		capsuleStructure = convertToInt(CompatibilityConfig.capsuleStructure.get(0));
 		arcticStructure = convertToInt(CompatibilityConfig.arcticStructure.get(0));
 		jungleStructure = convertToInt(CompatibilityConfig.jungleStructure.get(0));
