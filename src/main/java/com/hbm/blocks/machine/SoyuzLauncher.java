@@ -24,6 +24,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
@@ -68,7 +69,7 @@ public class SoyuzLauncher extends BlockDummyable {
     }
 
     @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack itemStack) {
+    public void onBlockPlacedBy(@NotNull World world, @NotNull BlockPos pos, @NotNull IBlockState state, @NotNull EntityLivingBase player, @NotNull ItemStack itemStack) {
         if (!(player instanceof EntityPlayer pl)) return;
 
         EnumHand hand = player.getHeldItemMainhand() == itemStack ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND;
@@ -160,7 +161,7 @@ public class SoyuzLauncher extends BlockDummyable {
     }
 
     @Override
-    public void breakBlock(World world, BlockPos pos, IBlockState state) {
+    public void breakBlock(@NotNull World world, @NotNull BlockPos pos, IBlockState state) {
         if (!keepInventory) {
             TileEntity te = world.getTileEntity(pos);
             if (te instanceof TileEntitySoyuzLauncher) {

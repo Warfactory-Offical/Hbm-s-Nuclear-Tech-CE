@@ -28,6 +28,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -124,7 +125,7 @@ public class BlockSlidingBlastDoor extends BlockDummyable implements IRadResista
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entityIn, boolean isActualState) {
+	public void addCollisionBoxToList(@NotNull IBlockState state, @NotNull World worldIn, @NotNull BlockPos pos, @NotNull AxisAlignedBB entityBox, @NotNull List<AxisAlignedBB> collidingBoxes, Entity entityIn, boolean isActualState) {
 		AxisAlignedBB box = state.getCollisionBoundingBox(worldIn, pos);
 		if(box.minY == 0 && box.maxY == 0)
 			return;
@@ -132,7 +133,7 @@ public class BlockSlidingBlastDoor extends BlockDummyable implements IRadResista
 	}
 
 	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+	public @NotNull AxisAlignedBB getBoundingBox(@NotNull IBlockState state, @NotNull IBlockAccess source, @NotNull BlockPos pos) {
 		int meta = state.getValue(META);
 		if(this == ModBlocks.sliding_blast_door_keypad)
 			return FULL_BLOCK_AABB;
@@ -165,7 +166,7 @@ public class BlockSlidingBlastDoor extends BlockDummyable implements IRadResista
 	}
 
 	@Override
-	public boolean isOpaqueCube(IBlockState state) {
+	public boolean isOpaqueCube(@NotNull IBlockState state) {
 		return false;
 	}
 
@@ -191,7 +192,7 @@ public class BlockSlidingBlastDoor extends BlockDummyable implements IRadResista
 	}
 	
 	@Override
-	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+	public void breakBlock(@NotNull World worldIn, @NotNull BlockPos pos, IBlockState state) {
 		RadiationSystemNT.markChunkForRebuild(worldIn, pos);
 		super.breakBlock(worldIn, pos, state);
 	}

@@ -104,7 +104,7 @@ public class MachineCrucible extends BlockDummyable implements ICrucibleAcceptor
     }
 
     @Override
-    public void breakBlock(World world, BlockPos pos, IBlockState state) {
+    public void breakBlock(@NotNull World world, @NotNull BlockPos pos, IBlockState state) {
 
         TileEntity te = world.getTileEntity(pos);
 

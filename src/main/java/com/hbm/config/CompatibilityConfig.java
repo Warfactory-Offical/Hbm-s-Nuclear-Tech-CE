@@ -82,7 +82,6 @@ public class CompatibilityConfig {
 	public static HashMap geyserChlorine;
 	public static HashMap geyserVapor;
 	public static HashMap geyserNether;
-	public static HashMap meteorStructure;
 	public static HashMap capsuleStructure;
 	public static HashMap broadcaster;
 	public static HashMap minefreq;
@@ -273,7 +272,6 @@ public class CompatibilityConfig {
 		geyserVapor = CommonConfig.createConfigHashMap(config, CATEGORY_DIMSTRUC, "03.21_geyserVaporSpawn", "Spawn vapor geyser on every nTH chunk - <dimID:n> (Int:Int)", "Int", "Int", new String[]{ "0:500" }, ":");
 		geyserNether = CommonConfig.createConfigHashMap(config, CATEGORY_DIMSTRUC, "03.22_geyserNetherSpawn", "Spawn nether geyser on every nTH chunk - <dimID:n> (Int:Int)", "Int", "Int", new String[]{ "-1:2" }, ":");
 		
-		meteorStructure = CommonConfig.createConfigHashMap(config, CATEGORY_DUNGEON, "03.23_meteorStructureSpawn", "Spawn meteor dungeon on every nTH chunk - <dimID:n> (Int:Int)", "Int", "Int", new String[]{ "0:15000" }, ":");
 		capsuleStructure = CommonConfig.createConfigHashMap(config, CATEGORY_DUNGEON, "03.24_capsuleSpawn", "Spawn landing capsule on every nTH chunk - <dimID:n> (Int:Int)", "Int", "Int", new String[]{ "0:100" }, ":");
 		arcticStructure = CommonConfig.createConfigHashMap(config, CATEGORY_DUNGEON, "03.25_arcticVaultSpawn", "Spawn artic code vault on every nTH chunk - <dimID:n> (Int:Int)", "Int", "Int", new String[]{ "0:500" }, ":");
 		jungleStructure = CommonConfig.createConfigHashMap(config, CATEGORY_DUNGEON, "03.26_jungleDungeonSpawn", "Spawn jungle dungeon on every nTH chunk - <dimID:n> (Int:Int)", "Int", "Int", new String[]{ "0:2000" }, ":");

@@ -70,7 +70,7 @@ public class LaunchPad extends BlockDummyable implements IBomb {
 	}
 
 	@Override
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
+	public void neighborChanged(@NotNull IBlockState state, World world, @NotNull BlockPos pos, @NotNull Block blockIn, @NotNull BlockPos fromPos) {
 		if (!world.isRemote) {
 			int[] corePos = findCore(world, pos.getX(), pos.getY(), pos.getZ());
 			if (corePos != null) {

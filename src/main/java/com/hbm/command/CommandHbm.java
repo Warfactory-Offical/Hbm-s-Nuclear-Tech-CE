@@ -8,6 +8,7 @@ import com.hbm.main.ModEventHandlerClient;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.GLCompat;
 import com.hbm.world.*;
+import com.hbm.world.dungeon.LibraryDungeon;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.shader.Framebuffer;
@@ -290,7 +291,6 @@ public class CommandHbm extends CommandBase {
                 case "antenna" -> Antenna.INSTANCE.generate(world, rand, genPos, force);
                 case "relay" -> Relay.INSTANCE.generate(world, rand, genPos, force);
                 case "dud" -> new Dud().generate(world, rand, genPos);
-                case "silo" -> Silo.INSTANCE.generate(world, rand, genPos, force);
                 case "barrel" -> Barrel.INSTANCE.generate(world, rand, genPos, force);
                 case "satellite" -> Satellite.INSTANCE.generate(world, rand, genPos, force);
                 case "spaceship" -> Spaceship.INSTANCE.generate(world, rand, genPos, force);

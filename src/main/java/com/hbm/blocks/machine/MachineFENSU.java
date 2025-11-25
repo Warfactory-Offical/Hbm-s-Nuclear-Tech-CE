@@ -22,6 +22,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.oredict.OreDictionary;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,7 +99,7 @@ public class MachineFENSU extends BlockDummyableMBB implements ILookOverlay {
     }
 
     @Override
-    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+    public void breakBlock(@NotNull World worldIn, @NotNull BlockPos pos, IBlockState state) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
         if (tileentity instanceof TileEntityMachineFENSU) {
             IPersistentNBT.breakBlock(worldIn, pos, state);

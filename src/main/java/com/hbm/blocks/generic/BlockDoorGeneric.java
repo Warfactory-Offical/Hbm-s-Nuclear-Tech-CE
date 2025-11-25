@@ -29,6 +29,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -111,7 +112,7 @@ public class BlockDoorGeneric extends BlockDummyable implements IRadResistantBlo
 	}
 
 	@Override
-	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entityIn, boolean isActualState){
+	public void addCollisionBoxToList(@NotNull IBlockState state, @NotNull World worldIn, @NotNull BlockPos pos, @NotNull AxisAlignedBB entityBox, @NotNull List<AxisAlignedBB> collidingBoxes, Entity entityIn, boolean isActualState){
 		AxisAlignedBB box = state.getCollisionBoundingBox(worldIn, pos);
 		if(box!= null && (box.minY == 0 && box.maxY == 0))
 			return;
@@ -119,7 +120,7 @@ public class BlockDoorGeneric extends BlockDummyable implements IRadResistantBlo
 	}
 
 	@Override
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos){
+	public void neighborChanged(@NotNull IBlockState state, World world, @NotNull BlockPos pos, @NotNull Block blockIn, @NotNull BlockPos fromPos){
 		if(!world.isRemote){
 			int[] corePos = findCore(world, pos.getX(), pos.getY(), pos.getZ());
 			if(corePos != null){
@@ -142,7 +143,7 @@ public class BlockDoorGeneric extends BlockDummyable implements IRadResistantBlo
 	}
 
 	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
+	public @NotNull AxisAlignedBB getBoundingBox(@NotNull IBlockState state, @NotNull IBlockAccess source, @NotNull BlockPos pos){
 		int meta = state.getValue(META);
 		TileEntity te = source.getTileEntity(pos);
 		int[] core = this.findCore(source, pos.getX(), pos.getY(), pos.getZ());
@@ -176,7 +177,7 @@ public class BlockDoorGeneric extends BlockDummyable implements IRadResistantBlo
 	}
 
 	@Override
-	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+	public void breakBlock(@NotNull World worldIn, @NotNull BlockPos pos, IBlockState state) {
 		if(this.isRadResistant){
 			RadiationSystemNT.markChunkForRebuild(worldIn, pos);
 		}

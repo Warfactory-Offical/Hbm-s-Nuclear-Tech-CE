@@ -4,6 +4,8 @@ import com.hbm.world.gen.MapGenNTMFeatures;
 import com.hbm.world.gen.NTMWorldGenerator;
 import com.hbm.world.gen.component.BunkerComponents;
 import com.hbm.world.gen.component.CivilianFeatures;
+import com.hbm.world.gen.component.OfficeFeatures;
+import com.hbm.world.gen.component.SiloComponent;
 import com.hbm.world.gen.nbt.NBTStructure;
 import com.hbm.world.phased.PhasedStructureGenerator;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
@@ -40,9 +42,8 @@ public class HbmWorld {
 
 	private static void registerNTMFeatures() {
 		CivilianFeatures.registerComponents();
-		// OfficeFeatures.registerComponents();
-		// RuinFeatures.registerComponents();
+		OfficeFeatures.registerComponents();
 		BunkerComponents.registerComponents();
-		// MapGenStructureIO.registerStructureComponent(SiloComponent.class, "NTMSiloComponent");
+		MapGenStructureIO.registerStructureComponent(SiloComponent.class, "NTMSiloComponent");
 	}
 }

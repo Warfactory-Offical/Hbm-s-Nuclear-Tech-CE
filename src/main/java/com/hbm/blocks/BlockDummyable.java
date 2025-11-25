@@ -12,7 +12,6 @@ import com.hbm.world.gen.nbt.INBTBlockTransformable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -30,7 +29,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
@@ -46,6 +44,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -90,7 +89,7 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
 	public static boolean safeRem = false;
 	
 	@Override
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
+	public void neighborChanged(@NotNull IBlockState state, World world, @NotNull BlockPos pos, @NotNull Block blockIn, @NotNull BlockPos fromPos) {
 		if(world.isRemote || safeRem)
     		return;
     	
@@ -108,7 +107,7 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
 	}
 	
 	@Override
-	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
+	public void updateTick(@NotNull World world, @NotNull BlockPos pos, @NotNull IBlockState state, @NotNull Random rand) {
 		super.updateTick(world, pos, state, rand);
 		if(world.isRemote)
     		return;
@@ -147,7 +146,7 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
     	return findCoreRec(world, x, y, z);
     }
     
-    List<BlockPos> positions = new ArrayList<BlockPos>();
+    List<BlockPos> positions = new ArrayList<>();
 
 	private int @Nullable [] findCoreRec(IBlockAccess world, int x, int y, int z) {
     	
@@ -178,15 +177,14 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
     }
     
     @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack itemStack) {
-    	if(!(player instanceof EntityPlayer))
+    public void onBlockPlacedBy(@NotNull World world, @NotNull BlockPos pos, @NotNull IBlockState state, @NotNull EntityLivingBase player, @NotNull ItemStack itemStack) {
+    	if(!(player instanceof EntityPlayer pl))
 			return;
 		safeRem = true;
     	world.setBlockToAir(pos);
 		safeRem = false;
-    	
-		EntityPlayer pl = (EntityPlayer) player;
-		EnumHand hand = pl.getHeldItemMainhand() == itemStack ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND;
+
+        EnumHand hand = pl.getHeldItemMainhand() == itemStack ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND;
 		
 		int i = MathHelper.floor(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
 		int o = -getOffset();
@@ -314,12 +312,9 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
 	}
 	
 	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState state) {
+	public void breakBlock(@NotNull World world, @NotNull BlockPos pos, IBlockState state) {
 		int i = state.getValue(META);
-		if(i >= 12) {
-			//ForgeDirection d = ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z) - offset);
-			//MultiblockHandler.emptySpace(world, x, y, z, getDimensions(), this, d);
-		} else if(!safeRem) {
+		if(i < 12 && !safeRem) {
 
 			if(i >= extra)
 				i -= extra;
@@ -328,8 +323,6 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
 			int[] pos1 = findCore(world, pos.getX() + dir.offsetX, pos.getY() + dir.offsetY, pos.getZ() + dir.offsetZ);
 
 			if(pos1 != null) {
-
-				//ForgeDirection d = ForgeDirection.getOrientation(world.getBlockMetadata(pos[0], pos[1], pos[2]) - offset);
 				world.setBlockToAir(new BlockPos(pos1[0], pos1[1], pos1[2]));
 			}
 		}
@@ -344,7 +337,7 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
 	public List<AxisAlignedBB> bounding = new ArrayList<>();
 
 	@Override
-	public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn, boolean isActualState) {
+	public void addCollisionBoxToList(@NotNull IBlockState state, @NotNull World worldIn, @NotNull BlockPos pos, @NotNull AxisAlignedBB entityBox, @NotNull List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn, boolean isActualState) {
 		if (!this.useDetailedHitbox()) {
 			super.addCollisionBoxToList(state, worldIn, pos, entityBox, collidingBoxes, entityIn, isActualState);
 			return;
@@ -399,37 +392,32 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
 	}
 	
 	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state) {
-		return EnumBlockRenderType.INVISIBLE;
-	}
-	
-	@Override
-	public boolean isOpaqueCube(IBlockState state) {
+	public boolean isOpaqueCube(@NotNull IBlockState state) {
 		return false;
 	}
 	
 	@Override
-	public boolean isBlockNormalCube(IBlockState state) {
+	public boolean isBlockNormalCube(@NotNull IBlockState state) {
 		return false;
 	}
 	
 	@Override
-	public boolean isNormalCube(IBlockState state) {
+	public boolean isNormalCube(@NotNull IBlockState state) {
 		return false;
 	}
 	
 	@Override
-	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) {
+	public boolean isNormalCube(@NotNull IBlockState state, @NotNull IBlockAccess world, @NotNull BlockPos pos) {
 		return false;
 	}
 	@Override
-	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
+	public boolean shouldSideBeRendered(@NotNull IBlockState blockState, @NotNull IBlockAccess blockAccess, @NotNull BlockPos pos, @NotNull EnumFacing side) {
 		return false;
 	}
 	
 	@Override
-	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, new IProperty[]{META});
+	protected @NotNull BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, META);
 	}
 	
 	@Override
@@ -438,7 +426,7 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
 	}
 	
 	@Override
-	public IBlockState getStateFromMeta(int meta) {
+	public @NotNull IBlockState getStateFromMeta(int meta) {
 		return this.getDefaultState().withProperty(META, meta);
 	}
 	
@@ -481,7 +469,7 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
 	}
 
 	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+	public @NotNull AxisAlignedBB getBoundingBox(@NotNull IBlockState state, @NotNull IBlockAccess source, @NotNull BlockPos pos) {
 		if (!this.useDetailedHitbox()) {
 			return FULL_BLOCK_AABB;
 		} else {
@@ -585,7 +573,7 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
 	public StateMapperBase getStateMapper(ResourceLocation loc) {
 		return new StateMapperBase() {
 			@Override
-			protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+			protected @NotNull ModelResourceLocation getModelResourceLocation(@NotNull IBlockState state) {
 				return new ModelResourceLocation(loc, "normal");
 			}
 		};

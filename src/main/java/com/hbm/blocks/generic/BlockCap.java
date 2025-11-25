@@ -9,6 +9,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -29,10 +30,10 @@ public class BlockCap extends BlockEnumMeta {
     }
 
     @Override
-    public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+    public @NotNull List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         int meta = state.getValue(META);
         BlockEnums.EnumBlockCapType oreType = (BlockEnums.EnumBlockCapType) this.blockEnum.getEnumConstants()[meta];
 
-        return Collections.singletonList(new ItemStack(oreType.getDrop().getItem(), oreType.getDropCount(0), oreType.drop.getMetadata()));
+        return Collections.singletonList(new ItemStack(oreType.getDrop().getItem(), oreType.getDropCount(), oreType.drop.getMetadata()));
     }
 }

@@ -25,21 +25,18 @@ import com.hbm.util.LootGenerator;
 import com.hbm.world.*;
 import com.hbm.world.dungeon.AncientTombStructure;
 import com.hbm.world.dungeon.ArcticVault;
+import com.hbm.world.dungeon.LibraryDungeon;
 import com.hbm.world.feature.*;
 import com.hbm.world.generator.CellularDungeonFactory;
 import com.hbm.world.generator.DungeonToolbox;
 import com.hbm.world.generator.JungleDungeonStructure;
-import com.hbm.world.generator.MeteorDungeonStructure;
 import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.BlockOldLog;
 import net.minecraft.block.BlockPlanks;
-import net.minecraft.block.BlockRotatedPillar;
-import net.minecraft.block.BlockSkull;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.block.state.pattern.BlockMatcher;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -337,7 +334,7 @@ public class HbmWorldGen implements IWorldGenerator {
             new Sellafield(r, r * 0.35D).generate(world, rand, new BlockPos(x, 0, z));
 
             if (GeneralConfig.enableDebugMode)
-                MainRegistry.logger.info("[Debug] Successfully spawned raditation hotspot at x=" + x + " z=" + z);
+                MainRegistry.logger.info("[Debug] Successfully spawned raditation hotspot at x={} z={}", x, z);
         }
     }
 
@@ -385,7 +382,6 @@ public class HbmWorldGen implements IWorldGenerator {
             }
             generateAStructure(world, rand, i, j, Spaceship.INSTANCE, parseInt(CompatibilityConfig.spaceshipStructure.get(dimID)));
             generateAStructure(world, rand, i, j, Bunker.INSTANCE, parseInt(CompatibilityConfig.bunkerStructure.get(dimID)));
-            generateAStructure(world, rand, i, j, Silo.INSTANCE, parseInt(CompatibilityConfig.siloStructure.get(dimID)));
             generateAStructure(world, rand, i, j, new Dud(), parseInt(CompatibilityConfig.dudStructure.get(dimID)));
             if (biome.getTempCategory() == Biome.TempCategory.WARM && biome.getTempCategory() != Biome.TempCategory.OCEAN)
                 generateSellafieldPool(world, rand, i, j, dimID);
@@ -401,7 +397,7 @@ public class HbmWorldGen implements IWorldGenerator {
                         world.setBlockState(new BlockPos(x, y, z), ModBlocks.mine_ap.getDefaultState());
 
                         if (GeneralConfig.enableDebugMode)
-                            MainRegistry.logger.info("[Debug] Successfully spawned landmine at x=" + x + " y=" + y + " z=" + z);
+                            MainRegistry.logger.info("[Debug] Successfully spawned landmine at x={} y={} z={}", x, y, z);
                     }
                 }
             }
@@ -428,7 +424,7 @@ public class HbmWorldGen implements IWorldGenerator {
                     }
 
                     if(GeneralConfig.enableDebugMode)
-                        MainRegistry.logger.info("[Debug] Successfully spawned lantern at " + x + " " + (y) + " " + z);
+                        MainRegistry.logger.info("[Debug] Successfully spawned lantern at {} {} {}", x, y, z);
                 }
             }
 
@@ -442,7 +438,7 @@ public class HbmWorldGen implements IWorldGenerator {
                     world.setBlockState(new BlockPos(x, y, z), ModBlocks.broadcaster_pc.getDefaultState().withProperty(PinkCloudBroadcaster.FACING, EnumFacing.byIndex(rand.nextInt(4) + 2)), 2);
 
                     if (GeneralConfig.enableDebugMode)
-                        MainRegistry.logger.info("[Debug] Successfully spawned corrupted broadcaster at x=" + x + " y=" + y + " z=" + z);
+                        MainRegistry.logger.info("[Debug] Successfully spawned corrupted broadcaster at x={} y={} z={}", x, y, z);
                 }
             }
 
@@ -516,7 +512,7 @@ public class HbmWorldGen implements IWorldGenerator {
                         }
 
                         if (GeneralConfig.enableDebugMode)
-                            MainRegistry.logger.info("[Debug] Successfully spawned capsule at x=" + x + " z=" + z);
+                            MainRegistry.logger.info("[Debug] Successfully spawned capsule at x={} z={}", x, z);
                     }
                 }
             }
@@ -533,7 +529,7 @@ public class HbmWorldGen implements IWorldGenerator {
                     }
                 }
                 if (GeneralConfig.enableDebugMode && done)
-                    MainRegistry.logger.info("[Debug] Successfully spawned pink tree at x=" + x + " z=" + z);
+                    MainRegistry.logger.info("[Debug] Successfully spawned pink tree at x={} z={}", x, z);
             }
             if (GeneralConfig.enableVaults) {
                 int dimVaultFreq = parseInt(CompatibilityConfig.vaultfreq.get(dimID));
@@ -578,49 +574,8 @@ public class HbmWorldGen implements IWorldGenerator {
                             }
 
                             if (GeneralConfig.enableDebugMode)
-                                MainRegistry.logger.info("[Debug] Successfully spawned safe at x=" + x + " y=" + (y + 1) + " z=" + z);
+                                MainRegistry.logger.info("[Debug] Successfully spawned safe at x={} y={} z={}", x, y + 1, z);
                         }
-                    }
-                }
-            }
-            int dimMeteorStructure = parseInt(CompatibilityConfig.meteorStructure.get(dimID));
-            if (dimMeteorStructure > 0 && rand.nextInt(dimMeteorStructure) == 0) {
-                int x = i + rand.nextInt(16);
-                int z = j + rand.nextInt(16);
-                int y = 12;
-
-                new MeteorDungeonStructure(CellularDungeonFactory.meteor, y)
-                        .generate(world, rand, new BlockPos(x, y, z), true);
-
-                if (GeneralConfig.enableDebugMode)
-                    MainRegistry.logger.info("[Debug] Successfully spawned meteor dungeon at x=" + x + " y=10 z=" + z);
-
-                int columnY = world.getHeight(x, z);
-                for (int y1 = y + 1; y1 > 1; y1--) {
-                    BlockPos check = new BlockPos(x, y1, z);
-                    IBlockState state = world.getBlockState(check);
-                    if (!state.getBlock().isReplaceable(world, check) && state.isOpaqueCube()) {
-                        columnY = y1 + 1;
-                        break;
-                    }
-                }
-
-                for (int f = 0; f < 3; f++)
-                    world.setBlockState(new BlockPos(x, columnY + f, z), ModBlocks.meteor_pillar.getDefaultState().withProperty(BlockRotatedPillar.AXIS, EnumFacing.Axis.Y));
-                world.setBlockState(new BlockPos(x, columnY + 3, z), ModBlocks.meteor_brick_chiseled.getDefaultState());
-
-                for (int f = 0; f < 10; f++) {
-                    int sx = x + (int) (rand.nextGaussian() * 4);
-                    int sz = z + (int) (rand.nextGaussian() * 4);
-                    if (x == sx && sz == z) continue;
-                    y = world.getHeight(sx, sz);
-
-                    BlockPos below = new BlockPos(sx, y - 1, sz);
-                    if (world.getBlockState(below).isSideSolid(world, below, EnumFacing.UP)) {
-                        BlockPos skullPos = new BlockPos(sx, y, sz);
-                        world.setBlockState(skullPos, Blocks.SKULL.getDefaultState().withProperty(BlockSkull.FACING, EnumFacing.UP));
-                        TileEntitySkull skull = (TileEntitySkull) world.getTileEntity(skullPos);
-                        if (skull != null) skull.setSkullRotation(rand.nextInt(16));
                     }
                 }
             }
@@ -639,7 +594,7 @@ public class HbmWorldGen implements IWorldGenerator {
                             .generate(world, world.rand, new BlockPos(x, 28, z), true);
 
                     if (GeneralConfig.enableDebugMode)
-                        MainRegistry.logger.info("[Debug] Successfully spawned jungle dungeon at x=" + x + " y=10 z=" + z);
+                        MainRegistry.logger.info("[Debug] Successfully spawned jungle dungeon at x={} y=10 z={}", x, z);
 
                     int y = world.getHeight(x, z);
                     int columnY = y;

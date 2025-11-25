@@ -26,6 +26,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
@@ -50,7 +51,7 @@ public class ZirnoxDestroyed extends BlockDummyable {
     // and have the TileEntityZirnoxDestroyed#onFire synced to clients via the TE instead of being set(and overridden) here
     // but, to preserve the behavior, I am only guarding the world.setBlockState calls
     @Override
-    public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {
+    public void updateTick(@NotNull World world, @NotNull BlockPos pos, @NotNull IBlockState state, @NotNull Random rand) {
         BlockPos posUp = pos.up();
         Block block = world.getBlockState(posUp).getBlock();
 

@@ -23,6 +23,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
@@ -75,7 +76,7 @@ public class MachineITER extends BlockDummyable {
 	public static final int height = 2;
 	
 	@Override
-	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack itemStack) {
+	public void onBlockPlacedBy(@NotNull World world, @NotNull BlockPos pos, @NotNull IBlockState state, @NotNull EntityLivingBase player, @NotNull ItemStack itemStack) {
 		if(!(player instanceof EntityPlayer))
 			return;
 		EnumHand hand = player.getHeldItemMainhand() == itemStack ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND;
@@ -144,7 +145,7 @@ public class MachineITER extends BlockDummyable {
 	}
 	
 	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState state) {
+	public void breakBlock(@NotNull World world, @NotNull BlockPos pos, IBlockState state) {
 		int i = state.getValue(META);
 		if(i >= 12 && drop) {
 

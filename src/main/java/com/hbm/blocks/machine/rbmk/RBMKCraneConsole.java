@@ -12,6 +12,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
 
 public class RBMKCraneConsole extends BlockDummyable {
@@ -35,26 +36,26 @@ public class RBMKCraneConsole extends BlockDummyable {
 	}
 
 	@Override
-	public boolean isOpaqueCube(IBlockState state) {
+	public boolean isOpaqueCube(@NotNull IBlockState state) {
 		return false;
 	}
 	
 	@Override
-	public boolean isBlockNormalCube(IBlockState state) {
+	public boolean isBlockNormalCube(@NotNull IBlockState state) {
 		return false;
 	}
 	
 	@Override
-	public boolean isNormalCube(IBlockState state) {
+	public boolean isNormalCube(@NotNull IBlockState state) {
 		return false;
 	}
 	
 	@Override
-	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) {
+	public boolean isNormalCube(@NotNull IBlockState state, @NotNull IBlockAccess world, @NotNull BlockPos pos) {
 		return false;
 	}
 	@Override
-	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
+	public boolean shouldSideBeRendered(@NotNull IBlockState blockState, @NotNull IBlockAccess blockAccess, @NotNull BlockPos pos, @NotNull EnumFacing side) {
 		return false;
 	}
 

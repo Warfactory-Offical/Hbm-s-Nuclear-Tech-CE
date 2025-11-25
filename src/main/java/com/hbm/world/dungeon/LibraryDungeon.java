@@ -1,4 +1,4 @@
-package com.hbm.world;
+package com.hbm.world.dungeon;
 
 import com.hbm.config.GeneralConfig;
 import com.hbm.world.phased.AbstractPhasedStructure;

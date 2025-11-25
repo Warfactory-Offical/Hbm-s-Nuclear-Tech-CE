@@ -44,7 +44,7 @@ public class PylonLarge extends BlockDummyable implements ITooltipProvider {
 	}
 
 	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState state) {
+	public void breakBlock(@NotNull World world, @NotNull BlockPos pos, IBlockState state) {
         TileEntity te = world.getTileEntity(pos);
         if (te instanceof TileEntityPylonBase) {
             ((TileEntityPylonBase)te).disconnectAll();

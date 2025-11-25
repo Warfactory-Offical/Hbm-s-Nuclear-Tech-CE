@@ -29,6 +29,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -104,7 +105,7 @@ public class MachineStirling extends BlockDummyable implements ILookOverlay, ITo
     }
 
     @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack itemStack) {
+    public void onBlockPlacedBy(@NotNull World world, @NotNull BlockPos pos, @NotNull IBlockState state, @NotNull EntityLivingBase player, @NotNull ItemStack itemStack) {
         super.onBlockPlacedBy(world, pos, state, player, itemStack);
 
         if (itemStack.getItemDamage() == 1) {
@@ -128,7 +129,7 @@ public class MachineStirling extends BlockDummyable implements ILookOverlay, ITo
     }
 
     @Override
-    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+    public void breakBlock(@NotNull World worldIn, @NotNull BlockPos pos, IBlockState state) {
         TileEntity tile = worldIn.getTileEntity(pos);
         if (tile instanceof TileEntityStirling stirling && stirling.shouldDrop()) {
             ItemStack itemstack = new ItemStack(Item.getItemFromBlock(state.getBlock()), 1, stirling.hasCog ? 0 : 1);

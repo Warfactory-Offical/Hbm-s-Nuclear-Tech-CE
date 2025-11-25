@@ -40,6 +40,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Random;
@@ -137,7 +138,7 @@ public class MachineFluidTank extends BlockDummyable implements IPersistentInfoP
     }
 
     @Override
-    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+    public void breakBlock(@NotNull World worldIn, @NotNull BlockPos pos, IBlockState state) {
         IPersistentNBT.breakBlock(worldIn, pos, state);
         super.breakBlock(worldIn, pos, state);
     }

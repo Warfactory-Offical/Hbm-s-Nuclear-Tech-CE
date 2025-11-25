@@ -31,6 +31,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -97,7 +98,7 @@ public abstract class RBMKBase extends BlockDummyable implements IToolable, IToo
 	}
 
 	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos bpos){
+	public @NotNull AxisAlignedBB getBoundingBox(@NotNull IBlockState state, @NotNull IBlockAccess source, @NotNull BlockPos bpos){
 		float height = 0.0F;
 		
 		int[] pos = this.findCore(source, bpos.getX(), bpos.getY(), bpos.getZ());
@@ -144,7 +145,7 @@ public abstract class RBMKBase extends BlockDummyable implements IToolable, IToo
 	}
 	
 	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState state){
+	public void breakBlock(@NotNull World world, @NotNull BlockPos pos, IBlockState state){
 		if(!world.isRemote && dropLids) {
 			int i = state.getValue(META);
 			if(i == DIR_NORMAL_LID.ordinal() + offset) {

@@ -96,7 +96,7 @@ public class MachineRefinery extends BlockDummyable implements IPersistentInfoPr
     }
 
     @Override
-    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+    public void breakBlock(@NotNull World worldIn, @NotNull BlockPos pos, IBlockState state) {
         IPersistentNBT.breakBlock(worldIn, pos, state);
         super.breakBlock(worldIn, pos, state);
     }
