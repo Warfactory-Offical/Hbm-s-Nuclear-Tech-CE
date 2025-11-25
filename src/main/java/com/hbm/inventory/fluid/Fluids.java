@@ -21,6 +21,7 @@ import com.hbm.potion.HbmPotion;
 import com.hbm.render.misc.EnumSymbol;
 import com.hbm.util.ArmorRegistry.HazardClass;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.init.MobEffects;
@@ -80,6 +81,12 @@ public class Fluids {
     protected static final List<FluidType> metaOrder = new ArrayList();
     private static final HashMap<Integer, FluidType> idMapping = new HashMap();
     private static final HashMap<String, FluidType> nameMapping = new HashMap();
+    public static final IItemColor GENERIC_COLOR_HANLDER = (stack, tintIndex) -> {
+        if (tintIndex == 1) {
+            return Fluids.fromID(stack.getMetadata()).getColor();
+        }
+        return 0xFFFFFF;
+    };
     public static FluidType NONE;
     public static FluidType WATER;
     public static FluidType STEAM;

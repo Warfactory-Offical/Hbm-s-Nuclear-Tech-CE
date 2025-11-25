@@ -8,6 +8,7 @@ import com.hbm.items.ItemBakedBase;
 import com.hbm.items.ModItems;
 import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -95,7 +96,19 @@ public class ItemFluidIcon extends ItemBakedBase {
 		return stack;
 	}
 
-	public static ItemStack make(FluidStack stack) {
+
+    @SideOnly(Side.CLIENT)
+    public IItemColor getItemColorHandler() {
+        return (stack, tintIndex) -> {
+            if (tintIndex == 0) {
+                return ItemFluidIcon.getFluidType(stack).getColor();
+            }
+            return 0xFFFFFF;
+        };
+    }
+
+
+    public static ItemStack make(FluidStack stack) {
 		return make(stack.type, stack.fill, stack.pressure);
 	}
 

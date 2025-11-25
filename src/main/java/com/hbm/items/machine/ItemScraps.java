@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.model.ModelRotation;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
@@ -125,6 +126,25 @@ public class ItemScraps extends ItemAutogen implements IDynamicModels {
             return LIQUID_MRL;
         });
     }
+
+
+
+    @SideOnly(Side.CLIENT)
+    public IItemColor getItemColorHandler() {
+
+        return (stack, tintIndex) -> {
+            if (tintIndex != 0) return 0xFFFFFF;
+            if (stack.hasTagCompound() && stack.getTagCompound().getBoolean("liquid")) {
+                NTMMaterial mat = Mats.matById.get(stack.getMetadata());
+                if (mat != null) {
+                    return mat.moltenColor;
+                }
+            }
+            return 0xFFFFFF;
+        };
+    }
+
+
 
     @Override
     @SideOnly(Side.CLIENT)

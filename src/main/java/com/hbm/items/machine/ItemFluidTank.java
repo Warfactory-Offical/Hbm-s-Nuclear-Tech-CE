@@ -101,14 +101,7 @@ public class ItemFluidTank extends ItemBakedBase {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IItemColor getItemColorHandler() {
-		return (stack, tintIndex) -> {
-			if (tintIndex == 0) {
-				return 0xFFFFFF;
-			}
-
-			int color = Fluids.fromID(stack.getMetadata()).getColor();
-			return color >= 0 ? color : 0xFFFFFF;
-		};
+        return Fluids.GENERIC_COLOR_HANLDER;
 	}
 
 	@Override

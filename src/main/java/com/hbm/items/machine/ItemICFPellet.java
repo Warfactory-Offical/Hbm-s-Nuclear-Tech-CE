@@ -4,10 +4,14 @@ import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.material.Mats;
 import com.hbm.inventory.material.NTMMaterial;
+import com.hbm.items.IDynamicModels;
 import com.hbm.items.ModItems;
+import com.hbm.items.armor.IDamageHandler;
 import com.hbm.util.BobMathUtil;
 import com.hbm.util.EnumUtil;
 import com.hbm.util.I18nUtil;
+import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -16,6 +20,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.Contract;
@@ -25,15 +30,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class ItemICFPellet extends Item {
+public class ItemICFPellet extends Item implements IDynamicModels {
     public static HashMap<FluidType, EnumICFFuel> fluidMap = new HashMap<>();
     public static HashMap<NTMMaterial, EnumICFFuel> materialMap = new HashMap<>();
+
     public ItemICFPellet(String s) {
         this.setMaxStackSize(1);
         this.setHasSubtypes(true);
         this.setTranslationKey(s);
         this.setRegistryName(s);
         ModItems.ALL_ITEMS.add(this);
+        IDynamicModels.INSTANCES.add(this);
     }
 
     public static void init() {
@@ -133,6 +140,36 @@ public class ItemICFPellet extends Item {
         tooltip.add(TextFormatting.YELLOW + "Heat required: " + BobMathUtil.getShortNumber(getFusingDifficulty(stack)) + "TU");
         tooltip.add(TextFormatting.YELLOW + "Reactivity multiplier: x" + (int) (getType(stack, true).reactionMult * getType(stack, false).reactionMult * 100) / 100D);
         if (muon) tooltip.add(TextFormatting.DARK_AQUA + "Muon catalyzed!");
+    }
+
+    @Override
+    public IItemColor getItemColorHandler() {
+        return (stack, tintIndex) -> {
+            if (tintIndex == 0) {
+                ItemICFPellet.EnumICFFuel type1 = ItemICFPellet.getType(stack, true);
+                ItemICFPellet.EnumICFFuel type2 = ItemICFPellet.getType(stack, false);
+                int r = (((type1.color & 0xff0000) >> 16) + ((type2.color & 0xff0000) >> 16)) / 2;
+                int g = (((type1.color & 0x00ff00) >> 8) + ((type2.color & 0x00ff00) >> 8)) / 2;
+                int b = ((type1.color & 0x0000ff) + (type2.color & 0x0000ff)) / 2;
+                return (r << 16) | (g << 8) | b;
+            }
+            return 0xFFFFFF;
+        };
+    }
+
+    @Override
+    public void bakeModel(ModelBakeEvent event) {
+
+    }
+
+    @Override
+    public void registerModel() {
+
+    }
+
+    @Override
+    public void registerSprite(TextureMap map) {
+
     }
 
     public enum EnumICFFuel {

@@ -5,11 +5,13 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.ModSoundTypes;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
+import com.hbm.items.IDynamicModels;
 import com.hbm.items.ModItems;
 import com.hbm.tileentity.network.TileEntityPipeBaseNT;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,6 +21,7 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.ColorHandlerEvent;
+import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -26,10 +29,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemFFFluidDuct extends Item {
+public class ItemFFFluidDuct extends Item implements IDynamicModels {
 	public static final ModelResourceLocation ductLoc = new ModelResourceLocation(
 			Tags.MODID + ":ff_fluid_duct", "inventory");
-	private static final List<ItemFFFluidDuct> INSTANCES = new ArrayList<>();
 
 	public ItemFFFluidDuct(String s) {
 		this.setTranslationKey(s);
@@ -37,10 +39,9 @@ public class ItemFFFluidDuct extends Item {
 		this.setHasSubtypes(true);
 		
 		ModItems.ALL_ITEMS.add(this);
+        IDynamicModels.INSTANCES.add(this);
 
-		if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
-			INSTANCES.add(this);
-		}
+
 	}
 
 	@Override
@@ -57,28 +58,38 @@ public class ItemFFFluidDuct extends Item {
 	}
 
 
-	@SideOnly(Side.CLIENT)
-	public static void registerColorHandlers(ColorHandlerEvent.Item evt) {
-		ItemColors itemColors = evt.getItemColors();
-		IItemColor handler = new ItemFFFluidDuct.FluidDuctColorHandler();
 
-		for (ItemFFFluidDuct item : INSTANCES) {
-			itemColors.registerItemColorHandler(handler, item);
-		}
-	}
+    @Override
+    @SideOnly(Side.CLIENT)
+    public IItemColor getItemColorHandler() {
+        return (stack, tintIndex) ->{
+            if (tintIndex == 1) {
+                int color = Fluids.fromID(stack.getItemDamage()).getColor();
+                return color < 0 ? 0xFFFFFF : color;
+            }
+            return 0xFFFFFF;
+        };
+    }
 
-	@SideOnly(Side.CLIENT)
-	private static class FluidDuctColorHandler implements IItemColor {
-		@Override
-		public int colorMultiplier(ItemStack stack, int tintIndex) {
-			if (tintIndex == 1) {
-				int color = Fluids.fromID(stack.getItemDamage()).getColor();
-				return color < 0 ? 0xFFFFFF : color;
-			}
-			return 0xFFFFFF;
-		}
-	}
-	
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void bakeModel(ModelBakeEvent event) {
+
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerModel() {
+
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerSprite(TextureMap map) {
+
+    }
+
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public String getItemStackDisplayName(ItemStack stack) {

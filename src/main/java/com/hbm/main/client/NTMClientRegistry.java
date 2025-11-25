@@ -2,17 +2,12 @@ package com.hbm.main.client;
 
 import com.hbm.Tags;
 import com.hbm.blocks.ModBlocks;
-import com.hbm.blocks.bomb.Balefire;
 import com.hbm.blocks.generic.TrappedBrick;
-import com.hbm.blocks.network.FluidDuctBox;
-import com.hbm.blocks.network.FluidDuctStandard;
 import com.hbm.entity.siege.SiegeTier;
 import com.hbm.forgefluid.SpecialContainerFillLists;
 import com.hbm.interfaces.IHasCustomModel;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.inventory.material.Mats;
-import com.hbm.inventory.material.NTMMaterial;
 import com.hbm.inventory.recipes.ChemplantRecipes;
 import com.hbm.items.IDynamicModels;
 import com.hbm.items.IModelRegister;
@@ -42,7 +37,6 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
@@ -50,7 +44,6 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.IRegistry;
@@ -82,59 +75,9 @@ public class NTMClientRegistry {
 
     @SubscribeEvent
     public void itemColorsEvent(ColorHandlerEvent.Item evt) {
-        IItemColor fluidMetaHandler = (stack, tintIndex) -> {
-            if (tintIndex == 1) {
-                return Fluids.fromID(stack.getMetadata()).getColor();
-            }
-            return 0xFFFFFF;
-        };
-        evt.getItemColors().registerItemColorHandler((ItemStack stack, int tintIndex) -> {
-            if (tintIndex == 1) {
-                int j = ItemCassette.TrackType.getEnum(stack.getItemDamage()).getColor();
-                if (j < 0) j = 0xFFFFFF;
-                return j;
-            }
-            return 0xFFFFFF;
-        }, ModItems.siren_track);
-        evt.getItemColors().registerItemColorHandler((stack, tintIndex) -> {
-            if (tintIndex == 0) {
-                ItemICFPellet.EnumICFFuel type1 = ItemICFPellet.getType(stack, true);
-                ItemICFPellet.EnumICFFuel type2 = ItemICFPellet.getType(stack, false);
-                int r = (((type1.color & 0xff0000) >> 16) + ((type2.color & 0xff0000) >> 16)) / 2;
-                int g = (((type1.color & 0x00ff00) >> 8) + ((type2.color & 0x00ff00) >> 8)) / 2;
-                int b = ((type1.color & 0x0000ff) + (type2.color & 0x0000ff)) / 2;
-                return (r << 16) | (g << 8) | b;
-            }
-            return 0xFFFFFF;
-        }, ModItems.icf_pellet);
-        evt.getItemColors().registerItemColorHandler(fluidMetaHandler, ModItems.fluid_tank_full);
-        evt.getItemColors().registerItemColorHandler(fluidMetaHandler, ModItems.fluid_tank_lead_full);
-        evt.getItemColors().registerItemColorHandler(fluidMetaHandler, ModItems.fluid_barrel_full);
-        evt.getItemColors().registerItemColorHandler(fluidMetaHandler, ModItems.disperser_canister);
-        evt.getItemColors().registerItemColorHandler(fluidMetaHandler, ModItems.glyphid_gland);
-        evt.getItemColors().registerItemColorHandler((stack, tintIndex) -> {
-            if (tintIndex == 0) {
-                return ItemFluidIcon.getFluidType(stack).getColor();
-            }
-            return 0xFFFFFF;
-        }, ModItems.fluid_icon);
-        evt.getItemColors().registerItemColorHandler((stack, tintIndex) -> {
-            if (tintIndex != 0) return 0xFFFFFF;
-            if (stack.hasTagCompound() && stack.getTagCompound().getBoolean("liquid")) {
-                NTMMaterial mat = Mats.matById.get(stack.getMetadata());
-                if (mat != null) {
-                    return mat.moltenColor;
-                }
-            }
-            return 0xFFFFFF;
-        }, ModItems.scraps);
-        //TODO: Move to IDynamicModels
         ItemBedrockOreNew.registerColorHandlers(evt);
-        ItemFFFluidDuct.registerColorHandlers(evt);
-        ItemGasCanister.registerColorHandler(evt);
         IDynamicModels.registerItemColorHandlers(evt);
         ItemChemicalDye.registerColorHandlers(evt);
-        ItemKitCustom.registerColorHandlers(evt);
     }
 
     @SubscribeEvent
@@ -149,7 +92,7 @@ public class NTMClientRegistry {
         ItemMold.registerSprites(map);
 
         IDynamicModels.registerSprites(map);
-        RegistrationUtils.registerInFolder(map,"textures/blocks/forgefluid");
+        RegistrationUtils.registerInFolder(map, "textures/blocks/forgefluid");
 
         //Debug stuff
         debugPower = map.registerSprite(new ResourceLocation(Tags.MODID, "particle/debug_power"));
@@ -158,7 +101,6 @@ public class NTMClientRegistry {
         contrail = map.registerSprite(new ResourceLocation(Tags.MODID, "particle/contrail"));
         particle_base = map.registerSprite(new ResourceLocation(Tags.MODID, "particle/particle_base"));
         fog = map.registerSprite(new ResourceLocation(Tags.MODID, "particle/fog"));
-
 
 
         map.registerSprite(new ResourceLocation(Tags.MODID, "items/ore_bedrock_layer"));
@@ -251,6 +193,7 @@ public class NTMClientRegistry {
             reg.putObject(loc, new BakedModelNoFPV((TEISRBase) render, model));
         }
     }
+
     @SubscribeEvent
     public void onGuiInit(GuiScreenEvent.InitGuiEvent.Post event) {
         if (!ctmWarning) return;
@@ -317,6 +260,7 @@ public class NTMClientRegistry {
 
         //FIXME: this is a dogshit solution
         // now 2 dogshit solutions!
+        //Someone will be executed for this
 
 
     }
@@ -325,6 +269,7 @@ public class NTMClientRegistry {
         registerModel(Item.getItemFromBlock(block), meta);
     }
 
+    @Deprecated//
     private void registerModel(Item item, int meta) {
         if (item == Items.AIR)
             return;
