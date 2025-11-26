@@ -2,9 +2,8 @@ package com.hbm.world.generator;
 
 import com.hbm.blocks.PlantEnums;
 import com.hbm.blocks.generic.BlockFlowerPlant;
-import com.hbm.blocks.generic.BlockPlantEnumMeta;
 import com.hbm.render.amlfrom1710.Vec3;
-import com.hbm.world.feature.NTMFlowers;
+import com.hbm.world.feature.WorldGenMinableNonCascade;
 import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
@@ -13,14 +12,13 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenFlowers;
-import net.minecraft.world.gen.feature.WorldGenMinable;
 
 import java.util.List;
 import java.util.Random;
 
 public class DungeonToolbox {
 
-    	public static void generateFlowers(World world, Random rand, int chunkX, int chunkZ, BlockFlowerPlant flower, PlantEnums.EnumFlowerPlantType type){
+    public static void generateFlowers(World world, Random rand, int chunkX, int chunkZ, BlockFlowerPlant flower, PlantEnums.EnumFlowerPlantType type){
 		int x = chunkX + rand.nextInt(16);
 		int z = chunkZ + rand.nextInt(16);
 		int y = world.getHeight(new BlockPos(x, 0, z)).getY();
@@ -132,7 +130,7 @@ public class DungeonToolbox {
                 int y = minHeight + (variance > 0 ? rand.nextInt(variance) : 0);
                 int z = chunkZ + rand.nextInt(16);
 
-                (new WorldGenMinable(ore, amount, state -> state.getBlock() == target)).generate(world, rand, new BlockPos(x, y, z));
+                new WorldGenMinableNonCascade(ore, amount, state -> state.getBlock() == target).generate(world, rand, new BlockPos(x, y, z));
             }
         }
     }
