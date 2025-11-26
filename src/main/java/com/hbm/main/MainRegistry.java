@@ -141,6 +141,7 @@ public class MainRegistry {
     public static int y;
     public static int z;
     public static long time;
+    public static long startupTime = 0;
     public static File configDir;
     public static File configHbmDir;
     // Armor Materials
@@ -254,6 +255,7 @@ public class MainRegistry {
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        startupTime = System.currentTimeMillis();
         CrashHelper.init();
 
         if (logger == null)

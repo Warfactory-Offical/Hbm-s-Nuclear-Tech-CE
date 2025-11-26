@@ -393,7 +393,7 @@ public class ModEventHandlerClient {
 
         if (Keyboard.isKeyDown(Keyboard.KEY_F1) && Minecraft.getMinecraft().currentScreen != null) {
 
-            ComparableStack comp = canneryTimestamp > System.currentTimeMillis() - 100 ? lastCannery : null;
+            ComparableStack comp = canneryTimestamp > Clock.get_ms() - 100 ? lastCannery : null;
 
             if (comp == null) {
                 ItemStack stack = getMouseOverStack();
@@ -410,7 +410,7 @@ public class ModEventHandlerClient {
 
         if (Keyboard.isKeyDown(HbmKeybinds.qmaw.getKeyCode()) && Minecraft.getMinecraft().currentScreen != null) {
 
-            QuickManualAndWiki qmaw = qmawTimestamp > System.currentTimeMillis() - 100 ? lastQMAW : null;
+            QuickManualAndWiki qmaw = qmawTimestamp > Clock.get_ms() - 100 ? lastQMAW : null;
 
             if (qmaw != null) {
                 Minecraft.getMinecraft().player.closeScreen();
@@ -577,17 +577,17 @@ public class ModEventHandlerClient {
 
         Vec3d vec = new Vec3d(x - d3, y - d4, z - d5);
 
-        if (vec.length() < dist) {
+        if (vec.length() < dist && !HTTPHandler.capsule.isEmpty()) {
             GlStateManager.pushMatrix();
             GlStateManager.translate(vec.x, vec.y, vec.z);
 
 
-            net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();
+            RenderHelper.enableStandardItemLighting();
             GL11.glRotated(80, 0, 0, 1);
             GL11.glRotated(30, 0, 1, 0);
 
-            double sine = Math.sin(System.currentTimeMillis() * 0.0005) * 5;
-            double sin3 = Math.sin(System.currentTimeMillis() * 0.0005 + Math.PI * 0.5) * 5;
+            double sine = Math.sin(Clock.get_ms() * 0.0005) * 5;
+            double sin3 = Math.sin(Clock.get_ms() * 0.0005 + Math.PI * 0.5) * 5;
             GL11.glRotated(sine, 0, 0, 1);
             GL11.glRotated(sin3, 1, 0, 0);
 
@@ -595,9 +595,10 @@ public class ModEventHandlerClient {
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 6500F, 30F);
             SoyuzPronter.prontCapsule();
 
-            GL11.glRotated(System.currentTimeMillis() * 0.025 % 360, 0, -1, 0);
+            GL11.glRotated(Clock.get_ms() * 0.025 % 360, 0, -1, 0);
 
-            String msg = HTTPHandler.capsule;
+            int rand = new Random(MainRegistry.startupTime).nextInt(HTTPHandler.capsule.size());
+            String msg = HTTPHandler.capsule.get(rand);
 
             GlStateManager.translate(0, 3.75, 0);
             GL11.glRotated(180, 1, 0, 0);
@@ -626,7 +627,7 @@ public class ModEventHandlerClient {
                 GlStateManager.popMatrix();
             }
 
-            net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
+            RenderHelper.disableStandardItemLighting();
 
             GlStateManager.popMatrix();
         }

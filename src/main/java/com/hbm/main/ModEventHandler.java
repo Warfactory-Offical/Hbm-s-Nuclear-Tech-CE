@@ -84,8 +84,11 @@ import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.storage.loot.*;
@@ -1240,38 +1243,31 @@ public class ModEventHandler {
     public void onPlayerLogin(PlayerLoggedInEvent event) {
         if (event.player instanceof EntityPlayerMP player) {
 
-            if (GeneralConfig.enableWelcomeMessage) {
-                event.player.sendMessage(new TextComponentTranslation("chat.welcome"));
-            }
-
-            if (HTTPHandler.newVersion && GeneralConfig.changelog) {
-                event.player.sendMessage(new TextComponentTranslation("chat.newver", HTTPHandler.versionNumber));
-                event.player.sendMessage(new TextComponentTranslation("chat.curver", Tags.VERSION));
-
-                if (HTTPHandler.changes != "") {
-                    String[] lines = HTTPHandler.changes.split("\\$");
-                    event.player.sendMessage(new TextComponentString("§6[Some of the new Features]§r"));//RefStrings.CHANGELOG
-                    for (String w : lines) {
-                        event.player.sendMessage(new TextComponentString(w));//RefStrings.CHANGELOG
-                    }
+            if (GeneralConfig.enableMOTD) {
+                player.sendMessage(new TextComponentString("Loaded world with Hbm's Nuclear Tech Mod " + Tags.VERSION + " for Minecraft 1.7.10!"));
+                if (HTTPHandler.newVersion && GeneralConfig.changelog) {
+                    player.sendMessage(new TextComponentTranslation("chat.newver", HTTPHandler.versionNumber));
+                    player.sendMessage(new TextComponentString("Click ")
+                            .setStyle(new Style().setColor(TextFormatting.YELLOW))
+                            .appendSibling(new TextComponentString("[here]")
+                                    .setStyle(new Style().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/Warfactory-Offical/Hbm-s-Nuclear-Tech-CE/releases")).setUnderlined(Boolean.TRUE).setColor(TextFormatting.RED))
+                            ).appendSibling(new TextComponentString(" to download!").setStyle(new Style().setColor(TextFormatting.YELLOW)))
+                    );
                 }
             }
 
-            if (HTTPHandler.optifine) {
-                event.player.sendMessage(new TextComponentString("Optifine detected, may cause compatibility issues. Check log for details."));
-            }
             if (GeneralConfig.duckButton) {
-                if (event.player instanceof EntityPlayerMP && !event.player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getBoolean("hasDucked")) {
-                    PacketDispatcher.sendTo(new PlayerInformPacket("chat.duck"), (EntityPlayerMP) event.player);
+                if (!player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getBoolean("hasDucked")) {
+                    PacketDispatcher.sendTo(new PlayerInformPacket("chat.duck"), player);
                 }
             }
 
             if(GeneralConfig.enableGuideBook) {
-                IHBMData props = HbmCapability.getData(event.player);
+                IHBMData props = HbmCapability.getData(player);
 
                 if(!props.hasReceivedBook()) {
-                    event.player.inventory.addItemStackToInventory(new ItemStack(ModItems.book_guide, 1, ItemGuideBook.BookType.STARTER.ordinal()));
-                    event.player.inventoryContainer.detectAndSendChanges();
+                    player.inventory.addItemStackToInventory(new ItemStack(ModItems.book_guide, 1, ItemGuideBook.BookType.STARTER.ordinal()));
+                    player.inventoryContainer.detectAndSendChanges();
                     props.setReceivedBook(true);
                 }
             }

@@ -2,13 +2,8 @@ package com.hbm.config;
 
 import com.hbm.main.MainRegistry;
 import com.hbm.render.GLCompat;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import org.apache.logging.log4j.Level;
-import org.lwjgl.opengl.GLContext;
 
 public class GeneralConfig {
 
@@ -22,7 +17,6 @@ public class GeneralConfig {
 	public static boolean enableDebugMode = false;
 	public static boolean enableDebugWorldGen = false;
 	public static boolean enableSkyboxes = true;
-	public static boolean enableWelcomeMessage = true;
 	public static boolean enableKeybindOverlap = true;
 	public static boolean enableFluidContainerCompat = true;
 	public static boolean enableMycelium = false;
@@ -66,6 +60,7 @@ public class GeneralConfig {
 	public static boolean changelog = true;
 	public static boolean registerTanks = true;
 	public static boolean duckButton = true;
+    public static boolean enableMOTD = true;
     public static boolean enableGuideBook = true;
 	public static boolean depthEffects = true;
 	public static boolean flashlight = true;
@@ -206,13 +201,11 @@ public class GeneralConfig {
 		if(crucibleMaxCharges <= 0){
 			crucibleMaxCharges = 16;
 		}
-
-		enableWelcomeMessage = CommonConfig.createConfigBool(config, CATEGORY_GENERAL, "1.34_enableWelcomeMessage", "Enables the welcome message which appears in the chat when you load into the game", true);
-
 		conversionRateHeToRF = CommonConfig.createConfigDouble(config, CATEGORY_GENERAL, "1.35_conversionRateHeToRF", "One HE is (insert number) RF - <number> (double)", 1.0D);
 
 		hintPos = CommonConfig.createConfigInt(config, CATEGORY_GENERAL, "1.36_infoOverlayPosition", "Positions where the info overlay will appear (from 0 to 3). 0: Top left\n1: Top right\n2: Center right\n3: Center Left", 0);
 		enableFluidContainerCompat = config.get(CATEGORY_GENERAL, "1.37_enableFluidContainerCompat", true, "If enabled, fluid containers will be oredicted and interchangable in recipes with other mods' containers. Should probably work with things like IE's/GC oil properly.").getBoolean(true);
+        enableMOTD = config.get(CATEGORY_GENERAL, "1.36_enableMOTD", true, "If enabled, shows the 'Loaded mod!' chat message as well as update notifications when joining a world").getBoolean(true);
         enableGuideBook = config.get(CATEGORY_GENERAL, "1.37_enableGuideBook", true, "If enabled, gives players the guide book when joining the world for the first time").getBoolean(true);
         decoToIngotRate = CommonConfig.createConfigInt(config, CATEGORY_GENERAL, "1.38_decoToIngotConversionRate", "Chance of successful turning a deco block into an ingot. Default is 25%", 25);
 		enableThreadedAtmospheres = CommonConfig.createConfigBool(config, CATEGORY_GENERAL, "1.39_threadedAtmospheres", "If enabled, will run atmosphere blobbing in a separate thread for performance", true);
