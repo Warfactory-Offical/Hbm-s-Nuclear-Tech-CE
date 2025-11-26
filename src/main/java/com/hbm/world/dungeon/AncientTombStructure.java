@@ -6,10 +6,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 public class AncientTombStructure extends AbstractPhasedStructure {
     public static final AncientTombStructure INSTANCE = new AncientTombStructure();
@@ -22,7 +19,17 @@ public class AncientTombStructure extends AbstractPhasedStructure {
 
     @Override
     public List<@NotNull BlockPos> getValidationPoints(@NotNull BlockPos origin) {
-        return Collections.singletonList(origin);
+        final int r = 27;
+        return Arrays.asList(origin,
+                origin.add( r, 0,  0),
+                origin.add(-r, 0,  0),
+                origin.add( 0, 0,  r),
+                origin.add( 0, 0, -r),
+                origin.add( r, 0,  r),
+                origin.add( r, 0, -r),
+                origin.add(-r, 0,  r),
+                origin.add(-r, 0, -r)
+        );
     }
 
     @Override

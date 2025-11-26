@@ -435,7 +435,6 @@ public class MainRegistry {
         FluidCombustionRecipes.registerFluidCombustionRecipes();
         HbmDetox.init();
         NTMBatteryCapabilityHandler.initialize();
-        MinecraftForge.EVENT_BUS.register(PhasedStructureGenerator.INSTANCE);
 
         //has to register after cracking, and therefore after all serializable recipes
         RadiolysisRecipes.registerRadiolysis();

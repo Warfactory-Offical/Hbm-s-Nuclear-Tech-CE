@@ -56,17 +56,17 @@ public class AncientTomb {
 				for(int iz = -range; iz <= range; iz++) {
 					BlockPos currentPos = new BlockPos(x + ix, surfaceY + iy, z + iz);
 					if((ix <= -range + 1 || ix >= range - 1) && (iz <= -range + 1 || iz >= range - 1)) {
-						world.setBlockState(currentPos, ModBlocks.reinforced_stone.getDefaultState());
+						world.setBlockState(currentPos, ModBlocks.reinforced_stone.getDefaultState(), 2 | 16);
 						continue;
 					}
 					
 					if(iy == 1) {
-						world.setBlockState(currentPos, ModBlocks.concrete_smooth.getDefaultState());
+						world.setBlockState(currentPos, ModBlocks.concrete_smooth.getDefaultState(), 2 | 16);
 						continue;
 					}
 					
 					if((ix <= -range + 1 || ix >= range - 1) || (iz <= -range + 1 || iz >= range - 1)) {
-						world.setBlockState(currentPos, ModBlocks.concrete_smooth.getDefaultState());
+						world.setBlockState(currentPos, ModBlocks.concrete_smooth.getDefaultState(), 2 | 16);
 						continue;
 					}
 					world.setBlockToAir(currentPos);
@@ -75,10 +75,10 @@ public class AncientTomb {
 		}
 
 		DungeonToolbox.generateBox(world, x - 2, surfaceY + 2, z - 2, 5, 4, 5, concrete);
-		world.setBlockState(new BlockPos(x + 2, surfaceY + 3, z), ModBlocks.brick_concrete_marked.getDefaultState());
-		world.setBlockState(new BlockPos(x - 2, surfaceY + 3, z), ModBlocks.brick_concrete_marked.getDefaultState());
-		world.setBlockState(new BlockPos(x, surfaceY + 3, z + 2), ModBlocks.brick_concrete_marked.getDefaultState());
-		world.setBlockState(new BlockPos(x, surfaceY + 3, z - 2), ModBlocks.brick_concrete_marked.getDefaultState());
+		world.setBlockState(new BlockPos(x + 2, surfaceY + 3, z), ModBlocks.brick_concrete_marked.getDefaultState(), 2 | 16);
+		world.setBlockState(new BlockPos(x - 2, surfaceY + 3, z), ModBlocks.brick_concrete_marked.getDefaultState(), 2 | 16);
+		world.setBlockState(new BlockPos(x, surfaceY + 3, z + 2), ModBlocks.brick_concrete_marked.getDefaultState(), 2 | 16);
+		world.setBlockState(new BlockPos(x, surfaceY + 3, z - 2), ModBlocks.brick_concrete_marked.getDefaultState(), 2 | 16);
 
 		DungeonToolbox.generateBox(world, x + 5, surfaceY + 2, z + 5, 1, 7, 1, ModBlocks.concrete_pillar.getDefaultState().withProperty(BlockRotatedPillar.AXIS, EnumFacing.Axis.Y));
 		DungeonToolbox.generateBox(world, x + 5, surfaceY + 2, z - 5, 1, 7, 1, ModBlocks.concrete_pillar.getDefaultState().withProperty(BlockRotatedPillar.AXIS, EnumFacing.Axis.Y));
@@ -107,7 +107,7 @@ public class AncientTomb {
 						Block b = world.getBlockState(new BlockPos(dx, dy, dz)).getBlock();
 
 						if(b != Blocks.AIR && b != ModBlocks.gas_radon_tomb && b != ModBlocks.concrete && b != ModBlocks.concrete_smooth && b != ModBlocks.brick_concrete && b != ModBlocks.brick_concrete_cracked && b != ModBlocks.brick_concrete_broken) {
-							world.setBlockState(new BlockPos(dx, dy, dz), DungeonToolbox.getRandom(concrete, rand), 3);
+							world.setBlockState(new BlockPos(dx, dy, dz), DungeonToolbox.getRandom(concrete, rand), 2 | 16);
 						}
 					}
 				}
@@ -122,7 +122,7 @@ public class AncientTomb {
 					
 					Block b = world.getBlockState(new BlockPos(dx, dy, dz)).getBlock();
 					if(b != Blocks.AIR && b != ModBlocks.gas_radon_tomb && b != ModBlocks.concrete && b != ModBlocks.concrete_smooth && b != ModBlocks.brick_concrete && b != ModBlocks.brick_concrete_cracked && b != ModBlocks.brick_concrete_broken) {
-						world.setBlockState(new BlockPos(dx, dy, dz), DungeonToolbox.getRandom(concrete, rand), 3);
+						world.setBlockState(new BlockPos(dx, dy, dz), DungeonToolbox.getRandom(concrete, rand), 2 | 16);
 					}
 				}
 			}
@@ -138,7 +138,7 @@ public class AncientTomb {
 			int iz = (int) (z + vec.zCoord * variance);
 			int iy = world.getHeight(ix, iz) - 3;
 			for(int j = iy; j < iy + 7; j++) {
-				world.setBlockState(new BlockPos(ix, j, iz), ModBlocks.deco_steel.getDefaultState());
+				world.setBlockState(new BlockPos(ix, j, iz), ModBlocks.deco_steel.getDefaultState(), 2 | 16);
 			}
 		}
 	}

@@ -30,14 +30,14 @@ public class HbmWorld {
 
 		worldGenerator = new NTMWorldGenerator();
 		registerWorldGen(worldGenerator, 1);
+        registerWorldGen(PhasedStructureGenerator.INSTANCE, 1);
 		MinecraftForge.EVENT_BUS.register(worldGenerator);
-
+        MinecraftForge.EVENT_BUS.register(PhasedStructureGenerator.INSTANCE);
 		NBTStructure.register();
 	}
 
 	private static void registerWorldGen(IWorldGenerator nukerWorldGen, int weightedProbability) {
 		GameRegistry.registerWorldGenerator(nukerWorldGen, weightedProbability);
-		GameRegistry.registerWorldGenerator(PhasedStructureGenerator.INSTANCE, weightedProbability);
 	}
 
 	private static void registerNTMFeatures() {

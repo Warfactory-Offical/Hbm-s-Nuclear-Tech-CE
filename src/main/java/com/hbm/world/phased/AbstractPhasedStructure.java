@@ -23,7 +23,13 @@ import java.util.concurrent.ConcurrentHashMap;
  * Base class for all phased structures.
  */
 public abstract class AbstractPhasedStructure extends WorldGenerator implements IPhasedStructure {
-    private static final Map<Class<? extends AbstractPhasedStructure>, Map<ChunkPos, List<BlockInfo>>> STRUCTURE_CACHE = new ConcurrentHashMap<>();
+    private static final Map<Class<? extends AbstractPhasedStructure>, Map<Long, Map<ChunkPos, List<BlockInfo>>>> STRUCTURE_CACHE = new ConcurrentHashMap<>();
+
+    private static long anchorKey(int anchorX, int anchorZ) {
+        int ax = anchorX & 15;
+        int az = anchorZ & 15;
+        return (((long) ax) << 32) | (az & 0xFFFF_FFFFL);
+    }
 
     /**
      * Static part. Leave this empty if the whole structure is dynamic.
@@ -48,22 +54,27 @@ public abstract class AbstractPhasedStructure extends WorldGenerator implements 
 
     public final boolean generate(@NotNull World world, @NotNull Random rand, @NotNull BlockPos pos, boolean force) {
         BlockPos origin = pos.add(0, getGenerationHeightOffset(), 0);
+        int anchorX = origin.getX() & 15;
+        int anchorZ = origin.getZ() & 15;
+        long aKey = anchorKey(anchorX, anchorZ);
         Map<ChunkPos, List<BlockInfo>> layout;
+
         if (this.isCacheable()) {
-            layout = STRUCTURE_CACHE.computeIfAbsent(this.getClass(), k -> {
+            Map<Long, Map<ChunkPos, List<BlockInfo>>> byAnchor = STRUCTURE_CACHE.computeIfAbsent(this.getClass(), k -> new ConcurrentHashMap<>());
+            layout = byAnchor.computeIfAbsent(aKey, k -> {
                 LegacyBuilder staticBuilder = new LegacyBuilder(new Random(this.getClass().getName().hashCode()));
                 this.buildStructure(staticBuilder, staticBuilder.rand);
-                return chunkTheLayout(staticBuilder.getBlocks());
+                return chunkTheLayout(staticBuilder.getBlocks(), anchorX, anchorZ);
             });
         } else {
             LegacyBuilder dynamicBuilder = new LegacyBuilder(rand);
             this.buildStructure(dynamicBuilder, dynamicBuilder.rand);
-            layout = chunkTheLayout(dynamicBuilder.getBlocks());
+            layout = chunkTheLayout(dynamicBuilder.getBlocks(), anchorX, anchorZ);
         }
 
         if (force) {
             if (GeneralConfig.enableDebugWorldGen) MainRegistry.logger.info("Forcing {} generation at {}", this.getClass().getSimpleName(), origin);
-            PhasedStructureGenerator.INSTANCE.forceGenerateStructure(world, rand, origin, this, layout);
+            PhasedStructureGenerator.forceGenerateStructure(world, rand, origin, this, layout);
         } else {
             if (GeneralConfig.enableDebugWorldGen) MainRegistry.logger.info("Proposing {} generation at {}", this.getClass().getSimpleName(), origin);
             PhasedStructureGenerator.INSTANCE.scheduleStructureForValidation(world, origin, this, layout);
@@ -71,25 +82,31 @@ public abstract class AbstractPhasedStructure extends WorldGenerator implements 
         return true;
     }
 
-    private static Map<ChunkPos, List<BlockInfo>> chunkTheLayout(Map<BlockPos, BlockInfo> blocks) {
+    private static Map<ChunkPos, List<BlockInfo>> chunkTheLayout(Map<BlockPos, BlockInfo> blocks, int anchorX, int anchorZ) {
         Map<ChunkPos, List<BlockInfo>> chunkedMap = new HashMap<>();
-        for (Map.Entry<BlockPos, BlockInfo> entry : blocks.entrySet()) {
-            BlockInfo info = entry.getValue();
-            ChunkPos relativeChunkPos = new ChunkPos(info.relativePos.getX() >> 4, info.relativePos.getZ() >> 4);
+        for (BlockInfo info : blocks.values()) {
+            int localX = anchorX + info.relativePos.getX();
+            int localZ = anchorZ + info.relativePos.getZ();
+
+            int relChunkX = localX >> 4;
+            int relChunkZ = localZ >> 4;
+
+            ChunkPos relativeChunkPos = new ChunkPos(relChunkX, relChunkZ);
             chunkedMap.computeIfAbsent(relativeChunkPos, c -> new ArrayList<>()).add(info);
         }
         return chunkedMap;
     }
 
     @Override
-    public final void generateForChunk(@NotNull World world, @NotNull Random rand, @NotNull BlockPos structureOrigin, @NotNull ChunkPos chunkToGenerate, @Nullable List<BlockInfo> blocksForThisChunk) {
-        if (blocksForThisChunk == null) return;
+    public final void generateForChunk(@NotNull World world, @NotNull Random rand, @NotNull BlockPos structureOrigin,
+                                       @NotNull ChunkPos chunkToGenerate, @Nullable List<BlockInfo> blocksForThisChunk) {
+        if (blocksForThisChunk == null || blocksForThisChunk.isEmpty()) return;
+
         List<BlockInfo> teInfos = new ArrayList<>();
         for (BlockInfo info : blocksForThisChunk) {
             BlockPos worldPos = structureOrigin.add(info.relativePos);
-            /// 16 = no neighbour notification
-            /// @see WorldGenerator#setBlockAndNotifyAdequately
             world.setBlockState(worldPos, info.state, 2 | 16);
+
             if (info.tePopulator != null) {
                 teInfos.add(info);
             }
@@ -102,8 +119,7 @@ public abstract class AbstractPhasedStructure extends WorldGenerator implements 
                 try {
                     info.tePopulator.populate(world, rand, worldPos, te);
                 } catch (ClassCastException e) { // mlbv: just in case, I used force cast several times
-                    MainRegistry.logger.error("WorldGen found incompatible TileEntity type in dimension {} at {}, this is a bug!",
-                            world.provider.getDimension(), worldPos, e);
+                    MainRegistry.logger.error("WorldGen found incompatible TileEntity type in dimension {} at {}, this is a bug!", world.provider.getDimension(), worldPos, e);
                 }
             }
         }
@@ -133,8 +149,8 @@ public abstract class AbstractPhasedStructure extends WorldGenerator implements 
     }
 
     public class LegacyBuilder {
-        private final Map<BlockPos, BlockInfo> blocks = new HashMap<>();
         public final Random rand;
+        private final Map<BlockPos, BlockInfo> blocks = new HashMap<>();
 
         public LegacyBuilder(Random rand) {
             this.rand = rand;
@@ -149,7 +165,8 @@ public abstract class AbstractPhasedStructure extends WorldGenerator implements 
         }
 
         public void setBlockState(@NotNull BlockPos pos, @NotNull IBlockState state, @Nullable TileEntityPopulator populator) {
-            blocks.put(pos.toImmutable(), new BlockInfo(pos.toImmutable(), state, populator));
+            BlockPos immutable = pos.toImmutable();
+            blocks.put(immutable, new BlockInfo(immutable, state, populator));
         }
 
         @NotNull
@@ -157,8 +174,10 @@ public abstract class AbstractPhasedStructure extends WorldGenerator implements 
         public IBlockState getBlockState(@NotNull BlockPos pos) {
             BlockInfo info = blocks.get(pos);
             if (info != null) return info.state;
-            if (GeneralConfig.enableDebugWorldGen)
-                MainRegistry.logger.warn("Structure {} tried to retrieve non-existent BlockState at relative {}", AbstractPhasedStructure.this.getClass().getSimpleName(), pos);
+            if (GeneralConfig.enableDebugWorldGen) {
+                MainRegistry.logger.warn("Structure {} tried to retrieve non-existent BlockState at relative {}",
+                        AbstractPhasedStructure.this.getClass().getSimpleName(), pos);
+            }
             return Blocks.AIR.getDefaultState();
         }
 
@@ -176,12 +195,14 @@ public abstract class AbstractPhasedStructure extends WorldGenerator implements 
             return blocks;
         }
 
-        public void placeDoorWithoutCheck(@NotNull BlockPos pos, @NotNull EnumFacing facing, @NotNull Block door, boolean isRightHinge, boolean isOpen) {
+        public void placeDoorWithoutCheck(@NotNull BlockPos pos, @NotNull EnumFacing facing, @NotNull Block door, boolean isRightHinge,
+                                          boolean isOpen) {
             BlockDoor.EnumHingePosition hinge = isRightHinge ? BlockDoor.EnumHingePosition.RIGHT : BlockDoor.EnumHingePosition.LEFT;
-            IBlockState baseState =
-                    door.getDefaultState().withProperty(BlockDoor.FACING, facing).withProperty(BlockDoor.HINGE, hinge).withProperty(BlockDoor.POWERED, false).withProperty(BlockDoor.OPEN, isOpen);
-            this.setBlockState(pos.toImmutable(), baseState.withProperty(BlockDoor.HALF, BlockDoor.EnumDoorHalf.LOWER));
-            this.setBlockState(pos.toImmutable().up(), baseState.withProperty(BlockDoor.HALF, BlockDoor.EnumDoorHalf.UPPER));
+            IBlockState baseState = door.getDefaultState().withProperty(BlockDoor.FACING, facing).withProperty(BlockDoor.HINGE, hinge)
+                                        .withProperty(BlockDoor.POWERED, Boolean.FALSE).withProperty(BlockDoor.OPEN, isOpen);
+            BlockPos immutable = pos.toImmutable();
+            this.setBlockState(immutable, baseState.withProperty(BlockDoor.HALF, BlockDoor.EnumDoorHalf.LOWER));
+            this.setBlockState(immutable.up(), baseState.withProperty(BlockDoor.HALF, BlockDoor.EnumDoorHalf.UPPER));
         }
 
         public void placeDoorWithoutCheck(@NotNull BlockPos pos, @NotNull EnumFacing facing, @NotNull Block door, boolean isRightHinge) {

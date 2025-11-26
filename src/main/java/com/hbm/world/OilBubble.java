@@ -65,7 +65,7 @@ public class OilBubble extends AbstractPhasedStructure {
 					if(ZZ < r22) {
 						pos.setPos(X, Y, Z);
 						if(world.getBlockState(pos).getBlock() == Blocks.STONE)
-							world.setBlockState(pos, ModBlocks.ore_oil.getDefaultState());
+							world.setBlockState(pos, ModBlocks.ore_oil.getDefaultState(), 2 | 16);
 					}
 				}
 			}
@@ -88,7 +88,7 @@ public class OilBubble extends AbstractPhasedStructure {
 					int ZZ = YY + zz * zz;
 					if (ZZ < r22) {
 						if(world.getBlockState(new BlockPos(X, Y, Z)).getBlock() == target)
-							world.setBlockState(new BlockPos(X, Y, Z), block.getDefaultState(), 2);
+							world.setBlockState(new BlockPos(X, Y, Z), block.getDefaultState(), 2 | 16);
 					}
 				}
 			}
