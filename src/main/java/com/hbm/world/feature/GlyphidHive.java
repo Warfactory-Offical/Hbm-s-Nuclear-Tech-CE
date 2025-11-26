@@ -5,14 +5,21 @@ import com.hbm.blocks.generic.BlockGlyphid;
 import com.hbm.blocks.generic.BlockGlyphid.Type;
 import com.hbm.blocks.generic.BlockGlyphidSpawner;
 import com.hbm.util.LootGenerator;
+import com.hbm.world.phased.AbstractPhasedStructure;
+import com.hbm.world.phased.PhasedStructureGenerator;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
-public class GlyphidHive {
+public class GlyphidHive extends AbstractPhasedStructure {
+
     public static final int[][][] schematicSmall = new int[][][] {
             {
                     {0,0,0,0,0,0,0,0,0,0,0},
@@ -81,44 +88,93 @@ public class GlyphidHive {
             }
     };
 
+    private final boolean infected;
+    private final boolean loot;
+
+    private GlyphidHive(boolean infected, boolean loot) {
+        this.infected = infected;
+        this.loot = loot;
+    }
+
+    public static void generate(World world, int x, int y, int z, Random rand, boolean infected, boolean loot) {
+        GlyphidHive hive = new GlyphidHive(infected, loot);
+        hive.generate(world, rand, new BlockPos(x, y, z));
+    }
+
+    /**
+     * force = true
+     */
     public static void generateSmall(World world, int x, int y, int z, Random rand, boolean infected, boolean loot) {
+        GlyphidHive hive = new GlyphidHive(infected, loot);
+        hive.generate(world, rand, new BlockPos(x, y, z), true);
+    }
 
-        for(int i = 0; i < 11; i++) {
-            for(int j = 0; j < 5; j++) {
-                for(int k = 0; k < 11; k++) {
+    @Override
+    protected boolean isCacheable() {
+        return false;
+    }
 
+    @Override
+    protected void buildStructure(@NotNull LegacyBuilder builder, @NotNull Random rand) {
+        var baseState = ModBlocks.glyphid_base.getDefaultState().withProperty(BlockGlyphid.TYPE, this.infected ? Type.INFESTED : Type.BASE);
+        var spawnerState = ModBlocks.glyphid_spawner.getDefaultState()
+                                                    .withProperty(BlockGlyphidSpawner.TYPE, this.infected ? BlockGlyphidSpawner.Type.INFESTED : BlockGlyphidSpawner.Type.BASE);
+
+        for (int i = 0; i < 11; i++) {
+            for (int j = 0; j < 5; j++) {
+                for (int k = 0; k < 11; k++) {
                     int block = schematicSmall[4 - j][i][k];
-                    int iX = x + i - 5;
-                    int iY = y + j - 2;
-                    int iZ = z + k - 5;
-                    BlockPos pos = new BlockPos(iX, iY, iZ);
+                    BlockPos relPos = new BlockPos(i - 5, j - 2, k - 5);
 
-                    switch(block) {
-                        case 1: world.setBlockState(pos, ModBlocks.glyphid_base.getDefaultState().withProperty(BlockGlyphid.TYPE, infected ? Type.INFESTED : Type.BASE), 2); break;
-                        case 2: world.setBlockState(pos, rand.nextInt(3) == 0
-                                ? ModBlocks.glyphid_spawner.getDefaultState().withProperty(BlockGlyphidSpawner.TYPE, infected ? BlockGlyphidSpawner.Type.INFESTED : BlockGlyphidSpawner.Type.BASE)
-                                : ModBlocks.glyphid_base.getDefaultState().withProperty(BlockGlyphid.TYPE, infected ? Type.INFESTED : Type.BASE), 2); break;
-                        case 3:
-                            int r = rand.nextInt(3);
-                            if(r == 0) {
-                                world.setBlockState(pos, Blocks.SKULL.getStateFromMeta(1), 3);
-                                TileEntitySkull skull = (TileEntitySkull) world.getTileEntity(pos);
-                                if(skull != null) skull.setSkullRotation(rand.nextInt(16));
-                            } else if(r == 1) {
-                                world.setBlockState(new BlockPos(iX, iY, z + k - 5), ModBlocks.deco_loot.getDefaultState(), 2);
-                                LootGenerator.lootBones(world, iX, iY, iZ);
+                    switch (block) {
+                        case 1 -> builder.setBlockState(relPos, baseState);
+                        case 2 -> {
+                            if (rand.nextInt(3) == 0) {
+                                builder.setBlockState(relPos, spawnerState);
                             } else {
-                                if(loot) {
-                                    world.setBlockState(pos, ModBlocks.deco_loot.getDefaultState(), 2);
-                                    LootGenerator.lootGlyphidHive(world, iX, iY, iZ);
+                                builder.setBlockState(relPos, baseState);
+                            }
+                        }
+                        case 3 -> {
+                            int r = rand.nextInt(3);
+                            if (r == 0) {
+                                builder.setBlockState(relPos, Blocks.SKULL.getStateFromMeta(1), (world, random, pos, te) -> {
+                                    if (te instanceof TileEntitySkull skull) {
+                                        skull.setSkullRotation(random.nextInt(16));
+                                    }
+                                });
+                            } else if (r == 1) {
+                                builder.setBlockState(relPos, ModBlocks.deco_loot.getDefaultState(), (world, random, pos, te) -> LootGenerator.lootBones(world, pos.getX(), pos.getY(), pos.getZ()));
+                            } else {
+                                if (this.loot) {
+                                    builder.setBlockState(relPos, ModBlocks.deco_loot.getDefaultState(), (world, random, pos, te) -> LootGenerator.lootGlyphidHive(world, pos.getX(), pos.getY(), pos.getZ()));
                                 } else {
-                                    world.setBlockState(pos, ModBlocks.glyphid_base.getDefaultState().withProperty(BlockGlyphid.TYPE, infected ? Type.INFESTED : Type.BASE), 2);
+                                    builder.setBlockState(relPos, baseState);
                                 }
                             }
-                            break;
+                        }
+                        default -> {
+                        }
                     }
                 }
             }
         }
+    }
+
+    @NotNull
+    @Override
+    public List<@NotNull BlockPos> getValidationPoints(@NotNull BlockPos origin) {
+        int r = 5;
+        return Arrays.asList(origin.add(-r, 0, -r), origin.add(r, 0, -r), origin.add(-r, 0, r), origin.add(r, 0, r));
+    }
+
+    @NotNull
+    @Override
+    public Optional<PhasedStructureGenerator.ReadyToGenerateStructure> validate(@NotNull World world,
+                                                                                @NotNull PhasedStructureGenerator.PendingValidationStructure pending) {
+        if (checkSpawningConditions(world, pending.origin)) {
+            return Optional.of(new PhasedStructureGenerator.ReadyToGenerateStructure(pending, pending.origin));
+        }
+        return Optional.empty();
     }
 }
