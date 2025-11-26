@@ -40,7 +40,7 @@ import java.util.Map;
 import static com.hbm.items.machine.ItemAssemblyTemplate.checkAndConsume;
 import static com.hbm.items.machine.ItemAssemblyTemplate.countItem;
 
-public class ItemChemistryTemplate extends Item implements IHasCustomModel, IDynamicModels {
+public class ItemChemistryTemplate extends Item implements  IDynamicModels {
 
 	public static final ModelResourceLocation location = new ModelResourceLocation(Tags.MODID + ":chemistry_template", "inventory");
 	
@@ -178,11 +178,6 @@ public class ItemChemistryTemplate extends Item implements IHasCustomModel, IDyn
 			list.add("###INVALID###");
 			list.add("0x334077-0x6A298F-0xDF3795-0x334077");
 		}
-	}
-
-	@Override
-	public ModelResourceLocation getResourceLocation() {
-		return location;
 	}
 
     @Override
