@@ -43,14 +43,15 @@ public class TileEntityCableBaseNT extends TileEntityLoadedBase implements IEner
 					}
 				}
 			}
+            if(GeneralConfig.autoCableConversion) {
+                if (--this.feNeighborScanCooldown <= 0) {
+                    this.feNeighborScanCooldown = 20;
+                    this.refreshFENeighbors();
+                }
 
-            if (--this.feNeighborScanCooldown <= 0) {
-                this.feNeighborScanCooldown = 20;
-                this.refreshFENeighbors();
-            }
-
-            if (this.node != null && this.node.hasValidNet() && !this.feNeighbors.isEmpty() && GeneralConfig.conversionRateHeToRF > 0) {
-                this.handleFETransfers(this.node.net);
+                if (this.node != null && this.node.hasValidNet() && !this.feNeighbors.isEmpty() && GeneralConfig.conversionRateHeToRF > 0) {
+                    this.handleFETransfers(this.node.net);
+                }
             }
 		}
 	}
