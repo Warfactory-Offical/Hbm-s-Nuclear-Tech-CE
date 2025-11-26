@@ -21,6 +21,7 @@ import java.util.Locale;
 public class BlockEnumMeta extends BlockMeta {
 
 
+
     final public boolean multiName;
     final private boolean multiTexture;
     public Class<? extends Enum> blockEnum;
