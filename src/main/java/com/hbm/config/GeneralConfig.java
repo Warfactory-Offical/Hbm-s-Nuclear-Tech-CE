@@ -8,6 +8,7 @@ import net.minecraftforge.common.config.Property;
 public class GeneralConfig {
 
 	public static double conversionRateHeToRF = 1.0F;
+	public static boolean autoCableConversion = false;
 	public static boolean enablePacketThreading = true;
 	public static int packetThreadingCoreCount = 1;
 	public static int packetThreadingMaxCount = 2;
@@ -202,6 +203,7 @@ public class GeneralConfig {
 			crucibleMaxCharges = 16;
 		}
 		conversionRateHeToRF = CommonConfig.createConfigDouble(config, CATEGORY_GENERAL, "1.35_conversionRateHeToRF", "One HE is (insert number) RF - <number> (double)", 1.0D);
+		autoCableConversion = CommonConfig.createConfigBool(config, CATEGORY_GENERAL, "1.35.1_autoCableConversion", "If enabled, NTM cables will automatically convert FE <-> HE. Note: WILL MAKE ALL OTHER MODS' CABLES USELESS", false);
 
 		hintPos = CommonConfig.createConfigInt(config, CATEGORY_GENERAL, "1.36_infoOverlayPosition", "Positions where the info overlay will appear (from 0 to 3). 0: Top left\n1: Top right\n2: Center right\n3: Center Left", 0);
 		enableFluidContainerCompat = config.get(CATEGORY_GENERAL, "1.37_enableFluidContainerCompat", true, "If enabled, fluid containers will be oredicted and interchangable in recipes with other mods' containers. Should probably work with things like IE's/GC oil properly.").getBoolean(true);
