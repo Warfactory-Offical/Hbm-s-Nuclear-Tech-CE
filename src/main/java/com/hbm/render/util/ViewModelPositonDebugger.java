@@ -113,15 +113,9 @@ public class ViewModelPositonDebugger {
     public void apply(TransformType type) {
 //        GlStateManager.rotate(-90f, 0, 1, 0);
         switch (type) {
-            case FIRST_PERSON_LEFT_HAND:
-                render(TransformType.FIRST_PERSON_RIGHT_HAND);
-                break;
-            case THIRD_PERSON_LEFT_HAND:
-                render(TransformType.THIRD_PERSON_RIGHT_HAND);
-                break;
-            case FIXED:
-                render(TransformType.GUI);
-                break;
+            case FIRST_PERSON_LEFT_HAND -> render(TransformType.FIRST_PERSON_RIGHT_HAND);
+            case THIRD_PERSON_LEFT_HAND -> render(TransformType.THIRD_PERSON_RIGHT_HAND);
+            case GUI -> render(TransformType.GUI);
         }
         render(type);
         render(TransformType.NONE);

@@ -3,15 +3,14 @@ package com.hbm.render.item;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.anim.HbmAnimations;
-import com.hbm.render.item.weapon.sedna.ItemRenderWeaponBase;
 import com.hbm.render.util.ViewModelPositonDebugger;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
-import org.lwjgl.opengl.GL12;
+import org.lwjgl.opengl.GL11;
 
 @AutoRegister(item = "boltgun")
 public class ItemRenderBoltgun extends TEISRBase {
@@ -55,33 +54,27 @@ public class ItemRenderBoltgun extends TEISRBase {
             case FIRST_PERSON_RIGHT_HAND, FIRST_PERSON_LEFT_HAND -> {
                 offsets.apply(type);
 
+
+                double s0 = 0.15D;
+                GlStateManager.translate(0.5F, 0.35F, -0.25F);
+                GlStateManager.rotate(15F, 0F, 0F, 1F);
+                GlStateManager.rotate(80F, 0F, 1F, 0F);
+                GlStateManager.scale((float) s0, (float) s0, (float) s0);
+
                 GlStateManager.pushMatrix();
+                double[] anim = HbmAnimations.getRelevantTransformation("RECOIL", type == ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND);
+                GlStateManager.translate(0F, 0F, (float) -anim[0]);
+                if (anim[0] != 0)
+                    player.isSwingInProgress = false;
 
-                    double s0 = 0.15D;
-                    GlStateManager.translate(0.5F, 0.35F, -0.25F);
-                    GlStateManager.rotate(15F, 0F, 0F, 1F);
-                    GlStateManager.rotate(80F, 0F, 1F, 0F);
-                    GlStateManager.scale((float) s0, (float) s0, (float) s0);
+                ResourceManager.boltgun.renderPart("Barrel");
 
-                    double[] anim = HbmAnimations.getRelevantTransformation("RECOIL", EnumHand.MAIN_HAND);
-                    GlStateManager.translate(0F, 0F, (float) -anim[0]);
-                    if(anim[0] != 0)
-                        player.isSwingInProgress = false;
-
-                    ResourceManager.boltgun.renderPart("Barrel");
-
-                    GlStateManager.popMatrix();
-                }
-
+                GlStateManager.popMatrix();
+            }
 
 
             case THIRD_PERSON_RIGHT_HAND, THIRD_PERSON_LEFT_HAND -> {
-                // --- 1.7.10 BASE THIRD-PERSON TRANSFORMS ---
-                GlStateManager.translate(-0.0625F, 0.4375F, 0.0625F);
-                GlStateManager.rotate(-100F, 1F, 0F, 0F);
-                GlStateManager.rotate(45F, 0F, 1F, 0F);
-                GlStateManager.scale(0.625F, 0.625F, 0.625F);
-
+                offsets.apply(type);
                 double scale = 0.25D;
                 GlStateManager.scale((float) scale, (float) scale, (float) scale);
                 GlStateManager.rotate(10F, 0F, 1F, 0F);
@@ -91,18 +84,16 @@ public class ItemRenderBoltgun extends TEISRBase {
 
             }
             case GROUND -> {
-
+                offsets.apply(type);
                 double s1 = 0.1D;
                 GlStateManager.scale((float) s1, (float) s1, (float) s1);
             }
-            case GUI,FIXED -> {
-
-
+            case GUI, FIXED -> {
+                offsets.apply(type);
                 GlStateManager.enableAlpha();
                 GlStateManager.enableLighting();
 
-//                double s = 1.75D;
-                double s = 0.2D;
+                double s = 1.75D;
                 GlStateManager.translate(7F, 10F, 0F);
                 GlStateManager.rotate(-90F, 0F, 1F, 0F);
                 GlStateManager.rotate(-135F, 1F, 0F, 0F);
@@ -112,8 +103,6 @@ public class ItemRenderBoltgun extends TEISRBase {
             default -> {
             }
         }
-
-
 
 
         ResourceManager.boltgun.renderPart("Gun");

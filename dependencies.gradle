@@ -47,6 +47,7 @@ dependencies {
     compileOnly rfg.deobf("cofh:CoFHCore:1.12.2-${version_cofhcore}:universal")
     compileOnly('appeng:ae2-uel:v0.56.7') { transitive false } // use devOnlyNonPublishable/implementation if need to test in dev env
     shadowImplementation 'org.jctools:jctools-core:4.0.5'
+    shadowImplementation("org.joml:joml:1.10.8")
 
     implementation rfg.deobf("curse.maven:opencomputers-223008:6608365")
     implementation 'mezz:jei:4.29.9'
