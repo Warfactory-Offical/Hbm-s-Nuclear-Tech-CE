@@ -17,6 +17,7 @@ import org.joml.Quaternionf;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Quaternion;
+import org.lwjgl.util.vector.Vector3f;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -168,7 +169,11 @@ public class ViewModelPositonDebugger {
                 "rctrl", Keyboard.isKeyDown(Keyboard.KEY_RCONTROL),
                 "tab", Keyboard.isKeyDown(Keyboard.KEY_TAB),
                 "ctrl", Keyboard.isKeyDown(Keyboard.KEY_LCONTROL),
-                "backspace", Keyboard.isKeyDown(Keyboard.KEY_BACK)
+                "backspace", Keyboard.isKeyDown(Keyboard.KEY_BACK),
+
+               "scroll", Keyboard.isKeyDown(Keyboard.KEY_SCROLL),
+                "break", Keyboard.isKeyDown(Keyboard.KEY_PAUSE),
+                "home", Keyboard.isKeyDown(Keyboard.KEY_HOME)
         );
     }
     /**
@@ -194,8 +199,8 @@ public class ViewModelPositonDebugger {
      *     <li><b>Tab</b>: Precision mode (smaller increments)</li>
      *
      *     <li><b>Pause / Break</b>: Reset rotation to identity quaternion</li>
-     *     <li><b>Home</b>: Reset position to (0,0,0)</li>
-     *     <li><b>End</b>: Reset scale to 1.0</li>
+     *     <li><b>Scroll</b>: Reset position to (0,0,0)</li>
+     *     <li><b>Home</b>: Reset scale to 1.0</li>
      * </ul>
      *
      * <h3>Rotation Handling</h3>
@@ -249,9 +254,10 @@ public class ViewModelPositonDebugger {
                         String.format(" Position: %01.2f, %01.2f, %01.2f",
                                 offset.position.x, offset.position.y, offset.position.z)));
 
+                var vec = quaternionToEulerXYZ(offset.rotation);
                 player.sendMessage(new TextComponentString(
                         String.format(" Rotation: %01.0f, %01.0f, %01.0f",
-                                offset.rotation.x, offset.rotation.y, offset.rotation.z)));
+                                vec.x, vec.y, vec.z)));
 
                 player.sendMessage(new TextComponentString(
                         " Type: " + (curTransform == TransformType.NONE ? "CUSTOM" : curTransform.name()))
@@ -293,8 +299,48 @@ public class ViewModelPositonDebugger {
             if (input.get("L")) offset.rotation.mul(qzMinus);
 
             offset.rotation.normalize();
+
+
+
+            if (input.get("break")) offset.rotation = new Quaternionf();
+            if (input.get("scroll")) offset.position = Vec3d.ZERO;
+            if (input.get("home")) offset.scale = 1;
         }
     }
+
+    public static Vector3f quaternionToEulerXYZ(Quaternionf q) {
+        Quaternionf nq = new Quaternionf(q).normalize();
+
+        float w = nq.w;
+        float x = nq.x;
+        float y = nq.y;
+        float z = nq.z;
+
+        float sinY = 2f * (w * y - z * x);
+        float pitchY;
+
+        if (Math.abs(sinY) >= 1f)
+            pitchY = (float)Math.copySign(Math.PI / 2.0, sinY);
+        else
+            pitchY = (float)Math.asin(sinY);
+
+        float rollX = (float)Math.atan2(
+                2f * (w * x + y * z),
+                1f - 2f * (x * x + y * y)
+        );
+
+        float yawZ = (float)Math.atan2(
+                2f * (w * z + x * y),
+                1f - 2f * (y * y + z * z)
+        );
+
+        return new Vector3f(
+                (float)Math.toDegrees(rollX),
+                (float)Math.toDegrees(pitchY),
+                (float)Math.toDegrees(yawZ)
+        );
+    }
+
 
     public static class offset {
         public double scale;
