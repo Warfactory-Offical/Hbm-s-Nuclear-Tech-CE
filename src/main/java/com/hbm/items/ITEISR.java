@@ -19,6 +19,7 @@ import net.minecraft.util.registry.IRegistry;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.BakedItemModel;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.tuple.Pair;
@@ -27,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.vecmath.Matrix4f;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public interface ITEISR extends IDynamicModels {
 
@@ -70,11 +72,6 @@ public interface ITEISR extends IDynamicModels {
     default boolean isGui3D() {
         return true;
     }
-
-    @SideOnly(Side.CLIENT)
-    default void registerModel() {
-    }
-
     ;
 
     @SideOnly(Side.CLIENT)

@@ -16,7 +16,7 @@ import org.lwjgl.opengl.GL12;
 @AutoRegister(item = "boltgun")
 public class ItemRenderBoltgun extends TEISRBase {
 
-//    ViewModelPositonDebugger offsets = new ViewModelPositonDebugger()
+    ViewModelPositonDebugger offsets = new ViewModelPositonDebugger();
 //            .get(TransformType.GUI)
 //            .setScale(0.11f).setPosition(-4.15, 3.30, -3.35).setRotation(0, 135, -90)
 //            .getHelper()
@@ -53,29 +53,34 @@ public class ItemRenderBoltgun extends TEISRBase {
         Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.boltgun_tex);
         switch (type) {
             case FIRST_PERSON_RIGHT_HAND, FIRST_PERSON_LEFT_HAND -> {
+                offsets.apply(type);
+
                 GlStateManager.pushMatrix();
-                GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-                GL11.glTranslatef(0.0F, -0.3F, 0.0F);
-                GL11.glScalef(1.5F, 1.5F, 1.5F);
-                GL11.glRotatef(50.0F, 0.0F, 1.0F, 0.0F);
-                GL11.glRotatef(335.0F, 0.0F, 0.0F, 1.0F);
-                GL11.glTranslatef(-0.9375F, -0.0625F, 0.0F);
 
-                double s0 = 0.15D;
-                GlStateManager.translate(0.5F, 0.35F, -0.25F);
-                GlStateManager.rotate(15F, 0F, 0F, 1F);
-                GlStateManager.rotate(80F, 0F, 1F, 0F);
-                GlStateManager.scale((float) s0, (float) s0, (float) s0);
+                    double s0 = 0.15D;
+                    GlStateManager.translate(0.5F, 0.35F, -0.25F);
+                    GlStateManager.rotate(15F, 0F, 0F, 1F);
+                    GlStateManager.rotate(80F, 0F, 1F, 0F);
+                    GlStateManager.scale((float) s0, (float) s0, (float) s0);
 
-                double[] anim = HbmAnimations.getRelevantTransformation("RECOIL",EnumHand.MAIN_HAND);
-                GlStateManager.translate(0F, 0F, (float) -anim[0]);
-                if (anim[0] != 0) player.isSwingInProgress = false;
-                ResourceManager.boltgun.renderPart("Barrel");
-                GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-                GlStateManager.popMatrix();
+                    double[] anim = HbmAnimations.getRelevantTransformation("RECOIL", EnumHand.MAIN_HAND);
+                    GlStateManager.translate(0F, 0F, (float) -anim[0]);
+                    if(anim[0] != 0)
+                        player.isSwingInProgress = false;
 
-            }
+                    ResourceManager.boltgun.renderPart("Barrel");
+
+                    GlStateManager.popMatrix();
+                }
+
+
+
             case THIRD_PERSON_RIGHT_HAND, THIRD_PERSON_LEFT_HAND -> {
+                // --- 1.7.10 BASE THIRD-PERSON TRANSFORMS ---
+                GlStateManager.translate(-0.0625F, 0.4375F, 0.0625F);
+                GlStateManager.rotate(-100F, 1F, 0F, 0F);
+                GlStateManager.rotate(45F, 0F, 1F, 0F);
+                GlStateManager.scale(0.625F, 0.625F, 0.625F);
 
                 double scale = 0.25D;
                 GlStateManager.scale((float) scale, (float) scale, (float) scale);
@@ -92,10 +97,12 @@ public class ItemRenderBoltgun extends TEISRBase {
             }
             case GUI,FIXED -> {
 
+
                 GlStateManager.enableAlpha();
                 GlStateManager.enableLighting();
 
-                double s = 1.75D;
+//                double s = 1.75D;
+                double s = 0.2D;
                 GlStateManager.translate(7F, 10F, 0F);
                 GlStateManager.rotate(-90F, 0F, 1F, 0F);
                 GlStateManager.rotate(-135F, 1F, 0F, 0F);
@@ -114,6 +121,7 @@ public class ItemRenderBoltgun extends TEISRBase {
             ResourceManager.boltgun.renderPart("Barrel");
         }
         GlStateManager.shadeModel(GL11.GL_FLAT);
+        ViewModelPositonDebugger.renderGizmo(4f, 3f);
 
         GlStateManager.popMatrix();
     }
