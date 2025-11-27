@@ -26,22 +26,29 @@ import com.hbm.render.item.weapon.ItemRenderGunAnim;
 import com.hbm.render.item.weapon.ItemRenderRedstoneSword;
 import com.hbm.render.tileentity.*;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.IRegistry;
 import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 
 /**
@@ -250,7 +257,7 @@ public class NTMClientRegistry {
     @SubscribeEvent
     @SuppressWarnings("unused")
     public void onModelBake(ModelBakeEvent evt) {
-        IDynamicModels.bakeModels(evt);
+        ResourceManager.init();
 
         for (SpecialContainerFillLists.EnumCanister e : SpecialContainerFillLists.EnumCanister.values()) {
             Object o = evt.getModelRegistry().getObject(e.getResourceLocation());
@@ -272,7 +279,6 @@ public class NTMClientRegistry {
                 e.putRenderModel((IBakedModel) o);
         }
 
-        ResourceManager.init();
         Object object1 = evt.getModelRegistry().getObject(RedstoneSword.rsModel);
         if (object1 instanceof IBakedModel) {
             IBakedModel model = (IBakedModel) object1;
@@ -342,7 +348,7 @@ public class NTMClientRegistry {
 
         swapModelsNoGui(ModItems.bedrock_ore, reg);
         swapModels(ModItems.detonator_laser, reg);
-        swapModels(ModItems.boltgun, reg);
+//        swapModels(ModItems.boltgun, reg);
 
         swapModels(ModItems.fluid_barrel_full, reg);
         swapModels(ModItems.fluid_tank_full, reg);
@@ -351,6 +357,7 @@ public class NTMClientRegistry {
         swapModels(ModItems.ammo_himars, reg);
         swapModels(ModItems.jetpack_glider, reg);
         swapModels(ModItems.gear_large, reg);
+        IDynamicModels.bakeModels(evt);
 
         for (Item item : ItemGunBaseNT.INSTANCES) {
             swapModelsNoFPV(item, reg);

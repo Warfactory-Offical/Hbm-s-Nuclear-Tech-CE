@@ -70,4 +70,5 @@ dependencies {
 //    runtimeOnlyNonPublishable rfg.deobf("curse.maven:universal-tweaks-705000:6675988")
 //    runtimeOnlyNonPublishable rfg.deobf("curse.maven:fluidlogged-api-485654:3845703")
     runtimeOnlyNonPublishable rfg.deobf(files("libs/legacy_completion-0.1.5.jar"))
+//    runtimeOnlyNonPublishable    rfg.deobf("curse.maven:vintagefix-871198:6609247")
 }

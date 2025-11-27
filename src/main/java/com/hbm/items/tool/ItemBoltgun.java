@@ -6,6 +6,7 @@ import com.hbm.handler.NTMToolHandler;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.material.Mats;
 import com.hbm.items.IAnimatedItem;
+import com.hbm.items.ITEISR;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
@@ -40,7 +41,7 @@ import java.util.List;
 import static com.hbm.inventory.RecipesCommon.AStack;
 import static com.hbm.inventory.RecipesCommon.MetaBlock;
 
-public class ItemBoltgun extends Item implements IAnimatedItem {
+public class ItemBoltgun extends Item implements IAnimatedItem, ITEISR {
 
     //Takes input block and tuple of oredict bolt, output block
     public ItemBoltgun(String s) {
@@ -51,6 +52,7 @@ public class ItemBoltgun extends Item implements IAnimatedItem {
 
         ToolType.BOLT.register(new ItemStack(this));
         ModItems.ALL_ITEMS.add(this);
+        INSTANCES.add(this);
     }
 
     @Override
