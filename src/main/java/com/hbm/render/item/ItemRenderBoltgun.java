@@ -14,7 +14,7 @@ import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManage
 import org.lwjgl.opengl.GL12;
 
 @AutoRegister(item = "boltgun")
-public class ItemRenderBoltgun extends ItemRenderWeaponBase {
+public class ItemRenderBoltgun extends TEISRBase {
 
 //    ViewModelPositonDebugger offsets = new ViewModelPositonDebugger()
 //            .get(TransformType.GUI)
@@ -118,8 +118,5 @@ public class ItemRenderBoltgun extends ItemRenderWeaponBase {
         GlStateManager.popMatrix();
     }
 
-    @Override
-    public void renderFirstPerson(ItemStack stack) {
 
-    }
 }

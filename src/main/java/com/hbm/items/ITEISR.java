@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import com.hbm.render.item.TEISRBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -49,7 +50,11 @@ public interface ITEISR extends IDynamicModels {
 
         var modelLoc = new ModelResourceLocation(res, "inventory");
         if(render instanceof TEISRBase base)
-            base.itemModel = isGui3D() ? new BakedItemModel(ImmutableList.of(), null,  ImmutableMap.of(), ItemOverrideList.NONE  ) : getInvModel(event, modelLoc);
+            base.itemModel = isGui3D() ? new BakedItemModel(ImmutableList.of(),
+                    Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite("minecraft:blocks/stone"),
+                    ImmutableMap.of(), ItemOverrideList.NONE  ){
+
+            } : getInvModel(event, modelLoc);
         else return;
 
         reg.putObject(modelLoc, new BakedModelDummy((TEISRBase) render, isGui3D()));
