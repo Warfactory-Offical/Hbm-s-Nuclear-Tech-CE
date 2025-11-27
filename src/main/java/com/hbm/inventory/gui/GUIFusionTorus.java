@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.inventory.container.ContainerFusionTorus;
-import com.hbm.lib.RefStrings;
+import com.hbm.Tags;
 import com.hbm.render.util.GaugeUtil;
 import com.hbm.tileentity.machine.fusion.TileEntityFusionTorus;
 import com.hbm.util.BobMathUtil;
@@ -13,7 +13,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class GUIFusionTorus extends GuiInfoContainer {
 
-    private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/reactors/gui_fusion_torus.png");
+    private static ResourceLocation texture = new ResourceLocation(Tags.MODID, "textures/gui/reactors/gui_fusion_torus.png");
     private TileEntityFusionTorus torus;
 
     public GUIFusionTorus(InventoryPlayer invPlayer, TileEntityFusionTorus torus) {

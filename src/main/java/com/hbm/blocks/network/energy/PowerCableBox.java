@@ -1,15 +1,13 @@
 package com.hbm.blocks.network.energy;
 
+import com.hbm.Tags;
 import com.hbm.blocks.ICustomBlockItem;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.interfaces.IBlockSpecialPlacementAABB;
-import com.hbm.inventory.fluid.FluidType;
-import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.IDynamicModels;
 import com.hbm.items.block.ItemBlockSpecialAABB;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
-import com.hbm.lib.RefStrings;
 import com.hbm.render.model.CableBoxBakedModel;
 import com.hbm.tileentity.network.energy.TileEntityCableBaseNT;
 import net.minecraft.block.Block;
@@ -198,15 +196,15 @@ public class PowerCableBox extends Block implements ICustomBlockItem, IDynamicMo
 
     @SideOnly(Side.CLIENT)
     public void registerSprite(TextureMap map) {
-        iconStraight[0] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "boxduct_cable_straight"));
-        iconCurveTL[0] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "boxduct_cable_curve_tl"));
-        iconCurveTR[0] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "boxduct_cable_curve_tr"));
-        iconCurveBL[0] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "boxduct_cable_curve_bl"));
-        iconCurveBR[0] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "boxduct_cable_curve_br"));
-        iconJunction[0] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "boxduct_cable_junction"));
+        iconStraight[0] = map.registerSprite(new ResourceLocation(Tags.MODID, "boxduct_cable_straight"));
+        iconCurveTL[0] = map.registerSprite(new ResourceLocation(Tags.MODID, "boxduct_cable_curve_tl"));
+        iconCurveTR[0] = map.registerSprite(new ResourceLocation(Tags.MODID, "boxduct_cable_curve_tr"));
+        iconCurveBL[0] = map.registerSprite(new ResourceLocation(Tags.MODID, "boxduct_cable_curve_bl"));
+        iconCurveBR[0] = map.registerSprite(new ResourceLocation(Tags.MODID, "boxduct_cable_curve_br"));
+        iconJunction[0] = map.registerSprite(new ResourceLocation(Tags.MODID, "boxduct_cable_junction"));
 
         for (int i = 0; i < iconEnd.length; i++) {
-            iconEnd[i] = map.registerSprite(new ResourceLocation(RefStrings.MODID, "boxduct_cable_end_" + i));
+            iconEnd[i] = map.registerSprite(new ResourceLocation(Tags.MODID, "boxduct_cable_end_" + i));
         }
     }
 

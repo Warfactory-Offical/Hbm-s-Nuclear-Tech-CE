@@ -85,6 +85,13 @@ public class ResourceManager {
 
     //ITER
     public static final IModelCustom iter = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/reactors/iter.obj")).asVBO();
+    public static final IModelCustom fusion_torus = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/fusion/torus.obj")).asVBO();
+    public static final IModelCustom fusion_klystron = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/fusion/klystron.obj")).asVBO();
+    public static final IModelCustom fusion_breeder = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/fusion/breeder.obj")).asVBO();
+    public static final IModelCustom fusion_collector = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/fusion/collector.obj")).asVBO();
+    public static final IModelCustom fusion_boiler = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/fusion/boiler.obj")).asVBO();
+    public static final IModelCustom fusion_mhdt = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/fusion/mhdt.obj")).asVBO();
+    public static final IModelCustom fusion_coupler = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/fusion/coupler.obj")).asVBO();
 
     //ICF
     public static final IModelCustom icf = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/reactors/icf.obj")).asVBO();
@@ -598,6 +605,17 @@ public class ResourceManager {
     public static final ResourceLocation iter_torus_desh = new ResourceLocation(Tags.MODID, "textures/models/iter/torus_desh.png");
     public static final ResourceLocation iter_torus_chlorophyte = new ResourceLocation(Tags.MODID, "textures/models/iter/torus_chlorophyte.png");
     public static final ResourceLocation iter_torus_vaporwave = new ResourceLocation(Tags.MODID, "textures/models/iter/torus_vaporwave.png");
+    public static final ResourceLocation fusion_torus_tex = new ResourceLocation(Tags.MODID, "textures/models/fusion/torus.png");
+    public static final ResourceLocation fusion_plasma_tex = new ResourceLocation(Tags.MODID, "textures/models/fusion/plasma.png");
+    public static final ResourceLocation fusion_plasma_glow_tex = new ResourceLocation(Tags.MODID, "textures/models/fusion/plasma_glow.png");
+    public static final ResourceLocation fusion_plasma_sparkle_tex = new ResourceLocation(Tags.MODID, "textures/models/fusion/plasma_sparkle.png");
+    public static final ResourceLocation fusion_klystron_tex = new ResourceLocation(Tags.MODID, "textures/models/fusion/klystron.png");
+    public static final ResourceLocation fusion_breeder_tex = new ResourceLocation(Tags.MODID, "textures/models/fusion/breeder.png");
+    public static final ResourceLocation fusion_collector_tex = new ResourceLocation(Tags.MODID, "textures/models/fusion/collector.png");
+    public static final ResourceLocation fusion_boiler_tex = new ResourceLocation(Tags.MODID, "textures/models/fusion/boiler.png");
+    public static final ResourceLocation fusion_mhdt_tex = new ResourceLocation(Tags.MODID, "textures/models/fusion/mhdt.png");
+    public static final ResourceLocation fusion_coupler_tex = new ResourceLocation(Tags.MODID, "textures/models/fusion/coupler.png");
+
     //ICF
     public static final ResourceLocation icf_tex = new ResourceLocation(Tags.MODID, "textures/models/machines/icf.png");
     //Strand Caster
