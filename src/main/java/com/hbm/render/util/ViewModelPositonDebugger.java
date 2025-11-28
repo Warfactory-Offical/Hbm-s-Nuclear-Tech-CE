@@ -161,7 +161,7 @@ public class ViewModelPositonDebugger {
                 "space", Keyboard.isKeyDown(Keyboard.KEY_SPACE),
                 "rshift", Keyboard.isKeyDown(Keyboard.KEY_RSHIFT),
                 "rctrl", Keyboard.isKeyDown(Keyboard.KEY_RCONTROL),
-                "tab", Keyboard.isKeyDown(Keyboard.KEY_TAB),
+
                 "ctrl", Keyboard.isKeyDown(Keyboard.KEY_LCONTROL),
                 "backspace", Keyboard.isKeyDown(Keyboard.KEY_BACK),
 
@@ -228,10 +228,15 @@ public class ViewModelPositonDebugger {
 
             boolean damn = input.get("rctrl");
 
-            if (input.get("tab")) {
+            if (Keyboard.isKeyDown(Keyboard.KEY_TAB)) {
                 increment = 0.05;
                 incrementAngle = 1;
                 incrementScale = 0.01;
+            }
+            if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
+                increment = 0.5;
+                incrementAngle = 5;
+                incrementScale = 0.1;
             }
 
             if (input.get("space") || input.get("rshift") || input.get("backspace")) {
