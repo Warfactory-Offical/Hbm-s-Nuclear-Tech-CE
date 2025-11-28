@@ -99,7 +99,7 @@ public final class UniNodespace {
             }
             return;
         }
-        GenNode<?> node = net.links.iterator().next();
+        GenNode<?> node = net.links.first();
         PerTypeNodeManager<?, ?, ?, ?> manager = managers.get(node.networkProvider);
         if (manager != null) manager.removeActiveNet(net);
     }

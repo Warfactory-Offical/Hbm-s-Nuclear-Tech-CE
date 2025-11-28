@@ -143,8 +143,8 @@ public class NTMFluidCapabilityHandler {
 
         @Override
         public int fill(FluidStack resource, boolean doFill) {
-            if (resource == null || getContentsInternal() != null) return 0;
-            FluidContainerRegistry.FluidContainer fillRecipe = FluidContainerRegistry.getFillRecipe(this.container, resource);
+            if (resource == null || getContentsInternal() != null || resource.tag != null) return 0;
+            FluidContainerRegistry.FluidContainer fillRecipe = FluidContainerRegistry.getFillRecipe(this.container, resource.getFluid());
             if (fillRecipe == null) return 0;
             int needed = fillRecipe.content();
             if (resource.amount < needed) return 0;
@@ -155,7 +155,7 @@ public class NTMFluidCapabilityHandler {
         @Nullable
         @Override
         public FluidStack drain(FluidStack resource, boolean doDrain) {
-            if (resource == null || resource.amount <= 0) return null;
+            if (resource == null || resource.amount <= 0 || resource.tag != null) return null;
             FluidStack contents = getContentsInternal();
             if (contents == null || !contents.isFluidEqual(resource) || resource.amount < contents.amount) return null;
             if (doDrain) {
@@ -222,12 +222,12 @@ public class NTMFluidCapabilityHandler {
 
             @Override
             public boolean canFillFluidType(FluidStack fluidStack) {
-                return canFill() && FluidContainerRegistry.getFillRecipe(container, fluidStack) != null;
+                return canFill() && fluidStack.tag == null && FluidContainerRegistry.getFillRecipe(container, fluidStack.getFluid()) != null;
             }
 
             @Override
             public boolean canDrainFluidType(FluidStack fluidStack) {
-                return canDrain() && contents.isFluidEqual(fluidStack);
+                return canDrain() && fluidStack.tag == null && contents.isFluidEqual(fluidStack);
             }
         }
     }

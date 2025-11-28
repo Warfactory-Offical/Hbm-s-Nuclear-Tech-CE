@@ -15,7 +15,7 @@ import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.oredict.OreDictionary;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -209,8 +209,8 @@ public class FluidContainerRegistry {
 
     @Nullable
     @Contract(pure = true)
-    public static FluidContainer getFillRecipe(@NotNull ItemStack emptyStack, @NotNull FluidStack fluid) {
-        return getFillRecipe(emptyStack, NTMFluidCapabilityHandler.getFluidType(fluid.getFluid()));
+    public static FluidContainer getFillRecipe(@NotNull ItemStack emptyStack, @NotNull Fluid fluid) {
+        return getFillRecipe(emptyStack, NTMFluidCapabilityHandler.getFluidType(fluid));
     }
 
     /**
