@@ -8,11 +8,13 @@ import com.hbm.inventory.container.ContainerFurnaceCombo;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.gui.*;
+import com.hbm.inventory.recipes.CrucibleRecipes;
 import com.hbm.inventory.recipes.DFCRecipes;
 import com.hbm.items.EffectItem;
 import com.hbm.items.ItemEnums;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemFELCrystal.EnumWavelengths;
+import com.hbm.items.machine.ItemFluidIDMulti;
 import com.hbm.items.machine.ItemFluidIcon;
 import com.hbm.items.weapon.ItemCustomMissile;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
@@ -480,36 +482,40 @@ public class JEIConfig implements IModPlugin {
 
     private static final ISubtypeRegistry.ISubtypeInterpreter metadataFluidContainerInterpreter = stack -> {
         FluidType type = Fluids.fromID(stack.getMetadata());
-        if (type != null && type != Fluids.NONE && FluidContainerRegistry.getFluidContainer(stack) != null) {
-            return type.getTranslationKey();
-        }
-        return "";
+        if (FluidContainerRegistry.getFluidContainer(stack) == null) return "";
+        return type.getName();
     };
 
-    private static final ISubtypeRegistry.ISubtypeInterpreter metadataInterpreter = stack -> String.valueOf(stack.getMetadata());
-
-	@Override
+    @Override
 	public void registerSubtypes(@NotNull ISubtypeRegistry subtypeRegistry) {
 		if(!GeneralConfig.jei)
 			return;
+        subtypeRegistry.useNbtForSubtypes(ModItems.fluid_identifier_multi);
         subtypeRegistry.registerSubtypeInterpreter(ModItems.cell, metadataFluidContainerInterpreter);
         subtypeRegistry.registerSubtypeInterpreter(ModItems.fluid_tank_full, metadataFluidContainerInterpreter);
         subtypeRegistry.registerSubtypeInterpreter(ModItems.fluid_barrel_full, metadataFluidContainerInterpreter);
         subtypeRegistry.registerSubtypeInterpreter(ModItems.fluid_tank_lead_full, metadataFluidContainerInterpreter);
         subtypeRegistry.registerSubtypeInterpreter(ModItems.canister_full, metadataFluidContainerInterpreter);
-        subtypeRegistry.registerSubtypeInterpreter(ModItems.disperser_canister, metadataInterpreter);
-        subtypeRegistry.registerSubtypeInterpreter(ModItems.glyphid_gland, metadataInterpreter);
+        subtypeRegistry.registerSubtypeInterpreter(ModItems.disperser_canister, metadataFluidContainerInterpreter);
+        subtypeRegistry.registerSubtypeInterpreter(ModItems.glyphid_gland, metadataFluidContainerInterpreter);
 		subtypeRegistry.registerSubtypeInterpreter(ModItems.missile_custom, stack -> ModItems.missile_custom.getTranslationKey() + "w" +
                 ItemCustomMissile.readFromNBT(stack, "warhead") + "f" + ItemCustomMissile.readFromNBT(stack, "fuselage") + "s" +
                 ItemCustomMissile.readFromNBT(stack, "stability") + "t" + ItemCustomMissile.readFromNBT(stack, "thruster"));
         subtypeRegistry.registerSubtypeInterpreter(ModItems.fluid_icon, stack -> {
             FluidType fluidType = ItemFluidIcon.getFluidType(stack);
-            if (fluidType != null) {
-                return fluidType.getTranslationKey();
-            }
-            return "";
+            if (fluidType == null) return "";
+            return fluidType.getTranslationKey();
         });
-        subtypeRegistry.registerSubtypeInterpreter(ModItems.crucible_template, metadataInterpreter);
+        subtypeRegistry.registerSubtypeInterpreter(ModItems.crucible_template, itemStack -> {
+            CrucibleRecipes.CrucibleRecipe recipe = CrucibleRecipes.indexMapping.get(itemStack.getItemDamage());
+            if(recipe == null) return "";
+            return recipe.getName();
+        });
+        subtypeRegistry.registerSubtypeInterpreter(ModItems.fluid_identifier_multi, stack -> {
+            if (!stack.hasTagCompound()) return "";
+            //mlbv: non-existent key -> default = 0 -> NONE, exactly what we want
+            return ItemFluidIDMulti.getType(stack, true).getName() + "_" + ItemFluidIDMulti.getType(stack, false).getName();
+        });
 	}
 
     @Override

@@ -64,9 +64,10 @@ public class ItemFluidIDMulti extends ItemBakedBase implements IItemFluidIdentif
         if (this.isInCreativeTab(tab)) {
             FluidType[] order = Fluids.getInNiceOrder();
             for (int i = 1; i < order.length; ++i) {
-                if (!order[i].hasNoID()) {
-                    ItemStack id = new ItemStack(this, 1, order[i].getID());
-                    setType(id, Fluids.fromID(i), true);
+                FluidType type = order[i];
+                if (!type.hasNoID()) {
+                    ItemStack id = new ItemStack(this, 1, type.getID());
+                    setType(id, type, true);
                     list.add(id);
                 }
             }
@@ -188,7 +189,9 @@ public class ItemFluidIDMulti extends ItemBakedBase implements IItemFluidIdentif
         if(!stack.hasTagCompound())
             stack.setTagCompound(new NBTTagCompound());
 
-        stack.getTagCompound().setInteger("fluid" + (primary ? 1 : 2), type.getID());
+        int id = type.getID();
+        stack.getTagCompound().setInteger("fluid" + (primary ? 1 : 2), id);
+        if (primary) stack.setItemDamage(id);
     }
 
     public static FluidType getType(ItemStack stack, boolean primary) {

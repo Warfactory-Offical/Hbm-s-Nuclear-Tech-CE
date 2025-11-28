@@ -30,6 +30,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileReader;
@@ -1123,6 +1124,7 @@ public class Fluids {
         nameMapping.put(fluid.getName(), fluid);
     }
 
+    @NotNull
     public static FluidType fromID(int id) {
         FluidType fluid = idMapping.get(id);
 
@@ -1132,6 +1134,7 @@ public class Fluids {
         return fluid;
     }
 
+    @NotNull
     public static FluidType fromName(String name) {
         FluidType fluid = nameMapping.get(name);
 
