@@ -32,6 +32,7 @@ import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.structure.*;
 import net.minecraft.world.gen.structure.template.TemplateManager;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.Constants.NBT;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,6 +58,7 @@ public class NBTStructure {
 	protected static Map<Integer, List<SpawnCondition>> customSpawnMap = new HashMap<>();
 
 	private String name;
+    private ResourceLocation resource;
 
 	private boolean isLoaded;
 
@@ -68,8 +70,10 @@ public class NBTStructure {
 	private Map<String, List<JigsawConnection>> toTopConnections;
 	private Map<String, List<JigsawConnection>> toBottomConnections;
 	private Map<String, List<JigsawConnection>> toHorizontalConnections;
+    private Map<Short, String> legacyItemIdToName;
 
 	public NBTStructure(ResourceLocation resource) {
+        this.resource = resource;
 		// Can't use regular resource loading, servers don't know how!
 		InputStream stream = NBTStructure.class.getResourceAsStream("/assets/" + resource.getNamespace() + "/" + resource.getPath());
 		if (stream != null) {
@@ -426,23 +430,23 @@ public class NBTStructure {
 		return worldItemPalette;
 	}
 
-	private TileEntity buildTileEntity(World world, Block block, HashMap<Short, Short> worldItemPalette, NBTTagCompound nbt, int coordBaseMode, String structureName) {
-		nbt = nbt.copy(); // wtf Bob?..
+    private TileEntity buildTileEntity(World world, Block block, HashMap<Short, Short> worldItemPalette, NBTTagCompound nbt, int coordBaseMode, String structureName) {
+        nbt = nbt.copy(); // wtf Bob?..
 
-		if(worldItemPalette != null) relinkItems(worldItemPalette, nbt);
+//        if(worldItemPalette != null) relinkItems(worldItemPalette, nbt);
 
-		TileEntity te = TileMappings.create(world, nbt);
+        Map<Short, String> idNameMap = getLegacyItemIdToNameMap();
+        if (idNameMap != null) nbtFixerUpper(nbt, idNameMap);
 
-		if(te instanceof INBTTileEntityTransformable) {
-			((INBTTileEntityTransformable) te).transformTE(world, coordBaseMode);
-		}
-
-		if(te instanceof TileEntityWandTandem) {
-			((TileEntityWandTandem) te).arm(getStructure(structureName));
-		}
-
-		return te;
-	}
+        TileEntity te = TileMappings.create(world, nbt);
+        if (te instanceof INBTTileEntityTransformable transformable) {
+            transformable.transformTE(world, coordBaseMode);
+        }
+        if (te instanceof TileEntityWandTandem tandem) {
+            tandem.arm(getStructure(structureName));
+        }
+        return te;
+    }
 
 	public void build(World world, int x, int y, int z) {
 		build(world, x, y, z, 0);
@@ -591,6 +595,7 @@ public class NBTStructure {
 
 	// NON-STANDARD, items are serialized with IDs, which will differ from world to world!
 	// So our fixed exporter adds an itemPalette, please don't hunt me down for fucking with the spec
+    //mlbv: we no longer need it as 1.12.2 use String id for items
 	private void relinkItems(HashMap<Short, Short> palette, NBTTagCompound nbt) {
 		NBTTagList items = null;
 		if(nbt.hasKey("items"))
@@ -605,6 +610,115 @@ public class NBTStructure {
 			item.setShort("id", palette.get(item.getShort("id")));
 		}
 	}
+
+    private Map<Short, String> getLegacyItemIdToNameMap() {
+        if (itemPalette == null || itemPalette.isEmpty())
+            return null;
+
+        if (legacyItemIdToName == null) {
+            legacyItemIdToName = new HashMap<>(itemPalette.size());
+            for (Pair<Short, String> entry : itemPalette) {
+                legacyItemIdToName.put(entry.key, entry.value);
+            }
+        }
+
+        return legacyItemIdToName;
+    }
+
+    private void nbtFixerUpper(NBTTagCompound teNbt, Map<Short, String> idPalette) {
+        if (teNbt == null) return;
+        if (teNbt.hasKey("inventory", Constants.NBT.TAG_COMPOUND)) return;
+        String listKey = null;
+        if (teNbt.hasKey("items", Constants.NBT.TAG_LIST)) listKey = "items";
+        else if (teNbt.hasKey("Items", Constants.NBT.TAG_LIST)) listKey = "Items";
+        if (listKey == null) return;
+        NBTTagList oldList = teNbt.getTagList(listKey, Constants.NBT.TAG_COMPOUND);
+        if (oldList.tagCount() == 0) return;
+        int maxSlot = -1;
+        for (int i = 0; i < oldList.tagCount(); i++) {
+            NBTTagCompound oldStack = oldList.getCompoundTagAt(i);
+            int slot = -1;
+            if (oldStack.hasKey("slot", Constants.NBT.TAG_BYTE)) {
+                slot = oldStack.getByte("slot") & 0xFF;
+            } else if (oldStack.hasKey("Slot", Constants.NBT.TAG_INT)) {
+                slot = oldStack.getInteger("Slot");
+            }
+            if (slot >= 0 && slot > maxSlot) {
+                maxSlot = slot;
+            }
+        }
+        if (maxSlot < 0) return;
+        NBTTagList newItems = new NBTTagList();
+        for (int i = 0; i < oldList.tagCount(); i++) {
+            NBTTagCompound oldStack = oldList.getCompoundTagAt(i);
+
+            int slot = -1;
+            if (oldStack.hasKey("slot", Constants.NBT.TAG_BYTE)) {
+                slot = oldStack.getByte("slot") & 0xFF;
+            } else if (oldStack.hasKey("Slot", Constants.NBT.TAG_INT)) {
+                slot = oldStack.getInteger("Slot");
+            }
+            if (slot < 0) continue;
+            String idString = null;
+            if (oldStack.hasKey("id", Constants.NBT.TAG_STRING)) {
+                idString = oldStack.getString("id");
+            } else if (oldStack.hasKey("id", Constants.NBT.TAG_SHORT)) {
+                short legacyId = oldStack.getShort("id");
+                idString = mapId(legacyId, idPalette);
+            } else if (oldStack.hasKey("id", Constants.NBT.TAG_INT)) {
+                int legacyId = oldStack.getInteger("id");
+                if (legacyId >= Short.MIN_VALUE && legacyId <= Short.MAX_VALUE) {
+                    idString = mapId((short) legacyId, idPalette);
+                } else {
+                    Item item = Item.getItemById(legacyId);
+                    if (item.getRegistryName() != null) {
+                        idString = item.getRegistryName().toString();
+                    }
+                }
+            }
+            if (idString == null || idString.isEmpty()) continue;
+            NBTTagCompound newStack = new NBTTagCompound();
+            newStack.setInteger("Slot", slot);
+            newStack.setString("id", idString);
+            if (oldStack.hasKey("Count", Constants.NBT.TAG_BYTE)) {
+                newStack.setByte("Count", oldStack.getByte("Count"));
+            } else {
+                newStack.setByte("Count", (byte) 1);
+            }
+            if (oldStack.hasKey("Damage", Constants.NBT.TAG_SHORT)) {
+                newStack.setShort("Damage", oldStack.getShort("Damage"));
+            } else {
+                newStack.setShort("Damage", (short) 0);
+            }
+            if (oldStack.hasKey("tag", Constants.NBT.TAG_COMPOUND)) {
+                newStack.setTag("tag", oldStack.getCompoundTag("tag"));
+            }
+            if (oldStack.hasKey("ForgeCaps", Constants.NBT.TAG_COMPOUND)) {
+                newStack.setTag("ForgeCaps", oldStack.getCompoundTag("ForgeCaps"));
+            }
+
+            newItems.appendTag(newStack);
+        }
+
+        if (newItems.tagCount() == 0) return;
+        NBTTagCompound invTag = new NBTTagCompound();
+        invTag.setTag("Items", newItems);
+        invTag.setInteger("Size", maxSlot + 1);
+        teNbt.setTag("inventory", invTag);
+        teNbt.removeTag(listKey);
+        MainRegistry.logger.debug("[NBTStructure] Fixed NBT for TE with {} items in structure {}", newItems.tagCount(), resource);
+    }
+
+    private String mapId(short legacyId, Map<Short, String> idPalette) {
+        if (idPalette != null) {
+            String name = idPalette.get(legacyId);
+            if (name != null && !name.isEmpty()) {
+                return name;
+            }
+        }
+        MainRegistry.logger.debug("[NBTStructure] Could not find id {} in structure {}'s item palette", legacyId, resource);
+        return null;
+    }
 
 	private Block transformBlock(BlockDefinition definition, Map<Block, StructureComponent.BlockSelector> blockTable, Random rand) {
 		if(blockTable != null && blockTable.containsKey(definition.block)) {
