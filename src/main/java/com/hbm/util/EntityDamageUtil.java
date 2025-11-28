@@ -3,7 +3,7 @@ package com.hbm.util;
 import com.hbm.handler.ArmorModHandler;
 import com.hbm.interfaces.Untested;
 import com.hbm.items.ModItems;
-import com.hbm.lib.MethodHandleHelper;
+import com.hbm.lib.internal.MethodHandleHelper;
 import com.hbm.main.MainRegistry;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;

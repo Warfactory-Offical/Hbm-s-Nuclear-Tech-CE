@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 package com.hbm.lib.maps;
-import static com.hbm.lib.UnsafeHolder.U;
+import static com.hbm.lib.internal.UnsafeHolder.U;
 
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
@@ -111,7 +111,7 @@ public class ConcurrentAutoTable implements Serializable {
     private static class CAT implements Serializable {
 
         // Unsafe crud: get a function which will CAS arrays
-        private static final int _Lbase  = U.arrayBaseOffset(long[].class);
+        private static final long _Lbase  = U.arrayBaseOffset(long[].class);
         private static final int _Lscale = U.arrayIndexScale(long[].class);
         private static long rawIndex(long[] ary, int i) {
             assert i >= 0 && i < ary.length;

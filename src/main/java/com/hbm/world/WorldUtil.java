@@ -1,7 +1,7 @@
 package com.hbm.world;
 
 import com.google.common.base.Predicate;
-import com.hbm.lib.MethodHandleHelper;
+import com.hbm.lib.internal.MethodHandleHelper;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.BiomeSyncPacket;

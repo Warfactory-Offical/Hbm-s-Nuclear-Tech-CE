@@ -1,29 +1,16 @@
-package com.hbm.lib;
+package com.hbm.lib.internal;
 
 import com.hbm.core.HbmCorePlugin;
-import org.jetbrains.annotations.ApiStatus;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
-import java.lang.reflect.Field;
 
-@ApiStatus.Internal
+import static com.hbm.lib.internal.UnsafeWrapper.IMPL_LOOKUP;
+
 public final class MethodHandleHelper {
-    private static final MethodHandles.Lookup IMPL_LOOKUP = getImplLookup();
 
     private MethodHandleHelper() {
-    }
-
-    private static MethodHandles.Lookup getImplLookup() {
-        try {
-            Field lookup = MethodHandles.Lookup.class.getDeclaredField("IMPL_LOOKUP");
-            Object base = UnsafeHolder.U.staticFieldBase(lookup);
-            long offset = UnsafeHolder.U.staticFieldOffset(lookup);
-            return (MethodHandles.Lookup) UnsafeHolder.U.getObject(base, offset);
-        } catch (NoSuchFieldException nsfe) {
-            throw new RuntimeException(nsfe);
-        }
     }
 
     public static MethodHandles.Lookup lookup() {

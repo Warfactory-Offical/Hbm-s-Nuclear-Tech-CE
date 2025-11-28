@@ -32,8 +32,8 @@ import java.util.function.Function;
 import java.util.function.LongFunction;
 
 import static com.hbm.lib.maps.NonBlockingHashMap.DUMMY_VOLATILE;
-import static com.hbm.lib.UnsafeHolder.U;
-import static com.hbm.lib.UnsafeHolder.fieldOffset;
+import static com.hbm.lib.internal.UnsafeHolder.U;
+import static com.hbm.lib.internal.UnsafeHolder.fieldOffset;
 
 
 /**
@@ -107,7 +107,7 @@ public class NonBlockingHashMapLong<TypeV>
     private static final int REPROBE_LIMIT=10; // Too many reprobes then force a table-resize
 
     // --- Bits to allow Unsafe access to arrays
-    private static final int _Obase  = U.arrayBaseOffset(Object[].class);
+    private static final long _Obase  = U.arrayBaseOffset(Object[].class);
     private static final int _Oscale = U.arrayIndexScale(Object[].class);
     private static long rawIndex(final Object[] ary, final int idx) {
         assert idx >= 0 && idx < ary.length;
@@ -115,7 +115,7 @@ public class NonBlockingHashMapLong<TypeV>
         // - or 2^28 - or about 268M - 8-byte pointer elements.
         return _Obase + ((long)idx * _Oscale);
     }
-    private static final int _Lbase  = U.arrayBaseOffset(long[].class);
+    private static final long _Lbase  = U.arrayBaseOffset(long[].class);
     private static final int _Lscale = U.arrayIndexScale(long[].class);
     private static long rawIndex(final long[] ary, final int idx) {
         assert idx >= 0 && idx < ary.length;

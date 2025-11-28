@@ -1,6 +1,6 @@
 package com.hbm.packet.toclient;
 
-import com.hbm.lib.MethodHandleHelper;
+import com.hbm.lib.internal.MethodHandleHelper;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.main.MainRegistry;
 import com.hbm.main.ModEventHandlerClient;

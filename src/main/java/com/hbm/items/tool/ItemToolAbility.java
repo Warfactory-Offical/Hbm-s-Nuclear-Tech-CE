@@ -16,7 +16,7 @@ import com.hbm.items.IDynamicModels;
 import com.hbm.items.IItemControlReceiver;
 import com.hbm.items.IKeybindReceiver;
 import com.hbm.items.ModItems;
-import com.hbm.lib.MethodHandleHelper;
+import com.hbm.lib.internal.MethodHandleHelper;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.PlayerInformPacketLegacy;

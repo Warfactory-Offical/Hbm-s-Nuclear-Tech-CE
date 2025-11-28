@@ -1,7 +1,7 @@
 package com.hbm.world.phased;
 
 import com.hbm.config.GeneralConfig;
-import com.hbm.lib.MethodHandleHelper;
+import com.hbm.lib.internal.MethodHandleHelper;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.ChunkUtil;
 import com.hbm.world.phased.AbstractPhasedStructure.BlockInfo;

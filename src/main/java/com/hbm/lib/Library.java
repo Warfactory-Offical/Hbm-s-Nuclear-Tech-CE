@@ -28,7 +28,6 @@ import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.BobMathUtil;
-import com.hbm.util.InventoryUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.material.Material;
@@ -77,6 +76,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.lang.invoke.*;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -85,8 +85,23 @@ import static net.minecraft.nbt.CompressedStreamTools.writeCompressed;
 
 @Spaghetti("this whole class")
 public class Library {
+    private static final Runnable SPIN_WAITER;
 
-	private Library(){
+    static {
+        Runnable result;
+        try {
+            MethodHandles.Lookup lookup = MethodHandles.publicLookup();
+            MethodHandle mh = lookup.findStatic(Thread.class, "onSpinWait", MethodType.methodType(void.class));
+            CallSite cs = LambdaMetafactory.metafactory(lookup, "run", MethodType.methodType(Runnable.class), MethodType.methodType(void.class), mh, MethodType.methodType(void.class));
+            result = (Runnable) cs.getTarget().invokeExact();
+        } catch (Throwable t) {
+            result = () -> {
+            };
+        }
+        SPIN_WAITER = result;
+    }
+
+    private Library() {
 	}
 
 	static Random rand = new Random();
@@ -1770,5 +1785,10 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 
     public static boolean isSwappingBetweenVariants(IBlockState state1, IBlockState state2, Block validBlock1, Block validBlock2) {
         return (state1.getBlock() == validBlock1 || state1.getBlock() == validBlock2) && (state2.getBlock() == validBlock1 || state2.getBlock() == validBlock2);
+    }
+
+    // mlbv: remove and replace it with Thread.onSpinWait() if we ever migrate to Java 9+
+    public static void onSpinWait() {
+        SPIN_WAITER.run();
     }
 }

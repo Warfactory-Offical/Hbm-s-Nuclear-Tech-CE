@@ -6,7 +6,7 @@ import com.hbm.interfaces.BitMask;
 import com.hbm.interfaces.ServerThread;
 import com.hbm.interfaces.ThreadSafeMethod;
 import com.hbm.lib.Library;
-import com.hbm.lib.UnsafeHolder;
+import com.hbm.lib.internal.UnsafeHolder;
 import com.hbm.lib.maps.NonBlockingHashMapLong;
 import com.hbm.main.MainRegistry;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
@@ -39,7 +39,7 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Function;
 
-import static com.hbm.lib.UnsafeHolder.U;
+import static com.hbm.lib.internal.UnsafeHolder.U;
 
 /**
  * <p>

@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.concurrent.ThreadSafe;
 import java.util.concurrent.atomic.LongAdder;
 
-import static com.hbm.lib.UnsafeHolder.U;
+import static com.hbm.lib.internal.UnsafeHolder.U;
 
 /**
  * Thread-safe bitset
@@ -16,7 +16,7 @@ import static com.hbm.lib.UnsafeHolder.U;
  */
 @ThreadSafe
 public class ConcurrentBitSet implements BitMask, Cloneable {
-    private static final int ABASE;
+    private static final long ABASE;
     private static final int ASHIFT;
 
     static {

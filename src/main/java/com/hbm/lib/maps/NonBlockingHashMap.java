@@ -20,8 +20,8 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 
-import static com.hbm.lib.UnsafeHolder.U;
-import static com.hbm.lib.UnsafeHolder.fieldOffset;
+import static com.hbm.lib.internal.UnsafeHolder.U;
+import static com.hbm.lib.internal.UnsafeHolder.fieldOffset;
 
 /**
  * A lock-free alternate implementation of {@link java.util.concurrent.ConcurrentHashMap}
@@ -87,7 +87,7 @@ public class NonBlockingHashMap<TypeK, TypeV>
     private static final int REPROBE_LIMIT=10; // Too many reprobes then force a table-resize
 
     // --- Bits to allow Unsafe access to arrays
-    private static final int _Obase  = U.arrayBaseOffset(Object[].class);
+    private static final long _Obase  = U.arrayBaseOffset(Object[].class);
     private static final int _Oscale = U.arrayIndexScale(Object[].class);
     private static final int _Olog   = _Oscale==4?2:(_Oscale==8?3:9999);
     private static long rawIndex(final Object[] ary, final int idx) {

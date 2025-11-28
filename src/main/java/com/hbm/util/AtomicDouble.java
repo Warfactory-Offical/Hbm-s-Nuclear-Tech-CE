@@ -1,7 +1,8 @@
 package com.hbm.util;
 
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
-import com.hbm.lib.UnsafeHolder;
+import com.hbm.lib.Library;
+import com.hbm.lib.internal.UnsafeHolder;
 
 import java.io.Serializable;
 import java.util.function.DoubleUnaryOperator;
@@ -57,7 +58,7 @@ public final class AtomicDouble extends Number implements Serializable {
             if (UnsafeHolder.U.compareAndSwapLong(this, VALUE_OFFSET, cur, next)) {
                 return Double.longBitsToDouble(cur);
             }
-            UnsafeHolder.onSpinWait();
+            Library.onSpinWait();
         }
     }
 
@@ -74,7 +75,7 @@ public final class AtomicDouble extends Number implements Serializable {
             if (UnsafeHolder.U.compareAndSwapLong(this, VALUE_OFFSET, curBits, nextBits)) {
                 return cur;
             }
-            UnsafeHolder.onSpinWait();
+            Library.onSpinWait();
         }
     }
 
@@ -91,7 +92,7 @@ public final class AtomicDouble extends Number implements Serializable {
             if (UnsafeHolder.U.compareAndSwapLong(this, VALUE_OFFSET, curBits, nextBits)) {
                 return next;
             }
-            UnsafeHolder.onSpinWait();
+            Library.onSpinWait();
         }
     }
 
@@ -117,7 +118,7 @@ public final class AtomicDouble extends Number implements Serializable {
             if (UnsafeHolder.U.compareAndSwapLong(this, VALUE_OFFSET, curBits, nextBits)) {
                 return cur;
             }
-            UnsafeHolder.onSpinWait();
+            Library.onSpinWait();
         }
     }
 
@@ -134,7 +135,7 @@ public final class AtomicDouble extends Number implements Serializable {
             if (UnsafeHolder.U.compareAndSwapLong(this, VALUE_OFFSET, curBits, nextBits)) {
                 return next;
             }
-            UnsafeHolder.onSpinWait();
+            Library.onSpinWait();
         }
     }
 

@@ -1,6 +1,7 @@
 package com.hbm.util;
 
-import com.hbm.lib.UnsafeHolder;
+import com.hbm.lib.Library;
+import com.hbm.lib.internal.UnsafeHolder;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static com.hbm.lib.UnsafeHolder.U;
+import static com.hbm.lib.internal.UnsafeHolder.U;
 
 /**
  * A lock-free, thread-safe MPSC stack that supports atomic drain.
@@ -26,7 +27,7 @@ public class MpscCollector<T> {
             Node<T> h = (Node<T>) U.getObjectVolatile(this, HEAD_OFF);
             n.next = h;
             if (U.compareAndSwapObject(this, HEAD_OFF, h, n)) return;
-            UnsafeHolder.onSpinWait();
+            Library.onSpinWait();
         }
     }
 
@@ -45,7 +46,7 @@ public class MpscCollector<T> {
             Node<T> h = (Node<T>) U.getObjectVolatile(this, HEAD_OFF);
             tailNode.next = h;
             if (U.compareAndSwapObject(this, HEAD_OFF, h, headNode)) return;
-            UnsafeHolder.onSpinWait();
+            Library.onSpinWait();
         }
     }
 

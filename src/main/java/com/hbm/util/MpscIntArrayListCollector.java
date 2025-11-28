@@ -1,13 +1,14 @@
 package com.hbm.util;
 
+import com.hbm.lib.Library;
 import com.hbm.lib.TLPool;
-import com.hbm.lib.UnsafeHolder;
+import com.hbm.lib.internal.UnsafeHolder;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import static com.hbm.lib.UnsafeHolder.U;
+import static com.hbm.lib.internal.UnsafeHolder.U;
 
 /**
  * A lock-free, thread-safe MPSC {@link IntArrayList} stack that supports atomic drain.
@@ -27,7 +28,7 @@ public class MpscIntArrayListCollector {
             Node h = (Node) U.getObjectVolatile(this, HEAD_OFF);
             n.next = h;
             if (U.compareAndSwapObject(this, HEAD_OFF, h, n)) return;
-            UnsafeHolder.onSpinWait();
+            Library.onSpinWait();
         }
     }
 
@@ -47,7 +48,7 @@ public class MpscIntArrayListCollector {
             Node h = (Node) U.getObjectVolatile(this, HEAD_OFF);
             tailNode.next = h;
             if (U.compareAndSwapObject(this, HEAD_OFF, h, headNode)) return;
-            UnsafeHolder.onSpinWait();
+            Library.onSpinWait();
         }
     }
 

@@ -4,7 +4,7 @@ import com.hbm.interfaces.BitMask;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import static com.hbm.lib.UnsafeHolder.U;
+import static com.hbm.lib.internal.UnsafeHolder.U;
 
 /**
  * For single writer usage, not thread-safe. Don't forget the free the memory!
