@@ -20,10 +20,15 @@ import org.jetbrains.annotations.Nullable;
 
 public class Compat {
 	private static final boolean MOD_EIDS = Loader.isModLoaded("jeid") || Loader.isModLoaded("neid");
+    private static final boolean MOD_OC = Loader.isModLoaded(ModIds.OPEN_COMPUTERS);
 
 	public static boolean isIDExtensionModLoaded() {
 		return MOD_EIDS;
 	}
+
+    public static boolean isOpenComputersLoaded() {
+        return MOD_OC;
+    }
 
 	public static Item tryLoadItem(String domain, String name) {
 		return Item.REGISTRY.getObject(new ResourceLocation(domain, name));

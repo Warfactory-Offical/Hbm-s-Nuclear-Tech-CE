@@ -7,6 +7,7 @@ import com.hbm.config.GeneralConfig;
 import com.hbm.config.StructureConfig;
 import com.hbm.handler.ThreeInts;
 import com.hbm.main.MainRegistry;
+import com.hbm.tileentity.TileMappings;
 import com.hbm.util.Tuple.Pair;
 import com.hbm.util.Tuple.Quartet;
 import com.hbm.world.gen.nbt.SpawnCondition.WorldCoordinate;
@@ -430,7 +431,7 @@ public class NBTStructure {
 
 		if(worldItemPalette != null) relinkItems(worldItemPalette, nbt);
 
-		TileEntity te = TileEntity.create(world, nbt);
+		TileEntity te = TileMappings.create(world, nbt);
 
 		if(te instanceof INBTTileEntityTransformable) {
 			((INBTTileEntityTransformable) te).transformTE(world, coordBaseMode);
