@@ -1,321 +1,47 @@
 package com.hbm.world.phased;
 
 import com.hbm.config.GeneralConfig;
+import com.hbm.lib.MethodHandleHelper;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.ChunkUtil;
 import com.hbm.world.phased.AbstractPhasedStructure.BlockInfo;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagLongArray;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.IChunkGenerator;
-import net.minecraftforge.event.world.ChunkEvent;
+import net.minecraft.world.gen.structure.MapGenStructure;
+import net.minecraft.world.gen.structure.StructureBoundingBox;
+import net.minecraft.world.gen.structure.StructureComponent;
+import net.minecraft.world.gen.structure.StructureStart;
+import net.minecraft.world.gen.structure.template.TemplateManager;
 import net.minecraftforge.fml.common.IWorldGenerator;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodType;
 import java.util.*;
 
-
 /**
- * Solution to cascading worldgen.
- * <p>
- * For some reason the worldgen can still cascade with the phased generator in <strong>extremely rare cases</strong>, idk why and I can't fix it.<br>
- * So instead there is a {@link GeneralConfig#enableTickBasedWorldGenerator} flag that can <strong>eliminate</strong> the cascading.<br>
- * This would be incompatible to most, if not all chunk pregenerators.<br>
- * Note that even with {@link GeneralConfig#enableTickBasedWorldGenerator} disabled, the mitigation still works.
+ * After doing so much i realized that i could have just used the existing mapgen structure system
  *
  * @author mlbv
  */
-public class PhasedStructureGenerator implements IWorldGenerator {
+public class PhasedStructureGenerator extends MapGenStructure implements IWorldGenerator {
     public static final PhasedStructureGenerator INSTANCE = new PhasedStructureGenerator();
-    private final Int2ObjectMap<Long2ObjectMap<ArrayList<PendingValidationStructure>>> pendingByChunk = new Int2ObjectOpenHashMap<>();
-    private final Int2ObjectMap<Long2ObjectMap<Queue<Runnable>>> structureParts = new Int2ObjectOpenHashMap<>();
-    private final Int2ObjectMap<Queue<ReadyToGenerateStructure>> generationQueues = new Int2ObjectOpenHashMap<>();
+    private static final String STRUCTURE_NAME = "PhasedStructures";
+    private static final MethodHandle MH_SET_STRUCTURE_START = MethodHandleHelper.findSpecial(MapGenStructure.class, MapGenStructure.class, "setStructureStart", "func_143026_a", MethodType.methodType(void.class, int.class, int.class, StructureStart.class));
+    private final Map<String, IPhasedStructure> structureRegistry = new HashMap<>();
+    private final Long2ObjectOpenHashMap<ObjectArrayList<PhasedStructureComponent>> componentsByChunk = new Long2ObjectOpenHashMap<>();
 
     private PhasedStructureGenerator() {
-    }
-
-    public void scheduleStructureForValidation(World world, BlockPos origin, IPhasedStructure structure,
-                                               Long2ObjectOpenHashMap<List<BlockInfo>> layout) {
-        if (layout.isEmpty() && !(!structure.getValidationPoints(BlockPos.ORIGIN)
-                                            .isEmpty() && structure instanceof AbstractPhasedStructure abstractPhased && !abstractPhased.isCacheable())) {
-
-            if (GeneralConfig.enableDebugWorldGen) {
-                MainRegistry.logger.warn("Skipping structure {} generation at {} due to empty layout.", structure.getClass().getSimpleName(), origin);
-            }
-            return;
-        }
-
-        PendingValidationStructure pending = new PendingValidationStructure(origin, structure, layout, world.getSeed());
-        IChunkProvider chunkProvider = world.getChunkProvider();
-        LongIterator it = pending.chunksAwaitingGeneration.iterator();
-        while (it.hasNext()) {
-            long key = it.nextLong();
-            int cx = ChunkUtil.getChunkPosX(key);
-            int cz = ChunkUtil.getChunkPosZ(key);
-            if (chunkProvider.isChunkGeneratedAt(cx, cz)) {
-                it.remove();
-            }
-        }
-
-        int dimId = world.provider.getDimension();
-
-        if (pending.chunksAwaitingGeneration.isEmpty()) {
-            ReadyToGenerateStructure validated = validate(world, pending);
-            if (validated != null) {
-                if (GeneralConfig.enableTickBasedWorldGenerator) {
-                    enqueueForTickGeneration(dimId, validated);
-                    if (GeneralConfig.enableDebugWorldGen) {
-                        MainRegistry.logger.info("All chunks present for {}. Scheduled for tick generation.", pending.structure.getClass()
-                                                                                                                               .getSimpleName());
-                    }
-                } else {
-                    queueValidatedStructure(world, validated);
-                }
-            } else if (GeneralConfig.enableDebugWorldGen) {
-                MainRegistry.logger.info("Structure {} at {} failed to validate on fast path.", pending.structure.getClass()
-                                                                                                                 .getSimpleName(), pending.origin);
-            }
-        } else {
-            Long2ObjectMap<ArrayList<PendingValidationStructure>> dimMap = pendingByChunk.get(dimId);
-            if (dimMap == null) {
-                dimMap = new Long2ObjectOpenHashMap<>();
-                pendingByChunk.put(dimId, dimMap);
-            }
-
-            LongIterator it2 = pending.chunksAwaitingGeneration.iterator();
-            while (it2.hasNext()) {
-                long key = it2.nextLong();
-                ArrayList<PendingValidationStructure> list = dimMap.get(key);
-                if (list == null) {
-                    list = new ArrayList<>();
-                    dimMap.put(key, list);
-                }
-                list.add(pending);
-            }
-        }
-    }
-
-    @Override
-    public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
-        int dimId = world.provider.getDimension();
-        long chunkKey = ChunkPos.asLong(chunkX, chunkZ);
-
-        processPendingValidations(world, dimId, chunkKey);
-
-        if (!GeneralConfig.enableTickBasedWorldGenerator) {
-            runQueuedGenerators(dimId, chunkKey);
-        }
-    }
-
-    @SubscribeEvent
-    public void onChunkLoad(ChunkEvent.Load event) {
-        World world = event.getWorld();
-        if (world.isRemote || GeneralConfig.enableTickBasedWorldGenerator) return;
-
-        Chunk chunk = event.getChunk();
-        if (chunk.isTerrainPopulated()) {
-            int dimId = world.provider.getDimension();
-            long chunkKey = ChunkPos.asLong(chunk.x, chunk.z);
-            runQueuedGenerators(dimId, chunkKey);
-        }
-    }
-
-    private void queueValidatedStructure(World world, ReadyToGenerateStructure validated) {
-        int dimId = world.provider.getDimension();
-        IPhasedStructure phasedStructure = validated.pending.structure;
-        Random structureRand = validated.structureRand;
-        Long2ObjectOpenHashMap<List<BlockInfo>> layout = validated.pending.layout;
-        int originChunkX = validated.finalOrigin.getX() >> 4;
-        int originChunkZ = validated.finalOrigin.getZ() >> 4;
-
-        if (GeneralConfig.enableDebugWorldGen) {
-            MainRegistry.logger.info("Queuing parts for {} at {}", phasedStructure.getClass().getSimpleName(), validated.finalOrigin);
-        }
-
-        IChunkProvider provider = world.getChunkProvider();
-
-        Long2ObjectMap<Queue<Runnable>> partsInDim = structureParts.get(dimId);
-        if (partsInDim == null) {
-            partsInDim = new Long2ObjectOpenHashMap<>();
-            structureParts.put(dimId, partsInDim);
-        }
-
-        ObjectIterator<Long2ObjectMap.Entry<List<BlockInfo>>> iterator = layout.long2ObjectEntrySet().fastIterator();
-        while (iterator.hasNext()) {
-            Long2ObjectMap.Entry<List<BlockInfo>> entry = iterator.next();
-            long relKey = entry.getLongKey();
-            List<BlockInfo> blocksForThisChunk = entry.getValue();
-
-            int relChunkX = ChunkUtil.getChunkPosX(relKey);
-            int relChunkZ = ChunkUtil.getChunkPosZ(relKey);
-            int absChunkX = originChunkX + relChunkX;
-            int absChunkZ = originChunkZ + relChunkZ;
-
-            ChunkPos absoluteChunkPos = new ChunkPos(absChunkX, absChunkZ);
-            long chunkKey = ChunkPos.asLong(absChunkX, absChunkZ);
-
-            validated.remainingChunks.add(chunkKey);
-
-            Chunk loadedChunk = provider.getLoadedChunk(absChunkX, absChunkZ);
-
-            if (loadedChunk != null && loadedChunk.isTerrainPopulated()) {
-                try {
-                    phasedStructure.generateForChunk(world, structureRand, validated.finalOrigin, absoluteChunkPos, blocksForThisChunk);
-                } catch (Exception e) {
-                    MainRegistry.logger.error("Error generating phased structure part at {}", absoluteChunkPos, e);
-                }
-                markChunkGenerated(world, validated, chunkKey);
-            } else {
-                Queue<Runnable> tasks = partsInDim.get(chunkKey);
-                if (tasks == null) {
-                    tasks = new ArrayDeque<>();
-                    partsInDim.put(chunkKey, tasks);
-                }
-
-                final List<BlockInfo> blocksCopy = blocksForThisChunk;
-                final ChunkPos absPosCopy = absoluteChunkPos;
-                tasks.add(() -> {
-                    try {
-                        phasedStructure.generateForChunk(world, structureRand, validated.finalOrigin, absPosCopy, blocksCopy);
-                    } catch (Exception e) {
-                        MainRegistry.logger.error("Error generating phased structure part at {}", absPosCopy, e);
-                    }
-                    markChunkGenerated(world, validated, chunkKey);
-                });
-            }
-        }
-
-        if (validated.remainingChunks.isEmpty()) {
-            callPostGenerate(world, validated);
-        }
-    }
-
-    private void runQueuedGenerators(int dimId, long chunkKey) {
-        Long2ObjectMap<Queue<Runnable>> partsInDim = structureParts.get(dimId);
-        if (partsInDim == null) return;
-
-        Queue<Runnable> tasks = partsInDim.remove(chunkKey);
-        if (tasks == null || tasks.isEmpty()) {
-            if (partsInDim.isEmpty()) {
-                structureParts.remove(dimId);
-            }
-            return;
-        }
-
-        while (!tasks.isEmpty()) {
-            Runnable task = tasks.poll();
-            if (task == null) continue;
-            try {
-                task.run();
-            } catch (Exception e) {
-                MainRegistry.logger.error("Error generating phased structure part in dim {} at chunk {}", dimId, chunkKey, e);
-            }
-        }
-
-        if (partsInDim.isEmpty()) {
-            structureParts.remove(dimId);
-        }
-    }
-
-    private static void markChunkGenerated(World world, ReadyToGenerateStructure validated, long chunkKey) {
-        if (!validated.remainingChunks.remove(chunkKey)) return;
-        if (validated.remainingChunks.isEmpty()) {
-            callPostGenerate(world, validated);
-        }
-    }
-
-    private static void callPostGenerate(World world, ReadyToGenerateStructure validated) {
-        if (validated.postGenerated) return;
-        validated.postGenerated = true;
-        IPhasedStructure phasedStructure = validated.pending.structure;
-        try {
-            phasedStructure.postGenerate(world, validated.structureRand, validated.finalOrigin);
-        } catch (Exception e) {
-            MainRegistry.logger.error("Error running postGenerate for {}", phasedStructure.getClass().getSimpleName(), e);
-        }
-    }
-
-    private void processPendingValidations(World world, int dimId, long currentChunkKey) {
-        Long2ObjectMap<ArrayList<PendingValidationStructure>> dimMap = pendingByChunk.get(dimId);
-        if (dimMap == null) {
-            return;
-        }
-
-        ArrayList<PendingValidationStructure> list = dimMap.remove(currentChunkKey);
-        if (list == null || list.isEmpty()) {
-            if (dimMap.isEmpty()) {
-                pendingByChunk.remove(dimId);
-            }
-            return;
-        }
-
-        for (int i = list.size() - 1; i >= 0; --i) {
-            PendingValidationStructure pending = list.get(i);
-            if (!pending.chunksAwaitingGeneration.remove(currentChunkKey)) continue;
-            if (pending.chunksAwaitingGeneration.isEmpty()) {
-                ReadyToGenerateStructure validated = validate(world, pending);
-
-                if (validated != null) {
-                    if (GeneralConfig.enableTickBasedWorldGenerator) {
-                        if (GeneralConfig.enableDebugWorldGen) {
-                            MainRegistry.logger.info("Scheduled {} generation at {}", pending.structure.getClass()
-                                                                                                       .getSimpleName(), validated.finalOrigin);
-                        }
-                        enqueueForTickGeneration(dimId, validated);
-                    } else {
-                        queueValidatedStructure(world, validated);
-                    }
-                } else if (GeneralConfig.enableDebugWorldGen) {
-                    MainRegistry.logger.info("Structure {} at {} failed to validate.", pending.structure.getClass().getSimpleName(), pending.origin);
-                }
-            }
-        }
-
-        if (dimMap.isEmpty()) {
-            pendingByChunk.remove(dimId);
-        }
-    }
-
-    private void enqueueForTickGeneration(int dimId, ReadyToGenerateStructure validated) {
-        Queue<ReadyToGenerateStructure> queue = generationQueues.get(dimId);
-        if (queue == null) {
-            queue = new ArrayDeque<>();
-            generationQueues.put(dimId, queue);
-        }
-        queue.add(validated);
-    }
-
-    @SubscribeEvent
-    public void onWorldTick(TickEvent.WorldTickEvent event) {
-        if (event.phase != TickEvent.Phase.END || event.world.isRemote || !GeneralConfig.enableTickBasedWorldGenerator) {
-            return;
-        }
-
-        int dimId = event.world.provider.getDimension();
-        Queue<ReadyToGenerateStructure> queue = generationQueues.get(dimId);
-        if (queue == null || queue.isEmpty()) {
-            return;
-        }
-
-        ReadyToGenerateStructure validated = queue.poll();
-        if (validated != null) {
-            generateValidatedImmediate(event.world, validated);
-        }
-
-        if (queue.isEmpty()) {
-            generationQueues.remove(dimId);
-        }
     }
 
     @Nullable
@@ -323,38 +49,8 @@ public class PhasedStructureGenerator implements IWorldGenerator {
         return pending.structure.validate(world, pending).orElse(null);
     }
 
-    private static void generateValidatedImmediate(World world, ReadyToGenerateStructure validated) {
-        IPhasedStructure phasedStructure = validated.pending.structure;
-        Random structureRand = validated.structureRand;
-        Long2ObjectOpenHashMap<List<BlockInfo>> layout = validated.pending.layout;
-
-        if (GeneralConfig.enableDebugWorldGen) {
-            MainRegistry.logger.info("Generating {} at {}", phasedStructure.getClass().getSimpleName(), validated.finalOrigin);
-        }
-
-        int originChunkX = validated.finalOrigin.getX() >> 4;
-        int originChunkZ = validated.finalOrigin.getZ() >> 4;
-
-        ObjectIterator<Long2ObjectMap.Entry<List<BlockInfo>>> iterator = layout.long2ObjectEntrySet().fastIterator();
-        while (iterator.hasNext()) {
-            Long2ObjectMap.Entry<List<BlockInfo>> entry = iterator.next();
-            long relKey = entry.getLongKey();
-            List<BlockInfo> blocksForThisChunk = entry.getValue();
-
-            int relChunkX = ChunkUtil.getChunkPosX(relKey);
-            int relChunkZ = ChunkUtil.getChunkPosZ(relKey);
-            int absChunkX = originChunkX + relChunkX;
-            int absChunkZ = originChunkZ + relChunkZ;
-
-            ChunkPos absoluteChunkPos = new ChunkPos(absChunkX, absChunkZ);
-
-            phasedStructure.generateForChunk(world, structureRand, validated.finalOrigin, absoluteChunkPos, blocksForThisChunk);
-        }
-        phasedStructure.postGenerate(world, structureRand, validated.finalOrigin);
-    }
-
-    public static void forceGenerateStructure(World world, Random rand, BlockPos origin, IPhasedStructure structure,
-                                              Long2ObjectOpenHashMap<List<BlockInfo>> layout) {
+    static void forceGenerateStructure(World world, Random rand, BlockPos origin, IPhasedStructure structure,
+                                       Long2ObjectOpenHashMap<List<BlockInfo>> layout) {
         int originChunkX = origin.getX() >> 4;
         int originChunkZ = origin.getZ() >> 4;
 
@@ -375,62 +71,578 @@ public class PhasedStructureGenerator implements IWorldGenerator {
         structure.postGenerate(world, rand, origin);
     }
 
+    void registerStructure(IPhasedStructure structure) {
+        structureRegistry.put(structure.getId(), structure);
+    }
+
+    @Nullable
+    private IPhasedStructure resolveStructure(String id) {
+        return structureRegistry.get(id);
+    }
+
+    @Override
+    public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
+        if (world.isRemote) return;
+        this.world = world;
+        this.initializeStructureData(world);
+        generateForChunkFast(world, new ChunkPos(chunkX, chunkZ));
+    }
+
+    @Override
+    public String getStructureName() {
+        return STRUCTURE_NAME;
+    }
+
+    @Nullable
+    @Override
+    public BlockPos getNearestStructurePos(World worldIn, BlockPos pos, boolean findUnexplored) {
+        return null;
+    }
+
+    @Override
+    protected boolean canSpawnStructureAtCoords(int chunkX, int chunkZ) {
+        return false;
+    }
+
+    @Override
+    protected StructureStart getStructureStart(int chunkX, int chunkZ) {
+        return new PhasedStructureStart();
+    }
+
+    @Override
+    public boolean isInsideStructure(BlockPos pos) {
+        if (this.world == null) {
+            return false;
+        }
+        this.initializeStructureData(this.world);
+        return this.getStructureAt(pos) != null;
+    }
+
+    @Override
+    @Nullable
+    protected StructureStart getStructureAt(BlockPos pos) {
+        int cx = pos.getX() >> 4;
+        int cz = pos.getZ() >> 4;
+        long key = ChunkPos.asLong(cx, cz);
+
+        ObjectArrayList<PhasedStructureComponent> list = componentsByChunk.get(key);
+        if (list == null || list.isEmpty()) {
+            return null;
+        }
+
+        for (PhasedStructureComponent comp : list) {
+            if (comp == null) continue;
+            PhasedStructureStart parent = comp.parent;
+            if (parent == null) continue;
+            if (!parent.isSizeableStructure()) continue;
+            if (!parent.getBoundingBox().isVecInside(pos)) continue;
+            if (comp.getBoundingBox().isVecInside(pos)) {
+                return parent;
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public boolean isPositionInStructure(World worldIn, BlockPos pos) {
+        this.world = worldIn;
+        this.initializeStructureData(worldIn);
+        int cx = pos.getX() >> 4;
+        int cz = pos.getZ() >> 4;
+        long key = ChunkPos.asLong(cx, cz);
+
+        ObjectArrayList<PhasedStructureComponent> list = componentsByChunk.get(key);
+        if (list == null || list.isEmpty()) return false;
+
+        for (PhasedStructureComponent comp : list) {
+            if (comp == null) continue;
+            PhasedStructureStart parent = comp.parent;
+            if (parent == null) continue;
+
+            if (parent.isSizeableStructure() && parent.getBoundingBox().isVecInside(pos)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    void scheduleStructureForValidation(World world, BlockPos origin, IPhasedStructure structure,
+                                        Long2ObjectOpenHashMap<List<BlockInfo>> layout, long layoutSeed) {
+        this.world = world;
+        registerStructure(structure);
+
+        boolean allowEmptyLayout = false;
+        if (structure instanceof AbstractPhasedStructure phased) {
+            allowEmptyLayout = !structure.getValidationPoints(BlockPos.ORIGIN).isEmpty() && !phased.isCacheable();
+        }
+
+        if (layout.isEmpty() && !allowEmptyLayout) {
+            if (GeneralConfig.enableDebugWorldGen) {
+                MainRegistry.logger.warn("Skipping structure {} generation at {} due to empty layout.", structure.getClass().getSimpleName(), origin);
+            }
+            return;
+        }
+
+        PendingValidationStructure pending = new PendingValidationStructure(origin, structure, layout, world.getSeed(), layoutSeed);
+        ReadyToGenerateStructure ready = validate(world, pending);
+
+        if (ready == null) {
+            if (GeneralConfig.enableDebugWorldGen) {
+                MainRegistry.logger.info("Structure {} at {} failed to validate on fast path.", pending.structure.getClass()
+                                                                                                                 .getSimpleName(), pending.origin);
+            }
+            return;
+        }
+
+        PhasedStructureStart start = new PhasedStructureStart(ready);
+        long key = ChunkPos.asLong(start.getChunkPosX(), start.getChunkPosZ());
+        this.structureMap.put(key, start);
+
+        this.initializeStructureData(world);
+        try {
+            MH_SET_STRUCTURE_START.invokeExact((MapGenStructure) this, start.getChunkPosX(), start.getChunkPosZ(), (StructureStart) start);
+        } catch (Throwable t) {
+            throw new RuntimeException("Failed to persist phased structure start", t);
+        }
+    }
+
+    private void registerComponent(ChunkPos chunkPos, PhasedStructureComponent component) {
+        long key = ChunkPos.asLong(chunkPos.x, chunkPos.z);
+        ObjectArrayList<PhasedStructureComponent> list = componentsByChunk.get(key);
+        if (list == null) {
+            list = new ObjectArrayList<>(1);
+            componentsByChunk.put(key, list);
+        }
+        list.add(component);
+    }
+
+    private void onChunkProcessed(PhasedStructureStart start, ChunkPos chunkPos) {
+        long key = ChunkPos.asLong(chunkPos.x, chunkPos.z);
+        ObjectArrayList<PhasedStructureComponent> list = componentsByChunk.get(key);
+        if (list == null || list.isEmpty()) {
+            return;
+        }
+
+        for (int i = 0; i < list.size(); ) {
+            PhasedStructureComponent comp = list.get(i);
+            if (comp == null || comp.parent != start) {
+                i++;
+            } else {
+                list.remove(i);
+            }
+        }
+
+        if (list.isEmpty()) {
+            componentsByChunk.remove(key);
+        }
+    }
+
+    private void generateForChunkFast(World world, ChunkPos chunkPos) {
+        long key = ChunkPos.asLong(chunkPos.x, chunkPos.z);
+        ObjectArrayList<PhasedStructureComponent> list = componentsByChunk.get(key);
+        if (list == null || list.isEmpty()) return;
+        list = list.clone();
+        for (PhasedStructureComponent comp : list) {
+            if (comp == null) continue;
+            PhasedStructureStart parent = comp.parent;
+            if (parent == null) continue;
+            if (!parent.isValidForPostProcess(chunkPos)) {
+                continue;
+            }
+            comp.generateNow(world);
+        }
+    }
+
     public static class ReadyToGenerateStructure {
         final PendingValidationStructure pending;
         final BlockPos finalOrigin;
         final Random structureRand;
-        final LongOpenHashSet remainingChunks = new LongOpenHashSet();
-        volatile boolean postGenerated;
 
         public ReadyToGenerateStructure(PendingValidationStructure pending, BlockPos finalOrigin) {
             this.pending = pending;
             this.finalOrigin = finalOrigin;
-            this.structureRand = pending.createRandom();
+            this.structureRand = PendingValidationStructure.createRandom(pending.worldSeed, pending.origin);
         }
     }
 
     public static class PendingValidationStructure {
         public final BlockPos origin;
         final IPhasedStructure structure;
-        final LongOpenHashSet chunksAwaitingGeneration;
         final Long2ObjectOpenHashMap<List<BlockInfo>> layout;
         final long worldSeed;
+        final long layoutSeed;
 
-        PendingValidationStructure(BlockPos origin, IPhasedStructure structure, Long2ObjectOpenHashMap<List<BlockInfo>> layout, long worldSeed) {
+        PendingValidationStructure(BlockPos origin, IPhasedStructure structure, Long2ObjectOpenHashMap<List<BlockInfo>> layout, long worldSeed,
+                                   long layoutSeed) {
             this.origin = origin;
             this.structure = structure;
             this.layout = layout;
             this.worldSeed = worldSeed;
+            this.layoutSeed = layoutSeed;
+        }
 
-            this.chunksAwaitingGeneration = new LongOpenHashSet();
+        static Random createRandom(long seed, BlockPos origin) {
+            Random rand = new Random(seed);
+            long x = rand.nextLong() ^ origin.getX();
+            long z = rand.nextLong() ^ origin.getZ();
+            rand.setSeed(x * origin.getX() + z * origin.getZ() ^ seed);
+            return rand;
+        }
+    }
 
-            int originChunkX = origin.getX() >> 4;
-            int originChunkZ = origin.getZ() >> 4;
-            LongIterator it = layout.keySet().iterator();
-            while (it.hasNext()) {
-                long relKey = it.nextLong();
+    public static class PhasedStructureStart extends StructureStart {
+        private final LongOpenHashSet remainingChunks = new LongOpenHashSet();
+        private final LongOpenHashSet processedChunks = new LongOpenHashSet();
+        private IPhasedStructure structure;
+        private String structureId;
+        private BlockPos finalOrigin = BlockPos.ORIGIN;
+        private long worldSeed;
+        private long layoutSeed;
+        private Random structureRand = new Random();
+        private Long2ObjectOpenHashMap<List<BlockInfo>> layout;
+        private boolean postGenerated;
+        private World cachedWorld;
+
+        @SuppressWarnings("WeakerAccess")
+        public PhasedStructureStart() {
+            super();
+        }
+
+        PhasedStructureStart(ReadyToGenerateStructure ready) {
+            super(ready.finalOrigin.getX() >> 4, ready.finalOrigin.getZ() >> 4);
+            this.structure = ready.pending.structure;
+            this.structureId = structure.getId();
+            this.finalOrigin = ready.finalOrigin;
+            this.worldSeed = ready.pending.worldSeed;
+            this.layoutSeed = ready.pending.layoutSeed;
+            this.structureRand = ready.structureRand;
+            this.layout = ready.pending.layout;
+            this.postGenerated = false;
+
+            buildComponentsFromLayout();
+            generateExistingChunks();
+        }
+
+        private void buildComponentsFromLayout() {
+            ensureLayout();
+            remainingChunks.clear();
+            this.components = new ArrayList<>();
+
+            int originChunkX = this.finalOrigin.getX() >> 4;
+            int originChunkZ = this.finalOrigin.getZ() >> 4;
+
+            ObjectIterator<Long2ObjectMap.Entry<List<BlockInfo>>> iterator = this.layout.long2ObjectEntrySet().fastIterator();
+            while (iterator.hasNext()) {
+                Long2ObjectMap.Entry<List<BlockInfo>> entry = iterator.next();
+                long relKey = entry.getLongKey();
+                List<BlockInfo> blocksForThisChunk = entry.getValue();
+
                 int relChunkX = ChunkUtil.getChunkPosX(relKey);
                 int relChunkZ = ChunkUtil.getChunkPosZ(relKey);
-                int absX = originChunkX + relChunkX;
-                int absZ = originChunkZ + relChunkZ;
-                this.chunksAwaitingGeneration.add(ChunkPos.asLong(absX, absZ));
+                int absChunkX = originChunkX + relChunkX;
+                int absChunkZ = originChunkZ + relChunkZ;
+
+                ChunkPos chunkPos = new ChunkPos(absChunkX, absChunkZ);
+                int[] minMax = computeHeightBounds(blocksForThisChunk);
+                PhasedStructureComponent component = new PhasedStructureComponent(this, relChunkX, relChunkZ, chunkPos, minMax[0], minMax[1], blocksForThisChunk);
+                this.components.add(component);
+                this.remainingChunks.add(ChunkPos.asLong(absChunkX, absChunkZ));
+                PhasedStructureGenerator.INSTANCE.registerComponent(chunkPos, component);
             }
 
-            List<BlockPos> validationPointOffsets = structure.getValidationPoints(BlockPos.ORIGIN);
-            for (BlockPos offset : validationPointOffsets) {
-                BlockPos absoluteValidationPoint = origin.add(offset);
-                int chunkX = absoluteValidationPoint.getX() >> 4;
-                int chunkZ = absoluteValidationPoint.getZ() >> 4;
-                this.chunksAwaitingGeneration.add(ChunkPos.asLong(chunkX, chunkZ));
+            if (this.structure != null) {
+                List<ChunkPos> extras = this.structure.getAdditionalChunks(this.finalOrigin);
+                if (extras != null && !extras.isEmpty()) {
+                    for (ChunkPos extra : extras) {
+                        long key = ChunkPos.asLong(extra.x, extra.z);
+                        if (this.remainingChunks.contains(key)) continue;
+                        int relX = extra.x - originChunkX;
+                        int relZ = extra.z - originChunkZ;
+                        PhasedStructureComponent marker = new PhasedStructureComponent(this, relX, relZ, extra, this.finalOrigin.getY(), this.finalOrigin.getY(), true);
+                        this.components.add(marker);
+                        this.remainingChunks.add(key);
+                        PhasedStructureGenerator.INSTANCE.registerComponent(extra, marker);
+                    }
+                }
+            }
+
+            this.updateBoundingBox();
+        }
+
+        private int[] computeHeightBounds(List<BlockInfo> blocks) {
+            int minY = this.finalOrigin.getY();
+            int maxY = this.finalOrigin.getY();
+            if (blocks != null) {
+                for (BlockInfo info : blocks) {
+                    int y = this.finalOrigin.getY() + info.relativePos.getY();
+                    minY = Math.min(minY, y);
+                    maxY = Math.max(maxY, y);
+                }
+            }
+            return new int[]{minY, maxY};
+        }
+
+        private void ensureLayout() {
+            if (this.layout != null) return;
+            if (this.structure instanceof AbstractPhasedStructure abstractPhasedStructure) {
+                this.layout = abstractPhasedStructure.buildLayout(this.finalOrigin, this.layoutSeed);
+            } else {
+                this.layout = new Long2ObjectOpenHashMap<>();
             }
         }
 
-        Random createRandom() {
-            Random rand = new Random(this.worldSeed);
-            long x = rand.nextLong() ^ this.origin.getX();
-            long z = rand.nextLong() ^ this.origin.getZ();
-            rand.setSeed(x * this.origin.getX() + z * this.origin.getZ() ^ this.worldSeed);
-            return rand;
+        @Nullable List<BlockInfo> getBlocksFor(int relChunkX, int relChunkZ) {
+            ensureLayout();
+            long key = ChunkPos.asLong(relChunkX, relChunkZ);
+            return this.layout.get(key);
+        }
+
+        @Override
+        public void generateStructure(World worldIn, Random rand, StructureBoundingBox structurebb) {
+            this.cachedWorld = worldIn;
+            ensureLayout();
+            super.generateStructure(worldIn, this.structureRand, structurebb);
+        }
+
+        @Override
+        public boolean isValidForPostProcess(ChunkPos pair) {
+            return !processedChunks.contains(ChunkPos.asLong(pair.x, pair.z));
+        }
+
+        @Override
+        public void notifyPostProcessAt(ChunkPos pair) {
+            long key = ChunkPos.asLong(pair.x, pair.z);
+            processedChunks.add(key);
+            remainingChunks.remove(key);
+            PhasedStructureGenerator.INSTANCE.onChunkProcessed(this, pair);
+            if (remainingChunks.isEmpty() && !postGenerated && structure != null) {
+                postGenerated = true;
+                try {
+                    World world = resolveWorld();
+                    if (world != null) {
+                        structure.postGenerate(world, structureRand, finalOrigin);
+                    }
+                } catch (Exception e) {
+                    MainRegistry.logger.error("Error running postGenerate for {}", structureId, e);
+                }
+            }
+        }
+
+        void markGenerated(ChunkPos pos) {
+            notifyPostProcessAt(pos);
+        }
+
+        @Override
+        public void writeToNBT(NBTTagCompound nbt) {
+            super.writeToNBT(nbt);
+            nbt.setString("StructureId", structureId == null ? "" : structureId);
+            nbt.setLong("WorldSeed", worldSeed);
+            nbt.setLong("LayoutSeed", layoutSeed);
+            nbt.setInteger("OriginX", finalOrigin.getX());
+            nbt.setInteger("OriginY", finalOrigin.getY());
+            nbt.setInteger("OriginZ", finalOrigin.getZ());
+            nbt.setTag("Remaining", new NBTTagLongArray(remainingChunks.toLongArray()));
+            nbt.setTag("Processed", new NBTTagLongArray(processedChunks.toLongArray()));
+            nbt.setBoolean("PostGenerated", postGenerated);
+        }
+
+        @Override
+        public void readFromNBT(NBTTagCompound nbt) {
+            super.readFromNBT(nbt);
+            this.structureId = nbt.getString("StructureId");
+            this.worldSeed = nbt.getLong("WorldSeed");
+            this.layoutSeed = nbt.getLong("LayoutSeed");
+            this.finalOrigin = new BlockPos(nbt.getInteger("OriginX"), nbt.getInteger("OriginY"), nbt.getInteger("OriginZ"));
+            this.structureRand = PendingValidationStructure.createRandom(this.worldSeed, this.finalOrigin);
+            this.structure = PhasedStructureGenerator.INSTANCE.resolveStructure(this.structureId);
+            if (this.structure == null && GeneralConfig.enableDebugWorldGen) {
+                MainRegistry.logger.warn("Missing phased structure for id {} while loading saved data.", this.structureId);
+            }
+
+            this.remainingChunks.clear();
+            if (nbt.hasKey("Remaining")) {
+                long[] remaining = ((NBTTagLongArray) nbt.getTag("Remaining")).data;
+                for (long key : remaining) {
+                    this.remainingChunks.add(key);
+                }
+            }
+
+            this.processedChunks.clear();
+            if (nbt.hasKey("Processed")) {
+                long[] processed = ((NBTTagLongArray) nbt.getTag("Processed")).data;
+                for (long key : processed) {
+                    this.processedChunks.add(key);
+                }
+            }
+            this.postGenerated = nbt.getBoolean("PostGenerated");
+
+            ensureLayout();
+
+            for (StructureComponent component : this.components) {
+                if (component instanceof PhasedStructureComponent phased) {
+                    phased.attachParent(this);
+                    ChunkPos pos = phased.getChunkPos();
+                    long key = ChunkPos.asLong(pos.x, pos.z);
+
+                    if (this.remainingChunks.contains(key)) {
+                        PhasedStructureGenerator.INSTANCE.registerComponent(pos, phased);
+                    }
+                }
+            }
+        }
+
+        @Nullable
+        private World resolveWorld() {
+            if (cachedWorld != null) return cachedWorld;
+            return PhasedStructureGenerator.INSTANCE.world;
+        }
+
+        void generateExistingChunks() {
+            World world = resolveWorld();
+            if (world == null) return;
+            IChunkProvider provider = world.getChunkProvider();
+            for (StructureComponent component : this.components) {
+                if (!(component instanceof PhasedStructureComponent phased)) continue;
+                ChunkPos chunkPos = phased.getChunkPos();
+                if (provider.isChunkGeneratedAt(chunkPos.x, chunkPos.z)) {
+                    phased.generateNow(world);
+                }
+            }
+        }
+    }
+
+    public static class PhasedStructureComponent extends StructureComponent {
+        PhasedStructureStart parent;
+        private int relChunkX;
+        private int relChunkZ;
+        private List<BlockInfo> blocks;
+        private boolean generated;
+        private boolean markerOnly;
+
+        @SuppressWarnings("unused")
+        public PhasedStructureComponent() {
+            super(0);
+        }
+
+        PhasedStructureComponent(PhasedStructureStart parent, int relChunkX, int relChunkZ, ChunkPos chunkPos, int minY, int maxY,
+                                 List<BlockInfo> blocks) {
+            super(0);
+            this.parent = parent;
+            this.relChunkX = relChunkX;
+            this.relChunkZ = relChunkZ;
+            this.blocks = blocks;
+            this.markerOnly = false;
+            this.boundingBox = new StructureBoundingBox(chunkPos.x << 4, minY, chunkPos.z << 4, (chunkPos.x << 4) + 15, maxY, (chunkPos.z << 4) + 15);
+        }
+
+        PhasedStructureComponent(PhasedStructureStart parent, int relChunkX, int relChunkZ, ChunkPos chunkPos, int minY, int maxY,
+                                 boolean markerOnly) {
+            super(0);
+            this.parent = parent;
+            this.relChunkX = relChunkX;
+            this.relChunkZ = relChunkZ;
+            this.markerOnly = markerOnly;
+            this.boundingBox = new StructureBoundingBox(chunkPos.x << 4, minY, chunkPos.z << 4, (chunkPos.x << 4) + 15, maxY, (chunkPos.z << 4) + 15);
+        }
+
+        void attachParent(PhasedStructureStart start) {
+            this.parent = start;
+            if (!markerOnly && (this.blocks == null || this.blocks.isEmpty())) {
+                List<BlockInfo> rebuilt = start.getBlocksFor(relChunkX, relChunkZ);
+                if (rebuilt != null) {
+                    this.blocks = rebuilt;
+                }
+            }
+            ChunkPos chunkPos = new ChunkPos(start.getChunkPosX() + relChunkX, start.getChunkPosZ() + relChunkZ);
+            int minY = start.finalOrigin.getY();
+            int maxY = start.finalOrigin.getY();
+            if (!markerOnly && this.blocks != null && !this.blocks.isEmpty()) {
+                int[] minMax = start.computeHeightBounds(this.blocks);
+                minY = minMax[0];
+                maxY = minMax[1];
+            } else if (this.boundingBox != null) {
+                minY = this.boundingBox.minY;
+                maxY = this.boundingBox.maxY;
+            }
+            this.boundingBox = new StructureBoundingBox(chunkPos.x << 4, minY, chunkPos.z << 4, (chunkPos.x << 4) + 15, maxY, (chunkPos.z << 4) + 15);
+
+            long key = ChunkPos.asLong(chunkPos.x, chunkPos.z);
+            if (start.remainingChunks.contains(key)) {
+                PhasedStructureGenerator.INSTANCE.registerComponent(chunkPos, this);
+            }
+        }
+
+        ChunkPos getChunkPos() {
+            int absX = (parent != null ? parent.getChunkPosX() : 0) + relChunkX;
+            int absZ = (parent != null ? parent.getChunkPosZ() : 0) + relChunkZ;
+            return new ChunkPos(absX, absZ);
+        }
+
+        @Override
+        protected void writeStructureToNBT(NBTTagCompound nbt) {
+            nbt.setInteger("RelX", relChunkX);
+            nbt.setInteger("RelZ", relChunkZ);
+            int minY = this.boundingBox != null ? this.boundingBox.minY : (parent != null ? parent.finalOrigin.getY() : 0);
+            int maxY = this.boundingBox != null ? this.boundingBox.maxY : minY;
+            nbt.setInteger("MinY", minY);
+            nbt.setInteger("MaxY", maxY);
+            nbt.setBoolean("Marker", markerOnly);
+        }
+
+        @Override
+        protected void readStructureFromNBT(NBTTagCompound nbt, TemplateManager templateManager) {
+            this.relChunkX = nbt.getInteger("RelX");
+            this.relChunkZ = nbt.getInteger("RelZ");
+            int minY = nbt.getInteger("MinY");
+            int maxY = nbt.getInteger("MaxY");
+            this.boundingBox = new StructureBoundingBox(0, minY, 0, 0, maxY, 0);
+            this.markerOnly = nbt.getBoolean("Marker");
+        }
+
+        void generateNow(World worldIn) {
+            if (generated) return;
+
+            if (parent != null) {
+                ChunkPos chunkPos = getChunkPos();
+                if (!parent.isValidForPostProcess(chunkPos)) {
+                    generated = true;
+                    return;
+                }
+            }
+
+            generateInternal(worldIn);
+        }
+
+        private void generateInternal(World worldIn) {
+            if (parent == null || parent.structure == null) return;
+            if (markerOnly) {
+                generated = true;
+                parent.markGenerated(getChunkPos());
+                return;
+            }
+            if (this.blocks == null || this.blocks.isEmpty()) {
+                List<BlockInfo> rebuilt = parent.getBlocksFor(relChunkX, relChunkZ);
+                if (rebuilt != null) this.blocks = rebuilt;
+            }
+            if (this.blocks == null || this.blocks.isEmpty()) return;
+
+            ChunkPos chunkPos = getChunkPos();
+            try {
+                parent.structure.generateForChunk(worldIn, parent.structureRand, parent.finalOrigin, chunkPos, this.blocks);
+                generated = true;
+                parent.markGenerated(chunkPos);
+            } catch (Exception e) {
+                MainRegistry.logger.error("Error generating phased structure part at {}", chunkPos, e);
+            }
+        }
+
+        @Override
+        public boolean addComponentParts(World worldIn, Random rand, StructureBoundingBox box) {
+            if (generated) return true;
+            generateInternal(worldIn);
+            return true;
         }
     }
 }

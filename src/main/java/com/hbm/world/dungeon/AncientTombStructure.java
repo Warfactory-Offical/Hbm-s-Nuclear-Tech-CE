@@ -3,6 +3,7 @@ package com.hbm.world.dungeon;
 import com.hbm.world.phased.AbstractPhasedStructure;
 import com.hbm.world.phased.PhasedStructureGenerator;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,7 +20,8 @@ public class AncientTombStructure extends AbstractPhasedStructure {
 
     @Override
     public List<@NotNull BlockPos> getValidationPoints(@NotNull BlockPos origin) {
-        final int r = 27;
+        final int r = 32;
+        final int inner = 16;
         return Arrays.asList(origin,
                 origin.add( r, 0,  0),
                 origin.add(-r, 0,  0),
@@ -28,10 +30,13 @@ public class AncientTombStructure extends AbstractPhasedStructure {
                 origin.add( r, 0,  r),
                 origin.add( r, 0, -r),
                 origin.add(-r, 0,  r),
-                origin.add(-r, 0, -r)
+                origin.add(-r, 0, -r),
+                origin.add( inner, 0,  inner),
+                origin.add( inner, 0, -inner),
+                origin.add(-inner, 0,  inner),
+                origin.add(-inner, 0, -inner)
         );
     }
-
     @Override
     protected void buildStructure(@NotNull LegacyBuilder builder, @NotNull Random rand) {
         new AncientTomb().buildChamber(builder, rand, 0, 0, 0);
@@ -52,5 +57,19 @@ public class AncientTombStructure extends AbstractPhasedStructure {
     @Override
     public void postGenerate(@NotNull World world, @NotNull Random rand, @NotNull BlockPos finalOrigin) {
         new AncientTomb().buildSurfaceFeatures(world, rand, finalOrigin.getX(), finalOrigin.getZ());
+    }
+
+    @Override
+    public List<ChunkPos> getAdditionalChunks(@NotNull BlockPos origin) {
+        int originChunkX = origin.getX() >> 4;
+        int originChunkZ = origin.getZ() >> 4;
+        int radiusChunks = 2;
+        List<ChunkPos> chunks = new ArrayList<>();
+        for (int dx = -radiusChunks; dx <= radiusChunks; dx++) {
+            for (int dz = -radiusChunks; dz <= radiusChunks; dz++) {
+                chunks.add(new ChunkPos(originChunkX + dx, originChunkZ + dz));
+            }
+        }
+        return chunks;
     }
 }

@@ -24,6 +24,8 @@ public class HbmWorld {
 	public static void initWorldGen() {
 		MapGenStructureIO.registerStructure(MapGenNTMFeatures.Start.class, "NTMFeatures");
 		MapGenStructureIO.registerStructure(BunkerComponents.BunkerStart.class, "NTMBunker");
+		MapGenStructureIO.registerStructure(PhasedStructureGenerator.PhasedStructureStart.class, "PhasedStructure");
+		MapGenStructureIO.registerStructureComponent(PhasedStructureGenerator.PhasedStructureComponent.class, "PhasedStructureComponent");
 		registerNTMFeatures();
 
 		registerWorldGen(new HbmWorldGen(), 1);
@@ -32,7 +34,6 @@ public class HbmWorld {
 		registerWorldGen(worldGenerator, 1);
         registerWorldGen(PhasedStructureGenerator.INSTANCE, 1);
 		MinecraftForge.EVENT_BUS.register(worldGenerator);
-        MinecraftForge.EVENT_BUS.register(PhasedStructureGenerator.INSTANCE);
 		NBTStructure.register();
 	}
 

@@ -9,14 +9,20 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.Collections;
 
 @ParametersAreNonnullByDefault
 public interface IPhasedStructure {
+
+    default String getId() {
+        return this.getClass().getName();
+    }
 
     /**
      * Generates the part of the structure that lies within a specific chunk.
@@ -83,5 +89,14 @@ public interface IPhasedStructure {
      */
     default boolean checkSpawningConditions(@NotNull World world, @NotNull BlockPos origin) {
         return true;
+    }
+
+    /**
+     * Additional chunk positions that should be considered part of this structure even if no blocks are placed there.
+     * Used to delay post-generation until all affected chunks are ready. Defaults to none.
+     */
+    @Nullable
+    default List<ChunkPos> getAdditionalChunks(@NotNull BlockPos origin) {
+        return null;
     }
 }

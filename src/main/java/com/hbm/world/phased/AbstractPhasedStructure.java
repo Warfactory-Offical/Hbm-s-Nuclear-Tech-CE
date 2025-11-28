@@ -25,6 +25,11 @@ import java.util.*;
 public abstract class AbstractPhasedStructure extends WorldGenerator implements IPhasedStructure {
     private static final Map<Class<? extends AbstractPhasedStructure>, Long2ObjectOpenHashMap<Long2ObjectOpenHashMap<List<BlockInfo>>>> STRUCTURE_CACHE = new IdentityHashMap<>();
 
+    protected AbstractPhasedStructure() {
+        super();
+        PhasedStructureGenerator.INSTANCE.registerStructure(this);
+    }
+
     private static long anchorKey(int anchorX, int anchorZ) {
         int ax = anchorX & 15;
         int az = anchorZ & 15;
@@ -54,32 +59,37 @@ public abstract class AbstractPhasedStructure extends WorldGenerator implements 
 
     public final boolean generate(@NotNull World world, @NotNull Random rand, @NotNull BlockPos pos, boolean force) {
         BlockPos origin = pos.add(0, getGenerationHeightOffset(), 0);
-        int anchorX = origin.getX() & 15;
-        int anchorZ = origin.getZ() & 15;
-        long aKey = anchorKey(anchorX, anchorZ);
-        Long2ObjectOpenHashMap<List<BlockInfo>> layout;
-
-        if (this.isCacheable()) {
-            Long2ObjectOpenHashMap<Long2ObjectOpenHashMap<List<BlockInfo>>> byAnchor = STRUCTURE_CACHE.computeIfAbsent(this.getClass(), k -> new Long2ObjectOpenHashMap<>());
-            layout = byAnchor.computeIfAbsent(aKey, k -> {
-                LegacyBuilder staticBuilder = new LegacyBuilder(new Random(this.getClass().getName().hashCode()));
-                this.buildStructure(staticBuilder, staticBuilder.rand);
-                return chunkTheLayout(staticBuilder.getBlocks(), anchorX, anchorZ);
-            });
-        } else {
-            LegacyBuilder dynamicBuilder = new LegacyBuilder(rand);
-            this.buildStructure(dynamicBuilder, dynamicBuilder.rand);
-            layout = chunkTheLayout(dynamicBuilder.getBlocks(), anchorX, anchorZ);
-        }
+        long layoutSeed = rand.nextLong();
+        Long2ObjectOpenHashMap<List<BlockInfo>> layout = buildLayout(origin, layoutSeed);
 
         if (force) {
             if (GeneralConfig.enableDebugWorldGen) MainRegistry.logger.info("Forcing {} generation at {}", this.getClass().getSimpleName(), origin);
             PhasedStructureGenerator.forceGenerateStructure(world, rand, origin, this, layout);
         } else {
             if (GeneralConfig.enableDebugWorldGen) MainRegistry.logger.info("Proposing {} generation at {}", this.getClass().getSimpleName(), origin);
-            PhasedStructureGenerator.INSTANCE.scheduleStructureForValidation(world, origin, this, layout);
+            PhasedStructureGenerator.INSTANCE.scheduleStructureForValidation(world, origin, this, layout, layoutSeed);
         }
         return true;
+    }
+
+    protected Long2ObjectOpenHashMap<List<BlockInfo>> buildLayout(BlockPos origin, long layoutSeed) {
+        int anchorX = origin.getX() & 15;
+        int anchorZ = origin.getZ() & 15;
+        long aKey = anchorKey(anchorX, anchorZ);
+
+        if (this.isCacheable()) {
+            Long2ObjectOpenHashMap<Long2ObjectOpenHashMap<List<BlockInfo>>> byAnchor =
+                    STRUCTURE_CACHE.computeIfAbsent(this.getClass(), k -> new Long2ObjectOpenHashMap<>());
+            return byAnchor.computeIfAbsent(aKey, k -> {
+                LegacyBuilder staticBuilder = new LegacyBuilder(new Random(this.getClass().getName().hashCode()));
+                this.buildStructure(staticBuilder, staticBuilder.rand);
+                return chunkTheLayout(staticBuilder.getBlocks(), anchorX, anchorZ);
+            });
+        }
+
+        LegacyBuilder dynamicBuilder = new LegacyBuilder(new Random(layoutSeed));
+        this.buildStructure(dynamicBuilder, dynamicBuilder.rand);
+        return chunkTheLayout(dynamicBuilder.getBlocks(), anchorX, anchorZ);
     }
 
     private static Long2ObjectOpenHashMap<List<BlockInfo>> chunkTheLayout(Map<BlockPos, BlockInfo> blocks, int anchorX, int anchorZ) {
