@@ -55,9 +55,10 @@ public class TileEntityFusionTorus extends TileEntityCooledBase implements ITick
     protected PlasmaNetwork.PlasmaNode[] plasmaNodes;
     public boolean[] connections;
 
-    public volatile long klystronEnergy;
-    public volatile long plasmaEnergy;
-    public volatile double fuelConsumption;
+    public long klystronEnergy;
+    private long klystronEnergySync;
+    public long plasmaEnergy;
+    public double fuelConsumption;
 
     public float magnet;
     public float prevMagnet;
@@ -193,7 +194,7 @@ public class TileEntityFusionTorus extends TileEntityCooledBase implements ITick
                     }
                 }
             }
-
+            this.klystronEnergySync = this.klystronEnergy;
             this.networkPackNT(150);
 
             this.klystronEnergy = 0;
@@ -300,7 +301,7 @@ public class TileEntityFusionTorus extends TileEntityCooledBase implements ITick
     public void serialize(ByteBuf buf) {
         super.serialize(buf);
         buf.writeBoolean(this.didProcess);
-        buf.writeLong(this.klystronEnergy);
+        buf.writeLong(this.klystronEnergySync);
         buf.writeLong(this.plasmaEnergy);
         buf.writeDouble(this.fuelConsumption);
 
