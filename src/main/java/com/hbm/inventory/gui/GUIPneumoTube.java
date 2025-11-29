@@ -107,6 +107,6 @@ public class GUIPneumoTube extends GuiInfoContainer {
         drawTexturedModalRect(guiLeft + 151, guiTop + 52, 215, 18 * tube.sendOrder, 18, 18);
 
         drawTexturedModalRect(guiLeft + 6 + 4 * (tube.compair.getPressure() - 1), guiTop + 36, 179, 18, 4, 8);
-        GaugeUtil.drawSmoothGauge(guiLeft + 16, guiTop + 25, this.zLevel, 1 - ((double) tube.compair.getFill() / (double) tube.compair.getMaxFill()), 5, 2, 1, 0xCA6C43, 0xAB4223);
+        GaugeUtil.drawSmoothGauge(guiLeft + 16, guiTop + 25, this.zLevel, (double) tube.compair.getFill() / (double) tube.compair.getMaxFill(), 5, 2, 1, 0xCA6C43, 0xAB4223);
     }
 }
