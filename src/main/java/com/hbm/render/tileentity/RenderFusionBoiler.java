@@ -30,12 +30,14 @@ public class RenderFusionBoiler extends TileEntitySpecialRenderer<TileEntityFusi
         GlStateManager.enableCull();
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
 
-        switch (boiler.getBlockMetadata() - BlockDummyable.offset) {
-            case 2: GlStateManager.rotate(90, 0F, 1F, 0F);
-            case 4: GlStateManager.rotate(180, 0F, 1F, 0F);
-            case 3: GlStateManager.rotate(270, 0F, 1F, 0F);
-            case 5: GlStateManager.rotate(0, 0F, 1F, 0F);
-        }
+        int meta = boiler.getBlockMetadata() - BlockDummyable.offset;
+        float rotationY = switch (meta) {
+            case 3 -> 270f;
+            case 5 -> 0f;
+            case 4 -> 180f;
+            default -> 90f;
+        };
+        GlStateManager.rotate(rotationY, 0F, 1F, 0F);
 
         bindTexture(ResourceManager.fusion_boiler_tex);
         ResourceManager.fusion_boiler.renderAll();

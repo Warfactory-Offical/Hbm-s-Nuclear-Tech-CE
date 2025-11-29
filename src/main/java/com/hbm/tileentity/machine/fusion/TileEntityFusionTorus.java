@@ -292,8 +292,12 @@ public class TileEntityFusionTorus extends TileEntityCooledBase implements ITick
         }
 
         if(!world.isRemote) {
-            for(KlystronNetwork.KlystronNode node : klystronNodes) if(node != null) UniNodespace.destroyNode(world, pos, KlystronNetwork.THE_PROVIDER);
-            for(PlasmaNetwork.PlasmaNode node : plasmaNodes) if(node != null) UniNodespace.destroyNode(world, pos, PlasmaNetwork.THE_PROVIDER);
+            for(int i = 0; i < 4; i++) {
+                ForgeDirection dir = ForgeDirection.getOrientation(i + 2);
+                BlockPos nodePos = pos.add(dir.offsetX * 7, 2, dir.offsetZ * 7);
+                if(klystronNodes[i] != null) UniNodespace.destroyNode(world, nodePos, KlystronNetwork.THE_PROVIDER);
+                if(plasmaNodes[i] != null) UniNodespace.destroyNode(world, nodePos, PlasmaNetwork.THE_PROVIDER);
+            }
         }
     }
 
