@@ -26,7 +26,7 @@ public class RenderFusionBreeder extends TileEntitySpecialRenderer<TileEntityFus
         float rotationY = switch (meta) {
             case 3 -> 270f;
             case 5 -> 0f;
-            case 4 -> 18f;
+            case 4 -> 180f;
             default -> 90f;
         };
         GlStateManager.rotate(rotationY, 0F, 1F, 0F);
