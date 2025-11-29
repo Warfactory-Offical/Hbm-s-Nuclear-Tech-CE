@@ -67,6 +67,7 @@ public class JEIConfig implements IModPlugin {
     public static final String FLUIDS = "hbm.fluids";
     public static final String FRACTIONING = "hbm.fracturing";
     public static final String FUSION_BYPRODUCT = "hbm.fusionbyproduct";
+    public static final String FUSION_BREEDER = "hbm.fusionbreeder";
     public static final String GAS_CENT = "hbm.gas_centrifuge";
     public static final String HADRON = "hbm.hadron";
     public static final String HYDROTREATING = "hbm.hydrotreating";
@@ -124,6 +125,8 @@ public class JEIConfig implements IModPlugin {
     private ElectrolyserFluidHandler electrolyserFluidHandler;
     private ElectrolyserMetalHandler electrolyserMetalHandler;
     private FractioningRecipeHandler fractioningHandler;
+    private FusionBreederRecipeHandler fusionBreederRecipeHandler;
+    private FusionRecipeHandler fusionRecipeHandler;
     private FuelPoolHandler fuelPoolHandler;
     private HydrotreatingHandler hydrotreatHandler;
     private LiquefactionHandler liquefactHandler;
@@ -212,7 +215,8 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_pyrooven), PYROLYSIS);
         //This recipe catalyst doesn't work, since the book of is blacklisted.
         registry.addRecipeCatalyst(new ItemStack(ModItems.book_of_), BOOK);
-        registry.addRecipeCatalyst(new ItemStack(ModBlocks.iter), FUSION_BYPRODUCT);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.fusion_torus), FUSION_BYPRODUCT);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.fusion_breeder), FUSION_BREEDER);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.hadron_core), HADRON);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_silex), SILEX);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_rtg_grey), RTG);
@@ -264,6 +268,8 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipes(crucibleSmeltingHandler.getRecipes(), CRUCIBLE_SMELT);
         registry.addRecipes(deuteriumHandler.getRecipes(), DEUTERIUM);
         registry.addRecipes(fractioningHandler.getRecipes(), FRACTIONING);
+        registry.addRecipes(fusionBreederRecipeHandler.getRecipes(), FUSION_BREEDER);
+        registry.addRecipes(fusionRecipeHandler.getRecipes(), FUSION_BYPRODUCT);
         registry.addRecipes(hydrotreatHandler.getRecipes(), HYDROTREATING);
         registry.addRecipes(liquefactHandler.getRecipes(), LIQUEFACTION);
         registry.addRecipes(mixerHandler.getRecipes(), MIXER);
@@ -286,7 +292,6 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipes(JeiRecipes.getFluidEquivalences(), FLUIDS);
         registry.addRecipes(JeiRecipes.getBookRecipes(), BOOK);
         registry.addRecipes(JeiRecipes.getBreederRecipes(), BREEDER);
-        registry.addRecipes(JeiRecipes.getFusionByproducts(), FUSION_BYPRODUCT);
         registry.addRecipes(JeiRecipes.getHadronRecipes(), HADRON);
         registry.addRecipes(JeiRecipes.getSILEXRecipes(), SILEX);
         registry.addRecipes(JeiRecipes.getSILEXRecipes(EnumWavelengths.IR), SILEX_IR);
@@ -334,6 +339,8 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeClickArea(GUIMachineExposureChamber.class, 36, 40, 76-36, 48-40, EXPOSURE);
         registry.addRecipeClickArea(GUIRadiolysis.class, 71, 35, 99-71, 50-35, RADIOLYSIS);
         registry.addRecipeClickArea(GUIFurnaceCombo.class, 54, 55, 17, 17, JEIConfig.COMBINATION);
+        registry.addRecipeClickArea(GUIFusionBreeder.class, 67, 49, 42, 9, JEIConfig.FUSION_BREEDER);
+        registry.addRecipeClickArea(GUIFusionTorus.class, 99, 39, 28, 10, JEIConfig.FUSION_BYPRODUCT);
 
         IRecipeTransferRegistry transferRegistry = registry.getRecipeTransferRegistry();
         transferRegistry.addRecipeTransferHandler(new ExposureChamberTransferInfo());
@@ -441,6 +448,8 @@ public class JEIConfig implements IModPlugin {
                 electrolyserFluidHandler = new ElectrolyserFluidHandler(help),
                 electrolyserMetalHandler = new ElectrolyserMetalHandler(help),
                 fractioningHandler = new FractioningRecipeHandler(help),
+                fusionBreederRecipeHandler = new FusionBreederRecipeHandler(help),
+                fusionRecipeHandler = new FusionRecipeHandler(help),
                 fuelPoolHandler = new FuelPoolHandler(help),
                 hydrotreatHandler = new HydrotreatingHandler(help),
                 liquefactHandler = new LiquefactionHandler(help),
@@ -474,7 +483,6 @@ public class JEIConfig implements IModPlugin {
                 new SILEXGammaRecipeHandler(help),
                 new SILEXDigammaRecipeHandler(help),
                 new RBMKFuelRecipeHandler(help),
-                new FusionRecipeHandler(help),
                 new HadronRecipeHandler(help),
                 new DFCRecipeHandler(help),
                 new BookRecipeHandler(help));

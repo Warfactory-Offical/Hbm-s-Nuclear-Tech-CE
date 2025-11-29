@@ -6,20 +6,22 @@ import com.hbm.items.ModItems;
 import com.hbm.tileentity.machine.fusion.TileEntityFusionTorus;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
+import org.jetbrains.annotations.NotNull;
 
-public class ContainerFusionTorus extends ContainerBase {
+public class ContainerFusionTorus extends Container {
 
     private TileEntityFusionTorus torus;
 
-    public ContainerFusionTorus(InventoryPlayer invPlayer, IItemHandler torus) {
-        super(invPlayer, torus);
+    public ContainerFusionTorus(InventoryPlayer invPlayer, TileEntityFusionTorus torus) {
+        this.torus = torus;
 
-        this.addSlotToContainer(new SlotNonRetarded(torus, 0, 8, 82));
-        this.addSlotToContainer(new SlotNonRetarded(torus, 1, 71, 81));
-        this.addSlotToContainer(new SlotNonRetarded(torus, 2, 130, 36));
+        this.addSlotToContainer(new SlotNonRetarded(torus.inventory, 0, 8, 82));
+        this.addSlotToContainer(new SlotNonRetarded(torus.inventory, 1, 71, 81));
+        this.addSlotToContainer(new SlotNonRetarded(torus.inventory, 2, 130, 36));
 
         for(int i = 0; i < 3; i++) {
             for(int j = 0; j < 9; j++) {
@@ -33,24 +35,24 @@ public class ContainerFusionTorus extends ContainerBase {
     }
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer player, int index) {
-        ItemStack copy = null;
-        Slot slot = (Slot) this.inventorySlots.get(index);
+    public @NotNull ItemStack transferStackInSlot(EntityPlayer player, int index) {
+        ItemStack copy = ItemStack.EMPTY;
+        Slot slot = this.inventorySlots.get(index);
 
         if(slot != null && slot.getHasStack()) {
             ItemStack stack = slot.getStack();
             copy = stack.copy();
 
             if(index <= 2) {
-                if(!this.mergeItemStack(stack, 3, this.inventorySlots.size(), true)) return null;
+                if(!this.mergeItemStack(stack, 3, this.inventorySlots.size(), true)) return ItemStack.EMPTY;
             } else {
 
                 if(copy.getItem() == ModItems.blueprints) {
-                    if(!this.mergeItemStack(stack, 1, 2, false)) return null;
+                    if(!this.mergeItemStack(stack, 1, 2, false)) return ItemStack.EMPTY;
                 } else if(copy.getItem() instanceof IBatteryItem || copy.getItem() == ModItems.battery_creative) {
-                    if(!this.mergeItemStack(stack, 0, 1, false)) return null;
+                    if(!this.mergeItemStack(stack, 0, 1, false)) return ItemStack.EMPTY;
                 } else {
-                    return null;
+                    return ItemStack.EMPTY;
                 }
             }
 

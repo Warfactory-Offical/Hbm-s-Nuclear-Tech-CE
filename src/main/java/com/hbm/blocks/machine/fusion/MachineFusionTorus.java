@@ -1,17 +1,25 @@
 package com.hbm.blocks.machine.fusion;
 
 import com.hbm.blocks.BlockDummyable;
-import com.hbm.handler.MultiblockHandlerXR;
-import com.hbm.interfaces.AutoRegister;
+import com.hbm.blocks.ITooltipProvider;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.TileEntityProxyCombo;
 import com.hbm.tileentity.machine.fusion.TileEntityFusionTorus;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
-public class MachineFusionTorus extends BlockDummyable {
+import java.util.List;
+
+public class MachineFusionTorus extends BlockDummyable implements ITooltipProvider {
     public MachineFusionTorus(String s) {
         super(Material.IRON, s);
     }
@@ -72,15 +80,16 @@ public class MachineFusionTorus extends BlockDummyable {
     };
 
     @Override
-    public TileEntity createNewTileEntity(World world, int meta) {
+    public TileEntity createNewTileEntity(@NotNull World world, int meta) {
         if(meta >= 12) return new TileEntityFusionTorus();
         if(meta >= 6) return new TileEntityProxyCombo().inventory().power().fluid();
 
         return null;
     }
-
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-        return super.standardOpenBehavior(world, x, y, z, player, 0);
+    @Override
+    public boolean onBlockActivated(@NotNull World world, @NotNull BlockPos pos, @NotNull IBlockState state, @NotNull EntityPlayer player, @NotNull EnumHand hand, @NotNull EnumFacing facing,
+                                    float hitX, float hitY, float hitZ) {
+        return super.standardOpenBehavior(world, pos, player, 0);
     }
 
     @Override
@@ -100,57 +109,103 @@ public class MachineFusionTorus extends BlockDummyable {
         x += dir.offsetX * o;
         z += dir.offsetZ * o;
 
-        for (int iy = 0; iy < 5; iy++) {
+        for(int iy = 0; iy < 5; iy++) {
+
             int l = iy > 2 ? 4 - iy : iy;
+            int[][] layer = layout[l];
 
-            int size;
-            switch (l) {
-                case 0: size = 15; break;
-                case 1: size = 13; break;
-                default: size = 11; break;
+            for(int ix = 0; ix < layer.length; ix++) {
+
+                for(int iz = 0; iz < layer.length; iz++) {
+
+                    int ex = ix - layer.length / 2;
+                    int ez = iz - layer.length / 2;
+                    BlockPos pos = new BlockPos(x + ex, y + iy, z + ez);
+                    if(layout[l][ix][iz] > 0 && !world.getBlockState(pos).getBlock().canPlaceBlockAt(world, pos)) {
+                        return false;
+                    }
+                }
             }
-
-            int half = size / 2;
-
-            if (!MultiblockHandlerXR.checkSpace(world,
-                    x - half, y + iy, z - half,
-                    new int[]{0, 0, 0, size, 1, size},
-                    x, y, z, dir))
-                return false;
         }
+
         return true;
     }
 
     @Override
     public void fillSpace(World world, int x, int y, int z, ForgeDirection dir, int o) {
-        super.fillSpace(world, x, y, z, dir, o);
 
-        x += dir.offsetX * o;
-        z += dir.offsetZ * o;
+        x = x + dir.offsetX * o;
+        z = z + dir.offsetZ * o;
 
-        for (int iy = 0; iy < 5; iy++) {
+        for(int iy = 0; iy < 5; iy++) {
+
             int l = iy > 2 ? 4 - iy : iy;
+            int[][] layer = layout[l];
 
-            switch (l) {
-                case 0:
-                    MultiblockHandlerXR.fillSpace(world, x, y + iy, z, new int[]{-7, 0, -7, 15, 1, 15}, this, dir);
-                    break;
+            for(int ix = 0; ix < layer.length; ix++) {
 
-                case 1:
-                    MultiblockHandlerXR.fillSpace(world, x, y + iy, z, new int[]{-6, 0, -6, 13, 1, 13}, this, dir);
-                    break;
+                for(int iz = 0; iz < layer[0].length; iz++) {
 
-                case 2:
-                    MultiblockHandlerXR.fillSpace(world, x, y + iy, z, new int[]{-6, 0, -6, 13, 1, 13}, this, dir);
-                    break;
+                    int ex = ix - layer.length / 2;
+                    int ez = iz - layer.length / 2;
+
+                    int meta;
+
+                    if(iy > 0) {
+                        meta = ForgeDirection.UP.ordinal();
+                    } else if(ex < 0) {
+                        meta = ForgeDirection.WEST.ordinal();
+                    } else if(ex > 0) {
+                        meta = ForgeDirection.EAST.ordinal();
+                    } else if(ez < 0) {
+                        meta = ForgeDirection.NORTH.ordinal();
+                    } else if(ez > 0) {
+                        meta = ForgeDirection.SOUTH.ordinal();
+                    } else {
+                        continue;
+                    }
+
+                    if(layout[l][ix][iz] > 0)
+                        world.setBlockState(new BlockPos(x + ex, y + iy, z + ez), this.getDefaultState().withProperty(META, meta), 3);
+                }
             }
         }
 
-        ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
-        this.makeExtra(world, x + dir.offsetX * 2 + rot.offsetX * 6, y + 3, z + dir.offsetZ * 2 + rot.offsetZ * 6);
-        this.makeExtra(world, x + dir.offsetX * 2 - rot.offsetX * 6, y + 3, z + dir.offsetZ * 2 - rot.offsetZ * 6);
-        this.makeExtra(world, x - dir.offsetX * 2 + rot.offsetX * 6, y + 3, z - dir.offsetZ * 2 + rot.offsetZ * 6);
-        this.makeExtra(world, x - dir.offsetX * 2 - rot.offsetX * 6, y + 3, z - dir.offsetZ * 2 - rot.offsetZ * 6);
+        // is that enough ports?
+        this.makeExtra(world, x, y + 4, z);
+
+        this.makeExtra(world, x + 6, y, z);
+        this.makeExtra(world, x + 6, y + 4, z);
+        this.makeExtra(world, x + 6, y, z + 2);
+        this.makeExtra(world, x + 6, y + 4, z + 2);
+        this.makeExtra(world, x + 6, y, z - 2);
+        this.makeExtra(world, x + 6, y + 4, z - 2);
+
+        this.makeExtra(world, x - 6, y, z);
+        this.makeExtra(world, x - 6, y + 4, z);
+        this.makeExtra(world, x - 6, y, z + 2);
+        this.makeExtra(world, x - 6, y + 4, z + 2);
+        this.makeExtra(world, x - 6, y, z - 2);
+        this.makeExtra(world, x - 6, y + 4, z - 2);
+
+        this.makeExtra(world, x, y, z + 6);
+        this.makeExtra(world, x, y + 4, z + 6);
+        this.makeExtra(world, x + 2, y, z + 6);
+        this.makeExtra(world, x + 2, y + 4, z + 6);
+        this.makeExtra(world, x - 2, y, z + 6);
+        this.makeExtra(world, x - 2, y + 4, z + 6);
+
+        this.makeExtra(world, x, y, z - 6);
+        this.makeExtra(world, x, y + 4, z - 6);
+        this.makeExtra(world, x + 2, y, z - 6);
+        this.makeExtra(world, x + 2, y + 4, z - 6);
+        this.makeExtra(world, x - 2, y, z - 6);
+        this.makeExtra(world, x - 2, y + 4, z - 6);
+    }
+
+    @Override
+    public void addInformation(@NotNull ItemStack stack, World player, @NotNull List<String> tooltip, @NotNull ITooltipFlag advanced) {
+        addStandardInfo(tooltip);
     }
 
 

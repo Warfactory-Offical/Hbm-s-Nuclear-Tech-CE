@@ -167,7 +167,7 @@ public abstract class GenericRecipes <T extends GenericRecipe> extends Serializa
         writeExtraData(recipe, writer);
     }
 
-    public void writeExtraData(T recipe, JsonWriter writer) { }
+    public void writeExtraData(T recipe, JsonWriter writer) throws IOException { }
 
     public IOutput[] readOutputArray(JsonArray array) {
         IOutput[] output = new IOutput[array.size()];

@@ -15,7 +15,7 @@ import com.hbm.inventory.fluid.FluidStack;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.gui.GUIRBMKOutgasser;
-import com.hbm.inventory.recipes.RBMKOutgasserRecipes;
+import com.hbm.inventory.recipes.OutgasserRecipes;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.IGUIProvider;
@@ -133,7 +133,7 @@ public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implement
 		if(inventory.getStackInSlot(0).isEmpty())
 			return false;
 
-		Tuple.Pair<ItemStack, FluidStack> output = RBMKOutgasserRecipes.getOutput(inventory.getStackInSlot(0));
+		Tuple.Pair<ItemStack, FluidStack> output = OutgasserRecipes.getOutput(inventory.getStackInSlot(0));
 
 		if(output == null)
 			return false;
@@ -157,7 +157,7 @@ public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implement
 
 	private void process() {
 
-		Tuple.Pair<ItemStack, FluidStack> output = RBMKOutgasserRecipes.getOutput(inventory.getStackInSlot(0));
+		Tuple.Pair<ItemStack, FluidStack> output = OutgasserRecipes.getOutput(inventory.getStackInSlot(0));
 		inventory.extractItemUnchecked(0, 1, false);
 		this.progress = 0;
 
@@ -237,7 +237,7 @@ public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implement
 
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemStack) {
-		return RBMKOutgasserRecipes.getOutput(itemStack) != null && i == 0;
+		return OutgasserRecipes.getOutput(itemStack) != null && i == 0;
 	}
 
 	@Override

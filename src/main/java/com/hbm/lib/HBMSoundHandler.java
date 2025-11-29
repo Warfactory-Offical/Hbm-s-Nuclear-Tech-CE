@@ -357,6 +357,7 @@ public final class HBMSoundHandler {
     public static SoundEvent assemblerStop;
     public static SoundEvent meteoriteFallingLoop;
     public static SoundEvent assemblerCut;
+    public static SoundEvent fusionReactorRunning;
 
     public static SoundEvent alarmHatch = registerBypass("alarm.hatch");
     public static SoundEvent alarmAutopilot = registerBypass("alarm.autopilot");
@@ -749,6 +750,7 @@ public final class HBMSoundHandler {
         assemblerStop = register("block.assemblerStop");
         assemblerCut = register("block.assemblerCut");
         tubeFwoomp = register("weapon.reload.tubeFwoomp");
+        fusionReactorRunning = register("block.fusionReactorRunning");
 
         geigerSounds = new SoundEvent[]{geiger1, geiger2, geiger3, geiger4, geiger5, geiger6};
         voiceSounds = new SoundEvent[]{voices1, voices2, voices3, voices4, voices5, voices6, voices7, voices8};

@@ -129,6 +129,22 @@ public class ItemStackUtil {
 		return stack;
 	}
 
+    /**
+     * Automatically adds multistack labels for displays that use a ton of items (like construction recipe handlers).
+     * @param stack
+     * @return
+     */
+    public static ItemStack addStackSizeLabel(ItemStack stack) {
+
+        if(stack.getCount() > 64) {
+            int stacks = stack.getCount() / 64;
+            int items = stack.getCount() % 64;
+            addTooltipToStack(stack, TextFormatting.RED + "" + stacks + "x64" + (items > 0 ? (" + " + items) : ""));
+        }
+
+        return stack;
+    }
+
 	public static void addStacksToNBT(final ItemStack stack, final ItemStack... stacks) {
 
 		if(!stack.hasTagCompound())

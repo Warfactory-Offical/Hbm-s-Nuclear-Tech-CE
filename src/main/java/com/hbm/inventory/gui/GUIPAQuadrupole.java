@@ -27,8 +27,8 @@ public class GUIPAQuadrupole extends GuiInfoContainer {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
-        quadrupole.tanks[0].renderTankInfo(this, mouseX, mouseY, guiLeft + 116, guiTop + 36, 16, 52);
-        quadrupole.tanks[1].renderTankInfo(this, mouseX, mouseY, guiLeft + 134, guiTop + 36, 16, 52);
+        quadrupole.coolantTanks[0].renderTankInfo(this, mouseX, mouseY, guiLeft + 116, guiTop + 36, 16, 52);
+        quadrupole.coolantTanks[1].renderTankInfo(this, mouseX, mouseY, guiLeft + 134, guiTop + 36, 16, 52);
         this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 26, guiTop + 18, 16, 52, quadrupole.power, quadrupole.getMaxPower());
         this.renderHoveredToolTip(mouseX, mouseY);
     }
@@ -65,7 +65,7 @@ public class GUIPAQuadrupole extends GuiInfoContainer {
 
         if (quadrupole.power >= TileEntityPAQuadrupole.usage) drawTexturedModalRect(guiLeft + 65, guiTop + 64, 176, 8, 8, 8);
 
-        quadrupole.tanks[0].renderTank(guiLeft + 116, guiTop + 88, this.zLevel, 16, 52);
-        quadrupole.tanks[1].renderTank(guiLeft + 134, guiTop + 88, this.zLevel, 16, 52);
+        quadrupole.coolantTanks[0].renderTank(guiLeft + 116, guiTop + 88, this.zLevel, 16, 52);
+        quadrupole.coolantTanks[1].renderTank(guiLeft + 134, guiTop + 88, this.zLevel, 16, 52);
     }
 }

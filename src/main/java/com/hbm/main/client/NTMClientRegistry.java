@@ -228,6 +228,10 @@ public class NTMClientRegistry {
         RenderICFMultiblock.componentSprite0 = evt.getMap().getAtlasSprite("hbm:blocks/icf_component");
         RenderICFMultiblock.componentSprite2 = evt.getMap().getAtlasSprite("hbm:blocks/icf_component.vessel_welded");
         RenderICFMultiblock.componentSprite4 = evt.getMap().getAtlasSprite("hbm:blocks/icf_component.structure_bolted");
+
+        RenderFusionTorusMultiblock.componentSprites[1] = evt.getMap().getAtlasSprite("hbm:blocks/fusion_component.bscco_welded");
+        RenderFusionTorusMultiblock.componentSprites[2] = evt.getMap().getAtlasSprite("hbm:blocks/fusion_component.blanket");
+        RenderFusionTorusMultiblock.componentSprites[3] = evt.getMap().getAtlasSprite("hbm:blocks/fusion_component.motor");
     }
 
     public static void swapModels(Item item, IRegistry<ModelResourceLocation, IBakedModel> reg) {

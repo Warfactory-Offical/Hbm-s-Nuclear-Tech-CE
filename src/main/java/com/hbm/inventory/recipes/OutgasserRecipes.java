@@ -24,7 +24,7 @@ import java.util.Map.Entry;
 
 import static com.hbm.inventory.OreDictManager.*;
 
-public class RBMKOutgasserRecipes extends SerializableRecipe {
+public class OutgasserRecipes extends SerializableRecipe {
 
 	public static Map<RecipesCommon.AStack, Tuple.Pair<ItemStack, FluidStack>> recipes = new HashMap();
 
@@ -84,7 +84,7 @@ public class RBMKOutgasserRecipes extends SerializableRecipe {
 
 		HashMap<Object, Object[]> recipes = new HashMap<>();
 
-		for(Entry<RecipesCommon.AStack, Tuple.Pair<ItemStack, FluidStack>> entry : RBMKOutgasserRecipes.recipes.entrySet()) {
+		for(Entry<RecipesCommon.AStack, Tuple.Pair<ItemStack, FluidStack>> entry : OutgasserRecipes.recipes.entrySet()) {
 
 			RecipesCommon.AStack input = entry.getKey();
 			ItemStack solidOutput = entry.getValue().getKey();
