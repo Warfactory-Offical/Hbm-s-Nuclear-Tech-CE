@@ -58,8 +58,7 @@ public class GUIICF extends GuiInfoContainer {
             int p = (int) (icf.laser * 70 / icf.maxLaser);
             drawTexturedModalRect(guiLeft + 8, guiTop + 88 - p, 212, 192 - p, 16, p);
         }
-        // idk why this is inverted
-        GaugeUtil.drawSmoothGauge(guiLeft + 196, guiTop + 98, this.zLevel, 1 - (double) icf.heat / (double) TileEntityICF.maxHeat, 5, 2, 1, 0xFF00AF);
+        GaugeUtil.drawSmoothGauge(guiLeft + 196, guiTop + 98, this.zLevel, (double) icf.heat / (double) TileEntityICF.maxHeat, 5, 2, 1, 0xFF00AF);
 
         icf.tanks[0].renderTank(guiLeft + 44, guiTop + 88, this.zLevel, 16, 70);
         icf.tanks[1].renderTank(guiLeft + 188, guiTop + 88, this.zLevel, 16, 70);

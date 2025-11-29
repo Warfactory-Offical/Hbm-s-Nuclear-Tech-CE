@@ -1,6 +1,7 @@
 package com.hbm.render.util;
 
 import com.hbm.Tags;
+import com.hbm.util.MutableVec3d;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -72,13 +73,13 @@ public class GaugeUtil {
 		progress = MathHelper.clamp(progress, 0, 1);
 		float angle = (float) Math.toRadians(-progress * 270 - 45);
 
-		Vec3d tip = new Vec3d(0, tipLength, 0);
-		Vec3d left = new Vec3d(backSide, -backLength, 0);
-		Vec3d right = new Vec3d(-backSide, -backLength, 0);
+		MutableVec3d tip = new MutableVec3d(0, tipLength, 0);
+		MutableVec3d left = new MutableVec3d(backSide, -backLength, 0);
+		MutableVec3d right = new MutableVec3d(-backSide, -backLength, 0);
 
-		tip = rotateZ(tip, angle);
-		left = rotateZ(left, angle);
-		right = rotateZ(right, angle);
+		tip.rotateRollSelf(angle);
+		left.rotateRollSelf(angle);
+		right.rotateRollSelf(angle);
 
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
@@ -105,13 +106,5 @@ public class GaugeUtil {
 		tessellator.draw();
 
 		GlStateManager.enableTexture2D();
-	}
-
-	public static Vec3d rotateZ(Vec3d vec, float angle) {
-		float cos = MathHelper.cos(angle);
-		float sin = MathHelper.sin(angle);
-		double newX = vec.x * cos - vec.y * sin;
-		double newY = vec.x * sin + vec.y * cos;
-		return new Vec3d(newX, newY, vec.z);
 	}
 }

@@ -49,6 +49,6 @@ public class GUIMachinePress extends GuiInfoContainer {
 		int progress = this.press.getProgressScaled(16);
 		this.drawTexturedModalRect(guiLeft + 79, guiTop + 35, 194, 0, 18, progress);
 		double speed = (double) this.press.speed / (double) TileEntityMachinePress.maxSpeed;
-		GaugeUtil.drawSmoothGauge(guiLeft + 34, guiTop + 25, this.zLevel, 1 - speed, 5, 2, 1, 0x7f0000);
+		GaugeUtil.drawSmoothGauge(guiLeft + 34, guiTop + 25, this.zLevel, speed, 5, 2, 1, 0x7f0000);
 	}
 }

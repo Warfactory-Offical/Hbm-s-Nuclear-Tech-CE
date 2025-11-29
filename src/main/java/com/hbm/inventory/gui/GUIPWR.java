@@ -110,8 +110,8 @@ public class GUIPWR extends GuiInfoContainer {
         int c = (int) (controller.rodLevel * 52 / 100);
         drawTexturedModalRect(guiLeft + 53, guiTop + 54, 176, 40, c, 2);
 
-        GaugeUtil.drawSmoothGauge(guiLeft + 124, guiTop + 40, this.zLevel, 1 - (double) controller.coreHeat / (double) controller.coreHeatCapacity, 5, 2, 1, 0x7F0000);
-        GaugeUtil.drawSmoothGauge(guiLeft + 160, guiTop + 40, this.zLevel, 1 - (double) controller.hullHeat / (double) TileEntityPWRController.hullHeatCapacityBase, 5, 2, 1, 0x7F0000);
+        GaugeUtil.drawSmoothGauge(guiLeft + 124, guiTop + 40, this.zLevel, (double) controller.coreHeat / (double) controller.coreHeatCapacity, 5, 2, 1, 0x7F0000);
+        GaugeUtil.drawSmoothGauge(guiLeft + 160, guiTop + 40, this.zLevel, (double) controller.hullHeat / (double) TileEntityPWRController.hullHeatCapacityBase, 5, 2, 1, 0x7F0000);
 
         if(controller.typeLoaded != -1 && controller.amountLoaded > 0) {
             RenderHelper.enableGUIStandardItemLighting();
