@@ -41,7 +41,6 @@ import java.util.concurrent.RecursiveAction;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.ReentrantLock;
 
 import static com.hbm.config.BombConfig.safeCommit;
 
@@ -1144,8 +1143,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
                         if (useAggDamage) {
                             final int bitIndex = ((WORLD_HEIGHT - 1 - y) << 8) | ((x & 0xF) << 4) | (z & 0xF);
                             final double damageInc = Math.max(DAMAGE_PER_BLOCK * segLen, energyLoss) * INITIAL_ENERGY_FACTOR;
-                            if (damageInc > 0) agg.dmg(cachedCPLong).add(bitIndex, damageInc);
-                            agg.len(cachedCPLong).add(bitIndex, segLen);
+                            agg.recordHit(cachedCPLong, bitIndex, damageInc, segLen);
                         } else if (energy > 0) {
                             if (energyLoss > 0) {
                                 final int bitIndex = ((WORLD_HEIGHT - 1 - y) << 8) | ((x & 0xF) << 4) | (z & 0xF);
@@ -1284,10 +1282,17 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         final Long2ObjectOpenHashMap<IntDoubleAccumulator> localDamage = new Long2ObjectOpenHashMap<>(16);
         final Long2ObjectOpenHashMap<IntDoubleAccumulator> localLen = new Long2ObjectOpenHashMap<>(16);
         final Long2ObjectOpenHashMap<IntArrayList> deferredMissing = new Long2ObjectOpenHashMap<>(4);
+        long lastCp = Long.MIN_VALUE;
+        IntDoubleAccumulator lastDmg;
+        IntDoubleAccumulator lastLen;
 
         void clear() {
             localDamage.clear();
             localLen.clear();
+            lastCp = Long.MIN_VALUE;
+            lastDmg = null;
+            lastLen = null;
+
             if (!deferredMissing.isEmpty()) {
                 for (IntArrayList list : deferredMissing.values()) {
                     list.clear();
@@ -1314,47 +1319,53 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
             return deferredMissing;
         }
 
-        IntDoubleAccumulator dmg(long cp) {
-            IntDoubleAccumulator acc = localDamage.get(cp);
-            if (acc == null) {
-                acc = ACC_POOL.borrow();
-                localDamage.put(cp, acc);
-            }
-            return acc;
-        }
+        void recordHit(long chunkPos, int bitIndex, double damageInc, double segLen) {
+            if (damageInc <= 0.0 && segLen <= 0.0) return;
 
-        IntDoubleAccumulator len(long cp) {
-            IntDoubleAccumulator acc = localLen.get(cp);
-            if (acc == null) {
-                acc = ACC_POOL.borrow();
-                localLen.put(cp, acc);
+            if (chunkPos != lastCp) {
+                lastCp = chunkPos;
+                lastDmg = localDamage.get(chunkPos);
+                lastLen = localLen.get(chunkPos);
             }
-            return acc;
+
+            if (damageInc > 0.0) {
+                IntDoubleAccumulator acc = lastDmg;
+                if (acc == null) {
+                    acc = ACC_POOL.borrow();
+                    localDamage.put(chunkPos, acc);
+                    lastDmg = acc;
+                }
+                acc.add(bitIndex, damageInc);
+            }
+
+            if (segLen > 0.0) {
+                IntDoubleAccumulator acc = lastLen;
+                if (acc == null) {
+                    acc = ACC_POOL.borrow();
+                    localLen.put(chunkPos, acc);
+                    lastLen = acc;
+                }
+                acc.add(bitIndex, segLen);
+            }
         }
     }
 
     private static final class ChunkAgg {
-        final ReentrantLock lock = new ReentrantLock(false);
         final Int2DoubleOpenHashMap damage = new Int2DoubleOpenHashMap();
         final Int2DoubleOpenHashMap passLen = new Int2DoubleOpenHashMap();
         final MpscLinkedAtomicQueue<IntDoubleAccumulator> qDmg = new MpscLinkedAtomicQueue<>();
         final MpscLinkedAtomicQueue<IntDoubleAccumulator> qLen = new MpscLinkedAtomicQueue<>();
 
         void merge(@NotNull IntDoubleAccumulator accumulator, boolean isDamage) {
-            if (lock.tryLock()) {
-                try {
-                    drainUnlocked();
-                    if (accumulator.size() > 0) {
-                        if (isDamage) accumulator.accumulateTo(damage);
-                        else accumulator.accumulateTo(passLen);
-                    }
-                    ACC_POOL.recycle(accumulator);
-                } finally {
-                    lock.unlock();
-                }
+            int sz = accumulator.size();
+            if (sz == 0) {
+                ACC_POOL.recycle(accumulator);
+                return;
+            }
+            if (isDamage) {
+                qDmg.add(accumulator);
             } else {
-                if (isDamage) qDmg.add(accumulator);
-                else qLen.add(accumulator);
+                qLen.add(accumulator);
             }
         }
 
@@ -1371,14 +1382,15 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         }
 
         void clear() {
-            lock.lock();
-            try {
-                damage.clear();
-                passLen.clear();
-                qDmg.clear();
-                qLen.clear();
-            } finally {
-                lock.unlock();
+            damage.clear();
+            passLen.clear();
+
+            IntDoubleAccumulator a;
+            while ((a = qDmg.poll()) != null) {
+                ACC_POOL.recycle(a);
+            }
+            while ((a = qLen.poll()) != null) {
+                ACC_POOL.recycle(a);
             }
         }
     }
