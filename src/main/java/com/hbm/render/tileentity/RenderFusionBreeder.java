@@ -16,29 +16,24 @@ public class RenderFusionBreeder extends TileEntitySpecialRenderer<TileEntityFus
         implements IItemRendererProvider {
 
     @Override
-    public void render(
-            TileEntityFusionBreeder breeder,
-            double x,
-            double y,
-            double z,
-            float partialTicks,
-            int destroyStage,
-            float alpha) {
+    public void render(TileEntityFusionBreeder breeder, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         GlStateManager.pushMatrix();
         GlStateManager.translate(x + 0.5, y, z + 0.5);
         GlStateManager.enableLighting();
         GlStateManager.enableCull();
+
+        int meta = breeder.getBlockMetadata() - BlockDummyable.offset;
+        float rotationY = switch (meta) {
+            case 3 -> 270f;
+            case 5 -> 0f;
+            case 4 -> 18f;
+            default -> 90f;
+        };
+        GlStateManager.rotate(rotationY, 0F, 1F, 0F);
+
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
-
-        switch (breeder.getBlockMetadata() - BlockDummyable.offset) {
-		case 2: GlStateManager.rotate(90, 0F, 1F, 0F);
-		case 4: GlStateManager.rotate(180, 0F, 1F, 0F);
-		case 3: GlStateManager.rotate(270, 0F, 1F, 0F);
-		case 5: GlStateManager.rotate(0, 0F, 1F, 0F);
-		}
-
         bindTexture(ResourceManager.fusion_breeder_tex);
-        ResourceManager.fusion_breeder.renderAll();
+        ResourceManager.fusion_breeder.renderPart("Breeder");
 
         GlStateManager.shadeModel(GL11.GL_FLAT);
         GlStateManager.popMatrix();

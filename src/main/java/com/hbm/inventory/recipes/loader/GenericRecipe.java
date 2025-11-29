@@ -77,7 +77,7 @@ public class GenericRecipe {
     public GenericRecipe setIconToFirstIngredient() {
         if(this.inputItem != null) {
             List<ItemStack> stacks = this.inputItem[0].extractForJEI();
-            if(!stacks.isEmpty()) this.icon = stacks.get(0);
+            if(!stacks.isEmpty()) this.icon = stacks.getFirst();
         }
         return this;
     }
@@ -87,7 +87,7 @@ public class GenericRecipe {
         if(icon == null) {
             if(outputItem != null) {
                 if(outputItem[0] instanceof ChanceOutput) icon = ((ChanceOutput) outputItem[0]).stack.copy();
-                if(outputItem[0] instanceof ChanceOutputMulti) icon = ((ChanceOutputMulti) outputItem[0]).pool.get(0).stack.copy();
+                if(outputItem[0] instanceof ChanceOutputMulti) icon = ((ChanceOutputMulti) outputItem[0]).pool.getFirst().stack.copy();
                 return icon;
             }
             if(outputFluid != null) {
@@ -112,23 +112,48 @@ public class GenericRecipe {
     }
 
     public List<String> print() {
-        List<String> list = new ArrayList();
+        List<String> list = new ArrayList<>();
         list.add(TextFormatting.YELLOW + this.getLocalizedName());
+
+        autoSwitch(list);
+        duration(list);
+        power(list);
+        input(list);
+        output(list);
+
+        return list;
+    }
+
+    protected void autoSwitch(List<String> list) {
         if(this.autoSwitchGroup != null) {
             String[] lines = I18nUtil.resolveKeyArray("autoswitch", I18nUtil.resolveKey(this.autoSwitchGroup));
             for(String line : lines) list.add(TextFormatting.GOLD + line);
         }
+    }
+
+    protected void duration(List<String> list) {
         if(duration > 0) {
             double seconds = this.duration / 20D;
             list.add(TextFormatting.RED + I18nUtil.resolveKey("gui.recipe.duration") + ": " + seconds + "s");
         }
-        if(power > 0) list.add(TextFormatting.RED + I18nUtil.resolveKey("gui.recipe.consumption") + ": " + BobMathUtil.getShortNumber(power) + "HE/t");
+    }
+
+    protected void power(List<String> list) {
+        if(power > 0) {
+            list.add(TextFormatting.RED + I18nUtil.resolveKey("gui.recipe.consumption") + ": " + BobMathUtil.getShortNumber(power) + "HE/t");
+        }
+    }
+
+    protected void input(List<String> list) {
         list.add(TextFormatting.BOLD + I18nUtil.resolveKey("gui.recipe.input") + ":");
         if(inputItem != null) for(RecipesCommon.AStack stack : inputItem) {
             ItemStack display = stack.extractForCyclingDisplay(20);
             list.add("  " + TextFormatting.GRAY + display.getCount() + "x " + display.getDisplayName());
         }
-        if(inputFluid != null) for(FluidStack fluid : inputFluid) list.add("  " + TextFormatting.BLUE + fluid.fill + "mB " + fluid.type.getLocalizedName() + (fluid.pressure == 0 ? "" : " at " + TextFormatting.RED + fluid.pressure + " PU"));
+        if (inputFluid != null) for (FluidStack fluid : inputFluid) list.add("  " + TextFormatting.BLUE + fluid.fill + "mB " + fluid.type.getLocalizedName() + (fluid.pressure == 0 ? "" : " " + I18nUtil.resolveKey("gui.recipe.atPressure") + " " + TextFormatting.RED + fluid.pressure + " PU"));
+    }
+
+    protected void output(List<String> list) {
         list.add(TextFormatting.BOLD + I18nUtil.resolveKey("gui.recipe.output") + ":");
         if(outputItem != null) for(IOutput output : outputItem)
             for(String line : output.getLabel()) list.add("  " + line);
@@ -137,7 +162,6 @@ public class GenericRecipe {
                     " " + I18nUtil.resolveKey("gui.recipe.atPressure") + " " + TextFormatting.RED + fluid.pressure + " PU";
             list.add("  " + TextFormatting.BLUE + fluid.fill + "mB " + fluid.type.getLocalizedName() + pressurePart);
         }
-        return list;
     }
 
     /** Default impl only matches localized name substring, can be extended to include ingredients as well */

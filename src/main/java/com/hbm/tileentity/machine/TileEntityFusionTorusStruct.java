@@ -12,6 +12,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 @AutoRegister
 public class TileEntityFusionTorusStruct extends TileEntity implements ITickable {
@@ -38,7 +39,7 @@ public class TileEntityFusionTorusStruct extends TileEntity implements ITickable
 
         MachineFusionTorus block = (MachineFusionTorus) ModBlocks.fusion_torus;
         BlockDummyable.safeRem = true;
-        world.setBlockState(pos, ModBlocks.fusion_torus.getDefaultState().withProperty(BlockDummyable.META, this.getBlockMetadata() + BlockDummyable.offset), 3);
+        world.setBlockState(pos, ModBlocks.fusion_torus.getDefaultState().withProperty(BlockDummyable.META, 12), 3);
         block.fillSpace(world, pos.getX(), pos.getY(), pos.getZ(), ForgeDirection.NORTH, 0);
         BlockDummyable.safeRem = false;
     }
@@ -62,7 +63,7 @@ public class TileEntityFusionTorusStruct extends TileEntity implements ITickable
     AxisAlignedBB bb = null;
 
     @Override
-    public AxisAlignedBB getRenderBoundingBox() {
+    public @NotNull AxisAlignedBB getRenderBoundingBox() {
 
         if(bb == null) {
             bb = new AxisAlignedBB(

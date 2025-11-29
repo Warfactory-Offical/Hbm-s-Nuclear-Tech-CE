@@ -287,6 +287,7 @@ public class Fluids {
     public static FluidType PERFLUOROMETHYL_COLD;
     public static FluidType PERFLUOROMETHYL_HOT;
     public static FluidType CONCRETE;
+    public static FluidType DHC;
     /* Lagacy names for compatibility purposes */
     @Deprecated
     public static FluidType ACID;    //JAOPCA uses this, apparently
@@ -522,6 +523,7 @@ public class Fluids {
         BAUXITE_SOLUTION =		new FluidType("BAUXITE_SOLUTION",	0xE2560F, 3, 0, 3, EnumSymbol.ACID).addTraits(new FT_Corrosive(40), LIQUID, VISCOUS);
         ALUMINA =				new FluidType("ALUMINA",		0xDDFFFF, 0, 0, 0, EnumSymbol.NONE).addTraits(LIQUID);
         CONCRETE =				new FluidType("CONCRETE",		0xA2A2A2, 0, 0, 0, EnumSymbol.NONE).addTraits(LIQUID);
+        DHC =					new FluidType("DHC",			0xD2AFFF, 0, 0, 0, EnumSymbol.NONE).addTraits(GASEOUS);
 
         // ^ ^ ^ ^ ^ ^ ^ ^
         //ADD NEW FLUIDS HERE
@@ -647,6 +649,7 @@ public class Fluids {
         metaOrder.add(FISHOIL);
         metaOrder.add(SUNFLOWEROIL);
         metaOrder.add(NITAN);
+        metaOrder.add(DHC);
         metaOrder.add(HYDRAZINE);
         metaOrder.add(BALEFIRE);
         metaOrder.add(MORKITE);

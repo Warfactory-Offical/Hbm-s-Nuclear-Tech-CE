@@ -865,12 +865,12 @@ public class JeiRecipes {
 		if(fusionByproducts != null)
 			return fusionByproducts;
 		fusionByproducts = new ArrayList<>();
-		fusionByproducts.add(new FusionRecipe(new FluidStack(Fluids.PLASMA_DT, 1), FusionRecipes.getByproduct(Fluids.PLASMA_DT)));
-		fusionByproducts.add(new FusionRecipe(new FluidStack(Fluids.PLASMA_HD, 1), FusionRecipes.getByproduct(Fluids.PLASMA_HD)));
-		fusionByproducts.add(new FusionRecipe(new FluidStack(Fluids.PLASMA_HT,1), FusionRecipes.getByproduct(Fluids.PLASMA_HT)));
-		fusionByproducts.add(new FusionRecipe(new FluidStack(Fluids.PLASMA_XM, 1), FusionRecipes.getByproduct(Fluids.PLASMA_XM)));
-		fusionByproducts.add(new FusionRecipe(new FluidStack(Fluids.PLASMA_DH3, 1), FusionRecipes.getByproduct(Fluids.PLASMA_DH3)));
-		fusionByproducts.add(new FusionRecipe(new FluidStack(Fluids.PLASMA_BF, 1), FusionRecipes.getByproduct(Fluids.PLASMA_BF)));
+		fusionByproducts.add(new FusionRecipe(new FluidStack(Fluids.PLASMA_DT, 1), FusionRecipesLegacy.getByproduct(Fluids.PLASMA_DT)));
+		fusionByproducts.add(new FusionRecipe(new FluidStack(Fluids.PLASMA_HD, 1), FusionRecipesLegacy.getByproduct(Fluids.PLASMA_HD)));
+		fusionByproducts.add(new FusionRecipe(new FluidStack(Fluids.PLASMA_HT,1), FusionRecipesLegacy.getByproduct(Fluids.PLASMA_HT)));
+		fusionByproducts.add(new FusionRecipe(new FluidStack(Fluids.PLASMA_XM, 1), FusionRecipesLegacy.getByproduct(Fluids.PLASMA_XM)));
+		fusionByproducts.add(new FusionRecipe(new FluidStack(Fluids.PLASMA_DH3, 1), FusionRecipesLegacy.getByproduct(Fluids.PLASMA_DH3)));
+		fusionByproducts.add(new FusionRecipe(new FluidStack(Fluids.PLASMA_BF, 1), FusionRecipesLegacy.getByproduct(Fluids.PLASMA_BF)));
 		return fusionByproducts;
 	}
 	

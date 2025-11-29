@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
 
 import java.util.Iterator;
 
-import static com.hbm.inventory.recipes.RBMKOutgasserRecipes.recipes;
+import static com.hbm.inventory.recipes.OutgasserRecipes.recipes;
 
 @RegistryDescription(linkGenerator = "hbm", isFullyDocumented = false)
 public class IrradiationChannel extends VirtualizedRegistry<Tuple.Pair<RecipesCommon.AStack, Tuple.Pair<ItemStack, FluidStack>>> {

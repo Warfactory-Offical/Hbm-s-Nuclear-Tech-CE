@@ -12,25 +12,14 @@ import net.minecraft.item.Item;
 import org.lwjgl.opengl.GL11;
 
 @AutoRegister
-public class RenderFusionKlystron extends TileEntitySpecialRenderer<TileEntityFusionKlystron>
-        implements IItemRendererProvider {
-
-
+public class RenderFusionKlystron extends TileEntitySpecialRenderer<TileEntityFusionKlystron> implements IItemRendererProvider {
 
 	@Override
-    public void render(
-            TileEntityFusionKlystron klystron,
-            double x,
-            double y,
-            double z,
-            float partialTicks,
-            int destroyStage,
-            float alpha) {
+    public void render(TileEntityFusionKlystron klystron, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         GlStateManager.pushMatrix();
         GlStateManager.translate(x + 0.5, y, z + 0.5);
         GlStateManager.enableLighting();
         GlStateManager.enableCull();
-        GlStateManager.shadeModel(GL11.GL_SMOOTH);
 
         switch (klystron.getBlockMetadata() - BlockDummyable.offset) {
 		case 2: GlStateManager.rotate(90, 0F, 1F, 0F);
@@ -41,10 +30,19 @@ public class RenderFusionKlystron extends TileEntitySpecialRenderer<TileEntityFu
 
         GlStateManager.translate(-1, 0, 0);
 
-		bindTexture(ResourceManager.fusion_klystron_tex);
-		ResourceManager.fusion_klystron.renderAll();
+        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        bindTexture(ResourceManager.fusion_klystron_tex);
+        ResourceManager.fusion_klystron.renderPart("Klystron");
 
+        GlStateManager.pushMatrix();
+        float rot = klystron.prevFan + (klystron.fan - klystron.prevFan) * partialTicks;
+        GlStateManager.translate(0, 2.5, 0);
+        GlStateManager.rotate(rot, 1, 0, 0);
+        GlStateManager.translate(0, -2.5, 0);
+        ResourceManager.fusion_klystron.renderPart("Rotor");
         GlStateManager.shadeModel(GL11.GL_FLAT);
+        GlStateManager.popMatrix();
+
         GlStateManager.popMatrix();
 	}
 
@@ -66,7 +64,12 @@ public class RenderFusionKlystron extends TileEntitySpecialRenderer<TileEntityFu
                 GlStateManager.rotate(90, 0F, 1F, 0F);
                 GlStateManager.shadeModel(GL11.GL_SMOOTH);
 				bindTexture(ResourceManager.fusion_klystron_tex);
-				ResourceManager.fusion_klystron.renderAll();
+                ResourceManager.fusion_klystron.renderPart("Klystron");
+                double rot = ((double) System.currentTimeMillis() / 10) % 360D;
+                GlStateManager.translate(0, 2.5, 0);
+                GlStateManager.rotate(rot, 1, 0, 0);
+                GlStateManager.translate(0, -2.5, 0);
+                ResourceManager.fusion_klystron.renderPart("Rotor");
                 GlStateManager.shadeModel(GL11.GL_FLAT);
 			}};
 	}

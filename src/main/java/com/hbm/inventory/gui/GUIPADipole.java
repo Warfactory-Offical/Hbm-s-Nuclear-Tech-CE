@@ -58,8 +58,8 @@ public class GUIPADipole extends GuiInfoContainer {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
-        dipole.tanks[0].renderTankInfo(this, mouseX, mouseY, guiLeft + 134, guiTop + 36, 16, 52);
-        dipole.tanks[1].renderTankInfo(this, mouseX, mouseY, guiLeft + 152, guiTop + 36, 16, 52);
+        dipole.coolantTanks[0].renderTankInfo(this, mouseX, mouseY, guiLeft + 134, guiTop + 36, 16, 52);
+        dipole.coolantTanks[1].renderTankInfo(this, mouseX, mouseY, guiLeft + 152, guiTop + 36, 16, 52);
         this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 8, guiTop + 18, 16, 52, dipole.power, dipole.getMaxPower());
 
         this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 62, guiTop + 29, 12, 12, mouseX, mouseY, new String[]{TextFormatting.BLUE + "Player " +
@@ -154,8 +154,8 @@ public class GUIPADipole extends GuiInfoContainer {
 
         this.threshold.drawTextBox();
 
-        dipole.tanks[0].renderTank(guiLeft + 134, guiTop + 88, this.zLevel, 16, 52);
-        dipole.tanks[1].renderTank(guiLeft + 152, guiTop + 88, this.zLevel, 16, 52);
+        dipole.coolantTanks[0].renderTank(guiLeft + 134, guiTop + 88, this.zLevel, 16, 52);
+        dipole.coolantTanks[1].renderTank(guiLeft + 152, guiTop + 88, this.zLevel, 16, 52);
     }
 
     public void addLine(BufferBuilder buffer, int x, int y, int color, Vec3NT vec, float yaw) {

@@ -120,9 +120,8 @@ public class BobMathUtil {
      * @param amount
      * @return the number as a string with thousand group commas
      */
-    public static String format(int amount) {
-        return String.format(Locale.US, "%,d", amount);
-    }
+    public static String format(int amount)  { return String.format(Locale.US, "%,d", amount); }
+    public static String format(long amount) { return String.format(Locale.US, "%,d", amount); }
 
     public static boolean getBlink() {
         return System.currentTimeMillis() % 1000 < 500;
