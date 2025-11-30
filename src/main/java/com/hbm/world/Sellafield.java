@@ -7,10 +7,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -18,10 +18,13 @@ import java.util.Random;
 public class Sellafield extends AbstractPhasedStructure {
 	private final double radius;
 	private final double depth;
+	private final List<ChunkPos> chunkOffsets;
 
 	public Sellafield(double radius, double depth) {
 		this.radius = radius;
 		this.depth = depth;
+		int coverageRadius = (int) Math.round(this.radius) + 5;
+		this.chunkOffsets = collectChunkOffsetsByRadius(coverageRadius);
 	}
 
 	@Override
@@ -34,14 +37,8 @@ public class Sellafield extends AbstractPhasedStructure {
 	}
 
 	@Override
-	public List<@NotNull BlockPos> getValidationPoints(@NotNull BlockPos origin) {
-		int iRad = (int) Math.ceil(this.radius);
-		return Arrays.asList(
-				origin.add(-iRad, 0, -iRad),
-				origin.add(iRad, 0, -iRad),
-				origin.add(-iRad, 0, iRad),
-				origin.add(iRad, 0, iRad)
-		);
+	public List<ChunkPos> getAdditionalChunks(@NotNull BlockPos origin) {
+		return translateOffsets(origin, chunkOffsets);
 	}
 
 	@Override

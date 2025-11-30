@@ -111,71 +111,76 @@ public class PhasedStructureGenerator extends MapGenStructure implements IWorldG
 
     @Override
     public boolean isInsideStructure(BlockPos pos) {
-        if (this.world == null) {
-            return false;
-        }
-        this.initializeStructureData(this.world);
-        return this.getStructureAt(pos) != null;
+//        if (this.world == null) {
+//            return false;
+//        }
+//        this.initializeStructureData(this.world);
+//        return this.getStructureAt(pos) != null;
+        return false;
     }
 
     @Override
     @Nullable
     protected StructureStart getStructureAt(BlockPos pos) {
-        int cx = pos.getX() >> 4;
-        int cz = pos.getZ() >> 4;
-        long key = ChunkPos.asLong(cx, cz);
-
-        ObjectArrayList<PhasedStructureComponent> list = componentsByChunk.get(key);
-        if (list == null || list.isEmpty()) {
-            return null;
-        }
-
-        for (PhasedStructureComponent comp : list) {
-            if (comp == null) continue;
-            PhasedStructureStart parent = comp.parent;
-            if (parent == null) continue;
-            if (!parent.isSizeableStructure()) continue;
-            if (!parent.getBoundingBox().isVecInside(pos)) continue;
-            if (comp.getBoundingBox().isVecInside(pos)) {
-                return parent;
-            }
-        }
+//        int cx = pos.getX() >> 4;
+//        int cz = pos.getZ() >> 4;
+//        long key = ChunkPos.asLong(cx, cz);
+//
+//        ObjectArrayList<PhasedStructureComponent> list = componentsByChunk.get(key);
+//        if (list == null || list.isEmpty()) {
+//            return null;
+//        }
+//
+//        for (PhasedStructureComponent comp : list) {
+//            if (comp == null) continue;
+//            PhasedStructureStart parent = comp.parent;
+//            if (parent == null) continue;
+//            if (!parent.isSizeableStructure()) continue;
+//            if (!parent.getBoundingBox().isVecInside(pos)) continue;
+//            if (comp.getBoundingBox().isVecInside(pos)) {
+//                return parent;
+//            }
+//        }
 
         return null;
     }
 
     @Override
     public boolean isPositionInStructure(World worldIn, BlockPos pos) {
-        this.world = worldIn;
-        this.initializeStructureData(worldIn);
-        int cx = pos.getX() >> 4;
-        int cz = pos.getZ() >> 4;
-        long key = ChunkPos.asLong(cx, cz);
-
-        ObjectArrayList<PhasedStructureComponent> list = componentsByChunk.get(key);
-        if (list == null || list.isEmpty()) return false;
-
-        for (PhasedStructureComponent comp : list) {
-            if (comp == null) continue;
-            PhasedStructureStart parent = comp.parent;
-            if (parent == null) continue;
-
-            if (parent.isSizeableStructure() && parent.getBoundingBox().isVecInside(pos)) {
-                return true;
-            }
-        }
+//        this.world = worldIn;
+//        this.initializeStructureData(worldIn);
+//        int cx = pos.getX() >> 4;
+//        int cz = pos.getZ() >> 4;
+//        long key = ChunkPos.asLong(cx, cz);
+//
+//        ObjectArrayList<PhasedStructureComponent> list = componentsByChunk.get(key);
+//        if (list == null || list.isEmpty()) return false;
+//
+//        for (PhasedStructureComponent comp : list) {
+//            if (comp == null) continue;
+//            PhasedStructureStart parent = comp.parent;
+//            if (parent == null) continue;
+//
+//            if (parent.isSizeableStructure() && parent.getBoundingBox().isVecInside(pos)) {
+//                return true;
+//            }
+//        }
 
         return false;
     }
 
-    void scheduleStructureForValidation(World world, BlockPos origin, IPhasedStructure structure,
-                                        Long2ObjectOpenHashMap<List<BlockInfo>> layout, long layoutSeed) {
+    void scheduleStructureForValidation(World world, BlockPos origin, IPhasedStructure structure, Long2ObjectOpenHashMap<List<BlockInfo>> layout,
+                                        long layoutSeed) {
         this.world = world;
         registerStructure(structure);
 
         boolean allowEmptyLayout = false;
         if (structure instanceof AbstractPhasedStructure phased) {
-            allowEmptyLayout = !structure.getValidationPoints(BlockPos.ORIGIN).isEmpty() && !phased.isCacheable();
+            List<BlockPos> validationPoints = structure.getValidationPoints(origin);
+            List<ChunkPos> additionalChunks = structure.getAdditionalChunks(origin);
+            boolean hasValidation = !validationPoints.isEmpty();
+            boolean hasAdditionalChunks = additionalChunks != null && !additionalChunks.isEmpty();
+            allowEmptyLayout = !phased.isCacheable() && (hasValidation || hasAdditionalChunks);
         }
 
         if (layout.isEmpty() && !allowEmptyLayout) {
@@ -220,23 +225,23 @@ public class PhasedStructureGenerator extends MapGenStructure implements IWorldG
 
     private void onChunkProcessed(PhasedStructureStart start, ChunkPos chunkPos) {
         long key = ChunkPos.asLong(chunkPos.x, chunkPos.z);
-        ObjectArrayList<PhasedStructureComponent> list = componentsByChunk.get(key);
-        if (list == null || list.isEmpty()) {
-            return;
-        }
-
-        for (int i = 0; i < list.size(); ) {
-            PhasedStructureComponent comp = list.get(i);
-            if (comp == null || comp.parent != start) {
-                i++;
-            } else {
-                list.remove(i);
-            }
-        }
-
-        if (list.isEmpty()) {
+//        ObjectArrayList<PhasedStructureComponent> list = componentsByChunk.get(key);
+//        if (list == null || list.isEmpty()) {
+//            return;
+//        }
+//
+//        for (int i = 0; i < list.size(); ) {
+//            PhasedStructureComponent comp = list.get(i);
+//            if (comp == null || comp.parent != start) {
+//                i++;
+//            } else {
+//                list.remove(i);
+//            }
+//        }
+//
+//        if (list.isEmpty()) {
             componentsByChunk.remove(key);
-        }
+//        }
     }
 
     private void generateForChunkFast(World world, ChunkPos chunkPos) {
@@ -367,7 +372,6 @@ public class PhasedStructureGenerator extends MapGenStructure implements IWorldG
                     }
                 }
             }
-
             this.updateBoundingBox();
         }
 

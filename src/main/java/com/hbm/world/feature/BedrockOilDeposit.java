@@ -9,10 +9,10 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.block.state.pattern.BlockMatcher;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -26,6 +26,8 @@ public class BedrockOilDeposit extends AbstractPhasedStructure {
     private static final int OIL_SPOT_RADIUS = 5;
     private static final int OIL_SPOT_HEIGHT = 50;
     private static final boolean OIL_SPOT_RICH = true;
+    private static final int ADDITIONAL_RADIUS = 32;
+    private static final List<ChunkPos> CHUNK_OFFSETS = collectChunkOffsetsByRadius(ADDITIONAL_RADIUS);
 
     private static final Predicate<IBlockState> BEDROCK_MATCHER = BlockMatcher.forBlock(Blocks.BEDROCK);
 
@@ -54,13 +56,6 @@ public class BedrockOilDeposit extends AbstractPhasedStructure {
 
     @NotNull
     @Override
-    public List<@NotNull BlockPos> getValidationPoints(@NotNull BlockPos origin) {
-        int r = 32;
-        return Arrays.asList(origin.add(-r, 0, -r), origin.add(r, 0, -r), origin.add(-r, 0, r), origin.add(r, 0, r));
-    }
-
-    @NotNull
-    @Override
     public Optional<PhasedStructureGenerator.ReadyToGenerateStructure> validate(@NotNull World world,
                                                                                 @NotNull PhasedStructureGenerator.PendingValidationStructure pending) {
         if (checkSpawningConditions(world, pending.origin)) {
@@ -72,6 +67,11 @@ public class BedrockOilDeposit extends AbstractPhasedStructure {
     @Override
     public void postGenerate(@NotNull World world, @NotNull Random rand, @NotNull BlockPos finalOrigin) {
         executeOriginalLogic(world, rand, finalOrigin);
+    }
+
+    @Override
+    public List<ChunkPos> getAdditionalChunks(@NotNull BlockPos origin) {
+        return translateOffsets(origin, CHUNK_OFFSETS);
     }
 
     private static void executeOriginalLogic(@NotNull World world, @NotNull Random rand, @NotNull BlockPos finalOrigin) {

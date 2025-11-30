@@ -8,10 +8,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -23,12 +23,14 @@ public class DepthDeposit extends AbstractPhasedStructure {
     private final Block oreBlock;
     private final Block filler;
     private final Predicate<IBlockState> matcher;
+    private final List<ChunkPos> chunkOffsets;
 
     private DepthDeposit(int size, double fill, Block oreBlock, Block genTarget, Block filler) {
         this.size = size;
         this.fill = fill;
         this.oreBlock = oreBlock;
         this.filler = filler;
+        this.chunkOffsets = collectChunkOffsetsByRadius(size + 8);
         this.matcher = state -> {
             if (state == null) return false;
             Block block = state.getBlock();
@@ -79,12 +81,6 @@ public class DepthDeposit extends AbstractPhasedStructure {
     }
 
     @Override
-    public @NotNull List<@NotNull BlockPos> getValidationPoints(@NotNull BlockPos origin) {
-        int r = this.size;
-        return Arrays.asList(origin.add(-r, 0, -r), origin.add(r, 0, -r), origin.add(-r, 0, r), origin.add(r, 0, r));
-    }
-
-    @Override
     public @NotNull Optional<PhasedStructureGenerator.ReadyToGenerateStructure> validate(@NotNull World world,
                                                                                          @NotNull PhasedStructureGenerator.PendingValidationStructure pending) {
         BlockPos realOrigin = pending.origin;
@@ -132,5 +128,10 @@ public class DepthDeposit extends AbstractPhasedStructure {
                 }
             }
         }
+    }
+
+    @Override
+    public List<ChunkPos> getAdditionalChunks(@NotNull BlockPos origin) {
+        return translateOffsets(origin, chunkOffsets);
     }
 }

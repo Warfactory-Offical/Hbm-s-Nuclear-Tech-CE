@@ -80,8 +80,10 @@ public interface IPhasedStructure {
     /**
      * Points used to determine the y of the structure. Structures will not spawn until all chunks required to validate has been generated.
      */
-    @Contract("_ -> new")
-    List<@NotNull BlockPos> getValidationPoints(@NotNull BlockPos origin);
+    @NotNull
+    default List<@NotNull BlockPos> getValidationPoints(@NotNull BlockPos origin) {
+        return Collections.emptyList();
+    }
 
     /**
      * Override to use custom spawning condition.

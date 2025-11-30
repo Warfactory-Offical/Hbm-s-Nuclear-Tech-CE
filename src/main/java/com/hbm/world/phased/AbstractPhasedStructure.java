@@ -112,6 +112,27 @@ public abstract class AbstractPhasedStructure extends WorldGenerator implements 
         return chunkedMap;
     }
 
+    protected static List<ChunkPos> collectChunkOffsetsByRadius(int horizontalRadius) {
+        int chunkRadius = Math.max(0, Math.floorDiv(Math.max(0, horizontalRadius) + 23, 16));
+        List<ChunkPos> offsets = new ArrayList<>((chunkRadius * 2 + 1) * (chunkRadius * 2 + 1));
+        for (int cx = -chunkRadius; cx <= chunkRadius; cx++) {
+            for (int cz = -chunkRadius; cz <= chunkRadius; cz++) {
+                offsets.add(new ChunkPos(cx, cz));
+            }
+        }
+        return offsets;
+    }
+
+    protected static List<ChunkPos> translateOffsets(@NotNull BlockPos origin, @NotNull List<ChunkPos> relativeOffsets) {
+        int baseChunkX = origin.getX() >> 4;
+        int baseChunkZ = origin.getZ() >> 4;
+        List<ChunkPos> absolute = new ArrayList<>(relativeOffsets.size());
+        for (ChunkPos rel : relativeOffsets) {
+            absolute.add(new ChunkPos(baseChunkX + rel.x, baseChunkZ + rel.z));
+        }
+        return absolute;
+    }
+
     @Override
     public final void generateForChunk(@NotNull World world, @NotNull Random rand, @NotNull BlockPos structureOrigin,
                                        @NotNull ChunkPos chunkToGenerate, @Nullable List<BlockInfo> blocksForThisChunk) {

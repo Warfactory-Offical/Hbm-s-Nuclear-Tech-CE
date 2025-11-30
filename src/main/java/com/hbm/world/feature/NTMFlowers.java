@@ -8,12 +8,12 @@ import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Biomes;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -23,6 +23,8 @@ public class NTMFlowers extends AbstractPhasedStructure {
     public static final NTMFlowers INSTANCE_HEMP = new NTMFlowers((Biome) null, PlantEnums.EnumFlowerPlantType.HEMP);
     public static final NTMFlowers INSTANCE_TOBACCO = new NTMFlowers(BiomeDictionary.Type.JUNGLE, PlantEnums.EnumFlowerPlantType.TOBACCO);
     public static final NTMFlowers INSTANCE_NIGHTSHADE = new NTMFlowers(Biomes.ROOFED_FOREST, PlantEnums.EnumFlowerPlantType.NIGHTSHADE);
+    private static final int HORIZONTAL_RADIUS = 7;
+    private static final List<ChunkPos> CHUNK_OFFSETS = collectChunkOffsetsByRadius(HORIZONTAL_RADIUS);
 
     private Biome spawnBiome;
     private BiomeDictionary.Type biomeType;
@@ -61,15 +63,8 @@ public class NTMFlowers extends AbstractPhasedStructure {
     }
 
     @Override
-    public List<@NotNull BlockPos> getValidationPoints(@NotNull BlockPos origin) {
-        // OffsetX = [-7, 7], OffsetY = [-3, 3], OffsetZ = [-7, 7]
-        int iRad = 7;
-        return Arrays.asList(
-                origin.add(-iRad, 0, -iRad),
-                origin.add(iRad, 0, -iRad),
-                origin.add(-iRad, 0, iRad),
-                origin.add(iRad, 0, iRad)
-        );
+    public List<ChunkPos> getAdditionalChunks(@NotNull BlockPos origin) {
+        return translateOffsets(origin, CHUNK_OFFSETS);
     }
 
     @Override

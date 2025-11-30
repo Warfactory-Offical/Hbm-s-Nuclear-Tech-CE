@@ -9,11 +9,11 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.block.state.pattern.BlockMatcher;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -24,6 +24,7 @@ public class WorldGenMinableNonCascade extends AbstractPhasedStructure {
     private final IBlockState oreBlock;
     private final int numberOfBlocks;
     private final Predicate<IBlockState> predicate;
+    private final List<ChunkPos> chunkOffsets;
 
     public WorldGenMinableNonCascade(@NotNull IBlockState state, int blockCount) {
         this(state, blockCount, BlockMatcher.forBlock(Blocks.STONE));
@@ -33,6 +34,7 @@ public class WorldGenMinableNonCascade extends AbstractPhasedStructure {
         this.oreBlock = state;
         this.numberOfBlocks = blockCount;
         this.predicate = predicate;
+        this.chunkOffsets = collectChunkOffsetsByRadius(computeHorizontalRadius(blockCount) + 32);
     }
 
     @Override
@@ -42,13 +44,6 @@ public class WorldGenMinableNonCascade extends AbstractPhasedStructure {
 
     @Override
     protected void buildStructure(@NotNull LegacyBuilder builder, @NotNull Random rand) {
-    }
-
-    @NotNull
-    @Override
-    public List<@NotNull BlockPos> getValidationPoints(@NotNull BlockPos origin) {
-        int r = Math.max(8, this.numberOfBlocks / 4 + 10);
-        return Arrays.asList(origin.add(-r, 0, -r), origin.add(r, 0, -r), origin.add(-r, 0, r), origin.add(r, 0, r));
     }
 
     @NotNull
@@ -117,5 +112,15 @@ public class WorldGenMinableNonCascade extends AbstractPhasedStructure {
                 }
             }
         }
+    }
+
+    @Override
+    public List<ChunkPos> getAdditionalChunks(@NotNull BlockPos origin) {
+        return translateOffsets(origin, chunkOffsets);
+    }
+
+    private static int computeHorizontalRadius(int blockCount) {
+        double radius = 8.5 + (3.0 * blockCount) / 16.0;
+        return (int) Math.ceil(radius);
     }
 }

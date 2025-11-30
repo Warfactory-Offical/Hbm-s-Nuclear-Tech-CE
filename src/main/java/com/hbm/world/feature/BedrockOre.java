@@ -11,10 +11,10 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -26,6 +26,8 @@ public class BedrockOre extends AbstractPhasedStructure {
     private final int color;
     private final int tier;
     private final Block depthRock;
+    private static final int EFFECT_RADIUS = 3;
+    private static final List<ChunkPos> CHUNK_OFFSETS = collectChunkOffsetsByRadius(EFFECT_RADIUS);
 
     private BedrockOre(ItemStack stack, FluidStack acid, int color, int tier, Block depthRock) {
         this.resourceStack = stack.copy();
@@ -52,17 +54,6 @@ public class BedrockOre extends AbstractPhasedStructure {
 
     @Override
     protected void buildStructure(@NotNull LegacyBuilder builder, @NotNull Random rand) {
-    }
-
-    @NotNull
-    @Override
-    public List<@NotNull BlockPos> getValidationPoints(@NotNull BlockPos origin) {
-        return Arrays.asList(
-                origin.add(-3, 0, -3),
-                origin.add(3, 0, -3),
-                origin.add(-3, 0, 3),
-                origin.add(3, 0, 3)
-        );
     }
 
     @NotNull
@@ -130,6 +121,11 @@ public class BedrockOre extends AbstractPhasedStructure {
                 }
             }
         }
+    }
+
+    @Override
+    public List<ChunkPos> getAdditionalChunks(@NotNull BlockPos origin) {
+        return translateOffsets(origin, CHUNK_OFFSETS);
     }
 
 }

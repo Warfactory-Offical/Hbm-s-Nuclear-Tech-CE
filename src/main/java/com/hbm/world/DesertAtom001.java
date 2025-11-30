@@ -16,6 +16,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,6 +29,8 @@ public class DesertAtom001 extends AbstractPhasedStructure {
 	public static final DesertAtom001 INSTANCE = new DesertAtom001();
 	private final DesertAtom002 part2 = new DesertAtom002();
 	private final DesertAtom003 part3 = new DesertAtom003();
+	private static final int HORIZONTAL_RADIUS = 40;
+	private static final List<ChunkPos> CHUNK_OFFSETS = collectChunkOffsetsByRadius(HORIZONTAL_RADIUS);
 	private DesertAtom001() {}
 	Block Block2 = ModBlocks.yellow_barrel;
 	Block Block3 = ModBlocks.reinforced_sand;
@@ -114,6 +117,11 @@ public class DesertAtom001 extends AbstractPhasedStructure {
 	@Override
 	public @NotNull List<BlockPos> getValidationPoints(@NotNull BlockPos origin){
 		return Collections.singletonList(origin.add(20, 0, 16));
+	}
+
+	@Override
+	public List<ChunkPos> getAdditionalChunks(@NotNull BlockPos origin) {
+		return translateOffsets(origin, CHUNK_OFFSETS);
 	}
 
 	public boolean generate_r0(LegacyBuilder world, Random rand, int x, int y, int z)

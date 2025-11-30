@@ -5,18 +5,20 @@ import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 public class OilSandBubble extends AbstractPhasedStructure {
 	private final int radius;
+	private final List<ChunkPos> chunkOffsets;
 
 	public OilSandBubble(int radius) {
 		this.radius = radius;
+		this.chunkOffsets = collectChunkOffsetsByRadius(radius);
 	}
 
 	@Override
@@ -29,13 +31,8 @@ public class OilSandBubble extends AbstractPhasedStructure {
 	}
 
 	@Override
-	public List<@NotNull BlockPos> getValidationPoints(@NotNull BlockPos origin) {
-		return Arrays.asList(
-				origin.add(-radius, 0, -radius),
-				origin.add(radius, 0, -radius),
-				origin.add(-radius, 0, radius),
-				origin.add(radius, 0, radius)
-		);
+	public List<ChunkPos> getAdditionalChunks(@NotNull BlockPos origin) {
+		return translateOffsets(origin, chunkOffsets);
 	}
 
 	@Override

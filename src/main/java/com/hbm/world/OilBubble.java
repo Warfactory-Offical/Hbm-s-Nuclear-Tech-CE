@@ -6,20 +6,22 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 public class OilBubble extends AbstractPhasedStructure {
 	public final int radius;
 	private final int y;
+	private final List<ChunkPos> chunkOffsets;
 
 	public OilBubble(int radius, int y) {
 		this.radius = radius;
 		this.y = y;
+		this.chunkOffsets = collectChunkOffsetsByRadius(radius);
 	}
 
 	@Override
@@ -30,16 +32,10 @@ public class OilBubble extends AbstractPhasedStructure {
 	@Override
 	protected void buildStructure(@NotNull LegacyBuilder builder, @NotNull Random rand) {
 	}
-	// I think that Y pos somehow changes during validation, so keeping it at a fixed position should at least mitigate the issue
-	// or in the best case - fix it
+
 	@Override
-	public List<@NotNull BlockPos> getValidationPoints(@NotNull BlockPos origin) {
-		return Arrays.asList(
-				origin.add(-radius, y, -radius),
-				origin.add(radius, y, -radius),
-				origin.add(-radius, y, radius),
-				origin.add(radius, y, radius)
-		);
+	public List<ChunkPos> getAdditionalChunks(@NotNull BlockPos origin) {
+		return translateOffsets(origin, chunkOffsets);
 	}
 
 	@Override
