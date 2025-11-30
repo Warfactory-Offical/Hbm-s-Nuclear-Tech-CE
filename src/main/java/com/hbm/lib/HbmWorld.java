@@ -7,6 +7,7 @@ import com.hbm.world.gen.component.CivilianFeatures;
 import com.hbm.world.gen.component.OfficeFeatures;
 import com.hbm.world.gen.component.SiloComponent;
 import com.hbm.world.gen.nbt.NBTStructure;
+import com.hbm.world.phased.DynamicStructureDispatcher;
 import com.hbm.world.phased.PhasedStructureGenerator;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
 import net.minecraftforge.common.MinecraftForge;
@@ -24,8 +25,6 @@ public class HbmWorld {
 	public static void initWorldGen() {
 		MapGenStructureIO.registerStructure(MapGenNTMFeatures.Start.class, "NTMFeatures");
 		MapGenStructureIO.registerStructure(BunkerComponents.BunkerStart.class, "NTMBunker");
-		MapGenStructureIO.registerStructure(PhasedStructureGenerator.PhasedStructureStart.class, "PhasedStructure");
-		MapGenStructureIO.registerStructureComponent(PhasedStructureGenerator.PhasedStructureComponent.class, "PhasedStructureComponent");
 		registerNTMFeatures();
 
 		registerWorldGen(new HbmWorldGen(), 1);
@@ -33,6 +32,8 @@ public class HbmWorld {
 		worldGenerator = new NTMWorldGenerator();
 		registerWorldGen(worldGenerator, 1);
         registerWorldGen(PhasedStructureGenerator.INSTANCE, 1);
+        MinecraftForge.EVENT_BUS.register(PhasedStructureGenerator.INSTANCE);
+        MinecraftForge.EVENT_BUS.register(DynamicStructureDispatcher.INSTANCE);
 		MinecraftForge.EVENT_BUS.register(worldGenerator);
 		NBTStructure.register();
 	}

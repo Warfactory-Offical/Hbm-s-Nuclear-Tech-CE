@@ -38,7 +38,7 @@ public class SchistStratum {
         ChunkPos chunkPos = event.getChunkPos();
         int cX = chunkPos.getXStart();
         int cZ = chunkPos.getZStart();
-        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        BlockPos.PooledMutableBlockPos pos = BlockPos.PooledMutableBlockPos.retain();
 
         int minY = 1;
         int maxY = world.getHeight() - 1;
@@ -68,5 +68,6 @@ public class SchistStratum {
                 }
             }
         }
+        pos.release();
     }
 }

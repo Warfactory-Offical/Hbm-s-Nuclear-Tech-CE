@@ -7,6 +7,7 @@ import com.hbm.itempool.ItemPool;
 import com.hbm.itempool.ItemPoolsLegacy;
 import com.hbm.lib.Library;
 import com.hbm.world.phased.AbstractPhasedStructure;
+import it.unimi.dsi.fastutil.longs.LongArrayList;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockLiquid;
@@ -16,7 +17,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,7 +30,7 @@ public class DesertAtom001 extends AbstractPhasedStructure {
 	private final DesertAtom002 part2 = new DesertAtom002();
 	private final DesertAtom003 part3 = new DesertAtom003();
 	private static final int HORIZONTAL_RADIUS = 40;
-	private static final List<ChunkPos> CHUNK_OFFSETS = collectChunkOffsetsByRadius(HORIZONTAL_RADIUS);
+	private static final LongArrayList CHUNK_OFFSETS = collectChunkOffsetsByRadius(HORIZONTAL_RADIUS);
 	private DesertAtom001() {}
 	Block Block2 = ModBlocks.yellow_barrel;
 	Block Block3 = ModBlocks.reinforced_sand;
@@ -120,14 +120,14 @@ public class DesertAtom001 extends AbstractPhasedStructure {
 	}
 
 	@Override
-	public List<ChunkPos> getAdditionalChunks(@NotNull BlockPos origin) {
-		return translateOffsets(origin, CHUNK_OFFSETS);
+	public LongArrayList getWatchedChunkOffsets(@NotNull BlockPos origin) {
+		return CHUNK_OFFSETS;
 	}
 
 	public boolean generate_r0(LegacyBuilder world, Random rand, int x, int y, int z)
 	{
 		MutableBlockPos pos = new BlockPos.MutableBlockPos();
-		
+
 		world.setBlockState(pos.setPos(x + 6, y + -5, z + 9), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + -5, z + 9), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 8, y + -5, z + 9), Library.getRandomConcrete().getDefaultState(), 3);
@@ -231,7 +231,7 @@ public class DesertAtom001 extends AbstractPhasedStructure {
 		world.setBlockState(pos.setPos(x + 9, y + -4, z + 14), Blocks.CHEST.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.NORTH),
 				(worldIn, random, blockPos, chest) ->
 						WeightedRandomChestContentFrom1710.generateChestContents(random, ItemPool.getPool(ItemPoolsLegacy.POOL_NUKE_MISC), chest, 10));
-        world.setBlockState(pos.setPos(x + 10, y + -4, z + 14), Library.getRandomConcrete().getDefaultState(), 3);
+		world.setBlockState(pos.setPos(x + 10, y + -4, z + 14), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 11, y + -4, z + 14), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 6, y + -4, z + 15), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + -4, z + 15), Library.getRandomConcrete().getDefaultState(), 3);

@@ -19,7 +19,7 @@ import static com.hbm.blocks.generic.BlockMeta.META;
 public class OilSpot {
 
     public static void generateOilSpot(World world, int x, int z, int width, int count, boolean addWillows) {
-        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        BlockPos.PooledMutableBlockPos pos = BlockPos.PooledMutableBlockPos.retain();
 
         for (int i = 0; i < count; i++) {
             int rX = x + (int) (world.rand.nextGaussian() * width);
@@ -110,5 +110,6 @@ public class OilSpot {
                 }
             }
         }
+        pos.release();
     }
 }

@@ -1,30 +1,31 @@
 package com.hbm.world.feature;
 
 import com.google.common.base.Predicate;
-import com.hbm.config.GeneralConfig;
-import com.hbm.main.MainRegistry;
 import com.hbm.world.phased.AbstractPhasedStructure;
 import com.hbm.world.phased.PhasedStructureGenerator;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.longs.LongArrayList;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.block.state.pattern.BlockMatcher;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
 // mlbv: vanilla WorldGenMinable DOES cascade
 public class WorldGenMinableNonCascade extends AbstractPhasedStructure {
 
+    private static final Int2ObjectMap<LongArrayList> CHUNK_OFFSETS_CACHE = new Int2ObjectOpenHashMap();
+
     private final IBlockState oreBlock;
     private final int numberOfBlocks;
     private final Predicate<IBlockState> predicate;
-    private final List<ChunkPos> chunkOffsets;
+    private final LongArrayList chunkOffsets;
 
     public WorldGenMinableNonCascade(@NotNull IBlockState state, int blockCount) {
         this(state, blockCount, BlockMatcher.forBlock(Blocks.STONE));
@@ -34,7 +35,30 @@ public class WorldGenMinableNonCascade extends AbstractPhasedStructure {
         this.oreBlock = state;
         this.numberOfBlocks = blockCount;
         this.predicate = predicate;
-        this.chunkOffsets = collectChunkOffsetsByRadius(computeHorizontalRadius(blockCount) + 32);
+        this.chunkOffsets = getOrCreateChunkOffsets(computeHorizontalRadius(blockCount));
+    }
+
+    private static LongArrayList getOrCreateChunkOffsets(int horizontalRadius) {
+        LongArrayList cached = CHUNK_OFFSETS_CACHE.get(horizontalRadius);
+        if (cached != null) return cached;
+        LongArrayList offsets = collectChunkOffsetsByRadius(horizontalRadius);
+        CHUNK_OFFSETS_CACHE.put(horizontalRadius, offsets);
+        return offsets;
+    }
+
+    private static int computeHorizontalRadius(int blockCount) {
+        double radius = 23.5 + (3.0 * blockCount) / 16.0;
+        return (int) Math.ceil(radius);
+    }
+
+    @Override
+    protected boolean useDynamicScheduler() {
+        return true;
+    }
+
+    @Override
+    public LongArrayList getWatchedChunkOffsets(@NotNull BlockPos origin) {
+        return chunkOffsets;
     }
 
     @Override
@@ -42,20 +66,16 @@ public class WorldGenMinableNonCascade extends AbstractPhasedStructure {
         return false;
     }
 
-    @Override
-    protected void buildStructure(@NotNull LegacyBuilder builder, @NotNull Random rand) {
-    }
-
     @NotNull
     @Override
-    public Optional<PhasedStructureGenerator.ReadyToGenerateStructure> validate(@NotNull World world,
-                                                                                @NotNull PhasedStructureGenerator.PendingValidationStructure pending) {
-        if (checkSpawningConditions(world, pending.origin)) {
-            return Optional.of(new PhasedStructureGenerator.ReadyToGenerateStructure(pending, pending.origin));
-        } else if (GeneralConfig.enableDebugWorldGen) {
-            MainRegistry.logger.info("WorldGenMinableNonCascade at {} did not pass spawn condition check.", pending.origin);
-        }
-        return Optional.empty();
+    public Optional<PhasedStructureGenerator.ReadyToGenerateStructure> validate(@NotNull World world, @NotNull PhasedStructureGenerator.PendingValidationStructure pending) {
+        return checkSpawningConditions(world, pending.origin)
+               ? Optional.of(new PhasedStructureGenerator.ReadyToGenerateStructure(pending, pending.origin))
+               : Optional.empty();
+    }
+
+    @Override
+    protected void buildStructure(@NotNull LegacyBuilder builder, @NotNull Random rand) {
     }
 
     @Override
@@ -70,7 +90,7 @@ public class WorldGenMinableNonCascade extends AbstractPhasedStructure {
         double d4 = finalOrigin.getY() + rand.nextInt(3) - 2;
         double d5 = finalOrigin.getY() + rand.nextInt(3) - 2;
 
-        BlockPos.MutableBlockPos blockpos = new BlockPos.MutableBlockPos();
+        BlockPos.PooledMutableBlockPos blockpos = BlockPos.PooledMutableBlockPos.retain();
 
         for (int i = 0; i < numberOfBlocks1; ++i) {
             float f1 = (float) i / (float) numberOfBlocks1;
@@ -112,15 +132,7 @@ public class WorldGenMinableNonCascade extends AbstractPhasedStructure {
                 }
             }
         }
+        blockpos.release();
     }
 
-    @Override
-    public List<ChunkPos> getAdditionalChunks(@NotNull BlockPos origin) {
-        return translateOffsets(origin, chunkOffsets);
-    }
-
-    private static int computeHorizontalRadius(int blockCount) {
-        double radius = 8.5 + (3.0 * blockCount) / 16.0;
-        return (int) Math.ceil(radius);
-    }
 }

@@ -4,15 +4,14 @@ import com.google.common.base.Predicate;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.world.phased.AbstractPhasedStructure;
 import com.hbm.world.phased.PhasedStructureGenerator;
+import it.unimi.dsi.fastutil.longs.LongArrayList;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -23,7 +22,7 @@ public class DepthDeposit extends AbstractPhasedStructure {
     private final Block oreBlock;
     private final Block filler;
     private final Predicate<IBlockState> matcher;
-    private final List<ChunkPos> chunkOffsets;
+    private final LongArrayList chunkOffsets;
 
     private DepthDeposit(int size, double fill, Block oreBlock, Block genTarget, Block filler) {
         this.size = size;
@@ -69,6 +68,11 @@ public class DepthDeposit extends AbstractPhasedStructure {
         int cz = z + rand.nextInt(16);
 
         new DepthDeposit(size, fill, block, genTarget, filler).generate(world, rand, new BlockPos(cx, cy, cz));
+    }
+
+    @Override
+    protected boolean useDynamicScheduler() {
+        return true;
     }
 
     @Override
@@ -131,7 +135,7 @@ public class DepthDeposit extends AbstractPhasedStructure {
     }
 
     @Override
-    public List<ChunkPos> getAdditionalChunks(@NotNull BlockPos origin) {
-        return translateOffsets(origin, chunkOffsets);
+    public LongArrayList getWatchedChunkOffsets(@NotNull BlockPos origin) {
+        return chunkOffsets;
     }
 }

@@ -2,7 +2,9 @@ package com.hbm.world.phased;
 
 import com.hbm.config.GeneralConfig;
 import com.hbm.main.MainRegistry;
+import com.hbm.util.ChunkUtil;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.longs.LongArrayList;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.state.IBlockState;
@@ -48,6 +50,19 @@ public abstract class AbstractPhasedStructure extends WorldGenerator implements 
         return true;
     }
 
+    /**
+     * Override to route generation through {@link DynamicStructureDispatcher} instead of {@link PhasedStructureGenerator}.
+     */
+    protected boolean useDynamicScheduler() {
+        return false;
+    }
+
+    @Override
+    @Nullable
+    public LongArrayList getWatchedChunkOffsets(@NotNull BlockPos origin) {
+        return null;
+    }
+
     protected int getGenerationHeightOffset() {
         return 0;
     }
@@ -60,6 +75,18 @@ public abstract class AbstractPhasedStructure extends WorldGenerator implements 
     public final boolean generate(@NotNull World world, @NotNull Random rand, @NotNull BlockPos pos, boolean force) {
         BlockPos origin = pos.add(0, getGenerationHeightOffset(), 0);
         long layoutSeed = rand.nextLong();
+
+        if (useDynamicScheduler()) {
+            if (force) {
+                if (GeneralConfig.enableDebugWorldGen) MainRegistry.logger.info("Forcing dynamic {} generation at {}", this.getClass().getSimpleName(), origin);
+                DynamicStructureDispatcher.INSTANCE.forceGenerate(world, rand, origin, this);
+            } else {
+                if (GeneralConfig.enableDebugWorldGen) MainRegistry.logger.info("Proposing dynamic {} generation at {}", this.getClass().getSimpleName(), origin);
+                DynamicStructureDispatcher.INSTANCE.schedule(world, origin, this, layoutSeed);
+            }
+            return true;
+        }
+
         Long2ObjectOpenHashMap<List<BlockInfo>> layout = buildLayout(origin, layoutSeed);
 
         if (force) {
@@ -112,30 +139,33 @@ public abstract class AbstractPhasedStructure extends WorldGenerator implements 
         return chunkedMap;
     }
 
-    protected static List<ChunkPos> collectChunkOffsetsByRadius(int horizontalRadius) {
-        int chunkRadius = Math.max(0, Math.floorDiv(Math.max(0, horizontalRadius) + 23, 16));
-        List<ChunkPos> offsets = new ArrayList<>((chunkRadius * 2 + 1) * (chunkRadius * 2 + 1));
+    protected static LongArrayList collectChunkOffsetsByRadius(int horizontalRadius) {
+        int chunkRadius = Math.max(0, Math.floorDiv(Math.max(0, horizontalRadius) + 15, 16));
+        LongArrayList offsets = new LongArrayList((chunkRadius * 2 + 1) * (chunkRadius * 2 + 1));
         for (int cx = -chunkRadius; cx <= chunkRadius; cx++) {
             for (int cz = -chunkRadius; cz <= chunkRadius; cz++) {
-                offsets.add(new ChunkPos(cx, cz));
+                offsets.add(ChunkPos.asLong(cx, cz));
             }
         }
         return offsets;
     }
 
-    protected static List<ChunkPos> translateOffsets(@NotNull BlockPos origin, @NotNull List<ChunkPos> relativeOffsets) {
+    protected static LongArrayList translateOffsets(@NotNull BlockPos origin, @NotNull LongArrayList relativeOffsets) {
         int baseChunkX = origin.getX() >> 4;
         int baseChunkZ = origin.getZ() >> 4;
-        List<ChunkPos> absolute = new ArrayList<>(relativeOffsets.size());
-        for (ChunkPos rel : relativeOffsets) {
-            absolute.add(new ChunkPos(baseChunkX + rel.x, baseChunkZ + rel.z));
+        LongArrayList absolute = PhasedStructureGenerator.INSTANCE.borrowAdditionalChunkList();
+        absolute.ensureCapacity(relativeOffsets.size());
+        for (long rel : relativeOffsets) {
+            int relChunkX = ChunkUtil.getChunkPosX(rel);
+            int relChunkZ = ChunkUtil.getChunkPosZ(rel);
+            absolute.add(ChunkPos.asLong(baseChunkX + relChunkX, baseChunkZ + relChunkZ));
         }
         return absolute;
     }
 
     @Override
     public final void generateForChunk(@NotNull World world, @NotNull Random rand, @NotNull BlockPos structureOrigin,
-                                       @NotNull ChunkPos chunkToGenerate, @Nullable List<BlockInfo> blocksForThisChunk) {
+                                       int chunkX, int chunkZ, @Nullable List<BlockInfo> blocksForThisChunk) {
         if (blocksForThisChunk == null || blocksForThisChunk.isEmpty()) return;
 
         List<BlockInfo> teInfos = new ArrayList<>();

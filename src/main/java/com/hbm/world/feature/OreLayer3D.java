@@ -112,7 +112,7 @@ public class OreLayer3D {
             }
         }
 
-        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        BlockPos.PooledMutableBlockPos pos = BlockPos.PooledMutableBlockPos.retain();
         for (int xOff = 0; xOff < 16; xOff++) {
             int worldX = startX + xOff;
             for (int zOff = 0; zOff < 16; zOff++) {
@@ -133,5 +133,6 @@ public class OreLayer3D {
                 }
             }
         }
+        pos.release();
     }
 }

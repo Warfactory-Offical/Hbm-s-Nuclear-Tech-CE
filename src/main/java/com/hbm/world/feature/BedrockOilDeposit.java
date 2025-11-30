@@ -5,15 +5,14 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.world.generator.DungeonToolbox;
 import com.hbm.world.phased.AbstractPhasedStructure;
 import com.hbm.world.phased.PhasedStructureGenerator;
+import it.unimi.dsi.fastutil.longs.LongArrayList;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.block.state.pattern.BlockMatcher;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -27,7 +26,7 @@ public class BedrockOilDeposit extends AbstractPhasedStructure {
     private static final int OIL_SPOT_HEIGHT = 50;
     private static final boolean OIL_SPOT_RICH = true;
     private static final int ADDITIONAL_RADIUS = 32;
-    private static final List<ChunkPos> CHUNK_OFFSETS = collectChunkOffsetsByRadius(ADDITIONAL_RADIUS);
+    private static final LongArrayList CHUNK_OFFSETS = collectChunkOffsetsByRadius(ADDITIONAL_RADIUS);
 
     private static final Predicate<IBlockState> BEDROCK_MATCHER = BlockMatcher.forBlock(Blocks.BEDROCK);
 
@@ -38,6 +37,11 @@ public class BedrockOilDeposit extends AbstractPhasedStructure {
         BedrockOilDeposit task = new BedrockOilDeposit();
         BlockPos origin = new BlockPos(x, 0, z);
         task.generate(world, world.rand, origin);
+    }
+
+    @Override
+    protected boolean useDynamicScheduler() {
+        return true;
     }
 
     private static boolean isBedrock(@NotNull World world, @NotNull BlockPos pos) {
@@ -70,15 +74,15 @@ public class BedrockOilDeposit extends AbstractPhasedStructure {
     }
 
     @Override
-    public List<ChunkPos> getAdditionalChunks(@NotNull BlockPos origin) {
-        return translateOffsets(origin, CHUNK_OFFSETS);
+    public LongArrayList getWatchedChunkOffsets(@NotNull BlockPos origin) {
+        return CHUNK_OFFSETS;
     }
 
     private static void executeOriginalLogic(@NotNull World world, @NotNull Random rand, @NotNull BlockPos finalOrigin) {
         int centerX = finalOrigin.getX();
         int centerZ = finalOrigin.getZ();
 
-        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        BlockPos.PooledMutableBlockPos pos = BlockPos.PooledMutableBlockPos.retain();
 
         for (int dx = -DXZ_LIMIT; dx <= DXZ_LIMIT; dx++) {
             for (int y = 0; y <= MAX_Y; y++) {
@@ -94,6 +98,7 @@ public class BedrockOilDeposit extends AbstractPhasedStructure {
                 }
             }
         }
+        pos.release();
 
         int chunkMinX = (centerX >> 4) << 4;
         int chunkMinZ = (centerZ >> 4) << 4;

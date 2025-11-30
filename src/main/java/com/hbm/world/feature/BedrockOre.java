@@ -5,17 +5,16 @@ import com.hbm.blocks.generic.BlockBedrockOreTE;
 import com.hbm.inventory.fluid.FluidStack;
 import com.hbm.world.phased.AbstractPhasedStructure;
 import com.hbm.world.phased.PhasedStructureGenerator;
+import it.unimi.dsi.fastutil.longs.LongArrayList;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -27,7 +26,7 @@ public class BedrockOre extends AbstractPhasedStructure {
     private final int tier;
     private final Block depthRock;
     private static final int EFFECT_RADIUS = 3;
-    private static final List<ChunkPos> CHUNK_OFFSETS = collectChunkOffsetsByRadius(EFFECT_RADIUS);
+    private static final LongArrayList CHUNK_OFFSETS = collectChunkOffsetsByRadius(EFFECT_RADIUS);
 
     private BedrockOre(ItemStack stack, FluidStack acid, int color, int tier, Block depthRock) {
         this.resourceStack = stack.copy();
@@ -45,6 +44,11 @@ public class BedrockOre extends AbstractPhasedStructure {
 
     public static void generate(World world, int x, int z, ItemStack stack, FluidStack acid, int color, int tier) {
         generate(world, x, z, stack, acid, color, tier, ModBlocks.stone_depth);
+    }
+
+    @Override
+    protected boolean useDynamicScheduler() {
+        return true;
     }
 
     @Override
@@ -79,7 +83,7 @@ public class BedrockOre extends AbstractPhasedStructure {
         int x = finalOrigin.getX();
         int z = finalOrigin.getZ();
 
-        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        BlockPos.PooledMutableBlockPos pos = BlockPos.PooledMutableBlockPos.retain();
         for (int ix = x - 1; ix <= x + 1; ix++) {
             for (int iz = z - 1; iz <= z + 1; iz++) {
                 pos.setPos(ix, 0, iz);
@@ -91,8 +95,7 @@ public class BedrockOre extends AbstractPhasedStructure {
                         world.setBlockState(pos, ModBlocks.ore_bedrock_block.getDefaultState(), 3);
 
                         TileEntity tile = world.getTileEntity(pos);
-                        if (tile instanceof BlockBedrockOreTE.TileEntityBedrockOre) {
-                            BlockBedrockOreTE.TileEntityBedrockOre ore = (BlockBedrockOreTE.TileEntityBedrockOre) tile;
+                        if (tile instanceof BlockBedrockOreTE.TileEntityBedrockOre ore) {
                             ore.resource = this.resourceStack;
                             ore.color = this.color;
                             ore.shape = rand.nextInt(10);
@@ -121,11 +124,11 @@ public class BedrockOre extends AbstractPhasedStructure {
                 }
             }
         }
+        pos.release();
     }
 
     @Override
-    public List<ChunkPos> getAdditionalChunks(@NotNull BlockPos origin) {
-        return translateOffsets(origin, CHUNK_OFFSETS);
+    public LongArrayList getWatchedChunkOffsets(@NotNull BlockPos origin) {
+        return CHUNK_OFFSETS;
     }
-
 }

@@ -2,12 +2,16 @@ package com.hbm.world.dungeon;
 
 import com.hbm.world.phased.AbstractPhasedStructure;
 import com.hbm.world.phased.PhasedStructureGenerator;
+import it.unimi.dsi.fastutil.longs.LongArrayList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 
 public class AncientTombStructure extends AbstractPhasedStructure {
     public static final AncientTombStructure INSTANCE = new AncientTombStructure();
@@ -60,16 +64,14 @@ public class AncientTombStructure extends AbstractPhasedStructure {
     }
 
     @Override
-    public List<ChunkPos> getAdditionalChunks(@NotNull BlockPos origin) {
-        int originChunkX = origin.getX() >> 4;
-        int originChunkZ = origin.getZ() >> 4;
+    public LongArrayList getWatchedChunkOffsets(@NotNull BlockPos origin) {
         int radiusChunks = 2;
-        List<ChunkPos> chunks = new ArrayList<>();
+        LongArrayList offsets = new LongArrayList();
         for (int dx = -radiusChunks; dx <= radiusChunks; dx++) {
             for (int dz = -radiusChunks; dz <= radiusChunks; dz++) {
-                chunks.add(new ChunkPos(originChunkX + dx, originChunkZ + dz));
+                offsets.add(ChunkPos.asLong(dx, dz));
             }
         }
-        return chunks;
+        return offsets;
     }
 }

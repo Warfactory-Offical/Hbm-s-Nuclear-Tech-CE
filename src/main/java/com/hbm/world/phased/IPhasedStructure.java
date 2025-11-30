@@ -3,19 +3,18 @@ package com.hbm.world.phased;
 import com.hbm.config.GeneralConfig;
 import com.hbm.main.MainRegistry;
 import com.hbm.world.phased.AbstractPhasedStructure.BlockInfo;
+import it.unimi.dsi.fastutil.longs.LongArrayList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import java.util.Collections;
 
 @ParametersAreNonnullByDefault
 public interface IPhasedStructure {
@@ -33,7 +32,7 @@ public interface IPhasedStructure {
      * @param chunkPos        The position of the chunk to generate blocks in.
      * @param blockInfos      The list of blocks to generate.
      */
-    void generateForChunk(World world, Random rand, BlockPos structureOrigin, ChunkPos chunkPos, List<BlockInfo> blockInfos);
+    void generateForChunk(World world, Random rand, BlockPos structureOrigin, int chunkX, int chunkZ, List<BlockInfo> blockInfos);
 
     @NotNull
     default Optional<PhasedStructureGenerator.ReadyToGenerateStructure> validate(World world, PhasedStructureGenerator.PendingValidationStructure pending) {
@@ -54,9 +53,9 @@ public interface IPhasedStructure {
             }
         }
         int newY = validationPoints.stream()
-                .mapToInt(p -> world.getHeight(p.getX(), p.getZ()))
-                .min()
-                .orElse(world.getHeight(originAtY0.getX(), originAtY0.getZ()));
+                                   .mapToInt(p -> world.getHeight(p.getX(), p.getZ()))
+                                   .min()
+                                   .orElse(world.getHeight(originAtY0.getX(), originAtY0.getZ()));
 
         if (newY > 0 && newY < world.getHeight()) {
             BlockPos realOrigin = new BlockPos(originAtY0.getX(), newY, originAtY0.getZ());
@@ -94,11 +93,11 @@ public interface IPhasedStructure {
     }
 
     /**
-     * Additional chunk positions that should be considered part of this structure even if no blocks are placed there.
-     * Used to delay post-generation until all affected chunks are ready. Defaults to none.
+     * Relative chunk offsets (from the origin chunk) that must be present before post-generation runs.
+     * Defaults to none.
      */
     @Nullable
-    default List<ChunkPos> getAdditionalChunks(@NotNull BlockPos origin) {
+    default LongArrayList getWatchedChunkOffsets(@NotNull BlockPos origin) {
         return null;
     }
 }

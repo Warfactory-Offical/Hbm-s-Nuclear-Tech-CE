@@ -2,19 +2,18 @@ package com.hbm.world;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.world.phased.AbstractPhasedStructure;
+import it.unimi.dsi.fastutil.longs.LongArrayList;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.Random;
 
 public class OilSandBubble extends AbstractPhasedStructure {
 	private final int radius;
-	private final List<ChunkPos> chunkOffsets;
+	private final LongArrayList chunkOffsets;
 
 	public OilSandBubble(int radius) {
 		this.radius = radius;
@@ -27,14 +26,18 @@ public class OilSandBubble extends AbstractPhasedStructure {
 	}
 
 	@Override
+	protected boolean useDynamicScheduler() {
+		return true;
+	}
+
+	@Override
 	protected void buildStructure(@NotNull LegacyBuilder builder, @NotNull Random rand) {
 	}
 
 	@Override
-	public List<ChunkPos> getAdditionalChunks(@NotNull BlockPos origin) {
-		return translateOffsets(origin, chunkOffsets);
+	public LongArrayList getWatchedChunkOffsets(@NotNull BlockPos origin) {
+		return chunkOffsets;
 	}
-
 	@Override
 	public void postGenerate(@NotNull World world, @NotNull Random rand, @NotNull BlockPos finalOrigin) {
 		OilSandBubble.spawnOil(world, rand, finalOrigin.getX(), finalOrigin.getY(), finalOrigin.getZ(), this.radius);
