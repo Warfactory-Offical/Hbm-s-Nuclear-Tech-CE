@@ -2,6 +2,7 @@ package com.hbm.inventory.container;
 
 import com.hbm.inventory.SlotCraftingOutput;
 import com.hbm.inventory.SlotNonRetarded;
+import com.hbm.inventory.SlotUpgrade;
 import com.hbm.items.machine.ItemBlueprints;
 import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.lib.Library;
@@ -20,7 +21,9 @@ public class ContainerMachineAssemblyFactory extends ContainerBase {
         // Battery
         this.addSlotToContainer(new SlotNonRetarded(assemFac, 0, 234, 112));
         // Upgrades
-        this.addSlots(assemFac, 1, 214, 149, 3, 1);
+        this.addSlotToContainer(new SlotUpgrade(assemFac, 1, 214, 149));
+        this.addSlotToContainer(new SlotUpgrade(assemFac, 2, 214, 167));
+        this.addSlotToContainer(new SlotUpgrade(assemFac, 3, 214, 185));
 
         for(int i = 0; i < 4; i++) {
             // Template

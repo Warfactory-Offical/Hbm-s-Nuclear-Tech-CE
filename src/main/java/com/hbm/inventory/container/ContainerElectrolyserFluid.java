@@ -3,6 +3,7 @@ package com.hbm.inventory.container;
 import com.hbm.api.energymk2.IBatteryItem;
 import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotTakeOnly;
+import com.hbm.inventory.SlotUpgrade;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.items.machine.ItemMachineUpgrade;
@@ -24,8 +25,8 @@ public class ContainerElectrolyserFluid extends Container {
         //Battery
         this.addSlotToContainer(new SlotBattery(tedf.inventory, 0, 186, 109));
         //Upgrades
-        this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 1, 186, 140));
-        this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 2, 186, 158));
+        this.addSlotToContainer(new SlotUpgrade(tedf.inventory, 1, 186, 140));
+        this.addSlotToContainer(new SlotUpgrade(tedf.inventory, 2, 186, 158));
         //Fluid ID
         this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 3, 6, 18));
         this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 4, 6, 54));

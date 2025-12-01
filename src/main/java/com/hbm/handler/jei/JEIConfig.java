@@ -309,6 +309,25 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipes(purexHandler.getRecipes(), PUREX);
 
         registry.addRecipeClickArea(GUIMachineCoker.class, 60, 22, 32, 18, COKER);
+        registry.addRecipeClickArea(GUIMachineArcFurnaceLarge.class, 17, 36, 7, 70, ARC_FURNACE_SOLID);
+        registry.addRecipeClickArea(GUIMachineCatalyticReformer.class, 69, 34, 20, 20, REFORMING);
+        registry.addRecipeClickArea(GUIMachineHydrotreater.class, 87, 34, 20, 20, HYDROTREATING);
+        registry.addRecipeClickArea(GUIMachinePUREX.class, 62, 25, 47, 9, PUREX);
+        registry.addRecipeClickArea(GUIMachinePUREX.class, 62, 90, 47, 9, PUREX);
+        registry.addRecipeClickArea(GUILiquefactor.class, 42, 18, 41, 16, LIQUEFACTION);
+        registry.addRecipeClickArea(GUILiquefactor.class, 42, 34, 2, 18, LIQUEFACTION);
+        registry.addRecipeClickArea(GUIFurnaceBrick.class, 86, 35, 22, 15, VanillaRecipeCategoryUid.SMELTING);
+        registry.addRecipeClickArea(GUIMachineElectricFurnace.class, 80, 35, 22, 15, VanillaRecipeCategoryUid.SMELTING);
+        registry.addRecipeClickArea(GUIFurnaceIron.class, 52, 36, 70, 5, VanillaRecipeCategoryUid.SMELTING);
+        registry.addRecipeClickArea(GUIFurnaceSteel.class, 54, 18, 68, 5, VanillaRecipeCategoryUid.SMELTING);
+        registry.addRecipeClickArea(GUIFurnaceSteel.class, 54, 36, 68, 5, VanillaRecipeCategoryUid.SMELTING);
+        registry.addRecipeClickArea(GUIFurnaceSteel.class, 54, 54, 68, 5, VanillaRecipeCategoryUid.SMELTING);
+        registry.addRecipeClickArea(GUIMicrowave.class, 104, 35, 22, 15, VanillaRecipeCategoryUid.SMELTING);
+        registry.addRecipeClickArea(GUIRtgFurnace.class, 102, 36, 22, 15, RTG);
+        registry.addRecipeClickArea(GUISolidifier.class, 42, 18, 38, 16, SOLIDIFICATION);
+        registry.addRecipeClickArea(GUISolidifier.class, 75, 34, 8, 9, SOLIDIFICATION);
+        registry.addRecipeClickArea(GUICompressor.class, 42, 27, 54, 16, COMPRESSING);
+        registry.addRecipeClickArea(GUIOreSlopper.class, 62, 18, 34, 34, ORE_SLOPPER);
 		registry.addRecipeClickArea(GUIMixer.class, 62, 36, 52, 44, MIXER);
 		registry.addRecipeClickArea(GUIMachineCyclotron.class, 50, 24, 40, 40, CYCLOTRON);
 		registry.addRecipeClickArea(GUIMachinePress.class, 80, 35, 15, 15, PRESS);

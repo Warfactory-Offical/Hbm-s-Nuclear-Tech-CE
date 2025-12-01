@@ -1,6 +1,7 @@
 package com.hbm.inventory.container;
 
 import com.hbm.inventory.SlotBattery;
+import com.hbm.inventory.SlotUpgrade;
 import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.machine.TileEntityMachineCompressorBase;
@@ -23,8 +24,8 @@ public class ContainerCompressor extends Container {
         //Battery
         this.addSlotToContainer(new SlotBattery(tile.inventory, 1, 152, 72));
         //Upgrades
-        this.addSlotToContainer(new SlotItemHandler(tile.inventory, 2, 52, 72));
-        this.addSlotToContainer(new SlotItemHandler(tile.inventory, 3, 70, 72));
+        this.addSlotToContainer(new SlotUpgrade(tile.inventory, 2, 52, 72));
+        this.addSlotToContainer(new SlotUpgrade(tile.inventory, 3, 70, 72));
 
         for(int i = 0; i < 3; i++) {
             for(int j = 0; j < 9; j++) {

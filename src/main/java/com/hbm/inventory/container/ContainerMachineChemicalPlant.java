@@ -4,6 +4,7 @@ import com.hbm.capability.NTMFluidCapabilityHandler;
 import com.hbm.inventory.FluidContainerRegistry;
 import com.hbm.inventory.SlotCraftingOutput;
 import com.hbm.inventory.SlotNonRetarded;
+import com.hbm.inventory.SlotUpgrade;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.machine.ItemBlueprints;
@@ -26,7 +27,8 @@ public class ContainerMachineChemicalPlant extends ContainerBase {
         // Schematic
         this.addSlotToContainer(new SlotNonRetarded(chemicalPlant, 1, 35, 126));
         // Upgrades
-        this.addSlots(chemicalPlant, 2, 152, 108, 2, 1);
+        this.addSlotToContainer(new SlotUpgrade(chemicalPlant, 2, 152, 108));
+        this.addSlotToContainer(new SlotUpgrade(chemicalPlant, 3, 152, 126));
         // Solid Input
         this.addSlots(chemicalPlant, 4, 8, 99, 1, 3);
         // Solid Output

@@ -2,6 +2,7 @@ package com.hbm.inventory.container;
 
 import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotTakeOnly;
+import com.hbm.inventory.SlotUpgrade;
 import com.hbm.tileentity.machine.oil.TileEntityOilDrillBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -28,9 +29,9 @@ public class ContainerMachineOilWell extends Container {
 		// Gas Output
 		this.addSlotToContainer(new SlotTakeOnly(tedf.inventory, 4, 125, 53));
 		//Upgrades
-		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 5, 152, 17));
-		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 6, 152, 35));
-		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 7, 152, 53));
+		this.addSlotToContainer(new SlotUpgrade(tedf.inventory, 5, 152, 17));
+		this.addSlotToContainer(new SlotUpgrade(tedf.inventory, 6, 152, 35));
+		this.addSlotToContainer(new SlotUpgrade(tedf.inventory, 7, 152, 53));
 		
 		for(int i = 0; i < 3; i++)
 		{

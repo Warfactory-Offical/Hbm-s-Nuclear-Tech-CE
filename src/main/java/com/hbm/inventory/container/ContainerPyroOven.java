@@ -3,6 +3,7 @@ package com.hbm.inventory.container;
 import com.hbm.api.energymk2.IBatteryItem;
 import com.hbm.inventory.SlotBattery;
 import com.hbm.inventory.SlotTakeOnly;
+import com.hbm.inventory.SlotUpgrade;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.items.machine.ItemMachineUpgrade;
@@ -30,8 +31,8 @@ public class ContainerPyroOven extends Container {
         //Fluid ID
         this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 3, 8, 72));
         //Upgrades
-        this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 4, 71, 72));
-        this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 5, 89, 72));
+        this.addSlotToContainer(new SlotUpgrade(tedf.inventory, 4, 71, 72));
+        this.addSlotToContainer(new SlotUpgrade(tedf.inventory, 5, 89, 72));
 
         for(int i = 0; i < 3; i++) {
             for(int j = 0; j < 9; j++) {
