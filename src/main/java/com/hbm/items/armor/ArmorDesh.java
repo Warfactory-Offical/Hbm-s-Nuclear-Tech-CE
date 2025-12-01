@@ -25,8 +25,7 @@ public class ArmorDesh extends ArmorFSBFueled {
 
     @Override
     public Multimap<String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot slot) {
-        Multimap<String, AttributeModifier> multimap = HashMultimap.create();
-
+        Multimap<String, AttributeModifier> multimap = HashMultimap.create(super.getItemAttributeModifiers(slot));
         if (slot == this.armorType) {
             multimap.put(
                     SharedMonsterAttributes.MOVEMENT_SPEED.getName(),
@@ -38,7 +37,6 @@ public class ArmorDesh extends ArmorFSBFueled {
                     )
             );
         }
-
         return multimap;
     }
 
