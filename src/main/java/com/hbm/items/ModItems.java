@@ -2266,6 +2266,12 @@ public class ModItems {
             .setMeltingPoint(100000)
             .setFuelColor(0.733F, 0F, 0F)
             .setCherenkovColor(1F, 0.25F, 0F);
+    public static final ItemRBMKRod rbmk_fuel_test = new ItemRBMKRod("THE VOICES", "rbmk_fuel_test")
+            .setYield(1000000D)
+            .setStats(100)
+            .setFunction(EnumBurnFunc.EXPERIMENTAL)
+            .setHeat(1.0D)
+            .setMeltingPoint(100000);
     public static final Item icf_pellet_empty = new ItemBase("icf_pellet_empty").setCreativeTab(MainRegistry.controlTab);
     public static final Item icf_pellet = new ItemICFPellet("icf_pellet").setCreativeTab(MainRegistry.controlTab);
     public static final Item icf_pellet_depleted = new ItemBase("icf_pellet_depleted").setCreativeTab(MainRegistry.controlTab).setMaxStackSize(1);

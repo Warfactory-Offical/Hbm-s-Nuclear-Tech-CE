@@ -119,7 +119,7 @@ public class TileEntityICF extends TileEntityMachineBase implements ITickable, I
                         markDirty = true;
                     }
 
-                    tanks[2].setFill(tanks[2].getFill() + (int) Math.ceil(this.heat * 2.5D / maxHeat));
+                    tanks[2].setFill(tanks[2].getFill() + (int) Math.ceil(this.heat * 10.0D / maxHeat));
                     if (tanks[2].getFill() > tanks[2].getMaxFill()) tanks[2].setFill(tanks[2].getMaxFill());
 
                     NBTTagCompound dPart = new NBTTagCompound();
