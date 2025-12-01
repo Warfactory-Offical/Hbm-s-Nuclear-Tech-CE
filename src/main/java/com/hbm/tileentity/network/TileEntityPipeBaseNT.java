@@ -7,6 +7,7 @@ import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.IFluidCopiable;
+import com.hbm.tileentity.TileEntityLoadedBase;
 import com.hbm.uninos.UniNodespace;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,7 +18,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.world.WorldServer;
 
 @AutoRegister
-public class TileEntityPipeBaseNT extends TileEntity implements IFluidPipeMK2, IFluidCopiable, ITickable {
+public class TileEntityPipeBaseNT extends TileEntityLoadedBase implements IFluidPipeMK2, IFluidCopiable, ITickable {
 
     protected FluidNode node;
     protected FluidType type = Fluids.NONE;

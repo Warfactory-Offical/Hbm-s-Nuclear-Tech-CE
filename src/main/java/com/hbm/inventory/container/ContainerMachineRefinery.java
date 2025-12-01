@@ -9,13 +9,13 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
+import org.jetbrains.annotations.NotNull;
 
 public class ContainerMachineRefinery extends Container {
 
-private TileEntityMachineRefinery testNuke;
+    private TileEntityMachineRefinery testNuke;
 	
 	public ContainerMachineRefinery(InventoryPlayer invPlayer, TileEntityMachineRefinery tedf) {
-		
 		testNuke = tedf;
 
 		//Battery
@@ -57,19 +57,16 @@ private TileEntityMachineRefinery testNuke;
 	}
 	
 	@Override
-    public ItemStack transferStackInSlot(EntityPlayer p_82846_1_, int par2)
-    {
+    public @NotNull ItemStack transferStackInSlot(@NotNull EntityPlayer p_82846_1_, int par2) {
 		ItemStack var3 = ItemStack.EMPTY;
-		Slot var4 = (Slot) this.inventorySlots.get(par2);
+		Slot var4 = this.inventorySlots.get(par2);
 		
-		if (var4 != null && var4.getHasStack())
-		{
+		if (var4 != null && var4.getHasStack()) {
 			ItemStack var5 = var4.getStack();
 			var3 = var5.copy();
 			
             if (par2 <= 11) {
-				if (!this.mergeItemStack(var5, 12, this.inventorySlots.size(), true))
-				{
+				if (!this.mergeItemStack(var5, 12, this.inventorySlots.size(), true)) {
 					return ItemStack.EMPTY;
 				}
 			}
@@ -82,12 +79,10 @@ private TileEntityMachineRefinery testNuke;
 					return ItemStack.EMPTY;
 			}
 			
-			if (var5.isEmpty())
-			{
+			if (var5.isEmpty()) {
 				var4.putStack(ItemStack.EMPTY);
 			}
-			else
-			{
+			else {
 				var4.onSlotChanged();
 			}
 		}
@@ -96,7 +91,7 @@ private TileEntityMachineRefinery testNuke;
     }
 
 	@Override
-	public boolean canInteractWith(EntityPlayer player) {
+	public boolean canInteractWith(@NotNull EntityPlayer player) {
 		return testNuke.isUseableByPlayer(player);
 	}
 }

@@ -63,6 +63,7 @@ public class HazardTypeContaminating implements IHazardType {
     @Override
     @SideOnly(Side.CLIENT)
     public void addHazardInformation(EntityPlayer player, List<String> list, double level, ItemStack stack, List<IHazardModifier> modifiers) {
+        if(!RadiationConfig.enableContaminationOnGround) return;
         int radius = computeRadius(level);
         if (radius > 1) {
             list.add(TextFormatting.DARK_GREEN + "[" + I18nUtil.resolveKey("trait.contaminating") + "]");

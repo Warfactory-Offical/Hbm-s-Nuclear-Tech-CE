@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
 import org.lwjgl.opengl.GL11;
-// FIXME inventory render
 @AutoRegister
 public class RenderCharger extends TileEntitySpecialRenderer<TileEntityCharger> implements IItemRendererProvider {
 	@Override
@@ -102,16 +101,16 @@ public class RenderCharger extends TileEntitySpecialRenderer<TileEntityCharger> 
 		return new ItemRenderBase() {
 			public void renderInventory() {
 				GlStateManager.translate(0, -3, 0);
-				GlStateManager.scale(12, 12, 12);
+                GlStateManager.scale(6, 6, 6);
 			}
 			public void renderCommon() {
-				GlStateManager.scale(2, 2, 2);
-				GlStateManager.rotate(90, 0F, 1F, 0F);
-				GlStateManager.shadeModel(GL11.GL_SMOOTH);
-				bindTexture(ResourceManager.charger_tex);
-				ResourceManager.charger.renderAll();
-				GlStateManager.shadeModel(GL11.GL_FLAT);
-			}
+                GlStateManager.scale(2, 2, 2);
+                GlStateManager.translate(0.5, 0, 0);
+                GlStateManager.shadeModel(GL11.GL_SMOOTH);
+                bindTexture(ResourceManager.charger_tex);
+                ResourceManager.charger.renderAll();
+                GlStateManager.shadeModel(GL11.GL_FLAT);
+            }
 		};
 	}
 }

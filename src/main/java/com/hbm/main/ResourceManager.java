@@ -311,12 +311,14 @@ public class ResourceManager {
     public static final IModelCustom pylon_large = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/network/pylon_large.obj")).asVBO();
     public static final IModelCustom pylon_medium = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/network/pylon_medium.obj")).asVBO();
     public static final IModelCustom substation = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/network/substation.obj")).asVBO();
+    public static final IModelCustom pipe_anchor = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/network/pipe_anchor.obj")).asVBO();
     public static final IModelCustom fluid_pump = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/network/fluid_diode.obj")).asVBO();
     public static final IModelCustom conservecrate = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/blocks/conservecrate.obj")).asVBO();
     //Pipe
     public static final IModelCustom pipe_neo = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/blocks/pipe_neo.obj")).asVBO();
     //Conveyor blocks/cranes //FIXME: Doesnt work with VBO
     public static final IModelCustom crane_splitter = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/blocks/crane_splitter.obj"));
+    public static final IModelCustom crane_buffer = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/blocks/crane_buffer.obj"));
     //B.O.P
     public static final IModelCustom ore_slopper = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/machines/ore_slopper.obj")).asVBO();
     //Laser Miner
@@ -809,7 +811,10 @@ public class ResourceManager {
     public static final ResourceLocation substation_tex = new ResourceLocation(Tags.MODID, "textures/models/network/substation.png");
     public static final ResourceLocation wire_tex = new ResourceLocation(Tags.MODID, "textures/models/network/wire.png");
     public static final ResourceLocation wire_greyscale_tex = new ResourceLocation(Tags.MODID, "textures/models/network/wire_greyscale.png");
+    //Pipes
+    public static final ResourceLocation pipe_anchor_tex = new ResourceLocation(Tags.MODID, "textures/models/network/pipe_anchor.png");
     public static final ResourceLocation fluid_pump_tex = new ResourceLocation(Tags.MODID, "textures/models/network/fluid_diode.png");
+
     public static final ResourceLocation pylon_medium_tex = new ResourceLocation(Tags.MODID, "textures/models/network/pylon_medium.png");
     public static final ResourceLocation pylon_medium_steel_tex = new ResourceLocation(Tags.MODID, "textures/models/network/pylon_medium_steel.png");
     public static final ResourceLocation connector_tex = new ResourceLocation(Tags.MODID, "textures/models/network/connector.png");
