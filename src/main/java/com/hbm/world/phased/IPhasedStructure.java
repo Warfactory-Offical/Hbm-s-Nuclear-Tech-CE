@@ -1,27 +1,22 @@
 package com.hbm.world.phased;
 
 import com.hbm.config.GeneralConfig;
+import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.world.phased.AbstractPhasedStructure.BlockInfo;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.IChunkProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
 @ParametersAreNonnullByDefault
 public interface IPhasedStructure {
-
-    default String getId() {
-        return this.getClass().getName();
-    }
 
     /**
      * Generates the part of the structure that lies within a specific chunk.
@@ -30,65 +25,63 @@ public interface IPhasedStructure {
      * @param rand            A random object
      * @param structureOrigin The absolute origin (corner) of the entire structure in the world.
      * @param chunkPos        The position of the chunk to generate blocks in.
-     * @param blockInfos      The list of blocks to generate.
+     * @param blockInfos      The blocks to generate keyed by serialized relative pos.
      */
-    void generateForChunk(World world, Random rand, BlockPos structureOrigin, int chunkX, int chunkZ, List<BlockInfo> blockInfos);
+    void generateForChunk(World world, Random rand, long structureOrigin, int chunkX, int chunkZ, Long2ObjectOpenHashMap<BlockInfo> blockInfos);
 
     @NotNull
     default Optional<PhasedStructureGenerator.ReadyToGenerateStructure> validate(World world, PhasedStructureGenerator.PendingValidationStructure pending) {
-        BlockPos originAtY0 = pending.origin;
-        List<BlockPos> validationPoints = getValidationPoints(originAtY0);
-        if (GeneralConfig.enableDebugWorldGen) {
-            IChunkProvider chunkProvider = world.getChunkProvider();
-            for (BlockPos validationPoint : validationPoints) {
-                int chunkX = validationPoint.getX() >> 4;
-                int chunkZ = validationPoint.getZ() >> 4;
-                if (!chunkProvider.isChunkGeneratedAt(chunkX, chunkZ)) {
-                    throw new IllegalStateException(String.format(
-                            "Structure %s attempted to validate in an ungenerated chunk at [%d, %d] (validation point: %s). " +
-                                    "This is a bug!",
-                            this.getClass().getName(), chunkX, chunkZ, validationPoint
-                    ));
-                }
+        LongArrayList heightPoints = getHeightPoints(pending.origin);
+        if (heightPoints == null || heightPoints.isEmpty()) {
+            return checkSpawningConditions(world, pending.origin) // empty -> underground
+                    ? Optional.of(new PhasedStructureGenerator.ReadyToGenerateStructure(pending, pending.origin))
+                    : Optional.empty();
+        }
+        int newY = Integer.MAX_VALUE;
+        for (int i = 0, heightPointsSize = heightPoints.size(); i < heightPointsSize; i++) {
+            long p = heightPoints.getLong(i);
+            int height = world.getHeight(Library.getBlockPosX(p), Library.getBlockPosZ(p));
+            if (height < newY) {
+                newY = height;
             }
         }
-        int newY = validationPoints.stream()
-                                   .mapToInt(p -> world.getHeight(p.getX(), p.getZ()))
-                                   .min()
-                                   .orElse(world.getHeight(originAtY0.getX(), originAtY0.getZ()));
 
         if (newY > 0 && newY < world.getHeight()) {
-            BlockPos realOrigin = new BlockPos(originAtY0.getX(), newY, originAtY0.getZ());
-            if (checkSpawningConditions(world, realOrigin)) {
-                return Optional.of(new PhasedStructureGenerator.ReadyToGenerateStructure(pending, realOrigin));
+            int x = Library.getBlockPosX(pending.origin);
+            int z = Library.getBlockPosZ(pending.origin);
+            long serialized = Library.blockPosToLong(x, newY, z);
+            if (checkSpawningConditions(world, serialized)) {
+                return Optional.of(new PhasedStructureGenerator.ReadyToGenerateStructure(pending, serialized));
             } else if (GeneralConfig.enableDebugWorldGen) {
-                MainRegistry.logger.info("Structure {} at {} did not pass spawn condition check.", this.getClass().getSimpleName(), realOrigin);
+                MainRegistry.logger.info("Structure {} at [{}, {}, {}] did not pass spawn condition check.", this.getClass().getSimpleName(), x, newY, z);
             }
         }
         return Optional.empty();
     }
 
     /**
-     * Dynamic part. All chunks required must be either explicitly declared by {@link #getValidationPoints},
+     * Dynamic part. All chunks required must be either explicitly declared by {@link #getHeightPoints},
      * or is covered by {@link #generateForChunk}.<br>
      * Violation is guaranteed to cause cascading worldgen.
      */
-    default void postGenerate(@NotNull World world, @NotNull Random rand, @NotNull BlockPos finalOrigin){
+    default void postGenerate(@NotNull World world, @NotNull Random rand, long finalOrigin){
     }
 
     /**
      * Points used to determine the y of the structure. Structures will not spawn until all chunks required to validate has been generated.
+     *
+     * @param origin point of the origin, only x and z should be used.
      */
-    @NotNull
-    default List<@NotNull BlockPos> getValidationPoints(@NotNull BlockPos origin) {
-        return Collections.emptyList();
+    @Nullable
+    default LongArrayList getHeightPoints(long origin) {
+        return null;
     }
 
     /**
      * Override to use custom spawning condition.
      * @return true if the structure can spawn at the given position.
      */
-    default boolean checkSpawningConditions(@NotNull World world, @NotNull BlockPos origin) {
+    default boolean checkSpawningConditions(@NotNull World world, long origin) {
         return true;
     }
 
@@ -97,7 +90,10 @@ public interface IPhasedStructure {
      * Defaults to none.
      */
     @Nullable
-    default LongArrayList getWatchedChunkOffsets(@NotNull BlockPos origin) {
+    default LongArrayList getWatchedChunkOffsets(long origin) {
         return null;
+    }
+
+    default void writeToNBT(NBTTagCompound data) {
     }
 }

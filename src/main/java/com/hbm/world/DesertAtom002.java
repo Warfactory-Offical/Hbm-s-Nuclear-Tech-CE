@@ -11,7 +11,6 @@ import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.*;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 
 import java.util.Random;
@@ -46,10 +45,11 @@ public class DesertAtom002
 	Block Block27 = ModBlocks.pole_top;
 	Block Block28 = ModBlocks.machine_battery;
 	Block Block29 = ModBlocks.machine_electric_furnace_off;
+	private final MutableBlockPos mutablePos = new MutableBlockPos();
 	
 	public boolean generate_r00(AbstractPhasedStructure.LegacyBuilder world, Random rand, int x, int y, int z)
     {
-		MutableBlockPos pos = new BlockPos.MutableBlockPos();
+		MutableBlockPos pos = this.mutablePos;
 		
 		world.setBlockState(pos.setPos(x + 7, y + -1, z + 0), Block3.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 8, y + -1, z + 0), Block3.getDefaultState(), 3);

@@ -27,14 +27,12 @@ import com.hbm.world.dungeon.AncientTombStructure;
 import com.hbm.world.dungeon.ArcticVault;
 import com.hbm.world.dungeon.LibraryDungeon;
 import com.hbm.world.feature.*;
-import com.hbm.world.generator.CellularDungeonFactory;
 import com.hbm.world.generator.DungeonToolbox;
 import com.hbm.world.generator.JungleDungeonStructure;
 import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.BlockOldLog;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.block.state.pattern.BlockMatcher;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -43,7 +41,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.IChunkGenerator;
-import net.minecraft.world.gen.feature.WorldGenMinable;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.fml.common.IWorldGenerator;
 
@@ -207,7 +204,8 @@ public class HbmWorldGen implements IWorldGenerator {
                 int randPosX = chunkMinX + rand.nextInt(2) + 8;
                 int randPosZ = chunkMinZ + rand.nextInt(2) + 8;
 
-                BedrockOre.generate(world, randPosX, randPosZ, new ItemStack(ModItems.bedrock_ore_base), null, 0xD78A16, 1);
+//                BedrockOre.generate(world, randPosX, randPosZ, new ItemStack(ModItems.bedrock_ore_base), null, 0xD78A16, 1);
+                BedrockOre.OVERWORLD.generate(world, world.rand, new BlockPos(randPosX, 0, randPosZ));
             }
 
         }
@@ -248,7 +246,7 @@ public class HbmWorldGen implements IWorldGenerator {
                         int range = colRange / r;
 
                         if (randPosX <= colX + range && randPosX >= colX - range && randPosZ <= colZ + range && randPosZ >= colZ - range) {
-                            new WorldGenMinable(ModBlocks.ore_coltan.getDefaultState(), 4).generate(world, rand, new BlockPos(randPosX, randPosY, randPosZ));
+                            new WorldGenMinableNonCascade(ModBlocks.ore_coltan.getDefaultState(), 4).generate(world, rand, new BlockPos(randPosX, randPosY, randPosZ));
                         }
                     }
                 }
@@ -302,10 +300,6 @@ public class HbmWorldGen implements IWorldGenerator {
                 }
             }
         }
-    }
-
-    private boolean isBedrock(World world, BlockPos bPos) {
-        return world.getBlockState(bPos).getBlock().isReplaceableOreGen(world.getBlockState(bPos), world, bPos, BlockMatcher.forBlock(Blocks.BEDROCK));
     }
 
     private void generateBedrockOil(World world, Random rand, int chunkMinX, int chunkMinZ, int dimID) {
@@ -616,12 +610,10 @@ public class HbmWorldGen implements IWorldGenerator {
                     int x = chunkMinX + rand.nextInt(16);
                     int z = chunkMinZ + rand.nextInt(16);
 
-                    new JungleDungeonStructure(CellularDungeonFactory.jungle, 20)
-                            .generate(world, world.rand, new BlockPos(x, 20, z), true);
-                    new JungleDungeonStructure(CellularDungeonFactory.jungle, 24)
-                            .generate(world, world.rand, new BlockPos(x, 24, z), true);
-                    new JungleDungeonStructure(CellularDungeonFactory.jungle, 28)
-                            .generate(world, world.rand, new BlockPos(x, 28, z), true);
+                    //mlbv: what is this supposed to mean? three dungeons stacked?
+                    JungleDungeonStructure.INSTANCE.generate(world, world.rand, new BlockPos(x, 20, z));
+                    JungleDungeonStructure.INSTANCE.generate(world, world.rand, new BlockPos(x, 24, z));
+                    JungleDungeonStructure.INSTANCE.generate(world, world.rand, new BlockPos(x, 28, z));
 
                     if (GeneralConfig.enableDebugMode)
                         MainRegistry.logger.info("[Debug] Successfully spawned jungle dungeon at x={} y=10 z={}", x, z);
@@ -683,7 +675,7 @@ public class HbmWorldGen implements IWorldGenerator {
             int randPosY = rand.nextInt(25);
             int randPosZ = chunkMinZ + rand.nextInt(16);
 
-            new OilBubble(10 + rand.nextInt(7), randPosY).generate(world, rand, new BlockPos(randPosX, randPosY, randPosZ));
+            new OilBubble(10 + rand.nextInt(7)).generate(world, rand, new BlockPos(randPosX, randPosY, randPosZ));
         }
 
         if (GeneralConfig.enableNITAN) {
@@ -731,7 +723,7 @@ public class HbmWorldGen implements IWorldGenerator {
             BlockPos keyPos = new BlockPos(x, y, z);
             IBlockState state = world.getBlockState(keyPos);
 
-            if (state.getBlock().isReplaceableOreGen(state, world, keyPos, BlockMatcher.forBlock(Blocks.STONE))) {
+            if (state.getBlock().isReplaceableOreGen(state, world, keyPos, WorldUtil.STONE_PREDICATE)) {
                 world.setBlockState(keyPos, ModBlocks.stone_keyhole.getDefaultState(), 2 | 16);
             }
         }

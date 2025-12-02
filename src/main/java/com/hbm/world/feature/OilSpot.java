@@ -7,6 +7,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
 
@@ -18,8 +19,10 @@ import static com.hbm.blocks.generic.BlockMeta.META;
 
 public class OilSpot {
 
+    private static final MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
+
     public static void generateOilSpot(World world, int x, int z, int width, int count, boolean addWillows) {
-        BlockPos.PooledMutableBlockPos pos = BlockPos.PooledMutableBlockPos.retain();
+        MutableBlockPos pos = mutablePos;
 
         for (int i = 0; i < count; i++) {
             int rX = x + (int) (world.rand.nextGaussian() * width);
@@ -44,14 +47,15 @@ public class OilSpot {
                     if (ground == ModBlocks.plant_tall && (meta == MUSTARD_WILLOW_2_LOWER.ordinal() || meta == MUSTARD_WILLOW_3_LOWER.ordinal() || meta == MUSTARD_WILLOW_4_LOWER.ordinal())) {
                         continue;
                     }
-                } else if (below.isNormalCube(belowState, world, new BlockPos(rX, y - 1, rZ))) {
+                } else if (below.isNormalCube(belowState, world, pos.setPos(rX, y - 1, rZ))) {
                     pos.setPos(rX, y, rZ);
 
                     if (ground instanceof BlockTallGrass) {
                         if (world.rand.nextInt(10) == 0) {
-                            BlockPos topPos = new BlockPos(rX, y + 1, rZ);
-                            IBlockState topState = world.getBlockState(topPos);
+                            pos.setPos(rX, y + 1, rZ);
+                            IBlockState topState = world.getBlockState(pos);
                             Block topBlock = topState.getBlock();
+                            pos.setPos(rX, y, rZ);
 
                             if (topBlock instanceof BlockTallGrass && topState.getValue(BlockTallGrass.TYPE) == BlockTallGrass.EnumType.FERN) {
                                 world.setBlockState(pos, ModBlocks.plant_dead.getStateFromMeta(EnumDeadPlantType.FERN.ordinal()), 2 | 16);
@@ -110,6 +114,5 @@ public class OilSpot {
                 }
             }
         }
-        pos.release();
     }
 }

@@ -10,6 +10,7 @@ import net.minecraft.block.BlockFlower;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenFlowers;
 
@@ -18,11 +19,14 @@ import java.util.Random;
 
 public class DungeonToolbox {
 
+    private static final MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
+
     public static void generateFlowers(World world, Random rand, int chunkX, int chunkZ, BlockFlowerPlant flower, PlantEnums.EnumFlowerPlantType type){
 		int x = chunkX + rand.nextInt(16);
 		int z = chunkZ + rand.nextInt(16);
-		int y = world.getHeight(new BlockPos(x, 0, z)).getY();
-		BlockPos pos = new BlockPos(x, y, z);
+        MutableBlockPos pos = mutablePos;
+        int y = world.getHeight(pos.setPos(x, 0, z)).getY();
+        pos.setPos(x, y, z);
 
 		//new NTMFlowers(flower, type).generate(world, rand, pos);
 	}
@@ -32,6 +36,7 @@ public class DungeonToolbox {
 
         if (blocks.isEmpty())
             return;
+        MutableBlockPos poolPos = mutablePos;
 
         for (int i = x; i < x + sx; i++) {
 
@@ -42,7 +47,7 @@ public class DungeonToolbox {
                     IBlockState b = getRandom(blocks, world.rand);
                     if (b == null)
                         b = Blocks.AIR.getDefaultState();
-                    world.setBlockState(new BlockPos(i, j, k), b, 2);
+                    world.setBlockState(poolPos.setPos(i, j, k), b, 2);
                 }
             }
         }
@@ -52,6 +57,7 @@ public class DungeonToolbox {
 
         if (blocks.isEmpty())
             return;
+        MutableBlockPos pos = mutablePos;
 
         for (int i = x; i < x + sx; i++) {
 
@@ -62,7 +68,7 @@ public class DungeonToolbox {
                     IBlockState b = getRandom(blocks, world.rand);
                     if (b == null)
                         b = Blocks.AIR.getDefaultState();
-                    world.setBlockState(new BlockPos(i, j, k), b, 2 | 16);
+                    world.setBlockState(pos.setPos(i, j, k), b, 2 | 16);
                 }
             }
         }
@@ -77,7 +83,7 @@ public class DungeonToolbox {
 
                 for (int k = z; k < z + sz; k++) {
 
-                    world.setBlockState(new BlockPos(i, j, k), block, 2);
+                    world.setBlockState(mutablePos.setPos(i, j, k), block, 2);
                 }
             }
         }
@@ -91,7 +97,7 @@ public class DungeonToolbox {
 
                 for (int k = z; k < z + sz; k++) {
 
-                    world.setBlockState(new BlockPos(i, j, k), block, 2 | 16);
+                    world.setBlockState(mutablePos.setPos(i, j, k), block, 2 | 16);
                 }
             }
         }
@@ -130,7 +136,7 @@ public class DungeonToolbox {
                 int y = minHeight + (variance > 0 ? rand.nextInt(variance) : 0);
                 int z = chunkZ + rand.nextInt(16);
 
-                new WorldGenMinableNonCascade(ore, amount, state -> state.getBlock() == target).generate(world, rand, new BlockPos(x, y, z));
+                new WorldGenMinableNonCascade(ore, amount, target).generate(world, rand, mutablePos.setPos(x, y, z));
             }
         }
     }

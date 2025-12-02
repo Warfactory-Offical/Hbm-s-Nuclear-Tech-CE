@@ -1,15 +1,13 @@
 package com.hbm.world.dungeon;
 
+import com.hbm.lib.Library;
 import com.hbm.world.phased.AbstractPhasedStructure;
 import com.hbm.world.phased.PhasedStructureGenerator;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -23,24 +21,17 @@ public class AncientTombStructure extends AbstractPhasedStructure {
     }
 
     @Override
-    public List<@NotNull BlockPos> getValidationPoints(@NotNull BlockPos origin) {
-        final int r = 32;
+    public @NotNull LongArrayList getHeightPoints(long origin) {
         final int inner = 16;
-        return Arrays.asList(origin,
-                origin.add( r, 0,  0),
-                origin.add(-r, 0,  0),
-                origin.add( 0, 0,  r),
-                origin.add( 0, 0, -r),
-                origin.add( r, 0,  r),
-                origin.add( r, 0, -r),
-                origin.add(-r, 0,  r),
-                origin.add(-r, 0, -r),
-                origin.add( inner, 0,  inner),
-                origin.add( inner, 0, -inner),
-                origin.add(-inner, 0,  inner),
-                origin.add(-inner, 0, -inner)
-        );
+        LongArrayList points = new LongArrayList(4);
+        points.add(origin);
+        points.add(Library.shiftBlockPos(origin, inner, 0, inner));
+        points.add(Library.shiftBlockPos(origin, inner, 0, -inner));
+        points.add(Library.shiftBlockPos(origin, -inner, 0, inner));
+        points.add(Library.shiftBlockPos(origin, -inner, 0, -inner));
+        return points;
     }
+
     @Override
     protected void buildStructure(@NotNull LegacyBuilder builder, @NotNull Random rand) {
         new AncientTomb().buildChamber(builder, rand, 0, 0, 0);
@@ -49,22 +40,24 @@ public class AncientTombStructure extends AbstractPhasedStructure {
     @Override
     @NotNull
     public Optional<PhasedStructureGenerator.ReadyToGenerateStructure> validate(@NotNull World world, @NotNull PhasedStructureGenerator.PendingValidationStructure pending) {
-        BlockPos origin = pending.origin;
-        int surfaceY = world.getHeight(origin.getX(), origin.getZ());
+        long origin = pending.origin;
+        int originX = Library.getBlockPosX(origin);
+        int originZ = Library.getBlockPosZ(origin);
+        int surfaceY = world.getHeight(originX, originZ);
         if (surfaceY > 35) {
-            BlockPos finalOrigin = new BlockPos(origin.getX(), 20, origin.getZ());
+            long finalOrigin = Library.blockPosToLong(originX, 20, originZ);
             return Optional.of(new PhasedStructureGenerator.ReadyToGenerateStructure(pending, finalOrigin));
         }
         return Optional.empty();
     }
 
     @Override
-    public void postGenerate(@NotNull World world, @NotNull Random rand, @NotNull BlockPos finalOrigin) {
-        new AncientTomb().buildSurfaceFeatures(world, rand, finalOrigin.getX(), finalOrigin.getZ());
+    public void postGenerate(@NotNull World world, @NotNull Random rand, long finalOrigin) {
+        new AncientTomb().buildSurfaceFeatures(world, rand, Library.getBlockPosX(finalOrigin), Library.getBlockPosZ(finalOrigin));
     }
 
     @Override
-    public LongArrayList getWatchedChunkOffsets(@NotNull BlockPos origin) {
+    public LongArrayList getWatchedChunkOffsets(long origin) {
         int radiusChunks = 2;
         LongArrayList offsets = new LongArrayList();
         for (int dx = -radiusChunks; dx <= radiusChunks; dx++) {

@@ -4,6 +4,7 @@ import com.hbm.blocks.BlockEnumMeta;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.PlantEnums;
 import com.hbm.blocks.generic.BlockFlowerPlant;
+import com.hbm.lib.Library;
 import com.hbm.world.phased.AbstractPhasedStructure;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import net.minecraft.block.state.IBlockState;
@@ -46,7 +47,7 @@ public class NTMFlowers extends AbstractPhasedStructure {
     }
 
     @Override
-    public LongArrayList getWatchedChunkOffsets(@NotNull BlockPos origin) {
+    public LongArrayList getWatchedChunkOffsets(long origin) {
         return CHUNK_OFFSETS;
     }
 
@@ -56,13 +57,12 @@ public class NTMFlowers extends AbstractPhasedStructure {
     }
 
     @Override
-    protected void buildStructure(@NotNull LegacyBuilder builder, @NotNull Random rand) {
-    }
-
-    @Override
-    public void postGenerate(@NotNull World world, @NotNull Random rand, @NotNull BlockPos finalOrigin) {
+    public void postGenerate(@NotNull World world, @NotNull Random rand, long finalOrigin) {
+        int x = Library.getBlockPosX(finalOrigin);
+        int y = Library.getBlockPosY(finalOrigin);
+        int z = Library.getBlockPosZ(finalOrigin);
         for (int i = 0; i < 64; ++i) {
-            BlockPos blockpos = finalOrigin.add(rand.nextInt(8) - rand.nextInt(8), rand.nextInt(4) - rand.nextInt(4), rand.nextInt(8) - rand.nextInt(8));
+            BlockPos blockpos = mutablePos.setPos(x + rand.nextInt(8) - rand.nextInt(8), y + rand.nextInt(4) - rand.nextInt(4), z + rand.nextInt(8) - rand.nextInt(8));
 
             if (world.isAirBlock(blockpos) && blockpos.getY() < 255 && ((BlockFlowerPlant) plantType.getBlock()).canBlockStay(world, blockpos, plantType)) {
                 world.setBlockState(blockpos, plantType, 18);
@@ -71,7 +71,8 @@ public class NTMFlowers extends AbstractPhasedStructure {
     }
 
     @Override
-    public boolean checkSpawningConditions(@NotNull World world, @NotNull BlockPos origin) {
-        return (spawnBiome == null && biomeType == null) || (biomeType != null && BiomeDictionary.hasType(world.getBiome(origin), biomeType)) || world.getBiome(origin) == spawnBiome;
+    public boolean checkSpawningConditions(@NotNull World world, long origin) {
+        BlockPos pos = Library.fromLong(mutablePos, origin);
+        return (spawnBiome == null && biomeType == null) || (biomeType != null && BiomeDictionary.hasType(world.getBiome(pos), biomeType)) || world.getBiome(pos) == spawnBiome;
     }
 }

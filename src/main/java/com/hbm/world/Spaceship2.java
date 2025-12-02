@@ -5,9 +5,7 @@ import com.hbm.config.GeneralConfig;
 import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
-import net.minecraft.world.World;
 
 import java.util.Random;
 
@@ -22,10 +20,11 @@ public class Spaceship2 {
 	Block Block8 = ModBlocks.fusion_hatch;
 	Block Block9 = ModBlocks.reinforced_light;
 	Block Block10 = ModBlocks.reinforced_glass;
+	private final MutableBlockPos mutablePos = new MutableBlockPos();
 	
 	public boolean generate_r00(AbstractPhasedStructure.LegacyBuilder world, Random rand, int x, int y, int z)
     {
-		MutableBlockPos pos = new BlockPos.MutableBlockPos();
+		MutableBlockPos pos = this.mutablePos;
 		world.setBlockState(pos.setPos(x + 9, y + 0, z + 17), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 10, y + 0, z + 17), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 2, y + 0, z + 18), Blocks.AIR.getDefaultState(), 3);

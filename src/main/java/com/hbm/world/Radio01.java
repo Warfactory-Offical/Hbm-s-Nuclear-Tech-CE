@@ -4,21 +4,19 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
 import com.hbm.itempool.ItemPool;
 import com.hbm.itempool.ItemPoolsLegacy;
-import com.hbm.lib.HbmChestContents;
 import com.hbm.lib.Library;
 import com.hbm.world.phased.AbstractPhasedStructure;
-import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
+import it.unimi.dsi.fastutil.longs.LongArrayList;
+import net.minecraft.block.BlockChest;
+import net.minecraft.block.BlockHorizontal;
+import net.minecraft.block.BlockStairs;
+import net.minecraft.block.BlockTrapDoor;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
 @SuppressWarnings({"UnnecessaryUnaryMinus", "PointlessArithmeticExpression"})
@@ -27,56 +25,24 @@ public class Radio01 extends AbstractPhasedStructure
 	public static final Radio01 INSTANCE = new Radio01();
 	private final Radio02 part2 = new Radio02();
 	private Radio01() {}
-	protected Block[] GetValidSpawnBlocks()
-	{
-		return new Block[]
-		{
-			Blocks.GRASS,
-			Blocks.DIRT,
-			Blocks.STONE,
-			Blocks.SAND,
-		};
+
+	@Override
+	public boolean checkSpawningConditions(@NotNull World world, long pos) {
+		return locationIsValidSpawn(world, Library.shiftBlockPos(pos, 5, 0, 15));
 	}
 
 	@Override
-	public boolean checkSpawningConditions(@NotNull World world, @NotNull BlockPos pos) {
-		return locationIsValidSpawn(world, pos.add(5, 0, 15));
+	public @NotNull LongArrayList getHeightPoints(long origin) {
+		LongArrayList points = new LongArrayList(1);
+		points.add(Library.shiftBlockPos(origin, 5, 0, 15));
+		return points;
 	}
 
-	@Override
-	public @NotNull List<BlockPos> getValidationPoints(@NotNull BlockPos origin) {
-		return Collections.singletonList(origin.add(5, 0, 15));
-	}
-
-	private boolean locationIsValidSpawn(World world, BlockPos pos)
-	{
-		IBlockState checkBlockState = world.getBlockState(pos.down());
-		Block checkBlock = checkBlockState.getBlock();
-		Block blockAbove = world.getBlockState(pos).getBlock();
-		Block blockBelow = world.getBlockState(pos.down(2)).getBlock();
-
-		for (Block i : GetValidSpawnBlocks())
-		{
-			if (blockAbove != Blocks.AIR)
-			{
-				return false;
-			}
-			if (checkBlock == i)
-			{
-				return true;
-			}
-			else if (checkBlock == Blocks.SNOW_LAYER && blockBelow == i)
-			{
-				return true;
-			}
-			else if (checkBlockState.getMaterial() == Material.PLANTS && blockBelow == i)
-			{
-				return true;
-			}
-		}
-		return false;
-
-	}
+    @Override
+    protected boolean isCacheable() {
+        // non-cacheable due to Library.getRandomConcrete()
+        return false;
+    }
 
 	@Override
 	public void buildStructure(@NotNull LegacyBuilder builder, @NotNull Random rand) {
@@ -85,7 +51,7 @@ public class Radio01 extends AbstractPhasedStructure
 
 	public void generate_r0(LegacyBuilder world, Random rand, int x, int y, int z)
 	{
-		MutableBlockPos pos = new BlockPos.MutableBlockPos();
+		MutableBlockPos pos = this.mutablePos;
 
 		world.setBlockState(pos.setPos(x + 0, y + -1, z + 0), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 1, y + -1, z + 0), Library.getRandomConcrete().getDefaultState(), 3);

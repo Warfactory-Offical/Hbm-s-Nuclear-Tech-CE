@@ -71,6 +71,7 @@ import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Range;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -1723,12 +1724,26 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 		return (int)(serialized << 38 >> 38);
 	}
 
+    @Contract(pure = true)
+    public static long shiftBlockPos(long serialized, long shift) {
+        int dx = getBlockPosX(shift);
+        int dy = getBlockPosY(shift);
+        int dz = getBlockPosZ(shift);
+        return shiftBlockPos(serialized, dx, dy, dz);
+    }
+
+    @Contract(pure = true)
+    public static long shiftBlockPos(long serialized, int dx, int dy, int dz) {
+        int x = getBlockPosX(serialized);
+        int y = getBlockPosY(serialized);
+        int z = getBlockPosZ(serialized);
+        return blockPosToLong(x + dx, y + dy, z + dz);
+    }
+
 	@Contract(mutates = "param1")
-	public static void fromLong(@NotNull BlockPos.MutableBlockPos pos, long serialized) {
-		int x = (int)(serialized >> 38);
-		int y = (int)(serialized << 26 >> 52);
-		int z = (int)(serialized << 38 >> 38);
-		pos.setPos(x, y, z);
+	public static BlockPos.@NotNull MutableBlockPos fromLong(@NotNull BlockPos.MutableBlockPos pos, long serialized) {
+		pos.setPos(getBlockPosX(serialized), getBlockPosY(serialized), getBlockPosZ(serialized));
+        return pos;
 	}
 
 	@Contract(pure = true)
@@ -1790,5 +1805,17 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
     // mlbv: remove and replace it with Thread.onSpinWait() if we ever migrate to Java 9+
     public static void onSpinWait() {
         SPIN_WAITER.run();
+    }
+
+    @Contract(pure = true)
+    public static int nextIntDeterministic(long worldSeed, int chunkX, int chunkZ, @Range(from = 1, to = Integer.MAX_VALUE) int bound) {
+        long x = (long) chunkX * 341873128712L;
+        long z = (long) chunkZ * 132897987541L;
+        long s = worldSeed ^ x ^ z;
+        s ^= (s >> 12);
+        s ^= (s << 25);
+        s ^= (s >> 27);
+        int r = (int) (s & 0x7FFFFFFFL);
+        return r % bound;
     }
 }

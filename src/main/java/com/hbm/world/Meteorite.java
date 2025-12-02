@@ -29,6 +29,7 @@ import java.util.Random;
 public class Meteorite {
 
     public static boolean safeMode = false;
+	private final MutableBlockPos mutablePos = new MutableBlockPos();
 	
 	public void generate(World world, Random rand, int x, int y, int z, boolean safe, boolean allowSpecials, boolean damagingImpact) {
         safeMode = safe;
@@ -131,7 +132,7 @@ public class Meteorite {
 					List<ItemStack> list10 = new ArrayList<>();
 					list10.add(new ItemStack(ModBlocks.block_meteor_broken));
 					generateSphere5x5(world, rand, x, y, z, list10);
-					world.setBlockState(new BlockPos(x, y, z), ModBlocks.taint.getDefaultState().withProperty(BlockTaint.TAINTAGE, 9), 2);
+					world.setBlockState(mutablePos.setPos(x, y, z), ModBlocks.taint.getDefaultState().withProperty(BlockTaint.TAINTAGE, 9), 2);
 					return;
 				}
 				case 12 -> {
@@ -371,28 +372,28 @@ public class Meteorite {
 		}
 		
 		generateBox(world, rand, x, y, z, hullL);
-		setRandomBlock(world, new MutableBlockPos(x, y, z), rand, sCore.size(), sCore);
+		setRandomBlock(world, mutablePos.setPos(x, y, z), rand, sCore.size(), sCore);
 	}
 
 	public void genL1(World world, Random rand, int x, int y, int z, List<ItemStack> hull, List<ItemStack> op, List<ItemStack> ip, List<ItemStack> core) {
 		generateSphere7x7(world, rand, x, y, z, hull);
 		generateStar5x5(world, rand, x, y, z, op);
 		generateStar3x3(world, rand, x, y, z, ip);
-		setRandomBlock(world, new MutableBlockPos(x, y, z), rand, core.size(), core);
+		setRandomBlock(world, mutablePos.setPos(x, y, z), rand, core.size(), core);
 	}
 
 	public void genL2(World world, Random rand, int x, int y, int z, List<ItemStack> hull, List<ItemStack> op, List<ItemStack> ip, List<ItemStack> core) {
 		generateSphere7x7(world, rand, x, y, z, hull);
 		generateSphere5x5(world, rand, x, y, z, op);
 		generateStar3x3(world, rand, x, y, z, ip);
-		setRandomBlock(world, new MutableBlockPos(x, y, z), rand, core.size(), core);
+		setRandomBlock(world, mutablePos.setPos(x, y, z), rand, core.size(), core);
 	}
 
 	public void genL3(World world, Random rand, int x, int y, int z, List<ItemStack> hull, List<ItemStack> op, List<ItemStack> ip, List<ItemStack> core) {
 		generateSphere7x7(world, rand, x, y, z, hull);
 		generateSphere5x5(world, rand, x, y, z, op);
 		generateBox(world, rand, x, y, z, ip);
-		setRandomBlock(world, new MutableBlockPos(x, y, z), rand, core.size(), core);
+		setRandomBlock(world, mutablePos.setPos(x, y, z), rand, core.size(), core);
 	}
 
 	public void genL4(World world, Random rand, int x, int y, int z, List<ItemStack> hull, List<ItemStack> op, List<ItemStack> ip, List<ItemStack> core) {
@@ -400,7 +401,7 @@ public class Meteorite {
 		generateSphere5x5(world, rand, x, y, z, op);
 		generateBox(world, rand, x, y, z, ip);
 		generateStar3x3(world, rand, x, y, z, this.getRandomOre(rand));
-		setRandomBlock(world, new MutableBlockPos(x, y, z), rand, core.size(), core);
+		setRandomBlock(world, mutablePos.setPos(x, y, z), rand, core.size(), core);
 	}
 
 	public void genL5(World world, Random rand, int x, int y, int z, List<ItemStack> hull, List<ItemStack> op, List<ItemStack> ip, List<ItemStack> core) {
@@ -408,48 +409,48 @@ public class Meteorite {
 		generateSphere5x5(world, rand, x, y, z, op);
 		generateStar5x5(world, rand, x, y, z, ip);
 		generateStar3x3(world, rand, x, y, z, this.getRandomOre(rand));
-		setRandomBlock(world, new MutableBlockPos(x, y, z), rand, core.size(), core);
+		setRandomBlock(world, mutablePos.setPos(x, y, z), rand, core.size(), core);
 	}
 
 	public void genM1(World world, Random rand, int x, int y, int z, List<ItemStack> hull, List<ItemStack> op, List<ItemStack> ip, List<ItemStack> core) {
 		generateSphere5x5(world, rand, x, y, z, hull);
-		setRandomBlock(world, new MutableBlockPos(x, y, z), rand, core.size(), core);
+		setRandomBlock(world, mutablePos.setPos(x, y, z), rand, core.size(), core);
 	}
 	
 	public void genM2(World world, Random rand, int x, int y, int z, List<ItemStack> hull, List<ItemStack> op, List<ItemStack> ip, List<ItemStack> core) {
 		generateSphere5x5(world, rand, x, y, z, hull);
 		generateStar3x3(world, rand, x, y, z, op);
-		setRandomBlock(world, new MutableBlockPos(x, y, z), rand, core.size(), core);
+		setRandomBlock(world, mutablePos.setPos(x, y, z), rand, core.size(), core);
 	}
 	
 	public void genM3(World world, Random rand, int x, int y, int z, List<ItemStack> hull, List<ItemStack> op, List<ItemStack> ip, List<ItemStack> core) {
 		generateSphere5x5(world, rand, x, y, z, hull);
 		generateBox(world, rand, x, y, z, op);
-		setRandomBlock(world, new MutableBlockPos(x, y, z), rand, core.size(), core);
+		setRandomBlock(world, mutablePos.setPos(x, y, z), rand, core.size(), core);
 	}
 	
 	public void genM4(World world, Random rand, int x, int y, int z, List<ItemStack> hull, List<ItemStack> op, List<ItemStack> ip, List<ItemStack> core) {
 		generateSphere5x5(world, rand, x, y, z, hull);
 		generateBox(world, rand, x, y, z, op);
 		generateStar3x3(world, rand, x, y, z, ip);
-		setRandomBlock(world, new MutableBlockPos(x, y, z), rand, core.size(), core);
+		setRandomBlock(world, mutablePos.setPos(x, y, z), rand, core.size(), core);
 	}
 	
 	public void genM5(World world, Random rand, int x, int y, int z, List<ItemStack> hull, List<ItemStack> op, List<ItemStack> ip, List<ItemStack> core) {
 		generateSphere5x5(world, rand, x, y, z, hull);
 		generateBox(world, rand, x, y, z, ip);
-		setRandomBlock(world, new MutableBlockPos(x, y, z), rand, core.size(), core);
+		setRandomBlock(world, mutablePos.setPos(x, y, z), rand, core.size(), core);
 	}
 	
 	public void genM6(World world, Random rand, int x, int y, int z, List<ItemStack> hull, List<ItemStack> op, List<ItemStack> ip, List<ItemStack> core) {
 		generateSphere5x5(world, rand, x, y, z, hull);
 		generateBox(world, rand, x, y, z, ip);
 		generateStar3x3(world, rand, x, y, z, this.getRandomOre(rand));
-		setRandomBlock(world, new MutableBlockPos(x, y, z), rand, core.size(), core);
+		setRandomBlock(world, mutablePos.setPos(x, y, z), rand, core.size(), core);
 	}
 	
 	public void generateSphere7x7(World world, Random rand, int x, int y, int z, List<ItemStack> set) {
-		MutableBlockPos mPos = new BlockPos.MutableBlockPos();
+		MutableBlockPos mPos = this.mutablePos;
 		int setSize = set.size();
 		for(int a = -3; a < 4; a++)
 			for(int b = -1; b < 2; b++)
@@ -484,7 +485,7 @@ public class Meteorite {
 	}
 	
 	public void generateSphere5x5(World world, Random rand, int x, int y, int z, List<ItemStack> set) {
-		MutableBlockPos mPos = new BlockPos.MutableBlockPos();
+		MutableBlockPos mPos = this.mutablePos;
 		int setSize = set.size();
 		for(int a = -2; a < 3; a++)
 			for(int b = -1; b < 2; b++)
@@ -504,7 +505,7 @@ public class Meteorite {
 	}
 	
 	public void generateSphere9x9(World world, Random rand, int x, int y, int z, List<ItemStack> set) {
-		MutableBlockPos mPos = new BlockPos.MutableBlockPos();
+		MutableBlockPos mPos = this.mutablePos;
 		int setSize = set.size();
 		for(int a = -4; a < 5; a++)
 			for(int b = -1; b < 2; b++)
@@ -554,7 +555,7 @@ public class Meteorite {
 	}
 
 	public void generateBox(World world, Random rand, int x, int y, int z, List<ItemStack> set) {
-		MutableBlockPos mPos = new BlockPos.MutableBlockPos();
+		MutableBlockPos mPos = this.mutablePos;
 		int setSize = set.size();
 		for(int a = -1; a < 2; a++)
 			for(int b = -1; b < 2; b++)
@@ -578,7 +579,7 @@ public class Meteorite {
 	}
 	
 	public void generateStar5x5(World world, Random rand, int x, int y, int z, List<ItemStack> set) {
-		MutableBlockPos mPos = new BlockPos.MutableBlockPos();
+		MutableBlockPos mPos = this.mutablePos;
 		int setSize = set.size();
 		for(int a = -1; a < 2; a++)
 			for(int b = -1; b < 2; b++)
@@ -593,7 +594,7 @@ public class Meteorite {
 	}
 	
 	public void generateStar3x3(World world, Random rand, int x, int y, int z, List<ItemStack> set) {
-		MutableBlockPos mPos = new BlockPos.MutableBlockPos();
+		MutableBlockPos mPos = this.mutablePos;
 		int setSize = set.size();
 
 		setRandomBlock(world, mPos.setPos(x, y, z), rand, setSize, set);

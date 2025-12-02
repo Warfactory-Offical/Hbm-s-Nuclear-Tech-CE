@@ -3,6 +3,7 @@ package com.hbm.world.feature;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.NoiseGeneratorPerlin;
@@ -17,6 +18,7 @@ public class SchistStratum {
     private final double thickness;
     private final int height;
     private NoiseGeneratorPerlin noise;
+    private final MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
 
     public SchistStratum(IBlockState s, double scale, double threshold, double thickness, int height) {
         this.b = s;
@@ -38,7 +40,7 @@ public class SchistStratum {
         ChunkPos chunkPos = event.getChunkPos();
         int cX = chunkPos.getXStart();
         int cZ = chunkPos.getZStart();
-        BlockPos.PooledMutableBlockPos pos = BlockPos.PooledMutableBlockPos.retain();
+        MutableBlockPos pos = this.mutablePos;
 
         int minY = 1;
         int maxY = world.getHeight() - 1;
@@ -68,6 +70,5 @@ public class SchistStratum {
                 }
             }
         }
-        pos.release();
     }
 }

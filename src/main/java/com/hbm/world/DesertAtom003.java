@@ -10,7 +10,6 @@ import com.hbm.config.GeneralConfig;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
 import com.hbm.itempool.ItemPool;
 import com.hbm.itempool.ItemPoolsLegacy;
-import com.hbm.lib.HbmChestContents;
 import com.hbm.lib.Library;
 import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.*;
@@ -52,10 +51,11 @@ public class DesertAtom003
 	Block Block27 = ModBlocks.pole_top;
 	Block Block28 = ModBlocks.machine_battery;
 	Block Block29 = ModBlocks.machine_electric_furnace_off;
+	private final MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
 	
 	public boolean generate_r00(AbstractPhasedStructure.LegacyBuilder world, Random rand, int x, int y, int z)
     {
-		MutableBlockPos pos = new BlockPos.MutableBlockPos();
+		MutableBlockPos pos = this.mutablePos;
 		world.setBlockState(pos.setPos(x + 21, y + 3, z + 12), Block6.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 22, y + 3, z + 12), Block6.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 23, y + 3, z + 12), Block6.getDefaultState(), 3);

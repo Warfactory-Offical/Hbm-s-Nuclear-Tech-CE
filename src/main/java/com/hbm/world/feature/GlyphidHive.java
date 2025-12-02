@@ -6,16 +6,12 @@ import com.hbm.blocks.generic.BlockGlyphid.Type;
 import com.hbm.blocks.generic.BlockGlyphidSpawner;
 import com.hbm.util.LootGenerator;
 import com.hbm.world.phased.AbstractPhasedStructure;
-import com.hbm.world.phased.PhasedStructureGenerator;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
 public class GlyphidHive extends AbstractPhasedStructure {
@@ -87,6 +83,10 @@ public class GlyphidHive extends AbstractPhasedStructure {
                     {0,0,0,0,0,0,0,0,0,0,0},
             }
     };
+    public static final GlyphidHive INFECTED = new GlyphidHive(true, true);
+    public static final GlyphidHive INFECTED_NOLOOT = new GlyphidHive(true, false);
+    public static final GlyphidHive NORMAL = new GlyphidHive(false, true);
+    public static final GlyphidHive NORMAL_NOLOOT = new GlyphidHive(false, false);
 
     private final boolean infected;
     private final boolean loot;
@@ -97,16 +97,18 @@ public class GlyphidHive extends AbstractPhasedStructure {
     }
 
     public static void generate(World world, int x, int y, int z, Random rand, boolean infected, boolean loot) {
-        GlyphidHive hive = new GlyphidHive(infected, loot);
-        hive.generate(world, rand, new BlockPos(x, y, z));
+        getInstance(infected, loot).generate(world, rand, new BlockPos(x, y, z));
+    }
+
+    private static GlyphidHive getInstance(boolean infected, boolean loot) {
+        return infected ? (loot ? INFECTED : INFECTED_NOLOOT) : (loot ? NORMAL : NORMAL_NOLOOT);
     }
 
     /**
      * force = true
      */
     public static void generateSmall(World world, int x, int y, int z, Random rand, boolean infected, boolean loot) {
-        GlyphidHive hive = new GlyphidHive(infected, loot);
-        hive.generate(world, rand, new BlockPos(x, y, z), true);
+        getInstance(infected, loot).generate(world, rand, new BlockPos(x, y, z), true);
     }
 
     @Override
@@ -159,22 +161,5 @@ public class GlyphidHive extends AbstractPhasedStructure {
                 }
             }
         }
-    }
-
-    @NotNull
-    @Override
-    public List<@NotNull BlockPos> getValidationPoints(@NotNull BlockPos origin) {
-        int r = 5;
-        return Arrays.asList(origin.add(-r, 0, -r), origin.add(r, 0, -r), origin.add(-r, 0, r), origin.add(r, 0, r));
-    }
-
-    @NotNull
-    @Override
-    public Optional<PhasedStructureGenerator.ReadyToGenerateStructure> validate(@NotNull World world,
-                                                                                @NotNull PhasedStructureGenerator.PendingValidationStructure pending) {
-        if (checkSpawningConditions(world, pending.origin)) {
-            return Optional.of(new PhasedStructureGenerator.ReadyToGenerateStructure(pending, pending.origin));
-        }
-        return Optional.empty();
     }
 }

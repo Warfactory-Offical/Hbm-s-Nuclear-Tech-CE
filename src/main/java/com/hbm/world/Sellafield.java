@@ -2,11 +2,13 @@ package com.hbm.world;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockMeta;
+import com.hbm.lib.Library;
 import com.hbm.world.phased.AbstractPhasedStructure;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
@@ -31,18 +33,21 @@ public class Sellafield extends AbstractPhasedStructure {
 		return false;
 	}
 
-	@Override
-	protected void buildStructure(@NotNull LegacyBuilder builder, @NotNull Random rand) {
-	}
+    @Override
+    public boolean useDynamicScheduler() {
+        return true;
+    }
 
 	@Override
-	public LongArrayList getWatchedChunkOffsets(@NotNull BlockPos origin) {
+	public LongArrayList getWatchedChunkOffsets(long origin) {
 		return chunkOffsets;
 	}
 
 	@Override
-	public void postGenerate(@NotNull World world, @NotNull Random rand, @NotNull BlockPos finalOrigin) {
-		generate(world, finalOrigin.getX(), finalOrigin.getZ(), this.radius, this.depth);
+	public void postGenerate(@NotNull World world, @NotNull Random rand, long finalOrigin) {
+		int ox = Library.getBlockPosX(finalOrigin);
+		int oz = Library.getBlockPosZ(finalOrigin);
+		generate(world, ox, oz, this.radius, this.depth);
 	}
 
 	private static double depthFunc(double x, double rad, double depth) {
@@ -89,6 +94,18 @@ public class Sellafield extends AbstractPhasedStructure {
 
 		placeCore(world, x, z, radius * 0.3D);
 	}
+
+    @Override
+    public void writeToNBT(NBTTagCompound nbt) {
+        nbt.setDouble("radius", radius);
+        nbt.setDouble("depth", depth);
+    }
+
+    public static Sellafield readFromNBT(NBTTagCompound nbt) {
+        double radius = nbt.getDouble("radius");
+        double depth = nbt.getDouble("depth");
+        return new Sellafield(radius, depth);
+    }
 
 	private static void dig(World world, int x, int z, int depth) {
 

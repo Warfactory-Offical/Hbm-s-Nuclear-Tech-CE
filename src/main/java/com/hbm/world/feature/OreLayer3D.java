@@ -1,11 +1,11 @@
 package com.hbm.world.feature;
 
+import com.hbm.world.WorldUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.block.state.pattern.BlockMatcher;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.NoiseGeneratorPerlin;
 import net.minecraftforge.common.MinecraftForge;
@@ -18,7 +18,6 @@ public class OreLayer3D {
     private static final int MIN_Y = 6;
     private static final int MAX_Y = 64;
     private static final int HEIGHT = MAX_Y - MIN_Y + 1;
-    private static final BlockMatcher STONE_MATCHER = BlockMatcher.forBlock(Blocks.STONE);
     public static int counter = 0;
     public int id;
     private NoiseGeneratorPerlin noiseX;
@@ -35,6 +34,7 @@ public class OreLayer3D {
     private double[][] noiseXCache;
     private double[][] noiseYCache;
     private double[][] noiseZCache;
+    private final MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
 
     public OreLayer3D(Block block, int meta) {
         this.block = block;
@@ -112,7 +112,7 @@ public class OreLayer3D {
             }
         }
 
-        BlockPos.PooledMutableBlockPos pos = BlockPos.PooledMutableBlockPos.retain();
+        MutableBlockPos pos = this.mutablePos;
         for (int xOff = 0; xOff < 16; xOff++) {
             int worldX = startX + xOff;
             for (int zOff = 0; zOff < 16; zOff++) {
@@ -127,12 +127,11 @@ public class OreLayer3D {
                     IBlockState state = world.getBlockState(pos);
                     Block target = state.getBlock();
 
-                    if (target.isNormalCube(state, world, pos) && state.getMaterial() == Material.ROCK && target.isReplaceableOreGen(state, world, pos, STONE_MATCHER)) {
+                    if (target.isNormalCube(state, world, pos) && state.getMaterial() == Material.ROCK && target.isReplaceableOreGen(state, world, pos, WorldUtil.STONE_PREDICATE)) {
                         world.setBlockState(pos, blockState, 2 | 16);
                     }
                 }
             }
         }
-        pos.release();
     }
 }

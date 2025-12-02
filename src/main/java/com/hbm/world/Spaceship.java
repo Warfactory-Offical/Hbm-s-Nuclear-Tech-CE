@@ -6,24 +6,21 @@ import com.hbm.handler.WeightedRandomChestContentFrom1710;
 import com.hbm.itempool.ItemPool;
 import com.hbm.itempool.ItemPoolsLegacy;
 import com.hbm.items.ModItems;
+import com.hbm.lib.Library;
 import com.hbm.world.phased.AbstractPhasedStructure;
+import it.unimi.dsi.fastutil.longs.LongArrayList;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockStairs;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 
 @SuppressWarnings({"UnnecessaryUnaryMinus", "PointlessArithmeticExpression"})
@@ -42,42 +39,6 @@ public class Spaceship extends AbstractPhasedStructure {
 	Block Block10 = ModBlocks.reinforced_glass;
 	Block Block11 = ModBlocks.fusion_conductor;
 	Block Block12 = ModBlocks.pwr_fuelrod;
-	
-	protected Block[] GetValidSpawnBlocks()
-	{
-		return new Block[]
-		{
-			Blocks.GRASS,
-			Blocks.DIRT,
-			Blocks.STONE,
-			Blocks.SAND,
-			Blocks.SANDSTONE,
-		};
-	}
-
-	public boolean LocationIsValidSpawn(World world, BlockPos pos)
-	{
-		IBlockState checkBlockState = world.getBlockState(pos.down());
-		Block checkBlock = checkBlockState.getBlock();
-		Block blockBelow = world.getBlockState(pos.down(2)).getBlock();
-
-		for (Block i : GetValidSpawnBlocks())
-		{
-			if (checkBlock == i)
-			{
-				return true;
-			}
-			else if (checkBlock == Blocks.SNOW_LAYER && blockBelow == i)
-			{
-				return true;
-			}
-			else if (checkBlockState.getMaterial() == Material.PLANTS && blockBelow == i)
-			{
-				return true;
-			}
-		}
-		return false;
-	}
 
 	@Override
 	public void buildStructure(@NotNull LegacyBuilder builder, @NotNull Random rand) {
@@ -85,24 +46,42 @@ public class Spaceship extends AbstractPhasedStructure {
 	}
 
 	@Override
-	public boolean checkSpawningConditions(@NotNull World world, @NotNull BlockPos pos) {
-		return LocationIsValidSpawn(world, pos) && LocationIsValidSpawn(world, pos.add(12, 0, 0)) &&
-				LocationIsValidSpawn(world, pos.add(0, 0, 23)) && LocationIsValidSpawn(world, pos.add(12, 0, 23));
+	public boolean checkSpawningConditions(@NotNull World world, long pos) {
+		int ox = Library.getBlockPosX(pos);
+		int oy = Library.getBlockPosY(pos);
+		int oz = Library.getBlockPosZ(pos);
+		return locationIsValidSpawn(world, pos) &&
+				locationIsValidSpawn(world, Library.blockPosToLong(ox + 12, oy, oz)) &&
+				locationIsValidSpawn(world, Library.blockPosToLong(ox, oy, oz + 23)) &&
+				locationIsValidSpawn(world, Library.blockPosToLong(ox + 12, oy, oz + 23));
 	}
 
+    @Override
+    protected boolean isValidSpawnBlock(Block block) {
+        return block == Blocks.GRASS || block == Blocks.DIRT || block == Blocks.STONE || block == Blocks.SAND || block == Blocks.SANDSTONE;
+    }
+
+    @Override
+    public boolean isCacheable(){
+        return false;
+    }
+
 	@Override
-	public @NotNull List<BlockPos> getValidationPoints(@NotNull BlockPos origin) {
-		return Arrays.asList(
-				origin,
-				origin.add(12, 0, 0),
-				origin.add(0, 0, 23),
-				origin.add(12, 0, 23)
-		);
+	public @NotNull LongArrayList getHeightPoints(long origin) {
+		int ox = Library.getBlockPosX(origin);
+		int oy = Library.getBlockPosY(origin);
+		int oz = Library.getBlockPosZ(origin);
+		LongArrayList points = new LongArrayList(4);
+		points.add(origin);
+		points.add(Library.blockPosToLong(ox + 12, oy, oz));
+		points.add(Library.blockPosToLong(ox, oy, oz + 23));
+		points.add(Library.blockPosToLong(ox + 12, oy, oz + 23));
+		return points;
 	}
 
 	public boolean generate_r0(LegacyBuilder world, Random rand, int x, int y, int z)
 	{
-		MutableBlockPos pos = new BlockPos.MutableBlockPos();
+		MutableBlockPos pos = this.mutablePos;
 
 		y += 1;
 		

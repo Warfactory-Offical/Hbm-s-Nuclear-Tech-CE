@@ -2,25 +2,30 @@ package com.hbm.world.feature;
 
 import com.google.common.base.Predicate;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.lib.Library;
 import com.hbm.world.phased.AbstractPhasedStructure;
-import com.hbm.world.phased.PhasedStructureGenerator;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.pattern.BlockMatcher;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
 import java.util.Random;
 
 public class DepthDeposit extends AbstractPhasedStructure {
-
+    private static final Predicate<IBlockState> BEDROCK_MATCHER = BlockMatcher.forBlock(Blocks.BEDROCK);
     private final int size;
     private final double fill;
     private final Block oreBlock;
     private final Block filler;
+    private final Block genTarget;
     private final Predicate<IBlockState> matcher;
     private final LongArrayList chunkOffsets;
 
@@ -28,13 +33,10 @@ public class DepthDeposit extends AbstractPhasedStructure {
         this.size = size;
         this.fill = fill;
         this.oreBlock = oreBlock;
+        this.genTarget = genTarget;
         this.filler = filler;
         this.chunkOffsets = collectChunkOffsetsByRadius(size + 8);
-        this.matcher = state -> {
-            if (state == null) return false;
-            Block block = state.getBlock();
-            return block == genTarget || block == Blocks.BEDROCK;
-        };
+        this.matcher = BlockMatcher.forBlock(genTarget);
     }
 
     public static void generateConditionOverworld(World world, int x, int yMin, int yDev, int z, int size, double fill, Block block, Random rand,
@@ -45,7 +47,8 @@ public class DepthDeposit extends AbstractPhasedStructure {
         int cy = yMin + rand.nextInt(yDev);
         int cz = z + rand.nextInt(16);
 
-        new DepthDeposit(size, fill, block, Blocks.STONE, ModBlocks.stone_depth).generate(world, rand, new BlockPos(cx, cy, cz));
+        DepthDeposit deposit = new DepthDeposit(size, fill, block, Blocks.STONE, ModBlocks.stone_depth);
+        deposit.generate(world, rand, deposit.mutablePos.setPos(cx, cy, cz));
     }
 
     public static void generateConditionNether(World world, int x, int yMin, int yDev, int z, int size, double fill, Block block, Random rand,
@@ -56,7 +59,8 @@ public class DepthDeposit extends AbstractPhasedStructure {
         int cy = yMin + rand.nextInt(yDev);
         int cz = z + rand.nextInt(16);
 
-        new DepthDeposit(size, fill, block, Blocks.NETHERRACK, ModBlocks.stone_depth_nether).generate(world, rand, new BlockPos(cx, cy, cz));
+        DepthDeposit deposit = new DepthDeposit(size, fill, block, Blocks.NETHERRACK, ModBlocks.stone_depth_nether);
+        deposit.generate(world, rand, deposit.mutablePos.setPos(cx, cy, cz));
     }
 
     public static void generateCondition(World world, int x, int yMin, int yDev, int z, int size, double fill, Block block, Random rand, int chance,
@@ -67,7 +71,8 @@ public class DepthDeposit extends AbstractPhasedStructure {
         int cy = yMin + rand.nextInt(yDev);
         int cz = z + rand.nextInt(16);
 
-        new DepthDeposit(size, fill, block, genTarget, filler).generate(world, rand, new BlockPos(cx, cy, cz));
+        DepthDeposit deposit = new DepthDeposit(size, fill, block, genTarget, filler);
+        deposit.generate(world, rand, deposit.mutablePos.setPos(cx, cy, cz));
     }
 
     @Override
@@ -81,27 +86,13 @@ public class DepthDeposit extends AbstractPhasedStructure {
     }
 
     @Override
-    protected void buildStructure(@NotNull LegacyBuilder builder, @NotNull Random rand) {
-    }
-
-    @Override
-    public @NotNull Optional<PhasedStructureGenerator.ReadyToGenerateStructure> validate(@NotNull World world,
-                                                                                         @NotNull PhasedStructureGenerator.PendingValidationStructure pending) {
-        BlockPos realOrigin = pending.origin;
-        if (checkSpawningConditions(world, realOrigin)) {
-            return Optional.of(new PhasedStructureGenerator.ReadyToGenerateStructure(pending, realOrigin));
-        }
-        return Optional.empty();
-    }
-
-    @Override
-    public void postGenerate(@NotNull World world, @NotNull Random rand, @NotNull BlockPos finalOrigin) {
-        generateSphere(world, finalOrigin.getX(), finalOrigin.getY(), finalOrigin.getZ(), rand);
+    public void postGenerate(@NotNull World world, @NotNull Random rand, long finalOrigin) {
+        generateSphere(world, Library.getBlockPosX(finalOrigin), Library.getBlockPosY(finalOrigin), Library.getBlockPosZ(finalOrigin), rand);
     }
 
     private void generateSphere(World world, int cx, int cy, int cz, Random rand) {
         if (world.isRemote) return;
-        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        MutableBlockPos pos = this.mutablePos;
 
         for (int ix = cx - size; ix <= cx + size; ix++) {
             int dx = ix - cx;
@@ -118,7 +109,7 @@ public class DepthDeposit extends AbstractPhasedStructure {
                     Block current = state.getBlock();
 
                     //yes you've heard right, bedrock
-                    if (!current.isReplaceableOreGen(state, world, pos, matcher)) {
+                    if (!current.isReplaceableOreGen(state, world, pos, BEDROCK_MATCHER) && !current.isReplaceableOreGen(state, world, pos, matcher)) {
                         continue;
                     }
 
@@ -135,7 +126,27 @@ public class DepthDeposit extends AbstractPhasedStructure {
     }
 
     @Override
-    public LongArrayList getWatchedChunkOffsets(@NotNull BlockPos origin) {
+    public LongArrayList getWatchedChunkOffsets(long origin) {
         return chunkOffsets;
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound nbt) {
+        nbt.setInteger("size", size);
+        nbt.setDouble("fill", fill);
+        nbt.setString("oreBlock", oreBlock.getRegistryName().toString());
+        nbt.setString("genTarget", genTarget.getRegistryName().toString());
+        nbt.setString("filler", filler.getRegistryName().toString());
+    }
+
+    @Nullable
+    public static DepthDeposit readFromNBT(NBTTagCompound nbt) {
+        int size = nbt.getInteger("size");
+        double fill = nbt.getDouble("fill");
+        Block oreBlock = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(nbt.getString("oreBlock")));
+        Block genTarget = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(nbt.getString("genTarget")));
+        Block filler = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(nbt.getString("filler")));
+        if (oreBlock == null || genTarget == null || filler == null) return null;
+        return new DepthDeposit(size, fill, oreBlock, genTarget, filler);
     }
 }

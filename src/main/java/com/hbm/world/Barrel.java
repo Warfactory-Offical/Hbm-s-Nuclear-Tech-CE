@@ -1,26 +1,22 @@
 package com.hbm.world;
 
 import com.hbm.blocks.ModBlocks;
-import com.hbm.blocks.fluid.ModFluids;
 import com.hbm.config.GeneralConfig;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
 import com.hbm.itempool.ItemPool;
 import com.hbm.itempool.ItemPoolsLegacy;
 import com.hbm.lib.Library;
 import com.hbm.world.phased.AbstractPhasedStructure;
+import it.unimi.dsi.fastutil.longs.LongArrayList;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLadder;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 
 import static com.hbm.blocks.generic.BlockMeta.META;
@@ -28,53 +24,36 @@ import static com.hbm.blocks.generic.BlockMeta.META;
 public class Barrel extends AbstractPhasedStructure {
 	public static final Barrel INSTANCE = new Barrel();
 	private Barrel() {}
-	protected Block[] GetValidSpawnBlocks() {
-		
-		return new Block[] {
-				Blocks.GRASS,
-				Blocks.DIRT,
-				Blocks.SAND,
-				Blocks.STONE,
-				Blocks.SANDSTONE
-			};
-	}
 
-	public boolean locationIsValidSpawn(World world, BlockPos pos) {
-
-		IBlockState checkBlockState = world.getBlockState(pos.down());
-		Block checkBlock = checkBlockState.getBlock();
-		Block blockAbove = world.getBlockState(pos).getBlock();
-		Block blockBelow = world.getBlockState(pos.down(2)).getBlock();
-
-		for (Block i : GetValidSpawnBlocks()) {
-			if (blockAbove != Blocks.AIR) {
-				return false;
-			}
-			if (checkBlock == i) {
-				return true;
-			} else if (checkBlock == Blocks.SNOW_LAYER && blockBelow == i) {
-				return true;
-			} else if (checkBlockState.getMaterial() == Material.PLANTS && blockBelow == i) {
-				return true;
-			}
-		}
-		return false;
-	}
+    @Override
+    protected boolean isValidSpawnBlock(Block block) {
+        return block == Blocks.GRASS || block == Blocks.DIRT || block == Blocks.STONE || block == Blocks.SAND || block == Blocks.SANDSTONE;
+    }
 
 	@Override
-	public boolean checkSpawningConditions(@NotNull World world, @NotNull BlockPos pos) {
-		return locationIsValidSpawn(world, pos) && locationIsValidSpawn(world, pos.add(4, 0, 0)) &&
-				locationIsValidSpawn(world, pos.add(4, 0, 6)) && locationIsValidSpawn(world, pos.add(0, 0, 6));
+	public boolean checkSpawningConditions(@NotNull World world, long pos) {
+		return locationIsValidSpawn(world, pos) &&
+				locationIsValidSpawn(world, Library.shiftBlockPos(pos, 4, 0, 0)) &&
+				locationIsValidSpawn(world, Library.shiftBlockPos(pos, 4, 0, 6)) &&
+				locationIsValidSpawn(world, Library.shiftBlockPos(pos, 0, 0, 6));
 	}
 
+    @Override
+    protected boolean isCacheable() {
+        return false;
+    }
+
 	@Override
-	public @NotNull List<BlockPos> getValidationPoints(@NotNull BlockPos origin) {
-		return Arrays.asList(
-				origin,
-				origin.add(4, 0, 0),
-				origin.add(4, 0, 6),
-				origin.add(0, 0, 6)
-		);
+	public @NotNull LongArrayList getHeightPoints(long origin) {
+		int ox = Library.getBlockPosX(origin);
+		int oy = Library.getBlockPosY(origin);
+		int oz = Library.getBlockPosZ(origin);
+		LongArrayList points = new LongArrayList(4);
+		points.add(origin);
+		points.add(Library.blockPosToLong(ox + 4, oy, oz));
+		points.add(Library.blockPosToLong(ox + 4, oy, oz + 6));
+		points.add(Library.blockPosToLong(ox, oy, oz + 6));
+		return points;
 	}
 
 	@Override
@@ -96,7 +75,7 @@ public class Barrel extends AbstractPhasedStructure {
 	Block Block12 = ModBlocks.toxic_block;
 
 	public boolean generate_r0(LegacyBuilder world, Random rand, int x, int y, int z) {
-		MutableBlockPos pos = new BlockPos.MutableBlockPos();
+		MutableBlockPos pos = this.mutablePos;
 
 		world.setBlockState(pos.setPos(x + 1, y + -1, z + 0), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 2, y + -1, z + 0), Block1.getDefaultState(), 3);

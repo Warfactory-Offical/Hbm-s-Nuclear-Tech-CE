@@ -5,21 +5,16 @@ import com.hbm.config.GeneralConfig;
 import com.hbm.handler.WeightedRandomChestContentFrom1710;
 import com.hbm.itempool.ItemPool;
 import com.hbm.itempool.ItemPoolsLegacy;
-import com.hbm.lib.HbmChestContents;
 import com.hbm.lib.Library;
 import com.hbm.world.phased.AbstractPhasedStructure;
+import it.unimi.dsi.fastutil.longs.LongArrayList;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 
 @SuppressWarnings({"UnnecessaryUnaryMinus", "PointlessArithmeticExpression"})
@@ -32,48 +27,6 @@ public class Satellite extends AbstractPhasedStructure {
 	Block Block5 = ModBlocks.deco_titanium;
 	Block Block6 = ModBlocks.tape_recorder;
 	Block Block7 = ModBlocks.deco_tungsten;
-	
-	protected Block[] GetValidSpawnBlocks()
-	{
-		return new Block[]
-		{
-			Blocks.GRASS,
-			Blocks.DIRT,
-			Blocks.STONE,
-			Blocks.SAND,
-			Blocks.SANDSTONE,
-		};
-	}
-
-	public boolean LocationIsValidSpawn(World world, BlockPos pos)
- {
-
-		IBlockState checkBlockState = world.getBlockState(pos.down());
-		Block checkBlock = checkBlockState.getBlock();
-		Block blockAbove = world.getBlockState(pos).getBlock();
-		Block blockBelow = world.getBlockState(pos.down(2)).getBlock();
-
-		for (Block i : GetValidSpawnBlocks())
-		{
-			if (blockAbove != Blocks.AIR)
-			{
-				return false;
-			}
-			if (checkBlock == i)
-			{
-				return true;
-			}
-			else if (checkBlock == Blocks.SNOW_LAYER && blockBelow == i)
-			{
-				return true;
-			}
-			else if (checkBlockState.getMaterial() == Material.PLANTS && blockBelow == i)
-			{
-				return true;
-			}
-		}
-		return false;
-	}
 
 	@Override
 	public void buildStructure(@NotNull LegacyBuilder builder, @NotNull Random rand) {
@@ -81,23 +34,39 @@ public class Satellite extends AbstractPhasedStructure {
 	}
 
 	@Override
-	public boolean checkSpawningConditions(@NotNull World world, @NotNull BlockPos pos) {
-		return LocationIsValidSpawn(world, pos) && LocationIsValidSpawn(world, pos.add(24, 0, 0)) &&
-				LocationIsValidSpawn(world, pos.add(24, 0, 30)) && LocationIsValidSpawn(world, pos.add(0, 0, 30));
+	public boolean checkSpawningConditions(@NotNull World world, long pos) {
+		return locationIsValidSpawn(world, Library.shiftBlockPos(pos, 0, 0, 0)) &&
+				locationIsValidSpawn(world, Library.shiftBlockPos(pos, 24, 0, 0)) &&
+				locationIsValidSpawn(world, Library.shiftBlockPos(pos, 24, 0, 30)) &&
+				locationIsValidSpawn(world, Library.shiftBlockPos(pos, 0, 0, 30));
 	}
+
+    @Override
+    protected boolean isValidSpawnBlock(Block block) {
+        return block == Blocks.GRASS || block == Blocks.DIRT || block == Blocks.STONE || block == Blocks.SAND || block == Blocks.SANDSTONE;
+    }
 
 	@Override
-	public @NotNull List<BlockPos> getValidationPoints(@NotNull BlockPos origin) {
-		return Arrays.asList(
-				origin,
-				origin.add(24, 0, 0),
-				origin.add(24, 0, 30),
-				origin.add(0, 0, 30)
-		);
+	public @NotNull LongArrayList getHeightPoints(long origin) {
+		int ox = Library.getBlockPosX(origin);
+		int oy = Library.getBlockPosY(origin);
+		int oz = Library.getBlockPosZ(origin);
+		LongArrayList points = new LongArrayList(4);
+		points.add(origin);
+		points.add(Library.blockPosToLong(ox + 24, oy, oz));
+		points.add(Library.blockPosToLong(ox + 24, oy, oz + 30));
+		points.add(Library.blockPosToLong(ox, oy, oz + 30));
+		return points;
 	}
 
+    @Override
+    protected boolean isCacheable() {
+        // non-cacheable due to Library.getRandomConcrete()
+        return false;
+    }
+
 	public boolean generate_r0(LegacyBuilder world, Random rand, int x, int y, int z) {
-		MutableBlockPos pos = new BlockPos.MutableBlockPos();
+		MutableBlockPos pos = this.mutablePos;
 
 		world.setBlockState(pos.setPos(x + 18, y + -3, z + 9), Library.getRandomConcrete().getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 19, y + -3, z + 9), Library.getRandomConcrete().getDefaultState(), 3);

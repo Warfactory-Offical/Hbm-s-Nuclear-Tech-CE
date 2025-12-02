@@ -1,6 +1,7 @@
 package com.hbm.world.dungeon;
 
 import com.hbm.config.GeneralConfig;
+import com.hbm.lib.Library;
 import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
@@ -9,57 +10,54 @@ import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityMobSpawner;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.common.DungeonHooks;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 
 @SuppressWarnings({"PointlessArithmeticExpression"})
 public class LibraryDungeon extends AbstractPhasedStructure {
 	public static final LibraryDungeon INSTANCE = new LibraryDungeon();
 	private LibraryDungeon() {}
-	public boolean LocationIsValidSpawn(World world, BlockPos pos)
-	{
-		IBlockState blockAboveState = world.getBlockState(pos.up(8));
-		IBlockState blockBelow = world.getBlockState(pos.down());
-		
-		if(blockAboveState.getMaterial().isSolid() && blockBelow.getMaterial().isSolid() && pos.getY() - 1 > 4)
-		{
-			return true;
-		}
-		return false;
-	}
+
+    @Override
+	public boolean locationIsValidSpawn(World world, long serialized) {
+        int x = Library.getBlockPosX(serialized);
+        int y = Library.getBlockPosY(serialized);
+        int z = Library.getBlockPosZ(serialized);
+        MutableBlockPos pos = this.mutablePos;
+		IBlockState blockAboveState = world.getBlockState(pos.setPos(x, y + 8, z));
+		IBlockState blockBelow = world.getBlockState(pos.setPos(x, y - 1, z));
+        return blockAboveState.getMaterial().isSolid() && blockBelow.getMaterial().isSolid() && y - 1 > 4;
+    }
 
 	@Override
 	public void buildStructure(@NotNull LegacyBuilder builder, @NotNull Random rand) {
 		generate_r0(builder, rand, 0, 0, 0);
 	}
 
-	@Override
-	public boolean checkSpawningConditions(@NotNull World world, @NotNull BlockPos pos) {
-		return LocationIsValidSpawn(world, pos) && LocationIsValidSpawn(world, pos.add(8, 0, 0)) &&
-				LocationIsValidSpawn(world, pos.add(8, 0, 10)) && LocationIsValidSpawn(world, pos.add(0, 0, 10));
-	}
+    @Override
+    public boolean isCacheable() {
+        return false; // random usage
+    }
 
 	@Override
-	public @NotNull List<BlockPos> getValidationPoints(@NotNull BlockPos origin) {
-		return Arrays.asList(
-				origin,
-				origin.add(8, 0, 0),
-				origin.add(8, 0, 10),
-				origin.add(0, 0, 10)
-		);
+	public boolean checkSpawningConditions(@NotNull World world, long pos) {
+		int ox = Library.getBlockPosX(pos);
+		int oy = Library.getBlockPosY(pos);
+		int oz = Library.getBlockPosZ(pos);
+		return locationIsValidSpawn(world, pos) &&
+				locationIsValidSpawn(world, Library.blockPosToLong(ox + 8, oy, oz)) &&
+				locationIsValidSpawn(world, Library.blockPosToLong(ox + 8, oy, oz + 10)) &&
+				locationIsValidSpawn(world, Library.blockPosToLong(ox, oy, oz + 10));
 	}
 
 	public boolean generate_r0(LegacyBuilder world, Random rand, int x, int y, int z)
 	{
-		MutableBlockPos pos = new BlockPos.MutableBlockPos();
+		MutableBlockPos pos = this.mutablePos;
 
 		world.setBlockState(pos.setPos(x + 0, y + 0, z + 0), Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.CHISELED), 3);
 		world.setBlockState(pos.setPos(x + 1, y + 0, z + 0), getBrick(rand), 3);

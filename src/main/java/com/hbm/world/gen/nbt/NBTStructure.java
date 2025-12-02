@@ -637,12 +637,7 @@ public class NBTStructure {
         int maxSlot = -1;
         for (int i = 0; i < oldList.tagCount(); i++) {
             NBTTagCompound oldStack = oldList.getCompoundTagAt(i);
-            int slot = -1;
-            if (oldStack.hasKey("slot", Constants.NBT.TAG_BYTE)) {
-                slot = oldStack.getByte("slot") & 0xFF;
-            } else if (oldStack.hasKey("Slot", Constants.NBT.TAG_INT)) {
-                slot = oldStack.getInteger("Slot");
-            }
+            int slot = getSlot(oldStack);
             if (slot >= 0 && slot > maxSlot) {
                 maxSlot = slot;
             }
@@ -651,13 +646,7 @@ public class NBTStructure {
         NBTTagList newItems = new NBTTagList();
         for (int i = 0; i < oldList.tagCount(); i++) {
             NBTTagCompound oldStack = oldList.getCompoundTagAt(i);
-
-            int slot = -1;
-            if (oldStack.hasKey("slot", Constants.NBT.TAG_BYTE)) {
-                slot = oldStack.getByte("slot") & 0xFF;
-            } else if (oldStack.hasKey("Slot", Constants.NBT.TAG_INT)) {
-                slot = oldStack.getInteger("Slot");
-            }
+            int slot = getSlot(oldStack);
             if (slot < 0) continue;
             String idString = null;
             if (oldStack.hasKey("id", Constants.NBT.TAG_STRING)) {
@@ -707,6 +696,27 @@ public class NBTStructure {
         teNbt.setTag("inventory", invTag);
         teNbt.removeTag(listKey);
         MainRegistry.logger.debug("[NBTStructure] Fixed NBT for TE with {} items in structure {}", newItems.tagCount(), resource);
+    }
+
+    private static int getSlot(NBTTagCompound tag) {
+        int id = tag.getTagId("slot");
+        if (id != 0) {
+            if (id == NBT.TAG_BYTE) {
+                return tag.getByte("slot") & 0xFF;
+            } else if (id == NBT.TAG_INT) {
+                return tag.getInteger("slot");
+            }
+        } else {
+            id = tag.getTagId("Slot");
+            if (id != 0) {
+                if (id == NBT.TAG_BYTE) {
+                    return tag.getByte("Slot") & 0xFF;
+                } else if (id == NBT.TAG_INT) {
+                    return tag.getInteger("Slot");
+                }
+            }
+        }
+        return -1;
     }
 
     private String mapId(short legacyId, Map<Short, String> idPalette) {

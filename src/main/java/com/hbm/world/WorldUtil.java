@@ -6,7 +6,10 @@ import com.hbm.main.MainRegistry;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.BiomeSyncPacket;
 import com.hbm.util.Compat;
+import net.minecraft.block.BlockStone;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.ChunkPos;
@@ -31,6 +34,14 @@ import java.util.List;
 
 public class WorldUtil {
     private static final MethodHandle getIntBiomeArray;
+    public static final Predicate<IBlockState> STONE_PREDICATE = state -> {
+        if (state != null && state.getBlock() == Blocks.STONE) {
+            BlockStone.EnumType type = state.getValue(BlockStone.VARIANT);
+            return type.isNatural();
+        } else {
+            return false;
+        }
+    };
 
     static {
         MethodHandle method = null;

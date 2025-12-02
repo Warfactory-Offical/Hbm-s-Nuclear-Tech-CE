@@ -1,9 +1,11 @@
 package com.hbm.world;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.lib.Library;
 import com.hbm.world.phased.AbstractPhasedStructure;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import net.minecraft.init.Blocks;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
@@ -31,16 +33,15 @@ public class OilSandBubble extends AbstractPhasedStructure {
 	}
 
 	@Override
-	protected void buildStructure(@NotNull LegacyBuilder builder, @NotNull Random rand) {
-	}
-
-	@Override
-	public LongArrayList getWatchedChunkOffsets(@NotNull BlockPos origin) {
+	public LongArrayList getWatchedChunkOffsets(long origin) {
 		return chunkOffsets;
 	}
 	@Override
-	public void postGenerate(@NotNull World world, @NotNull Random rand, @NotNull BlockPos finalOrigin) {
-		OilSandBubble.spawnOil(world, rand, finalOrigin.getX(), finalOrigin.getY(), finalOrigin.getZ(), this.radius);
+	public void postGenerate(@NotNull World world, @NotNull Random rand, long finalOrigin) {
+		int ox = Library.getBlockPosX(finalOrigin);
+		int oy = Library.getBlockPosY(finalOrigin);
+		int oz = Library.getBlockPosZ(finalOrigin);
+		OilSandBubble.spawnOil(world, rand, ox, oy, oz, this.radius);
 	}
 
 	private static void spawnOil(World world, Random rand, int x, int y, int z, int radius) {
@@ -67,5 +68,14 @@ public class OilSandBubble extends AbstractPhasedStructure {
 			}
 		}
 	}
-	
+
+    @Override
+    public void writeToNBT(NBTTagCompound nbt) {
+        nbt.setInteger("radius", radius);
+    }
+
+    public static OilSandBubble readFromNBT(NBTTagCompound nbt) {
+        int radius = nbt.getInteger("radius");
+        return new OilSandBubble(radius);
+    }
 }

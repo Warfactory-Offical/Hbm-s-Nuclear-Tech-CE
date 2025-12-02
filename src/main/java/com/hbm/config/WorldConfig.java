@@ -93,8 +93,11 @@ public class WorldConfig {
 	public static float craterBiomeInnerRad = 25F;
 	public static float craterBiomeOuterRad = 0.5F;
 	public static float craterBiomeWaterMult = 5F;
+    public static int bedrockGlowstoneSpawn;
+    public static int bedrockPhosphorusSpawn;
+    public static int bedrockQuartzSpawn;
 
-	public static int convertToInt(Object e){
+    public static int convertToInt(Object e){
 		if(e == null)
 			return 0;
 		return (int)e;

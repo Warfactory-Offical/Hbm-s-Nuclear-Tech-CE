@@ -6,26 +6,21 @@ import com.hbm.handler.WeightedRandomChestContentFrom1710;
 import com.hbm.itempool.ItemPool;
 import com.hbm.itempool.ItemPoolsLegacy;
 import com.hbm.items.ModItems;
-import com.hbm.lib.HbmChestContents;
 import com.hbm.lib.Library;
 import com.hbm.tileentity.machine.TileEntityCrateIron;
 import com.hbm.world.phased.AbstractPhasedStructure;
+import it.unimi.dsi.fastutil.longs.LongArrayList;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.BlockTorch;
 import net.minecraft.block.BlockWallSign;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
 @SuppressWarnings({"UnnecessaryUnaryMinus", "PointlessArithmeticExpression"})
@@ -40,48 +35,6 @@ public class Relay extends AbstractPhasedStructure {
 	Block Block7 = ModBlocks.deco_red_copper;
 	Block Block8 = ModBlocks.deco_tungsten;
 	Block Block9 = ModBlocks.pole_top;
-	
-	protected Block[] GetValidSpawnBlocks()
-	{
-		return new Block[]
-		{
-			Blocks.STONE,
-			Blocks.GRASS,
-			Blocks.DIRT,
-			Blocks.SAND,
-			Blocks.SANDSTONE,
-		};
-	}
-
-	public boolean LocationIsValidSpawn(World world, int x, int y, int z)
- {
-
-		IBlockState checkBlockState = world.getBlockState(new BlockPos(x, y - 1, z));
-		Block checkBlock = checkBlockState.getBlock();
-		Block blockAbove = world.getBlockState(new BlockPos(x, y , z)).getBlock();
-		Block blockBelow = world.getBlockState(new BlockPos(x, y - 2, z)).getBlock();
-
-		for (Block i : GetValidSpawnBlocks())
-		{
-			if (blockAbove != Blocks.AIR)
-			{
-				return false;
-			}
-			if (checkBlock == i)
-			{
-				return true;
-			}
-			else if (checkBlock == Blocks.SNOW_LAYER && blockBelow == i)
-			{
-				return true;
-			}
-			else if (checkBlockState.getMaterial() == Material.PLANTS && blockBelow == i)
-			{
-				return true;
-			}
-		}
-		return false;
-	}
 
 	@Override
 	public void buildStructure(@NotNull LegacyBuilder builder, @NotNull Random rand) {
@@ -89,19 +42,34 @@ public class Relay extends AbstractPhasedStructure {
 	}
 
 	@Override
-	public boolean checkSpawningConditions(@NotNull World world, @NotNull BlockPos pos) {
-		BlockPos p = pos.add(5, 0, 8);
-		return LocationIsValidSpawn(world, p.getX(), p.getY(), p.getZ());
+	public boolean checkSpawningConditions(@NotNull World world, long pos) {
+		return locationIsValidSpawn(world, Library.shiftBlockPos(pos, 5, 0, 8));
 	}
 
+    @Override
+    protected boolean isValidSpawnBlock(Block block) {
+        return block == Blocks.GRASS || block == Blocks.DIRT || block == Blocks.STONE || block == Blocks.SAND || block == Blocks.SANDSTONE;
+    }
+
+    @Override
+    protected boolean isCacheable() {
+        // non-cacheable due to Library.getRandomConcrete()
+        return false;
+    }
+
 	@Override
-	public @NotNull List<BlockPos> getValidationPoints(@NotNull BlockPos origin) {
-		return Collections.singletonList(origin.add(5, 0, 8));
+	public @NotNull LongArrayList getHeightPoints(long origin) {
+		int ox = Library.getBlockPosX(origin);
+		int oy = Library.getBlockPosY(origin);
+		int oz = Library.getBlockPosZ(origin);
+		LongArrayList points = new LongArrayList(1);
+		points.add(Library.blockPosToLong(ox + 5, oy, oz + 8));
+		return points;
 	}
 
 	public boolean generate_r0(LegacyBuilder world, Random rand, int x, int y, int z)
 	{
-		MutableBlockPos pos = new BlockPos.MutableBlockPos();
+		MutableBlockPos pos = this.mutablePos;
 
 		world.setBlockState(pos.setPos(x + 2, y + -3, z + 0), Block1.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 3, y + -3, z + 0), Block1.getDefaultState(), 3);

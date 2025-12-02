@@ -1,11 +1,10 @@
 package com.hbm.world.feature;
 
 import com.hbm.inventory.RecipesCommon;
+import com.hbm.world.WorldUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.block.state.pattern.BlockMatcher;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -85,7 +84,7 @@ public class OreCave {
         int cZ = event.getPos().getZ();
 
         double scale = 0.01D;
-
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         for (int x = cX + 8; x < cX + 24; x++) {
             for (int z = cZ + 8; z < cZ + 24; z++) {
 
@@ -101,13 +100,12 @@ public class OreCave {
                         continue;
 
                     for (int y = yLevel - range; y <= yLevel + range; y++) {
-                        BlockPos pos = new BlockPos(x, y, z);
                         IBlockState genState = world.getBlockState(pos);
                         Block genBlock = genState.getBlock();
 
                         if (genBlock.isNormalCube(genState, world, pos)
                                 && (genState.getMaterial() == Material.ROCK || genState.getMaterial() == Material.GROUND)
-                                && genBlock.isReplaceableOreGen(genState, world, pos, BlockMatcher.forBlock(Blocks.STONE))) {
+                                && genBlock.isReplaceableOreGen(genState, world, pos, WorldUtil.STONE_PREDICATE)) {
 
                             boolean shouldGen = false;
                             boolean canGenFluid = event.getRand().nextBoolean();

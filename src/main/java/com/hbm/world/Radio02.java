@@ -7,7 +7,6 @@ import com.hbm.config.GeneralConfig;
 import com.hbm.world.phased.AbstractPhasedStructure;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 
 import java.util.Random;
@@ -15,9 +14,11 @@ import java.util.Random;
 @SuppressWarnings("PointlessArithmeticExpression")
 public class Radio02
 {
+	private final MutableBlockPos mutablePos = new MutableBlockPos();
+
 	public void generate_r00(AbstractPhasedStructure.LegacyBuilder world, Random rand, int x, int y, int z)
     {
-		MutableBlockPos pos = new BlockPos.MutableBlockPos();
+		MutableBlockPos pos = this.mutablePos;
 		world.setBlockState(pos.setPos(x + 6, y + 16, z + 12), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 7, y + 16, z + 12), Blocks.AIR.getDefaultState(), 3);
 		world.setBlockState(pos.setPos(x + 8, y + 16, z + 12), Blocks.AIR.getDefaultState(), 3);
