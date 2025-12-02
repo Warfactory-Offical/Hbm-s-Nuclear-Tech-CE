@@ -102,8 +102,9 @@ public class GeneralConfig {
 	public static boolean enableLBSMSafeCrates = true;
 	public static boolean enableLBSMSafeMEDrives = true;
 	public static boolean enableLBSMIGen = true;
+    public static boolean enable528BosniaSimulator = false;
 
-	public static void loadFromConfig(Configuration config){
+    public static void loadFromConfig(Configuration config){
 		final String CATEGORY_GENERAL = "01_general";
 		enablePacketThreading = config.get(CATEGORY_GENERAL, "0.01_enablePacketThreading", true, "Enables creation of a separate thread to increase packet processing speed on servers. Disable this if you are having anomalous crashes related to memory connections.").getBoolean(true);
 		packetThreadingCoreCount = config.get(CATEGORY_GENERAL, "0.02_packetThreadingCoreCount", 1, "Number of core threads to create for packets (recommended 1).").getInt(1);
