@@ -7,8 +7,6 @@ import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.RecipesCommon.NbtComparableStack;
 import com.hbm.inventory.fluid.FluidStack;
 import com.hbm.inventory.fluid.FluidType;
-import com.hbm.inventory.fluid.Fluids;
-import com.hbm.inventory.fluid.trait.FT_Heatable;
 import com.hbm.inventory.recipes.*;
 import com.hbm.inventory.recipes.MagicRecipes.MagicRecipe;
 import com.hbm.items.ModItems;
@@ -29,32 +27,28 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 public class JeiRecipes {
 
 	private static List<ChemRecipe> chemRecipes = null;
 	private static List<CyclotronRecipe> cyclotronRecipes = null;
 	private static List<AlloyFurnaceRecipe> alloyFurnaceRecipes = null;
-	private static List<BoilerRecipe> boilerRecipes = null;
-	private static List<CMBFurnaceRecipe> cmbRecipes = null;
+    private static List<CMBFurnaceRecipe> cmbRecipes = null;
 	private static List<GasCentrifugeRecipe> gasCentRecipes = null;
-	private static List<WasteDrumRecipe> wasteDrumRecipes = null;
-	private static List<StorageDrumRecipe> storageDrumRecipes = null;
+    private static List<StorageDrumRecipe> storageDrumRecipes = null;
 	private static List<RBMKFuelRecipe> rbmkFuelRecipes = null;
 	private static List<RefineryRecipe> refineryRecipes = null;
 	private static List<FluidRecipe> fluidEquivalences = null;
 	private static List<BookRecipe> bookRecipes = null;
 	private static List<BreederRecipe> breederRecipes = null;
-	private static List<FusionRecipe> fusionByproducts = null;
-	private static List<HadronRecipe> hadronRecipes = null;
+    private static List<HadronRecipe> hadronRecipes = null;
 	private static List<SILEXRecipe> silexRecipes = null;
 	private static final Map<EnumWavelengths, List<SILEXRecipe>> waveSilexRecipes = new HashMap<>();
-	private static List<AssemblerRecipeWrapper> assemblerRecipes = null;
-	private static List<TransmutationRecipe> transmutationRecipes = null;
+    private static List<TransmutationRecipe> transmutationRecipes = null;
 	
 	private static List<ItemStack> batteries = null;
     private static List<ItemStack> blades = null;
@@ -317,18 +311,7 @@ public class JeiRecipes {
 		
 	}
 
-	static List<AssemblerRecipeWrapper> getAssemblerRecipes() {
-		if (assemblerRecipes != null) {
-			return assemblerRecipes;
-		}
-		assemblerRecipes = AssemblerRecipes.recipes.entrySet().stream()
-				.map(entry -> new AssemblerRecipeWrapper(entry.getKey(), entry.getValue()))
-				.collect(Collectors.toList());
-
-		return assemblerRecipes;
-	}
-	
-	public static class BookRecipe implements IRecipeWrapper {
+    public static class BookRecipe implements IRecipeWrapper {
 
 		List<ItemStack> inputs;
 		ItemStack output;
@@ -417,7 +400,7 @@ public class JeiRecipes {
 		}
 		
 		@Override
-		public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
+		public void drawInfo(@NotNull Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
 			if(analysisOnly)
 				HadronRecipeHandler.analysis.draw(minecraft, 117, 17);
 			FontRenderer fontRenderer = minecraft.fontRenderer;
@@ -554,9 +537,36 @@ public class JeiRecipes {
 			int side = 160;
 			fontRenderer.drawString(duration, side - fontRenderer.getStringWidth(duration), 43, 0x404040);
 			fontRenderer.drawString(consumption, side - fontRenderer.getStringWidth(consumption), 55, 0x404040);
-			return;
-		}
+        }
 	}
+
+    public static class ArcWelderRecipe extends JeiUniversalRecipe {
+        private final int duration;
+        private final int consumption;
+        private final boolean hasStats;
+
+        public ArcWelderRecipe(List<List<ItemStack>> inputs, ItemStack[] outputs, ItemStack[] machine, int duration, int consumption, boolean hasStats) {
+            super(inputs, outputs, machine);
+            this.duration = duration;
+            this.consumption = consumption;
+            this.hasStats = hasStats;
+        }
+
+        @Override
+        public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
+            super.drawInfo(minecraft, recipeWidth, recipeHeight, mouseX, mouseY);
+            if (!hasStats) {
+                return;
+            }
+
+            FontRenderer fontRenderer = minecraft.fontRenderer;
+            String durationText = String.format(Locale.US, "%,d", duration) + " ticks";
+            String consumptionText = String.format(Locale.US, "%,d", consumption) + " HE/t";
+            int side = 160;
+            fontRenderer.drawString(durationText, side - fontRenderer.getStringWidth(durationText), 43, 0x404040);
+            fontRenderer.drawString(consumptionText, side - fontRenderer.getStringWidth(consumptionText), 55, 0x404040);
+        }
+    }
 	
 	public static List<ChemRecipe> getChemistryRecipes() {
 		if(chemRecipes != null)
@@ -664,31 +674,7 @@ public class JeiRecipes {
 		return alloyFuels;
 	}
 
-	public static List<BoilerRecipe> getBoilerRecipes() {
-		if (boilerRecipes != null) {
-			return boilerRecipes;
-		}
-
-		boilerRecipes = new ArrayList<>();
-
-		for (FluidType type : Fluids.getInNiceOrder()) {
-			if (type.hasTrait(FT_Heatable.class)) {
-				FT_Heatable trait = type.getTrait(FT_Heatable.class);
-
-				if (trait.getEfficiency(FT_Heatable.HeatingType.BOILER) > 0) {
-					FT_Heatable.HeatingStep step = trait.getFirstStep();
-					FluidStack input = new FluidStack(type, step.amountReq);
-					FluidStack output = new FluidStack(step.typeProduced, step.amountProduced);
-
-					boilerRecipes.add(new BoilerRecipe(input, output));
-				}
-			}
-		}
-
-		return boilerRecipes;
-	}
-	
-	public static List<ItemStack> getBatteries() {
+    public static List<ItemStack> getBatteries() {
 		if(batteries != null)
 			return batteries;
 		batteries = new ArrayList<>();
@@ -771,19 +757,7 @@ public class JeiRecipes {
 		return breederRecipes;
 	}
 
-	public static List<WasteDrumRecipe> getWasteDrumRecipes(){
-		if(wasteDrumRecipes != null)
-			return wasteDrumRecipes;
-		wasteDrumRecipes = new ArrayList<>();
-		
-		for(Entry<ComparableStack, ItemStack> entry : WasteDrumRecipes.recipes.entrySet()){
-			wasteDrumRecipes.add(new WasteDrumRecipe(entry.getKey().getStack(), entry.getValue()));
-		}
-		
-		return wasteDrumRecipes;
-	}
-
-	public static List<StorageDrumRecipe> getStorageDrumRecipes(){
+    public static List<StorageDrumRecipe> getStorageDrumRecipes(){
 		if(storageDrumRecipes != null)
 			return storageDrumRecipes;
 		storageDrumRecipes = new ArrayList<>();
@@ -861,20 +835,7 @@ public class JeiRecipes {
 		return fluidEquivalences;
 	}
 
-	public static List<FusionRecipe> getFusionByproducts(){
-		if(fusionByproducts != null)
-			return fusionByproducts;
-		fusionByproducts = new ArrayList<>();
-		fusionByproducts.add(new FusionRecipe(new FluidStack(Fluids.PLASMA_DT, 1), FusionRecipesLegacy.getByproduct(Fluids.PLASMA_DT)));
-		fusionByproducts.add(new FusionRecipe(new FluidStack(Fluids.PLASMA_HD, 1), FusionRecipesLegacy.getByproduct(Fluids.PLASMA_HD)));
-		fusionByproducts.add(new FusionRecipe(new FluidStack(Fluids.PLASMA_HT,1), FusionRecipesLegacy.getByproduct(Fluids.PLASMA_HT)));
-		fusionByproducts.add(new FusionRecipe(new FluidStack(Fluids.PLASMA_XM, 1), FusionRecipesLegacy.getByproduct(Fluids.PLASMA_XM)));
-		fusionByproducts.add(new FusionRecipe(new FluidStack(Fluids.PLASMA_DH3, 1), FusionRecipesLegacy.getByproduct(Fluids.PLASMA_DH3)));
-		fusionByproducts.add(new FusionRecipe(new FluidStack(Fluids.PLASMA_BF, 1), FusionRecipesLegacy.getByproduct(Fluids.PLASMA_BF)));
-		return fusionByproducts;
-	}
-	
-	public static List<HadronRecipe> getHadronRecipes(){
+    public static List<HadronRecipe> getHadronRecipes(){
 		if(hadronRecipes != null)
 			return hadronRecipes;
 		hadronRecipes = new ArrayList<>();
@@ -897,7 +858,7 @@ public class JeiRecipes {
 					weight += obj.itemWeight;
 				}
 				List<Double> chances = new ArrayList<>(out.outputs.size());
-				List<ItemStack> outputs = new ArrayList<>(chances.size());
+				List<ItemStack> outputs = new ArrayList<>(0);
 				for(int i = 0; i < out.outputs.size(); i++) {
 					WeightedRandomObject obj = out.outputs.get(i);
 					outputs.add(obj.asStack());
@@ -922,7 +883,7 @@ public class JeiRecipes {
 				weight += obj.itemWeight;
 			}
 			List<Double> chances = new ArrayList<>(out.outputs.size());
-			List<ItemStack> outputs = new ArrayList<>(chances.size());
+			List<ItemStack> outputs = new ArrayList<>(0);
 			for(int i = 0; i < out.outputs.size(); i++) {
 				WeightedRandomObject obj = out.outputs.get(i);
 				outputs.add(obj.asStack());
@@ -953,7 +914,7 @@ public class JeiRecipes {
 		}
 
 		@Override
-		public void getIngredients(IIngredients ingredients) {
+		public void getIngredients(@NotNull IIngredients ingredients) {
 			List<List<ItemStack>> jeiInputs = Library.copyItemStackListList(inputs);
 			while (jeiInputs.size() < 12) {
 				jeiInputs.add(Collections.singletonList(new ItemStack(ModItems.nothing)));

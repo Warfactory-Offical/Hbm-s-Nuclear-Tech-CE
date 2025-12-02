@@ -20,6 +20,7 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ public class BlockSupplyCrate extends BlockContainer {
 
     public BlockSupplyCrate(Material materialIn, String s) {
         super(materialIn);
+        this.setHarvestLevel("axe", 0);
         this.setTranslationKey(s);
         this.setRegistryName(s);
 
@@ -36,49 +38,49 @@ public class BlockSupplyCrate extends BlockContainer {
     }
 
     @Override
-    public TileEntity createNewTileEntity(World world, int meta) {
+    public TileEntity createNewTileEntity(@NotNull World world, int meta) {
         return new TileEntitySupplyCrate();
     }
 
     @Override
-    public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer) {
+    public boolean canRenderInLayer(@NotNull IBlockState state, @NotNull BlockRenderLayer layer) {
         return layer == BlockRenderLayer.CUTOUT;
     }
 
     @Override
-    public EnumBlockRenderType getRenderType(IBlockState state) {
+    public @NotNull EnumBlockRenderType getRenderType(@NotNull IBlockState state) {
         return EnumBlockRenderType.MODEL;
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state) {
+    public boolean isOpaqueCube(@NotNull IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean isBlockNormalCube(IBlockState state) {
+    public boolean isBlockNormalCube(@NotNull IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean isNormalCube(IBlockState state) {
+    public boolean isNormalCube(@NotNull IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) {
+    public boolean isNormalCube(@NotNull IBlockState state, @NotNull IBlockAccess world, @NotNull BlockPos pos) {
         return false;
     }
 
     @Override
-    public boolean isFullCube(IBlockState state) {
+    public boolean isFullCube(@NotNull IBlockState state) {
         return false;
     }
 
-    @Override public Item getItemDropped(IBlockState state, Random rand, int fortune) { return null; }
+    @Override public @NotNull Item getItemDropped(@NotNull IBlockState state, @NotNull Random rand, int fortune) { return null; }
 
     @Override
-    public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
+    public boolean removedByPlayer(@NotNull IBlockState state, @NotNull World world, @NotNull BlockPos pos, EntityPlayer player, boolean willHarvest) {
 
         if(!player.capabilities.isCreativeMode && !world.isRemote && willHarvest) {
 
@@ -104,7 +106,7 @@ public class BlockSupplyCrate extends BlockContainer {
     }
 
     @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+    public void onBlockPlacedBy(World world, @NotNull BlockPos pos, @NotNull IBlockState state, @NotNull EntityLivingBase placer, @NotNull ItemStack stack) {
 
         TileEntitySupplyCrate inv = (TileEntitySupplyCrate) world.getTileEntity(pos);
 
@@ -119,7 +121,7 @@ public class BlockSupplyCrate extends BlockContainer {
     }
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(@NotNull World world, @NotNull BlockPos pos, @NotNull IBlockState state, EntityPlayer player, @NotNull EnumHand hand, @NotNull EnumFacing facing, float hitX, float hitY, float hitZ) {
         if(!player.getHeldItemMainhand().isEmpty() && player.getHeldItemMainhand().getItem().equals(ModItems.crowbar)) {
             if(!world.isRemote) {
                 dropContents(world, pos);
@@ -147,7 +149,7 @@ public class BlockSupplyCrate extends BlockContainer {
         public List<ItemStack> items = new ArrayList<>();
 
         @Override
-        public void readFromNBT(NBTTagCompound nbt) {
+        public void readFromNBT(@NotNull NBTTagCompound nbt) {
             super.readFromNBT(nbt);
             items.clear();
             NBTTagList list = nbt.getTagList("items", 10);
@@ -158,7 +160,7 @@ public class BlockSupplyCrate extends BlockContainer {
         }
 
         @Override
-        public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+        public @NotNull NBTTagCompound writeToNBT(@NotNull NBTTagCompound nbt) {
             NBTTagList list = new NBTTagList();
             for (ItemStack item : items) {
                 NBTTagCompound nbt1 = new NBTTagCompound();
