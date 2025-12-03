@@ -310,8 +310,8 @@ public class JEIConfig implements IModPlugin {
 
         registry.addRecipeClickArea(GUIMachineCoker.class, 60, 22, 32, 18, COKER);
         registry.addRecipeClickArea(GUIMachineArcFurnaceLarge.class, 17, 36, 7, 70, ARC_FURNACE_SOLID);
-        registry.addRecipeClickArea(GUIMachineCatalyticReformer.class, 69, 34, 20, 20, REFORMING);
-        registry.addRecipeClickArea(GUIMachineHydrotreater.class, 87, 34, 20, 20, HYDROTREATING);
+        registry.addRecipeClickArea(GUIMachineCatalyticReformer.class, 67, 82, 24, 24, REFORMING);
+        registry.addRecipeClickArea(GUIMachineHydrotreater.class, 85, 82, 24, 24, HYDROTREATING);
         registry.addRecipeClickArea(GUIMachinePUREX.class, 62, 25, 47, 9, PUREX);
         registry.addRecipeClickArea(GUIMachinePUREX.class, 62, 90, 47, 9, PUREX);
         registry.addRecipeClickArea(GUILiquefactor.class, 42, 18, 41, 16, LIQUEFACTION);
@@ -327,7 +327,10 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeClickArea(GUISolidifier.class, 42, 18, 38, 16, SOLIDIFICATION);
         registry.addRecipeClickArea(GUISolidifier.class, 75, 34, 8, 9, SOLIDIFICATION);
         registry.addRecipeClickArea(GUICompressor.class, 42, 27, 54, 16, COMPRESSING);
-        registry.addRecipeClickArea(GUIOreSlopper.class, 62, 18, 34, 34, ORE_SLOPPER);
+        registry.addRecipeClickArea(GUIOreSlopper.class, 62, 18, 6, 34, ORE_SLOPPER);
+        registry.addRecipeClickArea(GUIOreSlopper.class, 68, 18, 22, 6, ORE_SLOPPER);
+        registry.addRecipeClickArea(GUIOreSlopper.class, 68, 46, 22, 6, ORE_SLOPPER);
+        registry.addRecipeClickArea(GUIOreSlopper.class, 90, 18, 6, 34, ORE_SLOPPER);
 		registry.addRecipeClickArea(GUIMixer.class, 62, 36, 52, 44, MIXER);
 		registry.addRecipeClickArea(GUIMachineCyclotron.class, 50, 24, 40, 40, CYCLOTRON);
 		registry.addRecipeClickArea(GUIMachinePress.class, 80, 35, 15, 15, PRESS);
