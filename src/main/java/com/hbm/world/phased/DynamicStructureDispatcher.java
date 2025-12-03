@@ -9,6 +9,7 @@ import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongList;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagLongArray;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
@@ -29,6 +30,7 @@ import java.util.Random;
  * Minimal dispatcher for post-generate-only structures that would otherwise overwhelm
  * {@link PhasedStructureGenerator} with marker tasks.
  */
+@SuppressWarnings("ForLoopReplaceableByForEach")//iterator allocation
 public class DynamicStructureDispatcher {
 
     public static final DynamicStructureDispatcher INSTANCE = new DynamicStructureDispatcher();
@@ -42,10 +44,10 @@ public class DynamicStructureDispatcher {
     }
 
     public void schedule(@NotNull World world, long originSerialized, @NotNull AbstractPhasedStructure structure, long layoutSeed) {
-        if (!(world instanceof WorldServer server) || world.isRemote) return;
-
+        if (world.isRemote) return;
+        WorldServer server = (WorldServer) world;
         PhasedStructureGenerator.PendingValidationStructure pending = new PhasedStructureGenerator.PendingValidationStructure(originSerialized, structure, EMPTY_LAYOUT, server.getSeed(), layoutSeed);
-        PhasedStructureGenerator.ReadyToGenerateStructure ready = structure.validate(world, pending).orElse(null);
+        PhasedStructureGenerator.ReadyToGenerateStructure ready = structure.validate(world, pending);
         if (ready == null) return;
 
         WorldState state = states.computeIfAbsent(server.provider.getDimension(), dim -> new WorldState());
@@ -65,12 +67,12 @@ public class DynamicStructureDispatcher {
         }
     }
 
-    public void forceGenerate(@NotNull World world, @NotNull Random rand, long originSerialized, @NotNull AbstractPhasedStructure structure) {
+    public static void forceGenerate(@NotNull World world, @NotNull Random rand, long originSerialized, @NotNull AbstractPhasedStructure structure) {
         if (world.isRemote) return;
         structure.postGenerate(world, rand, originSerialized);
     }
 
-    private LongList resolveOffsets(AbstractPhasedStructure structure, long origin) {
+    private static LongList resolveOffsets(AbstractPhasedStructure structure, long origin) {
         LongArrayList offsets = structure.getWatchedChunkOffsets(origin);
         if (offsets == null || offsets.isEmpty()) {
             return ORIGIN_ONLY;
@@ -78,7 +80,7 @@ public class DynamicStructureDispatcher {
         return offsets;
     }
 
-    private void addJobForOrigin(@NotNull WorldState state, long originChunkKey, @NotNull PendingDynamicStructure job) {
+    private static void addJobForOrigin(@NotNull WorldState state, long originChunkKey, @NotNull PendingDynamicStructure job) {
         ArrayList<PendingDynamicStructure> list = state.jobsByOriginChunk.get(originChunkKey);
         if (list == null) {
             list = new ArrayList<>(4);
@@ -107,25 +109,25 @@ public class DynamicStructureDispatcher {
     @SubscribeEvent
     public void onChunkPopulated(PopulateChunkEvent.Post event) {
         World world = event.getWorld();
-        if (world.isRemote || !(world instanceof WorldServer server)) return;
-        handleChunkAvailable(server, ChunkPos.asLong(event.getChunkX(), event.getChunkZ()));
+        if (world.isRemote) return;
+        handleChunkAvailable((WorldServer) world, ChunkPos.asLong(event.getChunkX(), event.getChunkZ()));
     }
 
     @SubscribeEvent
     public void onChunkLoaded(ChunkEvent.Load event) {
         World world = event.getWorld();
-        if (world.isRemote || !(world instanceof WorldServer server)) return;
+        if (world.isRemote) return;
         Chunk chunk = event.getChunk();
-        if (!chunk.isPopulated() && !chunk.isTerrainPopulated()) return;
-        handleChunkAvailable(server, ChunkPos.asLong(chunk.x, chunk.z));
+        if (!chunk.isTerrainPopulated()) return;
+        handleChunkAvailable((WorldServer) world, ChunkPos.asLong(chunk.x, chunk.z));
     }
 
     @SubscribeEvent
     public void onChunkDataSave(ChunkDataEvent.Save event) {
         World world = event.getWorld();
-        if (world.isRemote || !(world instanceof WorldServer server)) return;
+        if (world.isRemote) return;
 
-        int dim = server.provider.getDimension();
+        int dim = world.provider.getDimension();
         WorldState state = states.get(dim);
         if (state == null) return;
 
@@ -140,7 +142,7 @@ public class DynamicStructureDispatcher {
             return;
         }
 
-        net.minecraft.nbt.NBTTagList list = new net.minecraft.nbt.NBTTagList();
+        NBTTagList list = new NBTTagList();
         for (int i = 0; i < jobs.size(); i++) {
             PendingDynamicStructure job = jobs.get(i);
             if (job.structure == null || job.watchedOffsets == null) continue;
@@ -165,7 +167,7 @@ public class DynamicStructureDispatcher {
             list.appendTag(entry);
         }
 
-        if (list.tagCount() > 0) {
+        if (!list.isEmpty()) {
             data.setTag("HbmDynamicJobs", list);
         } else {
             data.removeTag("HbmDynamicJobs");
@@ -175,8 +177,8 @@ public class DynamicStructureDispatcher {
     @SubscribeEvent
     public void onChunkDataLoad(ChunkDataEvent.Load event) {
         World world = event.getWorld();
-        if (world.isRemote || !(world instanceof WorldServer server)) return;
-
+        if (world.isRemote) return;
+        WorldServer server = (WorldServer) world;
         NBTTagCompound data = event.getData();
         if (!data.hasKey("HbmDynamicJobs", 9)) { // 9 = TAG_LIST
             return;
@@ -188,7 +190,7 @@ public class DynamicStructureDispatcher {
         Chunk chunk = event.getChunk();
         long chunkKey = ChunkPos.asLong(chunk.x, chunk.z);
 
-        net.minecraft.nbt.NBTTagList list = data.getTagList("HbmDynamicJobs", 10); // 10 = TAG_COMPOUND
+        NBTTagList list = data.getTagList("HbmDynamicJobs", 10); // 10 = TAG_COMPOUND
         if (list.tagCount() == 0) return;
 
         ChunkProviderServer provider = server.getChunkProvider();
@@ -228,8 +230,8 @@ public class DynamicStructureDispatcher {
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload event) {
         World world = event.getWorld();
-        if (world.isRemote || !(world instanceof WorldServer server)) return;
-        states.remove(server.provider.getDimension());
+        if (world.isRemote) return;
+        states.remove(world.provider.getDimension());
     }
 
     private void handleChunkAvailable(WorldServer world, long chunkKey) {
@@ -239,12 +241,16 @@ public class DynamicStructureDispatcher {
         ArrayList<PendingDynamicStructure> waiters = state.waitingByChunk.remove(chunkKey);
         if (waiters == null || waiters.isEmpty()) return;
 
+        ChunkProviderServer provider = world.getChunkProvider();
         for (int i = waiters.size() - 1; i >= 0; i--) {
             PendingDynamicStructure job = waiters.get(i);
             job.waitingOn.remove(chunkKey);
-            if (job.isReady()) {
-                job.run(world);
+            if (!job.isReady()) continue;
+            if (!job.ensureAllWatchedChunksLoaded(provider)) {
+                job.registerWaiting(state.waitingByChunk);
+                continue;
             }
+            job.run(world);
         }
     }
 
@@ -264,6 +270,21 @@ public class DynamicStructureDispatcher {
         private LongList watchedOffsets;
 
         private PendingDynamicStructure() {
+        }
+
+        boolean ensureAllWatchedChunksLoaded(ChunkProviderServer provider) {
+            if (watchedOffsets == null || watchedOffsets.isEmpty()) return true;
+            waitingOn.clear();
+            final int originChunkX = Library.getBlockPosX(origin) >> 4;
+            final int originChunkZ = Library.getBlockPosZ(origin) >> 4;
+            for (int i = 0, len = watchedOffsets.size(); i < len; i++) {
+                long rel = watchedOffsets.getLong(i);
+                int offsetX = ChunkUtil.getChunkPosX(rel);
+                int offsetZ = ChunkUtil.getChunkPosZ(rel);
+                long absKey = ChunkPos.asLong(originChunkX + offsetX, originChunkZ + offsetZ);
+                if (!provider.loadedChunks.containsKey(absKey)) waitingOn.add(absKey);
+            }
+            return waitingOn.isEmpty();
         }
 
         static PendingDynamicStructure obtain(AbstractPhasedStructure structure, PhasedStructureGenerator.ReadyToGenerateStructure ready,
@@ -326,7 +347,7 @@ public class DynamicStructureDispatcher {
 
                 long absKey = ChunkPos.asLong(originChunkX + offsetX, originChunkZ + offsetZ);
                 Chunk chunk = provider.loadedChunks.get(absKey);
-                if (chunk == null || (!chunk.isPopulated() && !chunk.isTerrainPopulated())) {
+                if (chunk == null || !chunk.isTerrainPopulated()) {
                     waitingOn.add(absKey);
                 }
             }

@@ -38,17 +38,16 @@ public class AncientTombStructure extends AbstractPhasedStructure {
     }
 
     @Override
-    @NotNull
-    public Optional<PhasedStructureGenerator.ReadyToGenerateStructure> validate(@NotNull World world, @NotNull PhasedStructureGenerator.PendingValidationStructure pending) {
+    public PhasedStructureGenerator.ReadyToGenerateStructure validate(@NotNull World world, @NotNull PhasedStructureGenerator.PendingValidationStructure pending) {
         long origin = pending.origin;
         int originX = Library.getBlockPosX(origin);
         int originZ = Library.getBlockPosZ(origin);
         int surfaceY = world.getHeight(originX, originZ);
         if (surfaceY > 35) {
             long finalOrigin = Library.blockPosToLong(originX, 20, originZ);
-            return Optional.of(new PhasedStructureGenerator.ReadyToGenerateStructure(pending, finalOrigin));
+            return new PhasedStructureGenerator.ReadyToGenerateStructure(pending, finalOrigin);
         }
-        return Optional.empty();
+        return null;
     }
 
     @Override

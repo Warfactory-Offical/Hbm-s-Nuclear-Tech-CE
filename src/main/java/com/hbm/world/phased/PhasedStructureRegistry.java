@@ -10,6 +10,7 @@ import it.unimi.dsi.fastutil.objects.Object2ShortOpenHashMap;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
 import net.minecraft.nbt.NBTTagCompound;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
@@ -19,6 +20,7 @@ public class PhasedStructureRegistry {
     private static final Short2ObjectOpenHashMap<Function<NBTTagCompound, IPhasedStructure>> factoryRegistry = new Short2ObjectOpenHashMap<>(64);
 
     static {
+        reverseRegistry.defaultReturnValue((short) -1);
         short i = 0;
         register(AncientTombStructure.class, i++, AncientTombStructure.INSTANCE);
         register(Antenna.class, i++, Antenna.INSTANCE);
@@ -55,7 +57,6 @@ public class PhasedStructureRegistry {
         register(WorldGenMinableNonCascade.class, i++, WorldGenMinableNonCascade::readFromNBT);
     }
 
-
     public static void register(Class<? extends IPhasedStructure> structure, short id, IPhasedStructure instance) {
         registry.put(id, structure);
         factoryRegistry.put(id, _ -> instance);
@@ -65,27 +66,25 @@ public class PhasedStructureRegistry {
     public static void register(Class<? extends IPhasedStructure> structure, short id, Function<NBTTagCompound, IPhasedStructure> factory) {
         registry.put(id, structure);
         factoryRegistry.put(id, factory);
-        reverseRegistry.put(structure, id); // for non-singleton "per-class" types
+        reverseRegistry.put(structure, id);
     }
 
-    public static short getId(IPhasedStructure structure) {
+    public static short getId(@NotNull IPhasedStructure structure) {
         short id = reverseRegistry.getShort(structure);
-        if (id == 0 && !reverseRegistry.containsKey(structure)) {
-            id = reverseRegistry.getShort(structure.getClass());
-        }
+        if (id < 0) id = reverseRegistry.getShort(structure.getClass());
+        if (id < 0) throw new IllegalArgumentException("Unknown phased structure: " + structure);
         return id;
     }
 
-    public static Class<? extends IPhasedStructure> byId(short id) {
+    public static @Nullable Class<? extends IPhasedStructure> byId(short id) {
         return registry.get(id);
     }
 
-    /**
-     * @return The deserialized phased structure, or null if ID or NBT is invalid.
-     */
     public static @NotNull IPhasedStructure deserialize(short id, NBTTagCompound nbt) throws Exception {
-        IPhasedStructure result = factoryRegistry.get(id).apply(nbt);
-        if (result == null) throw new NullPointerException("result");
+        Function<NBTTagCompound, IPhasedStructure> factory = factoryRegistry.get(id);
+        if (factory == null) throw new IllegalArgumentException("Unknown phased structure ID: " + id);
+        IPhasedStructure result = factory.apply(nbt);
+        if (result == null) throw new IllegalStateException("Factory for ID " + id + " returned null");
         return result;
     }
 }

@@ -104,7 +104,7 @@ public abstract class AbstractPhasedStructure extends WorldGenerator implements 
         if (useDynamicScheduler()) {
             if (force) {
                 if (GeneralConfig.enableDebugWorldGen) MainRegistry.logger.info("Forcing dynamic {} generation at {}", this.getClass().getSimpleName(), originSerialized);
-                DynamicStructureDispatcher.INSTANCE.forceGenerate(world, rand, originSerialized, this);
+                DynamicStructureDispatcher.forceGenerate(world, rand, originSerialized, this);
             } else {
                 if (GeneralConfig.enableDebugWorldGen) MainRegistry.logger.info("Proposing dynamic {} generation at {}", this.getClass().getSimpleName(), originSerialized);
                 DynamicStructureDispatcher.INSTANCE.schedule(world, originSerialized, this, layoutSeed);

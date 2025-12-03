@@ -70,11 +70,6 @@ public class PhasedStructureGenerator implements IWorldGenerator {
         state.processingTasks = false;
     }
 
-    @Nullable
-    private static ReadyToGenerateStructure validate(World world, PendingValidationStructure pending) {
-        return pending.structure.validate(world, pending).orElse(null);
-    }
-
     static void forceGenerateStructure(World world, Random rand, long originSerialized, IPhasedStructure structure,
                                        Long2ObjectOpenHashMap<Long2ObjectOpenHashMap<BlockInfo>> layout) {
         int originChunkX = Library.getBlockPosX(originSerialized) >> 4;
@@ -318,7 +313,7 @@ public class PhasedStructureGenerator implements IWorldGenerator {
         }
 
         PendingValidationStructure pending = new PendingValidationStructure(originSerialized, structure, layout, world.getSeed(), layoutSeed);
-        ReadyToGenerateStructure ready = validate(world, pending);
+        ReadyToGenerateStructure ready = pending.structure.validate(world, pending);
 
         if (ready == null) {
             if (GeneralConfig.enableDebugWorldGen) {
@@ -483,10 +478,6 @@ public class PhasedStructureGenerator implements IWorldGenerator {
         public PhasedStructureStart() {
         }
 
-        PhasedStructureStart(ReadyToGenerateStructure ready, DimensionState state) {
-            init(ready, state);
-        }
-
         private DimensionState state() {
             return PhasedStructureGenerator.getState(this.dimension);
         }
@@ -631,7 +622,6 @@ public class PhasedStructureGenerator implements IWorldGenerator {
             DimensionState state = state();
             int originChunkX = Library.getBlockPosX(this.finalOrigin) >> 4;
             int originChunkZ = Library.getBlockPosZ(this.finalOrigin) >> 4;
-            int[] heightBounds = new int[]{Library.getBlockPosY(this.finalOrigin), Library.getBlockPosY(this.finalOrigin)};
             minX = originChunkX;
             maxX = originChunkX;
             minZ = originChunkZ;
@@ -652,7 +642,6 @@ public class PhasedStructureGenerator implements IWorldGenerator {
                 maxX = Math.max(maxX, absChunkX);
                 minZ = Math.min(minZ, absChunkZ);
                 maxZ = Math.max(maxZ, absChunkZ);
-                updateHeightBounds(heightBounds, entry.getValue());
 
                 PhasedChunkTask component = borrowTask(state, this, relChunkX, relChunkZ, entry.getValue(), false);
                 this.components.add(component);
@@ -766,18 +755,6 @@ public class PhasedStructureGenerator implements IWorldGenerator {
             maxZ = (maxZ << 4) + 15;
         }
 
-        private void updateHeightBounds(int[] minMax, Long2ObjectOpenHashMap<BlockInfo> blocks) {
-            if (blocks == null || blocks.isEmpty()) return;
-            ObjectIterator<Long2ObjectMap.Entry<BlockInfo>> iterator = blocks.long2ObjectEntrySet().fastIterator();
-            while (iterator.hasNext()) {
-                Long2ObjectMap.Entry<BlockInfo> entry = iterator.next();
-                long key = entry.getLongKey();
-                int y = Library.getBlockPosY(this.finalOrigin) + Library.getBlockPosY(key);
-                minMax[0] = Math.min(minMax[0], y);
-                minMax[1] = Math.max(minMax[1], y);
-            }
-        }
-
         private void ensureLayout() {
             if (this.layout != null) return;
             if (this.structure instanceof AbstractPhasedStructure abstractPhasedStructure) {
@@ -825,20 +802,19 @@ public class PhasedStructureGenerator implements IWorldGenerator {
 
         void generateExistingChunks() {
             DimensionState state = state();
-            World w = state.world;
-            if (!(w instanceof WorldServer world)) return;
-            ChunkProviderServer provider = world.getChunkProvider();
+            WorldServer server = (WorldServer) state.world;
+            ChunkProviderServer provider = server.getChunkProvider();
             if (this.components == null) return;
 
             state.processingTasks = true;
             try {
-                PhasedChunkTask[] snapshot = this.components.toArray(new PhasedChunkTask[0]);
-                for (int i = 0, snapshotLength = snapshot.length; i < snapshotLength; i++) {
-                    PhasedChunkTask task = snapshot[i];
+                // noinspection unchecked
+                ArrayList<PhasedChunkTask> snapshot = (ArrayList<PhasedChunkTask>) components.clone();
+                for (PhasedChunkTask task : snapshot) {
                     if (task == null) continue;
                     long chunkKey = task.getChunkKey();
                     if (provider.loadedChunks.containsKey(chunkKey)) {
-                        task.generate(world, false);
+                        task.generate(server, false);
                     }
                 }
             } finally {
@@ -847,17 +823,9 @@ public class PhasedStructureGenerator implements IWorldGenerator {
                 drainCompletedStarts(state);
             }
         }
-
-        boolean isSizeableStructure() {
-            return maxX - minX > 0 && maxZ - minZ > 0;
-        }
-
-        boolean intersectsChunk(int minX, int minZ, int maxX, int maxZ) {
-            return this.maxX >= minX && this.minX <= maxX && this.maxZ >= minZ && this.minZ <= maxZ;
-        }
     }
 
-    public static class PhasedChunkTask {
+    static class PhasedChunkTask {
         PhasedStructureStart parent;
         private int relChunkX;
         private int relChunkZ;
@@ -866,10 +834,6 @@ public class PhasedStructureGenerator implements IWorldGenerator {
         private boolean generated;
 
         PhasedChunkTask() {
-        }
-
-        PhasedChunkTask(PhasedStructureStart parent, int relChunkX, int relChunkZ, Long2ObjectOpenHashMap<BlockInfo> blocks, boolean markerOnly) {
-            reset(parent, relChunkX, relChunkZ, blocks, markerOnly);
         }
 
         void reset(PhasedStructureStart parent, int relChunkX, int relChunkZ, Long2ObjectOpenHashMap<BlockInfo> blocks, boolean markerOnly) {

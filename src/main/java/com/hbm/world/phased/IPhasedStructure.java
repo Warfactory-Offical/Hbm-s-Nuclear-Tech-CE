@@ -29,13 +29,13 @@ public interface IPhasedStructure {
      */
     void generateForChunk(World world, Random rand, long structureOrigin, int chunkX, int chunkZ, Long2ObjectOpenHashMap<BlockInfo> blockInfos);
 
-    @NotNull
-    default Optional<PhasedStructureGenerator.ReadyToGenerateStructure> validate(World world, PhasedStructureGenerator.PendingValidationStructure pending) {
+    @Nullable
+    default PhasedStructureGenerator.ReadyToGenerateStructure validate(World world, PhasedStructureGenerator.PendingValidationStructure pending) {
         LongArrayList heightPoints = getHeightPoints(pending.origin);
         if (heightPoints == null || heightPoints.isEmpty()) {
             return checkSpawningConditions(world, pending.origin) // empty -> underground
-                    ? Optional.of(new PhasedStructureGenerator.ReadyToGenerateStructure(pending, pending.origin))
-                    : Optional.empty();
+                    ? new PhasedStructureGenerator.ReadyToGenerateStructure(pending, pending.origin)
+                    : null;
         }
         int newY = Integer.MAX_VALUE;
         for (int i = 0, heightPointsSize = heightPoints.size(); i < heightPointsSize; i++) {
@@ -51,12 +51,12 @@ public interface IPhasedStructure {
             int z = Library.getBlockPosZ(pending.origin);
             long serialized = Library.blockPosToLong(x, newY, z);
             if (checkSpawningConditions(world, serialized)) {
-                return Optional.of(new PhasedStructureGenerator.ReadyToGenerateStructure(pending, serialized));
+                return new PhasedStructureGenerator.ReadyToGenerateStructure(pending, serialized);
             } else if (GeneralConfig.enableDebugWorldGen) {
                 MainRegistry.logger.info("Structure {} at [{}, {}, {}] did not pass spawn condition check.", this.getClass().getSimpleName(), x, newY, z);
             }
         }
-        return Optional.empty();
+        return null;
     }
 
     /**
