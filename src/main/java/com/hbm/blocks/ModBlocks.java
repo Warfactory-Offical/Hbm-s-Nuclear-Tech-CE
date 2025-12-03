@@ -1431,7 +1431,7 @@ public class ModBlocks {
 	public static final Block pink_planks = new BlockBase(Material.WOOD, "pink_planks").setSoundType(SoundType.WOOD).setCreativeTab(null);
     public static final Block pink_slab = new BlockGenericSlab(Material.WOOD, "pink_slab").setSoundType(SoundType.WOOD).setCreativeTab(null);
     public static final Block pink_double_slab = new BlockGenericSlab(Material.WOOD, pink_slab, "pink_double_slab").setSoundType(SoundType.WOOD).setCreativeTab(null);
-    public static final Block pink_stairs = new BlockGenericStairs(pink_planks.getDefaultState(), "pink_stairs").setSoundType(SoundType.WOOD).setCreativeTab(null);
+    public static final Block pink_stairs = new BlockGenericStairs(pink_planks, "pink_stairs").setSoundType(SoundType.WOOD).setCreativeTab(null);
 
 	public static final Block wand_air = new BlockWand("wand_air", Blocks.AIR);
 	public static final Block wand_loot = new BlockWandLoot("wand_loot");

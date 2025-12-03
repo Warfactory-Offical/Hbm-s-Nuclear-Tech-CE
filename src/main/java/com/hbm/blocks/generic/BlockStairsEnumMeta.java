@@ -10,12 +10,9 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -53,7 +50,7 @@ public class BlockStairsEnumMeta extends BlockGenericStairs implements ICustomBl
     protected boolean showMetaInCreative = true;
 
     public BlockStairsEnumMeta(Block block, SoundType sound, String registryName, Class<? extends Enum<?>> blockEnum, boolean multiName, boolean multiTexture) {
-        super(block.getDefaultState(), registryName);
+        super(block, registryName);
         this.setSoundType(sound);
         this.setCreativeTab(CreativeTabs.BUILDING_BLOCKS);
 
@@ -183,25 +180,6 @@ public class BlockStairsEnumMeta extends BlockGenericStairs implements ICustomBl
         }
     }
 
-    private static ModelRotation rotationFor(EnumFacing facing, EnumHalf half) {
-        int y = switch (facing) {
-            case EAST -> 0;
-            case SOUTH -> 90;
-            case WEST -> 180;
-            default -> 270; // north is default, obviously
-        };
-        int x = (half == EnumHalf.TOP) ? 180 : 0;
-        if (x == 0 && y == 0) return ModelRotation.X0_Y0;
-        if (x == 0 && y == 90) return ModelRotation.X0_Y90;
-        if (x == 0 && y == 180) return ModelRotation.X0_Y180;
-        if (x == 0 && y == 270) return ModelRotation.X0_Y270;
-        if (x == 180 && y == 0) return ModelRotation.X180_Y0;
-        if (x == 180 && y == 90) return ModelRotation.X180_Y90;
-        if (x == 180 && y == 180) return ModelRotation.X180_Y180;
-        if (x == 180 && y == 270) return ModelRotation.X180_Y270;
-        return ModelRotation.X0_Y0;
-    }
-
     @Override
     @SideOnly(Side.CLIENT)
     public void registerModel() {
@@ -243,48 +221,7 @@ public class BlockStairsEnumMeta extends BlockGenericStairs implements ICustomBl
 
         for (int meta = 0; meta < META_COUNT; meta++) {
             BlockBakeFrame blockFrame = blockFrames[meta % blockFrames.length];
-            try {
-                ImmutableMap.Builder<String, String> textureMap = ImmutableMap.builder();
-                blockFrame.putTextures(textureMap);
-
-                IModel straight = baseStraight.retexture(textureMap.build());
-                IModel inner = baseInner.retexture(textureMap.build());
-                IModel outer = baseOuter.retexture(textureMap.build());
-
-                for (EnumHalf half : EnumHalf.values()) {
-                    for (EnumFacing facing : new EnumFacing[]{EnumFacing.NORTH, EnumFacing.EAST, EnumFacing.SOUTH, EnumFacing.WEST}) {
-                        ModelRotation rot = rotationFor(facing, half);
-
-                        IBakedModel bakedStraight = straight.bake(rot, DefaultVertexFormats.BLOCK, ModelLoader.defaultTextureGetter());
-                        IBakedModel bakedInner = inner.bake(rot, DefaultVertexFormats.BLOCK, ModelLoader.defaultTextureGetter());
-                        IBakedModel bakedOuter = outer.bake(rot, DefaultVertexFormats.BLOCK, ModelLoader.defaultTextureGetter());
-
-                        ModelResourceLocation mrlStraight = new ModelResourceLocation(getRegistryName(),
-                                "meta=" + meta + ",half=" + half.getName() + ",facing=" + facing.getName() + ",shape=straight");
-                        ModelResourceLocation mrlInnerL = new ModelResourceLocation(getRegistryName(),
-                                "meta=" + meta + ",half=" + half.getName() + ",facing=" + facing.getName() + ",shape=inner_left");
-                        ModelResourceLocation mrlInnerR = new ModelResourceLocation(getRegistryName(),
-                                "meta=" + meta + ",half=" + half.getName() + ",facing=" + facing.getName() + ",shape=inner_right");
-                        ModelResourceLocation mrlOuterL = new ModelResourceLocation(getRegistryName(),
-                                "meta=" + meta + ",half=" + half.getName() + ",facing=" + facing.getName() + ",shape=outer_left");
-                        ModelResourceLocation mrlOuterR = new ModelResourceLocation(getRegistryName(),
-                                "meta=" + meta + ",half=" + half.getName() + ",facing=" + facing.getName() + ",shape=outer_right");
-
-                        event.getModelRegistry().putObject(mrlStraight, bakedStraight);
-                        event.getModelRegistry().putObject(mrlInnerL, bakedInner);
-                        event.getModelRegistry().putObject(mrlInnerR, bakedInner);
-                        event.getModelRegistry().putObject(mrlOuterL, bakedOuter);
-                        event.getModelRegistry().putObject(mrlOuterR, bakedOuter);
-                    }
-                }
-
-                IBakedModel bakedItem = straight.bake(ModelRotation.X0_Y0, DefaultVertexFormats.BLOCK, ModelLoader.defaultTextureGetter());
-                ModelResourceLocation itemMrl = new ModelResourceLocation(getRegistryName(), "meta=" + meta);
-                event.getModelRegistry().putObject(itemMrl, bakedItem);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            bakeStairs(event, blockFrame, baseStraight, baseInner, baseOuter, meta, true);
         }
     }
 
