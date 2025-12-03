@@ -15,10 +15,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class ContainerAutocrafter extends Container {
 
-    private final TileEntityMachineAutocrafter autocrafter;
+    private final TileEntityMachineAutocrafter autoCrafter;
 
     public ContainerAutocrafter(InventoryPlayer invPlayer, TileEntityMachineAutocrafter tedf) {
-        autocrafter = tedf;
+        autoCrafter = tedf;
 
         /* TEMPLATE */
         for(int i = 0; i < 3; i++) {
@@ -68,7 +68,7 @@ public class ContainerAutocrafter extends Container {
         if(index == 9) {
 
             if(button == 1 && clickTypeIn == ClickType.PICKUP && slot.getHasStack()) {
-                autocrafter.nextTemplate();
+                autoCrafter.nextTemplate();
                 this.detectAndSendChanges();
             }
 
@@ -76,7 +76,7 @@ public class ContainerAutocrafter extends Container {
         }
 
         if(button == 1 && clickTypeIn == ClickType.PICKUP && slot.getHasStack()) {
-            autocrafter.nextMode(index);
+            autoCrafter.nextMode(index);
 
         } else {
             slot.putStack(held != ItemStack.EMPTY ? held.copy() : ItemStack.EMPTY);
@@ -86,8 +86,8 @@ public class ContainerAutocrafter extends Container {
             }
 
             slot.onSlotChanged();
-            autocrafter.initPattern(slot.getStack(), index);
-            autocrafter.updateTemplateGrid();
+            autoCrafter.initPattern(slot.getStack(), index);
+            autoCrafter.updateTemplateGrid();
         }
         return ret;
     }
@@ -123,6 +123,6 @@ public class ContainerAutocrafter extends Container {
 
     @Override
     public boolean canInteractWith(@NotNull EntityPlayer player) {
-        return autocrafter.isUseableByPlayer(player);
+        return autoCrafter.isUseableByPlayer(player);
     }
 }

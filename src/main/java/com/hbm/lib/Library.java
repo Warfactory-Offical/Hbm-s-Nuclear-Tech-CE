@@ -40,7 +40,9 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -58,6 +60,8 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
@@ -1178,6 +1182,24 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
     public static boolean isStackDrainableForTank(@NotNull ItemStack stack, @NotNull FluidTankNTM tank) {
         Item item = stack.getItem();
         if (tank.getFill() >= tank.getMaxFill()) return false;
+
+        if(item instanceof ItemBucket || item == Items.MILK_BUCKET) {
+            if(item == Items.BUCKET) return false;
+
+            Fluid fluid = FluidRegistry.lookupFluidForBlock(Block.getBlockFromItem(item));
+            if (fluid == null) {
+                if (item == Items.WATER_BUCKET) fluid = FluidRegistry.WATER;
+                else if (item == Items.LAVA_BUCKET) fluid = FluidRegistry.LAVA;
+                else if (item == Items.MILK_BUCKET) fluid = Fluids.MILK.getFF();
+            }
+
+            if (fluid != null) {
+                FluidStack fluidStack = new FluidStack(fluid, 1000);
+                return tank.fill(fluidStack, false) > 0;
+            }
+            return false;
+        }
+
         if (NTMFluidCapabilityHandler.isNtmFluidContainer(item)) {
             if (!NTMFluidCapabilityHandler.isFullNtmFluidContainer(item)) return false;
             return tank.getTankType() == Fluids.NONE || tank.getTankType() == FluidContainerRegistry.getFluidType(stack);
