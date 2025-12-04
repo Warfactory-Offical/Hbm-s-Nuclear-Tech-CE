@@ -40,9 +40,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBucket;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -60,8 +58,6 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
@@ -1135,12 +1131,12 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 	}
 
 	/** @return true if is instance of IBatteryItem or has FE capability */
-	public static boolean isItemBattery(@NotNull ItemStack stack){
+	public static boolean isItemCanStoreEnergy(@NotNull ItemStack stack){
 		if (stack.isEmpty()) return false;
 		return stack.getItem() instanceof IBatteryItem || getFE(stack) != null;
 	}
 
-	public static boolean isItemDischargeableBattery(@NotNull ItemStack stack){
+	public static boolean isItemDischargeable(@NotNull ItemStack stack){
 		if (stack.isEmpty()) return false;
 		if (stack.getItem() instanceof IBatteryItem battery) {
 			return battery.getCharge(stack) > 0 && battery.getDischargeRate() > 0;
@@ -1149,7 +1145,7 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 		return cap != null && cap.getEnergyStored() > 0 && cap.canExtract();
 	}
 
-	public static boolean isItemChargeableBattery(@NotNull ItemStack stack) {
+	public static boolean isItemChargeable(@NotNull ItemStack stack) {
 		if (stack.isEmpty()) return false;
 		if (stack.getItem() instanceof IBatteryItem battery) {
 			return battery.getMaxCharge(stack) > battery.getCharge(stack) && battery.getChargeRate() > 0;
@@ -1158,7 +1154,7 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 		return cap != null && cap.getMaxEnergyStored() > cap.getEnergyStored() && cap.canReceive();
 	}
 
-	public static boolean isItemEmptyBattery(@NotNull ItemStack stack){
+	public static boolean isItemEmptyEnergy(@NotNull ItemStack stack){
 		if (stack.isEmpty()) return false;
 		if (stack.getItem() instanceof IBatteryItem battery) {
 			return battery.getCharge(stack) <= 0;
@@ -1167,7 +1163,7 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 		return cap != null && cap.getEnergyStored() <= 0;
 	}
 
-	public static boolean isItemFullBattery(@NotNull ItemStack stack){
+	public static boolean isItemFullEnergy(@NotNull ItemStack stack){
 		if (stack.isEmpty()) return false;
 		if (stack.getItem() instanceof IBatteryItem battery) {
 			long max = battery.getMaxCharge(stack);

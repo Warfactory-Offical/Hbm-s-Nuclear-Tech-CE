@@ -61,7 +61,7 @@ public class ContainerMachineElectricFurnace extends ContainerBase {
 				slot.onSlotChange(stack, rStack);
 			} else {
 
-				if(Library.isItemDischargeableBattery(rStack)) {
+				if(Library.isItemDischargeable(rStack)) {
 					if(!this.mergeItemStack(stack, 0, 1, false))
 						return ItemStack.EMPTY;
 

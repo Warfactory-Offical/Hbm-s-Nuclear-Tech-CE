@@ -59,7 +59,7 @@ public class ContainerPADetector extends Container {
                     return ItemStack.EMPTY;
                 }
             } else {
-                if (Library.isItemBattery(rStack)) {
+                if (Library.isItemCanStoreEnergy(rStack)) {
                     if (!this.mergeItemStack(stack, 0, 1, false)) return ItemStack.EMPTY;
                 } else {
                     if (!this.mergeItemStack(stack, 1, 3, false)) return ItemStack.EMPTY;

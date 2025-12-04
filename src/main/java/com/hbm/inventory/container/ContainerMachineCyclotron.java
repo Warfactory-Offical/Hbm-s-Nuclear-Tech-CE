@@ -70,7 +70,7 @@ public class ContainerMachineCyclotron extends Container {
 				
 			} else {
 				
-				if(Library.isItemBattery(stack)) {
+				if(Library.isItemCanStoreEnergy(stack)) {
 					if(!this.mergeItemStack(stack, 9, 10, true))
 						return ItemStack.EMPTY;
 					

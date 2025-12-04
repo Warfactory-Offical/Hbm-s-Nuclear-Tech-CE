@@ -63,7 +63,7 @@ public class ContainerMachineExcavator extends Container {
 				}
 			} else {
 
-				if(Library.isItemBattery(rStack)) {
+				if(Library.isItemCanStoreEnergy(rStack)) {
 					if(!this.mergeItemStack(stack, 0, 1, false)) return ItemStack.EMPTY;
 				} else if(rStack.getItem() instanceof IItemFluidIdentifier) {
 					if(!this.mergeItemStack(stack, 1, 2, false)) return ItemStack.EMPTY;

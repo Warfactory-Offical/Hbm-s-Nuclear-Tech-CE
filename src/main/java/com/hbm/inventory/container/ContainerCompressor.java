@@ -58,7 +58,7 @@ public class ContainerCompressor extends Container {
                 }
             } else {
 
-                if(Library.isItemBattery(var3)) {
+                if(Library.isItemCanStoreEnergy(var3)) {
                     if(!this.mergeItemStack(var5, 1, 2, false)) {
                         return ItemStack.EMPTY;
                     }

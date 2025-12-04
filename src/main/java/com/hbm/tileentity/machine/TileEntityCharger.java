@@ -62,7 +62,7 @@ public class TileEntityCharger extends TileEntityLoadedBase implements IBufPacke
 
 					ItemStack stack = inv.getStackInSlot(i);
 
-					if(Library.isItemBattery(stack)) {
+					if(Library.isItemCanStoreEnergy(stack)) {
 						if (stack.getItem() instanceof IBatteryItem battery) {
 							charge += Math.min(battery.getMaxCharge(stack) - battery.getCharge(stack), battery.getChargeRate());
 						} else {
@@ -149,7 +149,7 @@ public class TileEntityCharger extends TileEntityLoadedBase implements IBufPacke
 			for(int i = 0; i < inv.getSizeInventory(); i ++){
 				if(powerBudget <= 0) break;
 				ItemStack stack = inv.getStackInSlot(i);
-				if(Library.isItemChargeableBattery(stack)) {
+				if(Library.isItemChargeable(stack)) {
 					long powerToOffer = powerBudget;
 					long chargedAmount = Library.chargeBatteryIfValid(stack, powerToOffer, false);
 					if (chargedAmount > 0) {

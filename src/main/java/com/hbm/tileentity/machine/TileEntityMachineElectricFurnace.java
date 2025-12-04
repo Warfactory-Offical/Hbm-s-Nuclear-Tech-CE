@@ -61,7 +61,7 @@ public class TileEntityMachineElectricFurnace extends TileEntityMachineBase impl
     @Override
     public boolean isItemValidForSlot(int i, ItemStack itemStack) {
         if (i == 0) {
-            return Library.isItemBattery(itemStack);
+            return Library.isItemCanStoreEnergy(itemStack);
         }
 
         if (i == 1) {
@@ -94,7 +94,7 @@ public class TileEntityMachineElectricFurnace extends TileEntityMachineBase impl
 
     @Override
     public boolean canExtractItem(int i, ItemStack itemStack, int j) {
-        if (i == 0) if (Library.isItemEmptyBattery(itemStack)) return true;
+        if (i == 0) if (Library.isItemEmptyEnergy(itemStack)) return true;
         return i == 2;
     }
 

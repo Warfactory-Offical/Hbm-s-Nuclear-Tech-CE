@@ -57,7 +57,7 @@ public class ContainerPASource extends Container {
                 }
             } else {
 
-                if(Library.isItemBattery(rStack)) {
+                if(Library.isItemCanStoreEnergy(rStack)) {
                     if(!InventoryUtil.mergeItemStack(this.inventorySlots, stack, 0, 1, false)) return ItemStack.EMPTY;
                 } else {
                     if(!InventoryUtil.mergeItemStack(this.inventorySlots, stack, 1, 3, false)) return ItemStack.EMPTY;

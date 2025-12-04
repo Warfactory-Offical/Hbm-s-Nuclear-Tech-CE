@@ -58,7 +58,7 @@ public class ContainerMachineExposureChamber extends Container {
                     if (!this.mergeItemStack(var5, 5, 7, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (Library.isItemBattery(var3)) {
+                } else if (Library.isItemCanStoreEnergy(var3)) {
                     if (!this.mergeItemStack(var5, 4, 5, false)) {
                         return ItemStack.EMPTY;
                     }

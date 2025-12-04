@@ -60,7 +60,7 @@ public class ContainerMachineChemicalPlant extends ContainerBase {
                     return ItemStack.EMPTY;
                 }
             } else {
-                if(Library.isItemBattery(slotOriginal)) {
+                if(Library.isItemCanStoreEnergy(slotOriginal)) {
                     if(!this.mergeItemStack(slotStack, 0, 1, false)) return ItemStack.EMPTY;
                 } else if(slotOriginal.getItem() instanceof ItemBlueprints) {
                     if(!this.mergeItemStack(slotStack, 1, 2, false)) return ItemStack.EMPTY;

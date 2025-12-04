@@ -173,10 +173,10 @@ public class TileEntityMachineEPress extends TileEntityMachineBase implements IT
 	@Override
 	public boolean isItemValidForSlot(int i, @NotNull ItemStack stack) {
 		return switch (i) {
-			case 0 -> Library.isItemBattery(stack);
+			case 0 -> Library.isItemCanStoreEnergy(stack);
 			case 1 -> stack.getItem() instanceof ItemStamp;
 			case 2 ->
-					!(stack.getItem() instanceof ItemStamp) && !Library.isItemBattery(stack) && !(stack.getItem() instanceof ItemMachineUpgrade);
+					!(stack.getItem() instanceof ItemStamp) && !Library.isItemCanStoreEnergy(stack) && !(stack.getItem() instanceof ItemMachineUpgrade);
 			case 4 -> stack.getItem() instanceof ItemMachineUpgrade;
 			default -> false;
 		};

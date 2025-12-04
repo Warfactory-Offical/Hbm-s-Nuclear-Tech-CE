@@ -48,7 +48,7 @@ public class ContainerMachineRadarNT extends Container {
                 }
             } else {
 
-                if(Library.isItemBattery(var3)) {
+                if(Library.isItemCanStoreEnergy(var3)) {
                     if(!this.mergeItemStack(var5, 9, 10, false)) {
                         return ItemStack.EMPTY;
                     }

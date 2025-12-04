@@ -62,7 +62,7 @@ public class ContainerMachineWoodBurner extends Container {
 				
 			} else {
 				
-				if(Library.isItemBattery(stack)) {
+				if(Library.isItemCanStoreEnergy(stack)) {
 					if(!this.mergeItemStack(originalStack, 5, 6, false)) {
 						return ItemStack.EMPTY;
 					}

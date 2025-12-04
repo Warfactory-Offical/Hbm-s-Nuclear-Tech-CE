@@ -47,7 +47,7 @@ public class ContainerMachineAssemblyMachine extends ContainerBase {
                 }
             } else {
 
-                if(Library.isItemBattery(slotOriginal)) {
+                if(Library.isItemCanStoreEnergy(slotOriginal)) {
                     if(!this.mergeItemStack(slotStack, 0, 1, false)) return ItemStack.EMPTY;
                 } else if(slotOriginal.getItem() == ModItems.blueprints) {
                     if(!this.mergeItemStack(slotStack, 1, 2, false)) return ItemStack.EMPTY;
