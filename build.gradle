@@ -1741,21 +1741,19 @@ tasks.named('build').configure {it.finalizedBy(tasks.named('repatchSourcesForIDE
 
 // JVMDG configuration
 jvmdg {
-    // mlbv: my fork with proper switch bootstrap
-    jvmdg {
-        def fileName = 'jvmdowngrader-java-api-1.3.4-downgraded-8.jar'
-        def src  = file("libs/$fileName")
-        if (!src.exists()) {
-            throw new GradleException("Missing source api jar: $src")
-        }
-        def dest = layout.buildDirectory.file("jvmdg/$fileName").get().asFile
-        copy {
-            from src
-            into dest.parentFile
-        }
-        apiJar = [dest]
-        ignoreWarningsIn = ["com/hbm/lib/internal/TrustedLookupAccessor"] as Set
-        shadeInlining = false
+    // mlbv: my fork with proper switch bootstrap and Runtime.version()
+    def fileName = 'jvmdowngrader-java-api-1.3.4-downgraded-8.jar'
+    def src  = file("libs/$fileName")
+    if (!src.exists()) {
+        throw new GradleException("Missing source api jar: $src")
     }
+    def dest = layout.buildDirectory.file("jvmdg/$fileName").get().asFile
+    copy {
+        from src
+        into dest.parentFile
+    }
+    apiJar = [dest]
+    ignoreWarningsIn = ["com/hbm/lib/internal/TrustedLookupAccessor"] as Set
+    shadeInlining = false
 }
 // End JVMDG configuration

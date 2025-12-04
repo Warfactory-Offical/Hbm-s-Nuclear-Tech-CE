@@ -1185,7 +1185,8 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 
         if (NTMFluidCapabilityHandler.isNtmFluidContainer(item)) {
             if (!NTMFluidCapabilityHandler.isFullNtmFluidContainer(item)) return false;
-            return tank.getTankType() == Fluids.NONE || tank.getTankType() == FluidContainerRegistry.getFluidType(stack);
+            if (tank.getTankType() != Fluids.NONE && tank.getTankType() != FluidContainerRegistry.getFluidType(stack)) return false;
+            return tank.getFill() + FluidContainerRegistry.getFluidContent(stack) <= tank.getMaxFill();
         } else if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
             IFluidHandlerItem handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
             FluidStack test = handler.drain(Integer.MAX_VALUE, false);
@@ -1282,7 +1283,7 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
         }
     }
 
-    public static <T extends TileEntity> float getTENbtPercentage(T te, float limitByteSize) {
+    public static float getTENbtPercentage(TileEntity te, float limitByteSize) {
         NBTTagCompound compound = new NBTTagCompound();
         compound = te.writeToNBT(compound);
         float percent = 0.0f;

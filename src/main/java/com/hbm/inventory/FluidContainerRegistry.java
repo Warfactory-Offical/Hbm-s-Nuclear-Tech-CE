@@ -140,6 +140,13 @@ public class FluidContainerRegistry {
         return (recipe != null && recipe.type() == type) ? recipe.content() : 0;
     }
 
+    @Contract(pure = true)
+    public static int getFluidContent(ItemStack stack) {
+        if (stack == null || stack.isEmpty()) return 0;
+        FluidContainer recipe = getFluidContainer(stack);
+        return recipe != null ? recipe.content() : 0;
+    }
+
     /**
      * Gets the FluidType contained in a full container stack.
      */
