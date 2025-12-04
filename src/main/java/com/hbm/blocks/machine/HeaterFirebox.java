@@ -33,7 +33,7 @@ public class HeaterFirebox extends BlockDummyable implements ITooltipProvider, I
 		if(meta >= 12)
 			return new TileEntityHeaterFirebox();
 		
-		return new TileEntityProxyCombo(true, false, false);
+		return new TileEntityProxyCombo(true, false, true);
 	}
 	
     @Override
