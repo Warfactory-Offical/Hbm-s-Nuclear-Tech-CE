@@ -1183,29 +1183,12 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
         Item item = stack.getItem();
         if (tank.getFill() >= tank.getMaxFill()) return false;
 
-        if(item instanceof ItemBucket || item == Items.MILK_BUCKET) {
-            if(item == Items.BUCKET) return false;
-
-            Fluid fluid = FluidRegistry.lookupFluidForBlock(Block.getBlockFromItem(item));
-            if (fluid == null) {
-                if (item == Items.WATER_BUCKET) fluid = FluidRegistry.WATER;
-                else if (item == Items.LAVA_BUCKET) fluid = FluidRegistry.LAVA;
-                else if (item == Items.MILK_BUCKET) fluid = Fluids.MILK.getFF();
-            }
-
-            if (fluid != null) {
-                FluidStack fluidStack = new FluidStack(fluid, 1000);
-                return tank.fill(fluidStack, false) > 0;
-            }
-            return false;
-        }
-
         if (NTMFluidCapabilityHandler.isNtmFluidContainer(item)) {
             if (!NTMFluidCapabilityHandler.isFullNtmFluidContainer(item)) return false;
             return tank.getTankType() == Fluids.NONE || tank.getTankType() == FluidContainerRegistry.getFluidType(stack);
         } else if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
             IFluidHandlerItem handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
-            FluidStack test = handler.drain(1, false);
+            FluidStack test = handler.drain(Integer.MAX_VALUE, false);
             if (test == null) return false;
             return tank.fill(test, false) > 0;
         } else return false;
@@ -1220,7 +1203,7 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
             return FluidContainerRegistry.getFillRecipe(stack, tank.getTankType()) != null;
         } else if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
             IFluidHandlerItem handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
-            return handler.fill(new FluidStack(tank.getTankTypeFF(), 1), false) > 0;
+            return handler.fill(new FluidStack(tank.getTankTypeFF(), Integer.MAX_VALUE), false) > 0;
         } else return false;
     }
 
