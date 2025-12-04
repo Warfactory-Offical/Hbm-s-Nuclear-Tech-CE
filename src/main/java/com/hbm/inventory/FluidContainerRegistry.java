@@ -174,13 +174,12 @@ public class FluidContainerRegistry {
      * Gets the empty container item for a given full container stack.
      * @return a copy of the empty container item for the given full container stack, or null if none is found.
      */
-    @Nullable
-    @Contract(pure = true, value = "null -> null")
+    @Contract(pure = true)
     public static ItemStack getEmptyContainer(ItemStack stack) {
-        if (stack == null || stack.isEmpty()) return null;
+        if (stack == null || stack.isEmpty()) return ItemStack.EMPTY;
         FluidContainer recipe = getFluidContainer(stack);
         if (recipe != null && recipe.emptyContainer() != null) return recipe.emptyContainer().copy();
-        return null;
+        return ItemStack.EMPTY;
     }
 
     /**

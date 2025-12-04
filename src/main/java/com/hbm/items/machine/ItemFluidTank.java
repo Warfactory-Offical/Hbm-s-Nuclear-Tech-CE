@@ -27,6 +27,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -156,4 +157,14 @@ public class ItemFluidTank extends ItemBakedBase {
 		}
 		Fluids.fromID(stack.getMetadata()).addInfoItemTanks(tooltip);
 	}
+
+    @Override
+    public boolean hasContainerItem(@NotNull ItemStack item) {
+        return true;
+    }
+
+    @Override
+    public @NotNull ItemStack getContainerItem(@NotNull ItemStack item) {
+        return FluidContainerRegistry.getEmptyContainer(item);
+    }
 }

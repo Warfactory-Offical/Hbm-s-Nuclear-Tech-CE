@@ -15,7 +15,6 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerMachineArcFurnaceLarge extends Container {
 
@@ -47,7 +46,7 @@ public class ContainerMachineArcFurnaceLarge extends Container {
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int index) {
         ItemStack rStack = ItemStack.EMPTY;
-        Slot slot = (Slot) this.inventorySlots.get(index);
+        Slot slot = this.inventorySlots.get(index);
 
         if(slot != null && slot.getHasStack()) {
             ItemStack stack = slot.getStack();
@@ -62,9 +61,9 @@ public class ContainerMachineArcFurnaceLarge extends Container {
                 if(rStack.getItem() instanceof IBatteryItem || rStack.getItem() == ModItems.battery_creative) {
                     if(!InventoryUtil.mergeItemStack(this.inventorySlots, stack, 3, 4, false)) return ItemStack.EMPTY;
                 } else if(rStack.getItem() == ModItems.arc_electrode) {
-                    if(!InventoryUtil.mergeItemStack(this.inventorySlots, stack, 4, 5, false)) return ItemStack.EMPTY;
-                } else if(rStack.getItem() instanceof ItemMachineUpgrade) {
                     if(!InventoryUtil.mergeItemStack(this.inventorySlots, stack, 0, 3, false)) return ItemStack.EMPTY;
+                } else if(rStack.getItem() instanceof ItemMachineUpgrade) {
+                    if(!InventoryUtil.mergeItemStack(this.inventorySlots, stack, 4, 5, false)) return ItemStack.EMPTY;
                 } else {
                     if(!InventoryUtil.mergeItemStack(this.inventorySlots, stack, 5, 25, false)) return ItemStack.EMPTY;
                 }

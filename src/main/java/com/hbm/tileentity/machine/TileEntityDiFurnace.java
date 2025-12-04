@@ -142,7 +142,7 @@ public class TileEntityDiFurnace extends TileEntityMachinePolluting implements I
         }
     }
 
-    private boolean hasItemPower(ItemStack itemStack) {
+    public boolean hasItemPower(ItemStack itemStack) {
         return BlastFurnaceRecipes.getItemPower(itemStack) > 0;
     }
 
