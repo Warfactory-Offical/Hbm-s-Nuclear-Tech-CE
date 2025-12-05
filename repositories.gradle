@@ -5,6 +5,8 @@ repositories {
 //        name = "galacticraft"
 //        url = "https://maven.galacticraft.net/repository/legacy/"
 //    }
+
+    mavenCentral()
     maven { //  baubles
         name = "thiakil"
         url = "https://maven.thiakil.com"
