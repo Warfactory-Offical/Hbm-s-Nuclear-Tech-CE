@@ -105,10 +105,10 @@ public class BlockOutgas extends BlockNTMOre {
         if(onNeighbour && !world.isRemote &&world.rand.nextInt(3) == 0) {
             for(EnumFacing dir : EnumFacing.VALUES) {
                 BlockPos targetPos = pos.offset(dir);
-                DelayedTick.nextWorldTick(world, () -> {
-                    IBlockState targetState = world.getBlockState(targetPos);
-                    if (targetState.getBlock().isAir(targetState, world, targetPos)) {
-                        world.setBlockState(targetPos, getGas().getDefaultState(), 3);
+                DelayedTick.nextWorldTickEnd(world, w -> {
+                    IBlockState targetState = w.getBlockState(targetPos);
+                    if (targetState.getBlock().isAir(targetState, w, targetPos)) {
+                        w.setBlockState(targetPos, getGas().getDefaultState(), 3);
                     }
                 });
             }
@@ -125,10 +125,10 @@ public class BlockOutgas extends BlockNTMOre {
                 int manhattan = Math.abs(x + y + z);
                 if (manhattan > 0 && manhattan < 5) {
                     BlockPos targetPos = pos.add(x, y, z);
-                    DelayedTick.nextWorldTick(world, () -> {
-                        IBlockState state1 = world.getBlockState(targetPos);
-                        if (state1.getBlock().isAir(state1, world, targetPos)) {
-                            world.setBlockState(targetPos, gas.getDefaultState(), 3);
+                    DelayedTick.nextWorldTickEnd(world, w -> {
+                        IBlockState state1 = w.getBlockState(targetPos);
+                        if (state1.getBlock().isAir(state1, w, targetPos)) {
+                            w.setBlockState(targetPos, gas.getDefaultState(), 3);
                         }
                     });
                 }

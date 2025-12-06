@@ -1214,10 +1214,10 @@ public class ModEventHandler {
             for (EnumFacing dir : EnumFacing.VALUES) {
                 if (world.rand.nextInt(2) == 0) {
                     BlockPos adjacentPos = pos.offset(dir);
-                    DelayedTick.nextWorldTick(world, () -> {
-                        IBlockState adjacentState = world.getBlockState(adjacentPos);
-                        if (adjacentState.getBlock().isAir(adjacentState, world, adjacentPos)) {
-                            world.setBlockState(adjacentPos, ModBlocks.gas_coal.getDefaultState(), 3);
+                    DelayedTick.nextWorldTickEnd(world, w -> {
+                        IBlockState adjacentState = w.getBlockState(adjacentPos);
+                        if (adjacentState.getBlock().isAir(adjacentState, w, adjacentPos)) {
+                            w.setBlockState(adjacentPos, ModBlocks.gas_coal.getDefaultState(), 3);
                         }
                     });
                 }

@@ -4,6 +4,7 @@ import com.hbm.config.GeneralConfig;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.ChunkUtil;
+import com.hbm.util.DelayedTick;
 import com.hbm.world.phased.AbstractPhasedStructure.BlockInfo;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.*;
@@ -18,6 +19,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.ChunkProviderServer;
 import net.minecraft.world.gen.IChunkGenerator;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.world.ChunkDataEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.IWorldGenerator;
@@ -366,13 +368,10 @@ public class PhasedStructureGenerator implements IWorldGenerator {
         state.world = world;
 
         NBTTagCompound data = event.getData();
-        if (!data.hasKey("HbmPhasedStructures", 9)) { // 9 = TAG_LIST
-            return;
-        }
-
-        NBTTagList list = data.getTagList("HbmPhasedStructures", 10); // 10 = TAG_COMPOUND
+        if (!data.hasKey("HbmPhasedStructures", Constants.NBT.TAG_LIST)) return;
+        NBTTagList list = data.getTagList("HbmPhasedStructures", Constants.NBT.TAG_COMPOUND);
         if (list.tagCount() == 0) return;
-
+        final ArrayList<PhasedStructureStart> loaded = new ArrayList<>(list.tagCount());
         for (int i = 0; i < list.tagCount(); i++) {
             NBTTagCompound entry = list.getCompoundTagAt(i);
             PhasedStructureStart start = borrowStart(state);
@@ -383,7 +382,16 @@ public class PhasedStructureGenerator implements IWorldGenerator {
             long key = ChunkPos.asLong(start.chunkPosX, start.chunkPosZ);
             state.structureMap.put(key, start);
             start.registerTasksForRemaining();
-            start.generateExistingChunks();
+            loaded.add(start);
+        }
+        if (!loaded.isEmpty()) {
+            DelayedTick.nextWorldTickStart(world, w -> {
+                DimensionState s = getState(w);
+                s.world = w;
+                for (PhasedStructureStart start : loaded) {
+                    start.generateExistingChunks();
+                }
+            });
         }
     }
 

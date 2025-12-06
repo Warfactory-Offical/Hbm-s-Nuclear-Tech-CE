@@ -60,9 +60,9 @@ public class EntityGrenadeIFNull extends EntityGrenadeBouncyBase {
         }
         if (toKill instanceof EntityLivingBase livingBase) livingBase.setHealth(0f);
         else toKill.setDead();
-        DelayedTick.nextWorldTick(toKill.world, () -> {
+        DelayedTick.nextWorldTickEnd(toKill.world, w -> {
             if (!toKill.isDead && toKill.isEntityAlive()) {
-                WorldServer ws = (WorldServer) toKill.world;
+                WorldServer ws = (WorldServer) w;
                 if (toKill instanceof EntityPlayer) {
                     ws.removeEntity(toKill);
                     return;
