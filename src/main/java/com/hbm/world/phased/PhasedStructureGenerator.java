@@ -38,6 +38,10 @@ public class PhasedStructureGenerator implements IWorldGenerator {
 
     public static final PhasedStructureGenerator INSTANCE = new PhasedStructureGenerator(); // entrypoint, state is per-dimension
     private static final Int2ObjectOpenHashMap<DimensionState> STATES = new Int2ObjectOpenHashMap<>();
+    private static final int MAX_TASK_POOL_SIZE = 2048;
+    private static final int MAX_START_POOL_SIZE = 1024;
+    private static final int MAX_TASK_LIST_POOL_SIZE = 2048;
+    private static final int MAX_ADDITIONAL_CHUNK_POOL_SIZE = 512;
 
     private PhasedStructureGenerator() {
     }
@@ -170,7 +174,9 @@ public class PhasedStructureGenerator implements IWorldGenerator {
     private static void recycleAdditionalChunkList(DimensionState state, LongArrayList list) {
         if (list == null) return;
         list.clear();
-        state.additionalChunkPool.add(list);
+        if (state.additionalChunkPool.size() < MAX_ADDITIONAL_CHUNK_POOL_SIZE) {
+            state.additionalChunkPool.add(list);
+        }
     }
 
     private static ArrayList<PhasedChunkTask> borrowTaskList(DimensionState state) {
@@ -187,13 +193,17 @@ public class PhasedStructureGenerator implements IWorldGenerator {
             recycleTask(state, task);
         }
         list.clear();
-        state.chunkTaskListPool.add(list);
+        if (state.chunkTaskListPool.size() < MAX_TASK_LIST_POOL_SIZE) {
+            state.chunkTaskListPool.add(list);
+        }
     }
 
     private static void recycleTask(DimensionState state, PhasedChunkTask task) {
         if (task == null) return;
         task.release();
-        state.chunkTaskPool.add(task);
+        if (state.chunkTaskPool.size() < MAX_TASK_POOL_SIZE) {
+            state.chunkTaskPool.add(task);
+        }
     }
 
     private static void recycleAllComponents(DimensionState state) {
@@ -222,7 +232,9 @@ public class PhasedStructureGenerator implements IWorldGenerator {
     private static void recycleStart(DimensionState state, PhasedStructureStart start) {
         if (start == null) return;
         start.release();
-        state.structureStartPool.add(start);
+        if (state.structureStartPool.size() < MAX_START_POOL_SIZE) {
+            state.structureStartPool.add(start);
+        }
     }
 
     private static void onStructureComplete(DimensionState state, PhasedStructureStart start) {
@@ -410,12 +422,12 @@ public class PhasedStructureGenerator implements IWorldGenerator {
         final int dimension;
         final Long2ObjectOpenHashMap<ArrayList<PhasedChunkTask>> componentsByChunk = new Long2ObjectOpenHashMap<>(4096);
         final Long2ObjectOpenHashMap<PhasedStructureStart> structureMap = new Long2ObjectOpenHashMap<>(4096);
-        final ArrayList<PhasedChunkTask> chunkTaskPool = new ArrayList<>();
-        final ArrayList<PhasedStructureStart> structureStartPool = new ArrayList<>();
-        final ArrayList<ArrayList<PhasedChunkTask>> chunkTaskListPool = new ArrayList<>();
-        final ArrayList<ArrayList<PhasedChunkTask>> recycleQueue = new ArrayList<>();
-        final ArrayList<PhasedStructureStart> completedStarts = new ArrayList<>();
-        final ArrayList<LongArrayList> additionalChunkPool = new ArrayList<>();
+        final ArrayList<PhasedChunkTask> chunkTaskPool = new ArrayList<>(512);
+        final ArrayList<PhasedStructureStart> structureStartPool = new ArrayList<>(512);
+        final ArrayList<ArrayList<PhasedChunkTask>> chunkTaskListPool = new ArrayList<>(512);
+        final ArrayList<ArrayList<PhasedChunkTask>> recycleQueue = new ArrayList<>(128);
+        final ArrayList<PhasedStructureStart> completedStarts = new ArrayList<>(256);
+        final ArrayList<LongArrayList> additionalChunkPool = new ArrayList<>(512);
         long currentlyProcessingChunk = Long.MIN_VALUE;
         boolean processingTasks;
         World world; // cached per-dimension world reference
