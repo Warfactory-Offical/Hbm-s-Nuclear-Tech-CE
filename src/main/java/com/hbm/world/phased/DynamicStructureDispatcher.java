@@ -16,6 +16,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.ChunkProviderServer;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import net.minecraftforge.event.world.ChunkDataEvent;
 import net.minecraftforge.event.world.ChunkEvent;
@@ -34,6 +35,8 @@ import java.util.Random;
 public class DynamicStructureDispatcher {
 
     public static final DynamicStructureDispatcher INSTANCE = new DynamicStructureDispatcher();
+    // it is using too much memory, disable for now
+    private static final boolean NO_SAVING = true;
 
     private static final LongArrayList ORIGIN_ONLY = LongArrayList.wrap(new long[]{ChunkPos.asLong(0, 0)});
     private static final Long2ObjectOpenHashMap<Long2ObjectOpenHashMap<AbstractPhasedStructure.BlockInfo>> EMPTY_LAYOUT = new Long2ObjectOpenHashMap<>(0);
@@ -126,6 +129,12 @@ public class DynamicStructureDispatcher {
     public void onChunkDataSave(ChunkDataEvent.Save event) {
         World world = event.getWorld();
         if (world.isRemote) return;
+        NBTTagCompound data = event.getData();
+
+        if (NO_SAVING) {
+            data.removeTag("HbmDynamicJobs");
+            return;
+        }
 
         int dim = world.provider.getDimension();
         WorldState state = states.get(dim);
@@ -135,7 +144,6 @@ public class DynamicStructureDispatcher {
         long chunkKey = ChunkPos.asLong(chunk.x, chunk.z);
 
         ArrayList<PendingDynamicStructure> jobs = state.jobsByOriginChunk.get(chunkKey);
-        NBTTagCompound data = event.getData();
 
         if (jobs == null || jobs.isEmpty()) {
             data.removeTag("HbmDynamicJobs");
@@ -178,11 +186,15 @@ public class DynamicStructureDispatcher {
     public void onChunkDataLoad(ChunkDataEvent.Load event) {
         World world = event.getWorld();
         if (world.isRemote) return;
-        WorldServer server = (WorldServer) world;
         NBTTagCompound data = event.getData();
-        if (!data.hasKey("HbmDynamicJobs", 9)) { // 9 = TAG_LIST
+        if (!data.hasKey("HbmDynamicJobs", Constants.NBT.TAG_LIST)) {
             return;
         }
+        if (NO_SAVING) {
+            data.removeTag("HbmDynamicJobs");
+            return;
+        }
+        WorldServer server = (WorldServer) world;
 
         int dim = server.provider.getDimension();
         WorldState state = states.computeIfAbsent(dim, d -> new WorldState());
@@ -190,7 +202,7 @@ public class DynamicStructureDispatcher {
         Chunk chunk = event.getChunk();
         long chunkKey = ChunkPos.asLong(chunk.x, chunk.z);
 
-        NBTTagList list = data.getTagList("HbmDynamicJobs", 10); // 10 = TAG_COMPOUND
+        NBTTagList list = data.getTagList("HbmDynamicJobs", Constants.NBT.TAG_COMPOUND);
         if (list.tagCount() == 0) return;
 
         ChunkProviderServer provider = server.getChunkProvider();
