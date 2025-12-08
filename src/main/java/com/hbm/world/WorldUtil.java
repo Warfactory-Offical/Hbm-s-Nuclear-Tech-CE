@@ -34,6 +34,8 @@ import java.util.List;
 
 public class WorldUtil {
     private static final MethodHandle getIntBiomeArray;
+    private static final MethodHandle getMinWorldHeightHandle;
+    private static final MethodHandle getMaxWorldHeightHandle;
     public static final Predicate<IBlockState> STONE_PREDICATE = state -> {
         if (state != null && state.getBlock() == Blocks.STONE) {
             BlockStone.EnumType type = state.getValue(BlockStone.VARIANT);
@@ -54,6 +56,53 @@ public class WorldUtil {
             }
         }
         getIntBiomeArray = method;
+
+        MethodHandle minWHHandle = null;
+        MethodHandle maxWHHandle = null;
+        if (Compat.MOD_CC) {
+            try {
+                //see https://github.com/OpenCubicChunks/CubicChunks/blob/MC_1.12/CubicChunksAPI/src/main/java/io/github/opencubicchunks/cubicchunks/api/world/IMinMaxHeight.java
+                //see https://github.com/OpenCubicChunks/CubicChunks/blob/MC_1.12/src/main/java/io/github/opencubicchunks/cubicchunks/core/asm/mixin/core/common/MixinWorld.java
+                minWHHandle = MethodHandleHelper.findVirtual(World.class, "getMinHeight", MethodType.methodType(int.class));
+                maxWHHandle = MethodHandleHelper.findVirtual(World.class, "getMaxHeight", MethodType.methodType(int.class));
+            } catch (RuntimeException ex) {
+                MainRegistry.logger.error("CubicChunks is loaded but failed to find getMinHeight/getMaxHeight method", ex);
+            }
+        }
+        getMinWorldHeightHandle = minWHHandle;
+        getMaxWorldHeightHandle = maxWHHandle;
+    }
+
+    /**
+     * Returns Y position of the bottom block in the world
+     *
+     * @return the bottom of the world, 0 by default
+     */
+    public static int getMinWorldHeight(World world) {
+        if (getMinWorldHeightHandle == null) return 0;
+        try {
+            return (int) getMinWorldHeightHandle.invokeExact(world);
+        } catch (Throwable x) {
+            throw new RuntimeException("Failed to get min world height", x);
+        }
+    }
+
+    /**
+     * Returns Y position of block above the top block in the world,
+     *
+     * @return the top of the world, 256 by default
+     */
+    public static int getMaxWorldHeight(World world) {
+        if (getMaxWorldHeightHandle == null) return 256;
+        try {
+            return (int) getMaxWorldHeightHandle.invokeExact(world);
+        } catch (Throwable x) {
+            throw new RuntimeException("Failed to get max world height", x);
+        }
+    }
+
+    public static int getSubChunkCount(World world) {
+        return (getMaxWorldHeight(world) - getMinWorldHeight(world)) >> 4;
     }
 
     public static Chunk provideChunk(WorldServer world, int chunkX, int chunkZ) {
