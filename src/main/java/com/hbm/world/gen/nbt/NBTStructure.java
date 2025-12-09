@@ -520,12 +520,14 @@ public class NBTStructure {
 		final int maxIdxX = sx - 1;
 		final int maxIdxZ = sz - 1;
 
-		int absMinX = Math.max(generatingBounds.minX - totalBounds.minX, 0);
-		int absMinZ = Math.max(generatingBounds.minZ - totalBounds.minZ, 0);
-		int absMaxX = Math.min(generatingBounds.maxX - totalBounds.minX, maxIdxX);
-		int absMaxZ = Math.min(generatingBounds.maxZ - totalBounds.minZ, maxIdxZ);
+        int sizeX = totalBounds.maxX - totalBounds.minX;
+        int sizeZ = totalBounds.maxZ - totalBounds.minZ;
 
-		if (absMinX > maxIdxX || absMinZ > maxIdxZ || absMaxX < 0 || absMaxZ < 0) return true;
+        int absMinX = Math.max(generatingBounds.minX - totalBounds.minX, 0);
+        int absMinZ = Math.max(generatingBounds.minZ - totalBounds.minZ, 0);
+        int absMaxX = Math.min(generatingBounds.maxX - totalBounds.minX, sizeX);
+        int absMaxZ = Math.min(generatingBounds.maxZ - totalBounds.minZ, sizeZ);
+        if (absMinX > sizeX || absMinZ > sizeZ || absMaxX < 0 || absMaxZ < 0) return true;
 
 		int ux1 = unrotateX(absMinX, absMinZ, coordBaseMode);
 		int uz1 = unrotateZ(absMinX, absMinZ, coordBaseMode);
@@ -889,14 +891,19 @@ public class NBTStructure {
 			this(spawn, piece, rand, x, 0, z, rand.nextInt(4));
 		}
 
-		public Component(SpawnCondition spawn, JigsawPiece piece, Random rand, int x, int y, int z, int coordBaseMode) {
-			super(0);
-			this.coordBaseMode = coordBaseMode;
-			this.piece = piece;
-			this.minHeight = spawn.minHeight;
-			this.maxHeight = spawn.maxHeight;
-			this.boundingBox = new StructureBoundingBox(x, y, z, x + piece.structure.size.x - 1, y + piece.structure.size.y - 1, z + piece.structure.size.z - 1);
-		}
+        public Component(SpawnCondition spawn, JigsawPiece piece, Random rand, int x, int y, int z, int coordBaseMode) {
+            super(0);
+            this.coordBaseMode = coordBaseMode;
+            this.piece = piece;
+            this.minHeight = spawn.minHeight;
+            this.maxHeight = spawn.maxHeight;
+            this.boundingBox = switch (coordBaseMode) {
+                case 1, 3 ->
+                        new StructureBoundingBox(x, y, z, x + piece.structure.size.z - 1, y + piece.structure.size.y - 1, z + piece.structure.size.x - 1);
+                default ->
+                        new StructureBoundingBox(x, y, z, x + piece.structure.size.x - 1, y + piece.structure.size.y - 1, z + piece.structure.size.z - 1);
+            };
+        }
 
 		public Component connectedFrom(JigsawConnection connection) {
 			this.connectedFrom = connection;
