@@ -1748,6 +1748,48 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
         return pos;
 	}
 
+    /**
+     * chunkX, chunkZ ∈ [-2_097_152, 2_097_151] (±33.5M blocks)
+     * subY ∈ [-524_288, 524_287] (±8.3M blocks)
+     */
+    @Contract(pure = true)
+    public static long subChunkToLong(int chunkX, int subY, int chunkZ) {
+        long xPart = ((long) chunkX & 0x3fffffL) << 42;
+        long zPart = ((long) chunkZ & 0x3fffffL) << 20;
+        long yPart = ((long) subY & 0xfffffL);
+        return xPart | zPart | yPart;
+    }
+
+    @Contract(pure = true)
+    public static long subChunkToLong(ChunkPos pos, int subY) {
+        return subChunkToLong(pos.x, subY, pos.z);
+    }
+
+    @Contract(pure = true)
+    public static int getSubChunkX(long key) {
+        return (int) (key >> 42);
+    }
+
+    @Contract(pure = true)
+    public static int getSubChunkY(long key) {
+        return (int) (key << 44 >> 44);
+    }
+
+    @Contract(pure = true)
+    public static int getSubChunkZ(long key) {
+        return (int) (key << 22 >> 42);
+    }
+
+    @Contract(pure = true)
+    public static long blockPosToSubChunkLong(int x, int y, int z) {
+        return subChunkToLong(x >> 4, y >> 4, z >> 4);
+    }
+
+    @Contract(pure = true)
+    public static long blockPosToSubChunkLong(BlockPos pos) {
+        return subChunkToLong(pos.getX() >> 4, pos.getY() >> 4, pos.getZ() >> 4);
+    }
+
 	@Contract(pure = true)
 	public static int packLocal(int localX, int localY, int localZ) {
 		return (localY << 8) | (localZ << 4) | localX;

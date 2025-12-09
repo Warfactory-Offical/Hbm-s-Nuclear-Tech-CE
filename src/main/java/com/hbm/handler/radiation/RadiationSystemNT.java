@@ -11,6 +11,7 @@ import com.hbm.entity.mob.EntityQuackos;
 import com.hbm.entity.mob.EntityRADBeast;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.IRadResistantBlock;
+import com.hbm.lib.Library;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.lib.maps.NonBlockingHashMapLong;
 import com.hbm.main.AdvancementManager;
@@ -19,7 +20,6 @@ import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.saveddata.AuxSavedData;
 import com.hbm.util.AtomicDouble;
 import com.hbm.util.ChunkUtil;
-import com.hbm.util.SubChunkKey;
 import com.hbm.world.WorldUtil;
 import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongSet;
@@ -139,7 +139,7 @@ public final class RadiationSystemNT {
      * @param max    - the maximum amount of radiation allowed before it doesn't increment
      */
     public static void incrementRad(WorldServer world, BlockPos pos, double amount, double max) {
-        if (pos.getY() < WorldUtil.getMinWorldHeight(world) || pos.getY() >= WorldUtil.getMaxWorldHeight(world) || !world.isBlockLoaded(pos)) return;
+        if (pos.getY() < 0 || pos.getY() > 255 || !world.isBlockLoaded(pos)) return;
         if (amount < 0 || max < 0) throw new IllegalArgumentException("Radiation amount and max must be positive.");
         if (!isSubChunkLoaded(world, pos)) rebuildChunkPockets(world, world.getChunk(pos), pos.getY() >> 4);
         RadPocket p = getPocket(world, pos);
@@ -158,7 +158,7 @@ public final class RadiationSystemNT {
      * @param amount - the amount to subtract from current rads
      */
     public static void decrementRad(WorldServer world, BlockPos pos, double amount) {
-        if (pos.getY() < WorldUtil.getMinWorldHeight(world) || pos.getY() >= WorldUtil.getMaxWorldHeight(world) || !world.isBlockLoaded(pos)) return;
+        if (pos.getY() < 0 || pos.getY() > 255 || !world.isBlockLoaded(pos)) return;
         if (amount < 0) throw new IllegalArgumentException("Radiation amount to decrement must be positive.");
         if (!isSubChunkLoaded(world, pos)) rebuildChunkPockets(world, world.getChunk(pos), pos.getY() >> 4);
         RadPocket p = getPocket(world, pos);
@@ -176,7 +176,7 @@ public final class RadiationSystemNT {
      * @param amount - the amount to set the radiation to
      */
     public static void setRadForCoord(WorldServer world, BlockPos pos, double amount) {
-        if (pos.getY() < WorldUtil.getMinWorldHeight(world) || pos.getY() >= WorldUtil.getMaxWorldHeight(world) || !world.isBlockLoaded(pos)) return;
+        if (pos.getY() < 0 || pos.getY() > 255 || !world.isBlockLoaded(pos)) return;
         if (!isSubChunkLoaded(world, pos)) rebuildChunkPockets(world, world.getChunk(pos), pos.getY() >> 4);
         RadPocket p = getPocket(world, pos);
         if (p == null) return;
@@ -245,11 +245,11 @@ public final class RadiationSystemNT {
      */
     public static boolean isSubChunkLoaded(WorldServer world, BlockPos pos) {
         //If the position is out of bounds, it isn't loaded
-        if (pos.getY() < WorldUtil.getMinWorldHeight(world) || pos.getY() >= WorldUtil.getMaxWorldHeight(world)) return false;
+        if (pos.getY() > 255 || pos.getY() < 0) return false;
         //If the world radiation data doesn't exist, nothing is loaded
         WorldRadiationData worldRadData = worldMap.get(world);
         if (worldRadData == null) return false;
-        long key = SubChunkKey.asLong(pos.getX() >> 4, pos.getZ() >> 4, pos.getY() >> 4);
+        long key = Library.blockPosToSubChunkLong(pos);
         return worldRadData.sectionsStorage.containsKey(key);
     }
 
@@ -263,7 +263,7 @@ public final class RadiationSystemNT {
     @Nullable
     public static SubChunkRadiationStorage getSubChunkStorage(WorldServer world, BlockPos pos) {
         WorldRadiationData worldRadData = getWorldRadData(world);
-        return worldRadData.sectionsStorage.get(SubChunkKey.asLong(pos.getX() >> 4, pos.getZ() >> 4, pos.getY() >> 4));
+        return worldRadData.sectionsStorage.get(Library.blockPosToSubChunkLong(pos));
     }
 
     /**
@@ -456,14 +456,11 @@ public final class RadiationSystemNT {
     public static void markChunkForRebuild(World world, BlockPos pos) {
         if (world.isRemote) return;
         if (!GeneralConfig.advancedRadiation) return;
-        int subX = pos.getX() >> 4;
-        int subZ = pos.getZ() >> 4;
-        int subY = pos.getY() >> 4;
-        long key = SubChunkKey.asLong(subX, subZ, subY);
+        long key = Library.blockPosToSubChunkLong(pos);
         WorldRadiationData r = getWorldRadData((WorldServer) world);
 
         if (GeneralConfig.enableDebugMode) {
-            MainRegistry.logger.info("[Debug] Marking chunk dirty at [{}, {}], section {}", subX, subZ, subY);
+            MainRegistry.logger.info("[Debug] Marking chunk dirty at {}", pos);
         }
 
         //Ensures we don't run into any problems with concurrent modification
@@ -496,9 +493,9 @@ public final class RadiationSystemNT {
             LongIterator iterator = r.dirtySections.iterator();
             while (iterator.hasNext()) {
                 long dirtyKey = iterator.nextLong();
-                int cx = SubChunkKey.getSubX(dirtyKey);
-                int cz = SubChunkKey.getSubZ(dirtyKey);
-                int subY = SubChunkKey.getSubY(dirtyKey);
+                int cx = Library.getSubChunkX(dirtyKey);
+                int cz = Library.getSubChunkZ(dirtyKey);
+                int subY = Library.getSubChunkY(dirtyKey);
                 if (GeneralConfig.enableDebugMode) {
                     MainRegistry.logger.info("[Debug] Rebuilding chunk pockets for dirty chunk at [{}, {}] section {}", cx, cz, subY);
                 }
@@ -544,10 +541,8 @@ public final class RadiationSystemNT {
         WorldServer world = (WorldServer) e.getWorld();
         WorldRadiationData data = getWorldRadData(world);
         ChunkPos chunkPos = e.getChunk().getPos();
-        final int subChunkCount = WorldUtil.getSubChunkCount(world);
-
-        for (int i = 0; i < subChunkCount; i++) {
-            long key = SubChunkKey.asLong(chunkPos.x, chunkPos.z, i);
+        for (int i = 0; i < 16; i++) {
+            long key = Library.subChunkToLong(chunkPos.x, i, chunkPos.z);
             SubChunkRadiationStorage storage = data.sectionsStorage.remove(key);
             if (storage != null) {
                 storage.unload();
@@ -565,9 +560,8 @@ public final class RadiationSystemNT {
         readFromNBT(data, e.getChunk().getPos(), e.getData().getCompoundTag("hbmRadDataNT"));
 
         ChunkPos cpos = e.getChunk().getPos();
-        final int subChunkCount = WorldUtil.getSubChunkCount(e.getWorld());
-        for (int i = 0; i < subChunkCount; i++) {
-            long key = SubChunkKey.asLong(cpos.x, cpos.z, i);
+        for (int i = 0; i < 16; i++) {
+            long key = Library.subChunkToLong(cpos.x, i, cpos.z);
             if (data.deferredRebuildSections.remove(key)) {
                 data.dirtySections.add(key);
             }
@@ -611,8 +605,6 @@ public final class RadiationSystemNT {
         RadiationUpdates.WorldUpdate wu = new RadiationUpdates.WorldUpdate();
         final ThreadLocalRandom rand = ThreadLocalRandom.current();
         final double minB = minBoundFor(worldData.world);
-        final int minY = WorldUtil.getMinWorldHeight(worldData.world);
-        final int maxY = WorldUtil.getMaxWorldHeight(worldData.world);
         Set<RadPocket> setView = worldData.getActivePocketsView();
         setView.parallelStream().forEach(p -> {
             BlockPos pos = p.parent.subChunkPos;
@@ -683,15 +675,15 @@ public final class RadiationSystemNT {
                 p.accumulatedRads.add(-radForThisTick * 0.7D); // export share
                 for (EnumFacing e : EnumFacing.VALUES) {
                     BlockPos nPos = pos.offset(e, 16);
-                    if (!worldData.world.isBlockLoaded(nPos) || nPos.getY() < minY || nPos.getY() >= maxY) continue;
+                    if (!worldData.world.isBlockLoaded(nPos) || nPos.getY() < 0 || nPos.getY() > 255) continue;
                     List<Integer> cons = p.connectionIndices[e.ordinal()];
                     if (cons.contains(-1)) {
-                        wu.sectionsForRebuild.add(SubChunkKey.asLong(nPos.getX() >> 4, nPos.getZ() >> 4, nPos.getY() >> 4));
+                        wu.sectionsForRebuild.add(Library.blockPosToSubChunkLong(nPos));
                         continue;
                     }
                     SubChunkRadiationStorage sc2 = getSubChunkStorage(worldData.world, nPos);
                     if (sc2 == null) {
-                        wu.sectionsForRebuild.add(SubChunkKey.asLong(nPos.getX() >> 4, nPos.getZ() >> 4, nPos.getY() >> 4));
+                        wu.sectionsForRebuild.add(Library.blockPosToSubChunkLong(nPos));
                         continue;
                     }
                     for (int idx : cons) {
@@ -850,7 +842,7 @@ public final class RadiationSystemNT {
         subChunk.pockets = pockets.toArray(new RadPocket[0]);
 
         //Finally, put the newly built sub chunk into the data
-        long key = SubChunkKey.asLong(chunk.getPos().x, chunk.getPos().z, yIndex);
+        long key = Library.subChunkToLong(chunk.getPos(), yIndex);
         SubChunkRadiationStorage old = data.sectionsStorage.put(key, subChunk);
         if (old != null) {
             subChunk.setRad(old);
@@ -900,8 +892,6 @@ public final class RadiationSystemNT {
         int paletteIndex = pocket.index;
         Queue<BlockPos> queue = new ArrayDeque<>(1024);
         queue.add(start);
-        int minY = WorldUtil.getMinWorldHeight(world);
-        int maxY = WorldUtil.getMaxWorldHeight(world);
 
         // Set the starting block's palette index
         setPaletteIndex(pocketData, start, paletteIndex);
@@ -917,7 +907,7 @@ public final class RadiationSystemNT {
                     //If we're outside the sub chunk bounds, try to connect to neighbor chunk pockets
                     BlockPos outPos = newPos.add(subChunkWorldPos);
                     //If this position is out of bounds, do nothing
-                    if (outPos.getY() < minY || outPos.getY() >= maxY) continue;
+                    if (outPos.getY() < 0 || outPos.getY() > 255) continue;
                     //Will also attempt to load the chunk, which will cause neighbor data to be updated correctly if it's unloaded.
                     Block block = world.getBlockState(outPos).getBlock();
                     //If the block isn't radiation resistant...
@@ -985,9 +975,8 @@ public final class RadiationSystemNT {
         boolean hasData = false;
         ByteBuffer buf = BUF.get();
         buf.clear();
-        final int subChunkCount = WorldUtil.getSubChunkCount(data.world);
-        for (int i = 0; i < subChunkCount; i++) {
-            long key = SubChunkKey.asLong(chunkPos.x, chunkPos.z, i);
+        for (int i = 0; i < 16; i++) {
+            long key = Library.subChunkToLong(chunkPos, i);
             SubChunkRadiationStorage sc = data.sectionsStorage.get(key);
             if (sc == null) {
                 buf.put((byte) 0);
@@ -1012,26 +1001,16 @@ public final class RadiationSystemNT {
         byte[] arr = new byte[buf.limit()];
         buf.get(arr);
         NBTTagCompound tag = new NBTTagCompound();
-        tag.setString("fmt", "v2");
-        tag.setInteger("subChunkCount", subChunkCount);
+        tag.setString("fmt", "v1");
         tag.setByteArray("chunkRadData", arr);
         return tag;
     }
 
     private static void readFromNBT(WorldRadiationData data, ChunkPos chunkPos, NBTTagCompound tag) {
-        final String fmt = tag.hasKey("fmt") ? tag.getString("fmt") : "v0";
-        final boolean useDouble = "v1".equals(fmt) || "v2".equals(fmt);
-        final int runtimeSubChunks = WorldUtil.getSubChunkCount(data.world);
-        final int storedSubChunks;
-        if ("v2".equals(fmt) && tag.hasKey("subChunkCount")) {
-            storedSubChunks = tag.getInteger("subChunkCount");
-        } else {
-            storedSubChunks = 16;
-        }
-        final int maxSubChunks = Math.min(runtimeSubChunks, storedSubChunks);
-
+        String format = tag.getString("fmt");
+        final boolean useDouble = "v1".equals(format) || "v2".equals(format);
         ByteBuffer bdata = ByteBuffer.wrap(tag.getByteArray("chunkRadData"));
-        for (int i = 0; i < maxSubChunks; i++) {
+        for (int i = 0; i < 16; i++) {
             try {
                 if (bdata.remaining() == 0) break;
                 byte has = bdata.get();
@@ -1055,7 +1034,7 @@ public final class RadiationSystemNT {
                     } else {
                         sc.pocketData = null;
                     }
-                    long key = SubChunkKey.asLong(chunkPos.x, chunkPos.z, yLevel >> 4);
+                    long key = Library.subChunkToLong(chunkPos, i);
                     data.sectionsStorage.put(key, sc);
                 }
             } catch (BufferUnderflowException | IndexOutOfBoundsException | IllegalStateException ex) {
@@ -1064,7 +1043,7 @@ public final class RadiationSystemNT {
                 SubChunkRadiationStorage corruptedStorage = new SubChunkRadiationStorage(data, subChunkPos);
                 corruptedStorage.pockets = new RadPocket[]{new RadPocket(corruptedStorage, 0)};
                 corruptedStorage.pocketData = null;
-                long key = SubChunkKey.asLong(chunkPos.x, chunkPos.z, i);
+                long key = Library.subChunkToLong(chunkPos, i);
                 data.sectionsStorage.put(key, corruptedStorage);
                 break;
             }
@@ -1345,7 +1324,7 @@ public final class RadiationSystemNT {
 
         /**
          * <p>Secondary set of subchunks awaiting to be rebuilt.</p>
-         * <p>Key: packed subchunk</p>
+         * <p>Key: subchunk coordinate encoded in {@link Library#subChunkToLong(int, int, int)}</p>
          */
         private final LongSet dirtySections2 = NonBlockingHashMapLong.newKeySet();
         private final Set<RadPocket> activePockets = ConcurrentHashMap.newKeySet();
@@ -1377,20 +1356,17 @@ public final class RadiationSystemNT {
         public void addActivePocket(RadPocket radPocket) {
             this.activePockets.add(radPocket);
             if (GeneralConfig.enableDebugMode) {
-                SubChunkKey chunkKey = new SubChunkKey(radPocket.getSubChunkPos().getX() >> 4, radPocket.getSubChunkPos().getZ() >> 4,
-                        radPocket.getSubChunkPos().getY() >> 4);
-                MainRegistry.logger.info("[Debug] Added active pocket {} (radiation: {}, accumulatedRads: {}, sealed: {}) at {} (Chunk:{}) for " +
+                MainRegistry.logger.info("[Debug] Added active pocket {} (radiation: {}, accumulatedRads: {}, sealed: {}) at {} for " +
                         "world {}", radPocket.index, radPocket.radiation.get(), radPocket.accumulatedRads.sum(), radPocket.isSealed(),
-                        radPocket.getSubChunkPos(), chunkKey, world);
+                        radPocket.getSubChunkPos(), world);
             }
         }
 
         public void removeActivePocket(RadPocket radPocket) {
             this.activePockets.remove(radPocket);
             if (GeneralConfig.enableDebugMode) {
-                SubChunkKey chunkKey = new SubChunkKey(radPocket.getSubChunkPos().getX() >> 4, radPocket.getSubChunkPos().getZ() >> 4,
-                        radPocket.getSubChunkPos().getY() >> 4);
-                MainRegistry.logger.info("[Debug] Removed active pocket {} (radiation: {}, accumulatedRads: {}, sealed: {}) at {} (Chunk:{}) for " + "world {}", radPocket.index, radPocket.radiation.get(), radPocket.accumulatedRads.sum(), radPocket.isSealed(), radPocket.getSubChunkPos(), chunkKey, world);
+                MainRegistry.logger.info("[Debug] Removed active pocket {} (radiation: {}, accumulatedRads: {}, sealed: {}) at {} for " +
+                        "world {}", radPocket.index, radPocket.radiation.get(), radPocket.accumulatedRads.sum(), radPocket.isSealed(), radPocket.getSubChunkPos(), world);
 
             }
         }

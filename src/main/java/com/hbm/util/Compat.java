@@ -21,7 +21,6 @@ import org.jetbrains.annotations.Nullable;
 public class Compat {
 	private static final boolean MOD_EIDS = Loader.isModLoaded("jeid") || Loader.isModLoaded("neid");
     private static final boolean MOD_OC = Loader.isModLoaded(ModIds.OPEN_COMPUTERS);
-    public static final boolean MOD_CC = Loader.isModLoaded(ModIds.CUBIC_CHUNKS);
 
 	public static boolean isIDExtensionModLoaded() {
 		return MOD_EIDS;
@@ -62,6 +61,5 @@ public class Compat {
         public static final String CTM = "ctm";
         public static final String AE2 = "appliedenergistics2";
         public static final String MODERN_SPLASH = "modernsplash";
-        public static final String CUBIC_CHUNKS = "cubicchunks";
     }
 }
