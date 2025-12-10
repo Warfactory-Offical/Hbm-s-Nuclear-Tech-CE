@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import com.hbm.blocks.BlockEnums;
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.generic.BlockBobble.BobbleType;
 import com.hbm.inventory.OreDictManager;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.recipes.loader.SerializableRecipe;
@@ -395,6 +396,12 @@ public class ShredderRecipes extends SerializableRecipe {
         for (int i = 0; i < 16; i++) {
             ShredderRecipes.setRecipe(new ItemStack(Blocks.STAINED_HARDENED_CLAY, 1, i), new ItemStack(Items.CLAY_BALL, 4));
             ShredderRecipes.setRecipe(new ItemStack(Blocks.WOOL, 1, i), new ItemStack(Items.STRING, 4));
+        }
+
+        /* Shredding bobbleheads */
+        for(int i = 0; i < BobbleType.values().length; i++) {
+            BobbleType type = BobbleType.values()[i];
+            ShredderRecipes.setRecipe(new ItemStack(ModBlocks.bobblehead, 1, i), new ItemStack(ModItems.scrap_plastic, 1, type.scrap.ordinal()));
         }
 
         /* Debris shredding */

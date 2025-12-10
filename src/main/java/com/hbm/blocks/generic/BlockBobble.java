@@ -20,7 +20,6 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemBlock;
@@ -58,8 +57,8 @@ public class BlockBobble extends BlockContainer implements INBTBlockTransformabl
         this.setRegistryName(name);
         this.setDefaultState(this.blockState.getBaseState().withProperty(META, 0));
         this.setLightOpacity(0);
-        this.setHardness(1.5F);
-        this.setResistance(10.0F);
+        this.setHardness(0.0F);
+        this.setResistance(0.0F);
         ModBlocks.ALL_BLOCKS.add(this);
     }
 
@@ -90,10 +89,6 @@ public class BlockBobble extends BlockContainer implements INBTBlockTransformabl
     }
 
     @Override
-    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
-    }
-
-    @Override
     public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
         TileEntity te = world.getTileEntity(pos);
         if (te instanceof TileEntityBobble entity) {
@@ -103,32 +98,25 @@ public class BlockBobble extends BlockContainer implements INBTBlockTransformabl
     }
 
     @Override
-    public void onBlockHarvested(World world, BlockPos pos, IBlockState state, EntityPlayer player) {
-        if (!player.capabilities.isCreativeMode) {
-            harvesters.set(player);
-            if (!world.isRemote) {
-                TileEntity te = world.getTileEntity(pos);
-                if (te instanceof TileEntityBobble entity) {
-                    ItemStack drop = new ItemStack(this, 1, entity.type.ordinal());
-                    EntityItem item = new EntityItem(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, drop);
-                    item.motionX = item.motionY = item.motionZ = 0;
-                    world.spawnEntity(item);
-                }
-            }
-            harvesters.set(null);
-        }
-    }
-
-    @Override
     public void harvestBlock(World world, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, ItemStack tool) {
         player.addStat(StatList.getBlockStats(this));
         player.addExhaustion(0.025F);
     }
 
     @Override
+    public void breakBlock(World world, BlockPos pos, IBlockState state) {
+        TileEntity te = world.getTileEntity(pos);
+        if (te instanceof TileEntityBobble entity && !world.isRemote) {
+            ItemStack drop = new ItemStack(this, 1, entity.type.ordinal());
+            spawnAsEntity(world, pos, drop);
+        }
+        super.breakBlock(world, pos, state);
+    }
+
+    @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX,
                                     float hitY, float hitZ) {
-        if (!world.isRemote) {
+        if (!world.isRemote && !player.isSneaking()) {
             FMLNetworkHandler.openGui(player, MainRegistry.instance, 0, world, pos.getX(), pos.getY(), pos.getZ());
         }
         return true;
@@ -299,7 +287,12 @@ public class BlockBobble extends BlockContainer implements INBTBlockTransformabl
 
         @Override
         public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
-            return null;
+            return new Container() {
+                @Override
+                public boolean canInteractWith(EntityPlayer playerIn) {
+                    return true;
+                }
+            };
         }
 
         @Override

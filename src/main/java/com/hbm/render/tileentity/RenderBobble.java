@@ -581,7 +581,6 @@ public class RenderBobble extends TileEntitySpecialRenderer<TileEntityBobble> im
         return Item.getItemFromBlock(ModBlocks.bobblehead);
     }
 
-
     @Override
     public ItemRenderBase getRenderer(Item item) {
         return new ItemRenderBase() {
@@ -593,6 +592,15 @@ public class RenderBobble extends TileEntitySpecialRenderer<TileEntityBobble> im
             public void renderCommon(ItemStack stack) {
                 GlStateManager.scale(0.5, 0.5, 0.5);
                 RenderBobble.instance.renderBobble(BobbleType.values()[stack.getItemDamage()]);
+            }
+
+            public void renderGround() {
+                GlStateManager.scale(5.0, 5.0, 5.0);
+            }
+
+            public void renderFirstPersonRightHand() {
+                GlStateManager.scale(2.0, 2.0, 2.0);
+                GlStateManager.rotate(45, 0, 1, 0);
             }
         };
     }
