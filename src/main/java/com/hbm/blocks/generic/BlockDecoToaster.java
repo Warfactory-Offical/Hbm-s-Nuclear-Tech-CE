@@ -40,6 +40,7 @@ public class BlockDecoToaster extends BlockDecoModel {
     @SideOnly(Side.CLIENT)
     public void bakeModel(ModelBakeEvent event) {
         HFRWavefrontObject wavefront = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/blocks/toaster.obj"));
+
         TextureMap atlas = Minecraft.getMinecraft().getTextureMapBlocks();
         String[] variants = new String[]{"toaster_iron", "toaster_steel", "toaster_wood"};
         for (int m = 0; m < variants.length; m++) {
