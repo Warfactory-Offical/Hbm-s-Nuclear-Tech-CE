@@ -31,6 +31,7 @@ import java.lang.invoke.MethodHandles;
  * @see <a href="https://gist.github.com/burningtnt/c188e65f048c2cf096db095e5858b5af">TrustedLookupAccessor</a>
  * @author Burning_TNT
  */
+/*
 final class TrustedLookupAccessor {
     private static MethodHandles.Lookup lookup;
 
@@ -158,3 +159,4 @@ final class TrustedLookupAccessor {
         return lookup;
     }
 }
+*/

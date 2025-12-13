@@ -81,12 +81,13 @@ public final class UnsafeWrapper {
 
             MethodHandles.Lookup lookup;
             Unsafe sunUnsafe = null;
-            if (MAJOR_VERSION >= 23) {
-                lookup = TrustedLookupAccessor.lookup();
-            } else {
+            // removed TrustedLookupAccessor to make curseforge happy
+//            if (MAJOR_VERSION >= 23) {
+//                lookup = TrustedLookupAccessor.lookup();
+//            } else {
                 sunUnsafe = getSunUnsafe();
                 lookup = getImplLookupUnsafe(sunUnsafe);
-            }
+//            }
             IMPL_LOOKUP = lookup;
 
             Class<?> unsafeClass;
