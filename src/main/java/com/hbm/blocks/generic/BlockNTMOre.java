@@ -18,10 +18,12 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import com.hbm.util.I18nUtil;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
+import java.util.Arrays;
 
 import static com.hbm.blocks.OreEnumUtil.OreEnum;
 
@@ -109,14 +111,13 @@ public class BlockNTMOre extends BlockOre {
     @Override
     public void addInformation(ItemStack stack, World player, List<String> tooltip, ITooltipFlag advanced) {
         if (stack.getItem() == Item.getItemFromBlock(ModBlocks.ore_uranium) || stack.getItem() == Item.getItemFromBlock(ModBlocks.ore_gneiss_uranium) || stack.getItem() == Item.getItemFromBlock(ModBlocks.ore_nether_uranium)) {
-            tooltip.add("High-Radiation creates medium amounts of schrabidium inside this block");
+            tooltip.addAll(Arrays.asList(I18nUtil.resolveKey("tile.ore_uranium.desc").split("\\$")));
         }
         if (stack.getItem() == Item.getItemFromBlock(ModBlocks.ore_schrabidium) || stack.getItem() == Item.getItemFromBlock(ModBlocks.ore_gneiss_schrabidium) || stack.getItem() == Item.getItemFromBlock(ModBlocks.ore_nether_schrabidium)) {
-            tooltip.add("High-Radiation has created medium amounts of schrabidium inside this block");
+            tooltip.addAll(Arrays.asList(I18nUtil.resolveKey("tile.ore_schrabidium.desc").split("\\$")));
         }
         if (stack.getItem() == Item.getItemFromBlock(ModBlocks.ore_oil)) {
-            tooltip.add("You weren't supposed to mine that.");
-            tooltip.add("Come on, get a derrick you doofus.");
+            tooltip.addAll(Arrays.asList(I18nUtil.resolveKey("tile.ore_oil.desc").split("\\$")));
         }
     }
 

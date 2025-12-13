@@ -15,6 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.lwjgl.input.Keyboard;
 import net.minecraft.client.renderer.GlStateManager;
+import com.hbm.util.I18nUtil;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -62,10 +63,10 @@ public class GUIHeaterHeatex extends GuiInfoContainer {
         heater.tanksNew[1].renderTankInfo(this, x, y, guiLeft + 116, guiTop + 36, 16, 52);
 
         if (guiLeft + 70 <= x && guiLeft + 70 + 36 > x && guiTop + 26 < y && guiTop + 26 + 18 >= y) {
-            drawHoveringText(Arrays.asList("Amount per cycle"), x, y);
+            drawHoveringText(Arrays.asList(I18nUtil.resolveKey("gui.heatex.amount")), x, y);
         }
         if (guiLeft + 70 <= x && guiLeft + 70 + 36 > x && guiTop + 44 < y && guiTop + 44 + 18 >= y) {
-            drawHoveringText(Arrays.asList("Cycle tick delay"), x, y);
+            drawHoveringText(Arrays.asList(I18nUtil.resolveKey("gui.heatex.cycle")), x, y);
         }
 
         super.renderHoveredToolTip(x, y);
