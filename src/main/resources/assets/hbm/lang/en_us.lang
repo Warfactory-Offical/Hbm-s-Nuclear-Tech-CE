@@ -1866,6 +1866,8 @@ geiger.playerRes=Player resistance:
 geiger.recievedRad=Total recieved radiation:
 geiger.title.dosimeter=DOSIMETER
 geiger.title=GEIGER COUNTER
+gui.heatex.amount=Amount per cycle
+gui.heatex.cycle=Cycle tick delay
 gui.recipe.atPressure=at
 gui.recipe.consumption=Consumption
 gui.recipe.duration=Duration
@@ -8248,3 +8250,4 @@ weapon.elecGun.glass_cannon.uv=Ultraviolet Light
 weapon.elecGun.glass_cannon.visible=Visible Light
 weapon.elecGun.glass_cannon.xray=X-rays
 weapon.elecGun.modeChange=Firing Mode Changed to:
+
