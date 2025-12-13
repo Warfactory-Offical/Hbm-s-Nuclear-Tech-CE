@@ -1033,6 +1033,21 @@ public class ClientProxy extends ServerProxy {
                     Minecraft.getMinecraft().effectRenderer.addEffect(fx);
                 }
             }
+            case "fluidfill" -> {
+                double mX = data.getDouble("mX");
+                double mY = data.getDouble("mY");
+                double mZ = data.getDouble("mZ");
+
+                Particle fx = new ParticleCrit.Factory().createParticle(0, world, x, y, z, mX, mY, mZ);
+                fx.nextTextureIndexX();
+
+                if (data.hasKey("color")) {
+                    Color color = new Color(data.getInteger("color"));
+                    fx.setRBGColorF(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
+                }
+
+                Minecraft.getMinecraft().effectRenderer.addEffect(fx);
+            }
             case "radiation" -> {
                 for (int i = 0; i < data.getInteger("count"); i++) {
 
