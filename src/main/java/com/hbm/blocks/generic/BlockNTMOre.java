@@ -18,10 +18,12 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import com.hbm.util.I18nUtil;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
+import java.util.Arrays;
 
 import static com.hbm.blocks.OreEnumUtil.OreEnum;
 
