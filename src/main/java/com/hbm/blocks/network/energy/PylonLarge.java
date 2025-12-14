@@ -2,6 +2,7 @@ package com.hbm.blocks.network.energy;
 
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ITooltipProvider;
+import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.network.energy.TileEntityPylonBase;
 import com.hbm.tileentity.network.energy.TileEntityPylonLarge;
 import com.hbm.util.I18nUtil;
@@ -14,6 +15,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
@@ -56,6 +58,29 @@ public class PylonLarge extends BlockDummyable implements ITooltipProvider {
 		Collections.addAll(list, I18nUtil.resolveKeyArray("tile.red_pylon_large.desc"));
 		super.addInformation(stack, worldIn, list, flagIn);
 	}
+
+    @Override
+    protected int getMetaForCore(World world, BlockPos pos, EntityPlayer player, int original) {
+
+        int i = MathHelper.floor(player.rotationYaw * 4.0F / 180.0F + 0.5D) & 3;
+
+        ForgeDirection dir = ForgeDirection.NORTH;
+
+        if(i == 0) {
+            dir = ForgeDirection.getOrientation(2);
+        }
+        if(i == 1) {
+            dir = ForgeDirection.getOrientation(5);
+        }
+        if(i == 2) {
+            dir = ForgeDirection.getOrientation(3);
+        }
+        if(i == 3) {
+            dir = ForgeDirection.getOrientation(4);
+        }
+
+        return dir.ordinal() + offset;
+    }
 
 	@Override
 	public boolean onBlockActivated(World world, @NotNull BlockPos pos, @NotNull IBlockState state, @NotNull EntityPlayer player, @NotNull EnumHand hand, @NotNull EnumFacing facing, float hitX, float hitY, float hitZ) {

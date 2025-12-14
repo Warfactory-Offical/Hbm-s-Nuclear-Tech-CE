@@ -225,7 +225,8 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
 		
 		if(!world.isRemote){
 			BlockPos cur = new BlockPos(x + dir.offsetX * o , y + dir.offsetY * o, z + dir.offsetZ * o);
-			world.setBlockState(cur, this.getDefaultState().withProperty(META, dir.ordinal() + offset), 3);
+            int meta = getMetaForCore(world, cur, pl, dir.ordinal() + offset);
+			world.setBlockState(cur, this.getDefaultState().withProperty(META, meta), 3);
 			IPersistentNBT.onBlockPlacedBy(world, cur, itemStack);
 			fillSpace(world, x, y, z, dir, o);
 		}
@@ -256,6 +257,21 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
 			return true;
 		}
 	}
+
+    /**
+     * A bit more advanced than the dir modifier, but it is important that the resulting direction meta is in the core range.
+     * Using the "extra" metas is technically possible but requires a bit of tinkering, e.g. preventing a recursive loop
+     * in the core finder and making sure the TE uses the right metas.
+     * @param world
+     * @param pos
+     * @param player
+     * @param original
+     * @return
+     */
+    protected int getMetaForCore(World world, BlockPos pos, EntityPlayer player, int original) {
+        return original;
+    }
+
     public ForgeDirection getDirModified(ForgeDirection dir) {
 		return dir;
 	}
