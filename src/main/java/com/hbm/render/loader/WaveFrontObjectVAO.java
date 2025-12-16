@@ -27,7 +27,7 @@ public class WaveFrontObjectVAO implements IModelCustom {
     static int VERTEX_SIZE = 3;
     List<VBOBufferData> groups = new ArrayList<>();
     public WaveFrontObjectVAO(HFRWavefrontObject obj) {
-        if(arbOr30() == 0) throw new UnsupportedOperationException("Your system does not support opengl 3  cababilites");
+        if(arbOr30() == 0) throw new UnsupportedOperationException("Your system does not support opengl 3+ or ARB extensions: Supported versions: "  + GLContext.getCapabilities());
         for (GroupObject g : obj.groupObjects) {
 
             VBOBufferData data = new VBOBufferData();
