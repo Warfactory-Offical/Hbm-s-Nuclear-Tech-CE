@@ -1,9 +1,12 @@
 package com.hbm.render.loader;
 
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.ARBVertexArrayObject;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GLContext;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
@@ -15,12 +18,16 @@ import static org.lwjgl.opengl.GL15.*;
 public class WaveFrontObjectVAO implements IModelCustom {
 
     public static ArrayList<WaveFrontObjectVAO> allVBOs = new ArrayList<>();
+    public static final boolean GL30Support = GLContext.getCapabilities().OpenGL30;
+    public static final boolean ARBSupport = GLContext.getCapabilities().GL_ARB_vertex_array_object;
+
 
     private static final int FLOAT_SIZE = 4;
     private static final int STRIDE = 9 * FLOAT_SIZE;
     static int VERTEX_SIZE = 3;
     List<VBOBufferData> groups = new ArrayList<>();
     public WaveFrontObjectVAO(HFRWavefrontObject obj) {
+        if(arbOr30() == 0) throw new UnsupportedOperationException("Your system does not support opengl 3  cababilites");
         for (GroupObject g : obj.groupObjects) {
 
             VBOBufferData data = new VBOBufferData();
@@ -89,8 +96,15 @@ public class WaveFrontObjectVAO implements IModelCustom {
 
     public void generate_vaos(){
         for (VBOBufferData data : groups) {
-            data.vaoHandle = GL30.glGenVertexArrays();
-            GL30.glBindVertexArray(data.vaoHandle);
+
+            if(arbOr30() == 1) {
+                data.vaoHandle = GL30.glGenVertexArrays();
+                GL30.glBindVertexArray(data.vaoHandle);
+            } else {
+                data.vaoHandle =  ARBVertexArrayObject.glGenVertexArrays();
+                ARBVertexArrayObject.glBindVertexArray(data.vaoHandle);
+            }
+
             glBindBuffer(GL_ARRAY_BUFFER, data.vboHandle);
 
             GL11.glVertexPointer(3, GL11.GL_FLOAT, STRIDE, 0L);
@@ -102,9 +116,19 @@ public class WaveFrontObjectVAO implements IModelCustom {
             GL11.glNormalPointer(GL11.GL_FLOAT, STRIDE, 6L * Float.BYTES);
             glEnableClientState(GL_NORMAL_ARRAY);
 
-            GL30.glBindVertexArray(0);
+            if (arbOr30() == 1) {
+                GL30.glBindVertexArray(0);
+            } else {
+                ARBVertexArrayObject.glBindVertexArray(0);
+            }
             glBindBuffer(GL_ARRAY_BUFFER, 0);
         }
+    }
+
+    private int arbOr30(){
+        if(GL30Support) return 1;
+        if(ARBSupport) return 2;
+        return 0;
     }
 
     @Override
@@ -113,9 +137,15 @@ public class WaveFrontObjectVAO implements IModelCustom {
     }
 
     private void renderVBO(VBOBufferData data) {
-        GL30.glBindVertexArray(data.vaoHandle);
+        if(arbOr30() == 1)
+            GL30.glBindVertexArray(data.vaoHandle);
+        else ARBVertexArrayObject.glBindVertexArray(data.vaoHandle);
+
         GlStateManager.glDrawArrays(GL11.GL_TRIANGLES, 0, data.vertices);
-        GL30.glBindVertexArray(0);
+
+        if(arbOr30() == 1)
+            GL30.glBindVertexArray(0);
+        else ARBVertexArrayObject.glBindVertexArray(0);
     }
 
     @Override
