@@ -58,7 +58,7 @@ public class TileEntityICF extends TileEntityMachineBase implements ITickable, I
     private AxisAlignedBB bb = null;
 
     public TileEntityICF() {
-        super(12, true, true);
+        super(12, true, false);
         this.tanks = new FluidTankNTM[3];
         this.tanks[0] = new FluidTankNTM(Fluids.SODIUM, 512_000);
         this.tanks[1] = new FluidTankNTM(Fluids.SODIUM_HOT, 512_000);
