@@ -2,7 +2,6 @@ package com.hbm.world.phased;
 
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
-import com.hbm.util.ChunkUtil;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
@@ -291,8 +290,8 @@ public class DynamicStructureDispatcher {
             final int originChunkZ = Library.getBlockPosZ(origin) >> 4;
             for (int i = 0, len = watchedOffsets.size(); i < len; i++) {
                 long rel = watchedOffsets.getLong(i);
-                int offsetX = ChunkUtil.getChunkPosX(rel);
-                int offsetZ = ChunkUtil.getChunkPosZ(rel);
+                int offsetX = Library.getChunkPosX(rel);
+                int offsetZ = Library.getChunkPosZ(rel);
                 long absKey = ChunkPos.asLong(originChunkX + offsetX, originChunkZ + offsetZ);
                 if (!provider.loadedChunks.containsKey(absKey)) waitingOn.add(absKey);
             }
@@ -354,8 +353,8 @@ public class DynamicStructureDispatcher {
 
             for (int i = 0; i < watchedOffsets.size(); i++) {
                 long rel = watchedOffsets.getLong(i);
-                int offsetX = ChunkUtil.getChunkPosX(rel);
-                int offsetZ = ChunkUtil.getChunkPosZ(rel);
+                int offsetX = Library.getChunkPosX(rel);
+                int offsetZ = Library.getChunkPosZ(rel);
 
                 long absKey = ChunkPos.asLong(originChunkX + offsetX, originChunkZ + offsetZ);
                 Chunk chunk = provider.loadedChunks.get(absKey);

@@ -67,7 +67,7 @@ public class TileEntitySlidingBlastDoor extends TileEntityLockableBase implement
                         if (state != oldState) {
                             // With door finally closed, mark chunk for rad update since door is now rad resistant
                             // No need to update when open as well, as opening door should update
-                            RadiationSystemNT.markChunkForRebuild(world, pos);
+                            RadiationSystemNT.markSectionForRebuild(world, pos);
                         }
                     }
                 } else if (state == DoorState.OPENING) {
@@ -338,11 +338,11 @@ public class TileEntitySlidingBlastDoor extends TileEntityLockableBase implement
         if (state == DoorState.CLOSED) {
             state = DoorState.OPENING;
             // With door opening, mark chunk for rad update
-            RadiationSystemNT.markChunkForRebuild(world, pos);
+            RadiationSystemNT.markSectionForRebuild(world, pos);
         } else if (state == DoorState.OPEN) {
             state = DoorState.CLOSING;
             // With door closing, mark chunk for rad update
-            RadiationSystemNT.markChunkForRebuild(world, pos);
+            RadiationSystemNT.markSectionForRebuild(world, pos);
         }
     }
 

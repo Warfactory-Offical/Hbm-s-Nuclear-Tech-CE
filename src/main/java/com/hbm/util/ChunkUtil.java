@@ -456,9 +456,9 @@ public final class ChunkUtil {
         final NeighborCache nc = new NeighborCache();
         int xBase = chunkX << 4, yBase = subY << 4, zBase = chunkZ << 4;
         for (int idx = localMask.nextSetBit(0); idx >= 0 && idx < 4096; idx = localMask.nextSetBit(idx + 1)) {
-            final int xLocal = Library.unpackLocalX(idx);
-            final int yLocal = Library.unpackLocalY(idx);
-            final int zLocal = Library.unpackLocalZ(idx);
+            final int xLocal = Library.getLocalX(idx);
+            final int yLocal = Library.getLocalY(idx);
+            final int zLocal = Library.getLocalZ(idx);
 
             final IBlockState old = dst.get(xLocal, yLocal, zLocal);
             if (old.getMaterial() != Material.AIR) {
@@ -609,7 +609,7 @@ public final class ChunkUtil {
             final int subY = y >> 4;
             Int2ObjectOpenHashMap<IBlockState> b = bySub[subY];
             if (b == null) bySub[subY] = b = new Int2ObjectOpenHashMap<>();
-            b.put(Library.packLocal(x & 15, y & 15, z & 15), e.getValue());
+            b.put(Library.blockPosToLocal(x, y, z), e.getValue());
         }
 
         final Long2ObjectOpenHashMap<IBlockState> subScratch = oldStatesOut == null ? null : TL_SCRATCH.get();
@@ -631,9 +631,9 @@ public final class ChunkUtil {
 
                     for (Int2ObjectMap.Entry<IBlockState> e : bucket.int2ObjectEntrySet()) {
                         final int local = e.getIntKey();
-                        final int lx = Library.unpackLocalX(local);
-                        final int ly = Library.unpackLocalY(local);
-                        final int lz = Library.unpackLocalZ(local);
+                        final int lx = Library.getLocalX(local);
+                        final int ly = Library.getLocalY(local);
+                        final int lz = Library.getLocalZ(local);
                         final IBlockState ns = e.getValue();
                         if (ns == null) throw new NullPointerException("newState");
 
@@ -684,9 +684,9 @@ public final class ChunkUtil {
                         final IBlockState newState = overrides[idx];
                         if (newState == null) continue;
 
-                        final int lx = Library.unpackLocalX(idx);
-                        final int ly = Library.unpackLocalY(idx);
-                        final int lz = Library.unpackLocalZ(idx);
+                        final int lx = Library.getLocalX(idx);
+                        final int ly = Library.getLocalY(idx);
+                        final int lz = Library.getLocalZ(idx);
 
                         final IBlockState oldState = src == null || src.isEmpty() ? AIR_DEFAULT_STATE : src.get(lx, ly, lz);
                         if (oldState == newState) continue;
@@ -754,9 +754,9 @@ public final class ChunkUtil {
 
         for (Int2ObjectMap.Entry<IBlockState> e : toUpdate.int2ObjectEntrySet()) {
             final int packedLocal = e.getIntKey();
-            final int lx = Library.unpackLocalX(packedLocal);
-            final int ly = Library.unpackLocalY(packedLocal);
-            final int lz = Library.unpackLocalZ(packedLocal);
+            final int lx = Library.getLocalX(packedLocal);
+            final int ly = Library.getLocalY(packedLocal);
+            final int lz = Library.getLocalZ(packedLocal);
 
             final IBlockState newState = e.getValue();
             if (newState == null) throw new NullPointerException("newState");
@@ -820,22 +820,6 @@ public final class ChunkUtil {
             if (newTileEntity != null) world.setTileEntity(pos, newTileEntity);
         }
         if (newTileEntity != null) newTileEntity.updateContainingBlockInfo();
-    }
-
-    /**
-     * @return the X component of a packed chunk-key ({@code x | (z << 32)}).
-     */
-    @Contract(pure = true)
-    public static int getChunkPosX(long chunkKey) {
-        return (int) (chunkKey & 0xFFFFFFFFL);
-    }
-
-    /**
-     * @return the Z component of a packed chunk-key ({@code x | (z << 32)}).
-     */
-    @Contract(pure = true)
-    public static int getChunkPosZ(long chunkKey) {
-        return (int) ((chunkKey >>> 32) & 0xFFFFFFFFL);
     }
 
     /**

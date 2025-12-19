@@ -110,7 +110,7 @@ public class TileEntityBlastDoor extends TileEntityLockableBase implements ITick
 
                         // With door finally closed, mark chunk for rad update since door is now rad resistant
                         // No need to update when open as well, as opening door should update
-                        RadiationSystemNT.markChunkForRebuild(world, pos);
+                        RadiationSystemNT.markSectionForRebuild(world, pos);
                     }
                 }
             }
@@ -396,7 +396,7 @@ public class TileEntityBlastDoor extends TileEntityLockableBase implements ITick
             this.world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), HBMSoundHandler.reactorStart, SoundCategory.BLOCKS, 0.5F, 0.75F);
 
             // With door opening, mark chunk for rad update
-            RadiationSystemNT.markChunkForRebuild(world, pos);
+            RadiationSystemNT.markSectionForRebuild(world, pos);
         } else if (state == DoorState.OPEN) {
             state = DoorState.CLOSING;
             PacketDispatcher.wrapper.sendToAllTracking(new TEVaultPacket(pos.getX(), pos.getY(), pos.getZ(), state.ordinal(), 1, 0),
@@ -407,7 +407,7 @@ public class TileEntityBlastDoor extends TileEntityLockableBase implements ITick
 
 
             // With door closing, mark chunk for rad update
-            RadiationSystemNT.markChunkForRebuild(world, pos);
+            RadiationSystemNT.markSectionForRebuild(world, pos);
         }
     }
 

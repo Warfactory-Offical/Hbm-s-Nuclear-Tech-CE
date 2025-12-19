@@ -111,8 +111,8 @@ public class EntityFalloutRain extends EntityExplosionChunkloading {
         LongIterator it = coords.iterator();
         while (it.hasNext()) {
             long packed = it.nextLong();
-            data[i++] = ChunkUtil.getChunkPosX(packed);
-            data[i++] = ChunkUtil.getChunkPosZ(packed);
+            data[i++] = Library.getChunkPosX(packed);
+            data[i++] = Library.getChunkPosZ(packed);
         }
         return data;
     }
@@ -181,8 +181,8 @@ public class EntityFalloutRain extends EntityExplosionChunkloading {
             Long cpBoxed = chunkLoadQueue.poll();
             if (cpBoxed == null) break;
             long ck = cpBoxed;
-            int cx = ChunkUtil.getChunkPosX(ck);
-            int cz = ChunkUtil.getChunkPosZ(ck);
+            int cx = Library.getChunkPosX(ck);
+            int cz = Library.getChunkPosZ(ck);
             world.getChunk(cx, cz);
             Boolean clamp = waitingRoom.remove(ck);
             if (clamp != null) enqueueWork(ck, clamp.booleanValue());
@@ -198,8 +198,8 @@ public class EntityFalloutRain extends EntityExplosionChunkloading {
             return;
         }
 
-        final int chunkX = ChunkUtil.getChunkPosX(cpLong);
-        final int chunkZ = ChunkUtil.getChunkPosZ(cpLong);
+        final int chunkX = Library.getChunkPosX(cpLong);
+        final int chunkZ = Library.getChunkPosZ(cpLong);
         final int minX = (chunkX << 4);
         final int minZ = (chunkZ << 4);
 
@@ -279,7 +279,7 @@ public class EntityFalloutRain extends EntityExplosionChunkloading {
             final int y = Library.getBlockPosY(p);
             final int z = Library.getBlockPosZ(p);
             if ((x >> 4) != chunkX || (z >> 4) != chunkZ || y < 0 || y >= 256) continue;
-            bySub[y >> 4].put(Library.packLocal(x & 15, y & 15, z & 15), e.getValue());
+            bySub[y >> 4].put(Library.blockPosToLocal(x, y, z), e.getValue());
         }
 
         for (int subY = 0; subY < 16; subY++) {
@@ -364,8 +364,8 @@ public class EntityFalloutRain extends EntityExplosionChunkloading {
     }
 
     private void doNotifyOnMain(long cpLong, Long2ObjectOpenHashMap<IBlockState> oldStates, int mask, Long2IntOpenHashMap biomeChanges, Long2ObjectOpenHashMap<IBlockState> spawnFalling) {
-        int cx = ChunkUtil.getChunkPosX(cpLong);
-        int cz = ChunkUtil.getChunkPosZ(cpLong);
+        int cx = Library.getChunkPosX(cpLong);
+        int cz = Library.getChunkPosZ(cpLong);
         Chunk loadedChunk = world.getChunk(cx, cz);
 
         if (mask != 0) sectionMaskByChunk.put(cpLong, sectionMaskByChunk.get(cpLong) | mask);
@@ -397,8 +397,8 @@ public class EntityFalloutRain extends EntityExplosionChunkloading {
             while (iterator2.hasNext()) {
                 Long2IntMap.Entry be = iterator2.next();
                 long packed = be.getLongKey();
-                int x = ChunkUtil.getChunkPosX(packed);
-                int z = ChunkUtil.getChunkPosZ(packed);
+                int x = Library.getChunkPosX(packed);
+                int z = Library.getChunkPosZ(packed);
                 Biome target = Biome.getBiome(be.getIntValue());
                 if (target != null) WorldUtil.setBiome(world, x, z, target);
             }

@@ -3,7 +3,6 @@ package com.hbm.world.phased;
 import com.hbm.config.GeneralConfig;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
-import com.hbm.util.ChunkUtil;
 import com.hbm.util.DelayedTick;
 import com.hbm.world.phased.AbstractPhasedStructure.BlockInfo;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -87,8 +86,8 @@ public class PhasedStructureGenerator implements IWorldGenerator {
             long relKey = entry.getLongKey();
             Long2ObjectOpenHashMap<BlockInfo> blocksForThisChunk = entry.getValue();
 
-            int relChunkX = ChunkUtil.getChunkPosX(relKey);
-            int relChunkZ = ChunkUtil.getChunkPosZ(relKey);
+            int relChunkX = Library.getChunkPosX(relKey);
+            int relChunkZ = Library.getChunkPosZ(relKey);
             int absChunkX = originChunkX + relChunkX;
             int absChunkZ = originChunkZ + relChunkZ;
 
@@ -105,8 +104,8 @@ public class PhasedStructureGenerator implements IWorldGenerator {
         absolute.ensureCapacity(relativeOffsets.size());
         for (int i = 0; i < relativeOffsets.size(); i++) {
             long rel = relativeOffsets.getLong(i);
-            int relChunkX = ChunkUtil.getChunkPosX(rel);
-            int relChunkZ = ChunkUtil.getChunkPosZ(rel);
+            int relChunkX = Library.getChunkPosX(rel);
+            int relChunkZ = Library.getChunkPosZ(rel);
             absolute.add(ChunkPos.asLong(baseChunkX + relChunkX, baseChunkZ + relChunkZ));
         }
         return absolute;
@@ -651,8 +650,8 @@ public class PhasedStructureGenerator implements IWorldGenerator {
             while (iterator.hasNext()) {
                 Long2ObjectMap.Entry<Long2ObjectOpenHashMap<BlockInfo>> entry = iterator.next();
                 long relKey = entry.getLongKey();
-                int relChunkX = ChunkUtil.getChunkPosX(relKey);
-                int relChunkZ = ChunkUtil.getChunkPosZ(relKey);
+                int relChunkX = Library.getChunkPosX(relKey);
+                int relChunkZ = Library.getChunkPosZ(relKey);
                 int absChunkX = originChunkX + relChunkX;
                 int absChunkZ = originChunkZ + relChunkZ;
                 long absKey = ChunkPos.asLong(absChunkX, absChunkZ);
@@ -676,8 +675,8 @@ public class PhasedStructureGenerator implements IWorldGenerator {
                     while (iter.hasNext()) {
                         long extra = iter.nextLong();
                         if (!this.remainingChunks.contains(extra)) continue;
-                        int absX = ChunkUtil.getChunkPosX(extra);
-                        int absZ = ChunkUtil.getChunkPosZ(extra);
+                        int absX = Library.getChunkPosX(extra);
+                        int absZ = Library.getChunkPosZ(extra);
                         int relX = absX - originChunkX;
                         int relZ = absZ - originChunkZ;
 
@@ -726,8 +725,8 @@ public class PhasedStructureGenerator implements IWorldGenerator {
                 long relKey = entry.getLongKey();
                 Long2ObjectOpenHashMap<BlockInfo> blocksForThisChunk = entry.getValue();
 
-                int relChunkX = ChunkUtil.getChunkPosX(relKey);
-                int relChunkZ = ChunkUtil.getChunkPosZ(relKey);
+                int relChunkX = Library.getChunkPosX(relKey);
+                int relChunkZ = Library.getChunkPosZ(relKey);
                 int absChunkX = originChunkX + relChunkX;
                 int absChunkZ = originChunkZ + relChunkZ;
 
@@ -751,8 +750,8 @@ public class PhasedStructureGenerator implements IWorldGenerator {
                     while (iter.hasNext()) {
                         long extra = iter.nextLong();
                         if (this.remainingChunks.contains(extra)) continue;
-                        int absX = ChunkUtil.getChunkPosX(extra);
-                        int absZ = ChunkUtil.getChunkPosZ(extra);
+                        int absX = Library.getChunkPosX(extra);
+                        int absZ = Library.getChunkPosZ(extra);
                         int relX = absX - originChunkX;
                         int relZ = absZ - originChunkZ;
 

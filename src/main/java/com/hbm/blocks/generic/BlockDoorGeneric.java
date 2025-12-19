@@ -37,7 +37,7 @@ import java.util.List;
 public class BlockDoorGeneric extends BlockDummyable implements IRadResistantBlock, IPartialSealableBlock {
 
 	public DoorDecl type;
-	private boolean isRadResistant;
+	public final boolean isRadResistant;
 
 	public BlockDoorGeneric(Material materialIn, DoorDecl type, boolean isRadResistant, String s){
 		super(materialIn, s, false);
@@ -171,7 +171,7 @@ public class BlockDoorGeneric extends BlockDummyable implements IRadResistantBlo
 	@Override
 	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
 		if(this.isRadResistant){
-			RadiationSystemNT.markChunkForRebuild(worldIn, pos);
+			RadiationSystemNT.markSectionForRebuild(worldIn, pos);
 		}
 		super.onBlockAdded(worldIn, pos, state);
 	}
@@ -179,7 +179,7 @@ public class BlockDoorGeneric extends BlockDummyable implements IRadResistantBlo
 	@Override
 	public void breakBlock(@NotNull World worldIn, @NotNull BlockPos pos, IBlockState state) {
 		if(this.isRadResistant){
-			RadiationSystemNT.markChunkForRebuild(worldIn, pos);
+			RadiationSystemNT.markSectionForRebuild(worldIn, pos);
 		}
 		super.breakBlock(worldIn, pos, state);
 	}

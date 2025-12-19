@@ -179,13 +179,13 @@ public class BlockSiloHatch extends BlockContainer implements IBomb, IMultiBlock
 
 	@Override
 	public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
-		RadiationSystemNT.markChunkForRebuild(world, pos);
+		RadiationSystemNT.markSectionForRebuild(world, pos);
 		super.onBlockAdded(world, pos, state);
 	}
 	
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {
-		RadiationSystemNT.markChunkForRebuild(world, pos);
+		RadiationSystemNT.markSectionForRebuild(world, pos);
 		super.breakBlock(world, pos, state);
 	}
 

@@ -28,6 +28,7 @@ import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.BobMathUtil;
+import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.material.Material;
@@ -96,8 +97,7 @@ public class Library {
             CallSite cs = LambdaMetafactory.metafactory(lookup, "run", MethodType.methodType(Runnable.class), MethodType.methodType(void.class), mh, MethodType.methodType(void.class));
             result = (Runnable) cs.getTarget().invokeExact();
         } catch (Throwable t) {
-            result = () -> {
-            };
+            result = () -> {};
         }
         SPIN_WAITER = result;
     }
@@ -1706,40 +1706,37 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 		return itemsPulled;
 	}
 
-	@Contract(pure = true)
+    // ----------------- Vanilla Encoding -----------------
+
+    /**
+     * Identical to {@link BlockPos#toLong()}
+     */
 	public static long blockPosToLong(int x, int y, int z) {
 		return ((long)x & 0x03FF_FFFF) << 38 | ((long)y & 0x0000_0FFF) << 26 | ((long) z & 0x03FF_FFFF);
 	}
 
-	@Contract(pure = true)
 	public static int getBlockPosX(long serialized) {
 		return (int)(serialized >> 38);
 	}
 
-	@Contract(pure = true)
 	public static int getBlockPosY(long serialized) {
 		return (int)(serialized << 26 >> 52);
 	}
 
-	@Contract(pure = true)
 	public static int getBlockPosZ(long serialized) {
 		return (int)(serialized << 38 >> 38);
 	}
 
-    @Contract(pure = true)
-    public static long shiftBlockPos(long serialized, long shift) {
-        int dx = getBlockPosX(shift);
-        int dy = getBlockPosY(shift);
-        int dz = getBlockPosZ(shift);
-        return shiftBlockPos(serialized, dx, dy, dz);
+    public static long shiftBlockPos(long serialized, int dx, int dy, int dz) {
+        return (serialized + (((long) dx) << 38)) & 0xFFFF_FFC0_0000_0000L | (serialized + (((long) dy) << 26)) & 0x0000_003F_FC00_0000L | (serialized + (long) dz) & 0x0000_0000_03FF_FFFFL;
     }
 
-    @Contract(pure = true)
-    public static long shiftBlockPos(long serialized, int dx, int dy, int dz) {
-        int x = getBlockPosX(serialized);
-        int y = getBlockPosY(serialized);
-        int z = getBlockPosZ(serialized);
-        return blockPosToLong(x + dx, y + dy, z + dz);
+    public static long shiftBlockPos(long serialized, EnumFacing e) {
+        return shiftBlockPos(serialized, e.getXOffset(), e.getYOffset(), e.getZOffset());
+    }
+
+    public static long shiftBlockPos(long serialized, EnumFacing e, int n) {
+        return shiftBlockPos(serialized, e.getXOffset() * n, e.getYOffset() * n, e.getZOffset() * n);
     }
 
 	@Contract(mutates = "param1")
@@ -1748,67 +1745,121 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
         return pos;
 	}
 
+    public static long blockPosToChunkLong(long serialized) {
+        return ((serialized >> 42) & 0xFFFFFFFFL) | ((serialized << 38 >> 42) << 32);
+    }
+
+    public static int getChunkPosX(long ck) {
+        return (int) ck;
+    }
+
+    public static int getChunkPosZ(long ck) {
+        return (int) (ck >>> 32);
+    }
+
+    /**
+     * Identical to {@link net.minecraft.world.chunk.BlockStateContainer#getIndex(int, int, int)}
+     */
+    public static int packLocal(int localX, int localY, int localZ) {
+        return (localY << 8) | (localZ << 4) | localX;
+    }
+
+    public static int blockPosToLocal(int x, int y, int z) {
+        return ((y & 0xF) << 8) | ((z & 0xF) << 4) | (x & 0xF);
+    }
+
+    public static int blockPosToLocal(BlockPos pos) {
+        return blockPosToLocal(pos.getX(), pos.getY(), pos.getZ());
+    }
+
+    public static int blockPosToLocal(long serialized) {
+        return ((int)(serialized >> 18) & 0xF00) | ((int)(serialized << 4) & 0xF0) | ((int)(serialized >> 38) & 0xF);
+    }
+
+    public static int getLocalX(int packed) {
+        return packed & 0xF;
+    }
+
+    public static int getLocalY(int packed) {
+        return (packed >>> 8) & 0xF;
+    }
+
+    public static int getLocalZ(int packed) {
+        return (packed >>> 4) & 0xF;
+    }
+
+    public static int setLocalX(int packed, int newX) {
+        return (packed & ~0xF) | (newX & 0xF);
+    }
+
+    public static int setLocalY(int packed, int newY) {
+        return (packed & ~0xF00) | ((newY & 0xF) << 8);
+    }
+
+    public static int setLocalZ(int packed, int newZ) {
+        return (packed & ~0xF0) | ((newZ & 0xF) << 4);
+    }
+
+    // ----------------- Custom Encoding -----------------
+
     /**
      * chunkX, chunkZ ∈ [-2_097_152, 2_097_151] (±33.5M blocks)
      * subY ∈ [-524_288, 524_287] (±8.3M blocks)
      */
-    @Contract(pure = true)
-    public static long subChunkToLong(int chunkX, int subY, int chunkZ) {
-        long xPart = ((long) chunkX & 0x3fffffL) << 42;
-        long zPart = ((long) chunkZ & 0x3fffffL) << 20;
-        long yPart = ((long) subY & 0xfffffL);
-        return xPart | zPart | yPart;
+    public static long sectionToLong(int chunkX, @Range(from = -524_288, to = 524_287) int subY, int chunkZ) {
+        // put subY at most MSB to avoid trailing zeros, this makes HashCommon.mix more uniform
+        return ((((long) subY) & 0xFFFFFL) << 44) | ((((long) chunkZ) & 0x3FFFFFL) << 22) | (((long) chunkX) & 0x3FFFFFL);
     }
 
-    @Contract(pure = true)
-    public static long subChunkToLong(ChunkPos pos, int subY) {
-        return subChunkToLong(pos.x, subY, pos.z);
+    public static long sectionToLong(long ck, @Range(from = -524_288, to = 524_287) int subY) {
+        return ((((long) subY) & 0xFFFFFL) << 44) | (((ck >>> 32) & 0x3FFFFFL) << 22) | (ck & 0x3FFFFFL);
     }
 
-    @Contract(pure = true)
-    public static int getSubChunkX(long key) {
-        return (int) (key >> 42);
+    public static long sectionToLong(ChunkPos pos, @Range(from = -524_288, to = 524_287) int subY) {
+        return sectionToLong(pos.x, subY, pos.z);
     }
 
-    @Contract(pure = true)
-    public static int getSubChunkY(long key) {
-        return (int) (key << 44 >> 44);
+    public static int getSectionX(long key) {
+        return (int) (key << 42 >> 42);
     }
 
-    @Contract(pure = true)
-    public static int getSubChunkZ(long key) {
-        return (int) (key << 22 >> 42);
+    public static int getSectionY(long key) {
+        return (int) (key >> 44);
     }
 
-    @Contract(pure = true)
-    public static long blockPosToSubChunkLong(int x, int y, int z) {
-        return subChunkToLong(x >> 4, y >> 4, z >> 4);
+    public static int getSectionZ(long key) {
+        return (int) (key << 20 >> 42);
     }
 
-    @Contract(pure = true)
-    public static long blockPosToSubChunkLong(BlockPos pos) {
-        return subChunkToLong(pos.getX() >> 4, pos.getY() >> 4, pos.getZ() >> 4);
+    public static long setSectionX(long key, int chunkX) {
+        return (key & ~0x3FFFFFL) | (((long) chunkX) & 0x3FFFFFL);
     }
 
-	@Contract(pure = true)
-	public static int packLocal(int localX, int localY, int localZ) {
-		return (localY << 8) | (localZ << 4) | localX;
-	}
+    public static long setSectionY(long key, @Range(from = -524_288, to = 524_287) int subY) {
+        return (key & 0x00000FFFFFFFFFFFL) | ((((long) subY) & 0xFFFFFL) << 44);
+    }
 
-	@Contract(pure = true)
-	public static int unpackLocalX(int packedLocal) {
-		return packedLocal & 0xF;
-	}
+    public static long setSectionZ(long key, int chunkZ) {
+        return (key & ~(0x3FFFFFL << 22)) | ((((long) chunkZ) & 0x3FFFFFL) << 22);
+    }
 
-	@Contract(pure = true)
-	public static int unpackLocalY(int packedLocal) {
-		return (packedLocal >>> 8) & 0xF;
-	}
+    public static long sectionToChunkLong(long sck) {
+        int x = (int) (sck << 42 >> 42);
+        int z = (int) (sck << 20 >> 42);
+        return ((long) z << 32) | (x & 0xFFFFFFFFL);
+    }
 
-	@Contract(pure = true)
-	public static int unpackLocalZ(int packedLocal) {
-		return (packedLocal >>> 4) & 0xF;
-	}
+    public static long blockPosToSectionLong(int x, int y, int z) {
+        return sectionToLong(x >> 4, y >> 4, z >> 4);
+    }
+
+    public static long blockPosToSectionLong(long serialized) {
+        return ((((serialized << 26) >> 56) & 0xFFFFFL) << 44) | ((serialized & 0x03FF_FFF0L) << 18) |  (serialized >>> 42);
+    }
+
+    public static long blockPosToSectionLong(BlockPos pos) {
+        return sectionToLong(pos.getX() >> 4, pos.getY() >> 4, pos.getZ() >> 4);
+    }
 
 	@Nullable
 	public static <T extends Comparable<T>> IBlockState changeBlockState(Block trueState, Block falseState, IBlockState state,
@@ -1851,15 +1902,17 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
         SPIN_WAITER.run();
     }
 
-    @Contract(pure = true)
-    public static int nextIntDeterministic(long worldSeed, int chunkX, int chunkZ, @Range(from = 1, to = Integer.MAX_VALUE) int bound) {
-        long x = (long) chunkX * 341873128712L;
-        long z = (long) chunkZ * 132897987541L;
-        long s = worldSeed ^ x ^ z;
-        s ^= (s >> 12);
-        s ^= (s << 25);
-        s ^= (s >> 27);
-        int r = (int) (s & 0x7FFFFFFFL);
-        return r % bound;
+    public static int nextIntDeterministic(long seed, int chunkX, int chunkZ, @Range(from = 1, to = Integer.MAX_VALUE) int bound) {
+        long state = seed ^ ChunkPos.asLong(chunkX, chunkZ);
+        final long threshold = Integer.remainderUnsigned(-bound, bound) & 0xffff_ffffL;
+        while (true) {
+            state += 0x9E3779B97F4A7C15L;
+            long z = HashCommon.murmurHash3(state);
+            long r = z >>> 32;
+            long m = r * (long) bound;
+            if ((m & 0xffff_ffffL) >= threshold) {
+                return (int) (m >>> 32);
+            }
+        }
     }
 }

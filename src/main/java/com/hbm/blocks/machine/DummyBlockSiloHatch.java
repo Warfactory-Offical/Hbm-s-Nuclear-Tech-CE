@@ -78,7 +78,7 @@ public class DummyBlockSiloHatch extends BlockContainer implements IDummy, IBomb
     		}
     	}
     	world.removeTileEntity(pos);
-    	RadiationSystemNT.markChunkForRebuild(world, pos);
+        RadiationSystemNT.markSectionForRebuild(world, pos);
 	}
 	
 	@Override
@@ -166,7 +166,6 @@ public class DummyBlockSiloHatch extends BlockContainer implements IDummy, IBomb
 
 	@Override
 	public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
-		RadiationSystemNT.markChunkForRebuild(world, pos);
 		super.onBlockAdded(world, pos, state);
 	}
 

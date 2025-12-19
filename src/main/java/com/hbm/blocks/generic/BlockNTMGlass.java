@@ -49,7 +49,7 @@ public class BlockNTMGlass extends BlockBreakable implements IRadResistantBlock 
 	@Override
 	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
 		if(this.isRadResistant){
-			RadiationSystemNT.markChunkForRebuild(worldIn, pos);
+			RadiationSystemNT.markSectionForRebuild(worldIn, pos);
 		}
 		super.onBlockAdded(worldIn, pos, state);
 	}
@@ -57,7 +57,7 @@ public class BlockNTMGlass extends BlockBreakable implements IRadResistantBlock 
 	@Override
 	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
 		if(this.isRadResistant){
-			RadiationSystemNT.markChunkForRebuild(worldIn, pos);
+			RadiationSystemNT.markSectionForRebuild(worldIn, pos);
 		}
 		super.breakBlock(worldIn, pos, state);
 	}

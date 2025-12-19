@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.concurrent.ThreadSafe;
+import java.nio.ByteBuffer;
 import java.util.concurrent.atomic.LongAdder;
 
 import static com.hbm.lib.internal.UnsafeHolder.U;
@@ -78,6 +79,59 @@ public class ConcurrentBitSet implements BitMask, Cloneable {
         return bitSet;
     }
 
+    @NotNull
+    @Contract(value = "_ -> new", pure = true)
+    public static ConcurrentBitSet valueOf(long @NotNull [] data) {
+        int len = 0;
+        for (int i = data.length - 1; i >= 0; i--) {
+            long w = data[i];
+            if (w != 0) {
+                len = (i << 6) + (64 - Long.numberOfLeadingZeros(w));
+                break;
+            }
+        }
+        return fromLongArray(data, len);
+    }
+
+    public static ConcurrentBitSet fromWords(@NotNull ByteBuffer buf, int logicalSize) {
+        ConcurrentBitSet bitSet = new ConcurrentBitSet(logicalSize);
+        int wc = bitSet.wordCount;
+        int need = wc << 3;
+        if (buf.remaining() < need) {
+            throw new IllegalArgumentException("Buffer underflow: need " + need + " bytes for words, have " + buf.remaining());
+        }
+        if (wc == 0) return bitSet;
+        long totalBits = 0L;
+        int last = wc - 1;
+        long tailMask = bitSet.lastWordMask();
+        for (int i = 0; i < last; i++) {
+            long w = buf.getLong();
+            bitSet.words[i] = w;
+            totalBits += Long.bitCount(w);
+        }
+        long wLast = buf.getLong() & tailMask;
+        bitSet.words[last] = wLast;
+        totalBits += Long.bitCount(wLast);
+        bitSet.bitCount.add(totalBits);
+        return bitSet;
+    }
+
+    public void toWords(@NotNull ByteBuffer buf) {
+        int need = wordCount << 3;
+        if (buf.remaining() < need) {
+            throw new IllegalArgumentException("Buffer too small: need " + need + " bytes remaining, have " + buf.remaining());
+        }
+        if (wordCount == 0) return;
+
+        int last = wordCount - 1;
+        long tailMask = lastWordMask();
+
+        for (int i = 0; i < last; i++) {
+            buf.putLong(U.getLongVolatile(words, byteOffset(i)));
+        }
+        buf.putLong(U.getLongVolatile(words, byteOffset(last)) & tailMask);
+    }
+
     @Override
     @Contract(pure = true)
     public boolean get(int bit) {
@@ -99,7 +153,7 @@ public class ConcurrentBitSet implements BitMask, Cloneable {
             long oldWord = U.getLongVolatile(words, offset);
             long newWord = oldWord | mask;
             if (oldWord == newWord) return;
-            if (U.compareAndSwapLong(words, offset, oldWord, newWord)) {
+            if (U.compareAndSetLong(words, offset, oldWord, newWord)) {
                 bitCount.increment();
                 return;
             }
@@ -116,7 +170,7 @@ public class ConcurrentBitSet implements BitMask, Cloneable {
             long oldWord = U.getLongVolatile(words, offset);
             if ((oldWord & mask) != 0) return true;
             long newWord = oldWord | mask;
-            if (U.compareAndSwapLong(words, offset, oldWord, newWord)) {
+            if (U.compareAndSetLong(words, offset, oldWord, newWord)) {
                 bitCount.increment();
                 return false;
             }
@@ -146,7 +200,7 @@ public class ConcurrentBitSet implements BitMask, Cloneable {
             long oldWord = U.getLongVolatile(words, offset);
             long newWord = oldWord | mask;
             if (oldWord == newWord) return;
-            if (U.compareAndSwapLong(words, offset, oldWord, newWord)) {
+            if (U.compareAndSetLong(words, offset, oldWord, newWord)) {
                 bitCount.add(Long.bitCount(newWord ^ oldWord));
                 return;
             }
@@ -162,7 +216,7 @@ public class ConcurrentBitSet implements BitMask, Cloneable {
             long oldWord = U.getLongVolatile(words, offset);
             long newWord = oldWord & mask;
             if (oldWord == newWord) return;
-            if (U.compareAndSwapLong(words, offset, oldWord, newWord)) {
+            if (U.compareAndSetLong(words, offset, oldWord, newWord)) {
                 bitCount.decrement();
                 return;
             }
@@ -178,7 +232,7 @@ public class ConcurrentBitSet implements BitMask, Cloneable {
             long oldWord = U.getLongVolatile(words, offset);
             if ((oldWord & mask) == 0) return false;
             long newWord = oldWord & ~mask;
-            if (U.compareAndSwapLong(words, offset, oldWord, newWord)) {
+            if (U.compareAndSetLong(words, offset, oldWord, newWord)) {
                 bitCount.decrement();
                 return true;
             }
@@ -208,7 +262,7 @@ public class ConcurrentBitSet implements BitMask, Cloneable {
             long oldWord = U.getLongVolatile(words, offset);
             long newWord = oldWord & ~mask;
             if (oldWord == newWord) return;
-            if (U.compareAndSwapLong(words, offset, oldWord, newWord)) {
+            if (U.compareAndSetLong(words, offset, oldWord, newWord)) {
                 bitCount.add(-Long.bitCount(oldWord ^ newWord));
                 return;
             }
@@ -227,7 +281,7 @@ public class ConcurrentBitSet implements BitMask, Cloneable {
         while (true) {
             long oldWord = U.getLongVolatile(words, offset);
             long newWord = oldWord ^ mask;
-            if (U.compareAndSwapLong(words, offset, oldWord, newWord)) {
+            if (U.compareAndSetLong(words, offset, oldWord, newWord)) {
                 bitCount.add((oldWord & mask) == 0 ? 1 : -1);
                 return;
             }
@@ -243,7 +297,7 @@ public class ConcurrentBitSet implements BitMask, Cloneable {
             long oldWord = U.getLongVolatile(words, offset);
             boolean wasSet = (oldWord & mask) != 0;
             long newWord = oldWord ^ mask;
-            if (U.compareAndSwapLong(words, offset, oldWord, newWord)) {
+            if (U.compareAndSetLong(words, offset, oldWord, newWord)) {
                 if (wasSet) bitCount.decrement();
                 else bitCount.increment();
                 return wasSet;
@@ -273,7 +327,7 @@ public class ConcurrentBitSet implements BitMask, Cloneable {
         while (true) {
             long oldWord = U.getLongVolatile(words, offset);
             long newWord = oldWord ^ mask;
-            if (U.compareAndSwapLong(words, offset, oldWord, newWord)) {
+            if (U.compareAndSetLong(words, offset, oldWord, newWord)) {
                 bitCount.add(Long.bitCount(mask) - 2L * Long.bitCount(mask & oldWord));
                 return;
             }
@@ -363,10 +417,52 @@ public class ConcurrentBitSet implements BitMask, Cloneable {
         return bitCount.sum() == 0;
     }
 
+    //fucking retarded word scan
+    public boolean isEmptyExact() {
+        if (wordCount == 0) return true;
+        int last = wordCount - 1;
+        long tailMask = lastWordMask();
+
+        for (int i = 0; i < last; i++) {
+            if (U.getLongVolatile(words, byteOffset(i)) != 0L) return false;
+        }
+        return (U.getLongVolatile(words, byteOffset(last)) & tailMask) == 0L;
+    }
+
     @Override
     @Contract(pure = true)
     public long cardinality() {
         return bitCount.sum();
+    }
+
+    public long cardinalityExact() {
+        if (wordCount == 0) return 0L;
+        int last = wordCount - 1;
+        long tailMask = lastWordMask();
+
+        long total = 0L;
+        for (int i = 0; i < last; i++) {
+            total += Long.bitCount(U.getLongVolatile(words, byteOffset(i)));
+        }
+        total += Long.bitCount(U.getLongVolatile(words, byteOffset(last)) & tailMask);
+        return total;
+    }
+
+    public boolean isFullExact() {
+        if (logicalSize == 0) return true;
+        int last = wordCount - 1;
+        if ((logicalSize & 63) == 0) {
+            for (int i = 0; i <= last; i++) {
+                if (U.getLongVolatile(words, byteOffset(i)) != -1L) return false;
+            }
+            return true;
+        }
+        for (int i = 0; i < last; i++) {
+            if (U.getLongVolatile(words, byteOffset(i)) != -1L) return false;
+        }
+        long tailMask = lastWordMask();
+        long wLast = U.getLongVolatile(words, byteOffset(last)) & tailMask;
+        return wLast == tailMask;
     }
 
     @Override
@@ -417,7 +513,7 @@ public class ConcurrentBitSet implements BitMask, Cloneable {
                 long oldWord = U.getLongVolatile(words, offset);
                 long newWord = oldWord & other;
                 if (oldWord == newWord) break;
-                if (U.compareAndSwapLong(words, offset, oldWord, newWord)) {
+                if (U.compareAndSetLong(words, offset, oldWord, newWord)) {
                     bitCount.add(-Long.bitCount(oldWord ^ newWord));
                     break;
                 }
@@ -434,7 +530,7 @@ public class ConcurrentBitSet implements BitMask, Cloneable {
                 long oldWord = U.getLongVolatile(words, offset);
                 long newWord = oldWord | other;
                 if (oldWord == newWord) break;
-                if (U.compareAndSwapLong(words, offset, oldWord, newWord)) {
+                if (U.compareAndSetLong(words, offset, oldWord, newWord)) {
                     bitCount.add(Long.bitCount(oldWord ^ newWord));
                     break;
                 }
@@ -451,7 +547,7 @@ public class ConcurrentBitSet implements BitMask, Cloneable {
                 long oldWord = U.getLongVolatile(words, offset);
                 long newWord = oldWord ^ otherWord;
                 if (oldWord == newWord) break;
-                if (U.compareAndSwapLong(words, offset, oldWord, newWord)) {
+                if (U.compareAndSetLong(words, offset, oldWord, newWord)) {
                     bitCount.add(Long.bitCount(otherWord) - 2L * Long.bitCount(otherWord & oldWord));
                     break;
                 }
@@ -468,7 +564,7 @@ public class ConcurrentBitSet implements BitMask, Cloneable {
                 long oldWord = U.getLongVolatile(words, offset);
                 long newWord = oldWord & ~otherWord;
                 if (oldWord == newWord) break;
-                if (U.compareAndSwapLong(words, offset, oldWord, newWord)) {
+                if (U.compareAndSetLong(words, offset, oldWord, newWord)) {
                     bitCount.add(-Long.bitCount(oldWord ^ newWord));
                     break;
                 }
@@ -496,18 +592,17 @@ public class ConcurrentBitSet implements BitMask, Cloneable {
         return out;
     }
 
-    @NotNull
-    @Contract(value = "_ -> new", pure = true)
-    public static ConcurrentBitSet valueOf(long @NotNull [] data) {
-        int len = 0;
-        for (int i = data.length - 1; i >= 0; i--) {
-            long w = data[i];
-            if (w != 0) {
-                len = (i << 6) + (64 - Long.numberOfLeadingZeros(w));
-                break;
-            }
+    public void toLongArray(long @NotNull [] out) {
+        if (out.length != wordCount) {
+            throw new IllegalArgumentException("Expected long[" + wordCount + "], got long[" + out.length + "]");
         }
-        return fromLongArray(data, len);
+        if (wordCount == 0) return;
+        int last = wordCount - 1;
+        long tailMask = lastWordMask();
+        for (int i = 0; i < last; i++) {
+            out[i] = U.getLongVolatile(words, byteOffset(i));
+        }
+        out[last] = U.getLongVolatile(words, byteOffset(last)) & tailMask;
     }
 
     private long lastWordMask() {

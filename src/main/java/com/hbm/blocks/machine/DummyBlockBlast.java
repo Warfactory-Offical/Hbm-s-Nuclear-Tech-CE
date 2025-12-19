@@ -78,7 +78,7 @@ public class DummyBlockBlast extends BlockContainer implements IDummy, IBomb, IR
     		}
     	}
     	world.removeTileEntity(pos);
-		RadiationSystemNT.markChunkForRebuild(world, pos);
+        RadiationSystemNT.markSectionForRebuild(world, pos);
 	}
 	
 	@Override
@@ -167,7 +167,7 @@ public class DummyBlockBlast extends BlockContainer implements IDummy, IBomb, IR
 
 	@Override
 	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
-		RadiationSystemNT.markChunkForRebuild(worldIn, pos);
+		RadiationSystemNT.markSectionForRebuild(worldIn, pos);
 		super.onBlockAdded(worldIn, pos, state);
 	}
 

@@ -48,8 +48,11 @@ public class RadiationConfig {
 	public static double sootFogThreshold = 35D;
 	public static double sootFogDivisor = 120D;
 	public static double smokeStackSootMult = 0.8;
-	
-	public static void loadFromConfig(Configuration config) {
+    public static int radTickRate = 1;
+    public static double radHalfLifeSeconds = 120D;
+    public static double radDiffusivity = 10.0 / 6.0;
+
+    public static void loadFromConfig(Configuration config) {
 		final String CATEGORY_NUKE = "06_explosions";
 		final String CATEGORY_RAD = "07_radiation";
 		final String CATEGORY_POL = "16_pollution";
@@ -92,7 +95,6 @@ public class RadiationConfig {
 		
 		fogCh = CommonConfig.setDef(RadiationConfig.fogCh, 20);
 
-		//TODO either completely depricate this or make it work
 		neutronActivation = CommonConfig.createConfigBool(config, CATEGORY_RAD, "7.01_itemContamination", "Whether high radiation levels should radiate items in inventory. WARNING: extremely laggy and and buggy. Keep it off unless you know what you are doing", false);
 		neutronActivationThreshold = CommonConfig.createConfigInt(config, CATEGORY_RAD, "7.01_itemContaminationThreshold", "Minimum recieved Rads/s threshold at which items get irradiated", 15);
 		
@@ -100,6 +102,9 @@ public class RadiationConfig {
 		geigerY = CommonConfig.createConfigInt(config, CATEGORY_RAD, "7.03_geigerY", "Y Coordinate of the geiger counter gui (y=0 is on the bottom)", 2);
 		digammaX = CommonConfig.createConfigInt(config, CATEGORY_RAD, "7.04_digammaX", "X Coordinate of the digamma diagnostic gui (x=0 is on the right)", 16);
 		digammaY = CommonConfig.createConfigInt(config, CATEGORY_RAD, "7.05_digammaY", "Y Coordinate of the digamma diagnostic gui (y=0 is on the bottom)", 18);
+        radTickRate = CommonConfig.createConfigInt(config, CATEGORY_RAD, "7.99_CE_01_radTickRate", "How many ticks between each radiation system updates. 1 = once per tick", 1);
+        radHalfLifeSeconds = CommonConfig.createConfigDouble(config, CATEGORY_RAD, "7.99_CE_02_radHalfLifeSeconds", "The half life of chunk radiation in seconds", 120);
+        radDiffusivity = CommonConfig.createConfigDouble(config, CATEGORY_RAD, "7.99_CE_03_radDiffusivity", "The diffusivity of chunk radiation. radDiffusivity * radTickRate / 20.0 must not exceed 1/6", 10.0 / 6.0);
 
 		hazardRate = CommonConfig.createConfigInt(config, CATEGORY_HAZ, "CE-0.3_hazardRate", "Ticks between application of effects for the hazards", 5);
 		disableAsbestos = CommonConfig.createConfigBool(config, CATEGORY_HAZ, "CE-0.3_disableAsbestos", "Setting it true makes Asbestos Hazard to do nothing", false);

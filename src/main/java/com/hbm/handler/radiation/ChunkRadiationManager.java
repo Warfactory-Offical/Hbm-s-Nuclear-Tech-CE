@@ -23,7 +23,7 @@ public final class ChunkRadiationManager {
          */
         @DoNotCall("unless you know what you are doing")
         public void updateSystem() {
-            RadiationSystemNT.forceUpdateAll();
+            throw new UnsupportedOperationException();
         }
 
         public double getRadiation(World world, BlockPos pos) {

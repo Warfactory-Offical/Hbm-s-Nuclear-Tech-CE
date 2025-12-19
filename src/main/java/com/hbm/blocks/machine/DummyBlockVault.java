@@ -136,8 +136,8 @@ public class DummyBlockVault extends BlockContainer implements IDummy, IBomb, IR
     				world.destroyBlock(((TileEntityDummy)te).target, true);
     		}
     	}
+		RadiationSystemNT.markSectionForRebuild(world, pos);
     	world.removeTileEntity(pos);
-		RadiationSystemNT.markChunkForRebuild(world, pos);
 	}
 	
 	@Override
@@ -177,12 +177,6 @@ public class DummyBlockVault extends BlockContainer implements IDummy, IBomb, IR
 	@Override
 	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
 		return new ItemStack(ModBlocks.vault_door);
-	}
-
-	@Override
-	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
-		RadiationSystemNT.markChunkForRebuild(worldIn, pos);
-		super.onBlockAdded(worldIn, pos, state);
 	}
 
 	@Override

@@ -11,14 +11,16 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import org.jctools.queues.MpscUnboundedXaddArrayQueue;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * Methods here are safe to call off-thread, except {@link #waitUntilThreadFinished()}.
+ */
 public class PacketThreading {
 
     public static final String threadPrefix = "NTM-Packet-Thread-";
@@ -29,7 +31,7 @@ public class PacketThreading {
      * Futures returned by {@link #threadPool}. The list is cleared by {@link #waitUntilThreadFinished()} once all
      * packets have either completed, errored, or timed out.
      */
-    public static final List<Future<?>> futureList = new ArrayList<>();
+    private static final MpscUnboundedXaddArrayQueue<Future<?>> futureQueue = new MpscUnboundedXaddArrayQueue<>(8192);
 
     /**
      * Global lock guarding the FML channel state for outbound server packets.
@@ -42,18 +44,19 @@ public class PacketThreading {
     public static final ReentrantLock lock = new ReentrantLock();
 
     /** Total packets submitted since the last flush. */
-    public static AtomicInteger totalCnt = new AtomicInteger(0);
+    public static final AtomicInteger totalCnt = new AtomicInteger(0);
     /** Total nanoseconds the main thread waited for worker completion. */
-    public static long nanoTimeWaited = 0;
+    public static volatile long nanoTimeWaited = 0L;
 
-    public static int clearCnt = 0;
-    public static boolean hasTriggered = false;
+    public static volatile int clearCnt = 0;
+    public static volatile boolean hasTriggered = false;
 
     /**
      * Sets up thread pool settings during mod initialization.
      */
     public static void init() {
         threadPool.setKeepAliveTime(50, TimeUnit.MILLISECONDS);
+
         if (GeneralConfig.enablePacketThreading) {
             int coreCount = GeneralConfig.packetThreadingCoreCount;
             int maxCount = GeneralConfig.packetThreadingMaxCount;
@@ -89,7 +92,7 @@ public class PacketThreading {
         if (isTriggered()) {
             task.run();
         } else if (GeneralConfig.enablePacketThreading) {
-            futureList.add(threadPool.submit(task));
+            futureQueue.offer(threadPool.submit(task));
         } else {
             task.run();
         }
@@ -178,19 +181,27 @@ public class PacketThreading {
      * but gives up if the total wait time exceeds 50 milliseconds to prevent stalling the main thread.
      */
     public static void waitUntilThreadFinished() {
-        if (futureList.isEmpty() || !GeneralConfig.enablePacketThreading || isTriggered()) {
-            futureList.clear();
+        // If threading is disabled or permanently bypassed, don't bother waiting.
+        if (!GeneralConfig.enablePacketThreading || isTriggered()) {
+            totalCnt.set(0);
+            return;
+        }
+
+        // Fast path: nothing currently tracked.
+        if (futureQueue.isEmpty()) {
             totalCnt.set(0);
             return;
         }
 
         long startTime = System.nanoTime();
         try {
-            if (GeneralConfig.enablePacketThreading && !hasTriggered) {
+            if (!hasTriggered) {
                 long deadline = startTime + TimeUnit.MILLISECONDS.toNanos(50);
-                for (Future<?> future : futureList) {
+                while (true) {
+                    Future<?> future = futureQueue.poll();
+                    if (future == null) break;
                     long timeoutLeft = deadline - System.nanoTime();
-                    if (timeoutLeft <= 0) {
+                    if (timeoutLeft <= 0L) {
                         throw new TimeoutException("Packet processing deadline exceeded.");
                     }
                     future.get(timeoutLeft, TimeUnit.NANOSECONDS);
@@ -200,7 +211,7 @@ public class PacketThreading {
             MainRegistry.logger.error("A packet processing task threw an exception.", e.getCause());
         } catch (TimeoutException e) {
             if (!GeneralConfig.packetThreadingErrorBypass && !hasTriggered) {
-                MainRegistry.logger.warn("A packet task timed out or the total wait time (>50ms) was exceeded. Discarding {} remaining packets out of {} total to prevent server stall.", threadPool.getQueue().size(), totalCnt);
+                MainRegistry.logger.warn("A packet task timed out or the total wait time (>50ms) was exceeded. Discarding {} remaining packets out of {} total to prevent server stall.", threadPool.getQueue().size(), totalCnt.get());
             }
             clearThreadPoolTasks();
         } catch (InterruptedException e) {
@@ -208,7 +219,6 @@ public class PacketThreading {
             Thread.currentThread().interrupt();
         } finally {
             nanoTimeWaited = System.nanoTime() - startTime;
-            futureList.clear();
             if (!threadPool.getQueue().isEmpty()) {
                 if (!GeneralConfig.packetThreadingErrorBypass && !hasTriggered) {
                     MainRegistry.logger.warn("Residual packets detected in queue after processing. Discarding {} packets.", threadPool.getQueue().size());
@@ -222,13 +232,14 @@ public class PacketThreading {
     /**
      * Forcibly removes every queued task without executing them.
      */
-    public static void clearThreadPoolTasks() {
+    private static void clearThreadPoolTasks() {
         if (threadPool.getQueue().isEmpty()) {
             clearCnt = 0;
             return;
         }
 
         threadPool.getQueue().clear();
+        futureQueue.clear();
 
         if (!GeneralConfig.packetThreadingErrorBypass && !hasTriggered) {
             MainRegistry.logger.warn("Packet work queue cleared forcefully (clear count: {}).", clearCnt);

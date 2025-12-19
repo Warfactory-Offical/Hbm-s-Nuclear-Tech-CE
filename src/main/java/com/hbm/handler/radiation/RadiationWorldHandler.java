@@ -3,20 +3,18 @@ package com.hbm.handler.radiation;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.GeneralConfig;
 import com.hbm.config.RadiationConfig;
-import com.hbm.handler.radiation.RadiationSystemNT.RadPocket;
 import com.hbm.main.MainRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
-import java.util.Set;
+class RadiationWorldHandler {
 
-public class RadiationWorldHandler {
-
-    public static void handleWorldDestruction(WorldServer world) {
+    static void handleWorldDestruction(WorldServer world) {
         if (!RadiationConfig.worldRadEffects || !GeneralConfig.enableRads) return;
         handleAdvancedDestruction(world);
     }
@@ -25,43 +23,14 @@ public class RadiationWorldHandler {
         if (GeneralConfig.enableDebugMode) {
             MainRegistry.logger.info("[Debug] Starting advanced world destruction processing");
         }
-
-        Set<RadPocket> activePockets = RadiationSystemNT.getActiveSetView(world);
-        if (activePockets.isEmpty()) {
-            return;
-        }
-
-        RadPocket[] pockets = activePockets.toArray(new RadPocket[0]);
-        RadPocket p = pockets[world.rand.nextInt(pockets.length)];
-
-        float threshold = 5.0F;
-
-        if (p.radiation.get() < threshold) {
-            return;
-        }
-
-        BlockPos startPos = p.parent.subChunkPos;
-
-        for (int i = 0; i < 16; i++) {
-            for (int j = 0; j < 16; j++) {
-                for (int k = 0; k < 16; k++) {
-                    if (world.rand.nextInt(3) != 0) continue;
-                    BlockPos pos = startPos.add(i, j, k);
-                    if (p.parent.getPocket(pos) != p) continue;
-                    if (world.isAirBlock(pos)) continue;
-
-                    IBlockState state = world.getBlockState(pos);
-                    decayBlock(world, pos, state, false);
-                }
-            }
-        }
+        RadiationSystemNT.handleWorldDestruction(world);
 
         if (GeneralConfig.enableDebugMode) {
             MainRegistry.logger.info("[Debug] Finished advanced world destruction processing");
         }
     }
 
-    private static void decayBlock(World world, BlockPos pos, IBlockState state, boolean isLegacy) {
+    static void decayBlock(World world, BlockPos pos, IBlockState state, boolean isLegacy) {
         Block block = state.getBlock();
         if (block.getRegistryName() == null) return;
 
@@ -80,27 +49,29 @@ public class RadiationWorldHandler {
             return;
         }
 
-        String registryName = block.getRegistryName().toString();
+        ResourceLocation registryName = block.getRegistryName();
+        String namespace = registryName.getNamespace();
+        String path = registryName.getPath();
 
-        if ("hbm:waste_leaves".equals(registryName)) {
+        if ("hbm".equals(namespace) && "waste_leaves".equals(path)) {
             if (world.rand.nextInt(8) == 0) {
                 world.setBlockToAir(pos);
             }
             return;
         }
-
-        IBlockState newState = switch (registryName) {
-            case "minecraft:grass" -> ModBlocks.waste_earth.getDefaultState();
-            case "minecraft:dirt", "minecraft:farmland" -> ModBlocks.waste_dirt.getDefaultState();
-            case "minecraft:sandstone" -> ModBlocks.waste_sandstone.getDefaultState();
-            case "minecraft:red_sandstone" -> ModBlocks.waste_red_sandstone.getDefaultState();
-            case "minecraft:hardened_clay", "minecraft:stained_hardened_clay" -> ModBlocks.waste_terracotta.getDefaultState();
-            case "minecraft:gravel" -> ModBlocks.waste_gravel.getDefaultState();
-            case "minecraft:mycelium" -> ModBlocks.waste_mycelium.getDefaultState();
-            case "minecraft:snow_layer" -> ModBlocks.waste_snow.getDefaultState();
-            case "minecraft:snow" -> ModBlocks.waste_snow_block.getDefaultState();
-            case "minecraft:ice" -> ModBlocks.waste_ice.getDefaultState();
-            case "minecraft:sand" -> {
+        if (!"minecraft".equals(namespace)) return;
+        IBlockState newState = switch (path) {
+            case "grass" -> ModBlocks.waste_earth.getDefaultState();
+            case "dirt", "farmland" -> ModBlocks.waste_dirt.getDefaultState();
+            case "sandstone" -> ModBlocks.waste_sandstone.getDefaultState();
+            case "red_sandstone" -> ModBlocks.waste_red_sandstone.getDefaultState();
+            case "hardened_clay", "stained_hardened_clay" -> ModBlocks.waste_terracotta.getDefaultState();
+            case "gravel" -> ModBlocks.waste_gravel.getDefaultState();
+            case "mycelium" -> ModBlocks.waste_mycelium.getDefaultState();
+            case "snow_layer" -> ModBlocks.waste_snow.getDefaultState();
+            case "snow" -> ModBlocks.waste_snow_block.getDefaultState();
+            case "ice" -> ModBlocks.waste_ice.getDefaultState();
+            case "sand" -> {
                 BlockSand.EnumType meta = state.getValue(BlockSand.VARIANT);
                 if (isLegacy && world.rand.nextInt(60) == 0) {
                     yield meta == BlockSand.EnumType.SAND ? ModBlocks.waste_trinitite.getDefaultState() :
