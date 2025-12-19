@@ -1947,6 +1947,9 @@ public final class UnsafeWrapper {
         }
     }
 
+    /**
+     * @deprecated use {@link #getReference(Object, long)} whenever possible
+     */
     @Deprecated
     public <T extends Throwable> Object getObject(Object o, long offset) throws T {
         try {
@@ -1956,6 +1959,9 @@ public final class UnsafeWrapper {
         }
     }
 
+    /**
+     * @deprecated use {@link #putReference(Object, long, Object)} whenever possible
+     */
     @Deprecated
     public <T extends Throwable> void putObject(Object o, long offset, Object x) throws T {
         try {
@@ -1965,6 +1971,9 @@ public final class UnsafeWrapper {
         }
     }
 
+    /**
+     * @deprecated use {@link #getReferenceVolatile(Object, long)} whenever possible
+     */
     @Deprecated
     public <T extends Throwable> Object getObjectVolatile(Object o, long offset) throws T {
         try {
@@ -1974,6 +1983,9 @@ public final class UnsafeWrapper {
         }
     }
 
+    /**
+     * @deprecated use {@link #putReferenceVolatile(Object, long, Object)} whenever possible
+     */
     @Deprecated
     public <T extends Throwable> void putObjectVolatile(Object o, long offset, Object x) throws T {
         try {
@@ -1983,6 +1995,9 @@ public final class UnsafeWrapper {
         }
     }
 
+    /**
+     * @deprecated use {@link #compareAndSetReference(Object, long, Object, Object)} whenever possible
+     */
     @Deprecated
     public <T extends Throwable> boolean compareAndSwapObject(Object o, long offset, Object expected, Object x) throws T {
         try {
@@ -1992,6 +2007,9 @@ public final class UnsafeWrapper {
         }
     }
 
+    /**
+     * @deprecated use {@link #compareAndSetInt(Object, long, int, int)} whenever possible
+     */
     @Deprecated
     public <T extends Throwable> boolean compareAndSwapInt(Object o, long offset, int expected, int x) throws T {
         try {
@@ -2001,6 +2019,9 @@ public final class UnsafeWrapper {
         }
     }
 
+    /**
+     * @deprecated use {@link #compareAndSetLong(Object, long, long, long)} whenever possible
+     */
     @Deprecated
     public <T extends Throwable> boolean compareAndSwapLong(Object o, long offset, long expected, long x) throws T {
         try {
@@ -2010,6 +2031,9 @@ public final class UnsafeWrapper {
         }
     }
 
+    /**
+     * @deprecated use {@link #getAndSetReference(Object, long, Object)} whenever possible
+     */
     @Deprecated
     public <T extends Throwable> Object getAndSetObject(Object o, long offset, Object x) throws T {
         try {
@@ -2019,6 +2043,9 @@ public final class UnsafeWrapper {
         }
     }
 
+    /**
+     * @deprecated use {@link #putIntRelease(Object, long, int)} whenever possible
+     */
     @Deprecated
     public <T extends Throwable> void putOrderedInt(Object o, long offset, int x) throws T {
         try {
@@ -2028,6 +2055,9 @@ public final class UnsafeWrapper {
         }
     }
 
+    /**
+     * @deprecated use {@link #putLongRelease(Object, long, long)} whenever possible
+     */
     @Deprecated
     public <T extends Throwable> void putOrderedLong(Object o, long offset, long x) throws T {
         try {
@@ -2037,6 +2067,9 @@ public final class UnsafeWrapper {
         }
     }
 
+    /**
+     * @deprecated use {@link #putReferenceRelease(Object, long, Object)} whenever possible
+     */
     @Deprecated
     public <T extends Throwable> void putOrderedObject(Object o, long offset, Object x) throws T {
         try {

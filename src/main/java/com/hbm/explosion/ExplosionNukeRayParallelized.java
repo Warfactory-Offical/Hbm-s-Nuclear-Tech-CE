@@ -75,11 +75,12 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
     private static final ThreadLocal<LocalAgg> TL_LOCAL_AGG = ThreadLocal.withInitial(LocalAgg::new);
     private static final ThreadLocal<double[]> TL_DIR = ThreadLocal.withInitial(() -> new double[3]);
     private static final TLPool<IntDoubleAccumulator> ACC_POOL = new TLPool<>(IntDoubleAccumulator::new, IntDoubleAccumulator::clear, 16, 4096);
-    private static final ThreadLocal<LongArrayList> TL_TE = ThreadLocal.withInitial(() -> new LongArrayList(16));
+    private static final ThreadLocal<Long2ObjectOpenHashMap<IBlockState>> TL_MODIFIED = ThreadLocal.withInitial(() -> new Long2ObjectOpenHashMap<>(16));
     private static final ThreadLocal<LongOpenHashSet> TL_EDGES = ThreadLocal.withInitial(() -> new LongOpenHashSet(64));
     private static final TLPool<LongArrayList> LONG_LIST_POOL = new TLPool<>(() -> new LongArrayList(64), LongArrayList::clear, 8, 512);
     private static final TLPool<Long2IntOpenHashMap> LONG2INT_POOL = new TLPool<>(Long2IntOpenHashMap::new, Long2IntOpenHashMap::clear, 4, 256);
     private static final TLPool<IntArrayList> INT_LIST_POOL = new TLPool<>(() -> new IntArrayList(64), IntArrayList::clear, 16, 512);
+    private static final TLPool<Long2ObjectOpenHashMap<IBlockState>> LONG2OBJECT_POOL = new TLPool<>(Long2ObjectOpenHashMap::new, Long2ObjectOpenHashMap::clear, 4, 256);
 
     static {
         for (int r = 0; r < LUT_RESISTANCE_BINS; r++) {
@@ -386,7 +387,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
             int xLocal = (bit >>> 4) & 0xF;
             int zLocal = bit & 0xF;
             int yLocal = yGlobal & 0xF;
-            int localIndex = xLocal | (zLocal << 4) | (yLocal << 8);
+            int localIndex = Library.packLocal(xLocal, yLocal, zLocal);
             m.computeIfAbsent(subY, k -> new OffHeapBitSet(SUB_MASK_SIZE)).set(localIndex);
             bit = chunkMask.nextSetBit(bit + 1);
         }
@@ -408,7 +409,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
                 int xLocal = (bitIndex >>> 4) & 0xF;
                 int zLocal = bitIndex & 0xF;
                 int yLocal = yGlobal & 0xF;
-                int localIndex = xLocal | (zLocal << 4) | (yLocal << 8);
+                int localIndex = Library.packLocal(xLocal, yLocal, zLocal);
                 if (shouldDestroy(bitIndex, storages, e.getDoubleValue(), len.get(bitIndex))) {
                     subChunkBitSets.computeIfAbsent(subY, k -> new OffHeapBitSet(SUB_MASK_SIZE)).set(localIndex);
                 }
@@ -426,7 +427,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
                 int xLocal = (bitIndex >>> 4) & 0xF;
                 int zLocal = bitIndex & 0xF;
                 int yLocal = yGlobal & 0xF;
-                int localIndex = xLocal | (zLocal << 4) | (yLocal << 8);
+                int localIndex = Library.packLocal(xLocal, yLocal, zLocal);
                 if (shouldDestroy(bitIndex, storages, 0.0, e.getDoubleValue())) {
                     subChunkBitSets.computeIfAbsent(subY, k -> new OffHeapBitSet(SUB_MASK_SIZE)).set(localIndex);
                 }
@@ -581,7 +582,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         }
     }
 
-    private int carveSubchunkAndSwap(BitMask subMask, long cpLong, ExtendedBlockStorage[] storages, LongArrayList teRemovals, LongArrayList neighborNotifies, int selfMask, Long2IntOpenHashMap neighborMask, int subY) {
+    private int carveSubchunkAndSwap(BitMask subMask, long cpLong, ExtendedBlockStorage[] storages, Long2ObjectOpenHashMap<IBlockState> modified, LongArrayList neighborNotifies, int selfMask, Long2IntOpenHashMap neighborMask, int subY) {
         final int cx = ChunkUtil.getChunkPosX(cpLong);
         final int cz = ChunkUtil.getChunkPosZ(cpLong);
 
@@ -590,17 +591,20 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
             return selfMask | (1 << subY);
         }
 
-        final LongArrayList te = TL_TE.get();
+        final Long2ObjectOpenHashMap<IBlockState> modifiedLocal = TL_MODIFIED.get();
         final LongOpenHashSet edges = TL_EDGES.get();
 
-        te.clear();
+        modifiedLocal.clear();
         edges.clear();
 
         while (true) {
-            final ExtendedBlockStorage carved = ChunkUtil.copyAndCarveLocal(world, cx, cz, subY, storages, subMask, te, edges);
+            modifiedLocal.clear();
+            edges.clear();
+            updateModified(cx, cz, subY, subMask, expected, modifiedLocal);
+            final ExtendedBlockStorage carved = ChunkUtil.copyAndCarveLocal(world, cx, cz, subY, storages, subMask, edges);
             if (ChunkUtil.casEbsAt(expected, carved, storages, subY)) {
                 selfMask |= (1 << subY);
-                for (int i = 0, n = te.size(); i < n; i++) teRemovals.add(te.getLong(i));
+                modified.putAll(modifiedLocal);
                 if (!edges.isEmpty()) {
                     MutableBlockPos pos = TL_POS.get();
                     LongIterator it = edges.iterator();
@@ -621,13 +625,13 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
                 selfMask |= (1 << subY);
                 break;
             }
-            te.clear();
+            modifiedLocal.clear();
             edges.clear();
         }
         return selfMask;
     }
 
-    private void notifyMainThread(long cpLong, LongArrayList teRemovals, LongArrayList neighborNotifies, int selfMask, Long2IntOpenHashMap neighborMask) {
+    private void notifyMainThread(long cpLong, Long2ObjectOpenHashMap<IBlockState> teRemovals, LongArrayList neighborNotifies, int selfMask, Long2IntOpenHashMap neighborMask) {
         pendingCarveNotifies.incrementAndGet();
         world.addScheduledTask(() -> {
             try {
@@ -635,7 +639,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
                 Chunk chunk = ChunkUtil.getLoadedChunk(world, cpLong);
                 if (chunk != null) chunk.markDirty();
             } finally {
-                LONG_LIST_POOL.recycle(teRemovals);
+                LONG2OBJECT_POOL.recycle(teRemovals);
                 LONG_LIST_POOL.recycle(neighborNotifies);
                 LONG2INT_POOL.recycle(neighborMask);
                 if (pendingCarveNotifies.decrementAndGet() == 0) {
@@ -667,15 +671,16 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         ExtendedBlockStorage expected = storages[subY];
         if (expected == Chunk.NULL_BLOCK_STORAGE || expected.isEmpty()) return null;
 
-        final LongArrayList te = TL_TE.get();
+        final Long2ObjectOpenHashMap<IBlockState> modifiedLocal = TL_MODIFIED.get();
         final LongOpenHashSet edges = TL_EDGES.get();
-        te.clear();
+        modifiedLocal.clear();
         edges.clear();
-        final ExtendedBlockStorage carved = ChunkUtil.copyAndCarveLocal(world, cx, cz, subY, storages, subBitset, te, edges);
+        updateModified(cx, cz, subY, subBitset, expected, modifiedLocal);
+        final ExtendedBlockStorage carved = ChunkUtil.copyAndCarveLocal(world, cx, cz, subY, storages, subBitset, edges);
         CarveSubTask task = new CarveSubTask(subY, subBitset);
         task.expected = expected;
         task.carved = carved;
-        for (int i = 0, n = te.size(); i < n; i++) task.teRemovals.add(te.getLong(i));
+        task.modified.putAll(modifiedLocal);
         if (!edges.isEmpty()) {
             MutableBlockPos pos = TL_POS.get();
             LongIterator it = edges.iterator();
@@ -692,6 +697,25 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         return task;
     }
 
+    private static void updateModified(int cx, int cz, int subY, BitMask subBitset, ExtendedBlockStorage expected,
+                                       Long2ObjectOpenHashMap<IBlockState> modified) {
+        if (!expected.isEmpty()) {
+            final int xBase = cx << 4;
+            final int yBase = subY << 4;
+            final int zBase = cz << 4;
+            for (int idx = subBitset.nextSetBit(0); idx >= 0 && idx < 4096; idx = subBitset.nextSetBit(idx + 1)) {
+                int x = Library.unpackLocalX(idx);
+                int z = Library.unpackLocalZ(idx);
+                int y = Library.unpackLocalY(idx);
+                IBlockState state = expected.getData().get(idx);
+                if (state.getBlock() != Blocks.AIR) {
+                    long pos = Library.blockPosToLong(xBase | x, yBase | y, zBase | z);
+                    modified.put(pos, state);
+                }
+            }
+        }
+    }
+
     private void applyCarveJobOnMain(@NotNull PendingCarve job) {
         final int cx = ChunkUtil.getChunkPosX(job.chunkPos());
         final int cz = ChunkUtil.getChunkPosZ(job.chunkPos());
@@ -704,7 +728,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
             return;
         }
         ExtendedBlockStorage[] storages = chunk.getBlockStorageArray();
-        final LongArrayList teRemovals = LONG_LIST_POOL.borrow();
+        final Long2ObjectOpenHashMap<IBlockState> teRemovals = LONG2OBJECT_POOL.borrow();
         final LongArrayList neighborNotifies = LONG_LIST_POOL.borrow();
         final Long2IntOpenHashMap neighborMask = LONG2INT_POOL.borrow();
         teRemovals.clear();
@@ -720,7 +744,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
             if (cur == t.expected) {
                 storages[subY] = t.carved;
                 selfMask |= (1 << subY);
-                for (int j = 0, m = t.teRemovals.size(); j < m; j++) teRemovals.add(t.teRemovals.getLong(j));
+                teRemovals.putAll(t.modified);
                 for (int j = 0, m = t.neighborNotifies.size(); j < m; j++)
                     neighborNotifies.add(t.neighborNotifies.getLong(j));
                 if (!t.neighborMask.isEmpty()) {
@@ -749,30 +773,15 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         }
 
         if (selfMask != 0) {
-            applyMasks(chunk, job.chunkPos(), teRemovals, neighborNotifies, selfMask, neighborMask);
+            notifyMainThread(job.chunkPos(), teRemovals, neighborNotifies, selfMask, neighborMask);
         } else {
-            LONG_LIST_POOL.recycle(teRemovals);
+            LONG2OBJECT_POOL.recycle(teRemovals);
             LONG_LIST_POOL.recycle(neighborNotifies);
             LONG2INT_POOL.recycle(neighborMask);
         }
     }
 
-    private void applyMasks(Chunk chunk, long cpLong, LongArrayList teRemovals, LongArrayList neighborNotifies, int selfMask, Long2IntOpenHashMap neighborMask) {
-        pendingCarveNotifies.incrementAndGet();
-        try {
-            chunkFixup(cpLong, teRemovals, neighborNotifies, selfMask, neighborMask);
-            chunk.markDirty();
-        } finally {
-            LONG_LIST_POOL.recycle(teRemovals);
-            LONG_LIST_POOL.recycle(neighborNotifies);
-            LONG2INT_POOL.recycle(neighborMask);
-            if (pendingCarveNotifies.decrementAndGet() == 0) {
-                maybeFinish();
-            }
-        }
-    }
-
-    private void chunkFixup(long cpLong, LongArrayList teRemovals, LongArrayList neighborNotifies, int selfMask, Long2IntOpenHashMap neighborMask) {
+    private void chunkFixup(long cpLong, Long2ObjectOpenHashMap<IBlockState> modified, LongArrayList neighborNotifies, int selfMask, Long2IntOpenHashMap neighborMask) {
         sectionMaskByChunk.put(cpLong, sectionMaskByChunk.get(cpLong) | selfMask);
         ObjectIterator<Long2IntMap.Entry> iterator = neighborMask.long2IntEntrySet().fastIterator();
         while (iterator.hasNext()) {
@@ -782,10 +791,13 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
             sectionMaskByChunk.put(cpk, sectionMaskByChunk.get(cpk) | m);
         }
         MutableBlockPos p = TL_POS.get();
-        for (int i = 0, n = teRemovals.size(); i < n; i++) {
-            long lp = teRemovals.getLong(i);
+        ObjectIterator<Long2ObjectMap.Entry<IBlockState>> modifiedIterator = modified.long2ObjectEntrySet().fastIterator();
+        while (modifiedIterator.hasNext()) {
+            Long2ObjectMap.Entry<IBlockState> entry = modifiedIterator.next();
+            long lp = entry.getLongKey();
+            IBlockState state = entry.getValue();
             Library.fromLong(p, lp);
-            world.removeTileEntity(p);
+            state.getBlock().breakBlock(world, p, state); // this should handle te removals
         }
         for (int i = 0, n = neighborNotifies.size(); i < n; i++) {
             long lp = neighborNotifies.getLong(i);
@@ -801,7 +813,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
     private static final class CarveSubTask {
         final int subY;
         final BitMask mask;
-        final LongArrayList teRemovals = new LongArrayList(64);
+        final Long2ObjectOpenHashMap<IBlockState> modified = new Long2ObjectOpenHashMap<>(64);
         final LongArrayList neighborNotifies = new LongArrayList(128);
         final Long2IntOpenHashMap neighborMask = new Long2IntOpenHashMap();
         ExtendedBlockStorage expected;
@@ -1399,7 +1411,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
         @Override
         public void apply(long cpLong, ExtendedBlockStorage[] storages, Int2ObjectOpenHashMap<BitMask> masks) {
             if (masks == null || masks.isEmpty()) return;
-            final LongArrayList teRemovals = LONG_LIST_POOL.borrow();
+            final Long2ObjectOpenHashMap<IBlockState> teRemovals = LONG2OBJECT_POOL.borrow();
             final LongArrayList neighborNotifies = LONG_LIST_POOL.borrow();
             teRemovals.clear();
             neighborNotifies.clear();
@@ -1417,7 +1429,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay {
             if (selfMask != 0) {
                 notifyMainThread(cpLong, teRemovals, neighborNotifies, selfMask, neighborMask);
             } else {
-                LONG_LIST_POOL.recycle(teRemovals);
+                LONG2OBJECT_POOL.recycle(teRemovals);
                 LONG_LIST_POOL.recycle(neighborNotifies);
                 LONG2INT_POOL.recycle(neighborMask);
             }
