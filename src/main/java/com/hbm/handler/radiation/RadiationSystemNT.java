@@ -402,7 +402,6 @@ public final class RadiationSystemNT {
     }
 
     private static void runParallelSimulation() {
-        long start = System.nanoTime();
         WorldRadiationData[] all = worldMap.values().toArray(new WorldRadiationData[0]);
         int n = all.length;
         if (n == 0) return;
@@ -430,7 +429,6 @@ public final class RadiationSystemNT {
             }
             ForkJoinTask.invokeAll(tasks);
         }
-        MainRegistry.logger.info((System.nanoTime() - start) / 1_000_000.0);
     }
 
     private static void processWorldSimulation(WorldRadiationData data) {
