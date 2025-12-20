@@ -136,49 +136,67 @@ public class ContaminationUtil {
         }
     }
 
-	public static void printGeigerData(EntityPlayer player) {
+    public static void printGeigerData(EntityPlayer player) {
+        double rawRadMod = ContaminationUtil.calculateRadiationMod(player);
+        double eRad = HbmLivingProps.getRadiation(player);
+        double rads = ChunkRadiationManager.proxy.getRadiation(player.world, player.getPosition());
+        double env = getPlayerRads(player);
+        double res = (1.0 - rawRadMod) * 100.0;
+        double resKoeff = HazmatRegistry.getResistance(player) * 100.0;
+        double rec = env * rawRadMod;
+        double ar;
+        String eRadS, radsS, envS, recS, resS, resKoeffS;
+        ar = Math.abs(eRad);
+        eRadS = (ar >= 1.0e6 || (ar > 0.0 && ar < 1.0e-3)) ? String.format("%.3e", eRad) : String.format("%.3f", eRad);
+        ar = Math.abs(rads);
+        radsS = (ar >= 1.0e6 || (ar > 0.0 && ar < 1.0e-3)) ? String.format("%.3e", rads) : String.format("%.3f", rads);
+        ar = Math.abs(env);
+        envS = (ar >= 1.0e6 || (ar > 0.0 && ar < 1.0e-3)) ? String.format("%.3e", env) : String.format("%.3f", env);
+        ar = Math.abs(rec);
+        recS = (ar >= 1.0e6 || (ar > 0.0 && ar < 1.0e-3)) ? String.format("%.3e", rec) : String.format("%.3f", rec);
+        ar = Math.abs(res);
+        resS = (ar >= 1.0e6 || (ar > 0.0 && ar < 1.0e-6)) ? String.format("%.6e", res) : String.format("%.6f", res);
+        ar = Math.abs(resKoeff);
+        resKoeffS = (ar >= 1.0e6 || (ar > 0.0 && ar < 1.0e-2)) ? String.format("%.2e", resKoeff) : String.format("%.2f", resKoeff);
 
-		double eRad = ((long)(HbmLivingProps.getRadiation(player) * 1000)) / 1000D;
-        double rads = ((long)(ChunkRadiationManager.proxy.getRadiation(player.world, player.getPosition()) * 1000D)) / 1000D;
-		double env = ((long)(getPlayerRads(player) * 1000D)) / 1000D;
+        String chunkPrefix = getPreffixFromRad(rads);
+        String envPrefix = getPreffixFromRad(env);
+        String recPrefix = getPreffixFromRad(rec);
+        String radPrefix = "";
+        String resPrefix = "" + TextFormatting.WHITE;
 
+        if (eRad < 200) radPrefix += TextFormatting.GREEN;
+        else if (eRad < 400) radPrefix += TextFormatting.YELLOW;
+        else if (eRad < 600) radPrefix += TextFormatting.GOLD;
+        else if (eRad < 800) radPrefix += TextFormatting.RED;
+        else if (eRad < 1000) radPrefix += TextFormatting.DARK_RED;
+        else radPrefix += TextFormatting.DARK_GRAY;
+        if (resKoeff > 0) resPrefix += TextFormatting.GREEN;
 
-		double res = Library.roundFloat((1D-ContaminationUtil.calculateRadiationMod(player))*100D, 6);
-		double resKoeff = ((long)(HazmatRegistry.getResistance(player) * 100D)) / 100D;
-
-		double rec = ((long)(env* (100-res)/100D * 1000D))/ 1000D;
-
-		String chunkPrefix = getPreffixFromRad(rads);
-		String envPrefix = getPreffixFromRad(env);
-		String recPrefix = getPreffixFromRad(rec);
-		String radPrefix = "";
-		String resPrefix = "" + TextFormatting.WHITE;
-
-		if(eRad < 200)
-			radPrefix += TextFormatting.GREEN;
-		else if(eRad < 400)
-			radPrefix += TextFormatting.YELLOW;
-		else if(eRad < 600)
-			radPrefix += TextFormatting.GOLD;
-		else if(eRad < 800)
-			radPrefix += TextFormatting.RED;
-		else if(eRad < 1000)
-			radPrefix += TextFormatting.DARK_RED;
-		else
-			radPrefix += TextFormatting.DARK_GRAY;
-
-		if(resKoeff > 0)
-			resPrefix += TextFormatting.GREEN;
-
-		//localization and server-side restrictions have turned this into a painful mess
-		//a *functioning* painful mess, nonetheless
-		player.sendMessage(new TextComponentString("===== ☢ ").appendSibling(new TextComponentTranslation("geiger.title")).appendSibling(new TextComponentString(" ☢ =====")).setStyle(new Style().setColor(TextFormatting.GOLD)));
-		player.sendMessage(new TextComponentTranslation("geiger.chunkRad").appendSibling(new TextComponentString(" " + chunkPrefix + rads + " RAD/s")).setStyle(new Style().setColor(TextFormatting.YELLOW)));
-		player.sendMessage(new TextComponentTranslation("geiger.envRad").appendSibling(new TextComponentString(" " + envPrefix + env + " RAD/s")).setStyle(new Style().setColor(TextFormatting.YELLOW)));
-		player.sendMessage(new TextComponentTranslation("geiger.recievedRad").appendSibling(new TextComponentString(" " + recPrefix + rec + " RAD/s")).setStyle(new Style().setColor(TextFormatting.YELLOW)));
-		player.sendMessage(new TextComponentTranslation("geiger.playerRad").appendSibling(new TextComponentString(" " + radPrefix + eRad + " RAD")).setStyle(new Style().setColor(TextFormatting.YELLOW)));
-		player.sendMessage(new TextComponentTranslation("geiger.playerRes").appendSibling(new TextComponentString(" " + resPrefix + String.format("%.6f", res) + "% (" + resKoeff + ")")).setStyle(new Style().setColor(TextFormatting.YELLOW)));
-	}
+        //localization and server-side restrictions have turned this into a painful mess
+        //a *functioning* painful mess, nonetheless
+        //@formatter:off
+        player.sendMessage(new TextComponentString("===== ☢ ")
+                .appendSibling(new TextComponentTranslation("geiger.title"))
+                .appendSibling(new TextComponentString(" ☢ ====="))
+                .setStyle(new Style().setColor(TextFormatting.GOLD)));
+        player.sendMessage(new TextComponentTranslation("geiger.chunkRad")
+                .appendSibling(new TextComponentString(" " + chunkPrefix + radsS + " RAD/s"))
+                .setStyle(new Style().setColor(TextFormatting.YELLOW)));
+        player.sendMessage(new TextComponentTranslation("geiger.envRad")
+                .appendSibling(new TextComponentString(" " + envPrefix + envS + " RAD/s"))
+                .setStyle(new Style().setColor(TextFormatting.YELLOW)));
+        player.sendMessage(new TextComponentTranslation("geiger.recievedRad")
+                .appendSibling(new TextComponentString(" " + recPrefix + recS + " RAD/s"))
+                .setStyle(new Style().setColor(TextFormatting.YELLOW)));
+        player.sendMessage(new TextComponentTranslation("geiger.playerRad")
+                .appendSibling(new TextComponentString(" " + radPrefix + eRadS + " RAD"))
+                .setStyle(new Style().setColor(TextFormatting.YELLOW)));
+        player.sendMessage(new TextComponentTranslation("geiger.playerRes")
+                .appendSibling(new TextComponentString(" " + resPrefix + resS + "% (" + resKoeffS + ")"))
+                .setStyle(new Style().setColor(TextFormatting.YELLOW)));
+        //@formatter:on
+    }
 
 	public static void printDosimeterData(EntityPlayer player) {
 
