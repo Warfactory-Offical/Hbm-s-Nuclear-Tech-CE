@@ -1447,7 +1447,7 @@ public class ModBlocks {
     public static final Block schrabidic_block = new SchrabidicBlock(ModFluids.schrabidic_fluid, fluidschrabidic.setReplaceable(), ModDamageSource.radiation, "schrabidic_block").setResistance(500F);
     public static final Block corium_block = new CoriumFinite(ModFluids.corium_fluid, fluidcorium, "corium_block").setResistance(500F);
     public static final Block volcanic_lava_block = new VolcanicBlock(ModFluids.volcanic_lava_fluid, fluidvolcanic, "volcanic_lava_block").setResistance(500F);
-    public static final Block bromine_block = new BromineBlock(ModFluids.bromine_fluid, Material.WATER).setResistance(500F);
+    public static final Block bromine_block = new BromineBlock(ModFluids.bromine_fluid, Material.WATER, "bromine_block").setResistance(500F);
     public static final Block sulfuric_acid_block = new SulfuricAcidBlock(ModFluids.sulfuric_acid_fluid, Material.WATER, "sulfuric_acid_block").setDamage(ModDamageSource.acid, 5F).setResistance(500F);
 
 	public static void preInit(){
