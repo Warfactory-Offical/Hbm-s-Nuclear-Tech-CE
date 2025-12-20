@@ -79,6 +79,8 @@ public final class RadiationSystemNT {
     private static final int[] BOUNDARY_MASKS = {0, 0, 0xF00, 0xF00, 0xFF0, 0xFF0}, LINEAR_OFFSETS = {-256, 256, -16, 16, -1, 1};
     private static final int[] FACE_DX = {0, 0, 0, 0, -1, 1}, FACE_DY = {-1, 1, 0, 0, 0, 0}, FACE_DZ = {0, 0, -1, 1, 0, 0};
     private static final int[] FACE_PLANE = new int[6 * 256];
+    // 9950x, 32 view distance, extremely irradiated worst-case overworld takes < 2.5ms per step;
+    // for normal world without strong artificial radiation source, it takes < 0.5ms and scales w.r.t active pocket count.
     private static final boolean PROFILING = false;
 
     private static final int SECTION_BLOCK_COUNT = 4096;
@@ -87,7 +89,7 @@ public final class RadiationSystemNT {
     private static final int IA_SHIFT = Integer.numberOfTrailingZeros(U.arrayIndexScale(int[].class));
     private static final String TAG_RAD = "hbmRadDataNT";
     private static final byte MAGIC_0 = (byte) 'N', MAGIC_1 = (byte) 'T', MAGIC_2 = (byte) 'X', FMT = 6;
-    private static final Object NOT_RES = HashCommon.REMOVED;
+    private static final Object NOT_RES = new Object();
     private static final ForkJoinPool RAD_POOL = ForkJoinPool.commonPool(); // safe: we don't lock in sim path
     private static final ConcurrentMap<WorldServer, WorldRadiationData> worldMap = new ConcurrentHashMap<>(4);
     private static final ThreadLocal<int[]> TL_FF_QUEUE = ThreadLocal.withInitial(() -> new int[SECTION_BLOCK_COUNT]);

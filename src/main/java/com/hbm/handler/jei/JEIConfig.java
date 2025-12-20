@@ -541,11 +541,6 @@ public class JEIConfig implements IModPlugin {
             if(recipe == null) return "";
             return recipe.getName();
         });
-        subtypeRegistry.registerSubtypeInterpreter(ModItems.fluid_identifier_multi, stack -> {
-            if (!stack.hasTagCompound()) return "";
-            //mlbv: non-existent key -> default = 0 -> NONE, exactly what we want
-            return ItemFluidIDMulti.getType(stack, true).getName() + "_" + ItemFluidIDMulti.getType(stack, false).getName();
-        });
 	}
 
     @Override
