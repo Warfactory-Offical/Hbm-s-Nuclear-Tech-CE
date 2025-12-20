@@ -93,6 +93,9 @@ public final class RadiationSystemNT {
     private static final ThreadLocal<int[]> TL_FF_QUEUE = ThreadLocal.withInitial(() -> new int[SECTION_BLOCK_COUNT]);
     private static final ThreadLocal<PalScratch> TL_PAL_SCRATCH = ThreadLocal.withInitial(PalScratch::new);
     private static final ThreadLocal<int[]> TL_VOL_COUNTS = ThreadLocal.withInitial(() -> new int[NO_POCKET]);
+    private static final ThreadLocal<double[]> TL_NEW_MASS = ThreadLocal.withInitial(() -> new double[NO_POCKET]);
+    private static final ThreadLocal<double[]> TL_OLD_MASS = ThreadLocal.withInitial(() -> new double[NO_POCKET]);
+    private static final ThreadLocal<int[]> TL_OVERLAPS = ThreadLocal.withInitial(() -> new int[NO_POCKET * NO_POCKET]);
     private static final int ACTIVE_STRIPES = computeActiveStripes(2);
     private static final int ACTIVE_STRIPE_MASK = ACTIVE_STRIPES - 1;
     private static ByteBuffer BUF = ByteBuffer.allocate(524_288);
@@ -2406,9 +2409,9 @@ public final class RadiationSystemNT {
         }
 
         void rebuildChunkPocketsLoaded(long sectionKey, @Nullable ExtendedBlockStorage ebs) {
-            int sy = Library.getSectionY(sectionKey);
-            long ck = Library.sectionToChunkLong(sectionKey);
-            ChunkRef owner = getOrCreateChunkRef(ck);
+            final int sy = Library.getSectionY(sectionKey);
+            final long ck = Library.sectionToChunkLong(sectionKey);
+            final ChunkRef owner = getOrCreateChunkRef(ck);
             U.putIntRelease(owner.activePocketMasks, offInt(sy), 0);
 
             byte[] pocketData;
@@ -2485,86 +2488,161 @@ public final class RadiationSystemNT {
                 }
             }
 
-            SectionRef old = owner.sec[sy];
-            double oldMass = 0.0d;
-            int oldVol = 0;
-            if (old != null) {
-                int oldLen = old.pocketCount & 0xFF;
-                if (oldLen > 0) {
-                    if (oldLen == 1) {
+            final SectionRef old = owner.sec[sy];
+            if (pocketCount <= 0) {
+                if (old != null) retireIfNeeded(old);
+                owner.sec[sy] = null;
+                owner.setUniformBit(sy, false);
+                for (int p = 0; p <= NO_POCKET; p++) pendingPocketRadBits.remove(pocketKey(sectionKey, p));
+                return;
+            }
+            final double[] newPocketMasses = TL_NEW_MASS.get();
+            Arrays.fill(newPocketMasses, 0, pocketCount, 0.0d);
+
+            if (old != null && (old.pocketCount & 0xFF) > 0) {
+                final int oldCnt = Math.min(old.pocketCount & 0xFF, NO_POCKET);
+
+                if (pocketCount == 1 && pocketData == null) {
+                    double totalMass = 0.0d;
+                    if (oldCnt == 1) {
                         int v = Math.max(1, old.volume0);
-                        oldVol = v;
-                        oldMass = old.getRad(0) * (double) v;
+                        double d = old.getRad(0);
+                        if (Double.isFinite(d) && !nearZero(d)) totalMass = d * (double) v;
                     } else {
                         SectionBuffers ob = old.buffers;
                         if (ob != null) {
-                            for (int i = 0; i < oldLen; i++) {
+                            for (int i = 0; i < oldCnt; i++) {
                                 int v = Math.max(1, ob.volume[i]);
-                                oldVol += v;
-                                oldMass += old.getRad(i) * (double) v;
+                                double d = old.getRad(i);
+                                if (Double.isFinite(d) && !nearZero(d)) totalMass += d * (double) v;
                             }
                         }
                     }
+                    if (Double.isFinite(totalMass) && !nearZero(totalMass)) newPocketMasses[0] = totalMass;
+                } else if (oldCnt == 1 && old.pocketData == null) {
+                    double d = old.getRad(0);
+                    if (Double.isFinite(d) && !nearZero(d)) {
+                        double oldMass = d * (double) SECTION_BLOCK_COUNT;
+
+                        long totalNewAir = 0L;
+                        if (pocketCount == 1) {
+                            totalNewAir = singleVolume0;
+                        } else {
+                            for (int i = 0; i < pocketCount; i++) totalNewAir += Math.max(1, buffers.volume[i]);
+                        }
+
+                        if (totalNewAir > 0L) {
+                            double massPerBlock = oldMass / (double) totalNewAir;
+                            if (pocketCount == 1) {
+                                newPocketMasses[0] = massPerBlock * (double) singleVolume0;
+                            } else {
+                                for (int i = 0; i < pocketCount; i++) {
+                                    int v = Math.max(1, buffers.volume[i]);
+                                    newPocketMasses[i] = massPerBlock * (double) v;
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    final double[] oldTotalMass = TL_OLD_MASS.get();
+                    Arrays.fill(oldTotalMass, 0, oldCnt, 0.0d);
+
+                    if (oldCnt == 1) {
+                        int v = Math.max(1, old.volume0);
+                        double d = old.getRad(0);
+                        if (!Double.isFinite(d) || nearZero(d)) d = 0.0d;
+                        oldTotalMass[0] = d * (double) v;
+                    } else {
+                        SectionBuffers ob = old.buffers;
+                        if (ob != null) {
+                            for (int i = 0; i < oldCnt; i++) {
+                                int v = Math.max(1, ob.volume[i]);
+                                double d = old.getRad(i);
+                                if (!Double.isFinite(d) || nearZero(d)) d = 0.0d;
+                                oldTotalMass[i] = d * (double) v;
+                            }
+                        }
+                    }
+
+                    final int[] overlaps = TL_OVERLAPS.get();
+                    Arrays.fill(overlaps, 0, oldCnt * pocketCount, 0);
+
+                    final boolean oldUniform = (old.pocketData == null);
+
+                    for (int i = 0; i < SECTION_BLOCK_COUNT; i++) {
+                        int nIdx;
+                        nIdx = readNibble(pocketData, i);
+                        if (nIdx >= pocketCount) continue;
+                        final int oIdx;
+                        if (oldUniform) {
+                            oIdx = 0;
+                        } else {
+                            oIdx = readNibble(old.pocketData, i);
+                            if (oIdx >= oldCnt) continue;
+                        }
+                        overlaps[oIdx * pocketCount + nIdx]++;
+                    }
+
+                    for (int o = 0; o < oldCnt; o++) {
+                        final double mass = oldTotalMass[o];
+                        if (!Double.isFinite(mass) || nearZero(mass)) continue;
+
+                        int totalRemainingBlocks = 0;
+                        final int row = o * pocketCount;
+                        for (int n = 0; n < pocketCount; n++) totalRemainingBlocks += overlaps[row + n];
+
+                        if (totalRemainingBlocks != 0) {
+                            final double massPerBlock = mass / (double) totalRemainingBlocks;
+                            for (int n = 0; n < pocketCount; n++) {
+                                int count = overlaps[row + n];
+                                if (count != 0) newPocketMasses[n] += (double) count * massPerBlock;
+                            }
+                        }
+                        // else: pocket fully filled with blocks -> mass lost
+                    }
                 }
-                retireIfNeeded(old);
             }
 
-            if (pocketCount <= 0) {
-                owner.sec[sy] = null;
-                owner.setUniformBit(sy, false);
-                return;
-            }
-
-            final int newVol;
-            if (pocketCount == 1) {
-                newVol = (pocketData == null) ? SECTION_BLOCK_COUNT : singleVolume0;
-            } else {
-                long v = 0L;
-                for (int i = 0; i < pocketCount; i++) v += Math.max(1, buffers.volume[i]);
-                newVol = (int) Math.max(1L, Math.min(Integer.MAX_VALUE, v));
-            }
-
-            double carryDensity = 0.0d;
-            if (oldVol > 0 && oldMass != 0.0d) {
-                carryDensity = oldMass / (double) newVol;
-                if (!Double.isFinite(carryDensity) || nearZero(carryDensity)) carryDensity = 0.0d;
-            }
+            if (old != null) retireIfNeeded(old);
+            final double minB = this.minBound;
 
             if (pocketCount == 1) {
-                long pk = pocketKey(sectionKey, 0);
-
-                double base = 0.0d;
+                final long pk = pocketKey(sectionKey, 0);
+                final SectionRef sc = pocketData == null
+                        ? SectionRef.singleUniform(owner, sy)
+                        : SectionRef.singleMasked(owner, sy, pocketData, singleVolume0, singleFaceCounts);
+                final int vol = pocketData == null ? SECTION_BLOCK_COUNT : singleVolume0;
+                double density = newPocketMasses[0] / (double) vol;
                 long bits = pendingPocketRadBits.remove(pk);
                 if (bits != 0L) {
                     double v = Double.longBitsToDouble(bits);
-                    if (Double.isFinite(v) && !nearZero(v)) base = v;
+                    density = (Double.isFinite(v) && !nearZero(v)) ? v : 0.0d;
                 }
                 for (int i = 1; i <= NO_POCKET; i++) pendingPocketRadBits.remove(pocketKey(sectionKey, i));
-                SectionRef sc = (pocketData == null) ? SectionRef.singleUniform(owner, sy) : SectionRef.singleMasked(owner, sy, pocketData, newVol, singleFaceCounts);
-                double out = base + carryDensity;
-                if (!Double.isFinite(out) || nearZero(out)) out = 0.0d;
-                sc.radBits0 = Double.doubleToRawLongBits(out);
-
+                if (!Double.isFinite(density) || nearZero(density)) density = 0.0d;
+                if (density < minB) density = minB;
+                sc.radBits0 = Double.doubleToRawLongBits(density);
                 owner.sec[sy] = sc;
                 owner.setUniformBit(sy, sc.isOpenUniformSingle());
 
-                if (!nearZero(out)) {
+                if (!nearZero(density)) {
                     if (owner.setActiveBit(sy, 0)) enqueueActiveNext(pk);
                 }
                 return;
             }
 
             for (int i = 0; i < pocketCount; i++) {
-                long pk = pocketKey(sectionKey, i);
-                double base = 0.0d;
+                final long pk = pocketKey(sectionKey, i);
+                final int vol = Math.max(1, buffers.volume[i]);
+                double density = newPocketMasses[i] / (double) vol;
                 long bits = pendingPocketRadBits.remove(pk);
                 if (bits != 0L) {
                     double v = Double.longBitsToDouble(bits);
-                    if (Double.isFinite(v) && !nearZero(v)) base = v;
+                    density = (Double.isFinite(v) && !nearZero(v)) ? v : 0.0d;
                 }
-                double out = base + carryDensity;
-                if (!Double.isFinite(out) || nearZero(out)) out = 0.0d;
-                buffers.radBits[i] = Double.doubleToRawLongBits(out);
+                if (!Double.isFinite(density) || nearZero(density)) density = 0.0d;
+                if (density < minB) density = minB;
+                buffers.radBits[i] = Double.doubleToRawLongBits(density);
                 buffers.deltas[i] = 0.0d;
             }
             for (int i = pocketCount; i <= NO_POCKET; i++) pendingPocketRadBits.remove(pocketKey(sectionKey, i));
