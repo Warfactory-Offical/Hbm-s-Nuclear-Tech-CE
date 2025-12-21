@@ -17,6 +17,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Read modVersion from gradle.properties
+        id: ver
+        run: |
+          set -euo pipefail
+          if [[ ! -f gradle.properties ]]; then
+            echo "::error::gradle.properties not found in repo root"; exit 1
+          fi
+          MOD_VERSION=$(grep -E '^\s*modVersion\s*=' gradle.properties | sed -E 's/^\s*modVersion\s*=\s*//; s/\r$//' | xargs || true)
+          if [[ -z "${MOD_VERSION}" ]]; then
+            echo "::error::modVersion is empty in gradle.properties"; exit 1
+          fi
+          echo "MOD_VERSION=${MOD_VERSION}" >> "$GITHUB_ENV"
+          echo "TAG=v${MOD_VERSION}" >> "$GITHUB_ENV"
+          echo "tag=v${MOD_VERSION}" >> "$GITHUB_OUTPUT"
+
       - name: Set up JDK 25
         uses: actions/setup-java@v4
         with:
@@ -63,8 +78,21 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.TAG }}
-          name: "Nightly Build ${{ env.TAG }}"
+          name: "Nightly Build v${{ env.MOD_VERSION }}"
           prerelease: true
+          body: |
+            ⚠️ **Nightly build** — may be unstable. Use at your own risk.
+            
+            ## Which JAR should I download?
+            
+            - **NTM-CE-1.12.2-${{ env.MOD_VERSION }}.jar** — **Java 8+** (recommended for most Forge users)
+            - **NTM-CE-1.12.2-${{ env.MOD_VERSION }}-java25.jar** — **Java 25+** (Cleanroom; may be more efficient)
+            - **NTM-CE-1.12.2-${{ env.MOD_VERSION }}-downgraded.jar** — **Java 8+**, but **does not** shade the JVMDG `java-api` (useful if you provide a custom one)
+            - **NTM-CE-1.12.2-${{ env.MOD_VERSION }}-dev.jar** — **Java 8+**, unobfuscated (for developers)
+            - **NTM-CE-1.12.2-${{ env.MOD_VERSION }}-dev-java25.jar** — **Java 25+**, unobfuscated (for developers on the JVMDG/Cleanroom toolchain)
+            
+            **Commit:** `${{ github.sha }}`
+            **Workflow run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           files: build/libs/*.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
