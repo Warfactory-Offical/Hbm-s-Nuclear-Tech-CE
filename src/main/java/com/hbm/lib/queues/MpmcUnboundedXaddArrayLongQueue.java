@@ -64,7 +64,7 @@ public final class MpmcUnboundedXaddArrayLongQueue extends MpUnboundedXaddArrayL
         final int piChunkOffset = (int) (pIndex & chunkMask);
         final long piChunkIndex = pIndex >> chunkShift;
 
-        MpmcUnboundedXaddChunkLong pChunk = (MpmcUnboundedXaddChunkLong) U.getReferenceVolatile(this, P_CHUNK_OFFSET);
+        MpmcUnboundedXaddChunkLong pChunk = this.producerChunk;
         if (pChunk.index != piChunkIndex) {
             // Other producers may have advanced the producer chunk as we claimed a slot in a prev chunk, or we may have
             // now stepped into a brand new chunk which needs appending.
@@ -103,7 +103,7 @@ public final class MpmcUnboundedXaddArrayLongQueue extends MpUnboundedXaddArrayL
         while (true) {
             isFirstElementOfNewChunk = false;
 
-            cIndex = U.getLongVolatile(this, C_INDEX_OFFSET);
+            cIndex = this.consumerIndex;
             // chunk is in sync with the index, and is safe to mutate after CAS of index (because we pre-verify it
             // matched the indicated ciChunkIndex)
             cChunk = (MpmcUnboundedXaddChunkLong) U.getReferenceVolatile(this, C_CHUNK_OFFSET);
@@ -118,13 +118,13 @@ public final class MpmcUnboundedXaddArrayLongQueue extends MpUnboundedXaddArrayL
                     continue;
                 }
                 isFirstElementOfNewChunk = true;
-                next = (MpmcUnboundedXaddChunkLong) U.getReferenceVolatile(cChunk, MpUnboundedXaddChunkLong.NEXT_OFFSET);
+                next = cChunk.next;
                 // next could have been modified by another racing consumer, but:
                 // - if null: it still needs to check q empty + casConsumerIndex
                 // - if !null: it will fail on casConsumerIndex
                 if (next == null) {
                     if (cIndex >= pIndex && // test against cached pIndex
-                            cIndex == (pIndex = U.getLongVolatile(this, P_INDEX_OFFSET))) // update pIndex if we must
+                            cIndex == (pIndex = this.producerIndex)) // update pIndex if we must
                     {
                         // strict empty check, this ensures [Queue.poll() == EMPTY iff isEmpty()]
                         return EMPTY;
@@ -176,7 +176,7 @@ public final class MpmcUnboundedXaddArrayLongQueue extends MpUnboundedXaddArrayL
 
             // ccChunkIndex < ciChunkIndex || e == EMPTY || sequence < ciChunkIndex:
             if (cIndex >= pIndex && // test against cached pIndex
-                    cIndex == (pIndex = U.getLongVolatile(this, P_INDEX_OFFSET))) // update pIndex if we must
+                    cIndex == (pIndex = this.producerIndex)) // update pIndex if we must
             {
                 // strict empty check, this ensures [Queue.poll() == EMPTY iff isEmpty()]
                 return EMPTY;
@@ -203,14 +203,14 @@ public final class MpmcUnboundedXaddArrayLongQueue extends MpUnboundedXaddArrayL
     ) {
         if (next == null) {
             final long ccChunkIndex = expectedChunkIndex - 1;
-            if (U.getLongVolatile(this, P_CHUNK_INDEX_OFFSET) == ccChunkIndex) {
+            if (this.producerChunkIndex == ccChunkIndex) {
                 next = appendNextChunks(cChunk, ccChunkIndex, 1);
             }
         }
 
         while (next == null) {
             Library.onSpinWait();
-            next = (MpmcUnboundedXaddChunkLong) U.getReferenceVolatile(cChunk, MpUnboundedXaddChunkLong.NEXT_OFFSET);
+            next = cChunk.next;
         }
 
         final long e = next.spinForElement(0, false);
@@ -233,7 +233,7 @@ public final class MpmcUnboundedXaddArrayLongQueue extends MpUnboundedXaddArrayL
 
         do {
             e = EMPTY;
-            cIndex = U.getLongVolatile(this, C_INDEX_OFFSET);
+            cIndex = this.consumerIndex;
 
             MpmcUnboundedXaddChunkLong cChunk = (MpmcUnboundedXaddChunkLong) U.getReferenceVolatile(this, C_CHUNK_OFFSET);
             final int ciChunkOffset = (int) (cIndex & chunkMask);
@@ -245,8 +245,7 @@ public final class MpmcUnboundedXaddArrayLongQueue extends MpUnboundedXaddArrayL
                 if (expectedChunkIndex != cChunk.index) {
                     continue;
                 }
-                final MpmcUnboundedXaddChunkLong next =
-                        (MpmcUnboundedXaddChunkLong) U.getReferenceVolatile(cChunk, MpUnboundedXaddChunkLong.NEXT_OFFSET);
+                final MpmcUnboundedXaddChunkLong next = cChunk.next;
                 if (next == null) {
                     continue;
                 }
@@ -265,8 +264,8 @@ public final class MpmcUnboundedXaddArrayLongQueue extends MpUnboundedXaddArrayL
 
             e = U.getLongVolatile(cChunk.buffer, MpUnboundedXaddChunkLong.calcLongElementOffset(ciChunkOffset));
         }
-        while ((e == EMPTY && cIndex != U.getLongVolatile(this, P_INDEX_OFFSET)) ||
-                (e != EMPTY && cIndex != U.getLongVolatile(this, C_INDEX_OFFSET)));
+        while ((e == EMPTY && cIndex != this.producerIndex) ||
+                (e != EMPTY && cIndex != this.consumerIndex));
 
         return e;
     }
@@ -276,8 +275,8 @@ public final class MpmcUnboundedXaddArrayLongQueue extends MpUnboundedXaddArrayL
         final int chunkMask = this.chunkMask;
         final int chunkShift = this.chunkShift;
 
-        final long cIndex = U.getLongVolatile(this, C_INDEX_OFFSET);
-        final MpmcUnboundedXaddChunkLong cChunk = (MpmcUnboundedXaddChunkLong) U.getReferenceVolatile(this, C_CHUNK_OFFSET);
+        final long cIndex = consumerIndex;
+        final MpmcUnboundedXaddChunkLong cChunk = consumerChunk;
 
         final int ciChunkOffset = (int) (cIndex & chunkMask);
         final long ciChunkIndex = cIndex >> chunkShift;
@@ -291,7 +290,7 @@ public final class MpmcUnboundedXaddArrayLongQueue extends MpUnboundedXaddArrayL
             final MpmcUnboundedXaddChunkLong next =
                     (expectedChunkIndex != ccChunkIndex)
                             ? null
-                            : (MpmcUnboundedXaddChunkLong) U.getReferenceVolatile(cChunk, MpUnboundedXaddChunkLong.NEXT_OFFSET);
+                            : cChunk.next;
 
             if (next == null) {
                 return EMPTY;
@@ -362,7 +361,7 @@ public final class MpmcUnboundedXaddArrayLongQueue extends MpUnboundedXaddArrayL
         final int chunkMask = this.chunkMask;
         final int chunkShift = this.chunkShift;
 
-        final long cIndex = U.getLongVolatile(this, C_INDEX_OFFSET);
+        final long cIndex = this.consumerIndex;
         final int ciChunkOffset = (int) (cIndex & chunkMask);
         final long ciChunkIndex = cIndex >> chunkShift;
 
@@ -376,8 +375,7 @@ public final class MpmcUnboundedXaddArrayLongQueue extends MpUnboundedXaddArrayL
             if (expectedChunkIndex != consumerChunk.index) {
                 return EMPTY;
             }
-            final MpmcUnboundedXaddChunkLong next =
-                    (MpmcUnboundedXaddChunkLong) U.getReferenceVolatile(consumerChunk, MpUnboundedXaddChunkLong.NEXT_OFFSET);
+            final MpmcUnboundedXaddChunkLong next = consumerChunk.next;
             if (next == null) {
                 return EMPTY;
             }
@@ -396,7 +394,7 @@ public final class MpmcUnboundedXaddArrayLongQueue extends MpUnboundedXaddArrayL
 
         final long e = U.getLongVolatile(consumerChunk.buffer, MpUnboundedXaddChunkLong.calcLongElementOffset(ciChunkOffset));
         // checking again vs consumerIndex changes is necessary to verify that e is still valid
-        if (cIndex != U.getLongVolatile(this, C_INDEX_OFFSET)) {
+        if (cIndex != this.consumerIndex) {
             return EMPTY;
         }
         return e;
@@ -466,7 +464,7 @@ public final class MpmcUnboundedXaddArrayLongQueue extends MpUnboundedXaddArrayL
     }
 
     public boolean isEmpty() {
-        return U.getLongVolatile(this, P_INDEX_OFFSET) == U.getLongVolatile(this, C_INDEX_OFFSET);
+        return this.producerIndex == this.consumerIndex;
     }
 
     public void clear() {

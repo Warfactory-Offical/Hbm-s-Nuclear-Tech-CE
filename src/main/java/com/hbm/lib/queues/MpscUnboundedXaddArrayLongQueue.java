@@ -58,7 +58,7 @@ public final class MpscUnboundedXaddArrayLongQueue extends MpUnboundedXaddArrayL
         final int piChunkOffset = (int) (pIndex & chunkMask);
         final long piChunkIndex = pIndex >> chunkShift;
 
-        MpscUnboundedXaddChunkLong pChunk = (MpscUnboundedXaddChunkLong) U.getReferenceVolatile(this, P_CHUNK_OFFSET);
+        MpscUnboundedXaddChunkLong pChunk = producerChunk;
         if (pChunk.index != piChunkIndex) {
             pChunk = producerChunkForIndex(pChunk, piChunkIndex);
         }
@@ -72,7 +72,7 @@ public final class MpscUnboundedXaddArrayLongQueue extends MpUnboundedXaddArrayL
         final long cIndex = U.getLong(this, C_INDEX_OFFSET);
         final int ciChunkOffset = (int) (cIndex & chunkMask);
 
-        MpscUnboundedXaddChunkLong cChunk = (MpscUnboundedXaddChunkLong) U.getReferenceVolatile(this, C_CHUNK_OFFSET);
+        MpscUnboundedXaddChunkLong cChunk = consumerChunk;
         // start of new chunk?
         if (ciChunkOffset == 0 && cIndex != 0) {
             cChunk = pollNextBuffer(cChunk, cIndex);
@@ -131,7 +131,7 @@ public final class MpscUnboundedXaddArrayLongQueue extends MpUnboundedXaddArrayL
 
         // start of new chunk?
         if (ciChunkOffset == 0 && cIndex != 0) {
-            final MpscUnboundedXaddChunkLong next = (MpscUnboundedXaddChunkLong) U.getReferenceVolatile(cChunk, MpUnboundedXaddChunkLong.NEXT_OFFSET);
+            final MpscUnboundedXaddChunkLong next = cChunk.next;
             if (next == null) {
                 return EMPTY;
             }
@@ -155,6 +155,33 @@ public final class MpscUnboundedXaddArrayLongQueue extends MpUnboundedXaddArrayL
         return e;
     }
 
+    public long plainPoll() {
+        final int chunkMask = this.chunkMask;
+        final long cIndex = U.getLong(this, C_INDEX_OFFSET);
+        final int ciChunkOffset = (int) (cIndex & chunkMask);
+        MpscUnboundedXaddChunkLong cChunk = (MpscUnboundedXaddChunkLong) U.getReference(this, C_CHUNK_OFFSET);
+        if (ciChunkOffset == 0 && cIndex != 0) {
+            final MpscUnboundedXaddChunkLong next = cChunk.next;
+            if (next == null) return EMPTY;
+            long e = next.buffer[0];
+            if (e == EMPTY) return EMPTY;
+            U.putReference(cChunk, MpUnboundedXaddChunkLong.NEXT_OFFSET, null);
+            U.putReference(next, MpUnboundedXaddChunkLong.PREV_OFFSET, null);
+            if (cChunk.pooled) {
+                freeChunksPool.offer(cChunk);
+            }
+            U.putReference(this, C_CHUNK_OFFSET, next);
+            next.buffer[0] = EMPTY;
+            U.putLong(this, C_INDEX_OFFSET, cIndex + 1);
+            return e;
+        }
+        long e = cChunk.buffer[ciChunkOffset];
+        if (e == EMPTY) return EMPTY;
+        cChunk.buffer[ciChunkOffset] = EMPTY;
+        U.putLong(this, C_INDEX_OFFSET, cIndex + 1);
+        return e;
+    }
+
     @Override
     public long relaxedPeek() {
         final int chunkMask = this.chunkMask;
@@ -164,7 +191,7 @@ public final class MpscUnboundedXaddArrayLongQueue extends MpUnboundedXaddArrayL
         MpscUnboundedXaddChunkLong cChunk = (MpscUnboundedXaddChunkLong) U.getReference(this, C_CHUNK_OFFSET);
         // start of new chunk?
         if (cChunkOffset == 0 && cIndex != 0) {
-            cChunk = (MpscUnboundedXaddChunkLong) U.getReferenceVolatile(cChunk, MpUnboundedXaddChunkLong.NEXT_OFFSET);
+            cChunk = cChunk.next;
             if (cChunk == null) {
                 return EMPTY;
             }
@@ -187,7 +214,7 @@ public final class MpscUnboundedXaddArrayLongQueue extends MpUnboundedXaddArrayL
 
             long e;
             if (consumerOffset == 0 && cIndex != 0) {
-                final MpscUnboundedXaddChunkLong next = (MpscUnboundedXaddChunkLong) U.getReferenceVolatile(cChunk, MpUnboundedXaddChunkLong.NEXT_OFFSET);
+                final MpscUnboundedXaddChunkLong next = cChunk.next;
                 if (next == null) {
                     return i;
                 }
@@ -268,14 +295,17 @@ public final class MpscUnboundedXaddArrayLongQueue extends MpUnboundedXaddArrayL
     }
 
     // non-atomic clear
-    public void clear(boolean ignored) {
+    public void clear(boolean scrub) {
         final long pIndex = this.producerIndex;
         final int pOffset = (int) (pIndex & this.chunkMask);
-        for (int i = 0; i < pOffset; i++) {
-            U.putLongRelease(this.producerChunk.buffer, MpUnboundedXaddChunkLong.calcLongElementOffset(i), EMPTY);
+        final MpscUnboundedXaddChunkLong pChunk = this.producerChunk;
+        if (scrub) {
+            for (int i = 0; i < pOffset; i++) U.putLongRelease(pChunk.buffer, MpUnboundedXaddChunkLong.calcLongElementOffset(i), EMPTY);
         }
-        U.putReferenceVolatile(this, C_CHUNK_OFFSET, this.producerChunk);
-        U.putLongVolatile(this, C_INDEX_OFFSET, pIndex);
+        if (pChunk.prev != null) U.putReferenceRelease(pChunk, MpUnboundedXaddChunkLong.PREV_OFFSET, null);
+        if (pChunk.next != null) U.putReferenceRelease(pChunk, MpUnboundedXaddChunkLong.NEXT_OFFSET, null);
+        U.putReferenceRelease(this, C_CHUNK_OFFSET, pChunk);
+        U.putLongRelease(this, C_INDEX_OFFSET, pIndex);
     }
 
     private MpscUnboundedXaddChunkLong pollNextBuffer(MpscUnboundedXaddChunkLong cChunk, long cIndex) {
@@ -289,7 +319,7 @@ public final class MpscUnboundedXaddArrayLongQueue extends MpUnboundedXaddArrayL
     }
 
     private MpscUnboundedXaddChunkLong spinForNextIfNotEmpty(MpscUnboundedXaddChunkLong cChunk, long cIndex) {
-        MpscUnboundedXaddChunkLong next = (MpscUnboundedXaddChunkLong) U.getReferenceVolatile(cChunk, MpUnboundedXaddChunkLong.NEXT_OFFSET);
+        MpscUnboundedXaddChunkLong next = cChunk.next;
         if (next == null) {
             if (producerIndex == cIndex) {
                 return null;
@@ -301,7 +331,7 @@ public final class MpscUnboundedXaddArrayLongQueue extends MpUnboundedXaddArrayL
             }
             while (next == null) {
                 Library.onSpinWait();
-                next = (MpscUnboundedXaddChunkLong) U.getReferenceVolatile(cChunk, MpUnboundedXaddChunkLong.NEXT_OFFSET);
+                next = cChunk.next;
             }
         }
         return next;

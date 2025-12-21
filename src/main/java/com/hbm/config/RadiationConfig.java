@@ -50,7 +50,7 @@ public class RadiationConfig {
 	public static double smokeStackSootMult = 0.8;
     public static int radTickRate = 1;
     public static double radHalfLifeSeconds = 120D;
-    public static double radDiffusivity = 10.0 / 6.0;
+    public static double radDiffusivity = 10.0;
 
     public static void loadFromConfig(Configuration config) {
 		final String CATEGORY_NUKE = "06_explosions";
@@ -104,7 +104,7 @@ public class RadiationConfig {
 		digammaY = CommonConfig.createConfigInt(config, CATEGORY_RAD, "7.05_digammaY", "Y Coordinate of the digamma diagnostic gui (y=0 is on the bottom)", 18);
         radTickRate = CommonConfig.createConfigInt(config, CATEGORY_RAD, "7.99_CE_01_radTickRate", "How many ticks between each radiation system updates. 1 = once per tick", 1);
         radHalfLifeSeconds = CommonConfig.createConfigDouble(config, CATEGORY_RAD, "7.99_CE_02_radHalfLifeSeconds", "The half life of chunk radiation in seconds", 120);
-        radDiffusivity = CommonConfig.createConfigDouble(config, CATEGORY_RAD, "7.99_CE_03_radDiffusivity", "The diffusivity of chunk radiation. radDiffusivity * radTickRate / 20.0 must not exceed 1/6", 10.0 / 6.0);
+        radDiffusivity = CommonConfig.createConfigDouble(config, CATEGORY_RAD, "7.99_CE_03_radDiffusivity", "The diffusivity of chunk radiation.", 10.0);
 
 		hazardRate = CommonConfig.createConfigInt(config, CATEGORY_HAZ, "CE-0.3_hazardRate", "Ticks between application of effects for the hazards", 5);
 		disableAsbestos = CommonConfig.createConfigBool(config, CATEGORY_HAZ, "CE-0.3_disableAsbestos", "Setting it true makes Asbestos Hazard to do nothing", false);

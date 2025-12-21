@@ -62,12 +62,11 @@ import java.util.concurrent.*;
 import static com.hbm.lib.internal.UnsafeHolder.U;
 
 /**
- * A concurrent radiation propagation system utilizing the Finite Volume Method.
+ * A concurrent radiation system using Operator Splitting with exact pairwise exchange.
  * <p>
- * This system solves for radiation density (&rho;) using the transport equation:
- * <br>
+ * It solves for radiation density (&rho;) using the analytical solution for 2-node diffusion:
  * <center>
- * &part;&rho;/&part;t = D&nabla;<sup>2</sup>&rho; &minus; &lambda;&rho; + S
+ * &Delta;&rho; = (&rho;<sub>eq</sub>&minus; &rho;) &times; (1 &minus; e<sup>-k&Delta;t</sup>)
  * </center>
  *
  * @author mlbv
@@ -79,14 +78,12 @@ public final class RadiationSystemNT {
     private static final int[] BOUNDARY_MASKS = {0, 0, 0xF00, 0xF00, 0xFF0, 0xFF0}, LINEAR_OFFSETS = {-256, 256, -16, 16, -1, 1};
     private static final int[] FACE_DX = {0, 0, 0, 0, -1, 1}, FACE_DY = {-1, 1, 0, 0, 0, 0}, FACE_DZ = {0, 0, -1, 1, 0, 0};
     private static final int[] FACE_PLANE = new int[6 * 256];
-    // 9950x, 32 view distance, extremely irradiated worst-case overworld takes < 2.5ms per step;
-    // for normal world without strong artificial radiation source, it takes < 0.5ms and scales w.r.t active pocket count.
-    private static final boolean PROFILING = false;
+    // 9950x, 32 view distance, extremely irradiated worst-case overworld takes < 3.2ms per step;
+    // for normal world without strong artificial radiation source, it takes < 1ms and scales w.r.t. active pocket count.
+    private static final boolean PROFILING = true;
 
     private static final int SECTION_BLOCK_COUNT = 4096;
 
-    private static final long IA_BASE = U.arrayBaseOffset(int[].class);
-    private static final int IA_SHIFT = Integer.numberOfTrailingZeros(U.arrayIndexScale(int[].class));
     private static final String TAG_RAD = "hbmRadDataNT";
     private static final byte MAGIC_0 = (byte) 'N', MAGIC_1 = (byte) 'T', MAGIC_2 = (byte) 'X', FMT = 6;
     private static final Object NOT_RES = new Object();
@@ -98,6 +95,10 @@ public final class RadiationSystemNT {
     private static final ThreadLocal<double[]> TL_NEW_MASS = ThreadLocal.withInitial(() -> new double[NO_POCKET]);
     private static final ThreadLocal<double[]> TL_OLD_MASS = ThreadLocal.withInitial(() -> new double[NO_POCKET]);
     private static final ThreadLocal<int[]> TL_OVERLAPS = ThreadLocal.withInitial(() -> new int[NO_POCKET * NO_POCKET]);
+    private static final ThreadLocal<long[]> TL_SUM_X = ThreadLocal.withInitial(() -> new long[NO_POCKET]);
+    private static final ThreadLocal<long[]> TL_SUM_Y = ThreadLocal.withInitial(() -> new long[NO_POCKET]);
+    private static final ThreadLocal<long[]> TL_SUM_Z = ThreadLocal.withInitial(() -> new long[NO_POCKET]);
+
     private static final int ACTIVE_STRIPES = computeActiveStripes(2);
     private static final int ACTIVE_STRIPE_MASK = ACTIVE_STRIPES - 1;
     private static ByteBuffer BUF = ByteBuffer.allocate(524_288);
@@ -106,9 +107,10 @@ public final class RadiationSystemNT {
     private static Object[] STATE_CLASS;
     private static int tickDelay = 1;
     private static double dT = tickDelay / 20.0D;
-    private static double diffusionDt = (10.0D / 6.0D) * dT;
+    private static double diffusionDt = 10.0 * dT;
+    private static double UU_E = Math.exp(-(diffusionDt / 128.0d));
     private static double retentionDt = Math.pow(0.99424, dT); // 2min
-    private static int fogChance = (int) (50.0 / dT);
+    private static double fogThreshold = 0.0D;
 
     static {
         int[] rowShifts = {4, 4, 8, 8, 8, 8}, colShifts = {0, 0, 0, 0, 4, 4}, bases = {0, 15 << 8, 0, 15 << 4, 0, 15};
@@ -138,10 +140,6 @@ public final class RadiationSystemNT {
         return HashCommon.nextPowerOfTwo(desired);
     }
 
-    private static long offInt(int idx) {
-        return IA_BASE + ((long) idx << IA_SHIFT);
-    }
-
     public static void onLoadComplete() {
         // noinspection deprecation
         STATE_CLASS = new Object[Block.BLOCK_STATE_IDS.size() + 1024];
@@ -154,11 +152,9 @@ public final class RadiationSystemNT {
         double hl = RadiationConfig.radHalfLifeSeconds;
         if (hl <= 0.0D || !Double.isFinite(hl)) throw new IllegalStateException("Radiation HalfLife must be positive and finite");
         retentionDt = Math.exp(Math.log(0.5) * (dT / hl));
-        if (diffusionDt > 1.0 / 6.0) MainRegistry.logger.warn(
-                "[RadiationSystemNT] Radiation diffusion rate per step = {} is higher than 1/6, which may lead to numerical instability",
-                diffusionDt);
-        int ch = RadiationConfig.fogCh;
-        fogChance = ch <= 0 ? Integer.MAX_VALUE : (int) ((double) ch / dT);
+        double ch = RadiationConfig.fogCh;
+        fogThreshold = ch <= 0.0D ? 0.0D : (dT / ch);
+        UU_E = Math.exp(-(diffusionDt / 128.0d));
     }
 
     public static void onServerStarting(FMLServerStartingEvent event) {
@@ -247,6 +243,12 @@ public final class RadiationSystemNT {
         double current = sc.getRad(pocketIndex);
         if (current >= max) return;
         double next = Math.min(current + amount, max);
+        if (!Double.isFinite(next) || next < 0) {
+            MainRegistry.logger.warn(
+                    "[RadiationSystemNT] Cancelled invalid incrementRad at {} in dimension {} ({}) due to overflow. Old: {}, Adding: {}, Result: {}.",
+                    pos, world.provider.getDimension(), world.provider.getDimensionType().getName(), current, amount, next);
+            return;
+        }
         sc.setRad(pocketIndex, next);
         if (sc.owner.setActiveBit(sc.sy, pocketIndex)) {
             data.enqueueActiveNext(pocketKey(sck, pocketIndex));
@@ -382,7 +384,7 @@ public final class RadiationSystemNT {
         if (storage == null || storage.isEmpty()) return;
         BlockStateContainer container = storage.data;
 
-        if (sc.pocketData == null && sc.pocketCount == 1) {
+        if (sc instanceof UniformSectionRef) {
             if (targetPocketIndex != 0) return;
             for (int i = 0; i < SECTION_BLOCK_COUNT; i++) {
                 if (world.rand.nextInt(3) != 0) continue;
@@ -455,48 +457,62 @@ public final class RadiationSystemNT {
         }
 
         int activeCount = 0;
-        for (int s = 0; s < ACTIVE_STRIPES; s++) activeCount += data.activeStripeCounts[s];
-
+        int totalTouchedCount = 0;
+        for (int s = 0; s < ACTIVE_STRIPES; s++) {
+            activeCount += data.activeStripeCounts[s];
+            totalTouchedCount += data.touchedStripeCounts[s];
+        }
+        if (activeCount == 0) {
+            logProfilingMessage(data, time);
+            return;
+        }
         long[] buf = data.activeBuf;
         SectionRef[] refs = data.activeRefs;
         if (buf.length < activeCount) {
-            int n = buf.length;
-            while (n < activeCount) n = n + (n >>> 1) + 16;
-            buf = data.activeBuf = Arrays.copyOf(buf, n);
-            refs = data.activeRefs = Arrays.copyOf(refs, n);
+            buf = data.activeBuf = new long[activeCount + (activeCount >>> 1)];
+            refs = data.activeRefs = new SectionRef[buf.length];
         }
-
         int pos = 0;
         for (int s = 0; s < ACTIVE_STRIPES; s++) {
             int c = data.activeStripeCounts[s];
             if (c == 0) continue;
-            long[] sb = data.activeStripeBufs[s];
-            SectionRef[] sr = data.activeStripeRefs[s];
-            System.arraycopy(sb, 0, buf, pos, c);
-            System.arraycopy(sr, 0, refs, pos, c);
-            Arrays.fill(sr, 0, c, null);
+            System.arraycopy(data.activeStripeBufs[s], 0, buf, pos, c);
+            System.arraycopy(data.activeStripeRefs[s], 0, refs, pos, c);
+            Arrays.fill(data.activeStripeRefs[s], 0, c, null);
             pos += c;
         }
-
+        Arrays.fill(data.parityCounts, 0);
+        for (int b = 0; b < 4; b++) {
+            if (data.parityBuckets[b].length < totalTouchedCount) data.parityBuckets[b] = new ChunkRef[totalTouchedCount + 128];
+        }
+        for (int s = 0; s < ACTIVE_STRIPES; s++) {
+            int c = data.touchedStripeCounts[s];
+            if (c == 0) continue;
+            ChunkRef[] src = data.touchedStripeRefs[s];
+            for (int i = 0; i < c; i++) {
+                ChunkRef cr = src[i];
+                long ck = cr.ck;
+                int bucketIdx = (int) ((ck & 1) | ((ck >>> 31) & 2));
+                int idx = data.parityCounts[bucketIdx]++;
+                data.parityBuckets[bucketIdx][idx] = cr;
+            }
+            Arrays.fill(src, 0, c, null);
+        }
         final int maxWake = (activeCount <= (Integer.MAX_VALUE / 90)) ? (activeCount * 90) : Integer.MAX_VALUE;
         final LongBag wokenBag = data.getWokenBag(maxWake);
         wokenBag.clear();
-
-        if (activeCount > 0) {
-            new ComputeAndScanTask(data, data.activeBuf, data.activeRefs, 0, activeCount, epoch, wokenBag).invoke();
-        }
-
+        runExactExchangeSweeps(data, wokenBag);
         final int wokenCount = wokenBag.size();
-        if (activeCount > 0 && wokenCount > 0) {
-            ForkJoinTask.invokeAll(new ApplyTask(data, data.activeBuf, data.activeRefs, 0, activeCount), new ApplyBagTask(data, wokenBag));
-        } else if (activeCount > 0) {
-            new ApplyTask(data, data.activeBuf, data.activeRefs, 0, activeCount).invoke();
-        } else if (wokenCount > 0) {
-            new ApplyBagTask(data, wokenBag).invoke();
+        if (wokenCount > 0) {
+            ForkJoinTask.invokeAll(new FinalizeTask(data, buf, refs, 0, activeCount), new FinalizeBagTask(data, wokenBag));
+        } else {
+            new FinalizeTask(data, buf, refs, 0, activeCount).invoke();
         }
-        if (activeCount > 0) {
-            Arrays.fill(data.activeRefs, 0, activeCount, null);
-        }
+        Arrays.fill(data.activeRefs, 0, activeCount, null);
+        logProfilingMessage(data, time);
+    }
+
+    private static void logProfilingMessage(WorldRadiationData data, long time) {
         if (!PROFILING) return;
         double durationMs = (System.nanoTime() - time) / 1_000_000.0D;
         data.executionTimeAccumulator += durationMs;
@@ -506,6 +522,215 @@ public final class RadiationSystemNT {
             MainRegistry.logger.info("dim {} = {} ms", data.world.provider.getDimension(), average);
             data.executionTimeAccumulator = 0.0D;
             data.executionSampleCount = 0;
+        }
+    }
+
+    private static void runExactExchangeSweeps(WorldRadiationData data, LongBag wakeBag) {
+        ChunkRef[][] buckets = data.parityBuckets;
+        int[] counts = data.parityCounts;
+        ForkJoinTask.invokeAll(new DiffuseXTask(data, buckets[0], 0, counts[0], wakeBag), new DiffuseXTask(data, buckets[2], 0, counts[2], wakeBag));
+        ForkJoinTask.invokeAll(new DiffuseXTask(data, buckets[1], 0, counts[1], wakeBag), new DiffuseXTask(data, buckets[3], 0, counts[3], wakeBag));
+        ForkJoinTask.invokeAll(new DiffuseZTask(data, buckets[0], 0, counts[0], wakeBag), new DiffuseZTask(data, buckets[1], 0, counts[1], wakeBag));
+        ForkJoinTask.invokeAll(new DiffuseZTask(data, buckets[2], 0, counts[2], wakeBag), new DiffuseZTask(data, buckets[3], 0, counts[3], wakeBag));
+        ForkJoinTask<?>[] yTasks0 = new ForkJoinTask[4];
+        for (int b = 0; b < 4; b++) {
+            yTasks0[b] = new DiffuseYTask(data, buckets[b], 0, counts[b], 0, wakeBag);
+        }
+        ForkJoinTask.invokeAll(yTasks0);
+        ForkJoinTask<?>[] yTasks1 = new ForkJoinTask[4];
+        for (int b = 0; b < 4; b++) {
+            yTasks1[b] = new DiffuseYTask(data, buckets[b], 0, counts[b], 1, wakeBag);
+        }
+        ForkJoinTask.invokeAll(yTasks1);
+    }
+
+    private static boolean exchangePairExact(SectionRef a, int ai, int faceA, SectionRef b, int bi, int faceB, int area) {
+        if (area <= 0) return false;
+
+        double ra = a.getRad(ai);
+        double rb = b.getRad(bi);
+        if (ra == rb) return false;
+
+        double invVa = a.getInvVolume(ai);
+        double invVb = b.getInvVolume(bi);
+        double denomInv = invVa + invVb;
+        if (!(denomInv > 0.0d)) return false;
+
+        double distA = a.getFaceDist(ai, faceA);
+        double distB = b.getFaceDist(bi, faceB);
+        double distSum = distA + distB;
+        if (!(distSum > 0.0d)) return false;
+
+        double g = ((double) area) / distSum;
+        double rate = g * denomInv * diffusionDt;
+        if (!(rate > 0.0d)) return false;
+
+        double e = Math.exp(-rate);
+        double rStar = (ra * invVb + rb * invVa) / denomInv;
+        double na = rStar + (ra - rStar) * e;
+        double nb = rStar + (rb - rStar) * e;
+
+        if (na == ra && nb == rb) return false;
+
+        a.setRad(ai, na);
+        b.setRad(bi, nb);
+        return true;
+    }
+
+    private static boolean exchangeFaceExact(Long2ObjectMap<Chunk> loaded, long aKey, SectionRef a, int faceA, long bKey, SectionRef b, int faceB,
+                                             LongBag wakeBag) {
+        boolean changedA = false, changedB = false;
+
+        if (a instanceof MultiSectionRef ma) {
+            if (b instanceof MultiSectionRef mb) {
+                int aCount = ma.pocketCount & 0xFF;
+                int bCount = Math.min(mb.pocketCount & 0xFF, NO_POCKET);
+                int stride = 6 * NEI_SLOTS;
+                char[] conn = ma.connectionArea;
+                byte[] faceAct = ma.faceActive;
+                int faceBase0 = faceA << 4;
+
+                for (int pi = 0; pi < aCount; pi++) {
+                    if (faceAct[pi * 6 + faceA] == 0) continue;
+                    int base = pi * stride + faceBase0;
+                    if (conn[base] == 0) continue;
+
+                    for (int npi = 0; npi < bCount; npi++) {
+                        int area = conn[base + NEI_SHIFT + npi];
+                        if (area == 0) continue;
+                        if (exchangePairExact(ma, pi, faceA, mb, npi, faceB, area)) {
+                            changedA = changedB = true;
+                            wakeIfNeeded(aKey, ma, pi, wakeBag);
+                            wakeIfNeeded(bKey, mb, npi, wakeBag);
+                        }
+                    }
+                }
+            } else {
+                int aCount = ma.pocketCount & 0xFF;
+                int stride = 6 * NEI_SLOTS;
+                char[] conn = ma.connectionArea;
+                byte[] faceAct = ma.faceActive;
+                int slot0 = (faceA << 4) + NEI_SHIFT;
+
+                for (int pi = 0; pi < aCount; pi++) {
+                    if (faceAct[pi * 6 + faceA] == 0) continue;
+                    int area = conn[pi * stride + slot0];
+                    if (area == 0) continue;
+                    if (exchangePairExact(ma, pi, faceA, b, 0, faceB, area)) {
+                        changedA = true;
+                        changedB = true;
+                        wakeIfNeeded(aKey, ma, pi, wakeBag);
+                        wakeIfNeeded(bKey, b, 0, wakeBag);
+                    }
+                }
+            }
+        } else if (b instanceof MultiSectionRef mb) {
+            changedB = exchangeFaceExact(loaded, bKey, mb, faceB, aKey, a, faceA, wakeBag);
+            changedA = changedB;
+        } else {
+            if (a instanceof UniformSectionRef ua && b instanceof UniformSectionRef ub) {
+                double ra = ua.rad, rb = ub.rad;
+                if (ra != rb) {
+                    double avg = 0.5d * (ra + rb);
+                    double delta = 0.5d * (ra - rb) * UU_E;
+                    ua.rad = avg + delta;
+                    ub.rad = avg - delta;
+                    changedA = changedB = true;
+                    wakeIfNeeded(aKey, ua, 0, wakeBag);
+                    wakeIfNeeded(bKey, ub, 0, wakeBag);
+                }
+            } else {
+                int area;
+                if (a instanceof SingleMaskedSectionRef sa && b instanceof UniformSectionRef) {
+                    area = sa.getFaceCount(faceA);
+                } else if (a instanceof UniformSectionRef && b instanceof SingleMaskedSectionRef sb) {
+                    area = sb.getFaceCount(faceB);
+                } else if (a instanceof SingleMaskedSectionRef sa && b instanceof SingleMaskedSectionRef) {
+                    long conns = sa.connections;
+                    area = (int) ((conns >>> (faceA * 9)) & 0x1FFL);
+                } else {
+                    area = 0;
+                }
+                if (area > 0 && exchangePairExact(a, 0, faceA, b, 0, faceB, area)) {
+                    changedA = changedB = true;
+                    wakeIfNeeded(aKey, a, 0, wakeBag);
+                    wakeIfNeeded(bKey, b, 0, wakeBag);
+                }
+            }
+        }
+
+        if (changedA) {
+            Chunk ca = a.owner.getChunk(loaded);
+            if (ca != null) ca.markDirty();
+        }
+        if (changedB) {
+            Chunk cb = b.owner.getChunk(loaded);
+            if (cb != null) cb.markDirty();
+        }
+        return changedA | changedB;
+    }
+
+    private static void wakeIfNeeded(long sectionKey, SectionRef sc, int pi, LongBag wakeBag) {
+        if (wakeBag == null) return;
+        double v = sc.getRad(pi);
+        if (!Double.isFinite(v) || nearZero(v)) return;
+        if (sc.owner.setActiveBit(sc.sy, pi)) {
+            wakeBag.tryAdd(pocketKey(sectionKey, pi));
+        }
+    }
+
+    private static void finalizeRange(WorldRadiationData data, long[] keys, @Nullable SectionRef[] refs, int start, int end) {
+        Long2ObjectMap<Chunk> loaded = data.world.getChunkProvider().loadedChunks;
+        double minB = data.minBound;
+        ThreadLocalRandom rnd = ThreadLocalRandom.current();
+
+        for (int i = start; i < end; i++) {
+            long pk = keys[i];
+            int pi = pocketIndexFromPocketKey(pk);
+            SectionRef sc;
+            if (refs != null) {
+                sc = refs[i];
+            } else {
+                sc = data.getSection(sectionKeyFromPocketKey(pk));
+            }
+            if (sc == null || sc.pocketCount <= 0) {
+                data.deactivatePocket(pk);
+                continue;
+            }
+
+            int len = sc.pocketCount & 0xFF;
+            if (pi < 0 || pi >= len) {
+                sc.owner.clearActiveBit(sc.sy, pi);
+                continue;
+            }
+
+            double prev = sc.getRad(pi);
+            if (prev > RadiationConfig.fogRad && rnd.nextDouble() < fogThreshold) {
+                data.spawnFog(sc, pi, rnd);
+            }
+
+            double next = prev * retentionDt;
+            if (!Double.isFinite(next)) {
+                next = 0.0d;
+            }
+            if (next < minB) next = minB;
+            if (nearZero(next)) next = 0.0d;
+
+            if (next != prev) {
+                sc.setRad(pi, next);
+                Chunk c = sc.owner.getChunk(loaded);
+                if (c != null) c.markDirty();
+                if (prev >= 5.0 && rnd.nextDouble() < 0.01 && pk != Long.MIN_VALUE) {
+                    if (tickDelay == 1) data.pocketToDestroy = pk;
+                    else data.destructionQueue.offer(pk);
+                }
+            }
+
+            if (next == 0.0d) {
+                sc.owner.clearActiveBit(sc.sy, pi);
+            } else {
+                data.enqueueActiveNext(pk);
+            }
         }
     }
 
@@ -581,9 +806,9 @@ public final class RadiationSystemNT {
         WorldRadiationData data = getWorldRadData((WorldServer) e.getWorld());
 
         Chunk chunk = e.getChunk();
+        NBTTagCompound nbt = e.getData();
         try {
             byte[] payload = null;
-            NBTTagCompound nbt = e.getData();
             int id = nbt.getTagId(TAG_RAD);
             if (id == Constants.NBT.TAG_COMPOUND) {
                 WorldProvider provider = e.getWorld().provider;
@@ -598,6 +823,7 @@ public final class RadiationSystemNT {
             WorldProvider provider = e.getWorld().provider;
             MainRegistry.logger.error("[RadiationSystemNT] Failed to decode data for chunk {} in dimension {} ({})", chunk.getPos(),
                     provider.getDimension(), provider.getDimensionType().getName(), ex);
+            nbt.removeTag(TAG_RAD);
         }
     }
 
@@ -653,7 +879,7 @@ public final class RadiationSystemNT {
 
             int len = sc.pocketCount & 0xFF;
             if (len > NO_POCKET) len = NO_POCKET;
-            if (sc.pocketData == null && sc.pocketCount == 1) len = 1;
+            if (sc instanceof UniformSectionRef) len = 1;
 
             for (int p = 0; p < len; p++) {
                 double v = sc.getRad(p);
@@ -752,11 +978,10 @@ public final class RadiationSystemNT {
         int sy = Library.getSectionY(sectionKey);
         SectionRef sc = owner.sec[sy];
         if (sc != null && sc.pocketCount > 0) return sc;
-        SectionRef stub = SectionRef.singleUniform(owner, sy);
+        UniformSectionRef stub = new UniformSectionRef(owner, sy);
         SectionRef prev = owner.sec[sy];
-        U.putIntRelease(owner.activePocketMasks, offInt(sy), 0);
+        owner.clearActiveBitMask(sy);
         owner.sec[sy] = stub;
-        owner.setUniformBit(sy, true);
         if (prev != null) data.retireIfNeeded(prev);
         data.markDirty(sectionKey);
         return stub;
@@ -1028,159 +1253,142 @@ public final class RadiationSystemNT {
         }
     }
 
-    private static int scanBoundaryAreaSingleToSingle(SectionRef aSingle, SectionRef bSingle, int faceA) {
-        int faceB = faceA ^ 1; // EnumFacing opposite (0D<->1U, 2N<->3S, 4W<->5E)
-        if (aSingle.pocketData == null && bSingle.pocketData == null) return 256;
-
-        boolean aOpenAll = (aSingle.pocketData == null);
-        boolean bOpenAll = (bSingle.pocketData == null);
-        int baseA = faceA << 8;
-        int baseB = faceB << 8;
-        int area = 0;
-        for (int t = 0; t < 256; t++) {
-            if (!aOpenAll) {
-                int pa = aSingle.paletteIndexOrNeg(FACE_PLANE[baseA + t]);
-                if (pa < 0) continue;
-            }
-            if (!bOpenAll) {
-                int pb = bSingle.paletteIndexOrNeg(FACE_PLANE[baseB + t]);
-                if (pb < 0) continue;
-            }
-            area++;
-        }
-        return area;
-    }
-
-    private static void applyRange(WorldRadiationData data, long[] keys, @Nullable SectionRef[] refs, int start, int end) {
-        Long2ObjectMap<Chunk> loaded = data.world.getChunkProvider().loadedChunks;
-        double minB = data.minBound;
-        ThreadLocalRandom rnd = ThreadLocalRandom.current();
-
-        for (int i = start; i < end; i++) {
-            long pk = keys[i];
-            int pi = pocketIndexFromPocketKey(pk);
-            SectionRef sc;
-            if (refs != null) {
-                sc = refs[i];
-                if (sc == null || sc.pocketCount <= 0) {
-                    data.deactivatePocket(pk);
-                    continue;
-                }
-            } else {
-                long curKey = sectionKeyFromPocketKey(pk);
-                sc = data.getSection(curKey);
-            }
-
-            if (sc != null && sc.pocketCount > 0) {
-                int len = sc.pocketCount & 0xFF;
-                if (pi >= 0 && pi < len) {
-                    double prev = sc.getRad(pi);
-                    double delta = sc.getDelta(pi);
-
-                    double next = (prev + delta) * retentionDt;
-                    if (!Double.isFinite(next)) {
-                        WorldProvider provider = data.world.provider;
-                        MainRegistry.logger.warn(
-                                "[RadiationSystemNT] Radiation overflow at {} chunk [{}, {}], section {}, pocket {} in dimension {} ({})",
-                                sc.owner.getChunk(loaded) == null ? "detached" : "loaded", Library.getSectionX(pk), Library.getSectionZ(pk), sc.sy,
-                                pi, provider.getDimension(), provider.getDimensionType().getName());
-                        next = 0.0d;
-                    }
-                    if (next < minB) next = minB;
-                    if (nearZero(next)) next = 0.0d;
-
-                    if (next != prev) {
-                        sc.setRad(pi, next);
-                        if (next == 0.0d) sc.owner.clearActiveBit(sc.sy, pi);
-                        else data.enqueueActiveNext(pk);
-
-                        Chunk c = sc.owner.getChunk(loaded);
-                        if (c != null) c.markDirty();
-
-                        if (prev >= 5.0 && rnd.nextDouble() < 0.01 && pk != Long.MIN_VALUE) {
-                            if (tickDelay == 1) data.pocketToDestroy = pk;
-                            else data.destructionQueue.offer(pk);
-                        }
-                    } else if (next == 0.0d) {
-                        sc.owner.clearActiveBit(sc.sy, pi);
-                    } else {
-                        data.enqueueActiveNext(pk);
-                    }
-
-                    sc.setDelta(pi, 0.0d);
-                    continue;
-                }
-            }
-
-            data.deactivatePocket(pk);
+    private static void processDiffuseGroup(Long2ObjectMap<Chunk> loaded, ChunkRef aCr, ChunkRef bCr, long unionMask, int group, LongBag wakeBag,
+                                            int faceA, int faceB) {
+        SectionRef[] aSec = aCr.sec, bSec = bCr.sec;
+        while (unionMask != 0L) {
+            int lane = Long.numberOfTrailingZeros(unionMask) >>> 4;
+            int sy = (group << 2) + lane;
+            long laneMask = 0xFFFFL << (lane << 4);
+            unionMask &= ~laneMask;
+            SectionRef a = aSec[sy];
+            SectionRef b = bSec[sy];
+            if (a == null || b == null || a.pocketCount <= 0 || b.pocketCount <= 0) continue;
+            long aKey = Library.sectionToLong(aCr.ck, sy);
+            long bKey = Library.sectionToLong(bCr.ck, sy);
+            exchangeFaceExact(loaded, aKey, a, faceA, bKey, b, faceB, wakeBag);
         }
     }
 
-    private static final class ChunkRef {
+    // padding boilerplate to address false sharing
+    // @formatter:off
+    private static abstract sealed class ChunkRefBase permits ChunkRefPad0 {
         final long ck;
         final @Nullable SectionRef @NotNull [] sec = new SectionRef[16];
-        final int[] activePocketMasks = new int[16]; // [sy] -> bitmask of active pockets
-        int uniformMask; // written by server thread, read by workers
-        @Nullable ChunkRef north, south, west, east; // written by server thread, read by workers
-        @Deprecated// don't use directly
-        volatile Chunk mcChunk;
+        @Nullable ChunkRef north, south, west, east;
+        @Deprecated volatile Chunk mcChunk;// don't use directly
+        volatile int touchedEpoch;
+        ChunkRefBase(long ck) { this.ck = ck; }
+    }
+    private static abstract sealed class ChunkRefPad0 extends ChunkRefBase permits ChunkRefM0 {
+        long p00, p01, p02, p03, p04, p05, p06;
+        ChunkRefPad0(long ck) { super(ck); }
+    }
+    private static abstract sealed class ChunkRefM0 extends ChunkRefPad0 permits ChunkRefPad1 {
+        volatile long mask0;
+        ChunkRefM0(long ck) { super(ck); }
+    }
+    private static abstract sealed class ChunkRefPad1 extends ChunkRefM0 permits ChunkRefM1 {
+        long p10, p11, p12, p13, p14, p15, p16;
+        ChunkRefPad1(long ck) { super(ck); }
+    }
+    private static abstract sealed class ChunkRefM1 extends ChunkRefPad1 permits ChunkRefPad2 {
+        volatile long mask1;
+        ChunkRefM1(long ck) { super(ck); }
+    }
+    private static abstract sealed class ChunkRefPad2 extends ChunkRefM1 permits ChunkRefM2 {
+        long p20, p21, p22, p23, p24, p25, p26;
+        ChunkRefPad2(long ck) { super(ck); }
+    }
+    private static abstract sealed class ChunkRefM2 extends ChunkRefPad2 permits ChunkRefPad3 {
+        volatile long mask2;
+        ChunkRefM2(long ck) { super(ck); }
+    }
+    private static abstract sealed class ChunkRefPad3 extends ChunkRefM2 permits ChunkRefM3 {
+        long p30, p31, p32, p33, p34, p35, p36;
+        ChunkRefPad3(long ck) { super(ck); }
+    }
+    private static abstract sealed class ChunkRefM3 extends ChunkRefPad3 permits ChunkRef {
+        volatile long mask3;
+        ChunkRefM3(long ck) { super(ck); }
+    }
+    // @formatter:on
+
+    private static final class ChunkRef extends ChunkRefM3 {
+        static final long MASK_0_OFF = UnsafeHolder.fieldOffset(ChunkRefM0.class, "mask0");
+        static final long MASK_1_OFF = UnsafeHolder.fieldOffset(ChunkRefM1.class, "mask1");
+        static final long MASK_2_OFF = UnsafeHolder.fieldOffset(ChunkRefM2.class, "mask2");
+        static final long MASK_3_OFF = UnsafeHolder.fieldOffset(ChunkRefM3.class, "mask3");
+        static final long TOUCHED_EPOCH_OFF = UnsafeHolder.fieldOffset(ChunkRefBase.class, "touchedEpoch");
 
         ChunkRef(long ck) {
-            this.ck = ck;
+            super(ck);
         }
 
-        boolean isActive(int sy, int pi) {
-            int mask = U.getIntVolatile(activePocketMasks, offInt(sy));
-            return (mask & (1 << pi)) != 0;
+        static long getMaskOffset(int sy) {
+            return switch (sy >> 2) {
+                case 0 -> MASK_0_OFF;
+                case 1 -> MASK_1_OFF;
+                case 2 -> MASK_2_OFF;
+                default -> MASK_3_OFF;
+            };
+        }
+
+        boolean isInactive(int sy, int pi) {
+            long maskGroup = switch (sy >> 2) {
+                case 0 -> mask0;
+                case 1 -> mask1;
+                case 2 -> mask2;
+                default -> mask3;
+            };
+            int localShift = (sy & 3) << 4;
+            return ((maskGroup >>> localShift) & (1L << pi)) == 0;
         }
 
         boolean setActiveBit(int sy, int pi) {
-            long offset = offInt(sy);
-            int bit = 1 << pi;
+            long offset = getMaskOffset(sy);
+            int localShift = (sy & 3) << 4;
+            long bit = 1L << (localShift + pi);
             while (true) {
-                int cur = U.getIntVolatile(activePocketMasks, offset);
+                long cur = U.getLongVolatile(this, offset);
                 if ((cur & bit) != 0) return false;
-                int next = cur | bit;
-                if (U.compareAndSetInt(activePocketMasks, offset, cur, next)) return true;
+                long next = cur | bit;
+                if (U.compareAndSetLong(this, offset, cur, next)) return true;
             }
         }
 
         void clearActiveBit(int sy, int pi) {
-            long offset = offInt(sy);
-            int bit = 1 << pi;
+            long offset = getMaskOffset(sy);
+            int localShift = (sy & 3) << 4;
+            long bit = 1L << (localShift + pi);
             while (true) {
-                int cur = U.getIntVolatile(activePocketMasks, offset);
+                long cur = U.getLongVolatile(this, offset);
                 if ((cur & bit) == 0) return;
-                int next = cur & ~bit;
-                if (U.compareAndSetInt(activePocketMasks, offset, cur, next)) return;
+                long next = cur & ~bit;
+                if (U.compareAndSetLong(this, offset, cur, next)) return;
             }
+        }
+
+        void clearActiveBitMask(int sy) {
+            long offset = getMaskOffset(sy);
+            int localShift = (sy & 3) << 4;
+            long mask = ~(0xFFFFL << localShift);
+            while (true) {
+                long cur = U.getLongVolatile(this, offset);
+                long next = cur & mask;
+                if (cur == next || U.compareAndSetLong(this, offset, cur, next)) return;
+            }
+        }
+
+        boolean tryMarkTouched(int epoch) {
+            int cur = touchedEpoch;
+            if (cur == epoch) return false;
+            return U.compareAndSetInt(this, TOUCHED_EPOCH_OFF, cur, epoch);
         }
 
         Chunk getChunk(Long2ObjectMap<Chunk> loaded) {
             Chunk c = mcChunk;
             return c != null && c.loaded ? c : (mcChunk = loaded.get(ck));
-        }
-
-        boolean isUniform(int sy) {
-            return ((uniformMask >>> sy) & 1) != 0;
-        }
-
-        // single writer
-        void setUniformBit(int sy, boolean on) {
-            int mask = uniformMask;
-            if (on) mask |= (1 << sy);
-            else mask &= ~(1 << sy);
-            uniformMask = mask;
-        }
-
-        @Nullable ChunkRef neighborByFace(int face) {
-            return switch (face) {
-                case 2 -> north;
-                case 3 -> south;
-                case 4 -> west;
-                case 5 -> east;
-                default -> null;
-            };
         }
     }
 
@@ -1370,13 +1578,14 @@ public final class RadiationSystemNT {
 
         @Override
         protected void compute() {
-            long[] out = data.activeStripeBufs[stripe];
+            long[] outPockets = data.activeStripeBufs[stripe];
             SectionRef[] outRefs = data.activeStripeRefs[stripe];
+            int pocketCount = 0;
+            ChunkRef[] outTouched = data.touchedStripeRefs[stripe];
+            int touchedCount = 0;
 
-            int count = 0;
             long pk;
-
-            while ((pk = q.relaxedPoll()) != Long.MIN_VALUE) {
+            while ((pk = q.plainPoll()) != Long.MIN_VALUE) {
                 long ck = Library.sectionToChunkLong(pk);
                 ChunkRef cr = data.chunkRefs.get(ck);
                 if (cr == null) continue;
@@ -1385,7 +1594,7 @@ public final class RadiationSystemNT {
                 int sy = (yz >>> 4) & 15;
                 int pi = yz & 15;
 
-                if (!cr.isActive(sy, pi)) continue;
+                if (cr.isInactive(sy, pi)) continue;
 
                 SectionRef sc = cr.sec[sy];
                 if (sc == null || sc.pocketCount <= 0) {
@@ -1401,74 +1610,75 @@ public final class RadiationSystemNT {
 
                 if (!sc.markEpochIfNot(pi, epoch)) continue;
 
-                if (count == out.length) {
-                    int n = out.length << 1;
-                    out = Arrays.copyOf(out, n);
+                if (pocketCount == outPockets.length) {
+                    int n = outPockets.length << 1;
+                    outPockets = Arrays.copyOf(outPockets, n);
                     outRefs = Arrays.copyOf(outRefs, n);
                 }
-                out[count] = pk;
-                outRefs[count] = sc;
-                count++;
-            }
+                outPockets[pocketCount] = pk;
+                outRefs[pocketCount] = sc;
+                pocketCount++;
 
-            data.activeStripeBufs[stripe] = out;
+                // Mark Center
+                if (cr.tryMarkTouched(epoch)) {
+                    if (touchedCount == outTouched.length) outTouched = Arrays.copyOf(outTouched, outTouched.length << 1);
+                    outTouched[touchedCount++] = cr;
+                }
+
+                ChunkRef n = cr.north, s = cr.south, e = cr.east, w = cr.west;
+                if (n != null && n.tryMarkTouched(epoch)) {
+                    if (touchedCount == outTouched.length) outTouched = Arrays.copyOf(outTouched, outTouched.length << 1);
+                    outTouched[touchedCount++] = n;
+                }
+                if (s != null && s.tryMarkTouched(epoch)) {
+                    if (touchedCount == outTouched.length) outTouched = Arrays.copyOf(outTouched, outTouched.length << 1);
+                    outTouched[touchedCount++] = s;
+                }
+                if (e != null && e.tryMarkTouched(epoch)) {
+                    if (touchedCount == outTouched.length) outTouched = Arrays.copyOf(outTouched, outTouched.length << 1);
+                    outTouched[touchedCount++] = e;
+                }
+                if (w != null && w.tryMarkTouched(epoch)) {
+                    if (touchedCount == outTouched.length) outTouched = Arrays.copyOf(outTouched, outTouched.length << 1);
+                    outTouched[touchedCount++] = w;
+                }
+
+                // diagonals
+                ChunkRef ne = (n != null) ? n.east : (e != null) ? e.north : null;
+                if (ne != null && ne.tryMarkTouched(epoch)) {
+                    if (touchedCount == outTouched.length) outTouched = Arrays.copyOf(outTouched, outTouched.length << 1);
+                    outTouched[touchedCount++] = ne;
+                }
+                ChunkRef nw = (n != null) ? n.west : (w != null) ? w.north : null;
+                if (nw != null && nw.tryMarkTouched(epoch)) {
+                    if (touchedCount == outTouched.length) outTouched = Arrays.copyOf(outTouched, outTouched.length << 1);
+                    outTouched[touchedCount++] = nw;
+                }
+                ChunkRef se = (s != null) ? s.east : (e != null) ? e.south : null;
+                if (se != null && se.tryMarkTouched(epoch)) {
+                    if (touchedCount == outTouched.length) outTouched = Arrays.copyOf(outTouched, outTouched.length << 1);
+                    outTouched[touchedCount++] = se;
+                }
+                ChunkRef sw = (s != null) ? s.west : (w != null) ? w.south : null;
+                if (sw != null && sw.tryMarkTouched(epoch)) {
+                    if (touchedCount == outTouched.length) outTouched = Arrays.copyOf(outTouched, outTouched.length << 1);
+                    outTouched[touchedCount++] = sw;
+                }
+            }
+            data.activeStripeBufs[stripe] = outPockets;
             data.activeStripeRefs[stripe] = outRefs;
-            data.activeStripeCounts[stripe] = count;
+            data.activeStripeCounts[stripe] = pocketCount;
+            data.touchedStripeRefs[stripe] = outTouched;
+            data.touchedStripeCounts[stripe] = touchedCount;
         }
     }
 
-    private static final class ComputeAndScanTask extends PocketTask {
-        final WorldRadiationData data;
-        final long[] active;
-        final SectionRef[] refs;
-        final int epoch;
-        final LongBag wakeBag;
-
-        ComputeAndScanTask(WorldRadiationData data, long[] active, SectionRef[] refs, int lo, int hi, int epoch, LongBag wakeBag) {
-            super(lo, hi);
-            this.data = data;
-            this.active = active;
-            this.refs = refs;
-            this.epoch = epoch;
-            this.wakeBag = wakeBag;
-        }
-
-        @Override
-        protected void work(int start, int end) {
-            final ThreadLocalRandom rnd = ThreadLocalRandom.current();
-            for (int i = start; i < end; i++) {
-                long pk = active[i];
-                SectionRef sc = refs[i];
-                if (sc == null || sc.pocketCount <= 0) continue; // should be rare
-                int pi = Library.getSectionY(pk) & 15;
-                int len = sc.pocketCount & 0xFF;
-                if (pi >= len) { // defensive
-                    sc.owner.clearActiveBit(sc.sy, pi);
-                    continue;
-                }
-
-                if (sc.getRad(pi) > RadiationConfig.fogRad && rnd.nextInt(fogChance) == 0) {
-                    data.spawnFog(sc, pi, rnd);
-                }
-
-                long curKey = Library.sectionToLong(sc.owner.ck, sc.sy);
-                double delta = sc.calculateFluxAndScan(data, curKey, pi, epoch, wakeBag);
-                sc.setDelta(pi, delta);
-            }
-        }
-
-        @Override
-        protected PocketTask createSubtask(int start, int end) {
-            return new ComputeAndScanTask(data, active, refs, start, end, epoch, wakeBag);
-        }
-    }
-
-    private static final class ApplyTask extends PocketTask {
+    private static final class FinalizeTask extends PocketTask {
         final WorldRadiationData data;
         final long[] keys;
         final SectionRef[] refs;
 
-        ApplyTask(WorldRadiationData data, long[] keys, SectionRef[] refs, int lo, int hi) {
+        FinalizeTask(WorldRadiationData data, long[] keys, SectionRef[] refs, int lo, int hi) {
             super(lo, hi);
             this.data = data;
             this.keys = keys;
@@ -1477,36 +1687,179 @@ public final class RadiationSystemNT {
 
         @Override
         protected void work(int start, int end) {
-            applyRange(data, keys, refs, start, end);
+            finalizeRange(data, keys, refs, start, end);
         }
 
         @Override
         protected PocketTask createSubtask(int start, int end) {
-            return new ApplyTask(data, keys, refs, start, end);
+            return new FinalizeTask(data, keys, refs, start, end);
         }
     }
 
-    private static final class ApplyBagTask extends BagTask {
+    private static final class FinalizeBagTask extends BagTask {
         final WorldRadiationData data;
 
-        ApplyBagTask(WorldRadiationData data, LongBag bag) {
+        FinalizeBagTask(WorldRadiationData data, LongBag bag) {
             super(bag, 0, bag.size());
             this.data = data;
         }
 
-        private ApplyBagTask(WorldRadiationData data, LongBag bag, int lo, int hi) {
+        private FinalizeBagTask(WorldRadiationData data, LongBag bag, int lo, int hi) {
             super(bag, lo, hi);
             this.data = data;
         }
 
         @Override
         protected void work(long[] chunk, int start, int end) {
-            applyRange(data, chunk, null, start, end);
+            finalizeRange(data, chunk, null, start, end);
         }
 
         @Override
         protected BagTask createSubtask(int start, int end) {
-            return new ApplyBagTask(data, bag, start, end);
+            return new FinalizeBagTask(data, bag, start, end);
+        }
+    }
+
+    private static final class DiffuseXTask extends RecursiveAction {
+        final WorldRadiationData data;
+        final ChunkRef[] chunks;
+        final int lo, hi;
+        final LongBag wakeBag;
+
+        DiffuseXTask(WorldRadiationData data, ChunkRef[] chunks, int lo, int hi, LongBag wakeBag) {
+            this.data = data;
+            this.chunks = chunks;
+            this.lo = lo;
+            this.hi = hi;
+            this.wakeBag = wakeBag;
+        }
+
+        @Override
+        protected void compute() {
+            if (hi - lo <= 64) {
+                work(lo, hi);
+            } else {
+                int mid = (lo + hi) >>> 1;
+                invokeAll(new DiffuseXTask(data, chunks, lo, mid, wakeBag), new DiffuseXTask(data, chunks, mid, hi, wakeBag));
+            }
+        }
+
+        private void work(int start, int end) {
+            Long2ObjectMap<Chunk> loaded = data.world.getChunkProvider().loadedChunks;
+            for (int i = start; i < end; i++) {
+                ChunkRef aCr = chunks[i];
+                ChunkRef bCr = aCr.east;
+                if (bCr == null) continue;
+                long a0 = aCr.mask0, a1 = aCr.mask1, a2 = aCr.mask2, a3 = aCr.mask3;
+                long b0 = bCr.mask0, b1 = bCr.mask1, b2 = bCr.mask2, b3 = bCr.mask3;
+                if (((a0 | a1 | a2 | a3) | (b0 | b1 | b2 | b3)) == 0L) continue;
+                processDiffuseGroup(loaded, aCr, bCr, a0 | b0, 0, wakeBag, 5, 4);
+                processDiffuseGroup(loaded, aCr, bCr, a1 | b1, 1, wakeBag, 5, 4);
+                processDiffuseGroup(loaded, aCr, bCr, a2 | b2, 2, wakeBag, 5, 4);
+                processDiffuseGroup(loaded, aCr, bCr, a3 | b3, 3, wakeBag, 5, 4);
+            }
+        }
+    }
+
+    private static final class DiffuseZTask extends RecursiveAction {
+        final WorldRadiationData data;
+        final ChunkRef[] chunks;
+        final int lo, hi;
+        final LongBag wakeBag;
+
+        DiffuseZTask(WorldRadiationData data, ChunkRef[] chunks, int lo, int hi, LongBag wakeBag) {
+            this.data = data;
+            this.chunks = chunks;
+            this.lo = lo;
+            this.hi = hi;
+            this.wakeBag = wakeBag;
+        }
+
+        @Override
+        protected void compute() {
+            if (hi - lo <= 64) {
+                work(lo, hi);
+            } else {
+                int mid = (lo + hi) >>> 1;
+                invokeAll(new DiffuseZTask(data, chunks, lo, mid, wakeBag), new DiffuseZTask(data, chunks, mid, hi, wakeBag));
+            }
+        }
+
+        private void work(int start, int end) {
+            Long2ObjectMap<Chunk> loaded = data.world.getChunkProvider().loadedChunks;
+            for (int i = start; i < end; i++) {
+                ChunkRef aCr = chunks[i];
+                ChunkRef bCr = aCr.south;
+                if (bCr == null) continue;
+                long a0 = aCr.mask0, a1 = aCr.mask1, a2 = aCr.mask2, a3 = aCr.mask3;
+                long b0 = bCr.mask0, b1 = bCr.mask1, b2 = bCr.mask2, b3 = bCr.mask3;
+                if (((a0 | a1 | a2 | a3) | (b0 | b1 | b2 | b3)) == 0L) continue;
+                processDiffuseGroup(loaded, aCr, bCr, a0 | b0, 0, wakeBag, 3, 2);
+                processDiffuseGroup(loaded, aCr, bCr, a1 | b1, 1, wakeBag, 3, 2);
+                processDiffuseGroup(loaded, aCr, bCr, a2 | b2, 2, wakeBag, 3, 2);
+                processDiffuseGroup(loaded, aCr, bCr, a3 | b3, 3, wakeBag, 3, 2);
+            }
+        }
+    }
+
+    private static final class DiffuseYTask extends RecursiveAction {
+        final WorldRadiationData data;
+        final ChunkRef[] chunks;
+        final int lo, hi;
+        final int parity;
+        final LongBag wakeBag;
+
+        DiffuseYTask(WorldRadiationData data, ChunkRef[] chunks, int lo, int hi, int parity, LongBag wakeBag) {
+            this.data = data;
+            this.chunks = chunks;
+            this.lo = lo;
+            this.hi = hi;
+            this.parity = parity;
+            this.wakeBag = wakeBag;
+        }
+
+        @Override
+        protected void compute() {
+            if (hi - lo <= 64) {
+                work(lo, hi);
+            } else {
+                int mid = (lo + hi) >>> 1;
+                invokeAll(new DiffuseYTask(data, chunks, lo, mid, parity, wakeBag), new DiffuseYTask(data, chunks, mid, hi, parity, wakeBag));
+            }
+        }
+
+        private void work(int start, int end) {
+            Long2ObjectMap<Chunk> loaded = data.world.getChunkProvider().loadedChunks;
+            for (int i = start; i < end; i++) {
+                ChunkRef cr = chunks[i];
+                long m0 = cr.mask0, m1 = cr.mask1, m2 = cr.mask2, m3 = cr.mask3;
+                if ((m0 | m1 | m2 | m3) == 0L) continue;
+
+                for (int sy = parity; sy < 15; sy += 2) {
+                    long mask = switch (sy >> 2) {
+                        case 0 -> m0;
+                        case 1 -> m1;
+                        case 2 -> m2;
+                        default -> m3;
+                    };
+                    long nextMask = switch ((sy + 1) >> 2) {
+                        case 0 -> m0;
+                        case 1 -> m1;
+                        case 2 -> m2;
+                        default -> m3;
+                    };
+                    int shift = (sy & 3) << 4;
+                    int nextShift = ((sy + 1) & 3) << 4;
+                    if (((mask >>> shift) & 0xFFFFL) == 0L && ((nextMask >>> nextShift) & 0xFFFFL) == 0L) continue;
+                    SectionRef a = cr.sec[sy];
+                    SectionRef b = cr.sec[sy + 1];
+                    if (a == null || b == null || a.pocketCount <= 0 || b.pocketCount <= 0) continue;
+
+                    long aKey = Library.sectionToLong(cr.ck, sy);
+                    long bKey = Library.sectionToLong(cr.ck, sy + 1);
+                    exchangeFaceExact(loaded, aKey, a, 1, bKey, b, 0, wakeBag);
+                }
+            }
         }
     }
 
@@ -1536,167 +1889,251 @@ public final class RadiationSystemNT {
         }
     }
 
-    private static final class SectionBuffers {
-        final char[] connectionArea = new char[NO_POCKET * 6 * NEI_SLOTS];
-        final byte[] faceActive = new byte[NO_POCKET * 6];
-        final long[] radBits = new long[NO_POCKET];
-        final double[] deltas = new double[NO_POCKET];
-        final int[] volume = new int[NO_POCKET];
-        final double[] invVolume = new double[NO_POCKET];
-        final int[] neighborMarkEpoch = new int[NO_POCKET];
-
-        void reset() {
-            Arrays.fill(connectionArea, (char) 0);
-            Arrays.fill(faceActive, (byte) 0);
-            Arrays.fill(radBits, 0L);
-            Arrays.fill(deltas, 0.0d);
-            Arrays.fill(volume, 0);
-            Arrays.fill(invVolume, 0.0d);
-            Arrays.fill(neighborMarkEpoch, 0);
-        }
-    }
-
-    private static final class SectionRef {
-        private static final long EPOCH0_OFF = UnsafeHolder.fieldOffset(SectionRef.class, "neighborMarkEpoch0");
-
+    private static abstract sealed class SectionRef permits MultiSectionRef, SingleMaskedSectionRef, UniformSectionRef {
         final ChunkRef owner;
         final int sy;
         final byte pocketCount;
-        final byte @Nullable [] pocketData;
-        final @Nullable SectionBuffers buffers;
-        final short @Nullable [] singleFaceCounts;
 
-        long radBits0;
-        double delta0;
-        int neighborMarkEpoch0;
-        int volume0;
-        double invVolume0;
-
-        private SectionRef(ChunkRef owner, int sy, byte pocketCount, byte @Nullable [] pocketData, @Nullable SectionBuffers buffers,
-                           short @Nullable [] singleFaceCounts, long radBits0, int neighborMarkEpoch0, int volume0, double invVolume0) {
+        SectionRef(ChunkRef owner, int sy, byte pocketCount) {
             this.owner = owner;
             this.sy = sy;
             this.pocketCount = pocketCount;
-            this.pocketData = pocketData;
-            this.buffers = buffers;
-            this.singleFaceCounts = singleFaceCounts;
-            this.radBits0 = radBits0;
-            this.neighborMarkEpoch0 = neighborMarkEpoch0;
-            this.volume0 = volume0;
-            this.invVolume0 = invVolume0;
         }
 
-        static SectionRef singleUniform(ChunkRef owner, int sy) {
-            return new SectionRef(owner, sy, (byte) 1, null, null, null, 0L, 0, SECTION_BLOCK_COUNT, 1.0d / SECTION_BLOCK_COUNT);
+        // @formatter:off
+        abstract boolean isMultiPocket();
+        abstract byte @Nullable [] getPocketData();
+        abstract double getRad(int idx);
+        abstract void setRad(int idx, double val);
+        abstract double getInvVolume(int idx);
+        abstract boolean markEpochIfNot(int idx, int epoch);
+        abstract int getPocketIndex(long pos);
+        abstract int paletteIndexOrNeg(int blockIndex);
+        abstract void clearFaceAllPockets(int faceOrdinal);
+        abstract boolean markSentinelPlane16x16(int ordinal);
+        abstract void linkFaceTo(SectionRef b, int faceA);
+        abstract void linkFaceToSingle(SectionRef single, int faceA);
+        abstract double getFaceDist(int pocketIndex, int faceOrdinal);
+        // @formatter:on
+    }
+
+    private static final class UniformSectionRef extends SectionRef {
+        volatile int neighborMarkEpoch;
+        double rad;
+
+        UniformSectionRef(ChunkRef owner, int sy) {
+            super(owner, sy, (byte) 1);
         }
 
-        static SectionRef singleMasked(ChunkRef owner, int sy, byte[] pocketData, int volume0, short[] faceCounts) {
-            int v = Math.max(1, volume0);
-            return new SectionRef(owner, sy, (byte) 1, pocketData, null, faceCounts, 0L, 0, v, 1.0d / v);
-        }
+        // @formatter:off
+        @Override boolean isMultiPocket() { return false; }
+        @Override byte[] getPocketData() { return null; }
+        @Override double getRad(int idx) { return rad; }
+        @Override void setRad(int idx, double val) { rad = val; }
+        @Override double getInvVolume(int idx) { return 1.0d / 4096.0d; }
+        @Override int getPocketIndex(long pos) { return 0; }
+        @Override int paletteIndexOrNeg(int blockIndex) { return 0; }
+        @Override void clearFaceAllPockets(int faceOrdinal) { }
+        @Override boolean markSentinelPlane16x16(int ordinal) { return false; }
+        @Override void linkFaceTo(SectionRef b, int faceA) { }
+        @Override void linkFaceToSingle(SectionRef single, int faceA) { }
+        @Override double getFaceDist(int pocketIndex, int faceOrdinal) { return 8.0d; }
+        // @formatter:on
 
-        static SectionRef multi(ChunkRef owner, int sy, byte pocketCount, byte[] pocketData, SectionBuffers buffers) {
-            return new SectionRef(owner, sy, pocketCount, pocketData, buffers, null, 0L, 0, 0, 0.0d);
-        }
-
-        boolean isSinglePocket() {
-            return (pocketCount & 0xFF) == 1;
-        }
-
-        boolean isMultiPocket() {
-            return (pocketCount & 0xFF) > 1;
-        }
-
-        boolean isOpenUniformSingle() {
-            return isSinglePocket() && pocketData == null;
-        }
-
-        double getRad(int idx) {
-            if (isSinglePocket()) return Double.longBitsToDouble(radBits0);
-            return Double.longBitsToDouble(buffers.radBits[idx]);
-        }
-
-        void setRad(int idx, double val) {
-            long bits = Double.doubleToRawLongBits(val);
-            if (isSinglePocket()) radBits0 = bits;
-            else buffers.radBits[idx] = bits;
-        }
-
-        double getDelta(int idx) {
-            if (isSinglePocket()) return delta0;
-            return buffers.deltas[idx];
-        }
-
-        void setDelta(int idx, double val) {
-            if (isSinglePocket()) delta0 = val;
-            else buffers.deltas[idx] = val;
-        }
-
+        @Override
         boolean markEpochIfNot(int idx, int epoch) {
-            if (isSinglePocket()) {
-                if (neighborMarkEpoch0 == epoch) return false;
-                neighborMarkEpoch0 = epoch;
-                return true;
+            if (neighborMarkEpoch == epoch) return false;
+            neighborMarkEpoch = epoch;
+            return true;
+        }
+    }
+
+    private static final class SingleMaskedSectionRef extends SectionRef {
+        static final long CONN_OFF = UnsafeHolder.fieldOffset(SingleMaskedSectionRef.class, "connections");
+        final byte[] pocketData;
+        final int volume;
+        final double invVolume;
+        final long packedFaceCounts;
+        final double cx, cy, cz;
+        volatile long connections;
+        volatile int neighborMarkEpoch;
+        double rad;
+
+        SingleMaskedSectionRef(ChunkRef owner, int sy, byte[] pocketData, int volume, short[] faceCountsInput, double cx, double cy, double cz) {
+            super(owner, sy, (byte) 1);
+            this.pocketData = pocketData;
+            this.volume = volume;
+            this.invVolume = 1.0d / volume;
+            this.cx = cx;
+            this.cy = cy;
+            this.cz = cz;
+            long packed = 0L;
+            for (int i = 0; i < 6; i++) {
+                long val = faceCountsInput[i] & 0x1FFL;
+                packed |= (val << (i * 9));
             }
-            int[] a = buffers.neighborMarkEpoch;
-            if (a[idx] == epoch) return false;
-            a[idx] = epoch;
+            this.packedFaceCounts = packed;
+        }
+
+        // @formatter:off
+        @Override boolean isMultiPocket() { return false; }
+        @Override byte[] getPocketData() { return pocketData; }
+        @Override double getRad(int idx) { return rad; }
+        @Override void setRad(int idx, double val) { rad = val; }
+        @Override double getInvVolume(int idx) { return invVolume; }
+        @Override void clearFaceAllPockets(int faceOrdinal) { updateConnections(faceOrdinal, 0); }
+        @Override boolean markSentinelPlane16x16(int ordinal) { return false; }
+        @Override void linkFaceTo(SectionRef b, int faceA) { }
+        // @formatter:on
+
+        @Override
+        double getFaceDist(int pocketIndex, int face) {
+            return switch (face) {
+                case 0 -> cy + 0.5d;
+                case 1 -> 15.5d - cy;
+                case 2 -> cz + 0.5d;
+                case 3 -> 15.5d - cz;
+                case 4 -> cx + 0.5d;
+                case 5 -> 15.5d - cx;
+                default -> throw new IllegalArgumentException("Invalid face ordinal: " + face);
+            };
+        }
+
+        void updateConnections(int face, int value) {
+            final int shift = face * 9;
+            final long mask = 0x1FFL << shift;
+            final long bits = ((long) value & 0x1FFL) << shift;
+            while (true) {
+                long current = this.connections;
+                long next = (current & ~mask) | bits;
+                if (current == next) return;
+                if (U.compareAndSetLong(this, CONN_OFF, current, next)) return;
+            }
+        }
+
+        int getFaceCount(int face) {
+            return (int) ((packedFaceCounts >>> (face * 9)) & 0x1FFL);
+        }
+
+        @Override
+        boolean markEpochIfNot(int idx, int epoch) {
+            if (neighborMarkEpoch == epoch) return false;
+            neighborMarkEpoch = epoch;
             return true;
         }
 
-        boolean tryMarkEpochCAS(int idx, int epoch) {
-            if (isSinglePocket()) {
-                int cur = neighborMarkEpoch0;
-                if (cur == epoch) return false;
-                return U.compareAndSetInt(this, EPOCH0_OFF, cur, epoch);
-            }
-            int[] arr = buffers.neighborMarkEpoch;
-            long offset = offInt(idx);
-            int cur = U.getInt(arr, offset);
-            if (cur == epoch) return false;
-            return U.compareAndSetInt(arr, offset, cur, epoch);
-        }
-
+        @Override
         int getPocketIndex(long pos) {
-            if (pocketCount <= 0) return -1;
-            if (pocketData == null) return 0;
             int blockIndex = Library.blockPosToLocal(pos);
             int nibble = readNibble(pocketData, blockIndex);
-            if (nibble == NO_POCKET) return -1;
-            int len = pocketCount & 0xFF;
-            if (nibble >= len) return -1;
-            return nibble;
+            return (nibble == 0) ? 0 : -1;
         }
 
+        @Override
         int paletteIndexOrNeg(int blockIndex) {
-            int len = pocketCount & 0xFF;
-            if (len == 0) return -1;
-            if (pocketData == null) return 0;
+            int nibble = readNibble(pocketData, blockIndex);
+            return (nibble == 0) ? 0 : -1;
+        }
+
+        @Override
+        void linkFaceToSingle(SectionRef neighbor, int faceA) {
+            int area;
+            if (neighbor instanceof UniformSectionRef) {
+                area = getFaceCount(faceA);
+            } else if (neighbor instanceof SingleMaskedSectionRef other) {
+                int faceB = faceA ^ 1;
+                int baseA = faceA << 8;
+                int baseB = faceB << 8;
+                int count = 0;
+                byte[] myData = this.pocketData;
+                byte[] otherData = other.pocketData;
+                for (int t = 0; t < 256; t++) {
+                    int idxA = FACE_PLANE[baseA + t];
+                    if (readNibble(myData, idxA) != 0) continue;
+                    int idxB = FACE_PLANE[baseB + t];
+                    if (readNibble(otherData, idxB) != 0) continue;
+                    count++;
+                }
+                area = count;
+                other.updateConnections(faceB, area);
+            } else {
+                return;
+            }
+            this.updateConnections(faceA, area);
+        }
+    }
+
+    private static final class MultiSectionRef extends SectionRef {
+        final byte[] pocketData, faceActive;
+        final char[] connectionArea;
+        final double[] rad, invVolume;
+        final int[] volume, neighborMarkEpoch;
+        final double[] faceDist;
+
+        MultiSectionRef(ChunkRef owner, int sy, byte pocketCount, byte[] pocketData, double[] faceDist) {
+            super(owner, sy, pocketCount);
+            this.pocketData = pocketData;
+            this.faceDist = faceDist;
+
+            int count = pocketCount & 0xFF;
+            this.connectionArea = new char[count * 6 * NEI_SLOTS];
+            this.faceActive = new byte[count * 6];
+            this.rad = new double[count];
+            this.volume = new int[count];
+            this.invVolume = new double[count];
+            this.neighborMarkEpoch = new int[count];
+        }
+
+        // @formatter:off
+        @Override boolean isMultiPocket() { return true; }
+        @Override byte[] getPocketData() { return pocketData; }
+        @Override double getRad(int idx) { return rad[idx]; }
+        @Override void setRad(int idx, double val) { rad[idx] = val; }
+        @Override double getInvVolume(int idx) { return invVolume[idx]; }
+        @Override double getFaceDist(int pocketIndex, int face) { return faceDist[pocketIndex * 6 + face]; }
+        // @formatter:on
+
+        @Override
+        boolean markEpochIfNot(int idx, int epoch) {
+            if (neighborMarkEpoch[idx] == epoch) return false;
+            neighborMarkEpoch[idx] = epoch;
+            return true;
+        }
+
+        @Override
+        int getPocketIndex(long pos) {
+            int blockIndex = Library.blockPosToLocal(pos);
+            int nibble = readNibble(pocketData, blockIndex);
+            return (nibble == NO_POCKET || nibble >= (pocketCount & 0xFF)) ? -1 : nibble;
+        }
+
+        @Override
+        int paletteIndexOrNeg(int blockIndex) {
             int nibble = readNibble(pocketData, blockIndex);
             if (nibble == NO_POCKET) return -1;
-            if (nibble >= len) return -2;
+            if (nibble >= (pocketCount & 0xFF)) return -2;
             return nibble;
         }
 
+        @Override
         void clearFaceAllPockets(int faceOrdinal) {
-            if (!isMultiPocket()) return;
             int len = pocketCount & 0xFF;
             int stride = 6 * NEI_SLOTS;
             int faceBase = faceOrdinal * NEI_SLOTS;
             for (int p = 0; p < len; p++) {
                 int off = p * stride + faceBase;
-                Arrays.fill(buffers.connectionArea, off, off + NEI_SLOTS, (char) 0);
-                buffers.faceActive[p * 6 + faceOrdinal] = 0;
+                Arrays.fill(connectionArea, off, off + NEI_SLOTS, (char) 0);
+                faceActive[p * 6 + faceOrdinal] = 0;
             }
         }
 
+        @Override
         boolean markSentinelPlane16x16(int ordinal) {
-            if (!isMultiPocket()) return false;
-
             boolean dirty = false;
             int slotBase = ordinal * NEI_SLOTS;
             int planeBase = ordinal << 8;
-
+            char[] conn = connectionArea;
+            byte[] face = faceActive;
             for (int t = 0; t < 256; t++) {
                 int idx = FACE_PLANE[planeBase + t];
                 int pi = paletteIndexOrNeg(idx);
@@ -1705,24 +2142,21 @@ public final class RadiationSystemNT {
                     continue;
                 }
                 if (pi >= 0) {
-                    buffers.connectionArea[pi * 6 * NEI_SLOTS + slotBase] = 1; // slot 0 sentinel
-                    buffers.faceActive[pi * 6 + ordinal] = 1;
+                    conn[pi * 6 * NEI_SLOTS + slotBase] = 1;
+                    face[pi * 6 + ordinal] = 1;
                 }
             }
             return dirty;
         }
 
+        @Override
         void linkFaceTo(SectionRef b, int faceA) {
+            if (!(b instanceof MultiSectionRef multiB)) return;
             int faceB = faceA ^ 1;
-
-            clearFaceAllPockets(faceA);
-            b.clearFaceAllPockets(faceB);
-
-            char[] aConn = buffers.connectionArea;
-            byte[] aFace = buffers.faceActive;
-            char[] bConn = b.buffers.connectionArea;
-            byte[] bFace = b.buffers.faceActive;
-
+            this.clearFaceAllPockets(faceA);
+            multiB.clearFaceAllPockets(faceB);
+            char[] aConn = this.connectionArea, bConn = multiB.connectionArea;
+            byte[] aFace = this.faceActive, bFace = multiB.faceActive;
             int aFaceBase0 = faceA * NEI_SLOTS;
             int bFaceBase0 = faceB * NEI_SLOTS;
 
@@ -1733,10 +2167,10 @@ public final class RadiationSystemNT {
                 int aIdx = FACE_PLANE[planeA + t];
                 int bIdx = FACE_PLANE[planeB + t];
 
-                int pa = paletteIndexOrNeg(aIdx);
+                int pa = this.paletteIndexOrNeg(aIdx);
                 if (pa < 0) continue;
 
-                int pb = b.paletteIndexOrNeg(bIdx);
+                int pb = multiB.paletteIndexOrNeg(bIdx);
                 if (pb < 0) continue;
 
                 int aOff = pa * 6 * NEI_SLOTS + aFaceBase0;
@@ -1753,284 +2187,29 @@ public final class RadiationSystemNT {
             }
         }
 
+        @Override
         void linkFaceToSingle(SectionRef single, int faceA) {
-            if (!isMultiPocket()) return;
-
             int faceB = faceA ^ 1;
-
-            clearFaceAllPockets(faceA);
-
-            char[] aConn = buffers.connectionArea;
-            byte[] aFace = buffers.faceActive;
+            this.clearFaceAllPockets(faceA);
+            char[] aConn = this.connectionArea;
+            byte[] aFace = this.faceActive;
             int aFaceBase0 = faceA * NEI_SLOTS;
-
             int planeA = faceA << 8;
             int planeB = faceB << 8;
-
-            // If the single has no pocketData, its boundary is always open.
-            boolean singleAlwaysOpen = (single.pocketData == null) && single.isSinglePocket();
-
+            boolean singleAlwaysOpen = (single instanceof UniformSectionRef);
             for (int t = 0; t < 256; t++) {
                 int aIdx = FACE_PLANE[planeA + t];
-                int pa = paletteIndexOrNeg(aIdx);
+                int pa = this.paletteIndexOrNeg(aIdx);
                 if (pa < 0) continue;
-
                 if (!singleAlwaysOpen) {
                     int bIdx = FACE_PLANE[planeB + t];
-                    int pb = single.paletteIndexOrNeg(bIdx);
-                    if (pb < 0) continue;
+                    if (single.paletteIndexOrNeg(bIdx) < 0) continue;
                 }
-
                 int aOff = pa * 6 * NEI_SLOTS + aFaceBase0;
                 aConn[aOff] = 1;
                 aConn[aOff + NEI_SHIFT]++; // neighbor pocket index 0
                 aFace[pa * 6 + faceA] = 1;
             }
-        }
-
-        double calculateFlux(WorldRadiationData data, long myKey, int pi) {
-            return calculateFluxInternal(data, myKey, pi, 0, null);
-        }
-
-        double calculateFluxAndScan(WorldRadiationData data, long myKey, int pi, int epoch, LongBag wakeBag) {
-            return calculateFluxInternal(data, myKey, pi, epoch, wakeBag);
-        }
-
-        private double calculateFluxInternal(WorldRadiationData data, long myKey, int pi, int epoch, @Nullable LongBag wakeBag) {
-            if (pocketCount <= 0) return 0.0d;
-            final int len = pocketCount & 0xFF;
-            if (pi < 0 || pi >= len) return 0.0d;
-            final boolean doWake = (wakeBag != null);
-            final ChunkRef myChunk = this.owner;
-            final int mySy = this.sy;
-            final long myCk = myChunk.ck;
-            final int myCx = Library.getChunkPosX(myCk);
-            final int myCz = Library.getChunkPosZ(myCk);
-            final Long2ObjectMap<Chunk> loaded = data.world.getChunkProvider().loadedChunks;
-            final NonBlockingHashMapLong<ChunkRef> crMap = data.chunkRefs;
-            final double myRad = getRad(pi);
-            double flux = 0.0d;
-            boolean markMeDirty = false;
-            if (len != 1) {
-                final SectionBuffers myBuf = this.buffers;
-                if (myBuf == null) return 0.0d;
-                final char[] myConn = myBuf.connectionArea;
-                final byte[] myFaceActive = myBuf.faceActive;
-                final double invVol = myBuf.invVolume[pi];
-                final int faceStride = 6 * NEI_SLOTS;
-                final int pocketFaceBase = pi * faceStride;
-                final int myFaceActiveBase = pi * 6;
-
-                for (int face = 0; face < 6; face++) {
-                    if (myFaceActive[myFaceActiveBase + face] == 0) continue;
-
-                    final int nSy = mySy + FACE_DY[face];
-                    if (isInvalidSectionY(nSy)) continue;
-                    final int base = pocketFaceBase + (face << 4);
-                    if (myConn[base] == 0) continue;
-
-                    ChunkRef nChunk;
-                    SectionRef ns;
-                    long nKey;
-
-                    if (face <= 1) {
-                        nChunk = myChunk;
-                        ns = myChunk.sec[nSy];
-                        nKey = Library.sectionToLong(myCk, nSy);
-                    } else {
-                        nChunk = myChunk.neighborByFace(face);
-                        if (nChunk == null) {
-                            final long nck = ChunkPos.asLong(myCx + FACE_DX[face], myCz + FACE_DZ[face]);
-                            nChunk = crMap.get(nck);
-                        }
-                        if (nChunk == null) continue;
-
-                        ns = nChunk.sec[mySy];
-                        nKey = Library.sectionToLong(nChunk.ck, mySy);
-                    }
-                    if (ns == null || ns.pocketCount <= 0) {
-                        final Chunk mc = nChunk.getChunk(loaded);
-                        if (mc != null) {
-                            data.markDirty(nKey);
-                            markMeDirty = true;
-                        }
-                        continue;
-                    }
-                    final int nCount = ns.pocketCount & 0xFF;
-                    final int lim = Math.min(nCount, NO_POCKET);
-                    final int connBase = base + NEI_SHIFT;
-                    for (int npi = 0; npi < lim; npi++) {
-                        final int area = myConn[connBase + npi];
-                        if (area == 0) continue;
-
-                        final double nRad = ns.getRad(npi);
-                        flux += (double) area * (nRad - myRad);
-
-                        if (doWake) {
-                            if (ns.tryMarkEpochCAS(npi, epoch)) {
-                                final long nk = pocketKey(nKey, npi);
-                                if (wakeBag.tryAdd(nk)) {
-                                    final int nSyBit = (face <= 1) ? nSy : mySy;
-                                    nChunk.setActiveBit(nSyBit, npi);
-
-                                    final double nd = ns.calculateFlux(data, nKey, npi);
-                                    ns.setDelta(npi, nd);
-                                } else {
-                                    final int nSyBit = (face <= 1) ? nSy : mySy;
-                                    if (nChunk.setActiveBit(nSyBit, npi)) {
-                                        data.enqueueActiveNext(nk);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (markMeDirty) data.markDirty(myKey);
-                return flux * diffusionDt * invVol;
-            }
-
-            final double invVol = this.invVolume0;
-            final boolean myUniform = (this.pocketData == null);
-
-            for (int face = 0; face < 6; face++) {
-                final int nSy = mySy + FACE_DY[face];
-                if (isInvalidSectionY(nSy)) continue;
-
-                ChunkRef nChunk;
-                SectionRef ns;
-                long nKey;
-
-                if (face <= 1) {
-                    nChunk = myChunk;
-                    ns = myChunk.sec[nSy];
-                    nKey = Library.sectionToLong(myCx, nSy, myCz);
-                } else {
-                    nChunk = myChunk.neighborByFace(face);
-                    if (nChunk == null) {
-                        final long nck = ChunkPos.asLong(myCx + FACE_DX[face], myCz + FACE_DZ[face]);
-                        nChunk = crMap.get(nck);
-                    }
-                    if (nChunk == null) continue;
-
-                    ns = nChunk.sec[mySy];
-                    nKey = Library.sectionToLong(nChunk.ck, mySy);
-                }
-
-                if (ns == null || ns.pocketCount <= 0) {
-                    final Chunk mc = nChunk.getChunk(loaded);
-                    if (mc != null) {
-                        data.markDirty(nKey);
-                        markMeDirty = true;
-                    }
-                    continue;
-                }
-
-                if (myUniform) {
-                    final boolean neighborUniform = (face <= 1) ? myChunk.isUniform(nSy) : nChunk.isUniform(mySy);
-                    if (neighborUniform) {
-                        final double nRad = Double.longBitsToDouble(ns.radBits0);
-                        flux += 256.0d * (nRad - myRad);
-
-                        if (doWake) {
-                            if (ns.tryMarkEpochCAS(0, epoch)) {
-                                final long nk = pocketKey(nKey, 0);
-                                if (wakeBag.tryAdd(nk)) {
-                                    final int nSyBit = (face <= 1) ? nSy : mySy;
-                                    nChunk.setActiveBit(nSyBit, 0);
-
-                                    final double nd = ns.calculateFlux(data, nKey, 0);
-                                    ns.setDelta(0, nd);
-                                } else {
-                                    final int nSyBit = (face <= 1) ? nSy : mySy;
-                                    if (nChunk.setActiveBit(nSyBit, 0)) {
-                                        data.enqueueActiveNext(nk);
-                                    }
-                                }
-                            }
-                        }
-                        continue;
-                    }
-                }
-
-                if ((ns.pocketCount & 0xFF) == 1) {
-                    final int area;
-                    final boolean nsUniform = (ns.pocketData == null);
-
-                    if (myUniform && nsUniform) {
-                        area = 256;
-                    } else if (nsUniform) {
-                        // I am masked, neighbor is air -> overlap is my face count
-                        area = this.singleFaceCounts[face] & 0xFFFF;
-                    } else if (myUniform) {
-                        // I am air, neighbor is masked -> overlap is neighbor's face count (opposite face)
-                        area = ns.singleFaceCounts[face ^ 1] & 0xFFFF;
-                    } else {
-                        // Both masked: must scan intersection
-                        area = scanBoundaryAreaSingleToSingle(this, ns, face);
-                    }
-
-                    if (area <= 0) continue;
-                    final double nRad = ns.getRad(0);
-                    flux += (double) area * (nRad - myRad);
-
-                    if (doWake) {
-                        if (ns.tryMarkEpochCAS(0, epoch)) {
-                            final long nk = pocketKey(nKey, 0);
-                            if (wakeBag.tryAdd(nk)) {
-                                final int nSyBit = (face <= 1) ? nSy : mySy;
-                                nChunk.setActiveBit(nSyBit, 0);
-
-                                final double nd = ns.calculateFlux(data, nKey, 0);
-                                ns.setDelta(0, nd);
-                            } else {
-                                final int nSyBit = (face <= 1) ? nSy : mySy;
-                                if (nChunk.setActiveBit(nSyBit, 0)) {
-                                    data.enqueueActiveNext(nk);
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    final int faceB = face ^ 1;
-                    final SectionBuffers nb = ns.buffers;
-                    final char[] nConn = nb.connectionArea;
-                    final byte[] nFace = nb.faceActive;
-                    final int stride = 6 * NEI_SLOTS;
-                    final int base = (faceB << 4) + NEI_SHIFT;
-                    final int nCount = ns.pocketCount & 0xFF;
-                    final int lim = Math.min(nCount, NO_POCKET);
-                    for (int p = 0; p < lim; p++) {
-                        if (nFace[p * 6 + faceB] == 0) continue;
-
-                        final int area = nConn[p * stride + base];
-                        if (area == 0) continue;
-
-                        final double nRad = ns.getRad(p);
-                        flux += (double) area * (nRad - myRad);
-
-                        if (doWake) {
-                            if (ns.tryMarkEpochCAS(p, epoch)) {
-                                final long nk = pocketKey(nKey, p);
-                                if (wakeBag.tryAdd(nk)) {
-                                    final int nSyBit = (face <= 1) ? nSy : mySy;
-                                    nChunk.setActiveBit(nSyBit, p);
-                                    final double nd = ns.calculateFlux(data, nKey, p);
-                                    ns.setDelta(p, nd);
-                                } else {
-                                    final int nSyBit = (face <= 1) ? nSy : mySy;
-                                    if (nChunk.setActiveBit(nSyBit, p)) {
-                                        data.enqueueActiveNext(nk);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (markMeDirty) data.markDirty(myKey);
-            return flux * diffusionDt * invVol;
         }
     }
 
@@ -2043,16 +2222,21 @@ public final class RadiationSystemNT {
         final MpscUnboundedXaddArrayLongQueue dirtyQueue = new MpscUnboundedXaddArrayLongQueue(16384);
         // only used when tickrate != 1.
         final MpscUnboundedXaddArrayLongQueue destructionQueue = new MpscUnboundedXaddArrayLongQueue(64);
-        final TLPool<SectionBuffers> sectionBuffersPool = new TLPool<>(SectionBuffers::new, SectionBuffers::reset, 256, 4096);
         final TLPool<byte[]> pocketDataPool = new TLPool<>(() -> new byte[2048], _ -> /*@formatter:off*/{}/*@formatter:on*/, 256, 4096);
         final SectionRetireBag retiredSections = new SectionRetireBag(16384);
         final NonBlockingLong2LongHashMap pendingPocketRadBits = new NonBlockingLong2LongHashMap(16384);
         final LongArrayList dirtyToRebuildScratch = new LongArrayList(16384);
         final Long2IntOpenHashMap dirtyChunkMasksScratch = new Long2IntOpenHashMap(16384);
         final double minBound;
+
         final long[][] activeStripeBufs = new long[ACTIVE_STRIPES][];
+        final ChunkRef[][] touchedStripeRefs = new ChunkRef[ACTIVE_STRIPES][];
         final int[] activeStripeCounts = new int[ACTIVE_STRIPES];
+        final int[] touchedStripeCounts = new int[ACTIVE_STRIPES];
         final SectionRef[][] activeStripeRefs = new SectionRef[ACTIVE_STRIPES][];
+        final ChunkRef[][] parityBuckets = new ChunkRef[4][4096];
+        final int[] parityCounts = new int[4];
+
         SectionRef[] activeRefs = new SectionRef[32768];
         volatile MpscUnboundedXaddArrayLongQueue[] activeQueuesCurrent, activeQueuesNext;
         LongBag wokenBag = new LongBag(32768);
@@ -2078,6 +2262,7 @@ public final class RadiationSystemNT {
                 cur[i] = new MpscUnboundedXaddArrayLongQueue(p);
                 nxt[i] = new MpscUnboundedXaddArrayLongQueue(p);
                 activeStripeBufs[i] = new long[p];
+                touchedStripeRefs[i] = new ChunkRef[p];
                 activeStripeRefs[i] = new SectionRef[p];
             }
             activeQueuesCurrent = cur;
@@ -2091,8 +2276,7 @@ public final class RadiationSystemNT {
                 out[n++] = k;
                 out[n++] = offsetKey(k, negFace);
             }
-            if (n >= 8192) Arrays.parallelSort(out, 0, n);
-            else Arrays.sort(out, 0, n);
+            Arrays.parallelSort(out, 0, n);
 
             int u = 0;
             long prev = Long.MIN_VALUE;
@@ -2126,7 +2310,7 @@ public final class RadiationSystemNT {
 
         void swapQueues() {
             MpscUnboundedXaddArrayLongQueue[] cur = activeQueuesCurrent;
-            for (int i = 0; i < ACTIVE_STRIPES; i++) cur[i].clear(true);
+            for (int i = 0; i < ACTIVE_STRIPES; i++) cur[i].clear(false);
             activeQueuesCurrent = activeQueuesNext;
             activeQueuesNext = cur;
         }
@@ -2150,12 +2334,8 @@ public final class RadiationSystemNT {
         }
 
         ChunkRef onChunkLoaded(Chunk chunk) {
-            int x = chunk.x;
-            int z = chunk.z;
-            long ck = ChunkPos.asLong(x, z);
-
-            ChunkRef cr = chunkRefs.computeIfAbsent(ck, ChunkRef::new);
-
+            int x = chunk.x, z = chunk.z;
+            ChunkRef cr = chunkRefs.computeIfAbsent(ChunkPos.asLong(x, z), ChunkRef::new);
             cr.mcChunk = chunk;
 
             ChunkRef n = chunkRefs.get(ChunkPos.asLong(x, z - 1));
@@ -2269,7 +2449,8 @@ public final class RadiationSystemNT {
                 float fx = x + 0.5F, fy = y + 0.5F, fz = z + 0.5F;
                 NBTTagCompound tag = new NBTTagCompound();
                 tag.setString("type", "radiationfog");
-                PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(tag, fx, fy, fz), new TargetPoint(world.provider.getDimension(), fx, fy, fz, 100));
+                PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(tag, fx, fy, fz),
+                        new TargetPoint(world.provider.getDimension(), fx, fy, fz, 100));
                 break;
             }
         }
@@ -2294,7 +2475,7 @@ public final class RadiationSystemNT {
 
         void retireIfNeeded(SectionRef sc) {
             if (sc == null) return;
-            if (sc.buffers != null || sc.pocketData != null) {
+            if (sc instanceof MultiSectionRef || sc instanceof SingleMaskedSectionRef) {
                 retiredSections.add(sc);
             }
         }
@@ -2349,17 +2530,16 @@ public final class RadiationSystemNT {
                 }
 
                 cr.sec[sy] = null;
-                U.putIntRelease(cr.activePocketMasks, offInt(sy), 0);
+                cr.clearActiveBitMask(sy);
 
                 dirtySections.remove(sck);
                 for (int p = 0; p <= NO_POCKET; p++) pendingPocketRadBits.remove(pocketKey(sck, p));
             }
-            cr.uniformMask = 0;
         }
 
         void cleanupPools() {
             destructionQueue.clear(true);
-            retiredSections.drainAndRecycle(sectionBuffersPool, pocketDataPool);
+            retiredSections.drainAndRecycle(pocketDataPool);
         }
 
         void readPayload(int cx, int cz, byte[] raw) throws DecodeException {
@@ -2369,19 +2549,14 @@ public final class RadiationSystemNT {
             for (int sy = 0; sy < 16; sy++) {
                 final long sck = Library.sectionToLong(cx, sy, cz);
                 final SectionRef prev = owner.sec[sy];
-                if (prev != null) {
-                    retireIfNeeded(prev);
-                }
-
-                U.putIntRelease(owner.activePocketMasks, offInt(sy), 0);
+                if (prev != null) retireIfNeeded(prev);
+                owner.clearActiveBitMask(sy);
                 owner.sec[sy] = null;
-                owner.setUniformBit(sy, false);
 
                 dirtySections.remove(sck);
                 markDirty(sck);
             }
 
-            // Clear stale pending entries for this chunk.
             for (int sy = 0; sy < 16; sy++) {
                 long sck = Library.sectionToLong(cx, sy, cz);
                 for (int p = 0; p <= NO_POCKET; p++) pendingPocketRadBits.remove(pocketKey(sck, p));
@@ -2414,11 +2589,15 @@ public final class RadiationSystemNT {
             final int sy = Library.getSectionY(sectionKey);
             final long ck = Library.sectionToChunkLong(sectionKey);
             final ChunkRef owner = getOrCreateChunkRef(ck);
-            U.putIntRelease(owner.activePocketMasks, offInt(sy), 0);
+            owner.clearActiveBitMask(sy);
 
             byte[] pocketData;
             int pocketCount;
-            SectionBuffers buffers = null;
+            int[] vols = TL_VOL_COUNTS.get();
+            long[] sumX = TL_SUM_X.get();
+            long[] sumY = TL_SUM_Y.get();
+            long[] sumZ = TL_SUM_Z.get();
+
             int singleVolume0 = SECTION_BLOCK_COUNT;
             short[] singleFaceCounts = null;
 
@@ -2431,8 +2610,10 @@ public final class RadiationSystemNT {
                 byte[] scratch = pocketDataPool.borrow();
                 Arrays.fill(scratch, (byte) 0xFF);
                 int[] queue = TL_FF_QUEUE.get();
-                int[] vols = TL_VOL_COUNTS.get();
                 Arrays.fill(vols, 0);
+                Arrays.fill(sumX, 0);
+                Arrays.fill(sumY, 0);
+                Arrays.fill(sumZ, 0);
 
                 int pc = 0;
 
@@ -2444,7 +2625,12 @@ public final class RadiationSystemNT {
                     int head = 0, tail = 0;
                     queue[tail++] = blockIndex;
                     writeNibble(scratch, blockIndex, currentPaletteIndex);
+
                     vols[currentPaletteIndex]++;
+                    sumX[currentPaletteIndex] += Library.getLocalX(blockIndex);
+                    sumY[currentPaletteIndex] += Library.getLocalY(blockIndex);
+                    sumZ[currentPaletteIndex] += Library.getLocalZ(blockIndex);
+
                     while (head != tail) {
                         int currentIndex = queue[head++];
                         for (int i = 0; i < 6; i++) {
@@ -2454,7 +2640,11 @@ public final class RadiationSystemNT {
                             if (resistant.get(neighborIndex)) continue;
                             writeNibble(scratch, neighborIndex, currentPaletteIndex);
                             queue[tail++] = neighborIndex;
+
                             vols[currentPaletteIndex]++;
+                            sumX[currentPaletteIndex] += Library.getLocalX(neighborIndex);
+                            sumY[currentPaletteIndex] += Library.getLocalY(neighborIndex);
+                            sumZ[currentPaletteIndex] += Library.getLocalZ(neighborIndex);
                         }
                     }
                 }
@@ -2462,16 +2652,7 @@ public final class RadiationSystemNT {
                 pocketCount = pc;
                 if (pocketCount > 0) {
                     pocketData = scratch;
-
-                    if (pocketCount > 1) {
-                        buffers = sectionBuffersPool.borrow();
-
-                        for (int i = 0; i < pocketCount; i++) {
-                            int v = Math.max(1, vols[i]);
-                            buffers.volume[i] = v;
-                            buffers.invVolume[i] = 1.0d / v;
-                        }
-                    } else {
+                    if (pocketCount == 1) {
                         singleVolume0 = Math.max(1, vols[0]);
                         singleFaceCounts = new short[6];
                         for (int face = 0; face < 6; face++) {
@@ -2494,7 +2675,6 @@ public final class RadiationSystemNT {
             if (pocketCount <= 0) {
                 if (old != null) retireIfNeeded(old);
                 owner.sec[sy] = null;
-                owner.setUniformBit(sy, false);
                 for (int p = 0; p <= NO_POCKET; p++) pendingPocketRadBits.remove(pocketKey(sectionKey, p));
                 return;
             }
@@ -2507,39 +2687,34 @@ public final class RadiationSystemNT {
                 if (pocketCount == 1 && pocketData == null) {
                     double totalMass = 0.0d;
                     if (oldCnt == 1) {
-                        int v = Math.max(1, old.volume0);
+                        int v = (old instanceof SingleMaskedSectionRef) ? Math.max(1, ((SingleMaskedSectionRef) old).volume) : SECTION_BLOCK_COUNT;
                         double d = old.getRad(0);
                         if (Double.isFinite(d) && !nearZero(d)) totalMass = d * (double) v;
-                    } else {
-                        SectionBuffers ob = old.buffers;
-                        if (ob != null) {
-                            for (int i = 0; i < oldCnt; i++) {
-                                int v = Math.max(1, ob.volume[i]);
-                                double d = old.getRad(i);
-                                if (Double.isFinite(d) && !nearZero(d)) totalMass += d * (double) v;
-                            }
+                    } else if (old instanceof MultiSectionRef mob) {
+                        for (int i = 0; i < oldCnt; i++) {
+                            int v = Math.max(1, mob.volume[i]);
+                            double d = mob.getRad(i);
+                            if (Double.isFinite(d) && !nearZero(d)) totalMass += d * (double) v;
                         }
                     }
                     if (Double.isFinite(totalMass) && !nearZero(totalMass)) newPocketMasses[0] = totalMass;
-                } else if (oldCnt == 1 && old.pocketData == null) {
+                } else if (oldCnt == 1 && (old instanceof UniformSectionRef)) {
                     double d = old.getRad(0);
                     if (Double.isFinite(d) && !nearZero(d)) {
                         double oldMass = d * (double) SECTION_BLOCK_COUNT;
-
                         long totalNewAir = 0L;
                         if (pocketCount == 1) {
                             totalNewAir = singleVolume0;
                         } else {
-                            for (int i = 0; i < pocketCount; i++) totalNewAir += Math.max(1, buffers.volume[i]);
+                            for (int i = 0; i < pocketCount; i++) totalNewAir += Math.max(1, vols[i]);
                         }
-
                         if (totalNewAir > 0L) {
                             double massPerBlock = oldMass / (double) totalNewAir;
                             if (pocketCount == 1) {
                                 newPocketMasses[0] = massPerBlock * (double) singleVolume0;
                             } else {
                                 for (int i = 0; i < pocketCount; i++) {
-                                    int v = Math.max(1, buffers.volume[i]);
+                                    int v = Math.max(1, vols[i]);
                                     newPocketMasses[i] = massPerBlock * (double) v;
                                 }
                             }
@@ -2550,36 +2725,30 @@ public final class RadiationSystemNT {
                     Arrays.fill(oldTotalMass, 0, oldCnt, 0.0d);
 
                     if (oldCnt == 1) {
-                        int v = Math.max(1, old.volume0);
+                        int v = (old instanceof SingleMaskedSectionRef) ? Math.max(1, ((SingleMaskedSectionRef) old).volume) : SECTION_BLOCK_COUNT;
                         double d = old.getRad(0);
                         if (!Double.isFinite(d) || nearZero(d)) d = 0.0d;
                         oldTotalMass[0] = d * (double) v;
-                    } else {
-                        SectionBuffers ob = old.buffers;
-                        if (ob != null) {
-                            for (int i = 0; i < oldCnt; i++) {
-                                int v = Math.max(1, ob.volume[i]);
-                                double d = old.getRad(i);
-                                if (!Double.isFinite(d) || nearZero(d)) d = 0.0d;
-                                oldTotalMass[i] = d * (double) v;
-                            }
+                    } else if (old instanceof MultiSectionRef mob) {
+                        for (int i = 0; i < oldCnt; i++) {
+                            int v = Math.max(1, mob.volume[i]);
+                            double d = mob.getRad(i);
+                            if (!Double.isFinite(d) || nearZero(d)) d = 0.0d;
+                            oldTotalMass[i] = d * (double) v;
                         }
                     }
 
                     final int[] overlaps = TL_OVERLAPS.get();
                     Arrays.fill(overlaps, 0, oldCnt * pocketCount, 0);
-
-                    final boolean oldUniform = (old.pocketData == null);
-
+                    final byte[] oldPocketData = old.getPocketData();
                     for (int i = 0; i < SECTION_BLOCK_COUNT; i++) {
-                        int nIdx;
-                        nIdx = readNibble(pocketData, i);
+                        int nIdx = readNibble(pocketData, i);
                         if (nIdx >= pocketCount) continue;
                         final int oIdx;
-                        if (oldUniform) {
+                        if (oldPocketData == null) {
                             oIdx = 0;
                         } else {
-                            oIdx = readNibble(old.pocketData, i);
+                            oIdx = readNibble(oldPocketData, i);
                             if (oIdx >= oldCnt) continue;
                         }
                         overlaps[oIdx * pocketCount + nIdx]++;
@@ -2588,16 +2757,14 @@ public final class RadiationSystemNT {
                     for (int o = 0; o < oldCnt; o++) {
                         final double mass = oldTotalMass[o];
                         if (!Double.isFinite(mass) || nearZero(mass)) continue;
-
                         int totalRemainingBlocks = 0;
                         final int row = o * pocketCount;
                         for (int n = 0; n < pocketCount; n++) totalRemainingBlocks += overlaps[row + n];
-
                         if (totalRemainingBlocks != 0) {
                             final double massPerBlock = mass / (double) totalRemainingBlocks;
                             for (int n = 0; n < pocketCount; n++) {
                                 int count = overlaps[row + n];
-                                if (count != 0) newPocketMasses[n] += (double) count * massPerBlock;
+                                if (count != 0) newPocketMasses[n] = Math.max(Math.min(newPocketMasses[n] + (double) count * massPerBlock, Double.MAX_VALUE), -Double.MAX_VALUE);
                             }
                         }
                         // else: pocket fully filled with blocks -> mass lost
@@ -2610,9 +2777,6 @@ public final class RadiationSystemNT {
 
             if (pocketCount == 1) {
                 final long pk = pocketKey(sectionKey, 0);
-                final SectionRef sc = pocketData == null
-                        ? SectionRef.singleUniform(owner, sy)
-                        : SectionRef.singleMasked(owner, sy, pocketData, singleVolume0, singleFaceCounts);
                 final int vol = pocketData == null ? SECTION_BLOCK_COUNT : singleVolume0;
                 double density = newPocketMasses[0] / (double) vol;
                 long bits = pendingPocketRadBits.remove(pk);
@@ -2623,19 +2787,50 @@ public final class RadiationSystemNT {
                 for (int i = 1; i <= NO_POCKET; i++) pendingPocketRadBits.remove(pocketKey(sectionKey, i));
                 if (!Double.isFinite(density) || nearZero(density)) density = 0.0d;
                 if (density < minB) density = minB;
-                sc.radBits0 = Double.doubleToRawLongBits(density);
-                owner.sec[sy] = sc;
-                owner.setUniformBit(sy, sc.isOpenUniformSingle());
 
+                SectionRef sc;
+                if (pocketData == null) {
+                    UniformSectionRef uni = new UniformSectionRef(owner, sy);
+                    uni.rad = density;
+                    sc = uni;
+                } else {
+                    double inv = 1.0d / singleVolume0;
+                    double cx = sumX[0] * inv;
+                    double cy = sumY[0] * inv;
+                    double cz = sumZ[0] * inv;
+
+                    SingleMaskedSectionRef masked = new SingleMaskedSectionRef(owner, sy, pocketData, singleVolume0, singleFaceCounts, cx, cy, cz);
+                    masked.rad = density;
+                    sc = masked;
+                }
+
+                owner.sec[sy] = sc;
                 if (!nearZero(density)) {
                     if (owner.setActiveBit(sy, 0)) enqueueActiveNext(pk);
                 }
                 return;
             }
 
+            double[] faceDists = new double[pocketCount * 6];
+            for (int i = 0; i < pocketCount; i++) {
+                int v = Math.max(1, vols[i]);
+                double inv = 1.0d / v;
+                double cx = sumX[i] * inv;
+                double cy = sumY[i] * inv;
+                double cz = sumZ[i] * inv;
+                int base = i * 6;
+                faceDists[base] = cy + 0.5d;
+                faceDists[base + 1] = 15.5d - cy;
+                faceDists[base + 2] = cz + 0.5d;
+                faceDists[base + 3] = 15.5d - cz;
+                faceDists[base + 4] = cx + 0.5d;
+                faceDists[base + 5] = 15.5d - cx;
+            }
+
+            MultiSectionRef sc = new MultiSectionRef(owner, sy, (byte) pocketCount, pocketData, faceDists);
             for (int i = 0; i < pocketCount; i++) {
                 final long pk = pocketKey(sectionKey, i);
-                final int vol = Math.max(1, buffers.volume[i]);
+                final int vol = Math.max(1, vols[i]);
                 double density = newPocketMasses[i] / (double) vol;
                 long bits = pendingPocketRadBits.remove(pk);
                 if (bits != 0L) {
@@ -2644,14 +2839,13 @@ public final class RadiationSystemNT {
                 }
                 if (!Double.isFinite(density) || nearZero(density)) density = 0.0d;
                 if (density < minB) density = minB;
-                buffers.radBits[i] = Double.doubleToRawLongBits(density);
-                buffers.deltas[i] = 0.0d;
+                sc.rad[i] = density;
+                sc.volume[i] = vol;
+                sc.invVolume[i] = 1.0d / vol;
             }
             for (int i = pocketCount; i <= NO_POCKET; i++) pendingPocketRadBits.remove(pocketKey(sectionKey, i));
 
-            SectionRef sc = SectionRef.multi(owner, sy, (byte) pocketCount, pocketData, buffers);
             owner.sec[sy] = sc;
-            owner.setUniformBit(sy, false);
 
             for (int i = 0; i < pocketCount; i++) {
                 double rad = sc.getRad(i);
@@ -2688,7 +2882,7 @@ public final class RadiationSystemNT {
             int by = ay + FACE_DY[faceA];
 
             if (isInvalidSectionY(by)) {
-                if (a != null && a.isMultiPocket()) a.clearFaceAllPockets(faceA);
+                if (a != null) a.clearFaceAllPockets(faceA);
                 return;
             }
 
@@ -2696,7 +2890,7 @@ public final class RadiationSystemNT {
             SectionRef b = getSection(bKey);
 
             if (a == null || a.pocketCount <= 0) {
-                if (b != null && b.isMultiPocket()) {
+                if (b != null) {
                     int faceB = faceA ^ 1;
                     b.clearFaceAllPockets(faceB);
                     markSentinelOnBoundary(bKey, b, faceB);
@@ -2705,30 +2899,32 @@ public final class RadiationSystemNT {
             }
 
             if (b == null || b.pocketCount <= 0) {
-                if (a.isMultiPocket()) {
-                    a.clearFaceAllPockets(faceA);
-                    markSentinelOnBoundary(aKey, a, faceA);
+                a.clearFaceAllPockets(faceA);
+                markSentinelOnBoundary(aKey, a, faceA);
+                return;
+            }
+            boolean aMulti = a.isMultiPocket();
+            boolean bMulti = b.isMultiPocket();
+            if (aMulti) {
+                if (bMulti) {
+                    a.linkFaceTo(b, faceA);
+                } else {
+                    a.linkFaceToSingle(b, faceA);
                 }
-                return;
-            }
-
-            if (a.isMultiPocket() && b.isMultiPocket()) {
-                a.linkFaceTo(b, faceA);
-                return;
-            }
-
-            if (a.isMultiPocket() && b.isSinglePocket()) {
-                a.linkFaceToSingle(b, faceA);
-                return;
-            }
-
-            if (a.isSinglePocket() && b.isMultiPocket()) {
-                b.linkFaceToSingle(a, faceA ^ 1);
+            } else {
+                if (bMulti) {
+                    b.linkFaceToSingle(a, faceA ^ 1);
+                } else {
+                    if (a instanceof SingleMaskedSectionRef sa) {
+                        sa.linkFaceToSingle(b, faceA);
+                    } else if (b instanceof SingleMaskedSectionRef sb) {
+                        sb.linkFaceToSingle(a, faceA ^ 1);
+                    } // implicitly 256
+                }
             }
         }
 
         void markSentinelOnBoundary(long sck, SectionRef sc, int faceOrdinal) {
-            if (!sc.isMultiPocket()) return;
             if (sc.markSentinelPlane16x16(faceOrdinal)) markDirty(sck);
         }
 
@@ -2741,7 +2937,7 @@ public final class RadiationSystemNT {
                 if (isInvalidSectionY(ny)) continue;
                 long nKey = Library.sectionToLong(rx + FACE_DX[i], ny, rz + FACE_DZ[i]);
                 SectionRef n = getSection(nKey);
-                if (n != null && n.isMultiPocket()) {
+                if (n != null) {
                     int nFace = i ^ 1;
                     n.clearFaceAllPockets(nFace);
                     markSentinelOnBoundary(nKey, n, nFace);
@@ -2848,7 +3044,7 @@ public final class RadiationSystemNT {
             chunk[o] = v;
         }
 
-        void drainAndRecycle(TLPool<SectionBuffers> bp, TLPool<byte[]> pp) {
+        void drainAndRecycle(TLPool<byte[]> pp) {
             int sz = size;
             if (sz > capacity) sz = capacity;
             for (int i = 0; i < sz; i++) {
@@ -2860,8 +3056,8 @@ public final class RadiationSystemNT {
 
                 SectionRef sc = chunk[o];
                 if (sc != null) {
-                    if (sc.buffers != null) bp.recycle(sc.buffers);
-                    if (sc.pocketData != null) pp.recycle(sc.pocketData);
+                    byte[] data = sc.getPocketData();
+                    if (data != null) pp.recycle(data);
                     chunk[o] = null;
                 }
             }

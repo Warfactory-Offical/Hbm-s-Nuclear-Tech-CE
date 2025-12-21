@@ -17,7 +17,7 @@ abstract class MpUnboundedXaddArrayLongQueue<R extends MpUnboundedXaddChunkLong<
     final int chunkMask;
     final int chunkShift;
     private final int maxPooledChunks;
-    private final SpscArrayQueue<R> freeChunksPool;
+    final SpscArrayQueue<R> freeChunksPool;
 
     MpUnboundedXaddArrayLongQueue(int chunkSize, int maxPooledChunks) {
         if (maxPooledChunks < 0) {
@@ -59,7 +59,7 @@ abstract class MpUnboundedXaddArrayLongQueue<R extends MpUnboundedXaddChunkLong<
 
         while (true) {
             if (currentChunk == null) {
-                currentChunk = (R) U.getReferenceVolatile(this, P_CHUNK_OFFSET);
+                currentChunk = producerChunk;
             }
             final long currentChunkIndex = currentChunk.index;
             assert currentChunkIndex != MpUnboundedXaddChunkLong.NOT_USED;
@@ -77,7 +77,7 @@ abstract class MpUnboundedXaddArrayLongQueue<R extends MpUnboundedXaddChunkLong<
         }
 
         for (long i = 0; i < jumpBackward; i++) {
-            currentChunk = (R) U.getReferenceVolatile(currentChunk, MpUnboundedXaddChunkLong.PREV_OFFSET);
+            currentChunk = currentChunk.prev;
             assert currentChunk != null;
         }
         assert currentChunk.index == requiredChunkIndex;
@@ -157,11 +157,8 @@ abstract class MpUnboundedXaddChunkLong<R> {
     final boolean pooled;
     final long[] buffer;
 
-    @SuppressWarnings("unused")
     volatile R prev;
-    @SuppressWarnings("unused")
     volatile long index;
-    @SuppressWarnings("unused")
     volatile R next;
 
     MpUnboundedXaddChunkLong(long index, R prev, int size, boolean pooled) {
@@ -215,7 +212,6 @@ abstract class MpUnboundedXaddArrayLongQueueProducerChunk<R extends MpUnboundedX
     static final long P_CHUNK_OFFSET = fieldOffset(MpUnboundedXaddArrayLongQueueProducerChunk.class, "producerChunk");
     static final long P_CHUNK_INDEX_OFFSET = fieldOffset(MpUnboundedXaddArrayLongQueueProducerChunk.class, "producerChunkIndex");
 
-    @SuppressWarnings("unused")
     volatile R producerChunk;
     volatile long producerChunkIndex;
 }
@@ -231,7 +227,6 @@ abstract class MpUnboundedXaddArrayLongQueueConsumerFields<R extends MpUnbounded
     static final long C_INDEX_OFFSET = fieldOffset(MpUnboundedXaddArrayLongQueueConsumerFields.class, "consumerIndex");
     static final long C_CHUNK_OFFSET = fieldOffset(MpUnboundedXaddArrayLongQueueConsumerFields.class, "consumerChunk");
     volatile long consumerIndex;
-    @SuppressWarnings("unused")
     volatile R consumerChunk;
 }
 
