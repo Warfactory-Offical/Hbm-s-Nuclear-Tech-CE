@@ -80,7 +80,7 @@ public final class RadiationSystemNT {
     private static final int[] FACE_PLANE = new int[6 * 256];
     // 9950x, 32 view distance, extremely irradiated worst-case overworld takes < 3.2ms per step;
     // for normal world without strong artificial radiation source, it takes < 1ms and scales w.r.t. active pocket count.
-    private static final boolean PROFILING = true;
+    private static final boolean PROFILING = false;
 
     private static final int SECTION_BLOCK_COUNT = 4096;
 
@@ -98,6 +98,9 @@ public final class RadiationSystemNT {
     private static final ThreadLocal<long[]> TL_SUM_X = ThreadLocal.withInitial(() -> new long[NO_POCKET]);
     private static final ThreadLocal<long[]> TL_SUM_Y = ThreadLocal.withInitial(() -> new long[NO_POCKET]);
     private static final ThreadLocal<long[]> TL_SUM_Z = ThreadLocal.withInitial(() -> new long[NO_POCKET]);
+
+    private static final double RAD_EPSILON = 1.0e-5D;
+    private static final double RAD_MAX = Double.MAX_VALUE / 2.0D;
 
     private static final int ACTIVE_STRIPES = computeActiveStripes(2);
     private static final int ACTIVE_STRIPE_MASK = ACTIVE_STRIPES - 1;
@@ -138,6 +141,14 @@ public final class RadiationSystemNT {
         int desired = p * scale;
         if (desired > 128) desired = 128;
         return HashCommon.nextPowerOfTwo(desired);
+    }
+
+    private static int getTaskThreshold(int size, int minGrain) {
+        int p = RAD_POOL.getParallelism();
+        if (p <= 1) return size;
+        int target = p * 4;
+        int th = size / target;
+        return Math.max(minGrain, th);
     }
 
     public static void onLoadComplete() {
@@ -225,8 +236,7 @@ public final class RadiationSystemNT {
 
     @ServerThread
     public static void incrementRad(WorldServer world, BlockPos pos, double amount, double max) {
-        if (isOutsideWorldY(pos.getY())) return;
-        if (amount <= 0 || max <= 0) return;
+        if (Math.abs(amount) < RAD_EPSILON || isOutsideWorldY(pos.getY())) return;
         long posLong = pos.toLong();
         long sck = Library.blockPosToSectionLong(posLong);
         long ck = Library.sectionToChunkLong(sck);
@@ -240,25 +250,27 @@ public final class RadiationSystemNT {
         if (sc.pocketCount <= 0) return;
         int pocketIndex = sc.getPocketIndex(posLong);
         if (pocketIndex < 0) return;
+
         double current = sc.getRad(pocketIndex);
         if (current >= max) return;
-        double next = Math.min(current + amount, max);
-        if (!Double.isFinite(next) || next < 0) {
-            MainRegistry.logger.warn(
-                    "[RadiationSystemNT] Cancelled invalid incrementRad at {} in dimension {} ({}) due to overflow. Old: {}, Adding: {}, Result: {}.",
-                    pos, world.provider.getDimension(), world.provider.getDimensionType().getName(), current, amount, next);
-            return;
+        double next = current + amount;
+        if (next > max) next = max;
+        next = data.sanitize(next);
+        if (next != current) {
+            sc.setRad(pocketIndex, next);
+            if (next != 0.0D) {
+                if (sc.owner.setActiveBit(sc.sy, pocketIndex)) {
+                    data.enqueueActiveNext(pocketKey(sck, pocketIndex));
+                }
+            }
+            chunk.markDirty();
         }
-        sc.setRad(pocketIndex, next);
-        if (sc.owner.setActiveBit(sc.sy, pocketIndex)) {
-            data.enqueueActiveNext(pocketKey(sck, pocketIndex));
-        }
-        chunk.markDirty();
     }
 
     @ServerThread
     public static void decrementRad(WorldServer world, BlockPos pos, double amount) {
-        if (isOutsideWorldY(pos.getY()) || amount <= 0) return;
+        if (Math.abs(amount) < RAD_EPSILON || isOutsideWorldY(pos.getY())) return;
+
         long posLong = pos.toLong();
         long sck = Library.blockPosToSectionLong(posLong);
         long ck = Library.sectionToChunkLong(sck);
@@ -271,11 +283,15 @@ public final class RadiationSystemNT {
         SectionRef sc = ensureSectionForWrite(data, owner, sck);
         int pocketIndex = sc.getPocketIndex(posLong);
         if (pocketIndex < 0) return;
+
         double current = sc.getRad(pocketIndex);
-        double next = Math.max(data.minBound, current - amount);
+        if (current == 0.0D && data.minBound == 0.0D) return;
+
+        double next = data.sanitize(current - amount);
+
         sc.setRad(pocketIndex, next);
         long pk = pocketKey(sck, pocketIndex);
-        if (!nearZero(next)) {
+        if (next != 0.0D) {
             if (sc.owner.setActiveBit(sc.sy, pocketIndex)) {
                 data.enqueueActiveNext(pk);
             }
@@ -286,7 +302,7 @@ public final class RadiationSystemNT {
     }
 
     /**
-     * @param amount clamped to [-backGround, Double.MAX_VALUE / 1536]
+     * @param amount clamped to [-backGround, Double.MAX_VALUE / 2]
      */
     @ServerThread
     public static void setRadForCoord(WorldServer world, BlockPos pos, double amount) {
@@ -304,10 +320,12 @@ public final class RadiationSystemNT {
         SectionRef sc = ensureSectionForWrite(data, owner, sck);
         int pocketIndex = sc.getPocketIndex(posLong);
         if (pocketIndex < 0) return;
-        double v = Math.max(data.minBound, Math.min(amount, Double.MAX_VALUE / 1536));
+
+        double v = data.sanitize(amount);
+
         sc.setRad(pocketIndex, v);
         long pk = pocketKey(sck, pocketIndex);
-        if (!nearZero(v)) {
+        if (v != 0.0D) {
             if (sc.owner.setActiveBit(sc.sy, pocketIndex)) {
                 data.enqueueActiveNext(pk);
             }
@@ -503,10 +521,13 @@ public final class RadiationSystemNT {
         wokenBag.clear();
         runExactExchangeSweeps(data, wokenBag);
         final int wokenCount = wokenBag.size();
+        final int activeThreshold = getTaskThreshold(activeCount, 64);
         if (wokenCount > 0) {
-            ForkJoinTask.invokeAll(new FinalizeTask(data, buf, refs, 0, activeCount), new FinalizeBagTask(data, wokenBag));
+            final int bagThreshold = getTaskThreshold(wokenCount, 64);
+            ForkJoinTask.invokeAll(new FinalizeTask(data, buf, refs, 0, activeCount, activeThreshold),
+                    new FinalizeBagTask(data, wokenBag, 0, wokenCount, bagThreshold));
         } else {
-            new FinalizeTask(data, buf, refs, 0, activeCount).invoke();
+            new FinalizeTask(data, buf, refs, 0, activeCount, activeThreshold).invoke();
         }
         Arrays.fill(data.activeRefs, 0, activeCount, null);
         logProfilingMessage(data, time);
@@ -528,19 +549,29 @@ public final class RadiationSystemNT {
     private static void runExactExchangeSweeps(WorldRadiationData data, LongBag wakeBag) {
         ChunkRef[][] buckets = data.parityBuckets;
         int[] counts = data.parityCounts;
-        ForkJoinTask.invokeAll(new DiffuseXTask(data, buckets[0], 0, counts[0], wakeBag), new DiffuseXTask(data, buckets[2], 0, counts[2], wakeBag));
-        ForkJoinTask.invokeAll(new DiffuseXTask(data, buckets[1], 0, counts[1], wakeBag), new DiffuseXTask(data, buckets[3], 0, counts[3], wakeBag));
-        ForkJoinTask.invokeAll(new DiffuseZTask(data, buckets[0], 0, counts[0], wakeBag), new DiffuseZTask(data, buckets[1], 0, counts[1], wakeBag));
-        ForkJoinTask.invokeAll(new DiffuseZTask(data, buckets[2], 0, counts[2], wakeBag), new DiffuseZTask(data, buckets[3], 0, counts[3], wakeBag));
+        int th0 = getTaskThreshold(counts[0], 64);
+        int th1 = getTaskThreshold(counts[1], 64);
+        int th2 = getTaskThreshold(counts[2], 64);
+        int th3 = getTaskThreshold(counts[3], 64);
+        ForkJoinTask.invokeAll(new DiffuseXTask(data, buckets[0], 0, counts[0], wakeBag, th0),
+                new DiffuseXTask(data, buckets[2], 0, counts[2], wakeBag, th2));
+        ForkJoinTask.invokeAll(new DiffuseXTask(data, buckets[1], 0, counts[1], wakeBag, th1),
+                new DiffuseXTask(data, buckets[3], 0, counts[3], wakeBag, th3));
+        ForkJoinTask.invokeAll(new DiffuseZTask(data, buckets[0], 0, counts[0], wakeBag, th0),
+                new DiffuseZTask(data, buckets[1], 0, counts[1], wakeBag, th1));
+        ForkJoinTask.invokeAll(new DiffuseZTask(data, buckets[2], 0, counts[2], wakeBag, th2),
+                new DiffuseZTask(data, buckets[3], 0, counts[3], wakeBag, th3));
         ForkJoinTask<?>[] yTasks0 = new ForkJoinTask[4];
-        for (int b = 0; b < 4; b++) {
-            yTasks0[b] = new DiffuseYTask(data, buckets[b], 0, counts[b], 0, wakeBag);
-        }
+        yTasks0[0] = new DiffuseYTask(data, buckets[0], 0, counts[0], 0, wakeBag, th0);
+        yTasks0[1] = new DiffuseYTask(data, buckets[1], 0, counts[1], 0, wakeBag, th1);
+        yTasks0[2] = new DiffuseYTask(data, buckets[2], 0, counts[2], 0, wakeBag, th2);
+        yTasks0[3] = new DiffuseYTask(data, buckets[3], 0, counts[3], 0, wakeBag, th3);
         ForkJoinTask.invokeAll(yTasks0);
         ForkJoinTask<?>[] yTasks1 = new ForkJoinTask[4];
-        for (int b = 0; b < 4; b++) {
-            yTasks1[b] = new DiffuseYTask(data, buckets[b], 0, counts[b], 1, wakeBag);
-        }
+        yTasks1[0] = new DiffuseYTask(data, buckets[0], 0, counts[0], 1, wakeBag, th0);
+        yTasks1[1] = new DiffuseYTask(data, buckets[1], 0, counts[1], 1, wakeBag, th1);
+        yTasks1[2] = new DiffuseYTask(data, buckets[2], 0, counts[2], 1, wakeBag, th2);
+        yTasks1[3] = new DiffuseYTask(data, buckets[3], 0, counts[3], 1, wakeBag, th3);
         ForkJoinTask.invokeAll(yTasks1);
     }
 
@@ -554,23 +585,16 @@ public final class RadiationSystemNT {
         double invVa = a.getInvVolume(ai);
         double invVb = b.getInvVolume(bi);
         double denomInv = invVa + invVb;
-        if (!(denomInv > 0.0d)) return false;
 
-        double distA = a.getFaceDist(ai, faceA);
-        double distB = b.getFaceDist(bi, faceB);
-        double distSum = distA + distB;
-        if (!(distSum > 0.0d)) return false;
+        double distSum = a.getFaceDist(ai, faceA) + b.getFaceDist(bi, faceB);
+        if (distSum <= 0.0D) return false;
 
-        double g = ((double) area) / distSum;
-        double rate = g * denomInv * diffusionDt;
-        if (!(rate > 0.0d)) return false;
+        double rate = (area / distSum) * denomInv * diffusionDt;
 
         double e = Math.exp(-rate);
         double rStar = (ra * invVb + rb * invVa) / denomInv;
         double na = rStar + (ra - rStar) * e;
         double nb = rStar + (rb - rStar) * e;
-
-        if (na == ra && nb == rb) return false;
 
         a.setRad(ai, na);
         b.setRad(bi, nb);
@@ -672,16 +696,15 @@ public final class RadiationSystemNT {
 
     private static void wakeIfNeeded(long sectionKey, SectionRef sc, int pi, LongBag wakeBag) {
         if (wakeBag == null) return;
-        double v = sc.getRad(pi);
-        if (!Double.isFinite(v) || nearZero(v)) return;
-        if (sc.owner.setActiveBit(sc.sy, pi)) {
-            wakeBag.tryAdd(pocketKey(sectionKey, pi));
+        if (sc.getRad(pi) != 0.0D) {
+            if (sc.owner.setActiveBit(sc.sy, pi)) {
+                wakeBag.tryAdd(pocketKey(sectionKey, pi));
+            }
         }
     }
 
     private static void finalizeRange(WorldRadiationData data, long[] keys, @Nullable SectionRef[] refs, int start, int end) {
         Long2ObjectMap<Chunk> loaded = data.world.getChunkProvider().loadedChunks;
-        double minB = data.minBound;
         ThreadLocalRandom rnd = ThreadLocalRandom.current();
 
         for (int i = start; i < end; i++) {
@@ -709,12 +732,7 @@ public final class RadiationSystemNT {
                 data.spawnFog(sc, pi, rnd);
             }
 
-            double next = prev * retentionDt;
-            if (!Double.isFinite(next)) {
-                next = 0.0d;
-            }
-            if (next < minB) next = minB;
-            if (nearZero(next)) next = 0.0d;
+            double next = data.sanitize(prev * retentionDt);
 
             if (next != prev) {
                 sc.setRad(pi, next);
@@ -726,10 +744,10 @@ public final class RadiationSystemNT {
                 }
             }
 
-            if (next == 0.0d) {
-                sc.owner.clearActiveBit(sc.sy, pi);
-            } else {
+            if (next != 0.0D) {
                 data.enqueueActiveNext(pk);
+            } else {
+                sc.owner.clearActiveBit(sc.sy, pi);
             }
         }
     }
@@ -770,7 +788,8 @@ public final class RadiationSystemNT {
             bi++;
         }
 
-        new RebuildChunkBatchTask(data, chunkKeys, masks, 0, batchCount).invoke();
+        int threshold = getTaskThreshold(batchCount, 8);
+        new RebuildChunkBatchTask(data, chunkKeys, masks, 0, batchCount, threshold).invoke();
         data.relinkKeys(toRebuild.elements(), size);
     }
 
@@ -883,7 +902,8 @@ public final class RadiationSystemNT {
 
             for (int p = 0; p < len; p++) {
                 double v = sc.getRad(p);
-                if (!Double.isFinite(v) || nearZero(v)) continue;
+                v = data.sanitize(v);
+                if (v == 0.0D) continue;
                 buf = ensureCapacity(buf, 1 + 8);
                 buf.put((byte) ((sy << 4) | (p & 15)));
                 buf.putDouble(v);
@@ -931,10 +951,6 @@ public final class RadiationSystemNT {
 
     private static boolean isInvalidSectionY(int sy) {
         return (sy & ~15) != 0;
-    }
-
-    private static boolean nearZero(double v) {
-        return Math.abs(v) < 1.0e-5d;
     }
 
     private static long pocketKey(long sectionKey, int pocketIndex) {
@@ -1425,23 +1441,25 @@ public final class RadiationSystemNT {
 
     private static abstract class PocketTask extends RecursiveAction {
         final int lo, hi;
+        final int threshold;
 
-        PocketTask(int lo, int hi) {
+        PocketTask(int lo, int hi, int threshold) {
             this.lo = lo;
             this.hi = hi;
+            this.threshold = threshold;
         }
 
         protected abstract void work(int start, int end);
 
-        protected abstract PocketTask createSubtask(int start, int end);
+        protected abstract PocketTask createSubtask(int start, int end, int threshold);
 
         @Override
         protected void compute() {
-            if (hi - lo <= /*heuristic*/ 128) {
+            if (hi - lo <= threshold) {
                 work(lo, hi);
             } else {
                 int mid = (lo + hi) >>> 1;
-                invokeAll(createSubtask(lo, mid), createSubtask(mid, hi));
+                invokeAll(createSubtask(lo, mid, threshold), createSubtask(mid, hi, threshold));
             }
         }
     }
@@ -1449,16 +1467,18 @@ public final class RadiationSystemNT {
     private static abstract class BagTask extends RecursiveAction {
         final LongBag bag;
         final int lo, hi;
+        final int threshold;
 
-        BagTask(LongBag bag, int lo, int hi) {
+        BagTask(LongBag bag, int lo, int hi, int threshold) {
             this.bag = bag;
             this.lo = lo;
             this.hi = hi;
+            this.threshold = threshold;
         }
 
         protected abstract void work(long[] chunk, int start, int end);
 
-        protected abstract BagTask createSubtask(int start, int end);
+        protected abstract BagTask createSubtask(int start, int end, int threshold);
 
         @Override
         protected void compute() {
@@ -1477,38 +1497,40 @@ public final class RadiationSystemNT {
                 return;
             }
 
-            if (n <= LongBag.CHUNK_SIZE) {
+            if (n <= threshold) {
                 int split = (c1 + 1) << LongBag.CHUNK_SHIFT;
-                invokeAll(createSubtask(lo, split), createSubtask(split, hi));
+                invokeAll(createSubtask(lo, split, threshold), createSubtask(split, hi, threshold));
                 return;
             }
 
             int mid = (lo + hi) >>> 1;
             int aligned = (mid >>> LongBag.CHUNK_SHIFT) << LongBag.CHUNK_SHIFT;
             if (aligned > lo && aligned < hi) mid = aligned;
-            invokeAll(createSubtask(lo, mid), createSubtask(mid, hi));
+            invokeAll(createSubtask(lo, mid, threshold), createSubtask(mid, hi, threshold));
         }
     }
 
     private static abstract class ChunkTask extends RecursiveAction {
         final int lo, hi;
+        final int threshold;
 
-        ChunkTask(int lo, int hi) {
+        ChunkTask(int lo, int hi, int threshold) {
             this.lo = lo;
             this.hi = hi;
+            this.threshold = threshold;
         }
 
         protected abstract void work(int start, int end);
 
-        protected abstract ChunkTask createSubtask(int start, int end);
+        protected abstract ChunkTask createSubtask(int start, int end, int threshold);
 
         @Override
         protected void compute() {
-            if (hi - lo <= /*heuristic*/ 8) {
+            if (hi - lo <= threshold) {
                 work(lo, hi);
             } else {
                 int mid = (lo + hi) >>> 1;
-                invokeAll(createSubtask(lo, mid), createSubtask(mid, hi));
+                invokeAll(createSubtask(lo, mid, threshold), createSubtask(mid, hi, threshold));
             }
         }
     }
@@ -1518,8 +1540,8 @@ public final class RadiationSystemNT {
         final long[] chunkKeys;
         final int[] masks;
 
-        RebuildChunkBatchTask(WorldRadiationData data, long[] chunkKeys, int[] masks, int lo, int hi) {
-            super(lo, hi);
+        RebuildChunkBatchTask(WorldRadiationData data, long[] chunkKeys, int[] masks, int lo, int hi, int threshold) {
+            super(lo, hi, threshold);
             this.data = data;
             this.chunkKeys = chunkKeys;
             this.masks = masks;
@@ -1558,8 +1580,8 @@ public final class RadiationSystemNT {
         }
 
         @Override
-        protected ChunkTask createSubtask(int start, int end) {
-            return new RebuildChunkBatchTask(data, chunkKeys, masks, start, end);
+        protected ChunkTask createSubtask(int start, int end, int threshold) {
+            return new RebuildChunkBatchTask(data, chunkKeys, masks, start, end, threshold);
         }
     }
 
@@ -1678,8 +1700,8 @@ public final class RadiationSystemNT {
         final long[] keys;
         final SectionRef[] refs;
 
-        FinalizeTask(WorldRadiationData data, long[] keys, SectionRef[] refs, int lo, int hi) {
-            super(lo, hi);
+        FinalizeTask(WorldRadiationData data, long[] keys, SectionRef[] refs, int lo, int hi, int threshold) {
+            super(lo, hi, threshold);
             this.data = data;
             this.keys = keys;
             this.refs = refs;
@@ -1691,21 +1713,16 @@ public final class RadiationSystemNT {
         }
 
         @Override
-        protected PocketTask createSubtask(int start, int end) {
-            return new FinalizeTask(data, keys, refs, start, end);
+        protected PocketTask createSubtask(int start, int end, int threshold) {
+            return new FinalizeTask(data, keys, refs, start, end, threshold);
         }
     }
 
     private static final class FinalizeBagTask extends BagTask {
         final WorldRadiationData data;
 
-        FinalizeBagTask(WorldRadiationData data, LongBag bag) {
-            super(bag, 0, bag.size());
-            this.data = data;
-        }
-
-        private FinalizeBagTask(WorldRadiationData data, LongBag bag, int lo, int hi) {
-            super(bag, lo, hi);
+        FinalizeBagTask(WorldRadiationData data, LongBag bag, int lo, int hi, int threshold) {
+            super(bag, lo, hi, threshold);
             this.data = data;
         }
 
@@ -1715,8 +1732,8 @@ public final class RadiationSystemNT {
         }
 
         @Override
-        protected BagTask createSubtask(int start, int end) {
-            return new FinalizeBagTask(data, bag, start, end);
+        protected BagTask createSubtask(int start, int end, int threshold) {
+            return new FinalizeBagTask(data, bag, start, end, threshold);
         }
     }
 
@@ -1725,22 +1742,24 @@ public final class RadiationSystemNT {
         final ChunkRef[] chunks;
         final int lo, hi;
         final LongBag wakeBag;
+        final int threshold;
 
-        DiffuseXTask(WorldRadiationData data, ChunkRef[] chunks, int lo, int hi, LongBag wakeBag) {
+        DiffuseXTask(WorldRadiationData data, ChunkRef[] chunks, int lo, int hi, LongBag wakeBag, int threshold) {
             this.data = data;
             this.chunks = chunks;
             this.lo = lo;
             this.hi = hi;
             this.wakeBag = wakeBag;
+            this.threshold = threshold;
         }
 
         @Override
         protected void compute() {
-            if (hi - lo <= 64) {
+            if (hi - lo <= threshold) {
                 work(lo, hi);
             } else {
                 int mid = (lo + hi) >>> 1;
-                invokeAll(new DiffuseXTask(data, chunks, lo, mid, wakeBag), new DiffuseXTask(data, chunks, mid, hi, wakeBag));
+                invokeAll(new DiffuseXTask(data, chunks, lo, mid, wakeBag, threshold), new DiffuseXTask(data, chunks, mid, hi, wakeBag, threshold));
             }
         }
 
@@ -1766,22 +1785,24 @@ public final class RadiationSystemNT {
         final ChunkRef[] chunks;
         final int lo, hi;
         final LongBag wakeBag;
+        final int threshold;
 
-        DiffuseZTask(WorldRadiationData data, ChunkRef[] chunks, int lo, int hi, LongBag wakeBag) {
+        DiffuseZTask(WorldRadiationData data, ChunkRef[] chunks, int lo, int hi, LongBag wakeBag, int threshold) {
             this.data = data;
             this.chunks = chunks;
             this.lo = lo;
             this.hi = hi;
             this.wakeBag = wakeBag;
+            this.threshold = threshold;
         }
 
         @Override
         protected void compute() {
-            if (hi - lo <= 64) {
+            if (hi - lo <= threshold) {
                 work(lo, hi);
             } else {
                 int mid = (lo + hi) >>> 1;
-                invokeAll(new DiffuseZTask(data, chunks, lo, mid, wakeBag), new DiffuseZTask(data, chunks, mid, hi, wakeBag));
+                invokeAll(new DiffuseZTask(data, chunks, lo, mid, wakeBag, threshold), new DiffuseZTask(data, chunks, mid, hi, wakeBag, threshold));
             }
         }
 
@@ -1808,23 +1829,26 @@ public final class RadiationSystemNT {
         final int lo, hi;
         final int parity;
         final LongBag wakeBag;
+        final int threshold;
 
-        DiffuseYTask(WorldRadiationData data, ChunkRef[] chunks, int lo, int hi, int parity, LongBag wakeBag) {
+        DiffuseYTask(WorldRadiationData data, ChunkRef[] chunks, int lo, int hi, int parity, LongBag wakeBag, int threshold) {
             this.data = data;
             this.chunks = chunks;
             this.lo = lo;
             this.hi = hi;
             this.parity = parity;
             this.wakeBag = wakeBag;
+            this.threshold = threshold;
         }
 
         @Override
         protected void compute() {
-            if (hi - lo <= 64) {
+            if (hi - lo <= threshold) {
                 work(lo, hi);
             } else {
                 int mid = (lo + hi) >>> 1;
-                invokeAll(new DiffuseYTask(data, chunks, lo, mid, parity, wakeBag), new DiffuseYTask(data, chunks, mid, hi, parity, wakeBag));
+                invokeAll(new DiffuseYTask(data, chunks, lo, mid, parity, wakeBag, threshold),
+                        new DiffuseYTask(data, chunks, mid, hi, parity, wakeBag, threshold));
             }
         }
 
@@ -1868,23 +1892,26 @@ public final class RadiationSystemNT {
         final long[] keys;
         final int lo, hi;
         final int canonicalFace;
+        final int threshold;
 
-        LinkDirTask(WorldRadiationData data, long[] keys, int lo, int hi, int canonicalFace) {
+        LinkDirTask(WorldRadiationData data, long[] keys, int lo, int hi, int canonicalFace, int threshold) {
             this.data = data;
             this.keys = keys;
             this.lo = lo;
             this.hi = hi;
             this.canonicalFace = canonicalFace;
+            this.threshold = threshold;
         }
 
         @Override
         protected void compute() {
             int n = hi - lo;
-            if (n <= 64) {
+            if (n <= threshold) {
                 for (int i = lo; i < hi; i++) data.linkCanonical(keys[i], canonicalFace);
             } else {
                 int mid = (lo + hi) >>> 1;
-                invokeAll(new LinkDirTask(data, keys, lo, mid, canonicalFace), new LinkDirTask(data, keys, mid, hi, canonicalFace));
+                invokeAll(new LinkDirTask(data, keys, lo, mid, canonicalFace, threshold),
+                        new LinkDirTask(data, keys, mid, hi, canonicalFace, threshold));
             }
         }
     }
@@ -2253,7 +2280,9 @@ public final class RadiationSystemNT {
         WorldRadiationData(WorldServer world) {
             this.world = world;
             Object v = CompatibilityConfig.dimensionRad.get(world.provider.getDimension());
-            minBound = -((v instanceof Number n) ? n.doubleValue() : 0D);
+            double mb = -((v instanceof Number n) ? n.doubleValue() : 0D);
+            if (!Double.isFinite(mb) || mb > 0.0D) mb = 0.0D;
+            minBound = mb;
             dirtyChunkMasksScratch.defaultReturnValue(0);
             int p = Math.max(256, 65536 / ACTIVE_STRIPES);
             MpscUnboundedXaddArrayLongQueue[] cur = new MpscUnboundedXaddArrayLongQueue[ACTIVE_STRIPES];
@@ -2293,6 +2322,27 @@ public final class RadiationSystemNT {
             long x = pocketKey ^ (pocketKey >>> 33);
             x ^= (x >>> 17);
             return ((int) x) & ACTIVE_STRIPE_MASK;
+        }
+
+        double sanitize(double v) {
+            if (Double.isNaN(v) || Math.abs(v) < RAD_EPSILON && v > minBound) return 0.0D;
+            return Math.max(Math.min(v, RAD_MAX), minBound);
+        }
+
+        static double mulClamp(double a, int b) {
+            if (a == 0.0D) return 0.0D;
+            if (!Double.isFinite(a)) return Math.copySign(Double.MAX_VALUE, a);
+            double lim = Double.MAX_VALUE / (double) b;
+            double aa = Math.abs(a);
+            if (aa >= lim) return Math.copySign(Double.MAX_VALUE, a);
+            return a * (double) b;
+        }
+
+        static double addClamp(double a, double b) {
+            double s = a + b;
+            if (s == Double.POSITIVE_INFINITY) return Double.MAX_VALUE;
+            if (s == Double.NEGATIVE_INFINITY) return -Double.MAX_VALUE;
+            return Double.isNaN(s) ? 0.0D : s;
         }
 
         void clearAllSections() {
@@ -2576,9 +2626,8 @@ public final class RadiationSystemNT {
                 int sy = (yz >>> 4) & 15;
                 int pi = yz & 15;
 
-                double rad = b.getDouble();
-                if (!Double.isFinite(rad) || nearZero(rad)) continue;
-
+                double rad = sanitize(b.getDouble());
+                if (rad == 0.0D) continue;
                 long sck = Library.sectionToLong(cx, sy, cz);
                 long pk = pocketKey(sck, pi);
                 pendingPocketRadBits.put(pk, Double.doubleToRawLongBits(rad));
@@ -2689,19 +2738,19 @@ public final class RadiationSystemNT {
                     if (oldCnt == 1) {
                         int v = (old instanceof SingleMaskedSectionRef) ? Math.max(1, ((SingleMaskedSectionRef) old).volume) : SECTION_BLOCK_COUNT;
                         double d = old.getRad(0);
-                        if (Double.isFinite(d) && !nearZero(d)) totalMass = d * (double) v;
+                        if (Math.abs(d) > RAD_EPSILON) totalMass = mulClamp(d, v);
                     } else if (old instanceof MultiSectionRef mob) {
                         for (int i = 0; i < oldCnt; i++) {
                             int v = Math.max(1, mob.volume[i]);
                             double d = mob.getRad(i);
-                            if (Double.isFinite(d) && !nearZero(d)) totalMass += d * (double) v;
+                            if (Math.abs(d) > RAD_EPSILON) totalMass = addClamp(totalMass, mulClamp(d, v));
                         }
                     }
-                    if (Double.isFinite(totalMass) && !nearZero(totalMass)) newPocketMasses[0] = totalMass;
+                    newPocketMasses[0] = totalMass;
                 } else if (oldCnt == 1 && (old instanceof UniformSectionRef)) {
                     double d = old.getRad(0);
-                    if (Double.isFinite(d) && !nearZero(d)) {
-                        double oldMass = d * (double) SECTION_BLOCK_COUNT;
+                    if (Math.abs(d) > RAD_EPSILON) {
+                        double oldMass = mulClamp(d, SECTION_BLOCK_COUNT);
                         long totalNewAir = 0L;
                         if (pocketCount == 1) {
                             totalNewAir = singleVolume0;
@@ -2711,11 +2760,11 @@ public final class RadiationSystemNT {
                         if (totalNewAir > 0L) {
                             double massPerBlock = oldMass / (double) totalNewAir;
                             if (pocketCount == 1) {
-                                newPocketMasses[0] = massPerBlock * (double) singleVolume0;
+                                newPocketMasses[0] = mulClamp(massPerBlock, singleVolume0);
                             } else {
                                 for (int i = 0; i < pocketCount; i++) {
                                     int v = Math.max(1, vols[i]);
-                                    newPocketMasses[i] = massPerBlock * (double) v;
+                                    newPocketMasses[i] = mulClamp(massPerBlock, v);
                                 }
                             }
                         }
@@ -2727,14 +2776,12 @@ public final class RadiationSystemNT {
                     if (oldCnt == 1) {
                         int v = (old instanceof SingleMaskedSectionRef) ? Math.max(1, ((SingleMaskedSectionRef) old).volume) : SECTION_BLOCK_COUNT;
                         double d = old.getRad(0);
-                        if (!Double.isFinite(d) || nearZero(d)) d = 0.0d;
-                        oldTotalMass[0] = d * (double) v;
+                        if (Math.abs(d) > RAD_EPSILON) oldTotalMass[0] = mulClamp(d, v);
                     } else if (old instanceof MultiSectionRef mob) {
                         for (int i = 0; i < oldCnt; i++) {
                             int v = Math.max(1, mob.volume[i]);
                             double d = mob.getRad(i);
-                            if (!Double.isFinite(d) || nearZero(d)) d = 0.0d;
-                            oldTotalMass[i] = d * (double) v;
+                            if (Math.abs(d) > RAD_EPSILON) oldTotalMass[i] = mulClamp(d, v);
                         }
                     }
 
@@ -2756,7 +2803,7 @@ public final class RadiationSystemNT {
 
                     for (int o = 0; o < oldCnt; o++) {
                         final double mass = oldTotalMass[o];
-                        if (!Double.isFinite(mass) || nearZero(mass)) continue;
+                        if (Math.abs(mass) <= RAD_EPSILON) continue;
                         int totalRemainingBlocks = 0;
                         final int row = o * pocketCount;
                         for (int n = 0; n < pocketCount; n++) totalRemainingBlocks += overlaps[row + n];
@@ -2764,29 +2811,36 @@ public final class RadiationSystemNT {
                             final double massPerBlock = mass / (double) totalRemainingBlocks;
                             for (int n = 0; n < pocketCount; n++) {
                                 int count = overlaps[row + n];
-                                if (count != 0) newPocketMasses[n] = Math.max(Math.min(newPocketMasses[n] + (double) count * massPerBlock, Double.MAX_VALUE), -Double.MAX_VALUE);
+                                if (count != 0) newPocketMasses[n] = addClamp(newPocketMasses[n], mulClamp(massPerBlock, count));
                             }
                         }
-                        // else: pocket fully filled with blocks -> mass lost
                     }
                 }
             }
 
+            for(int i = 0; i < pocketCount; i++) {
+                double m = newPocketMasses[i];
+                if (Math.abs(m) < RAD_EPSILON) newPocketMasses[i] = 0.0D;
+                else if (m > Double.MAX_VALUE) newPocketMasses[i] = Double.MAX_VALUE;
+                else if (m < -Double.MAX_VALUE) newPocketMasses[i] = -Double.MAX_VALUE;
+                else if (Double.isNaN(m)) newPocketMasses[i] = 0.0D;
+            }
+
             if (old != null) retireIfNeeded(old);
-            final double minB = this.minBound;
 
             if (pocketCount == 1) {
                 final long pk = pocketKey(sectionKey, 0);
                 final int vol = pocketData == null ? SECTION_BLOCK_COUNT : singleVolume0;
                 double density = newPocketMasses[0] / (double) vol;
+
                 long bits = pendingPocketRadBits.remove(pk);
                 if (bits != 0L) {
                     double v = Double.longBitsToDouble(bits);
-                    density = (Double.isFinite(v) && !nearZero(v)) ? v : 0.0d;
+                    if (Double.isFinite(v) && Math.abs(v) > RAD_EPSILON) density = v;
                 }
                 for (int i = 1; i <= NO_POCKET; i++) pendingPocketRadBits.remove(pocketKey(sectionKey, i));
-                if (!Double.isFinite(density) || nearZero(density)) density = 0.0d;
-                if (density < minB) density = minB;
+
+                density = sanitize(density);
 
                 SectionRef sc;
                 if (pocketData == null) {
@@ -2805,7 +2859,7 @@ public final class RadiationSystemNT {
                 }
 
                 owner.sec[sy] = sc;
-                if (!nearZero(density)) {
+                if (density != 0.0D) {
                     if (owner.setActiveBit(sy, 0)) enqueueActiveNext(pk);
                 }
                 return;
@@ -2832,13 +2886,13 @@ public final class RadiationSystemNT {
                 final long pk = pocketKey(sectionKey, i);
                 final int vol = Math.max(1, vols[i]);
                 double density = newPocketMasses[i] / (double) vol;
+
                 long bits = pendingPocketRadBits.remove(pk);
                 if (bits != 0L) {
                     double v = Double.longBitsToDouble(bits);
-                    density = (Double.isFinite(v) && !nearZero(v)) ? v : 0.0d;
+                    if (Double.isFinite(v) && Math.abs(v) > RAD_EPSILON) density = v;
                 }
-                if (!Double.isFinite(density) || nearZero(density)) density = 0.0d;
-                if (density < minB) density = minB;
+                density = sanitize(density);
                 sc.rad[i] = density;
                 sc.volume[i] = vol;
                 sc.invVolume[i] = 1.0d / vol;
@@ -2849,7 +2903,7 @@ public final class RadiationSystemNT {
 
             for (int i = 0; i < pocketCount; i++) {
                 double rad = sc.getRad(i);
-                if (!nearZero(rad)) {
+                if (rad != 0.0D) {
                     if (owner.setActiveBit(sy, i)) enqueueActiveNext(pocketKey(sectionKey, i));
                 }
             }
@@ -2859,11 +2913,14 @@ public final class RadiationSystemNT {
             if (hi <= 0) return;
             ensureLinkScratch(hi << 1);
             int eN = buildLinkKeys(keys, hi, EnumFacing.WEST.ordinal(), linkScratch);
-            if (eN > 0) new LinkDirTask(this, linkScratch, 0, eN, EnumFacing.EAST.ordinal()).invoke();
+            int threshold = getTaskThreshold(eN, 32);
+            if (eN > 0) new LinkDirTask(this, linkScratch, 0, eN, EnumFacing.EAST.ordinal(), threshold).invoke();
             int uN = buildLinkKeys(keys, hi, EnumFacing.DOWN.ordinal(), linkScratch);
-            if (uN > 0) new LinkDirTask(this, linkScratch, 0, uN, EnumFacing.UP.ordinal()).invoke();
+            threshold = getTaskThreshold(uN, 32);
+            if (uN > 0) new LinkDirTask(this, linkScratch, 0, uN, EnumFacing.UP.ordinal(), threshold).invoke();
             int sN = buildLinkKeys(keys, hi, EnumFacing.NORTH.ordinal(), linkScratch);
-            if (sN > 0) new LinkDirTask(this, linkScratch, 0, sN, EnumFacing.SOUTH.ordinal()).invoke();
+            threshold = getTaskThreshold(sN, 32);
+            if (sN > 0) new LinkDirTask(this, linkScratch, 0, sN, EnumFacing.SOUTH.ordinal(), threshold).invoke();
         }
 
         private void ensureLinkScratch(int need) {
