@@ -8,7 +8,7 @@ import com.hbm.core.HbmCorePlugin;
  * @author mlbv
  */
 public final class UnsafeHolder {
-    public static final UnsafeWrapper U = UnsafeWrapper.getUnsafe();
+    public static final AbstractUnsafe U = AbstractUnsafe.getUnsafe();
 
     private UnsafeHolder() {
     }

@@ -1,24 +1,18 @@
 package com.hbm.lib.internal;
 
-import sun.misc.Unsafe;
-
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.nio.ByteOrder;
 
 /**
  * Switch between different versions of Unsafe automatically depending on the Java version.
- * Mirrors the API of jdk.internal.misc.Unsafe while supporting JDK 8 and onwards.
+ * Mirrors the API of jdk.internal.misc.Unsafe while supporting JDK 9 and onwards.
  *
  * @author mlbv
  */
-@SuppressWarnings({"MethodMayBeStatic", "unchecked"})
-public final class UnsafeWrapper {
-    private static final UnsafeWrapper theUnsafe = new UnsafeWrapper();
-    private static final boolean BIG_ENDIAN = ByteOrder.nativeOrder() == ByteOrder.BIG_ENDIAN;
+@SuppressWarnings("unchecked")
+final class InternalUnsafeWrapper extends AbstractUnsafe {
 
     private static final MethodHandle OBJECT_FIELD_OFFSET, STATIC_FIELD_BASE, STATIC_FIELD_OFFSET, ALLOCATE_INSTANCE, ARRAY_BASE_OFFSET, ARRAY_INDEX_SCALE, ADDRESS_SIZE, PAGE_SIZE;
 
@@ -61,13 +55,8 @@ public final class UnsafeWrapper {
     private static final MethodHandle ALLOCATE_MEMORY, FREE_MEMORY, REALLOCATE_MEMORY, SET_MEMORY, COPY_MEMORY, GET_LONG_ADDRESS, PUT_LONG_ADDRESS, ALLOCATE_UNINITIALIZED_ARRAY;
     private static final MethodHandle LOAD_FENCE, STORE_FENCE, FULL_FENCE, PARK, UNPARK;
 
-    static final MethodHandles.Lookup IMPL_LOOKUP;
-    static final int MAJOR_VERSION;
-    static final boolean JPMS;
-
-    static {
+    static {// @formatter:off
         try {
-            MAJOR_VERSION = Runtime.version().feature(); // JVMDG downgrade
             // JDK-8159995 did the internal Unsafe compare* renaming in JDK 10 and JDK-8181292 backported them to JDK 9.
             // I doubt if anyone would use java 9 to run the mod though...
             // Specifically:
@@ -75,32 +64,10 @@ public final class UnsafeWrapper {
             // - compareAndSwap* to compareAndSet*
             // - weakCompareAndSwap*Volatile -> weakCompareAndSwap
             // - weakCompareAndSwap* -> weakCompareAndSwap*Plain
-            JPMS = MAJOR_VERSION >= 9;
             boolean JDK_8207146 = MAJOR_VERSION >= 12; // Rename xxxObject -> xxxReference
             boolean JDK_8344168 = MAJOR_VERSION >= 25; // arrayBaseOffset returns long
-
-            MethodHandles.Lookup lookup;
-            Unsafe sunUnsafe = null;
-            // removed TrustedLookupAccessor to make curseforge happy
-//            if (MAJOR_VERSION >= 23) {
-//                lookup = TrustedLookupAccessor.lookup();
-//            } else {
-                sunUnsafe = getSunUnsafe();
-                lookup = getImplLookupUnsafe(sunUnsafe);
-//            }
-            IMPL_LOOKUP = lookup;
-
-            Class<?> unsafeClass;
-            Object unsafeInstance;
-
-            if (JPMS) {
-                unsafeClass = Class.forName("jdk.internal.misc.Unsafe");
-                unsafeInstance = lookup.findStatic(unsafeClass, "getUnsafe", MethodType.methodType(unsafeClass)).invoke();
-            } else {
-                unsafeClass = Unsafe.class;
-                unsafeInstance = sunUnsafe;
-            }
-
+            Class<?> unsafeClass = Class.forName("jdk.internal.misc.Unsafe");
+            Object unsafeInstance = IMPL_LOOKUP.findStatic(unsafeClass, "getUnsafe", MethodType.methodType(unsafeClass)).invoke();
             UnsafeBinder binder = new UnsafeBinder(IMPL_LOOKUP, unsafeClass, unsafeInstance);
 
             // --- 1. Offsets & Basics ---
@@ -108,11 +75,7 @@ public final class UnsafeWrapper {
             STATIC_FIELD_BASE = binder.bind("staticFieldBase", Object.class, Field.class);
             STATIC_FIELD_OFFSET = binder.bind("staticFieldOffset", long.class, Field.class);
             ALLOCATE_INSTANCE = binder.bind("allocateInstance", Object.class, Class.class);
-            if (JPMS) {
-                ALLOCATE_UNINITIALIZED_ARRAY = binder.bind("allocateUninitializedArray", Object.class, Class.class, int.class);
-            } else {
-                ALLOCATE_UNINITIALIZED_ARRAY = IMPL_LOOKUP.findStatic(Array.class, "newInstance", MethodType.methodType(Object.class, Class.class, int.class));
-            }
+            ALLOCATE_UNINITIALIZED_ARRAY = binder.bind("allocateUninitializedArray", Object.class, Class.class, int.class);
 
             MethodHandle arrayBase = binder.bind("arrayBaseOffset", JDK_8344168 ? long.class : int.class, Class.class);
             if (!JDK_8344168) {
@@ -138,58 +101,39 @@ public final class UnsafeWrapper {
             COMPARE_AND_SET_REFERENCE = binder.bind(casRefName, boolean.class, Object.class, long.class, Object.class, Object.class);
             GET_AND_SET_REFERENCE = binder.bind(getAndSetRefName, Object.class, Object.class, long.class, Object.class);
 
-            if (JPMS) {
-                String getRefAcqName = JDK_8207146 ? "getReferenceAcquire" : "getObjectAcquire";
-                String putRefRelName = JDK_8207146 ? "putReferenceRelease" : "putObjectRelease";
-                String getRefOpaName = JDK_8207146 ? "getReferenceOpaque" : "getObjectOpaque";
-                String putRefOpaName = JDK_8207146 ? "putReferenceOpaque" : "putObjectOpaque";
+            String getRefAcqName = JDK_8207146 ? "getReferenceAcquire" : "getObjectAcquire";
+            String putRefRelName = JDK_8207146 ? "putReferenceRelease" : "putObjectRelease";
+            String getRefOpaName = JDK_8207146 ? "getReferenceOpaque" : "getObjectOpaque";
+            String putRefOpaName = JDK_8207146 ? "putReferenceOpaque" : "putObjectOpaque";
 
-                String weakRefBaseName = JDK_8207146 ? "weakCompareAndSetReference" : "weakCompareAndSetObject";
-                String weakRefAcqName = weakRefBaseName + "Acquire";
-                String weakRefRelName = weakRefBaseName + "Release";
-                String weakRefPlainName = weakRefBaseName + "Plain";
+            String weakRefBaseName = JDK_8207146 ? "weakCompareAndSetReference" : "weakCompareAndSetObject";
+            String weakRefAcqName = weakRefBaseName + "Acquire";
+            String weakRefRelName = weakRefBaseName + "Release";
+            String weakRefPlainName = weakRefBaseName + "Plain";
 
-                String caeRefBaseName = JDK_8207146 ? "compareAndExchangeReference" : "compareAndExchangeObject";
-                String caeRefAcqName = caeRefBaseName + "Acquire";
-                String caeRefRelName = caeRefBaseName + "Release";
+            String caeRefBaseName = JDK_8207146 ? "compareAndExchangeReference" : "compareAndExchangeObject";
+            String caeRefAcqName = caeRefBaseName + "Acquire";
+            String caeRefRelName = caeRefBaseName + "Release";
 
-                String getAndSetRefAcqName = JDK_8207146 ? "getAndSetReferenceAcquire" : "getAndSetObjectAcquire";
-                String getAndSetRefRelName = JDK_8207146 ? "getAndSetReferenceRelease" : "getAndSetObjectRelease";
+            String getAndSetRefAcqName = JDK_8207146 ? "getAndSetReferenceAcquire" : "getAndSetObjectAcquire";
+            String getAndSetRefRelName = JDK_8207146 ? "getAndSetReferenceRelease" : "getAndSetObjectRelease";
 
-                GET_REFERENCE_ACQUIRE = binder.bind(getRefAcqName, Object.class, Object.class, long.class);
-                PUT_REFERENCE_RELEASE = binder.bind(putRefRelName, void.class, Object.class, long.class, Object.class);
-                GET_REFERENCE_OPAQUE = binder.bind(getRefOpaName, Object.class, Object.class, long.class);
-                PUT_REFERENCE_OPAQUE = binder.bind(putRefOpaName, void.class, Object.class, long.class, Object.class);
+            GET_REFERENCE_ACQUIRE = binder.bind(getRefAcqName, Object.class, Object.class, long.class);
+            PUT_REFERENCE_RELEASE = binder.bind(putRefRelName, void.class, Object.class, long.class, Object.class);
+            GET_REFERENCE_OPAQUE = binder.bind(getRefOpaName, Object.class, Object.class, long.class);
+            PUT_REFERENCE_OPAQUE = binder.bind(putRefOpaName, void.class, Object.class, long.class, Object.class);
 
-                WEAK_COMPARE_AND_SET_REFERENCE = binder.bind(weakRefBaseName, boolean.class, Object.class, long.class, Object.class, Object.class);
-                WEAK_COMPARE_AND_SET_REFERENCE_ACQUIRE = binder.bind(weakRefAcqName, boolean.class, Object.class, long.class, Object.class, Object.class);
-                WEAK_COMPARE_AND_SET_REFERENCE_RELEASE = binder.bind(weakRefRelName, boolean.class, Object.class, long.class, Object.class, Object.class);
-                WEAK_COMPARE_AND_SET_REFERENCE_PLAIN = binder.bind(weakRefPlainName, boolean.class, Object.class, long.class, Object.class, Object.class);
+            WEAK_COMPARE_AND_SET_REFERENCE = binder.bind(weakRefBaseName, boolean.class, Object.class, long.class, Object.class, Object.class);
+            WEAK_COMPARE_AND_SET_REFERENCE_ACQUIRE = binder.bind(weakRefAcqName, boolean.class, Object.class, long.class, Object.class, Object.class);
+            WEAK_COMPARE_AND_SET_REFERENCE_RELEASE = binder.bind(weakRefRelName, boolean.class, Object.class, long.class, Object.class, Object.class);
+            WEAK_COMPARE_AND_SET_REFERENCE_PLAIN = binder.bind(weakRefPlainName, boolean.class, Object.class, long.class, Object.class, Object.class);
 
-                COMPARE_AND_EXCHANGE_REFERENCE = binder.bind(caeRefBaseName, Object.class, Object.class, long.class, Object.class, Object.class);
-                COMPARE_AND_EXCHANGE_REFERENCE_ACQUIRE = binder.bind(caeRefAcqName, Object.class, Object.class, long.class, Object.class, Object.class);
-                COMPARE_AND_EXCHANGE_REFERENCE_RELEASE = binder.bind(caeRefRelName, Object.class, Object.class, long.class, Object.class, Object.class);
+            COMPARE_AND_EXCHANGE_REFERENCE = binder.bind(caeRefBaseName, Object.class, Object.class, long.class, Object.class, Object.class);
+            COMPARE_AND_EXCHANGE_REFERENCE_ACQUIRE = binder.bind(caeRefAcqName, Object.class, Object.class, long.class, Object.class, Object.class);
+            COMPARE_AND_EXCHANGE_REFERENCE_RELEASE = binder.bind(caeRefRelName, Object.class, Object.class, long.class, Object.class, Object.class);
 
-                GET_AND_SET_REFERENCE_ACQUIRE = binder.bind(getAndSetRefAcqName, Object.class, Object.class, long.class, Object.class);
-                GET_AND_SET_REFERENCE_RELEASE = binder.bind(getAndSetRefRelName, Object.class, Object.class, long.class, Object.class);
-            } else {
-                GET_REFERENCE_ACQUIRE = GET_REFERENCE_VOLATILE;
-                PUT_REFERENCE_RELEASE = binder.bind("putOrderedObject", void.class, Object.class, long.class, Object.class);
-                GET_REFERENCE_OPAQUE = GET_REFERENCE_VOLATILE;
-                PUT_REFERENCE_OPAQUE = PUT_REFERENCE_VOLATILE;
-
-                WEAK_COMPARE_AND_SET_REFERENCE = COMPARE_AND_SET_REFERENCE;
-                WEAK_COMPARE_AND_SET_REFERENCE_ACQUIRE = COMPARE_AND_SET_REFERENCE;
-                WEAK_COMPARE_AND_SET_REFERENCE_RELEASE = COMPARE_AND_SET_REFERENCE;
-                WEAK_COMPARE_AND_SET_REFERENCE_PLAIN = COMPARE_AND_SET_REFERENCE;
-
-                COMPARE_AND_EXCHANGE_REFERENCE = binder.bindCompat("compatCompareAndExchangeReference", Object.class, Object.class, long.class, Object.class, Object.class);
-                COMPARE_AND_EXCHANGE_REFERENCE_ACQUIRE = COMPARE_AND_EXCHANGE_REFERENCE;
-                COMPARE_AND_EXCHANGE_REFERENCE_RELEASE = COMPARE_AND_EXCHANGE_REFERENCE;
-
-                GET_AND_SET_REFERENCE_ACQUIRE = GET_AND_SET_REFERENCE;
-                GET_AND_SET_REFERENCE_RELEASE = GET_AND_SET_REFERENCE;
-            }
+            GET_AND_SET_REFERENCE_ACQUIRE = binder.bind(getAndSetRefAcqName, Object.class, Object.class, long.class, Object.class);
+            GET_AND_SET_REFERENCE_RELEASE = binder.bind(getAndSetRefRelName, Object.class, Object.class, long.class, Object.class);
 
             // --- 3. Int ---
             GET_INT = binder.bind("getInt", int.class, Object.class, long.class);
@@ -201,41 +145,22 @@ public final class UnsafeWrapper {
             GET_AND_ADD_INT = binder.bind("getAndAddInt", int.class, Object.class, long.class, int.class);
             GET_AND_SET_INT = binder.bind("getAndSetInt", int.class, Object.class, long.class, int.class);
 
-            if (JPMS) {
-                GET_INT_ACQUIRE = binder.bind("getIntAcquire", int.class, Object.class, long.class);
-                PUT_INT_RELEASE = binder.bind("putIntRelease", void.class, Object.class, long.class, int.class);
-                GET_INT_OPAQUE = binder.bind("getIntOpaque", int.class, Object.class, long.class);
-                PUT_INT_OPAQUE = binder.bind("putIntOpaque", void.class, Object.class, long.class, int.class);
+            GET_INT_ACQUIRE = binder.bind("getIntAcquire", int.class, Object.class, long.class);
+            PUT_INT_RELEASE = binder.bind("putIntRelease", void.class, Object.class, long.class, int.class);
+            GET_INT_OPAQUE = binder.bind("getIntOpaque", int.class, Object.class, long.class);
+            PUT_INT_OPAQUE = binder.bind("putIntOpaque", void.class, Object.class, long.class, int.class);
 
-                WEAK_COMPARE_AND_SET_INT = binder.bind("weakCompareAndSetInt", boolean.class, Object.class, long.class, int.class, int.class);
-                WEAK_COMPARE_AND_SET_INT_ACQUIRE = binder.bind("weakCompareAndSetIntAcquire", boolean.class, Object.class, long.class, int.class, int.class);
-                WEAK_COMPARE_AND_SET_INT_RELEASE = binder.bind("weakCompareAndSetIntRelease", boolean.class, Object.class, long.class, int.class, int.class);
-                WEAK_COMPARE_AND_SET_INT_PLAIN = binder.bind("weakCompareAndSetIntPlain", boolean.class, Object.class, long.class, int.class, int.class);
+            WEAK_COMPARE_AND_SET_INT = binder.bind("weakCompareAndSetInt", boolean.class, Object.class, long.class, int.class, int.class);
+            WEAK_COMPARE_AND_SET_INT_ACQUIRE = binder.bind("weakCompareAndSetIntAcquire", boolean.class, Object.class, long.class, int.class, int.class);
+            WEAK_COMPARE_AND_SET_INT_RELEASE = binder.bind("weakCompareAndSetIntRelease", boolean.class, Object.class, long.class, int.class, int.class);
+            WEAK_COMPARE_AND_SET_INT_PLAIN = binder.bind("weakCompareAndSetIntPlain", boolean.class, Object.class, long.class, int.class, int.class);
 
-                COMPARE_AND_EXCHANGE_INT = binder.bind("compareAndExchangeInt", int.class, Object.class, long.class, int.class, int.class);
-                COMPARE_AND_EXCHANGE_INT_ACQUIRE = binder.bind("compareAndExchangeIntAcquire", int.class, Object.class, long.class, int.class, int.class);
-                COMPARE_AND_EXCHANGE_INT_RELEASE = binder.bind("compareAndExchangeIntRelease", int.class, Object.class, long.class, int.class, int.class);
+            COMPARE_AND_EXCHANGE_INT = binder.bind("compareAndExchangeInt", int.class, Object.class, long.class, int.class, int.class);
+            COMPARE_AND_EXCHANGE_INT_ACQUIRE = binder.bind("compareAndExchangeIntAcquire", int.class, Object.class, long.class, int.class, int.class);
+            COMPARE_AND_EXCHANGE_INT_RELEASE = binder.bind("compareAndExchangeIntRelease", int.class, Object.class, long.class, int.class, int.class);
 
-                GET_AND_SET_INT_ACQUIRE = binder.bind("getAndSetIntAcquire", int.class, Object.class, long.class, int.class);
-                GET_AND_SET_INT_RELEASE = binder.bind("getAndSetIntRelease", int.class, Object.class, long.class, int.class);
-            } else {
-                GET_INT_ACQUIRE = GET_INT_VOLATILE;
-                PUT_INT_RELEASE = binder.bind("putOrderedInt", void.class, Object.class, long.class, int.class);
-                GET_INT_OPAQUE = GET_INT_VOLATILE;
-                PUT_INT_OPAQUE = PUT_INT_VOLATILE;
-
-                WEAK_COMPARE_AND_SET_INT = COMPARE_AND_SET_INT;
-                WEAK_COMPARE_AND_SET_INT_ACQUIRE = COMPARE_AND_SET_INT;
-                WEAK_COMPARE_AND_SET_INT_RELEASE = COMPARE_AND_SET_INT;
-                WEAK_COMPARE_AND_SET_INT_PLAIN = COMPARE_AND_SET_INT;
-
-                COMPARE_AND_EXCHANGE_INT = binder.bindCompat("compatCompareAndExchangeInt", int.class, Object.class, long.class, int.class, int.class);
-                COMPARE_AND_EXCHANGE_INT_ACQUIRE = COMPARE_AND_EXCHANGE_INT;
-                COMPARE_AND_EXCHANGE_INT_RELEASE = COMPARE_AND_EXCHANGE_INT;
-
-                GET_AND_SET_INT_ACQUIRE = GET_AND_SET_INT;
-                GET_AND_SET_INT_RELEASE = GET_AND_SET_INT;
-            }
+            GET_AND_SET_INT_ACQUIRE = binder.bind("getAndSetIntAcquire", int.class, Object.class, long.class, int.class);
+            GET_AND_SET_INT_RELEASE = binder.bind("getAndSetIntRelease", int.class, Object.class, long.class, int.class);
 
             // --- 4. Long ---
             GET_LONG = binder.bind("getLong", long.class, Object.class, long.class);
@@ -247,41 +172,22 @@ public final class UnsafeWrapper {
             GET_AND_ADD_LONG = binder.bind("getAndAddLong", long.class, Object.class, long.class, long.class);
             GET_AND_SET_LONG = binder.bind("getAndSetLong", long.class, Object.class, long.class, long.class);
 
-            if (JPMS) {
-                GET_LONG_ACQUIRE = binder.bind("getLongAcquire", long.class, Object.class, long.class);
-                PUT_LONG_RELEASE = binder.bind("putLongRelease", void.class, Object.class, long.class, long.class);
-                GET_LONG_OPAQUE = binder.bind("getLongOpaque", long.class, Object.class, long.class);
-                PUT_LONG_OPAQUE = binder.bind("putLongOpaque", void.class, Object.class, long.class, long.class);
+            GET_LONG_ACQUIRE = binder.bind("getLongAcquire", long.class, Object.class, long.class);
+            PUT_LONG_RELEASE = binder.bind("putLongRelease", void.class, Object.class, long.class, long.class);
+            GET_LONG_OPAQUE = binder.bind("getLongOpaque", long.class, Object.class, long.class);
+            PUT_LONG_OPAQUE = binder.bind("putLongOpaque", void.class, Object.class, long.class, long.class);
 
-                WEAK_COMPARE_AND_SET_LONG = binder.bind("weakCompareAndSetLong", boolean.class, Object.class, long.class, long.class, long.class);
-                WEAK_COMPARE_AND_SET_LONG_ACQUIRE = binder.bind("weakCompareAndSetLongAcquire", boolean.class, Object.class, long.class, long.class, long.class);
-                WEAK_COMPARE_AND_SET_LONG_RELEASE = binder.bind("weakCompareAndSetLongRelease", boolean.class, Object.class, long.class, long.class, long.class);
-                WEAK_COMPARE_AND_SET_LONG_PLAIN = binder.bind("weakCompareAndSetLongPlain", boolean.class, Object.class, long.class, long.class, long.class);
+            WEAK_COMPARE_AND_SET_LONG = binder.bind("weakCompareAndSetLong", boolean.class, Object.class, long.class, long.class, long.class);
+            WEAK_COMPARE_AND_SET_LONG_ACQUIRE = binder.bind("weakCompareAndSetLongAcquire", boolean.class, Object.class, long.class, long.class, long.class);
+            WEAK_COMPARE_AND_SET_LONG_RELEASE = binder.bind("weakCompareAndSetLongRelease", boolean.class, Object.class, long.class, long.class, long.class);
+            WEAK_COMPARE_AND_SET_LONG_PLAIN = binder.bind("weakCompareAndSetLongPlain", boolean.class, Object.class, long.class, long.class, long.class);
 
-                COMPARE_AND_EXCHANGE_LONG = binder.bind("compareAndExchangeLong", long.class, Object.class, long.class, long.class, long.class);
-                COMPARE_AND_EXCHANGE_LONG_ACQUIRE = binder.bind("compareAndExchangeLongAcquire", long.class, Object.class, long.class, long.class, long.class);
-                COMPARE_AND_EXCHANGE_LONG_RELEASE = binder.bind("compareAndExchangeLongRelease", long.class, Object.class, long.class, long.class, long.class);
+            COMPARE_AND_EXCHANGE_LONG = binder.bind("compareAndExchangeLong", long.class, Object.class, long.class, long.class, long.class);
+            COMPARE_AND_EXCHANGE_LONG_ACQUIRE = binder.bind("compareAndExchangeLongAcquire", long.class, Object.class, long.class, long.class, long.class);
+            COMPARE_AND_EXCHANGE_LONG_RELEASE = binder.bind("compareAndExchangeLongRelease", long.class, Object.class, long.class, long.class, long.class);
 
-                GET_AND_SET_LONG_ACQUIRE = binder.bind("getAndSetLongAcquire", long.class, Object.class, long.class, long.class);
-                GET_AND_SET_LONG_RELEASE = binder.bind("getAndSetLongRelease", long.class, Object.class, long.class, long.class);
-            } else {
-                GET_LONG_ACQUIRE = GET_LONG_VOLATILE;
-                PUT_LONG_RELEASE = binder.bind("putOrderedLong", void.class, Object.class, long.class, long.class);
-                GET_LONG_OPAQUE = GET_LONG_VOLATILE;
-                PUT_LONG_OPAQUE = PUT_LONG_VOLATILE;
-
-                WEAK_COMPARE_AND_SET_LONG = COMPARE_AND_SET_LONG;
-                WEAK_COMPARE_AND_SET_LONG_ACQUIRE = COMPARE_AND_SET_LONG;
-                WEAK_COMPARE_AND_SET_LONG_RELEASE = COMPARE_AND_SET_LONG;
-                WEAK_COMPARE_AND_SET_LONG_PLAIN = COMPARE_AND_SET_LONG;
-
-                COMPARE_AND_EXCHANGE_LONG = binder.bindCompat("compatCompareAndExchangeLong", long.class, Object.class, long.class, long.class, long.class);
-                COMPARE_AND_EXCHANGE_LONG_ACQUIRE = COMPARE_AND_EXCHANGE_LONG;
-                COMPARE_AND_EXCHANGE_LONG_RELEASE = COMPARE_AND_EXCHANGE_LONG;
-
-                GET_AND_SET_LONG_ACQUIRE = GET_AND_SET_LONG;
-                GET_AND_SET_LONG_RELEASE = GET_AND_SET_LONG;
-            }
+            GET_AND_SET_LONG_ACQUIRE = binder.bind("getAndSetLongAcquire", long.class, Object.class, long.class, long.class);
+            GET_AND_SET_LONG_RELEASE = binder.bind("getAndSetLongRelease", long.class, Object.class, long.class, long.class);
 
             // --- 5. Boolean ---
             GET_BOOLEAN = binder.bind("getBoolean", boolean.class, Object.class, long.class);
@@ -289,37 +195,20 @@ public final class UnsafeWrapper {
             GET_BOOLEAN_VOLATILE = binder.bind("getBooleanVolatile", boolean.class, Object.class, long.class);
             PUT_BOOLEAN_VOLATILE = binder.bind("putBooleanVolatile", void.class, Object.class, long.class, boolean.class);
 
-            if (JPMS) {
-                GET_BOOLEAN_ACQUIRE = binder.bind("getBooleanAcquire", boolean.class, Object.class, long.class);
-                PUT_BOOLEAN_RELEASE = binder.bind("putBooleanRelease", void.class, Object.class, long.class, boolean.class);
-                GET_BOOLEAN_OPAQUE = binder.bind("getBooleanOpaque", boolean.class, Object.class, long.class);
-                PUT_BOOLEAN_OPAQUE = binder.bind("putBooleanOpaque", void.class, Object.class, long.class, boolean.class);
-                COMPARE_AND_SET_BOOLEAN = binder.bind("compareAndSetBoolean", boolean.class, Object.class, long.class, boolean.class, boolean.class);
+            GET_BOOLEAN_ACQUIRE = binder.bind("getBooleanAcquire", boolean.class, Object.class, long.class);
+            PUT_BOOLEAN_RELEASE = binder.bind("putBooleanRelease", void.class, Object.class, long.class, boolean.class);
+            GET_BOOLEAN_OPAQUE = binder.bind("getBooleanOpaque", boolean.class, Object.class, long.class);
+            PUT_BOOLEAN_OPAQUE = binder.bind("putBooleanOpaque", void.class, Object.class, long.class, boolean.class);
+            COMPARE_AND_SET_BOOLEAN = binder.bind("compareAndSetBoolean", boolean.class, Object.class, long.class, boolean.class, boolean.class);
 
-                WEAK_COMPARE_AND_SET_BOOLEAN = binder.bind("weakCompareAndSetBoolean", boolean.class, Object.class, long.class, boolean.class, boolean.class);
-                WEAK_COMPARE_AND_SET_BOOLEAN_ACQUIRE = binder.bind("weakCompareAndSetBooleanAcquire", boolean.class, Object.class, long.class, boolean.class, boolean.class);
-                WEAK_COMPARE_AND_SET_BOOLEAN_RELEASE = binder.bind("weakCompareAndSetBooleanRelease", boolean.class, Object.class, long.class, boolean.class, boolean.class);
-                WEAK_COMPARE_AND_SET_BOOLEAN_PLAIN = binder.bind("weakCompareAndSetBooleanPlain", boolean.class, Object.class, long.class, boolean.class, boolean.class);
+            WEAK_COMPARE_AND_SET_BOOLEAN = binder.bind("weakCompareAndSetBoolean", boolean.class, Object.class, long.class, boolean.class, boolean.class);
+            WEAK_COMPARE_AND_SET_BOOLEAN_ACQUIRE = binder.bind("weakCompareAndSetBooleanAcquire", boolean.class, Object.class, long.class, boolean.class, boolean.class);
+            WEAK_COMPARE_AND_SET_BOOLEAN_RELEASE = binder.bind("weakCompareAndSetBooleanRelease", boolean.class, Object.class, long.class, boolean.class, boolean.class);
+            WEAK_COMPARE_AND_SET_BOOLEAN_PLAIN = binder.bind("weakCompareAndSetBooleanPlain", boolean.class, Object.class, long.class, boolean.class, boolean.class);
 
-                COMPARE_AND_EXCHANGE_BOOLEAN = binder.bind("compareAndExchangeBoolean", boolean.class, Object.class, long.class, boolean.class, boolean.class);
-                COMPARE_AND_EXCHANGE_BOOLEAN_ACQUIRE = binder.bind("compareAndExchangeBooleanAcquire", boolean.class, Object.class, long.class, boolean.class, boolean.class);
-                COMPARE_AND_EXCHANGE_BOOLEAN_RELEASE = binder.bind("compareAndExchangeBooleanRelease", boolean.class, Object.class, long.class, boolean.class, boolean.class);
-            } else {
-                GET_BOOLEAN_ACQUIRE = GET_BOOLEAN_VOLATILE;
-                PUT_BOOLEAN_RELEASE = binder.bindCompat("compatPutBooleanRelease", void.class, Object.class, long.class, boolean.class);
-                GET_BOOLEAN_OPAQUE = GET_BOOLEAN_VOLATILE;
-                PUT_BOOLEAN_OPAQUE = PUT_BOOLEAN_VOLATILE;
-                COMPARE_AND_SET_BOOLEAN = binder.bindCompat("compatCompareAndSetBoolean", boolean.class, Object.class, long.class, boolean.class, boolean.class);
-
-                WEAK_COMPARE_AND_SET_BOOLEAN = COMPARE_AND_SET_BOOLEAN;
-                WEAK_COMPARE_AND_SET_BOOLEAN_ACQUIRE = COMPARE_AND_SET_BOOLEAN;
-                WEAK_COMPARE_AND_SET_BOOLEAN_RELEASE = COMPARE_AND_SET_BOOLEAN;
-                WEAK_COMPARE_AND_SET_BOOLEAN_PLAIN = COMPARE_AND_SET_BOOLEAN;
-
-                COMPARE_AND_EXCHANGE_BOOLEAN = binder.bindCompat("compatCompareAndExchangeBoolean", boolean.class, Object.class, long.class, boolean.class, boolean.class);
-                COMPARE_AND_EXCHANGE_BOOLEAN_ACQUIRE = COMPARE_AND_EXCHANGE_BOOLEAN;
-                COMPARE_AND_EXCHANGE_BOOLEAN_RELEASE = COMPARE_AND_EXCHANGE_BOOLEAN;
-            }
+            COMPARE_AND_EXCHANGE_BOOLEAN = binder.bind("compareAndExchangeBoolean", boolean.class, Object.class, long.class, boolean.class, boolean.class);
+            COMPARE_AND_EXCHANGE_BOOLEAN_ACQUIRE = binder.bind("compareAndExchangeBooleanAcquire", boolean.class, Object.class, long.class, boolean.class, boolean.class);
+            COMPARE_AND_EXCHANGE_BOOLEAN_RELEASE = binder.bind("compareAndExchangeBooleanRelease", boolean.class, Object.class, long.class, boolean.class, boolean.class);
 
             // --- 6. Byte ---
             GET_BYTE = binder.bind("getByte", byte.class, Object.class, long.class);
@@ -327,37 +216,20 @@ public final class UnsafeWrapper {
             GET_BYTE_VOLATILE = binder.bind("getByteVolatile", byte.class, Object.class, long.class);
             PUT_BYTE_VOLATILE = binder.bind("putByteVolatile", void.class, Object.class, long.class, byte.class);
 
-            if (JPMS) {
-                GET_BYTE_ACQUIRE = binder.bind("getByteAcquire", byte.class, Object.class, long.class);
-                PUT_BYTE_RELEASE = binder.bind("putByteRelease", void.class, Object.class, long.class, byte.class);
-                GET_BYTE_OPAQUE = binder.bind("getByteOpaque", byte.class, Object.class, long.class);
-                PUT_BYTE_OPAQUE = binder.bind("putByteOpaque", void.class, Object.class, long.class, byte.class);
-                COMPARE_AND_SET_BYTE = binder.bind("compareAndSetByte", boolean.class, Object.class, long.class, byte.class, byte.class);
+            GET_BYTE_ACQUIRE = binder.bind("getByteAcquire", byte.class, Object.class, long.class);
+            PUT_BYTE_RELEASE = binder.bind("putByteRelease", void.class, Object.class, long.class, byte.class);
+            GET_BYTE_OPAQUE = binder.bind("getByteOpaque", byte.class, Object.class, long.class);
+            PUT_BYTE_OPAQUE = binder.bind("putByteOpaque", void.class, Object.class, long.class, byte.class);
+            COMPARE_AND_SET_BYTE = binder.bind("compareAndSetByte", boolean.class, Object.class, long.class, byte.class, byte.class);
 
-                WEAK_COMPARE_AND_SET_BYTE = binder.bind("weakCompareAndSetByte", boolean.class, Object.class, long.class, byte.class, byte.class);
-                WEAK_COMPARE_AND_SET_BYTE_ACQUIRE = binder.bind("weakCompareAndSetByteAcquire", boolean.class, Object.class, long.class, byte.class, byte.class);
-                WEAK_COMPARE_AND_SET_BYTE_RELEASE = binder.bind("weakCompareAndSetByteRelease", boolean.class, Object.class, long.class, byte.class, byte.class);
-                WEAK_COMPARE_AND_SET_BYTE_PLAIN = binder.bind("weakCompareAndSetBytePlain", boolean.class, Object.class, long.class, byte.class, byte.class);
+            WEAK_COMPARE_AND_SET_BYTE = binder.bind("weakCompareAndSetByte", boolean.class, Object.class, long.class, byte.class, byte.class);
+            WEAK_COMPARE_AND_SET_BYTE_ACQUIRE = binder.bind("weakCompareAndSetByteAcquire", boolean.class, Object.class, long.class, byte.class, byte.class);
+            WEAK_COMPARE_AND_SET_BYTE_RELEASE = binder.bind("weakCompareAndSetByteRelease", boolean.class, Object.class, long.class, byte.class, byte.class);
+            WEAK_COMPARE_AND_SET_BYTE_PLAIN = binder.bind("weakCompareAndSetBytePlain", boolean.class, Object.class, long.class, byte.class, byte.class);
 
-                COMPARE_AND_EXCHANGE_BYTE = binder.bind("compareAndExchangeByte", byte.class, Object.class, long.class, byte.class, byte.class);
-                COMPARE_AND_EXCHANGE_BYTE_ACQUIRE = binder.bind("compareAndExchangeByteAcquire", byte.class, Object.class, long.class, byte.class, byte.class);
-                COMPARE_AND_EXCHANGE_BYTE_RELEASE = binder.bind("compareAndExchangeByteRelease", byte.class, Object.class, long.class, byte.class, byte.class);
-            } else {
-                GET_BYTE_ACQUIRE = GET_BYTE_VOLATILE;
-                PUT_BYTE_RELEASE = binder.bindCompat("compatPutByteRelease", void.class, Object.class, long.class, byte.class);
-                GET_BYTE_OPAQUE = GET_BYTE_VOLATILE;
-                PUT_BYTE_OPAQUE = PUT_BYTE_VOLATILE;
-                COMPARE_AND_SET_BYTE = binder.bindCompat("compatCompareAndSetByte", boolean.class, Object.class, long.class, byte.class, byte.class);
-
-                WEAK_COMPARE_AND_SET_BYTE = COMPARE_AND_SET_BYTE;
-                WEAK_COMPARE_AND_SET_BYTE_ACQUIRE = COMPARE_AND_SET_BYTE;
-                WEAK_COMPARE_AND_SET_BYTE_RELEASE = COMPARE_AND_SET_BYTE;
-                WEAK_COMPARE_AND_SET_BYTE_PLAIN = COMPARE_AND_SET_BYTE;
-
-                COMPARE_AND_EXCHANGE_BYTE = binder.bindCompat("compatCompareAndExchangeByte", byte.class, Object.class, long.class, byte.class, byte.class);
-                COMPARE_AND_EXCHANGE_BYTE_ACQUIRE = COMPARE_AND_EXCHANGE_BYTE;
-                COMPARE_AND_EXCHANGE_BYTE_RELEASE = COMPARE_AND_EXCHANGE_BYTE;
-            }
+            COMPARE_AND_EXCHANGE_BYTE = binder.bind("compareAndExchangeByte", byte.class, Object.class, long.class, byte.class, byte.class);
+            COMPARE_AND_EXCHANGE_BYTE_ACQUIRE = binder.bind("compareAndExchangeByteAcquire", byte.class, Object.class, long.class, byte.class, byte.class);
+            COMPARE_AND_EXCHANGE_BYTE_RELEASE = binder.bind("compareAndExchangeByteRelease", byte.class, Object.class, long.class, byte.class, byte.class);
 
             // --- 7. Short ---
             GET_SHORT = binder.bind("getShort", short.class, Object.class, long.class);
@@ -365,37 +237,20 @@ public final class UnsafeWrapper {
             GET_SHORT_VOLATILE = binder.bind("getShortVolatile", short.class, Object.class, long.class);
             PUT_SHORT_VOLATILE = binder.bind("putShortVolatile", void.class, Object.class, long.class, short.class);
 
-            if (JPMS) {
-                GET_SHORT_ACQUIRE = binder.bind("getShortAcquire", short.class, Object.class, long.class);
-                PUT_SHORT_RELEASE = binder.bind("putShortRelease", void.class, Object.class, long.class, short.class);
-                GET_SHORT_OPAQUE = binder.bind("getShortOpaque", short.class, Object.class, long.class);
-                PUT_SHORT_OPAQUE = binder.bind("putShortOpaque", void.class, Object.class, long.class, short.class);
-                COMPARE_AND_SET_SHORT = binder.bind("compareAndSetShort", boolean.class, Object.class, long.class, short.class, short.class);
+            GET_SHORT_ACQUIRE = binder.bind("getShortAcquire", short.class, Object.class, long.class);
+            PUT_SHORT_RELEASE = binder.bind("putShortRelease", void.class, Object.class, long.class, short.class);
+            GET_SHORT_OPAQUE = binder.bind("getShortOpaque", short.class, Object.class, long.class);
+            PUT_SHORT_OPAQUE = binder.bind("putShortOpaque", void.class, Object.class, long.class, short.class);
+            COMPARE_AND_SET_SHORT = binder.bind("compareAndSetShort", boolean.class, Object.class, long.class, short.class, short.class);
 
-                WEAK_COMPARE_AND_SET_SHORT = binder.bind("weakCompareAndSetShort", boolean.class, Object.class, long.class, short.class, short.class);
-                WEAK_COMPARE_AND_SET_SHORT_ACQUIRE = binder.bind("weakCompareAndSetShortAcquire", boolean.class, Object.class, long.class, short.class, short.class);
-                WEAK_COMPARE_AND_SET_SHORT_RELEASE = binder.bind("weakCompareAndSetShortRelease", boolean.class, Object.class, long.class, short.class, short.class);
-                WEAK_COMPARE_AND_SET_SHORT_PLAIN = binder.bind("weakCompareAndSetShortPlain", boolean.class, Object.class, long.class, short.class, short.class);
+            WEAK_COMPARE_AND_SET_SHORT = binder.bind("weakCompareAndSetShort", boolean.class, Object.class, long.class, short.class, short.class);
+            WEAK_COMPARE_AND_SET_SHORT_ACQUIRE = binder.bind("weakCompareAndSetShortAcquire", boolean.class, Object.class, long.class, short.class, short.class);
+            WEAK_COMPARE_AND_SET_SHORT_RELEASE = binder.bind("weakCompareAndSetShortRelease", boolean.class, Object.class, long.class, short.class, short.class);
+            WEAK_COMPARE_AND_SET_SHORT_PLAIN = binder.bind("weakCompareAndSetShortPlain", boolean.class, Object.class, long.class, short.class, short.class);
 
-                COMPARE_AND_EXCHANGE_SHORT = binder.bind("compareAndExchangeShort", short.class, Object.class, long.class, short.class, short.class);
-                COMPARE_AND_EXCHANGE_SHORT_ACQUIRE = binder.bind("compareAndExchangeShortAcquire", short.class, Object.class, long.class, short.class, short.class);
-                COMPARE_AND_EXCHANGE_SHORT_RELEASE = binder.bind("compareAndExchangeShortRelease", short.class, Object.class, long.class, short.class, short.class);
-            } else {
-                GET_SHORT_ACQUIRE = GET_SHORT_VOLATILE;
-                PUT_SHORT_RELEASE = binder.bindCompat("compatPutShortRelease", void.class, Object.class, long.class, short.class);
-                GET_SHORT_OPAQUE = GET_SHORT_VOLATILE;
-                PUT_SHORT_OPAQUE = PUT_SHORT_VOLATILE;
-                COMPARE_AND_SET_SHORT = binder.bindCompat("compatCompareAndSetShort", boolean.class, Object.class, long.class, short.class, short.class);
-
-                WEAK_COMPARE_AND_SET_SHORT = COMPARE_AND_SET_SHORT;
-                WEAK_COMPARE_AND_SET_SHORT_ACQUIRE = COMPARE_AND_SET_SHORT;
-                WEAK_COMPARE_AND_SET_SHORT_RELEASE = COMPARE_AND_SET_SHORT;
-                WEAK_COMPARE_AND_SET_SHORT_PLAIN = COMPARE_AND_SET_SHORT;
-
-                COMPARE_AND_EXCHANGE_SHORT = binder.bindCompat("compatCompareAndExchangeShort", short.class, Object.class, long.class, short.class, short.class);
-                COMPARE_AND_EXCHANGE_SHORT_ACQUIRE = COMPARE_AND_EXCHANGE_SHORT;
-                COMPARE_AND_EXCHANGE_SHORT_RELEASE = COMPARE_AND_EXCHANGE_SHORT;
-            }
+            COMPARE_AND_EXCHANGE_SHORT = binder.bind("compareAndExchangeShort", short.class, Object.class, long.class, short.class, short.class);
+            COMPARE_AND_EXCHANGE_SHORT_ACQUIRE = binder.bind("compareAndExchangeShortAcquire", short.class, Object.class, long.class, short.class, short.class);
+            COMPARE_AND_EXCHANGE_SHORT_RELEASE = binder.bind("compareAndExchangeShortRelease", short.class, Object.class, long.class, short.class, short.class);
 
             // --- 8. Char ---
             GET_CHAR = binder.bind("getChar", char.class, Object.class, long.class);
@@ -403,37 +258,20 @@ public final class UnsafeWrapper {
             GET_CHAR_VOLATILE = binder.bind("getCharVolatile", char.class, Object.class, long.class);
             PUT_CHAR_VOLATILE = binder.bind("putCharVolatile", void.class, Object.class, long.class, char.class);
 
-            if (JPMS) {
-                GET_CHAR_ACQUIRE = binder.bind("getCharAcquire", char.class, Object.class, long.class);
-                PUT_CHAR_RELEASE = binder.bind("putCharRelease", void.class, Object.class, long.class, char.class);
-                GET_CHAR_OPAQUE = binder.bind("getCharOpaque", char.class, Object.class, long.class);
-                PUT_CHAR_OPAQUE = binder.bind("putCharOpaque", void.class, Object.class, long.class, char.class);
-                COMPARE_AND_SET_CHAR = binder.bind("compareAndSetChar", boolean.class, Object.class, long.class, char.class, char.class);
+            GET_CHAR_ACQUIRE = binder.bind("getCharAcquire", char.class, Object.class, long.class);
+            PUT_CHAR_RELEASE = binder.bind("putCharRelease", void.class, Object.class, long.class, char.class);
+            GET_CHAR_OPAQUE = binder.bind("getCharOpaque", char.class, Object.class, long.class);
+            PUT_CHAR_OPAQUE = binder.bind("putCharOpaque", void.class, Object.class, long.class, char.class);
+            COMPARE_AND_SET_CHAR = binder.bind("compareAndSetChar", boolean.class, Object.class, long.class, char.class, char.class);
 
-                WEAK_COMPARE_AND_SET_CHAR = binder.bind("weakCompareAndSetChar", boolean.class, Object.class, long.class, char.class, char.class);
-                WEAK_COMPARE_AND_SET_CHAR_ACQUIRE = binder.bind("weakCompareAndSetCharAcquire", boolean.class, Object.class, long.class, char.class, char.class);
-                WEAK_COMPARE_AND_SET_CHAR_RELEASE = binder.bind("weakCompareAndSetCharRelease", boolean.class, Object.class, long.class, char.class, char.class);
-                WEAK_COMPARE_AND_SET_CHAR_PLAIN = binder.bind("weakCompareAndSetCharPlain", boolean.class, Object.class, long.class, char.class, char.class);
+            WEAK_COMPARE_AND_SET_CHAR = binder.bind("weakCompareAndSetChar", boolean.class, Object.class, long.class, char.class, char.class);
+            WEAK_COMPARE_AND_SET_CHAR_ACQUIRE = binder.bind("weakCompareAndSetCharAcquire", boolean.class, Object.class, long.class, char.class, char.class);
+            WEAK_COMPARE_AND_SET_CHAR_RELEASE = binder.bind("weakCompareAndSetCharRelease", boolean.class, Object.class, long.class, char.class, char.class);
+            WEAK_COMPARE_AND_SET_CHAR_PLAIN = binder.bind("weakCompareAndSetCharPlain", boolean.class, Object.class, long.class, char.class, char.class);
 
-                COMPARE_AND_EXCHANGE_CHAR = binder.bind("compareAndExchangeChar", char.class, Object.class, long.class, char.class, char.class);
-                COMPARE_AND_EXCHANGE_CHAR_ACQUIRE = binder.bind("compareAndExchangeCharAcquire", char.class, Object.class, long.class, char.class, char.class);
-                COMPARE_AND_EXCHANGE_CHAR_RELEASE = binder.bind("compareAndExchangeCharRelease", char.class, Object.class, long.class, char.class, char.class);
-            } else {
-                GET_CHAR_ACQUIRE = GET_CHAR_VOLATILE;
-                PUT_CHAR_RELEASE = binder.bindCompat("compatPutCharRelease", void.class, Object.class, long.class, char.class);
-                GET_CHAR_OPAQUE = GET_CHAR_VOLATILE;
-                PUT_CHAR_OPAQUE = PUT_CHAR_VOLATILE;
-                COMPARE_AND_SET_CHAR = binder.bindCompat("compatCompareAndSetChar", boolean.class, Object.class, long.class, char.class, char.class);
-
-                WEAK_COMPARE_AND_SET_CHAR = COMPARE_AND_SET_CHAR;
-                WEAK_COMPARE_AND_SET_CHAR_ACQUIRE = COMPARE_AND_SET_CHAR;
-                WEAK_COMPARE_AND_SET_CHAR_RELEASE = COMPARE_AND_SET_CHAR;
-                WEAK_COMPARE_AND_SET_CHAR_PLAIN = COMPARE_AND_SET_CHAR;
-
-                COMPARE_AND_EXCHANGE_CHAR = binder.bindCompat("compatCompareAndExchangeChar", char.class, Object.class, long.class, char.class, char.class);
-                COMPARE_AND_EXCHANGE_CHAR_ACQUIRE = COMPARE_AND_EXCHANGE_CHAR;
-                COMPARE_AND_EXCHANGE_CHAR_RELEASE = COMPARE_AND_EXCHANGE_CHAR;
-            }
+            COMPARE_AND_EXCHANGE_CHAR = binder.bind("compareAndExchangeChar", char.class, Object.class, long.class, char.class, char.class);
+            COMPARE_AND_EXCHANGE_CHAR_ACQUIRE = binder.bind("compareAndExchangeCharAcquire", char.class, Object.class, long.class, char.class, char.class);
+            COMPARE_AND_EXCHANGE_CHAR_RELEASE = binder.bind("compareAndExchangeCharRelease", char.class, Object.class, long.class, char.class, char.class);
 
             // --- 9. Float ---
             GET_FLOAT = binder.bind("getFloat", float.class, Object.class, long.class);
@@ -441,37 +279,20 @@ public final class UnsafeWrapper {
             GET_FLOAT_VOLATILE = binder.bind("getFloatVolatile", float.class, Object.class, long.class);
             PUT_FLOAT_VOLATILE = binder.bind("putFloatVolatile", void.class, Object.class, long.class, float.class);
 
-            if (JPMS) {
-                GET_FLOAT_ACQUIRE = binder.bind("getFloatAcquire", float.class, Object.class, long.class);
-                PUT_FLOAT_RELEASE = binder.bind("putFloatRelease", void.class, Object.class, long.class, float.class);
-                GET_FLOAT_OPAQUE = binder.bind("getFloatOpaque", float.class, Object.class, long.class);
-                PUT_FLOAT_OPAQUE = binder.bind("putFloatOpaque", void.class, Object.class, long.class, float.class);
-                COMPARE_AND_SET_FLOAT = binder.bind("compareAndSetFloat", boolean.class, Object.class, long.class, float.class, float.class);
+            GET_FLOAT_ACQUIRE = binder.bind("getFloatAcquire", float.class, Object.class, long.class);
+            PUT_FLOAT_RELEASE = binder.bind("putFloatRelease", void.class, Object.class, long.class, float.class);
+            GET_FLOAT_OPAQUE = binder.bind("getFloatOpaque", float.class, Object.class, long.class);
+            PUT_FLOAT_OPAQUE = binder.bind("putFloatOpaque", void.class, Object.class, long.class, float.class);
+            COMPARE_AND_SET_FLOAT = binder.bind("compareAndSetFloat", boolean.class, Object.class, long.class, float.class, float.class);
 
-                WEAK_COMPARE_AND_SET_FLOAT = binder.bind("weakCompareAndSetFloat", boolean.class, Object.class, long.class, float.class, float.class);
-                WEAK_COMPARE_AND_SET_FLOAT_ACQUIRE = binder.bind("weakCompareAndSetFloatAcquire", boolean.class, Object.class, long.class, float.class, float.class);
-                WEAK_COMPARE_AND_SET_FLOAT_RELEASE = binder.bind("weakCompareAndSetFloatRelease", boolean.class, Object.class, long.class, float.class, float.class);
-                WEAK_COMPARE_AND_SET_FLOAT_PLAIN = binder.bind("weakCompareAndSetFloatPlain", boolean.class, Object.class, long.class, float.class, float.class);
+            WEAK_COMPARE_AND_SET_FLOAT = binder.bind("weakCompareAndSetFloat", boolean.class, Object.class, long.class, float.class, float.class);
+            WEAK_COMPARE_AND_SET_FLOAT_ACQUIRE = binder.bind("weakCompareAndSetFloatAcquire", boolean.class, Object.class, long.class, float.class, float.class);
+            WEAK_COMPARE_AND_SET_FLOAT_RELEASE = binder.bind("weakCompareAndSetFloatRelease", boolean.class, Object.class, long.class, float.class, float.class);
+            WEAK_COMPARE_AND_SET_FLOAT_PLAIN = binder.bind("weakCompareAndSetFloatPlain", boolean.class, Object.class, long.class, float.class, float.class);
 
-                COMPARE_AND_EXCHANGE_FLOAT = binder.bind("compareAndExchangeFloat", float.class, Object.class, long.class, float.class, float.class);
-                COMPARE_AND_EXCHANGE_FLOAT_ACQUIRE = binder.bind("compareAndExchangeFloatAcquire", float.class, Object.class, long.class, float.class, float.class);
-                COMPARE_AND_EXCHANGE_FLOAT_RELEASE = binder.bind("compareAndExchangeFloatRelease", float.class, Object.class, long.class, float.class, float.class);
-            } else {
-                GET_FLOAT_ACQUIRE = GET_FLOAT_VOLATILE;
-                PUT_FLOAT_RELEASE = binder.bindCompat("compatPutFloatRelease", void.class, Object.class, long.class, float.class);
-                GET_FLOAT_OPAQUE = GET_FLOAT_VOLATILE;
-                PUT_FLOAT_OPAQUE = PUT_FLOAT_VOLATILE;
-                COMPARE_AND_SET_FLOAT = binder.bindCompat("compatCompareAndSetFloat", boolean.class, Object.class, long.class, float.class, float.class);
-
-                WEAK_COMPARE_AND_SET_FLOAT = COMPARE_AND_SET_FLOAT;
-                WEAK_COMPARE_AND_SET_FLOAT_ACQUIRE = COMPARE_AND_SET_FLOAT;
-                WEAK_COMPARE_AND_SET_FLOAT_RELEASE = COMPARE_AND_SET_FLOAT;
-                WEAK_COMPARE_AND_SET_FLOAT_PLAIN = COMPARE_AND_SET_FLOAT;
-
-                COMPARE_AND_EXCHANGE_FLOAT = binder.bindCompat("compatCompareAndExchangeFloat", float.class, Object.class, long.class, float.class, float.class);
-                COMPARE_AND_EXCHANGE_FLOAT_ACQUIRE = COMPARE_AND_EXCHANGE_FLOAT;
-                COMPARE_AND_EXCHANGE_FLOAT_RELEASE = COMPARE_AND_EXCHANGE_FLOAT;
-            }
+            COMPARE_AND_EXCHANGE_FLOAT = binder.bind("compareAndExchangeFloat", float.class, Object.class, long.class, float.class, float.class);
+            COMPARE_AND_EXCHANGE_FLOAT_ACQUIRE = binder.bind("compareAndExchangeFloatAcquire", float.class, Object.class, long.class, float.class, float.class);
+            COMPARE_AND_EXCHANGE_FLOAT_RELEASE = binder.bind("compareAndExchangeFloatRelease", float.class, Object.class, long.class, float.class, float.class);
 
             // --- 10. Double ---
             GET_DOUBLE = binder.bind("getDouble", double.class, Object.class, long.class);
@@ -479,37 +300,20 @@ public final class UnsafeWrapper {
             GET_DOUBLE_VOLATILE = binder.bind("getDoubleVolatile", double.class, Object.class, long.class);
             PUT_DOUBLE_VOLATILE = binder.bind("putDoubleVolatile", void.class, Object.class, long.class, double.class);
 
-            if (JPMS) {
-                GET_DOUBLE_ACQUIRE = binder.bind("getDoubleAcquire", double.class, Object.class, long.class);
-                PUT_DOUBLE_RELEASE = binder.bind("putDoubleRelease", void.class, Object.class, long.class, double.class);
-                GET_DOUBLE_OPAQUE = binder.bind("getDoubleOpaque", double.class, Object.class, long.class);
-                PUT_DOUBLE_OPAQUE = binder.bind("putDoubleOpaque", void.class, Object.class, long.class, double.class);
-                COMPARE_AND_SET_DOUBLE = binder.bind("compareAndSetDouble", boolean.class, Object.class, long.class, double.class, double.class);
+            GET_DOUBLE_ACQUIRE = binder.bind("getDoubleAcquire", double.class, Object.class, long.class);
+            PUT_DOUBLE_RELEASE = binder.bind("putDoubleRelease", void.class, Object.class, long.class, double.class);
+            GET_DOUBLE_OPAQUE = binder.bind("getDoubleOpaque", double.class, Object.class, long.class);
+            PUT_DOUBLE_OPAQUE = binder.bind("putDoubleOpaque", void.class, Object.class, long.class, double.class);
+            COMPARE_AND_SET_DOUBLE = binder.bind("compareAndSetDouble", boolean.class, Object.class, long.class, double.class, double.class);
 
-                WEAK_COMPARE_AND_SET_DOUBLE = binder.bind("weakCompareAndSetDouble", boolean.class, Object.class, long.class, double.class, double.class);
-                WEAK_COMPARE_AND_SET_DOUBLE_ACQUIRE = binder.bind("weakCompareAndSetDoubleAcquire", boolean.class, Object.class, long.class, double.class, double.class);
-                WEAK_COMPARE_AND_SET_DOUBLE_RELEASE = binder.bind("weakCompareAndSetDoubleRelease", boolean.class, Object.class, long.class, double.class, double.class);
-                WEAK_COMPARE_AND_SET_DOUBLE_PLAIN = binder.bind("weakCompareAndSetDoublePlain", boolean.class, Object.class, long.class, double.class, double.class);
+            WEAK_COMPARE_AND_SET_DOUBLE = binder.bind("weakCompareAndSetDouble", boolean.class, Object.class, long.class, double.class, double.class);
+            WEAK_COMPARE_AND_SET_DOUBLE_ACQUIRE = binder.bind("weakCompareAndSetDoubleAcquire", boolean.class, Object.class, long.class, double.class, double.class);
+            WEAK_COMPARE_AND_SET_DOUBLE_RELEASE = binder.bind("weakCompareAndSetDoubleRelease", boolean.class, Object.class, long.class, double.class, double.class);
+            WEAK_COMPARE_AND_SET_DOUBLE_PLAIN = binder.bind("weakCompareAndSetDoublePlain", boolean.class, Object.class, long.class, double.class, double.class);
 
-                COMPARE_AND_EXCHANGE_DOUBLE = binder.bind("compareAndExchangeDouble", double.class, Object.class, long.class, double.class, double.class);
-                COMPARE_AND_EXCHANGE_DOUBLE_ACQUIRE = binder.bind("compareAndExchangeDoubleAcquire", double.class, Object.class, long.class, double.class, double.class);
-                COMPARE_AND_EXCHANGE_DOUBLE_RELEASE = binder.bind("compareAndExchangeDoubleRelease", double.class, Object.class, long.class, double.class, double.class);
-            } else {
-                GET_DOUBLE_ACQUIRE = GET_DOUBLE_VOLATILE;
-                PUT_DOUBLE_RELEASE = binder.bindCompat("compatPutDoubleRelease", void.class, Object.class, long.class, double.class);
-                GET_DOUBLE_OPAQUE = GET_DOUBLE_VOLATILE;
-                PUT_DOUBLE_OPAQUE = PUT_DOUBLE_VOLATILE;
-                COMPARE_AND_SET_DOUBLE = binder.bindCompat("compatCompareAndSetDouble", boolean.class, Object.class, long.class, double.class, double.class);
-
-                WEAK_COMPARE_AND_SET_DOUBLE = COMPARE_AND_SET_DOUBLE;
-                WEAK_COMPARE_AND_SET_DOUBLE_ACQUIRE = COMPARE_AND_SET_DOUBLE;
-                WEAK_COMPARE_AND_SET_DOUBLE_RELEASE = COMPARE_AND_SET_DOUBLE;
-                WEAK_COMPARE_AND_SET_DOUBLE_PLAIN = COMPARE_AND_SET_DOUBLE;
-
-                COMPARE_AND_EXCHANGE_DOUBLE = binder.bindCompat("compatCompareAndExchangeDouble", double.class, Object.class, long.class, double.class, double.class);
-                COMPARE_AND_EXCHANGE_DOUBLE_ACQUIRE = COMPARE_AND_EXCHANGE_DOUBLE;
-                COMPARE_AND_EXCHANGE_DOUBLE_RELEASE = COMPARE_AND_EXCHANGE_DOUBLE;
-            }
+            COMPARE_AND_EXCHANGE_DOUBLE = binder.bind("compareAndExchangeDouble", double.class, Object.class, long.class, double.class, double.class);
+            COMPARE_AND_EXCHANGE_DOUBLE_ACQUIRE = binder.bind("compareAndExchangeDoubleAcquire", double.class, Object.class, long.class, double.class, double.class);
+            COMPARE_AND_EXCHANGE_DOUBLE_RELEASE = binder.bind("compareAndExchangeDoubleRelease", double.class, Object.class, long.class, double.class, double.class);
 
             // --- 11. Memory ---
             ALLOCATE_MEMORY = binder.bind("allocateMemory", long.class, long.class);
@@ -530,13 +334,9 @@ public final class UnsafeWrapper {
         } catch (Throwable t) {
             throw new ExceptionInInitializerError(t);
         }
-    }
+    }// @formatter:on
 
-    private UnsafeWrapper() {
-    }
-
-    public static UnsafeWrapper getUnsafe() {
-        return theUnsafe;
+    InternalUnsafeWrapper() {
     }
 
     public <T extends Throwable> long objectFieldOffset(Field f) throws T {
@@ -1947,472 +1747,9 @@ public final class UnsafeWrapper {
         }
     }
 
-    /**
-     * @deprecated use {@link #getReference(Object, long)} whenever possible
-     */
-    @Deprecated
-    public <T extends Throwable> Object getObject(Object o, long offset) throws T {
-        try {
-            return GET_REFERENCE.invokeExact(o, offset);
-        } catch (Throwable t) {
-            throw (T) t;
-        }
-    }
-
-    /**
-     * @deprecated use {@link #putReference(Object, long, Object)} whenever possible
-     */
-    @Deprecated
-    public <T extends Throwable> void putObject(Object o, long offset, Object x) throws T {
-        try {
-            PUT_REFERENCE.invokeExact(o, offset, x);
-        } catch (Throwable t) {
-            throw (T) t;
-        }
-    }
-
-    /**
-     * @deprecated use {@link #getReferenceVolatile(Object, long)} whenever possible
-     */
-    @Deprecated
-    public <T extends Throwable> Object getObjectVolatile(Object o, long offset) throws T {
-        try {
-            return GET_REFERENCE_VOLATILE.invokeExact(o, offset);
-        } catch (Throwable t) {
-            throw (T) t;
-        }
-    }
-
-    /**
-     * @deprecated use {@link #putReferenceVolatile(Object, long, Object)} whenever possible
-     */
-    @Deprecated
-    public <T extends Throwable> void putObjectVolatile(Object o, long offset, Object x) throws T {
-        try {
-            PUT_REFERENCE_VOLATILE.invokeExact(o, offset, x);
-        } catch (Throwable t) {
-            throw (T) t;
-        }
-    }
-
-    /**
-     * @deprecated use {@link #compareAndSetReference(Object, long, Object, Object)} whenever possible
-     */
-    @Deprecated
-    public <T extends Throwable> boolean compareAndSwapObject(Object o, long offset, Object expected, Object x) throws T {
-        try {
-            return (boolean) COMPARE_AND_SET_REFERENCE.invokeExact(o, offset, expected, x);
-        } catch (Throwable t) {
-            throw (T) t;
-        }
-    }
-
-    /**
-     * @deprecated use {@link #compareAndSetInt(Object, long, int, int)} whenever possible
-     */
-    @Deprecated
-    public <T extends Throwable> boolean compareAndSwapInt(Object o, long offset, int expected, int x) throws T {
-        try {
-            return (boolean) COMPARE_AND_SET_INT.invokeExact(o, offset, expected, x);
-        } catch (Throwable t) {
-            throw (T) t;
-        }
-    }
-
-    /**
-     * @deprecated use {@link #compareAndSetLong(Object, long, long, long)} whenever possible
-     */
-    @Deprecated
-    public <T extends Throwable> boolean compareAndSwapLong(Object o, long offset, long expected, long x) throws T {
-        try {
-            return (boolean) COMPARE_AND_SET_LONG.invokeExact(o, offset, expected, x);
-        } catch (Throwable t) {
-            throw (T) t;
-        }
-    }
-
-    /**
-     * @deprecated use {@link #getAndSetReference(Object, long, Object)} whenever possible
-     */
-    @Deprecated
-    public <T extends Throwable> Object getAndSetObject(Object o, long offset, Object x) throws T {
-        try {
-            return GET_AND_SET_REFERENCE.invokeExact(o, offset, x);
-        } catch (Throwable t) {
-            throw (T) t;
-        }
-    }
-
-    /**
-     * @deprecated use {@link #putIntRelease(Object, long, int)} whenever possible
-     */
-    @Deprecated
-    public <T extends Throwable> void putOrderedInt(Object o, long offset, int x) throws T {
-        try {
-            PUT_INT_RELEASE.invokeExact(o, offset, x);
-        } catch (Throwable t) {
-            throw (T) t;
-        }
-    }
-
-    /**
-     * @deprecated use {@link #putLongRelease(Object, long, long)} whenever possible
-     */
-    @Deprecated
-    public <T extends Throwable> void putOrderedLong(Object o, long offset, long x) throws T {
-        try {
-            PUT_LONG_RELEASE.invokeExact(o, offset, x);
-        } catch (Throwable t) {
-            throw (T) t;
-        }
-    }
-
-    /**
-     * @deprecated use {@link #putReferenceRelease(Object, long, Object)} whenever possible
-     */
-    @Deprecated
-    public <T extends Throwable> void putOrderedObject(Object o, long offset, Object x) throws T {
-        try {
-            PUT_REFERENCE_RELEASE.invokeExact(o, offset, x);
-        } catch (Throwable t) {
-            throw (T) t;
-        }
-    }
-
-    @SuppressWarnings("unused")
-    private static Object compatCompareAndExchangeReference(Object o, long offset, Object expected, Object x) {
-        while (true) {
-            Object witness;
-            try {
-                witness = GET_REFERENCE_VOLATILE.invokeExact(o, offset);
-                if (witness != expected) {
-                    return witness;
-                }
-                if ((boolean) COMPARE_AND_SET_REFERENCE.invokeExact(o, offset, expected, x)) {
-                    return expected;
-                }
-            } catch (Throwable t) {
-                throw new RuntimeException(t);
-            }
-        }
-    }
-
-    private static int compatCompareAndExchangeInt(Object o, long offset, int expected, int x) {
-        while (true) {
-            int witness;
-            try {
-                witness = (int) GET_INT_VOLATILE.invokeExact(o, offset);
-                if (witness != expected) {
-                    return witness;
-                }
-                if ((boolean) COMPARE_AND_SET_INT.invokeExact(o, offset, expected, x)) {
-                    return expected;
-                }
-            } catch (Throwable t) {
-                throw new RuntimeException(t);
-            }
-        }
-    }
-
-    private static long compatCompareAndExchangeLong(Object o, long offset, long expected, long x) {
-        while (true) {
-            long witness;
-            try {
-                witness = (long) GET_LONG_VOLATILE.invokeExact(o, offset);
-                if (witness != expected) {
-                    return witness;
-                }
-                if ((boolean) COMPARE_AND_SET_LONG.invokeExact(o, offset, expected, x)) {
-                    return expected;
-                }
-            } catch (Throwable t) {
-                throw new RuntimeException(t);
-            }
-        }
-    }
-
-    private static byte compatCompareAndExchangeByte(Object o, long offset, byte expected, byte x) {
-        final long wordOffset = offset & ~3L;
-        int byteIndex = (int) offset & 3;
-        if (BIG_ENDIAN) {
-            byteIndex ^= 3;
-        }
-
-        final int shift = byteIndex << 3;
-        final int mask = 0xFF << shift;
-        final int expBits = (expected & 0xFF) << shift;
-        final int newBits = (x & 0xFF) << shift;
-
-        while (true) {
-            final int fullWord;
-            try {
-                fullWord = (int) GET_INT_VOLATILE.invokeExact(o, wordOffset);
-            } catch (Throwable t) {
-                throw new RuntimeException(t);
-            }
-
-            final int currentBits = fullWord & mask;
-            if (currentBits != expBits) {
-                return (byte) (currentBits >>> shift);
-            }
-            final int updatedWord = (fullWord & ~mask) | newBits;
-            final boolean success;
-            try {
-                success = (boolean) COMPARE_AND_SET_INT.invokeExact(o, wordOffset, fullWord, updatedWord);
-            } catch (Throwable t) {
-                throw new RuntimeException(t);
-            }
-            if (success) {
-                return expected;
-            }
-        }
-    }
-
-    private static short compatCompareAndExchangeShort(Object o, long offset, short expected, short x) {
-        int byteIndex = (int) offset & 3;
-        if (byteIndex == 3) {
-            throw new IllegalArgumentException("short CAS crosses word boundary");
-        }
-        final long wordOffset = offset & ~3L;
-        final int shift;
-        if (BIG_ENDIAN) {
-            shift = (2 - byteIndex) << 3;
-        } else {
-            shift = byteIndex << 3;
-        }
-
-        final int mask = 0xFFFF << shift;
-        final int expBits = (expected & 0xFFFF) << shift;
-        final int newBits = (x & 0xFFFF) << shift;
-
-        while (true) {
-            final int fullWord;
-            try {
-                fullWord = (int) GET_INT_VOLATILE.invokeExact(o, wordOffset);
-            } catch (Throwable t) {
-                throw new RuntimeException(t);
-            }
-
-            final int currentBits = fullWord & mask;
-            if (currentBits != expBits) {
-                return (short) (currentBits >>> shift);
-            }
-
-            final int updatedWord = (fullWord & ~mask) | newBits;
-
-            final boolean success;
-            try {
-                success = (boolean) COMPARE_AND_SET_INT.invokeExact(o, wordOffset, fullWord, updatedWord);
-            } catch (Throwable t) {
-                throw new RuntimeException(t);
-            }
-            if (success) {
-                return expected;
-            }
-        }
-    }
-
-    @SuppressWarnings("unused")
-    private static boolean compatCompareAndExchangeBoolean(Object o, long offset, boolean expected, boolean x) {
-        return compatCompareAndExchangeByte(o, offset, (byte) (expected ? 1 : 0), (byte) (x ? 1 : 0)) != 0;
-    }
-
-    @SuppressWarnings("unused")
-    private static char compatCompareAndExchangeChar(Object o, long offset, char expected, char x) {
-        return (char) compatCompareAndExchangeShort(o, offset, (short) expected, (short) x);
-    }
-
-    @SuppressWarnings("unused")
-    private static float compatCompareAndExchangeFloat(Object o, long offset, float expected, float x) {
-        return Float.intBitsToFloat(compatCompareAndExchangeInt(o, offset, Float.floatToRawIntBits(expected), Float.floatToRawIntBits(x)));
-    }
-
-    @SuppressWarnings("unused")
-    private static double compatCompareAndExchangeDouble(Object o, long offset, double expected, double x) {
-        return Double.longBitsToDouble(compatCompareAndExchangeLong(o, offset, Double.doubleToRawLongBits(expected), Double.doubleToRawLongBits(x)));
-    }
-
-    @SuppressWarnings("unused")
-    private static boolean compatCompareAndSetBoolean(Object o, long offset, boolean expected, boolean x) {
-        return compatCompareAndSetByte(o, offset, (byte) (expected ? 1 : 0), (byte) (x ? 1 : 0));
-    }
-
-    private static boolean compatCompareAndSetByte(Object o, long offset, byte expected, byte x) {
-        final long wordOffset = offset & ~3L;
-        int byteIndex = (int) offset & 3;
-        if (BIG_ENDIAN) {
-            byteIndex ^= 3;
-        }
-        final int shift = byteIndex << 3;
-        final int mask = 0xFF << shift;
-        final int expBits = (expected & 0xFF) << shift;
-        final int newBits = (x & 0xFF) << shift;
-        while (true) {
-            final int fullWord;
-            try {
-                fullWord = (int) GET_INT_VOLATILE.invokeExact(o, wordOffset);
-            } catch (Throwable t) {
-                throw new RuntimeException(t);
-            }
-            final int currentBits = fullWord & mask;
-            if (currentBits != expBits) {
-                return false;
-            }
-            final int updatedWord = (fullWord & ~mask) | newBits;
-            final boolean success;
-            try {
-                success = (boolean) COMPARE_AND_SET_INT.invokeExact(o, wordOffset, fullWord, updatedWord);
-            } catch (Throwable t) {
-                throw new RuntimeException(t);
-            }
-            if (success) {
-                return true;
-            }
-        }
-    }
-
-    private static boolean compatCompareAndSetShort(Object o, long offset, short expected, short x) {
-        int byteIndex = (int) offset & 3;
-        if (byteIndex == 3) {
-            throw new IllegalArgumentException("short CAS crosses word boundary");
-        }
-        final long wordOffset = offset & ~3L;
-        final int shift;
-        if (BIG_ENDIAN) {
-            shift = (2 - byteIndex) << 3;
-        } else {
-            shift = byteIndex << 3;
-        }
-        final int mask = 0xFFFF << shift;
-        final int expBits = (expected & 0xFFFF) << shift;
-        final int newBits = (x & 0xFFFF) << shift;
-        while (true) {
-            final int fullWord;
-            try {
-                fullWord = (int) GET_INT_VOLATILE.invokeExact(o, wordOffset);
-            } catch (Throwable t) {
-                throw new RuntimeException(t);
-            }
-            final int currentBits = fullWord & mask;
-            if (currentBits != expBits) {
-                return false;
-            }
-            final int updatedWord = (fullWord & ~mask) | newBits;
-
-            final boolean success;
-            try {
-                success = (boolean) COMPARE_AND_SET_INT.invokeExact(o, wordOffset, fullWord, updatedWord);
-            } catch (Throwable t) {
-                throw new RuntimeException(t);
-            }
-            if (success) {
-                return true;
-            }
-        }
-    }
-
-    @SuppressWarnings("unused")
-    private static boolean compatCompareAndSetChar(Object o, long offset, char expected, char x) {
-        return compatCompareAndSetShort(o, offset, (short) expected, (short) x);
-    }
-
-    @SuppressWarnings("unused")
-    private static boolean compatCompareAndSetFloat(Object o, long offset, float expected, float x) {
-        try {
-            return (boolean) COMPARE_AND_SET_INT.invokeExact(o, offset, Float.floatToRawIntBits(expected), Float.floatToRawIntBits(x));
-        } catch (Throwable t) {
-            throw new RuntimeException(t);
-        }
-    }
-
-    @SuppressWarnings("unused")
-    private static boolean compatCompareAndSetDouble(Object o, long offset, double expected, double x) {
-        try {
-            return (boolean) COMPARE_AND_SET_LONG.invokeExact(o, offset, Double.doubleToRawLongBits(expected), Double.doubleToRawLongBits(x));
-        } catch (Throwable t) {
-            throw new RuntimeException(t);
-        }
-    }
-
-    @SuppressWarnings("unused")
-    private static void compatPutByteRelease(Object o, long offset, byte x) {
-        try {
-            STORE_FENCE.invokeExact();
-            PUT_BYTE.invokeExact(o, offset, x);
-        } catch (Throwable t) {
-            throw new RuntimeException(t);
-        }
-    }
-
-    @SuppressWarnings("unused")
-    private static void compatPutShortRelease(Object o, long offset, short x) {
-        try {
-            STORE_FENCE.invokeExact();
-            PUT_SHORT.invokeExact(o, offset, x);
-        } catch (Throwable t) {
-            throw new RuntimeException(t);
-        }
-    }
-
-    @SuppressWarnings("unused")
-    private static void compatPutBooleanRelease(Object o, long offset, boolean x) {
-        try {
-            STORE_FENCE.invokeExact();
-            PUT_BOOLEAN.invokeExact(o, offset, x);
-        } catch (Throwable t) {
-            throw new RuntimeException(t);
-        }
-    }
-
-    @SuppressWarnings("unused")
-    private static void compatPutCharRelease(Object o, long offset, char x) {
-        try {
-            STORE_FENCE.invokeExact();
-            PUT_CHAR.invokeExact(o, offset, x);
-        } catch (Throwable t) {
-            throw new RuntimeException(t);
-        }
-    }
-
-    @SuppressWarnings("unused")
-    private static void compatPutFloatRelease(Object o, long offset, float x) {
-        try {
-            PUT_INT_RELEASE.invokeExact(o, offset, Float.floatToRawIntBits(x));
-        } catch (Throwable t) {
-            throw new RuntimeException(t);
-        }
-    }
-
-    @SuppressWarnings("unused")
-    private static void compatPutDoubleRelease(Object o, long offset, double x) {
-        try {
-            PUT_LONG_RELEASE.invokeExact(o, offset, Double.doubleToRawLongBits(x));
-        } catch (Throwable t) {
-            throw new RuntimeException(t);
-        }
-    }
-
     private record UnsafeBinder(MethodHandles.Lookup lookup, Class<?> unsafeClass, Object unsafeInstance) {
         MethodHandle bind(String name, Class<?> rtype, Class<?>... ptypes) throws NoSuchMethodException, IllegalAccessException {
             return lookup.findVirtual(unsafeClass, name, MethodType.methodType(rtype, ptypes)).bindTo(unsafeInstance);
         }
-
-        MethodHandle bindCompat(String compatName, Class<?> rtype, Class<?>... ptypes) throws NoSuchMethodException, IllegalAccessException {
-            return lookup.findStatic(UnsafeWrapper.class, compatName, MethodType.methodType(rtype, ptypes));
-        }
-    }
-
-    @SuppressWarnings("removal")
-    private static MethodHandles.Lookup getImplLookupUnsafe(Unsafe unsafe) throws NoSuchFieldException {
-        Field lookupField = MethodHandles.Lookup.class.getDeclaredField("IMPL_LOOKUP");
-        Object base = unsafe.staticFieldBase(lookupField);
-        long offset = unsafe.staticFieldOffset(lookupField);
-        return (MethodHandles.Lookup) unsafe.getObject(base, offset);
-    }
-
-    private static Unsafe getSunUnsafe() throws NoSuchFieldException, IllegalAccessException {
-        Field field = Unsafe.class.getDeclaredField("theUnsafe");
-        field.setAccessible(true);
-        return (Unsafe) field.get(null);
     }
 }

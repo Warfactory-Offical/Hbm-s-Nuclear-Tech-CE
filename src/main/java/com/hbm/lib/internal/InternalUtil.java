@@ -3,8 +3,8 @@ package com.hbm.lib.internal;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodType;
 
-import static com.hbm.lib.internal.UnsafeWrapper.IMPL_LOOKUP;
-import static com.hbm.lib.internal.UnsafeWrapper.JPMS;
+import static com.hbm.lib.internal.AbstractUnsafe.IMPL_LOOKUP;
+import static com.hbm.lib.internal.AbstractUnsafe.JPMS;
 
 public final class InternalUtil {
 
