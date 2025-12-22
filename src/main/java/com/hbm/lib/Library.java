@@ -1131,12 +1131,12 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 	}
 
 	/** @return true if is instance of IBatteryItem or has FE capability */
-	public static boolean isItemCanStoreEnergy(@NotNull ItemStack stack){
+	public static boolean isBattery(@NotNull ItemStack stack){
 		if (stack.isEmpty()) return false;
 		return stack.getItem() instanceof IBatteryItem || getFE(stack) != null;
 	}
 
-	public static boolean isItemDischargeable(@NotNull ItemStack stack){
+	public static boolean isDischargeableBattery(@NotNull ItemStack stack){
 		if (stack.isEmpty()) return false;
 		if (stack.getItem() instanceof IBatteryItem battery) {
 			return battery.getCharge(stack) > 0 && battery.getDischargeRate() > 0;
@@ -1145,7 +1145,7 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 		return cap != null && cap.getEnergyStored() > 0 && cap.canExtract();
 	}
 
-	public static boolean isItemChargeable(@NotNull ItemStack stack) {
+	public static boolean isChargeableBattery(@NotNull ItemStack stack) {
 		if (stack.isEmpty()) return false;
 		if (stack.getItem() instanceof IBatteryItem battery) {
 			return battery.getMaxCharge(stack) > battery.getCharge(stack) && battery.getChargeRate() > 0;
@@ -1154,7 +1154,7 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 		return cap != null && cap.getMaxEnergyStored() > cap.getEnergyStored() && cap.canReceive();
 	}
 
-	public static boolean isItemEmptyEnergy(@NotNull ItemStack stack){
+	public static boolean isEmptyBattery(@NotNull ItemStack stack){
 		if (stack.isEmpty()) return false;
 		if (stack.getItem() instanceof IBatteryItem battery) {
 			return battery.getCharge(stack) <= 0;
@@ -1163,7 +1163,7 @@ public static boolean canConnect(IBlockAccess world, BlockPos pos, ForgeDirectio
 		return cap != null && cap.getEnergyStored() <= 0;
 	}
 
-	public static boolean isItemFullEnergy(@NotNull ItemStack stack){
+	public static boolean isFullBattery(@NotNull ItemStack stack){
 		if (stack.isEmpty()) return false;
 		if (stack.getItem() instanceof IBatteryItem battery) {
 			long max = battery.getMaxCharge(stack);

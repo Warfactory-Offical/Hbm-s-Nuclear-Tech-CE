@@ -62,7 +62,7 @@ public class ContainerMachineEPress extends Container {
                 }
             }
             else {
-                if (Library.isItemCanStoreEnergy(stackCopy)) {
+                if (Library.isBattery(stackCopy)) {
                     if (!this.mergeItemStack(originalStack, 0, 1, false)) {
                         return ItemStack.EMPTY;
                     }

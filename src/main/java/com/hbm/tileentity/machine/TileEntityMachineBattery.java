@@ -140,8 +140,8 @@ public class TileEntityMachineBattery extends TileEntityMachineBase implements I
 	
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack stack) {
-		if(i == 0) return Library.isItemDischargeable(stack);
-		if(i == 2) return Library.isItemChargeable(stack);
+		if(i == 0) return Library.isDischargeableBattery(stack);
+		if(i == 2) return Library.isChargeableBattery(stack);
 		return false;
 	}
 	
@@ -157,14 +157,14 @@ public class TileEntityMachineBattery extends TileEntityMachineBase implements I
 
 	public void tryMoveItems() {
 		ItemStack itemStackDrain = inventory.getStackInSlot(0);
-		if(Library.isItemEmptyEnergy(itemStackDrain)) {
+		if(Library.isEmptyBattery(itemStackDrain)) {
 			if(inventory.getStackInSlot(1).isEmpty()){
 				inventory.setStackInSlot(1, itemStackDrain);
 				inventory.setStackInSlot(0, ItemStack.EMPTY);
 			}
 		}
 		ItemStack itemStackFill = inventory.getStackInSlot(2);
-		if(Library.isItemFullEnergy(itemStackFill)) {
+		if(Library.isFullBattery(itemStackFill)) {
 			if(inventory.getStackInSlot(3).isEmpty()){
 				inventory.setStackInSlot(3, itemStackFill);
 				inventory.setStackInSlot(2, ItemStack.EMPTY);

@@ -3,9 +3,9 @@ package com.hbm.tileentity.machine;
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.Untested;
-import com.hbm.inventory.recipes.ShredderRecipes;
 import com.hbm.inventory.container.ContainerMachineShredder;
 import com.hbm.inventory.gui.GUIMachineShredder;
+import com.hbm.inventory.recipes.ShredderRecipes;
 import com.hbm.items.machine.ItemBlades;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
@@ -56,7 +56,7 @@ public class TileEntityMachineShredder extends TileEntityMachineBase implements 
 	@Override
 	public boolean canInsertItem(int slot, ItemStack itemStack){
         if (slot != 27 && slot != 28 && itemStack.getItem() instanceof ItemBlades) return false;
-        if (slot != 29 && Library.isItemDischargeable(itemStack)) return false;
+        if (slot != 29 && Library.isDischargeableBattery(itemStack)) return false;
 		return this.isItemValidForSlot(slot, itemStack);
 	}
 
@@ -64,7 +64,7 @@ public class TileEntityMachineShredder extends TileEntityMachineBase implements 
 	public boolean isItemValidForSlot(int i, ItemStack stack){
 		if (i < 9) {
 			return true;
-		} else if (i == 29 && Library.isItemCanStoreEnergy(stack)) {
+		} else if (i == 29 && Library.isBattery(stack)) {
 			return true;
 		} else {
 			return (i == 27 || i == 28) && stack.getItem() instanceof ItemBlades;

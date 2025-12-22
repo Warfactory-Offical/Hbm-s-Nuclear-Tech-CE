@@ -26,7 +26,7 @@ public class ContainerMachineAssembler extends Container {
 		this.addSlotToContainer(new SlotItemHandler(te.inventory, 0, 80, 18){
 			@Override
 			public boolean isItemValid(@NotNull ItemStack stack) {
-				return Library.isItemCanStoreEnergy(stack) || stack.getItem() == ModItems.meteorite_sword_alloyed;
+				return Library.isBattery(stack) || stack.getItem() == ModItems.meteorite_sword_alloyed;
 			}
 		});
 		//Upgrades

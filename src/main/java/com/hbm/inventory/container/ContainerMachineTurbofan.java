@@ -62,7 +62,7 @@ public class ContainerMachineTurbofan extends Container {
                     return ItemStack.EMPTY;
                 }
             } else {
-                if (Library.isItemChargeable(rStack)) {
+                if (Library.isChargeableBattery(rStack)) {
                     if (!this.mergeItemStack(stack, 3, 4, false)) return ItemStack.EMPTY;
                 } else if (rStack.getItem() instanceof IItemFluidIdentifier) {
                     if (!this.mergeItemStack(stack, 4, 5, false)) return ItemStack.EMPTY;

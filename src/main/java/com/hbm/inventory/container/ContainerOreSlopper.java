@@ -76,7 +76,7 @@ public class ContainerOreSlopper extends Container {
                     if(!this.mergeItemStack(var5, 1, 2, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if(Library.isItemCanStoreEnergy(var3)) {
+                } else if(Library.isBattery(var3)) {
                     if(!this.mergeItemStack(var5, 0, 1, false)) {
                         return ItemStack.EMPTY;
                     }

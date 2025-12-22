@@ -16,7 +16,7 @@ public class SlotBattery extends SlotItemHandler {
 
     @Override
     public boolean isItemValid(@NotNull ItemStack stack) {
-        return !stack.isEmpty() && Library.isItemCanStoreEnergy(stack);
+        return !stack.isEmpty() && Library.isBattery(stack);
     }
 
     @Override

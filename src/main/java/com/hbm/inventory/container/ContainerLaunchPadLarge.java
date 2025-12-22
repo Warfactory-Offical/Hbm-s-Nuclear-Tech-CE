@@ -63,7 +63,7 @@ public class ContainerLaunchPadLarge extends Container {
 				}
 			} else {
 				
-				if(Library.isItemCanStoreEnergy(stackCopy)) {
+				if(Library.isBattery(stackCopy)) {
 					if(!this.mergeItemStack(stack, 2, 3, false)) {
 						return ItemStack.EMPTY;
 					}

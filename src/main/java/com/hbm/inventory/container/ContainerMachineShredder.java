@@ -92,7 +92,7 @@ public class ContainerMachineShredder extends Container {
 				}
 			}
 			else {
-                if(Library.isItemCanStoreEnergy(rStack)) {
+                if(Library.isBattery(rStack)) {
                     if(!this.mergeItemStack(stack, 29, 30, false)) return ItemStack.EMPTY;
                 } else if(rStack.getItem() instanceof ItemBlades) {
                     if(!this.mergeItemStack(stack, 27, 29, false)) return ItemStack.EMPTY;

@@ -67,7 +67,7 @@ public class TileEntityMachineSchrabidiumTransmutator extends TileEntityMachineB
 				return true;
 			break;
 		case 3:
-			if(Library.isItemCanStoreEnergy(stack))
+			if(Library.isBattery(stack))
 				return true;
 			break;
 		}
@@ -90,7 +90,7 @@ public class TileEntityMachineSchrabidiumTransmutator extends TileEntityMachineB
 		}
 
 		if(i == 3) {
-			return Library.isItemEmptyEnergy(stack);
+			return Library.isEmptyBattery(stack);
 		}
 
 		return false;

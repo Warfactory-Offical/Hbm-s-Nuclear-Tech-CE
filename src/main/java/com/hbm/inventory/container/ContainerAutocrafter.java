@@ -106,7 +106,7 @@ public class ContainerAutocrafter extends Container {
                     return ItemStack.EMPTY;
                 }
             } else if(index > 20){
-                if(Library.isItemDischargeable(rStack)) {
+                if(Library.isDischargeableBattery(rStack)) {
                     if(!this.mergeItemStack(stack, 20, 21, false)) return ItemStack.EMPTY;
                 } else return ItemStack.EMPTY;
             }

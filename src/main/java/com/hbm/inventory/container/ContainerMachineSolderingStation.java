@@ -62,7 +62,7 @@ public class ContainerMachineSolderingStation extends Container {
         }
       } else {
 
-        if (Library.isItemCanStoreEnergy(rStack)) {
+        if (Library.isBattery(rStack)) {
           if (!this.mergeItemStack(stack, 7, 8, false)) return ItemStack.EMPTY;
         } else if (rStack.getItem() instanceof IItemFluidIdentifier) {
           if (!this.mergeItemStack(stack, 8, 9, false)) return ItemStack.EMPTY;

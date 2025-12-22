@@ -230,7 +230,7 @@ public class TileEntityMachineDiesel extends TileEntityMachinePolluting implemen
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack stack) {
 		if(i == 0) return FluidContainerRegistry.getFluidContent(stack, tank.getTankType()) > 0;
-		if(i == 2) return Library.isItemChargeable(stack);
+		if(i == 2) return Library.isChargeableBattery(stack);
 		return false;
 	}
 

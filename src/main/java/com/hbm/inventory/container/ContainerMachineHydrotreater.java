@@ -71,7 +71,7 @@ public class ContainerMachineHydrotreater extends Container {
                 }
             } else {
 
-                if(Library.isItemCanStoreEnergy(var3)) {
+                if(Library.isBattery(var3)) {
                     if(!this.mergeItemStack(var5, 0, 1, false)) {
                         return ItemStack.EMPTY;
                     }

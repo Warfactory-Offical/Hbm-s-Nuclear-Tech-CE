@@ -76,7 +76,7 @@ public class TileEntityMachineTurbine extends TileEntityLoadedBase implements IT
 					return stack.getItem() instanceof IItemFluidIdentifier;
 
 				if(slot == 4)
-					return Library.isItemCanStoreEnergy(stack);
+					return Library.isBattery(stack);
 
 				return true;
 			}

@@ -8,7 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 /**
  * Do not use intanceof checks on this interface!
  *
- * @see Library#isItemCanStoreEnergy
+ * @see Library#isBattery
  */
 public interface IBatteryItem {
 
