@@ -80,6 +80,29 @@ public abstract class GenericRecipes <T extends GenericRecipe> extends Serializa
         return this.recipeOrderedList;
     }
 
+    public void removeRecipeByName(String name) {
+        if(name == null) return;
+
+        T removed = this.recipeNameMap.remove(name);
+        if(removed == null) return;
+
+        for(int i = 0; i < this.recipeOrderedList.size(); i++) {
+            T r = this.recipeOrderedList.get(i);
+            if(r != null && name.equals(r.name)) {
+                this.recipeOrderedList.remove(i);
+                break;
+            }
+        }
+
+        for(List<GenericRecipe> list : this.autoSwitchGroups.values()) {
+            if(list == null) continue;
+            for(int i = list.size() - 1; i >= 0; i--) {
+                GenericRecipe r = list.get(i);
+                if(r != null && name.equals(r.name)) list.remove(i);
+            }
+        }
+    }
+
     @Override
     public void deleteRecipes() {
         this.recipeOrderedList.clear();
