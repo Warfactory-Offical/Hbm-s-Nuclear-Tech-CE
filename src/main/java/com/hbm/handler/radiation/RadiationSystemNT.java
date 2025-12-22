@@ -253,7 +253,7 @@ public final class RadiationSystemNT {
 
         double current = sc.getRad(pocketIndex);
         if (current >= max) return;
-        double next = current + amount;
+        double next = current + amount; 
         if (next > max) next = max;
         next = data.sanitize(next);
         if (next != current) {
