@@ -77,7 +77,9 @@ public final class SunUnsafeWrapper extends AbstractUnsafe {
     }
 
     public <T extends Throwable> Object getReferenceAcquire(Object o, long offset) throws T {
-        return sunUnsafe.getObjectVolatile(o, offset);
+        Object v = sunUnsafe.getObject(o, offset);
+        sunUnsafe.loadFence();
+        return v;
     }
 
     public <T extends Throwable> void putReferenceRelease(Object o, long offset, Object x) throws T {
@@ -85,11 +87,11 @@ public final class SunUnsafeWrapper extends AbstractUnsafe {
     }
 
     public <T extends Throwable> Object getReferenceOpaque(Object o, long offset) throws T {
-        return sunUnsafe.getObjectVolatile(o, offset);
+        return getReferenceAcquire(o, offset);
     }
 
     public <T extends Throwable> void putReferenceOpaque(Object o, long offset, Object x) throws T {
-        sunUnsafe.putObjectVolatile(o, offset, x);
+        putReferenceRelease(o, offset, x);
     }
 
     public <T extends Throwable> boolean compareAndSetReference(Object o, long offset, Object expected, Object x) throws T {
@@ -163,7 +165,9 @@ public final class SunUnsafeWrapper extends AbstractUnsafe {
     }
 
     public <T extends Throwable> int getIntAcquire(Object o, long offset) throws T {
-        return sunUnsafe.getIntVolatile(o, offset);
+        int v = sunUnsafe.getInt(o, offset);
+        sunUnsafe.loadFence();
+        return v;
     }
 
     public <T extends Throwable> void putIntRelease(Object o, long offset, int x) throws T {
@@ -171,11 +175,11 @@ public final class SunUnsafeWrapper extends AbstractUnsafe {
     }
 
     public <T extends Throwable> int getIntOpaque(Object o, long offset) throws T {
-        return sunUnsafe.getIntVolatile(o, offset);
+        return getIntAcquire(o, offset);
     }
 
     public <T extends Throwable> void putIntOpaque(Object o, long offset, int x) throws T {
-        sunUnsafe.putIntVolatile(o, offset, x);
+        putIntRelease(o, offset, x);
     }
 
     public <T extends Throwable> boolean compareAndSetInt(Object o, long offset, int expected, int x) throws T {
@@ -253,7 +257,9 @@ public final class SunUnsafeWrapper extends AbstractUnsafe {
     }
 
     public <T extends Throwable> long getLongAcquire(Object o, long offset) throws T {
-        return sunUnsafe.getLongVolatile(o, offset);
+        long v = sunUnsafe.getLong(o, offset);
+        sunUnsafe.loadFence();
+        return v;
     }
 
     public <T extends Throwable> void putLongRelease(Object o, long offset, long x) throws T {
@@ -261,11 +267,11 @@ public final class SunUnsafeWrapper extends AbstractUnsafe {
     }
 
     public <T extends Throwable> long getLongOpaque(Object o, long offset) throws T {
-        return sunUnsafe.getLongVolatile(o, offset);
+        return getLongAcquire(o, offset);
     }
 
     public <T extends Throwable> void putLongOpaque(Object o, long offset, long x) throws T {
-        sunUnsafe.putLongVolatile(o, offset, x);
+        putLongRelease(o, offset, x);
     }
 
     public <T extends Throwable> boolean compareAndSetLong(Object o, long offset, long expected, long x) throws T {
@@ -343,7 +349,9 @@ public final class SunUnsafeWrapper extends AbstractUnsafe {
     }
 
     public <T extends Throwable> boolean getBooleanAcquire(Object o, long offset) throws T {
-        return sunUnsafe.getBooleanVolatile(o, offset);
+        boolean v = sunUnsafe.getBoolean(o, offset);
+        sunUnsafe.loadFence();
+        return v;
     }
 
     public <T extends Throwable> void putBooleanRelease(Object o, long offset, boolean x) throws T {
@@ -352,11 +360,11 @@ public final class SunUnsafeWrapper extends AbstractUnsafe {
     }
 
     public <T extends Throwable> boolean getBooleanOpaque(Object o, long offset) throws T {
-        return sunUnsafe.getBooleanVolatile(o, offset);
+        return getBooleanAcquire(o, offset);
     }
 
     public <T extends Throwable> void putBooleanOpaque(Object o, long offset, boolean x) throws T {
-        sunUnsafe.putBooleanVolatile(o, offset, x);
+        putBooleanRelease(o, offset, x);
     }
 
     public <T extends Throwable> boolean compareAndSetBoolean(Object o, long offset, boolean expected, boolean x) throws T {
@@ -410,7 +418,9 @@ public final class SunUnsafeWrapper extends AbstractUnsafe {
     }
 
     public <T extends Throwable> byte getByteAcquire(Object o, long offset) throws T {
-        return sunUnsafe.getByteVolatile(o, offset);
+        byte v = sunUnsafe.getByte(o, offset);
+        sunUnsafe.loadFence();
+        return v;
     }
 
     public <T extends Throwable> void putByteRelease(Object o, long offset, byte x) throws T {
@@ -419,11 +429,11 @@ public final class SunUnsafeWrapper extends AbstractUnsafe {
     }
 
     public <T extends Throwable> byte getByteOpaque(Object o, long offset) throws T {
-        return sunUnsafe.getByteVolatile(o, offset);
+        return getByteAcquire(o, offset);
     }
 
     public <T extends Throwable> void putByteOpaque(Object o, long offset, byte x) throws T {
-        sunUnsafe.putByteVolatile(o, offset, x);
+        putByteRelease(o, offset, x);
     }
 
     public <T extends Throwable> boolean compareAndSetByte(Object o, long offset, byte expected, byte x) throws T {
@@ -517,7 +527,9 @@ public final class SunUnsafeWrapper extends AbstractUnsafe {
     }
 
     public <T extends Throwable> short getShortAcquire(Object o, long offset) throws T {
-        return sunUnsafe.getShortVolatile(o, offset);
+        short v = sunUnsafe.getShort(o, offset);
+        sunUnsafe.loadFence();
+        return v;
     }
 
     public <T extends Throwable> void putShortRelease(Object o, long offset, short x) throws T {
@@ -526,11 +538,11 @@ public final class SunUnsafeWrapper extends AbstractUnsafe {
     }
 
     public <T extends Throwable> short getShortOpaque(Object o, long offset) throws T {
-        return sunUnsafe.getShortVolatile(o, offset);
+        return getShortAcquire(o, offset);
     }
 
     public <T extends Throwable> void putShortOpaque(Object o, long offset, short x) throws T {
-        sunUnsafe.putShortVolatile(o, offset, x);
+        putShortRelease(o, offset, x);
     }
 
     public <T extends Throwable> boolean compareAndSetShort(Object o, long offset, short expected, short x) throws T {
@@ -636,7 +648,9 @@ public final class SunUnsafeWrapper extends AbstractUnsafe {
     }
 
     public <T extends Throwable> char getCharAcquire(Object o, long offset) throws T {
-        return sunUnsafe.getCharVolatile(o, offset);
+        char v = sunUnsafe.getChar(o, offset);
+        sunUnsafe.loadFence();
+        return v;
     }
 
     public <T extends Throwable> void putCharRelease(Object o, long offset, char x) throws T {
@@ -645,11 +659,11 @@ public final class SunUnsafeWrapper extends AbstractUnsafe {
     }
 
     public <T extends Throwable> char getCharOpaque(Object o, long offset) throws T {
-        return sunUnsafe.getCharVolatile(o, offset);
+        return getCharAcquire(o, offset);
     }
 
     public <T extends Throwable> void putCharOpaque(Object o, long offset, char x) throws T {
-        sunUnsafe.putCharVolatile(o, offset, x);
+        putCharRelease(o, offset, x);
     }
 
     public <T extends Throwable> boolean compareAndSetChar(Object o, long offset, char expected, char x) throws T {
@@ -703,7 +717,9 @@ public final class SunUnsafeWrapper extends AbstractUnsafe {
     }
 
     public <T extends Throwable> float getFloatAcquire(Object o, long offset) throws T {
-        return sunUnsafe.getFloatVolatile(o, offset);
+        float v = sunUnsafe.getFloat(o, offset);
+        sunUnsafe.loadFence();
+        return v;
     }
 
     public <T extends Throwable> void putFloatRelease(Object o, long offset, float x) throws T {
@@ -711,11 +727,11 @@ public final class SunUnsafeWrapper extends AbstractUnsafe {
     }
 
     public <T extends Throwable> float getFloatOpaque(Object o, long offset) throws T {
-        return sunUnsafe.getFloatVolatile(o, offset);
+        return getFloatAcquire(o, offset);
     }
 
     public <T extends Throwable> void putFloatOpaque(Object o, long offset, float x) throws T {
-        sunUnsafe.putFloatVolatile(o, offset, x);
+        putFloatRelease(o, offset, x);
     }
 
     public <T extends Throwable> boolean compareAndSetFloat(Object o, long offset, float expected, float x) throws T {
@@ -769,7 +785,9 @@ public final class SunUnsafeWrapper extends AbstractUnsafe {
     }
 
     public <T extends Throwable> double getDoubleAcquire(Object o, long offset) throws T {
-        return sunUnsafe.getDoubleVolatile(o, offset);
+        double v = sunUnsafe.getDouble(o, offset);
+        sunUnsafe.loadFence();
+        return v;
     }
 
     public <T extends Throwable> void putDoubleRelease(Object o, long offset, double x) throws T {
@@ -777,11 +795,11 @@ public final class SunUnsafeWrapper extends AbstractUnsafe {
     }
 
     public <T extends Throwable> double getDoubleOpaque(Object o, long offset) throws T {
-        return sunUnsafe.getDoubleVolatile(o, offset);
+        return getDoubleAcquire(o, offset);
     }
 
     public <T extends Throwable> void putDoubleOpaque(Object o, long offset, double x) throws T {
-        sunUnsafe.putDoubleVolatile(o, offset, x);
+        putDoubleRelease(o, offset, x);
     }
 
     public <T extends Throwable> boolean compareAndSetDouble(Object o, long offset, double expected, double x) throws T {

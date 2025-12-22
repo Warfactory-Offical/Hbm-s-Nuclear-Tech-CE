@@ -9,8 +9,21 @@ import com.hbm.core.HbmCorePlugin;
  */
 public final class UnsafeHolder {
     public static final AbstractUnsafe U = AbstractUnsafe.getUnsafe();
+    public static final long IA_BASE = U.arrayBaseOffset(int[].class);
+    public static final long IA_SHIFT = Integer.numberOfTrailingZeros(U.arrayIndexScale(int[].class));
+    public static final long IJ_BASE = U.arrayBaseOffset(long[].class);
+    public static final long IJ_SHIFT = Integer.numberOfTrailingZeros(U.arrayIndexScale(long[].class));
+
 
     private UnsafeHolder() {
+    }
+
+    public static long offInt(int i) {
+        return ((long) i << IA_SHIFT) + IA_BASE;
+    }
+
+    public static long offLong(int i) {
+        return ((long) i << IJ_SHIFT) + IJ_BASE;
     }
 
     public static long fieldOffset(Class<?> clz, String fieldName) {
