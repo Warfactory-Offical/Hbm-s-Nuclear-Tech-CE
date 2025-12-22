@@ -32,10 +32,10 @@ public class RenderGasCent extends TileEntitySpecialRenderer<TileEntityMachineGa
     GlStateManager.enableLighting();
     GlStateManager.shadeModel(GL11.GL_SMOOTH);
       switch (te.getBlockMetadata() - 10) {
-          case 2 -> GlStateManager.rotate(90, 0F, 1F, 0F);
-          case 4 -> GlStateManager.rotate(180, 0F, 1F, 0F);
-          case 3 -> GlStateManager.rotate(270, 0F, 1F, 0F);
-          case 5 -> GlStateManager.rotate(0, 0F, 1F, 0F);
+          case 2 -> GlStateManager.rotate(270, 0F, 1F, 0F);
+          case 4 -> GlStateManager.rotate(0, 0F, 1F, 0F);
+          case 3 -> GlStateManager.rotate(90, 0F, 1F, 0F);
+          case 5 -> GlStateManager.rotate(180, 0F, 1F, 0F);
       }
 
     bindTexture(ResourceManager.centrifuge_gas_tex);
