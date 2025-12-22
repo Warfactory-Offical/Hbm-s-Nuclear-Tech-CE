@@ -496,7 +496,6 @@ public final class RadiationSystemNT {
             if (c == 0) continue;
             System.arraycopy(data.activeStripeBufs[s], 0, buf, pos, c);
             System.arraycopy(data.activeStripeRefs[s], 0, refs, pos, c);
-            Arrays.fill(data.activeStripeRefs[s], 0, c, null);
             pos += c;
         }
         Arrays.fill(data.parityCounts, 0);
@@ -509,12 +508,12 @@ public final class RadiationSystemNT {
             ChunkRef[] src = data.touchedStripeRefs[s];
             for (int i = 0; i < c; i++) {
                 ChunkRef cr = src[i];
+                src[i] = null;
                 long ck = cr.ck;
                 int bucketIdx = (int) ((ck & 1) | ((ck >>> 31) & 2));
                 int idx = data.parityCounts[bucketIdx]++;
                 data.parityBuckets[bucketIdx][idx] = cr;
             }
-            Arrays.fill(src, 0, c, null);
         }
         final int maxWake = (activeCount <= (Integer.MAX_VALUE / 90)) ? (activeCount * 90) : Integer.MAX_VALUE;
         final LongBag wokenBag = data.getWokenBag(maxWake);
@@ -529,7 +528,6 @@ public final class RadiationSystemNT {
         } else {
             new FinalizeTask(data, buf, refs, 0, activeCount, activeThreshold).invoke();
         }
-        Arrays.fill(data.activeRefs, 0, activeCount, null);
         logProfilingMessage(data, time);
     }
 
@@ -546,34 +544,52 @@ public final class RadiationSystemNT {
         }
     }
 
+    // @formatter:off
     private static void runExactExchangeSweeps(WorldRadiationData data, LongBag wakeBag) {
-        ChunkRef[][] buckets = data.parityBuckets;
-        int[] counts = data.parityCounts;
-        int th0 = getTaskThreshold(counts[0], 64);
-        int th1 = getTaskThreshold(counts[1], 64);
-        int th2 = getTaskThreshold(counts[2], 64);
-        int th3 = getTaskThreshold(counts[3], 64);
-        ForkJoinTask.invokeAll(new DiffuseXTask(data, buckets[0], 0, counts[0], wakeBag, th0),
-                new DiffuseXTask(data, buckets[2], 0, counts[2], wakeBag, th2));
-        ForkJoinTask.invokeAll(new DiffuseXTask(data, buckets[1], 0, counts[1], wakeBag, th1),
-                new DiffuseXTask(data, buckets[3], 0, counts[3], wakeBag, th3));
-        ForkJoinTask.invokeAll(new DiffuseZTask(data, buckets[0], 0, counts[0], wakeBag, th0),
-                new DiffuseZTask(data, buckets[1], 0, counts[1], wakeBag, th1));
-        ForkJoinTask.invokeAll(new DiffuseZTask(data, buckets[2], 0, counts[2], wakeBag, th2),
-                new DiffuseZTask(data, buckets[3], 0, counts[3], wakeBag, th3));
-        ForkJoinTask<?>[] yTasks0 = new ForkJoinTask[4];
-        yTasks0[0] = new DiffuseYTask(data, buckets[0], 0, counts[0], 0, wakeBag, th0);
-        yTasks0[1] = new DiffuseYTask(data, buckets[1], 0, counts[1], 0, wakeBag, th1);
-        yTasks0[2] = new DiffuseYTask(data, buckets[2], 0, counts[2], 0, wakeBag, th2);
-        yTasks0[3] = new DiffuseYTask(data, buckets[3], 0, counts[3], 0, wakeBag, th3);
-        ForkJoinTask.invokeAll(yTasks0);
-        ForkJoinTask<?>[] yTasks1 = new ForkJoinTask[4];
-        yTasks1[0] = new DiffuseYTask(data, buckets[0], 0, counts[0], 1, wakeBag, th0);
-        yTasks1[1] = new DiffuseYTask(data, buckets[1], 0, counts[1], 1, wakeBag, th1);
-        yTasks1[2] = new DiffuseYTask(data, buckets[2], 0, counts[2], 1, wakeBag, th2);
-        yTasks1[3] = new DiffuseYTask(data, buckets[3], 0, counts[3], 1, wakeBag, th3);
-        ForkJoinTask.invokeAll(yTasks1);
+        ChunkRef[][] b = data.parityBuckets;
+        int[] c = data.parityCounts;
+        int c0 = c[0], c1 = c[1], c2 = c[2], c3 = c[3];
+        int th0 = getTaskThreshold(c0, 64), th1 = getTaskThreshold(c1, 64), th2 = getTaskThreshold(c2, 64), th3 = getTaskThreshold(c3, 64);
+        int s = data.workEpoch;
+        boolean fx = (s & 1) != 0, fz = (s & 2) != 0;
+        int yPar = (s & 4) != 0 ? 1 : 0;
+        int perm = s % 6;
+        if (perm < 0) perm += 6;
+        switch (perm) {
+            case 0 -> { sweepX(data, b, c0, c1, c2, c3, th0, th1, th2, th3, wakeBag, fx);sweepZ(data, b, c0, c1, c2, c3, th0, th1, th2, th3, wakeBag, fz);sweepY(data, b, c0, c1, c2, c3, th0, th1, th2, th3, wakeBag, yPar); }
+            case 1 -> { sweepX(data, b, c0, c1, c2, c3, th0, th1, th2, th3, wakeBag, fx);sweepY(data, b, c0, c1, c2, c3, th0, th1, th2, th3, wakeBag, yPar);sweepZ(data, b, c0, c1, c2, c3, th0, th1, th2, th3, wakeBag, fz); }
+            case 2 -> { sweepY(data, b, c0, c1, c2, c3, th0, th1, th2, th3, wakeBag, yPar);sweepZ(data, b, c0, c1, c2, c3, th0, th1, th2, th3, wakeBag, fz);sweepX(data, b, c0, c1, c2, c3, th0, th1, th2, th3, wakeBag, fx); }
+            case 3 -> { sweepY(data, b, c0, c1, c2, c3, th0, th1, th2, th3, wakeBag, yPar);sweepX(data, b, c0, c1, c2, c3, th0, th1, th2, th3, wakeBag, fx);sweepZ(data, b, c0, c1, c2, c3, th0, th1, th2, th3, wakeBag, fz); }
+            case 4 -> { sweepZ(data, b, c0, c1, c2, c3, th0, th1, th2, th3, wakeBag, fz);sweepX(data, b, c0, c1, c2, c3, th0, th1, th2, th3, wakeBag, fx);sweepY(data, b, c0, c1, c2, c3, th0, th1, th2, th3, wakeBag, yPar); }
+            default -> { sweepZ(data, b, c0, c1, c2, c3, th0, th1, th2, th3, wakeBag, fz);sweepY(data, b, c0, c1, c2, c3, th0, th1, th2, th3, wakeBag, yPar);sweepX(data, b, c0, c1, c2, c3, th0, th1, th2, th3, wakeBag, fx); }
+        }
     }
+    private static void sweepX(WorldRadiationData d, ChunkRef[][] b, int c0, int c1, int c2, int c3, int th0, int th1, int th2, int th3, LongBag bag, boolean flip) {
+        var t0 = new DiffuseXTask(d, b[0], 0, c0, bag, th0);
+        var t1 = new DiffuseXTask(d, b[1], 0, c1, bag, th1);
+        var t2 = new DiffuseXTask(d, b[2], 0, c2, bag, th2);
+        var t3 = new DiffuseXTask(d, b[3], 0, c3, bag, th3);
+        if (flip) { ForkJoinTask.invokeAll(t1, t3); ForkJoinTask.invokeAll(t0, t2); }
+        else      { ForkJoinTask.invokeAll(t0, t2); ForkJoinTask.invokeAll(t1, t3); }
+    }
+    private static void sweepZ(WorldRadiationData d, ChunkRef[][] b, int c0, int c1, int c2, int c3, int th0, int th1, int th2, int th3, LongBag bag, boolean flip) {
+        var t0 = new DiffuseZTask(d, b[0], 0, c0, bag, th0);
+        var t1 = new DiffuseZTask(d, b[1], 0, c1, bag, th1);
+        var t2 = new DiffuseZTask(d, b[2], 0, c2, bag, th2);
+        var t3 = new DiffuseZTask(d, b[3], 0, c3, bag, th3);
+        if (flip) { ForkJoinTask.invokeAll(t2, t3); ForkJoinTask.invokeAll(t0, t1); }
+        else      { ForkJoinTask.invokeAll(t0, t1); ForkJoinTask.invokeAll(t2, t3); }
+    }
+    private static void sweepY(WorldRadiationData d, ChunkRef[][] b, int c0, int c1, int c2, int c3, int th0, int th1, int th2, int th3, LongBag bag, int startParity) {
+        for (int p = 0; p < 2; p++) {
+            int parity = startParity ^ p;
+            invokeAll4(new DiffuseYTask(d, b[0], 0, c0, parity, bag, th0), new DiffuseYTask(d, b[1], 0, c1, parity, bag, th1), new DiffuseYTask(d, b[2], 0, c2, parity, bag, th2), new DiffuseYTask(d, b[3], 0, c3, parity, bag, th3));
+        }
+    }
+    private static void invokeAll4(ForkJoinTask<?> a, ForkJoinTask<?> b, ForkJoinTask<?> c, ForkJoinTask<?> d) {
+        a.fork();b.fork();c.fork();d.invoke();c.join();b.join();a.join();
+    }
+    // @formatter:on
 
     private static boolean exchangePairExact(SectionRef a, int ai, int faceA, SectionRef b, int bi, int faceB, int area) {
         if (area <= 0) return false;
@@ -710,9 +726,10 @@ public final class RadiationSystemNT {
         for (int i = start; i < end; i++) {
             long pk = keys[i];
             int pi = pocketIndexFromPocketKey(pk);
-            SectionRef sc;
+            final SectionRef sc;
             if (refs != null) {
                 sc = refs[i];
+                refs[i] = null;
             } else {
                 sc = data.getSection(sectionKeyFromPocketKey(pk));
             }
@@ -1602,8 +1619,10 @@ public final class RadiationSystemNT {
         protected void compute() {
             long[] outPockets = data.activeStripeBufs[stripe];
             SectionRef[] outRefs = data.activeStripeRefs[stripe];
-            int pocketCount = 0;
             ChunkRef[] outTouched = data.touchedStripeRefs[stripe];
+            final int prevPocketCount = data.activeStripeCounts[stripe];
+            final int prevTouchedCount = data.touchedStripeCounts[stripe];
+            int pocketCount = 0;
             int touchedCount = 0;
 
             long pk;
@@ -1687,6 +1706,8 @@ public final class RadiationSystemNT {
                     outTouched[touchedCount++] = sw;
                 }
             }
+            if (pocketCount < prevPocketCount) Arrays.fill(outRefs, pocketCount, prevPocketCount, null);
+            if (touchedCount < prevTouchedCount) Arrays.fill(outTouched, touchedCount, prevTouchedCount, null);
             data.activeStripeBufs[stripe] = outPockets;
             data.activeStripeRefs[stripe] = outRefs;
             data.activeStripeCounts[stripe] = pocketCount;
@@ -2324,11 +2345,6 @@ public final class RadiationSystemNT {
             return ((int) x) & ACTIVE_STRIPE_MASK;
         }
 
-        double sanitize(double v) {
-            if (Double.isNaN(v) || Math.abs(v) < RAD_EPSILON && v > minBound) return 0.0D;
-            return Math.max(Math.min(v, RAD_MAX), minBound);
-        }
-
         static double mulClamp(double a, int b) {
             if (a == 0.0D) return 0.0D;
             if (!Double.isFinite(a)) return Math.copySign(Double.MAX_VALUE, a);
@@ -2343,6 +2359,11 @@ public final class RadiationSystemNT {
             if (s == Double.POSITIVE_INFINITY) return Double.MAX_VALUE;
             if (s == Double.NEGATIVE_INFINITY) return -Double.MAX_VALUE;
             return Double.isNaN(s) ? 0.0D : s;
+        }
+
+        double sanitize(double v) {
+            if (Double.isNaN(v) || Math.abs(v) < RAD_EPSILON && v > minBound) return 0.0D;
+            return Math.max(Math.min(v, RAD_MAX), minBound);
         }
 
         void clearAllSections() {
