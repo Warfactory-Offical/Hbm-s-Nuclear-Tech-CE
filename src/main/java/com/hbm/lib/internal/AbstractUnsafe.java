@@ -445,7 +445,7 @@ public abstract sealed class AbstractUnsafe permits InternalUnsafeWrapper, SunUn
 
 
     // ================================================================================================================
-    // 12. Fences & Synchronization
+    // 12. Fences & Miscellaneous
     // ================================================================================================================
 
     public abstract <T extends Throwable> void loadFence() throws T;
@@ -457,6 +457,8 @@ public abstract sealed class AbstractUnsafe permits InternalUnsafeWrapper, SunUn
     public abstract <T extends Throwable> void park(boolean isAbsolute, long time) throws T;
 
     public abstract <T extends Throwable> void unpark(Object thread) throws T;
+
+    public abstract <T extends Throwable> void throwException(Throwable ee) throws T;
 
     /**
      * @deprecated use {@link #getReference(Object, long)} whenever possible

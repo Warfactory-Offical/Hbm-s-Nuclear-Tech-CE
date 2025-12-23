@@ -883,4 +883,9 @@ public final class SunUnsafeWrapper extends AbstractUnsafe {
     public <T extends Throwable> void unpark(Object thread) throws T {
         sunUnsafe.unpark(thread);
     }
+
+    @Override
+    public <T extends Throwable> void throwException(Throwable ee) throws T {
+        sunUnsafe.throwException(ee);
+    }
 }

@@ -53,7 +53,7 @@ final class InternalUnsafeWrapper extends AbstractUnsafe {
     private static final MethodHandle COMPARE_AND_EXCHANGE_DOUBLE, COMPARE_AND_EXCHANGE_DOUBLE_ACQUIRE, COMPARE_AND_EXCHANGE_DOUBLE_RELEASE;
 
     private static final MethodHandle ALLOCATE_MEMORY, FREE_MEMORY, REALLOCATE_MEMORY, SET_MEMORY, COPY_MEMORY, GET_LONG_ADDRESS, PUT_LONG_ADDRESS, ALLOCATE_UNINITIALIZED_ARRAY;
-    private static final MethodHandle LOAD_FENCE, STORE_FENCE, FULL_FENCE, PARK, UNPARK;
+    private static final MethodHandle LOAD_FENCE, STORE_FENCE, FULL_FENCE, PARK, UNPARK, THROW_EXCEPTION;
 
     static {// @formatter:off
         try {
@@ -330,6 +330,7 @@ final class InternalUnsafeWrapper extends AbstractUnsafe {
             FULL_FENCE = binder.bind("fullFence", void.class);
             PARK = binder.bind("park", void.class, boolean.class, long.class);
             UNPARK = binder.bind("unpark", void.class, Object.class);
+            THROW_EXCEPTION = binder.bind("throwException", void.class, Throwable.class);
 
         } catch (Throwable t) {
             throw new ExceptionInInitializerError(t);
@@ -1742,6 +1743,15 @@ final class InternalUnsafeWrapper extends AbstractUnsafe {
     public <T extends Throwable> void unpark(Object thread) throws T {
         try {
             UNPARK.invokeExact(thread);
+        } catch (Throwable t) {
+            throw (T) t;
+        }
+    }
+
+    @Override
+    public <T extends Throwable> void throwException(Throwable ee) throws T {
+        try {
+            THROW_EXCEPTION.invokeExact(ee);
         } catch (Throwable t) {
             throw (T) t;
         }
