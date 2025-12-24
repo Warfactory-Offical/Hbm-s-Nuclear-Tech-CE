@@ -193,7 +193,7 @@ final class MpscUnboundedXaddChunkLong extends MpUnboundedXaddChunkLong<MpscUnbo
 
 abstract class MpUnboundedXaddArrayLongQueuePad0 {
     @SuppressWarnings("unused")
-    long p00, p01, p02, p03, p04, p05, p06, p07;
+    long p00, p01, p02, p03, p04, p05; // 48B
 }
 
 abstract class MpUnboundedXaddArrayLongQueueProducerFields<R extends MpUnboundedXaddChunkLong<R>> extends MpUnboundedXaddArrayLongQueuePad0 {
@@ -204,7 +204,7 @@ abstract class MpUnboundedXaddArrayLongQueueProducerFields<R extends MpUnbounded
 abstract class MpUnboundedXaddArrayLongQueuePad1<R extends MpUnboundedXaddChunkLong<R>> extends MpUnboundedXaddArrayLongQueueProducerFields<R> {
 
     @SuppressWarnings("unused")
-    long p10, p11, p12, p13, p14, p15, p16, p17;
+    long p10, p11, p12, p13, p14, p15, p16; // 56B
 }
 
 abstract class MpUnboundedXaddArrayLongQueueProducerChunk<R extends MpUnboundedXaddChunkLong<R>> extends MpUnboundedXaddArrayLongQueuePad1<R> {
@@ -219,7 +219,7 @@ abstract class MpUnboundedXaddArrayLongQueueProducerChunk<R extends MpUnboundedX
 abstract class MpUnboundedXaddArrayLongQueuePad2<R extends MpUnboundedXaddChunkLong<R>> extends MpUnboundedXaddArrayLongQueueProducerChunk<R> {
 
     @SuppressWarnings("unused")
-    long p20, p21, p22, p23, p24, p25, p26, p27;
+    long p20, p21, p22, p23, p24, p25, p26; // 56B
 }
 
 abstract class MpUnboundedXaddArrayLongQueueConsumerFields<R extends MpUnboundedXaddChunkLong<R>> extends MpUnboundedXaddArrayLongQueuePad2<R> {
@@ -232,5 +232,5 @@ abstract class MpUnboundedXaddArrayLongQueueConsumerFields<R extends MpUnbounded
 
 abstract class MpUnboundedXaddArrayLongQueuePad3<R extends MpUnboundedXaddChunkLong<R>> extends MpUnboundedXaddArrayLongQueueConsumerFields<R> {
     @SuppressWarnings("unused")
-    long p30, p31, p32, p33, p34, p35, p36, p37;
+    long p30, p31, p32, p33, p34, p35, p36; // 56B
 }

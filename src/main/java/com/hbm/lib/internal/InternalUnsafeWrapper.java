@@ -62,8 +62,8 @@ final class InternalUnsafeWrapper extends AbstractUnsafe {
             // Specifically:
             // - compareAndExchange*Volatile to compareAndExchange*
             // - compareAndSwap* to compareAndSet*
-            // - weakCompareAndSwap*Volatile -> weakCompareAndSwap
-            // - weakCompareAndSwap* -> weakCompareAndSwap*Plain
+            // - weakCompareAndSwap*Volatile -> weakCompareAndSet*
+            // - weakCompareAndSwap* -> weakCompareAndSet*Plain
             boolean JDK_8207146 = MAJOR_VERSION >= 12; // Rename xxxObject -> xxxReference
             boolean JDK_8344168 = MAJOR_VERSION >= 25; // arrayBaseOffset returns long
             Class<?> unsafeClass = Class.forName("jdk.internal.misc.Unsafe");
@@ -140,8 +140,7 @@ final class InternalUnsafeWrapper extends AbstractUnsafe {
             PUT_INT = binder.bind("putInt", void.class, Object.class, long.class, int.class);
             GET_INT_VOLATILE = binder.bind("getIntVolatile", int.class, Object.class, long.class);
             PUT_INT_VOLATILE = binder.bind("putIntVolatile", void.class, Object.class, long.class, int.class);
-            String casIntName = JPMS ? "compareAndSetInt" : "compareAndSwapInt";
-            COMPARE_AND_SET_INT = binder.bind(casIntName, boolean.class, Object.class, long.class, int.class, int.class);
+            COMPARE_AND_SET_INT = binder.bind("compareAndSetInt", boolean.class, Object.class, long.class, int.class, int.class);
             GET_AND_ADD_INT = binder.bind("getAndAddInt", int.class, Object.class, long.class, int.class);
             GET_AND_SET_INT = binder.bind("getAndSetInt", int.class, Object.class, long.class, int.class);
 
@@ -167,8 +166,7 @@ final class InternalUnsafeWrapper extends AbstractUnsafe {
             PUT_LONG = binder.bind("putLong", void.class, Object.class, long.class, long.class);
             GET_LONG_VOLATILE = binder.bind("getLongVolatile", long.class, Object.class, long.class);
             PUT_LONG_VOLATILE = binder.bind("putLongVolatile", void.class, Object.class, long.class, long.class);
-            String casLongName = JPMS ? "compareAndSetLong" : "compareAndSwapLong";
-            COMPARE_AND_SET_LONG = binder.bind(casLongName, boolean.class, Object.class, long.class, long.class, long.class);
+            COMPARE_AND_SET_LONG = binder.bind("compareAndSetLong", boolean.class, Object.class, long.class, long.class, long.class);
             GET_AND_ADD_LONG = binder.bind("getAndAddLong", long.class, Object.class, long.class, long.class);
             GET_AND_SET_LONG = binder.bind("getAndSetLong", long.class, Object.class, long.class, long.class);
 

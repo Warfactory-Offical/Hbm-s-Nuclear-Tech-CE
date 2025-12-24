@@ -145,7 +145,7 @@ public final class MpscLinkedAtomicLongQueue extends MpscLinkedAtomicLongQueuePa
 
 abstract class MpscLinkedAtomicLongQueuePad0 {
     @SuppressWarnings("unused")
-    long p00, p01, p02, p03, p04, p05, p06, p07;
+    long p00, p01, p02, p03, p04, p05; // 48B
 }
 
 abstract class MpscLinkedAtomicLongQueueProducerNodeRef extends MpscLinkedAtomicLongQueuePad0 {
@@ -155,7 +155,7 @@ abstract class MpscLinkedAtomicLongQueueProducerNodeRef extends MpscLinkedAtomic
 
 abstract class MpscLinkedAtomicLongQueuePad1 extends MpscLinkedAtomicLongQueueProducerNodeRef {
     @SuppressWarnings("unused")
-    long p10, p11, p12, p13, p14, p15, p16, p17; // 64B
+    long p10, p11, p12, p13, p14, p15, p16; // 56B
 }
 
 abstract class MpscLinkedAtomicLongQueueConsumerNodeRef extends MpscLinkedAtomicLongQueuePad1 {
@@ -165,5 +165,5 @@ abstract class MpscLinkedAtomicLongQueueConsumerNodeRef extends MpscLinkedAtomic
 
 abstract class MpscLinkedAtomicLongQueuePad2 extends MpscLinkedAtomicLongQueueConsumerNodeRef {
     @SuppressWarnings("unused")
-    long p20, p21, p22, p23, p24, p25, p26, p27; // 64B
+    long p20, p21, p22, p23, p24, p25, p26; // 56B
 }

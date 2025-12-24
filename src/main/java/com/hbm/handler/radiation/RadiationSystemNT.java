@@ -606,7 +606,7 @@ public final class RadiationSystemNT {
             new FinalizeTask(data, data.activeBuf, data.activeRefs, data.activeChunkRefs, 0, activeCount, activeThreshold).invoke();
         }
 
-        if (ticks % 200 == 13) {
+        if (data.workEpoch % 200 == 13) {
             data.cleanupPools();
             data.processUnloadedQueue();
         }
@@ -712,21 +712,23 @@ public final class RadiationSystemNT {
         int c = (kA << 2) | kB;
 
         if (c == ((ChunkRef.KIND_UNI << 2) | ChunkRef.KIND_UNI)) {
-            double ra = crA.uniformRads[syA];
-            double rb = crB.uniformRads[syB];
+            double[] uniA = crA.uniformRads;
+            double[] uniB = crB.uniformRads;
+            double ra = uniA[syA];
+            double rb = uniB[syB];
             if (ra != rb) {
                 double avg = 0.5d * (ra + rb);
                 double delta = 0.5d * (ra - rb) * UU_E;
                 double na = avg + delta;
                 double nb = avg - delta;
-                crA.uniformRads[syA] = na;
-                crB.uniformRads[syB] = nb;
+                uniA[syA] = na;
+                uniB[syB] = nb;
 
-                if (na != 0.0D && crA.casUniformEpoch(syA, epoch)) {
+                if (na != 0.0D && crA.casUniEpoch(syA, epoch)) {
                     crA.setActiveBit(syA, 0);
                     wakeBag.tryAdd(pocketKey(aKey, 0));
                 }
-                if (nb != 0.0D && crB.casUniformEpoch(syB, epoch)) {
+                if (nb != 0.0D && crB.casUniEpoch(syB, epoch)) {
                     crB.setActiveBit(syB, 0);
                     wakeBag.tryAdd(pocketKey(bKey, 0));
                 }
@@ -762,7 +764,7 @@ public final class RadiationSystemNT {
 
     private static void wakeIfNeeded(long sectionKey, ChunkRef cr, int sy, LongBag wakeBag, int epoch) {
         if (cr.uniformRads[sy] == 0.0D) return;
-        if (!cr.casUniformEpoch(sy, epoch)) return;
+        if (!cr.casUniEpoch(sy, epoch)) return;
         cr.setActiveBit(sy, 0);
         wakeBag.tryAdd(pocketKey(sectionKey, 0));
     }
@@ -1544,65 +1546,61 @@ public final class RadiationSystemNT {
 
     // padding boilerplate to address false sharing
     // @formatter:off
-    private static abstract sealed class ChunkRefBase permits ChunkRefPad0 {
+    private static abstract class ChunkRefHeader {
         final long ck;
-        final @Nullable SectionRef @NotNull [] sec = new SectionRef[16]; // non-null if KIND is not NONE/UNI. If not, invariant breach should throw NPE
-        @Nullable ChunkRef north, south, west, east;
+        // non-null if KIND is not NONE/UNI. If not, invariant breach should throw NPE
+        final @Nullable SectionRef @NotNull [] sec = new SectionRef[16];
+        final double[] uniformRads = new double[16];
+        final int[] uniformEpochs = new int[16];
         Chunk mcChunk; // non-null for async compute, nullable for server thread ops
-        int touchedEpoch;
-        ChunkRefBase(long ck) { this.ck = ck; }
+        @Nullable ChunkRef north, south, west, east;
+        int sectionKinds;   // 2 bits per section
+        ChunkRefHeader(long ck) { this.ck = ck; }
     }
-    private static abstract sealed class ChunkRefPad0 extends ChunkRefBase permits ChunkRefM0 {
-        long p00, p01, p02, p03, p04, p05, p06;
+    private static abstract class ChunkRefPad0 extends ChunkRefHeader {
+        @SuppressWarnings("unused") long p00, p01; // 16B
         ChunkRefPad0(long ck) { super(ck); }
     }
-    private static abstract sealed class ChunkRefM0 extends ChunkRefPad0 permits ChunkRefPad1 {
-        long mask0;
-        ChunkRefM0(long ck) { super(ck); }
-    }
-    private static abstract sealed class ChunkRefPad1 extends ChunkRefM0 permits ChunkRefM1 {
-        long p10, p11, p12, p13, p14, p15, p16;
+    private static abstract class ChunkRefM0 extends ChunkRefPad0 { long mask0; ChunkRefM0(long ck) { super(ck); } }
+    private static abstract class ChunkRefPad1 extends ChunkRefM0 {
+        @SuppressWarnings("unused") long p10, p11, p12, p13, p14, p15, p16; // 56B
         ChunkRefPad1(long ck) { super(ck); }
     }
-    private static abstract sealed class ChunkRefM1 extends ChunkRefPad1 permits ChunkRefPad2 {
-        long mask1;
-        ChunkRefM1(long ck) { super(ck); }
-    }
-    private static abstract sealed class ChunkRefPad2 extends ChunkRefM1 permits ChunkRefM2 {
-        long p20, p21, p22, p23, p24, p25, p26;
+    private static abstract class ChunkRefM1 extends ChunkRefPad1 { long mask1; ChunkRefM1(long ck) { super(ck); } }
+    private static abstract class ChunkRefPad2 extends ChunkRefM1 {
+        @SuppressWarnings("unused") long p20, p21, p22, p23, p24, p25, p26; // 56B
         ChunkRefPad2(long ck) { super(ck); }
     }
-    private static abstract sealed class ChunkRefM2 extends ChunkRefPad2 permits ChunkRefPad3 {
-        long mask2;
-        ChunkRefM2(long ck) { super(ck); }
-    }
-    private static abstract sealed class ChunkRefPad3 extends ChunkRefM2 permits ChunkRefM3 {
-        long p30, p31, p32, p33, p34, p35, p36;
+    private static abstract class ChunkRefM2 extends ChunkRefPad2 { long mask2; ChunkRefM2(long ck) { super(ck); } }
+    private static abstract class ChunkRefPad3 extends ChunkRefM2 {
+        @SuppressWarnings("unused") long p30, p31, p32, p33, p34, p35, p36; // 56B
         ChunkRefPad3(long ck) { super(ck); }
     }
-    private static abstract sealed class ChunkRefM3 extends ChunkRefPad3 permits ChunkRef {
-        long mask3;
-        ChunkRefM3(long ck) { super(ck); }
+    private static abstract class ChunkRefM3 extends ChunkRefPad3 { long mask3; ChunkRefM3(long ck) { super(ck); } }
+    private static abstract class ChunkRefPad4 extends ChunkRefM3 {
+        @SuppressWarnings("unused") long p40, p41, p42, p43, p44, p45, p46; // 56B
+        ChunkRefPad4(long ck) { super(ck); }
     }
     // @formatter:on
 
-    private static final class ChunkRef extends ChunkRefM3 {
-        static final long MASK_0_OFF = fieldOffset(ChunkRefM0.class, "mask0");
-        static final long MASK_1_OFF = fieldOffset(ChunkRefM1.class, "mask1");
-        static final long MASK_2_OFF = fieldOffset(ChunkRefM2.class, "mask2");
-        static final long MASK_3_OFF = fieldOffset(ChunkRefM3.class, "mask3");
-        static final long TOUCHED_EPOCH_OFF = fieldOffset(ChunkRefBase.class, "touchedEpoch");
-        static final long[] MASK_OFFSETS = {MASK_0_OFF, MASK_1_OFF, MASK_2_OFF, MASK_3_OFF};
+    private static final class ChunkRef extends ChunkRefPad4 {
+        static final long MASK_BASE = fieldOffset(ChunkRefM0.class, "mask0");
+        static final long TOUCHED_EPOCH_OFF = fieldOffset(ChunkRef.class, "touchedEpoch");
         static final int KIND_NONE = 0;
         static final int KIND_UNI = 1;
         static final int KIND_SINGLE = 2;
         static final int KIND_MULTI = 3;
-        final double[] uniformRads = new double[16];
-        final int[] uniformEpochs = new int[16];
-        int sectionKinds; // 2 bits per section
+
+        int touchedEpoch;
 
         ChunkRef(long ck) {
             super(ck);
+        }
+
+        boolean casUniEpoch(int sy, int epoch) {
+            int cur = uniformEpochs[sy];
+            if (cur == epoch) return false;
+            return U.compareAndSetInt(uniformEpochs, offInt(sy), cur, epoch);
         }
 
         int getKind(int sy) {
@@ -1618,39 +1616,34 @@ public final class RadiationSystemNT {
         }
 
         boolean isInactive(int sy, int pi) {
-            long maskGroup = U.getLongVolatile(this, MASK_OFFSETS[(sy >>> 2) & 3]);
-            int localShift = (sy & 3) << 4;
-            return ((maskGroup >>> localShift) & (1L << pi)) == 0;
+            long offset = MASK_BASE + ((sy & 0xC) << 4);
+            return (U.getLong(this, offset) & (1L << (((sy & 3) << 4) + pi))) == 0;
         }
 
         boolean setActiveBit(int sy, int pi) {
-            long offset = MASK_OFFSETS[(sy >>> 2) & 3];
-            int localShift = (sy & 3) << 4;
-            long bit = 1L << (localShift + pi);
+            long offset = MASK_BASE + ((sy & 0xC) << 4);
+            long bit = 1L << (((sy & 3) << 4) + pi);
+
             while (true) {
                 long cur = U.getLongVolatile(this, offset);
                 if ((cur & bit) != 0) return false;
-                long next = cur | bit;
-                if (U.compareAndSetLong(this, offset, cur, next)) return true;
+                if (U.compareAndSetLong(this, offset, cur, cur | bit)) return true;
             }
         }
 
         void clearActiveBit(int sy, int pi) {
-            long offset = MASK_OFFSETS[(sy >>> 2) & 3];
-            int localShift = (sy & 3) << 4;
-            long bit = 1L << (localShift + pi);
+            long offset = MASK_BASE + ((sy & 0xC) << 4);
+            long bit = 1L << (((sy & 3) << 4) + pi);
             while (true) {
                 long cur = U.getLongVolatile(this, offset);
                 if ((cur & bit) == 0) return;
-                long next = cur & ~bit;
-                if (U.compareAndSetLong(this, offset, cur, next)) return;
+                if (U.compareAndSetLong(this, offset, cur, cur & ~bit)) return;
             }
         }
 
         void clearActiveBitMask(int sy) {
-            long offset = MASK_OFFSETS[(sy >>> 2) & 3];
-            int localShift = (sy & 3) << 4;
-            long mask = ~(0xFFFFL << localShift);
+            long offset = MASK_BASE + ((sy & 0xC) << 4);
+            long mask = ~(0xFFFFL << ((sy & 3) << 4));
             while (true) {
                 long cur = U.getLongVolatile(this, offset);
                 long next = cur & mask;
@@ -1662,12 +1655,6 @@ public final class RadiationSystemNT {
             int cur = touchedEpoch;
             if (cur == epoch) return false;
             return U.compareAndSetInt(this, TOUCHED_EPOCH_OFF, cur, epoch);
-        }
-
-        boolean casUniformEpoch(int sy, int epoch) {
-            int cur = uniformEpochs[sy];
-            if (cur == epoch) return false;
-            return U.compareAndSetInt(uniformEpochs, offInt(sy), cur, epoch);
         }
     }
 
@@ -1890,7 +1877,7 @@ public final class RadiationSystemNT {
                     Object next = U.getReference(cChunk, NEXT);
                     if (next == null) break;
                     long[] nBuf = (long[]) U.getReference(next, BUF);
-                    pk = U.getLong(nBuf, IJ_BASE);
+                    pk = U.getLong(nBuf, JA_BASE);
                     if (pk == MpscUnboundedXaddArrayLongQueue.EMPTY) break;
                     U.putReference(cChunk, NEXT, null);
                     U.putReference(next, PREV, null);
@@ -1899,7 +1886,7 @@ public final class RadiationSystemNT {
                         ((SpscArrayQueue) U.getReference(q, POOL)).offer(cChunk);
                     }
                     cChunk = next;
-                    U.putLong(nBuf, IJ_BASE, MpscUnboundedXaddArrayLongQueue.EMPTY);
+                    U.putLong(nBuf, JA_BASE, MpscUnboundedXaddArrayLongQueue.EMPTY);
                 } else {
                     pk = U.getLong(buf, elOff);
                     if (pk == MpscUnboundedXaddArrayLongQueue.EMPTY) break;
@@ -1963,7 +1950,7 @@ public final class RadiationSystemNT {
                             cr.clearActiveBit(sy, pi);
                             continue;
                         }
-                        if (cr.casUniformEpoch(sy, epoch)) {
+                        if (cr.casUniEpoch(sy, epoch)) {
                             outPockets[pocketWriteIdx] = realPk;
                             outRefs[pocketWriteIdx] = null;
                             outChunkRefs[pocketWriteIdx++] = cr;
@@ -2735,8 +2722,10 @@ public final class RadiationSystemNT {
         final int[] parityCounts = new int[4];
         final LongConsumer clearAux = sck -> {
             dirtySections.remove(sck);
-            writeAdd.remove(sck);
-            writeSet.remove(sck);
+            Int2DoubleOpenHashMap a = writeAdd.remove(sck);
+            if (a != null) localMapPool.recycle(a);
+            Int2DoubleOpenHashMap s = writeSet.remove(sck);
+            if (s != null) localMapPool.recycle(s);
             for (int p = 0; p <= NO_POCKET; p++) pendingPocketRadBits.remove(pocketKey(sck, p));
         };
         SectionRef[] activeRefs = new SectionRef[32768];
@@ -3564,7 +3553,7 @@ public final class RadiationSystemNT {
     }
 
     private static final class LongBag {
-        static final int CHUNK_SHIFT = 10;
+        static final int CHUNK_SHIFT = 14;
         static final int CHUNK_SIZE = 1 << CHUNK_SHIFT;
         static final int CHUNK_MASK = CHUNK_SIZE - 1;
         static final long SIZE_OFF = fieldOffset(LongBag.class, "size");
