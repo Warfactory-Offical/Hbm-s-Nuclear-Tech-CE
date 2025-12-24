@@ -19,6 +19,7 @@ import com.hbm.saveddata.AuxSavedData;
 import com.hbm.util.DecodeException;
 import com.hbm.util.ObjectPool;
 import it.unimi.dsi.fastutil.HashCommon;
+import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
 import it.unimi.dsi.fastutil.longs.*;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
@@ -83,7 +84,7 @@ public final class RadiationSystemNT {
     private static final int[] FACE_PLANE = new int[6 * 256];
     // 9950x, 32 view distance, extremely irradiated worst-case overworld takes ~1.8ms(with 2.2ms spikes) per step; 16 view distance takes ~1.1ms stepwise.
     // for normal world without strong artificial radiation source at 32 view distance, it takes ~0.8ms
-    private static final boolean PROFILING = true;
+    private static final int PROFILE_WINDOW = 200;
 
     private static final int SECTION_BLOCK_COUNT = 4096;
 
@@ -613,17 +614,67 @@ public final class RadiationSystemNT {
         logProfilingMessage(data, time);
     }
 
-    private static void logProfilingMessage(WorldRadiationData data, long time) {
-        if (!PROFILING) return;
-        double durationMs = (System.nanoTime() - time) / 1_000_000.0D;
-        data.executionTimeAccumulator += durationMs;
-        data.executionSampleCount++;
-        if (data.executionSampleCount >= 200) {
-            double average = data.executionTimeAccumulator / 200.0D;
-            MainRegistry.logger.info("dim {} = {} ms", data.world.provider.getDimension(), average);
-            data.executionTimeAccumulator = 0.0D;
-            data.executionSampleCount = 0;
+    private static void logProfilingMessage(WorldRadiationData data, long stepStartNs) {
+        if (!GeneralConfig.enableDebugMode) return;
+        double ms = (System.nanoTime() - stepStartNs) * 1.0e-6;
+        data.executionTimeAccumulator += ms;
+        int n = ++data.executionSampleCount;
+        if (n < PROFILE_WINDOW) return;
+        double totalMs = data.executionTimeAccumulator;
+        double avgMs = Math.rint((totalMs / PROFILE_WINDOW) * 1000.0) / 1000.0;
+        double lastMs = Math.rint(ms * 1000.0) / 1000.0;
+        int dimId = data.world.provider.getDimension();
+        String dimType = data.world.provider.getDimensionType().getName();
+        MainRegistry.logger.info("[RadiationSystemNT] dim {} ({}) avg {} ms/step over last {} steps (total {} ms, last {} ms)", dimId, dimType, avgMs,
+                PROFILE_WINDOW, (int) Math.rint(totalMs), lastMs);
+        data.executionTimeAccumulator = 0.0D;
+        data.executionSampleCount = 0;
+        data.profSteps++;
+        data.profTotalMs += ms;
+        if (ms > data.profMaxMs) data.profMaxMs = ms;
+        DoubleArrayList samples = data.profSamplesMs;
+        if (samples == null) data.profSamplesMs = samples = new DoubleArrayList(8192);
+        samples.add(ms);
+    }
+
+    private static void logLifetimeProfiling(WorldRadiationData data) {
+        if (!GeneralConfig.enableDebugMode) return;
+        long steps = data.profSteps;
+        if (steps <= 0) return;
+        int dimId = data.world.provider.getDimension();
+        String dimType = data.world.provider.getDimensionType().getName();
+        double avgMs = data.profTotalMs / (double) steps;
+        DoubleArrayList samples = data.profSamplesMs;
+        if (samples == null || samples.isEmpty()) {
+            MainRegistry.logger.info("[RadiationSystemNT] dim {} ({}) lifetime: steps={}, avg={} ms, max={} ms", dimId, dimType, steps, r3(avgMs),
+                    r3(data.profMaxMs));
+            return;
         }
+        double[] a = samples.toDoubleArray();
+        Arrays.parallelSort(a);
+        int n = a.length;
+        int k1 = Math.max(1, (int) Math.ceil(n * 0.01));
+        int k01 = Math.max(1, (int) Math.ceil(n * 0.001));
+        double onePctHighAvg = meanOfLargestK(a, k1);
+        double pointOnePctHigh = meanOfLargestK(a, k01);
+        double p99 = a[Math.min(n - 1, (int) Math.ceil(n * 0.99) - 1)];
+        double p999 = a[Math.min(n - 1, (int) Math.ceil(n * 0.999) - 1)];
+        MainRegistry.logger.info(
+                "[RadiationSystemNT] dim {} ({}) lifetime: steps={}, avg={} ms, 1% high(avg)={} ms, 0.1% high(avg)={} ms, p99={} ms, p999={} ms, max={} ms",
+                dimId, dimType, steps, r3(avgMs), r3(onePctHighAvg), r3(pointOnePctHigh), r3(p99), r3(p999), r3(data.profMaxMs));
+        data.profSamplesMs = null;
+    }
+
+    private static double meanOfLargestK(double[] sortedAscending, int k) {
+        int n = sortedAscending.length;
+        int start = n - k;
+        double sum = 0.0;
+        for (int i = start; i < n; i++) sum += sortedAscending[i];
+        return sum / (double) k;
+    }
+
+    private static double r3(double v) {
+        return Math.rint(v * 1000.0) / 1000.0;
     }
 
     // @formatter:off
@@ -990,7 +1041,8 @@ public final class RadiationSystemNT {
     @SubscribeEvent
     public static void onWorldUnload(WorldEvent.Unload e) {
         if (e.getWorld().isRemote) return;
-        worldMap.remove((WorldServer) e.getWorld());
+        WorldRadiationData data = worldMap.remove((WorldServer) e.getWorld());
+        logLifetimeProfiling(data);
     }
 
     private static byte[] verifyPayload(byte[] raw) throws DecodeException {
@@ -2741,6 +2793,11 @@ public final class RadiationSystemNT {
         int workEpoch = 0;
         double executionTimeAccumulator = 0.0D;
         int executionSampleCount = 0;
+        long profSteps;
+        double profTotalMs;
+        double profMaxMs;
+        // only allocated if profiling is enabled
+        DoubleArrayList profSamplesMs;
 
         WorldRadiationData(WorldServer world) {
             this.world = world;
