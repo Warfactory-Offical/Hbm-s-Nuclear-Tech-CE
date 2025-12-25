@@ -24,7 +24,6 @@ import com.hbm.entity.siege.SiegeTier;
 import com.hbm.explosion.ExplosionNukeGeneric;
 import com.hbm.handler.*;
 import com.hbm.handler.imc.IMCHandler;
-import com.hbm.handler.neutron.NeutronHandler;
 import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.handler.radiation.RadiationSystemNT;
 import com.hbm.handler.threading.PacketThreading;
@@ -290,7 +289,6 @@ public class MainRegistry {
         MinecraftForge.EVENT_BUS.register(new ModEventHandlerImpact());
         MinecraftForge.TERRAIN_GEN_BUS.register(new ModEventHandlerImpact());
         MinecraftForge.EVENT_BUS.register(new PollutionHandler());
-        MinecraftForge.EVENT_BUS.register(new NeutronHandler());
         MinecraftForge.EVENT_BUS.register(new DamageResistanceHandler());
 
         if (event.getSide() == Side.CLIENT) {

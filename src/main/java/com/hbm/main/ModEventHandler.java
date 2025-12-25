@@ -17,7 +17,9 @@ import com.hbm.entity.projectile.EntityBurningFOEQ;
 import com.hbm.events.CheckLadderEvent;
 import com.hbm.events.InventoryChangedEvent;
 import com.hbm.handler.*;
+import com.hbm.handler.neutron.NeutronHandler;
 import com.hbm.handler.pollution.PollutionHandler;
+import com.hbm.handler.radiation.RadiationSystemNT;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.hazard.HazardSystem;
 import com.hbm.integration.groovy.HbmGroovyPropertyContainer;
@@ -131,6 +133,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ForkJoinPool;
 
 public class ModEventHandler {
 
@@ -139,6 +143,7 @@ public class ModEventHandler {
     private static final Set<String> hashes = new HashSet();
     public static boolean showMessage = true;
     public static Random rand = new Random();
+    private static final ForkJoinPool THREAD_POOL = ForkJoinPool.commonPool();
 
     static {
         hashes.add("41de5c372b0589bbdb80571e87efa95ea9e34b0d74c6005b8eab495b7afd9994");
@@ -610,46 +615,47 @@ public class ModEventHandler {
 
     @SubscribeEvent
     public void worldTick(WorldTickEvent event) {
-        if (event.world == null || event.world.isRemote) return;
-        List<Object> entityList = new ArrayList<>(event.world.loadedEntityList);
+        if (event.world == null || event.world.isRemote || event.phase != Phase.START) return;
 
         if (event.world.getTotalWorldTime() % 100 == 97) {
             //Drillgon200: Retarded hack because I'm not convinced game rules are client sync'd
             //Yup they are not LMAO
             PacketThreading.createSendToAllThreadedPacket(new SurveyPacket(RBMKDials.getColumnHeight(event.world)));
         }
-
-        if (event.phase == Phase.START) {
-            BossSpawnHandler.rollTheDice(event.world);
-        }
-
-        for (final Object e : entityList) {
+        BossSpawnHandler.rollTheDice(event.world);
+        for (final Object e : event.world.loadedEntityList) {
             if (e instanceof EntityItem) {
                 HazardSystem.updateDroppedItem((EntityItem) e);
             }
         }
-
-        if(event.phase == Phase.END) {
-            // As ByteBufs are added to the queue in `com.hbm.packet.toclient.PacketThreading`, they are processed by the packet thread.
-            // This waits until the thread is finished, which most of the time will be instantly since it has plenty of time to process in parallel to everything else.
-            PacketThreading.waitUntilThreadFinished();
-
-            NetworkHandler.flush(); // Flush ALL network packets.
-        }
     }
 
-    @SubscribeEvent
-    public void serverTick(ServerTickEvent e) {
-        if (e.phase == Phase.START) {
-            JetpackHandler.serverTick();
-            RequestNetwork.updateEntries();
-            RTTYSystem.updateBroadcastQueue();
-            TileEntityMachineRadarNT.updateSystem();
-            UniNodespace.updateNodespace();
-            HazardSystem.onServerTick(e);
-        } else {
-            EntityHitDataHandler.updateSystem();
-        }
+    //mlbv: concurrent workers are safe as long as they don't interfere
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void serverTickFirst(ServerTickEvent e) {
+        if (e.phase != Phase.START) return;
+        CompletableFuture<Void> f1 = CompletableFuture.runAsync(JetpackHandler::serverTick, THREAD_POOL);
+        CompletableFuture<Void> f2 = CompletableFuture.runAsync(RequestNetwork::updateEntries, THREAD_POOL);
+        CompletableFuture<Void> f3 = CompletableFuture.runAsync(RTTYSystem::updateBroadcastQueue, THREAD_POOL);
+        CompletableFuture<Void> f4 = CompletableFuture.runAsync(TileEntityMachineRadarNT::updateSystem, THREAD_POOL);
+        CompletableFuture<Void> f5 = CompletableFuture.runAsync(NeutronHandler::onServerTick, THREAD_POOL);
+        CompletableFuture<Void> f6 = UniNodespace.updateNodespaceAsync(THREAD_POOL);
+        CompletableFuture<Void> f7 = HazardSystem.onServerTickAsync(THREAD_POOL);
+        CompletableFuture.allOf(f1, f2, f3, f4, f5, f6, f7).join();
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void serverTickLast(ServerTickEvent e) {
+        if (e.phase != Phase.END) return;
+        CompletableFuture<Void> f1 = CompletableFuture.runAsync(EntityHitDataHandler::updateSystem, THREAD_POOL);
+        CompletableFuture<Void> f2 = RadiationSystemNT.onServerTickLast(e);
+        CompletableFuture.allOf(f1, f2).join();
+
+        // As ByteBufs are added to the queue in `com.hbm.packet.toclient.PacketThreading`, they are processed by the packet thread.
+        // This waits until the thread is finished, which most of the time will be instantly since it has plenty of time to process in parallel to everything else.
+        PacketThreading.waitUntilThreadFinished();
+
+        NetworkHandler.flush(); // Flush ALL network packets.
     }
 
     // Drillgon200: So 1.12.2's going to ignore ISpecialArmor if the damage is

@@ -116,13 +116,13 @@ public class TileEntityRBMKOutgasser extends TileEntityRBMKSlottedBase implement
 
 			if(progress > duration) {
 				process();
-				this.markDirty();
+				this.markChanged();
 			}
 		} else if(!inventory.getStackInSlot(0).isEmpty()){
 			double efficiency = Math.min(1 - stream.fluxRatio * 0.8, 1);
 
 			ContaminationUtil.neutronActivateItem(inventory.getStackInSlot(0), (float)(stream.fluxQuantity * efficiency * 0.001), 1F);
-			this.markDirty();
+            this.markChanged();
 		}
 	}
 

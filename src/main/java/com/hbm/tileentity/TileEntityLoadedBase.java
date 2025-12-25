@@ -26,6 +26,11 @@ public class TileEntityLoadedBase extends TileEntity implements ILoadedTile, IBu
 		this.isLoaded = false;
 	}
 
+    /** The "chunks is modified, pls don't forget to save me" effect of markDirty, minus the block updates */
+    public void markChanged() {
+        this.world.markChunkDirty(this.pos, this);
+    }
+
 	public AudioWrapper createAudioLoop() { return null; } //Vidarin: Remember to override this if you use rebootAudio!!
 
 	public AudioWrapper rebootAudio(AudioWrapper wrapper) {

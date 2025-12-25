@@ -27,7 +27,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -38,7 +37,6 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import static com.hbm.util.ContaminationUtil.NTM_NEUTRON_NBT_KEY;
 
@@ -91,7 +89,7 @@ public class HazardSystem {
     private static final Queue<InventoryDelta> inventoryDeltas = new ConcurrentLinkedQueue<>();
     private static final Set<UUID> playersToUpdate = ConcurrentHashMap.newKeySet();
     private static final double minRadRate = 0.000005D;
-    private static CompletableFuture<Void> scanFuture = CompletableFuture.completedFuture(null);
+    private static volatile CompletableFuture<Void> scanFuture = CompletableFuture.completedFuture(null);
     private static long tickCounter = 0;
 
     /**
@@ -115,11 +113,9 @@ public class HazardSystem {
     /**
      * Main entry point, called from ServerTickEvent.
      */
-    public static void onServerTick(TickEvent.ServerTickEvent event) {
-        if (event.phase != TickEvent.Phase.START) return;
+    public static CompletableFuture<Void> onServerTickAsync(Executor backgroundExecutor) {
         MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
-        if (server == null) return;
-
+        if (server == null) return CompletableFuture.completedFuture(null);
         tickCounter++;
         if (tickCounter % RadiationConfig.hazardRate == 0) {
             for (EntityPlayerMP player : server.getPlayerList().getPlayers()) {
@@ -133,57 +129,86 @@ public class HazardSystem {
                 phd.applyActiveHazards();
             }
         }
-
-        if (scanFuture.isDone() && (!playersToUpdate.isEmpty() || !inventoryDeltas.isEmpty())) {
-            final List<EntityPlayer> playersForFullScan = new ArrayList<>();
-            playersToUpdate.removeIf(uuid -> {
-                EntityPlayer player = server.getPlayerList().getPlayerByUUID(uuid);
-                playersForFullScan.add(player);
-                return true;
-            });
-
-            final List<InventoryDelta> deltasForProcessing = new ArrayList<>();
-            InventoryDelta delta;
-            while ((delta = inventoryDeltas.poll()) != null) {
-                deltasForProcessing.add(delta);
+        CompletableFuture<Void> cur = scanFuture;
+        if (!cur.isDone()) return cur;
+        if (playersToUpdate.isEmpty() && inventoryDeltas.isEmpty()) return CompletableFuture.completedFuture(null);
+        final List<EntityPlayer> playersForFullScan = new ArrayList<>();
+        if (!playersToUpdate.isEmpty()) {
+            for (UUID uuid : playersToUpdate) {
+                EntityPlayer p = server.getPlayerList().getPlayerByUUID(uuid);
+                if (p != null && !p.isDead) playersForFullScan.add(p);
             }
-
-            if (!playersForFullScan.isEmpty() || !deltasForProcessing.isEmpty()) {
-                scanFuture =
-                        CompletableFuture.supplyAsync(() -> processHazardsAsync(playersForFullScan, deltasForProcessing)).thenAcceptAsync(results -> {
-                    results.fullScanResults.forEach((uuid, result) -> {
-                        PlayerHazardData phd = playerHazardDataMap.get(uuid);
-                        if (phd != null) phd.setScanResult(result);
-                    });
-                    results.deltaResults.forEach((uuid, result) -> {
-                        PlayerHazardData phd = playerHazardDataMap.get(uuid);
-                        if (phd != null) phd.applyDeltaResult(result);
-                    });
-                }, server::addScheduledTask);
-            }
+            playersToUpdate.clear();
         }
+        final List<InventoryDelta> deltasForProcessing = new ArrayList<>();
+        InventoryDelta delta;
+        while ((delta = inventoryDeltas.poll()) != null) {
+            deltasForProcessing.add(delta);
+        }
+        if (playersForFullScan.isEmpty() && deltasForProcessing.isEmpty()) {
+            return CompletableFuture.completedFuture(null);
+        }
+        scanFuture = processHazardsAsync(playersForFullScan, deltasForProcessing, backgroundExecutor).thenAccept(HazardSystem::applyUpdateResult);
+        return scanFuture;
     }
 
-    private static HazardUpdateResult processHazardsAsync(List<EntityPlayer> playersForFullScan, List<InventoryDelta> deltas) {
-        Map<UUID, PlayerHazardData.HazardScanResult> fullScanResults =
-                playersForFullScan.parallelStream().collect(Collectors.toConcurrentMap(EntityPlayer::getUniqueID,
-                        PlayerHazardData::calculateHazardScanForPlayer));
-        Map<UUID, List<InventoryDelta>> deltasByPlayer =
-                deltas.stream().filter(d -> !fullScanResults.containsKey(d.playerUUID())).collect(Collectors.groupingBy(InventoryDelta::playerUUID));
+    private static void applyUpdateResult(HazardUpdateResult results) {
+        results.fullScanResults.forEach((uuid, result) -> {
+            PlayerHazardData phd = playerHazardDataMap.get(uuid);
+            if (phd != null) phd.setScanResult(result);
+        });
+        results.deltaResults.forEach((uuid, result) -> {
+            PlayerHazardData phd = playerHazardDataMap.get(uuid);
+            if (phd != null) phd.applyDeltaResult(result);
+        });
+    }
 
-        Map<UUID, PlayerDeltaResult> deltaResults = deltasByPlayer.entrySet().parallelStream().collect(Collectors.toConcurrentMap(Map.Entry::getKey
-                , entry -> {
-            float totalNeutronDelta = 0;
-            Map<Integer, Optional<Consumer<EntityPlayer>>> finalApplicators = new HashMap<>();
-            for (InventoryDelta delta : entry.getValue()) {
-                DeltaUpdate update = calculateDeltaUpdate(delta);
-                totalNeutronDelta += update.neutronRadsDelta();
-                finalApplicators.put(delta.serverSlotIndex(), update.applicator());
+    private static CompletableFuture<HazardUpdateResult> processHazardsAsync(List<EntityPlayer> playersForFullScan, List<InventoryDelta> deltas,
+                                                                             Executor executor) {
+        final HashMap<UUID, CompletableFuture<PlayerHazardData.HazardScanResult>> fullScanFutures = new HashMap<>();
+        for (EntityPlayer p : playersForFullScan) {
+            if (p == null || p.isDead) continue;
+            UUID uuid = p.getUniqueID();
+            fullScanFutures.put(uuid, CompletableFuture.supplyAsync(() -> PlayerHazardData.calculateHazardScanForPlayer(p), executor));
+        }
+        final CompletableFuture<Void> fullBarrier = CompletableFuture.allOf(fullScanFutures.values().toArray(new CompletableFuture[0]));
+        return fullBarrier.thenCompose(_ -> {
+            final HashMap<UUID, PlayerHazardData.HazardScanResult> fullScanResults = new HashMap<>(fullScanFutures.size() * 2);
+            for (Map.Entry<UUID, CompletableFuture<PlayerHazardData.HazardScanResult>> e : fullScanFutures.entrySet()) {
+                fullScanResults.put(e.getKey(), e.getValue().join());
             }
-            return new PlayerDeltaResult(finalApplicators, totalNeutronDelta);
-        }));
+            final HashMap<UUID, ArrayList<InventoryDelta>> deltasByPlayer = new HashMap<>();
+            for (InventoryDelta d : deltas) {
+                if (fullScanResults.containsKey(d.playerUUID())) continue;
+                deltasByPlayer.computeIfAbsent(d.playerUUID(), _ -> new ArrayList<>()).add(d);
+            }
+            final HashMap<UUID, CompletableFuture<PlayerDeltaResult>> deltaFutures = new HashMap<>();
+            for (Map.Entry<UUID, ArrayList<InventoryDelta>> e : deltasByPlayer.entrySet()) {
+                UUID uuid = e.getKey();
+                ArrayList<InventoryDelta> list = e.getValue();
+                deltaFutures.put(uuid, CompletableFuture.supplyAsync(() -> computeDeltaForPlayer(list), executor));
+            }
+            final CompletableFuture<Void> deltaBarrier = CompletableFuture.allOf(deltaFutures.values().toArray(new CompletableFuture[0]));
+            return deltaBarrier.thenApply(_ -> {
+                final HashMap<UUID, PlayerDeltaResult> deltaResults = new HashMap<>(deltaFutures.size() * 2);
+                for (Map.Entry<UUID, CompletableFuture<PlayerDeltaResult>> e : deltaFutures.entrySet()) {
+                    deltaResults.put(e.getKey(), e.getValue().join());
+                }
+                return new HazardUpdateResult(Collections.unmodifiableMap(fullScanResults), Collections.unmodifiableMap(deltaResults));
+            });
+        });
+    }
 
-        return new HazardUpdateResult(fullScanResults, deltaResults);
+    private static PlayerDeltaResult computeDeltaForPlayer(List<InventoryDelta> deltas) {
+        float totalNeutronDelta = 0f;
+        Map<Integer, Optional<Consumer<EntityPlayer>>> finalApplicators = new HashMap<>(Math.max(16, deltas.size() * 2));
+
+        for (InventoryDelta delta : deltas) {
+            DeltaUpdate update = calculateDeltaUpdate(delta);
+            totalNeutronDelta += update.neutronRadsDelta();
+            finalApplicators.put(delta.serverSlotIndex(), update.applicator());
+        }
+        return new PlayerDeltaResult(Collections.unmodifiableMap(finalApplicators), totalNeutronDelta);
     }
 
     /**

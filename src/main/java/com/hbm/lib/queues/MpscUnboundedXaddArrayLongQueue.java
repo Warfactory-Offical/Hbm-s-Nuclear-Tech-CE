@@ -32,7 +32,7 @@ public final class MpscUnboundedXaddArrayLongQueue extends MpUnboundedXaddArrayL
 
     public static final long EMPTY = Long.MIN_VALUE;
 
-    private MpscUnboundedXaddArrayLongQueue(int chunkSize, int maxPooledChunks) {
+    public MpscUnboundedXaddArrayLongQueue(int chunkSize, int maxPooledChunks) {
         super(chunkSize, maxPooledChunks);
     }
 

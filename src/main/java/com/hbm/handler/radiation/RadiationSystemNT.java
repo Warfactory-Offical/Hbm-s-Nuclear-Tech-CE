@@ -115,7 +115,7 @@ public final class RadiationSystemNT {
     private static final int ACTIVE_STRIPE_SHIFT = 64 - Integer.numberOfTrailingZeros(ACTIVE_STRIPES);
     private static ByteBuffer BUF = ByteBuffer.allocate(524_288);
     private static long ticks;
-    private static CompletableFuture<Void> radiationFuture = CompletableFuture.completedFuture(null);
+    private static volatile @NotNull CompletableFuture<Void> radiationFuture = CompletableFuture.completedFuture(null);
     private static Object[] STATE_CLASS;
     private static int tickDelay = 1;
     private static double dT = tickDelay / 20.0D;
@@ -180,7 +180,7 @@ public final class RadiationSystemNT {
 
     public static void onServerStopping(FMLServerStoppingEvent ignoredEvent) {
         try {
-            if (radiationFuture != null) radiationFuture.join();
+            radiationFuture.join();
         } catch (Exception e) {
             MainRegistry.logger.error("Radiation system error during shutdown.", e);
         } finally {
@@ -188,22 +188,16 @@ public final class RadiationSystemNT {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void onServerTickFirst(TickEvent.ServerTickEvent e) {
-        if (!GeneralConfig.enableRads || !GeneralConfig.advancedRadiation || e.phase != Phase.START) return;
-        if (radiationFuture != null && !radiationFuture.isDone()) {
-            // this provides a quiescent server thread and sufficient happens-before for structural updates
-            radiationFuture.join();
-        }
-    }
-
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void onServerTickLast(TickEvent.ServerTickEvent e) {
-        if (!GeneralConfig.enableRads || !GeneralConfig.advancedRadiation || e.phase != Phase.END) return;
+    public static CompletableFuture<Void> onServerTickLast(TickEvent.ServerTickEvent e) {
+        if (!GeneralConfig.enableRads || !GeneralConfig.advancedRadiation || e.phase != Phase.END)
+            return CompletableFuture.completedFuture(null);
         ticks++;
         if ((ticks + 17) % tickDelay == 0) {
-            radiationFuture = CompletableFuture.runAsync(RadiationSystemNT::runParallelSimulation, RAD_POOL);
+            // to be immediately joined on server thread
+            // this provides a quiescent server thread and sufficient happens-before for structural updates
+            return radiationFuture = CompletableFuture.runAsync(RadiationSystemNT::runParallelSimulation, RAD_POOL);
         }
+        return CompletableFuture.completedFuture(null);
     }
 
     @SubscribeEvent
@@ -231,6 +225,14 @@ public final class RadiationSystemNT {
         data.clearPendingAll();
         data.cleanupPools();
         data.clearQueuedWrites();
+        for (Chunk chunk : world.getChunkProvider().loadedChunks.values()) {
+            ChunkRef cr = data.onChunkLoaded(chunk);
+            for (int sy = 0; sy < 16; sy++) {
+                if (cr.getKind(sy) == ChunkRef.KIND_NONE) {
+                    data.markDirty(Library.sectionToLong(chunk.x, sy, chunk.z));
+                }
+            }
+        }
     }
 
     @ServerThread
