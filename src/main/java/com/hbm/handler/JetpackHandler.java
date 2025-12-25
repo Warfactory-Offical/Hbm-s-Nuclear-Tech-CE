@@ -16,6 +16,7 @@ import com.hbm.main.MainRegistry;
 import com.hbm.main.ResourceManager;
 import com.hbm.packet.JetpackSyncPacket;
 import com.hbm.packet.PacketDispatcher;
+import com.hbm.packet.threading.ThreadedPacket;
 import com.hbm.particle.ParticleFakeBrightness;
 import com.hbm.particle.ParticleHeatDistortion;
 import com.hbm.particle.ParticleJetpackTrail;
@@ -63,7 +64,9 @@ import org.lwjgl.util.vector.Vector4f;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodType;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
 
 public class JetpackHandler {
@@ -339,8 +342,9 @@ public class JetpackHandler {
 			JetpackInfo j = new JetpackInfo(player.world.isRemote);
 			j.readFromNBT(tag);
 			put(player, j);
-			PacketDispatcher.wrapper.sendToAllTracking(new JetpackSyncPacket(player), (EntityPlayerMP) player);
-		}
+            ThreadedPacket message = new JetpackSyncPacket(player);
+            PacketThreading.createSendToAllTrackingThreadedPacket(message, (EntityPlayerMP) player);
+        }
 	}
 	
 	public static void worldLoad(WorldEvent.Load e){
@@ -376,8 +380,9 @@ public class JetpackHandler {
 				EntityPlayer player = (EntityPlayer)e.getTarget();
 				JetpackInfo j = get(player);
 				if(j != null){
-					PacketDispatcher.wrapper.sendTo(new JetpackSyncPacket(player), (EntityPlayerMP) e.getEntityPlayer());
-				}
+                    ThreadedPacket message = new JetpackSyncPacket(player);
+                    PacketThreading.createSendToThreadedPacket(message, (EntityPlayerMP) e.getEntityPlayer());
+                }
 			}
 		}
 	}

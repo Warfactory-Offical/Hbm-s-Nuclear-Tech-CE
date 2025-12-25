@@ -11,6 +11,7 @@ import com.hbm.interfaces.AutoRegister;
 import com.hbm.lib.Library;
 import com.hbm.lib.maps.NonBlockingHashMapLong;
 import com.hbm.util.ChunkUtil;
+import com.hbm.util.DelayedTick;
 import com.hbm.world.WorldUtil;
 import com.hbm.world.biome.BiomeGenCraterBase;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -354,7 +355,7 @@ public class EntityFalloutRain extends EntityExplosionChunkloading {
 
     private void notifyMainThread(long cpLong, Long2ObjectOpenHashMap<IBlockState> oldStates, int mask, Long2IntOpenHashMap biomeChanges, Long2ObjectOpenHashMap<IBlockState> spawnFalling) {
         pendingMainThreadNotifies.incrementAndGet();
-        ((WorldServer) world).addScheduledTask(() -> {
+        DelayedTick.nextWorldTickStart(world, _ -> {
             try {
                 doNotifyOnMain(cpLong, oldStates, mask, biomeChanges, spawnFalling);
             } finally {
@@ -424,7 +425,7 @@ public class EntityFalloutRain extends EntityExplosionChunkloading {
     private void maybeFinish() {
         if (finished.get()) return;
         if (pendingChunks.get() == 0 && waitingRoom.isEmpty() && qInner.isEmpty() && qOuter.isEmpty() && pendingMainThreadNotifies.get() == 0) {
-            ((WorldServer) world).addScheduledTask(this::secondPassAndFinish);
+            DelayedTick.nextWorldTickStart(world, _ -> secondPassAndFinish());
         }
     }
 

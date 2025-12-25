@@ -68,6 +68,22 @@ public final class UnsafeHolder {
         return ((long) i << RA_SHIFT) + RA_BASE;
     }
 
+    public static Object staticFieldBase(Class<?> clz, String fieldName) {
+        try {
+            return U.staticFieldBase(clz.getDeclaredField(fieldName));
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static long staticfieldOffset(Class<?> clz, String fieldName) {
+        try {
+            return U.staticFieldOffset(clz.getDeclaredField(fieldName));
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static long fieldOffset(Class<?> clz, String fieldName) {
         try {
             return U.objectFieldOffset(clz.getDeclaredField(fieldName));

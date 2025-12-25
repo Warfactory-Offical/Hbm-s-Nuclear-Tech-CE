@@ -60,8 +60,9 @@ public class TileEntityLoadedBase extends TileEntity implements ILoadedTile, IBu
 	/**
 	 * {@inheritDoc}
 	 * only call super.serialize() on noisy machines. It has no effect on others.<br>
-	 * This happens on the <strong>PacketThreading threadPool</strong>!
-	 * All the fields read in this method are recommended to be volatile, or weird visibility/reorder problems might occur.
+	 * The final ByteBuf is compared with previous packets sent in order to avoid unnecessary traffic.<br>
+     * A side effect of this is that compilation effectively runs on server thread, instead of PacketThreading IO thread;
+     * Override {@link #networkPackNT(int)} if this behavior is undesirable.
 	 */
 	@Override
 	public void serialize(ByteBuf buf) {
@@ -71,7 +72,7 @@ public class TileEntityLoadedBase extends TileEntity implements ILoadedTile, IBu
 	/**
 	 * {@inheritDoc}
 	 * only call super.deserialize() on noisy machines. It has no effect on others.<br>
-	 * This happens on the <strong>network thread</strong>!
+	 * This happens on the <strong>Netty Client IO thread</strong>!
 	 * Direct List modification is guaranteed to produce a CME.<br>
 	 */
 	@Override
@@ -80,23 +81,38 @@ public class TileEntityLoadedBase extends TileEntity implements ILoadedTile, IBu
 	}
 
 	/** Sends a sync packet that uses ByteBuf for efficient information-cramming */
-	public void networkPackNT(int range) {
-		if (world.isRemote) return;
+    public void networkPackNT(int range) {
+        if (world.isRemote) return;
 
-		BufPacket packet = new BufPacket(pos.getX(), pos.getY(), pos.getZ(), this);
-		ByteBuf preBuf = packet.getCompiledBuffer();
+        BufPacket packet = new BufPacket(pos.getX(), pos.getY(), pos.getZ(), this);
+        ByteBuf preBuf = packet.getCompiledBuffer();
 
-		// Don't send unnecessary packets, except for maybe one every second or so.
-		// If we stop sending duplicate packets entirely, this causes issues when
-		// a client unloads and then loads back a chunk with an unchanged tile entity.
-		// For that client, the tile entity will appear default until anything changes about it.
-		// In my testing, this can be reliably reproduced with a full fluid barrel, for instance.
-		// I think it might be fixable by doing something with getDescriptionPacket() and onDataPacket(),
-		// but this sidesteps the problem for the mean time.
-		if(preBuf.equals(lastPackedBuf) && this.world.getTotalWorldTime() % 20 != 0) return;
+        // Don't send unnecessary packets, except for maybe one every second or so.
+        // If we stop sending duplicate packets entirely, this causes issues when
+        // a client unloads and then loads back a chunk with an unchanged tile entity.
+        // For that client, the tile entity will appear default until anything changes about it.
+        // In my testing, this can be reliably reproduced with a full fluid barrel, for instance.
+        // I think it might be fixable by doing something with getDescriptionPacket() and onDataPacket(),
+        // but this sidesteps the problem for the mean time.
+        if (preBuf.equals(lastPackedBuf)) {
+            if (this.world.getTotalWorldTime() % 20 != 0) {
+                packet.releaseBuffer();
+                return;
+            }
+        }
+        if (lastPackedBuf != null && lastPackedBuf.refCnt() > 0) {
+            lastPackedBuf.release();
+        }
+        this.lastPackedBuf = preBuf.retainedDuplicate();
+        PacketThreading.createAllAroundThreadedPacket(packet, new NetworkRegistry.TargetPoint(this.world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), range));
+    }
 
-		this.lastPackedBuf = preBuf.copy();
-
-			PacketThreading.createAllAroundThreadedPacket(new BufPacket(pos.getX(), pos.getY(), pos.getZ(), this), new NetworkRegistry.TargetPoint(this.world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), range));
-	}
+    @Override
+    public void invalidate() {
+        super.invalidate();
+        if(lastPackedBuf != null && lastPackedBuf.refCnt() > 0) {
+            lastPackedBuf.release();
+            lastPackedBuf = null;
+        }
+    }
 }

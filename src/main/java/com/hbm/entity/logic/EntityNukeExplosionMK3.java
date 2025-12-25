@@ -11,7 +11,6 @@ import com.hbm.interfaces.Spaghetti;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.AdvancementManager;
 import com.hbm.main.MainRegistry;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -331,7 +330,7 @@ public class EntityNukeExplosionMK3 extends EntityExplosionChunkloading {
 						data.setFloat("g", 0.75F);
 						data.setFloat("b", 1.0F);
 						data.setFloat("scale", 7.5F);
-						PacketDispatcher.wrapper.sendToAllAround(new AuxParticlePacketNT(data, ix, iy, iz), new TargetPoint(entry.dim, ix, iy, iz, 150));
+						PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, ix, iy, iz), new TargetPoint(entry.dim, ix, iy, iz, 150));
 					}
 				}
 

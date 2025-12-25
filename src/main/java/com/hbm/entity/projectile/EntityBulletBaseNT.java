@@ -17,11 +17,11 @@ import com.hbm.handler.ArmorUtil;
 import com.hbm.handler.BulletConfigSyncingUtil;
 import com.hbm.handler.BulletConfiguration;
 import com.hbm.handler.GunConfigurationSedna;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.weapon.sedna.ItemGunBaseSedna;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.potion.HbmPotion;
 import com.hbm.util.BobMathUtil;
@@ -396,7 +396,7 @@ public class EntityBulletBaseNT extends EntityThrowableInterp implements IBullet
                 data.setDouble("motion", 0.1D);
                 data.setString("mode", "blockdust");
                 data.setInteger("block", Block.getIdFromBlock(Blocks.REDSTONE_BLOCK));
-                PacketDispatcher.wrapper.sendToAllAround(new AuxParticlePacketNT(data, living.posX, living.posY + living.height - head, living.posZ), new NetworkRegistry.TargetPoint(living.dimension, living.posX, living.posY, living.posZ, 50));
+                PacketThreading.createAllAroundThreadedPacket(new AuxParticlePacketNT(data, living.posX, living.posY + living.height - head, living.posZ), new NetworkRegistry.TargetPoint(living.dimension, living.posX, living.posY, living.posZ, 50));
                 world.playSound(null, victim.posX, victim.posY, victim.posZ, SoundEvents.ENTITY_ZOMBIE_BREAK_DOOR_WOOD, SoundCategory.PLAYERS, 1.0F, 0.95F + rand.nextFloat() * 0.2F);
             }
         }

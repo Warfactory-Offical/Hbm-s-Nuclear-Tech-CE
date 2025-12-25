@@ -321,6 +321,10 @@ public class ModEventHandlerClient {
                 }
             }
         }
+
+        if (event.phase == Phase.END) {
+            NetworkHandler.flushClient();
+        }
     }
 
     @SubscribeEvent

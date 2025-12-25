@@ -623,7 +623,7 @@ public class ModEventHandler {
             PacketThreading.createSendToAllThreadedPacket(new SurveyPacket(RBMKDials.getColumnHeight(event.world)));
         }
         BossSpawnHandler.rollTheDice(event.world);
-        for (final Object e : event.world.loadedEntityList) {
+        for (Entity e : event.world.loadedEntityList) {
             if (e instanceof EntityItem) {
                 HazardSystem.updateDroppedItem((EntityItem) e);
             }
@@ -650,12 +650,7 @@ public class ModEventHandler {
         CompletableFuture<Void> f1 = CompletableFuture.runAsync(EntityHitDataHandler::updateSystem, THREAD_POOL);
         CompletableFuture<Void> f2 = RadiationSystemNT.onServerTickLast(e);
         CompletableFuture.allOf(f1, f2).join();
-
-        // As ByteBufs are added to the queue in `com.hbm.packet.toclient.PacketThreading`, they are processed by the packet thread.
-        // This waits until the thread is finished, which most of the time will be instantly since it has plenty of time to process in parallel to everything else.
-        PacketThreading.waitUntilThreadFinished();
-
-        NetworkHandler.flush(); // Flush ALL network packets.
+        NetworkHandler.flushServer(); // Flush ALL network packets.
     }
 
     // Drillgon200: So 1.12.2's going to ignore ISpecialArmor if the damage is
