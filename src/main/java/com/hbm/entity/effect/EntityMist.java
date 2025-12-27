@@ -137,24 +137,27 @@ public class EntityMist extends Entity {
             }
         } else {
 
-            for (int i = 0; i < 2; i++) {
-                AxisAlignedBB boundingBox = this.getEntityBoundingBox();
-                double x = boundingBox.minX + rand.nextDouble() * (boundingBox.maxX - boundingBox.minX);
-                double y = boundingBox.minY + rand.nextDouble() * (boundingBox.maxY - boundingBox.minY);
-                double z = boundingBox.minZ + rand.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
+            FluidType type = this.getType();
+            if (type != null) {
+                for (int i = 0; i < 2; i++) {
+                    AxisAlignedBB boundingBox = this.getEntityBoundingBox();
+                    double x = boundingBox.minX + rand.nextDouble() * (boundingBox.maxX - boundingBox.minX);
+                    double y = boundingBox.minY + rand.nextDouble() * (boundingBox.maxY - boundingBox.minY);
+                    double z = boundingBox.minZ + rand.nextDouble() * (boundingBox.maxZ - boundingBox.minZ);
 
 
-                NBTTagCompound fx = new NBTTagCompound();
-                fx.setString("type", "tower");
-                fx.setFloat("lift", 0.5F);
-                fx.setFloat("base", 0.75F);
-                fx.setFloat("max", 2F);
-                fx.setInteger("life", 50 + world.rand.nextInt(10));
-                fx.setInteger("color", this.getType().getColor());
-                fx.setDouble("posX", x);
-                fx.setDouble("posY", y);
-                fx.setDouble("posZ", z);
-                MainRegistry.proxy.effectNT(fx);
+                    NBTTagCompound fx = new NBTTagCompound();
+                    fx.setString("type", "tower");
+                    fx.setFloat("lift", 0.5F);
+                    fx.setFloat("base", 0.75F);
+                    fx.setFloat("max", 2F);
+                    fx.setInteger("life", 50 + world.rand.nextInt(10));
+                    fx.setInteger("color", type.getColor());
+                    fx.setDouble("posX", x);
+                    fx.setDouble("posY", y);
+                    fx.setDouble("posZ", z);
+                    MainRegistry.proxy.effectNT(fx);
+                }
             }
         }
     }
@@ -368,4 +371,3 @@ public class EntityMist extends Entity {
         NULL
     }
 }
-
