@@ -47,7 +47,7 @@ public class TileEntityRBMKCooler extends TileEntityRBMKBase implements IFluidSt
 
 	@Override
 	public void update() {
-
+        int rbmkHeight = RBMKDials.getColumnHeight(world);
 		if(!world.isRemote) {
 
             if (this.world.getTotalWorldTime() % 20 == 0)

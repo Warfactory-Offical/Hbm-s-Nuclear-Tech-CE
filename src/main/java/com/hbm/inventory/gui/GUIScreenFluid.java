@@ -1,12 +1,12 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.Tags;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemFluidIDMulti;
 import com.hbm.packet.toserver.NBTItemControlPacket;
-import com.hbm.packet.PacketDispatcher;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiScreen;
@@ -90,13 +90,13 @@ public class GUIScreenFluid extends GuiScreen {
                     this.primary = this.searchArray[k];
                     NBTTagCompound data = new NBTTagCompound();
                     data.setInteger("primary", this.primary.getID());
-                    PacketDispatcher.wrapper.sendToServer(new NBTItemControlPacket(data));
+                    PacketThreading.createSendToServerThreadedPacket(new NBTItemControlPacket(data));
                 } else if(button == 1) {
                     mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                     this.secondary = this.searchArray[k];
                     NBTTagCompound data = new NBTTagCompound();
                     data.setInteger("secondary", this.secondary.getID());
-                    PacketDispatcher.wrapper.sendToServer(new NBTItemControlPacket(data));
+                    PacketThreading.createSendToServerThreadedPacket(new NBTItemControlPacket(data));
                 }
             }
         }

@@ -1,7 +1,7 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.Tags;
-import com.hbm.packet.PacketDispatcher;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.network.TileEntityRadioTelex;
 import net.minecraft.client.Minecraft;
@@ -227,7 +227,7 @@ public class GuiScreenRadioTelex extends GuiScreen {
             for(int j = 0; j < 5; j++) this.txBuffer[j] = "";
             NBTTagCompound data = new NBTTagCompound();
             for(int j = 0; j < 5; j++) data.setString("tx" + j, this.txBuffer[j]);
-            PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, telex.getPos()));
+            PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(data, telex.getPos()));
         }
         // PRT
         if(checkClick(x, y, 147, 219, 18, 18)) cmd = "rxprt"; // print message in RX buffer
@@ -248,7 +248,7 @@ public class GuiScreenRadioTelex extends GuiScreen {
                 data.setString("rxChan", this.rxFrequency.getText());
             }
 
-            PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, telex.getPos()));
+            PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(data, telex.getPos()));
         }
 
         if(character != '\0') {
@@ -315,7 +315,7 @@ public class GuiScreenRadioTelex extends GuiScreen {
         Keyboard.enableRepeatEvents(false);
         NBTTagCompound data = new NBTTagCompound();
         for(int j = 0; j < 5; j++) data.setString("tx" + j, this.txBuffer[j]);
-        PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, telex.getPos()));
+        PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(data, telex.getPos()));
     }
 
     @Override

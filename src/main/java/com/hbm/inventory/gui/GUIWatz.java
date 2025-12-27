@@ -1,8 +1,8 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.Tags;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.container.ContainerWatz;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.render.util.GaugeUtil;
 import com.hbm.render.util.GaugeUtil.Gauge;
@@ -65,8 +65,9 @@ public class GUIWatz extends GuiInfoContainer {
 		if(guiLeft + 142 <= x && guiLeft + 142 + 18 > x && guiTop + 70 < y && guiTop + 70 + 18 >= y) {
 			NBTTagCompound control = new NBTTagCompound();
 			control.setBoolean("lock", true);
-			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(control, watz.getPos().getX(), watz.getPos().getY(), watz.getPos().getZ()));
-			mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1F));
+            PacketThreading.createSendToServerThreadedPacket(
+                    new NBTControlPacket(control, watz.getPos().getX(), watz.getPos().getY(), watz.getPos().getZ()));
+            mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1F));
 		}
 	}
 

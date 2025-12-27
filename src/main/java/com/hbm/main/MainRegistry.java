@@ -475,6 +475,7 @@ public class MainRegistry {
         RadiationSystemNT.onServerStopping(evt);
         ChunkUtil.onServerStopping();
         RecipesCommon.onServerStopping();
+        ModEventHandler.RBMK_COL_HEIGHT_MAP.clear();
     }
 
     @EventHandler

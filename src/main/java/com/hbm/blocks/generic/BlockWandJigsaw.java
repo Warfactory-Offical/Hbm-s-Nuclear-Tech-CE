@@ -5,11 +5,11 @@ import com.hbm.api.block.IBlockSideRotation;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.machine.BlockContainerBakeable;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.render.block.BlockBakeFrame;
 import com.hbm.tileentity.IGUIProvider;
@@ -428,7 +428,8 @@ public class BlockWandJigsaw extends BlockContainerBakeable implements IBlockSid
 
             data.setBoolean("roll", "Rollable".equals(jointToggle.displayString));
 
-            PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, jigsaw.getPos().getX(), jigsaw.getPos().getY(), jigsaw.getPos().getZ()));
+            PacketThreading.createSendToServerThreadedPacket(
+                    new NBTControlPacket(data, jigsaw.getPos().getX(), jigsaw.getPos().getY(), jigsaw.getPos().getZ()));
         }
 
         @Override

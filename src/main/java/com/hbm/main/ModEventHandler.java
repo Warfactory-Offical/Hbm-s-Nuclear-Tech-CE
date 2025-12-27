@@ -42,6 +42,7 @@ import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.packet.PacketDispatcher;
+import com.hbm.packet.threading.ThreadedPacket;
 import com.hbm.packet.toclient.*;
 import com.hbm.particle.bullet_hit.EntityHitDataHandler;
 import com.hbm.particle.helper.BlackPowderCreator;
@@ -55,6 +56,7 @@ import com.hbm.uninos.UniNodespace;
 import com.hbm.util.*;
 import com.hbm.util.ArmorRegistry.HazardClass;
 import com.hbm.world.biome.BiomeGenCraterBase;
+import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.Enchantment;
@@ -141,11 +143,13 @@ public class ModEventHandler {
     public static final ResourceLocation ENT_HBM_PROP_ID = new ResourceLocation(Tags.MODID, "HBMLIVINGPROPS");
     public static final ResourceLocation DATA_LOC = new ResourceLocation(Tags.MODID, "HBMDATA");
     private static final Set<String> hashes = new HashSet();
+    public static final Int2IntOpenHashMap RBMK_COL_HEIGHT_MAP = new Int2IntOpenHashMap(); // server only, to avoid sending redundant packets
     public static boolean showMessage = true;
     public static Random rand = new Random();
     private static final ForkJoinPool THREAD_POOL = ForkJoinPool.commonPool();
 
     static {
+        RBMK_COL_HEIGHT_MAP.defaultReturnValue((int) RBMKDials.RBMKKeys.KEY_COLUMN_HEIGHT.defValue);
         hashes.add("41de5c372b0589bbdb80571e87efa95ea9e34b0d74c6005b8eab495b7afd9994");
         hashes.add("31da6223a100ed348ceb3254ceab67c9cc102cb2a04ac24de0df3ef3479b1036");
     }
@@ -451,13 +455,21 @@ public class ModEventHandler {
     }
 
     @SubscribeEvent
-    public void addAITasks(EntityJoinWorldEvent event) {
-        if(event.getWorld().isRemote || !(event.getEntity() instanceof EntityLiving living)) return;
+    public void onEntityJoinWorld(EntityJoinWorldEvent event) {
+        World world = event.getWorld();
+        Entity entity = event.getEntity();
+        if(world.isRemote) return;
+        if (entity instanceof EntityPlayerMP player) {
+            int height = RBMKDials.getColumnHeight(world);
+            if (height != (int) RBMKDials.RBMKKeys.KEY_COLUMN_HEIGHT.defValue) {
+                PacketThreading.createSendToThreadedPacket(new SurveyPacket(height), player);
+            }
+        } else if (entity instanceof EntityLiving living) {
+            ItemStack held = living.getHeldItem(EnumHand.MAIN_HAND);
 
-        ItemStack held = living.getHeldItem(EnumHand.MAIN_HAND);
-
-        if(!held.isEmpty() && held.getItem() instanceof ItemGunBaseNT) {
-            MobUtil.addFireTask(living);
+            if (!held.isEmpty() && held.getItem() instanceof ItemGunBaseNT) {
+                MobUtil.addFireTask(living);
+            }
         }
     }
 
@@ -616,11 +628,12 @@ public class ModEventHandler {
     @SubscribeEvent
     public void worldTick(WorldTickEvent event) {
         if (event.world == null || event.world.isRemote || event.phase != Phase.START) return;
-
-        if (event.world.getTotalWorldTime() % 100 == 97) {
+        int cur = RBMKDials.getColumnHeight(event.world);
+        int dim = event.world.provider.getDimension();
+        if (RBMK_COL_HEIGHT_MAP.put(dim, cur) != cur) {
             //Drillgon200: Retarded hack because I'm not convinced game rules are client sync'd
             //Yup they are not LMAO
-            PacketThreading.createSendToAllThreadedPacket(new SurveyPacket(RBMKDials.getColumnHeight(event.world)));
+            PacketThreading.createSendToDimensionThreadedPacket(new SurveyPacket(cur), dim);
         }
         BossSpawnHandler.rollTheDice(event.world);
         for (Entity e : event.world.loadedEntityList) {
@@ -866,7 +879,7 @@ public class ModEventHandler {
             /// PU RADIATION END ///
 
             /// SYNC START ///
-            if(!player.world.isRemote && player instanceof EntityPlayerMP playerMP) PacketDispatcher.wrapper.sendTo(new PermaSyncPacket(playerMP), playerMP);
+            if(!player.world.isRemote && player instanceof EntityPlayerMP playerMP) PacketThreading.createSendToThreadedPacket(new PermaSyncPacket(playerMP), playerMP);
             /// SYNC END ///
         }
         // Alcater addition on June 2023
@@ -1284,13 +1297,15 @@ public class ModEventHandler {
                     File recFile = new File(recDir.getAbsolutePath() + File.separatorChar + recipe.getFileName());
                     if(recFile.exists() && recFile.isFile()) {
                         MainRegistry.logger.info("Sending recipe file: " + recFile.getName());
-                        PacketDispatcher.wrapper.sendTo(new SerializableRecipePacket(recFile), player);
+                        ThreadedPacket message = new SerializableRecipePacket(recFile);
+                        PacketThreading.createSendToThreadedPacket(message, player);
                         hasSent = true;
                     }
                 }
 
                 if(hasSent) {
-                    PacketDispatcher.wrapper.sendTo(new SerializableRecipePacket(true), player);
+                    ThreadedPacket message = new SerializableRecipePacket(true);
+                    PacketThreading.createSendToThreadedPacket(message, player);
                 }
             }
 

@@ -1,12 +1,13 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.Tags;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.container.ContainerMachineWoodBurner;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.machine.TileEntityMachineWoodBurner;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
@@ -15,7 +16,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.client.renderer.GlStateManager;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -70,15 +70,15 @@ public class GUIMachineWoodBurner extends GuiInfoContainer {
 			mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 			NBTTagCompound data = new NBTTagCompound();
 			data.setBoolean("toggle", false);
-			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, burner.getPos()));
-		}
+            PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(data, burner.getPos()));
+        }
 
 		if(guiLeft + 46 <= mouseX && guiLeft + 46 + 30 > mouseX && guiTop + 37 < mouseY && guiTop + 37 + 14 >= mouseY) {
 			mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 			NBTTagCompound data = new NBTTagCompound();
 			data.setBoolean("switch", false);
-			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, burner.getPos()));
-		}
+            PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(data, burner.getPos()));
+        }
 	}
 	
 	@Override

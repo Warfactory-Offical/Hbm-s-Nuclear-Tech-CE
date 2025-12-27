@@ -772,8 +772,8 @@ public class JetpackHandler {
 				
 				//SYNC
 				if(player == Minecraft.getMinecraft().player && j.dirty){
-					PacketDispatcher.wrapper.sendToServer(new JetpackSyncPacket(player));
-					j.dirty = false;
+                    PacketThreading.createSendToServerThreadedPacket(new JetpackSyncPacket(player));
+                    j.dirty = false;
 				}
 			}
 		}

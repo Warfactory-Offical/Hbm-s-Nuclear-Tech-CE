@@ -321,8 +321,8 @@ public class RBMKDials {
         KEY_DISABLE_DEPLETION("dialDisableDepletion", false),
         KEY_DISABLE_XENON("dialDisableXenon", false);
 
-        final String keyString;
-        final Object defValue;
+        public final String keyString;
+        public final Object defValue;
 
         RBMKKeys(String key, Object def) {
             keyString = key;

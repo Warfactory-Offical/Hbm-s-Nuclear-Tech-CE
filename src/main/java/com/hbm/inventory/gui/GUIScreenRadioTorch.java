@@ -1,8 +1,8 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.Tags;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.packet.toserver.NBTControlPacket;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.network.TileEntityRadioTorchBase;
 import com.hbm.tileentity.network.TileEntityRadioTorchSender;
 import com.hbm.util.I18nUtil;
@@ -154,15 +154,15 @@ public class GUIScreenRadioTorch extends GuiScreen {
 			mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 			NBTTagCompound data = new NBTTagCompound();
 			data.setBoolean("hasMapping", !radio.customMap);
-			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, radio.getPos()));
-		}
+            PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(data, radio.getPos()));
+        }
 		
 		if(guiLeft + 173 <= x && guiLeft + 173 + 18 > x && guiTop + 17 < y && guiTop + 17 + 18 >= y) {
 			mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 			NBTTagCompound data = new NBTTagCompound();
 			data.setBoolean("isPolling", !radio.polling);
-			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, radio.getPos()));
-		}
+            PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(data, radio.getPos()));
+        }
 		
 		if(guiLeft + 209 <= x && guiLeft + 209 + 18 > x && guiTop + 17 < y && guiTop + 17 + 18 >= y) {
 			mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
@@ -171,8 +171,8 @@ public class GUIScreenRadioTorch extends GuiScreen {
 			for(int j = 0; j < 16; j++) {
 				data.setString("mapping" + j, this.remap[j].getText());
 			}
-			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, radio.getPos()));
-		}
+            PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(data, radio.getPos()));
+        }
 	}
 
 	@Override

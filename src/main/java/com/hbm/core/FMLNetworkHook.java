@@ -27,17 +27,11 @@ public final class FMLNetworkHook {
     private static final int MAX_PARTS = 255;
     private static final long SIDE_OFF = fieldOffset(NetworkDispatcher.class, "side");
     private static final long SP_DATA_OFF = fieldOffset(SPacketCustomPayload.class, "data", "field_149171_b");
+    private static final long SP_CHAN_OFF = fieldOffset(SPacketCustomPayload.class, "channel", "field_149172_a");
     private static final long CP_DATA_OFF = fieldOffset(CPacketCustomPayload.class, "data", "field_149561_c");
+    private static final long CP_CHAN_OFF = fieldOffset(CPacketCustomPayload.class, "channel", "field_149562_a");
 
     private FMLNetworkHook() {
-    }
-
-    private static PacketBuffer heapCopy(ByteBuf src) {
-        int len = src.readableBytes();
-        int ri = src.readerIndex();
-        ByteBuf dst = Unpooled.buffer(len, len); // heap
-        dst.writeBytes(src, ri, len);
-        return new PacketBuffer(dst);
     }
 
     private static void safeRelease(ByteBuf b) {
@@ -60,9 +54,20 @@ public final class FMLNetworkHook {
         }
     }
 
-    private static void addReleaseListener(ChannelFuture f, Object pkt, boolean local) {
-        if (local) return;
-        f.addListener((ChannelFutureListener) _ -> releaseCustomPayloadData(pkt));
+    private static SPacketCustomPayload createUncheckedSPacket(String channel, PacketBuffer buf) {
+        SPacketCustomPayload pkt = new SPacketCustomPayload();
+        // skip 1048576B size check in ctor
+        U.putReference(pkt, SP_CHAN_OFF, channel);
+        U.putReference(pkt, SP_DATA_OFF, buf);
+        return pkt;
+    }
+
+    private static CPacketCustomPayload createUncheckedCPacket(String channel, PacketBuffer buf) {
+        CPacketCustomPayload pkt = new CPacketCustomPayload();
+        // skip 32767B size check in ctor
+        U.putReference(pkt, CP_CHAN_OFF, channel);
+        U.putReference(pkt, CP_DATA_OFF, buf);
+        return pkt;
     }
 
     @SuppressWarnings("unused")
@@ -73,52 +78,60 @@ public final class FMLNetworkHook {
         }
 
         final ByteBuf payload = pkt.payload();
-        final boolean local = self.manager != null && self.manager.isLocalChannel();
+        final boolean local = self.manager.isLocalChannel();
 
         try {
             final Side side = (Side) U.getReference(self, SIDE_OFF);
 
-            if (side == Side.CLIENT) {
-                PacketBuffer pb = local ? heapCopy(payload) : new PacketBuffer(payload.retainedSlice());
-                CPacketCustomPayload out = new CPacketCustomPayload(pkt.channel(), pb);
+            if (side == Side.CLIENT) { // Client -> Server
+                PacketBuffer pb = new PacketBuffer(payload.retainedSlice());
+                CPacketCustomPayload out;
 
-                final ChannelFuture f;
-                try {
-                    f = ctx.write(out, promise);
-                } catch (Throwable t) {
-                    releaseCustomPayloadData(out);
-                    throw t;
+                if (local) {
+                    out = createUncheckedCPacket(pkt.channel(), pb);
+                } else {
+                    out = new CPacketCustomPayload(pkt.channel(), pb);
                 }
-                addReleaseListener(f, out, local);
 
-            } else {
-                List<Packet<INetHandlerPlayClient>> parts = fmlProxyPacketToS3FPackets(pkt, local);
+                final ChannelFuture f = ctx.write(out, promise);
+                f.addListener((ChannelFutureListener) future -> {
+                    if (!local || !future.isSuccess()) {
+                        releaseCustomPayloadData(out);
+                    }
+                });
 
+            } else { // Server -> Client
+                if (local) {
+                    PacketBuffer pb = new PacketBuffer(payload.retainedSlice());
+                    SPacketCustomPayload out = createUncheckedSPacket(pkt.channel(), pb);
+                    final ChannelFuture f = ctx.write(out, promise);
+                    f.addListener((ChannelFutureListener) future -> {
+                        if (!future.isSuccess()) {
+                            releaseCustomPayloadData(out);
+                        }
+                    });
+                    return;
+                }
+                List<Packet<INetHandlerPlayClient>> parts = fmlProxyPacketToS3FPackets(pkt);
                 int last = parts.size() - 1;
+
                 for (int i = 0; i <= last; i++) {
                     Packet<INetHandlerPlayClient> p = parts.get(i);
                     ChannelPromise pPromise = (i == last) ? promise : ctx.newPromise();
 
-                    final ChannelFuture f;
-                    try {
-                        f = ctx.write(p, pPromise);
-                    } catch (Throwable t) {
+                    final ChannelFuture f = ctx.write(p, pPromise);
+                    f.addListener((ChannelFutureListener) _ -> {
                         releaseCustomPayloadData(p);
-                        throw t;
-                    }
-                    addReleaseListener(f, p, local);
+                    });
                 }
             }
         } finally {
+            // We retained slices for the packets, so we release the original reference from the FMLProxyPacket
             safeRelease(payload);
         }
     }
 
     public static List<Packet<INetHandlerPlayClient>> fmlProxyPacketToS3FPackets(FMLProxyPacket self) {
-        return fmlProxyPacketToS3FPackets(self, false);
-    }
-
-    public static List<Packet<INetHandlerPlayClient>> fmlProxyPacketToS3FPackets(FMLProxyPacket self, boolean local) {
         final ByteBuf buf = self.payload();
         final int len = buf.readableBytes();
         final int ri = buf.readerIndex();
@@ -127,7 +140,7 @@ public final class FMLNetworkHook {
 
         try {
             if (len < PART_SIZE) {
-                PacketBuffer pb = local ? heapCopy(buf) : new PacketBuffer(buf.retainedSlice(ri, len));
+                PacketBuffer pb = new PacketBuffer(buf.retainedSlice(ri, len));
                 ret.add(new SPacketCustomPayload(self.channel(), pb));
                 return ret;
             }
@@ -145,28 +158,23 @@ public final class FMLNetworkHook {
             for (int x = 0; x < parts; x++) {
                 int dataLen = Math.min(PART_SIZE - 1, len - offset);
 
-                PacketBuffer pb;
-                if (local) {
-                    ByteBuf dst = Unpooled.buffer(1 + dataLen, 1 + dataLen);
-                    dst.writeByte(x & 0xFF);
-                    dst.writeBytes(buf, ri + offset, dataLen);
-                    pb = new PacketBuffer(dst);
-                } else {
-                    ByteBuf slice = buf.retainedSlice(ri + offset, dataLen);
-                    ByteBuf header = Unpooled.buffer(1, 1).writeByte(x & 0xFF);
-                    ByteBuf combined = Unpooled.wrappedBuffer(header, slice);
-                    pb = new PacketBuffer(combined);
-                }
+                ByteBuf slice = buf.retainedSlice(ri + offset, dataLen);
+                ByteBuf header = Unpooled.buffer(1, 1).writeByte(x & 0xFF);
+                ByteBuf combined = Unpooled.wrappedBuffer(header, slice);
+                PacketBuffer pb = new PacketBuffer(combined);
 
-                ret.add(new SPacketCustomPayload("FML|MP", pb));
+                try {
+                    ret.add(new SPacketCustomPayload("FML|MP", pb));
+                } catch (Throwable t) {
+                    if (combined.refCnt() > 0) combined.release();
+                    throw t;
+                }
                 offset += dataLen;
             }
 
             return ret;
         } catch (Throwable t) {
-            if (!local) { // only needed if we created ref-counted retained slices; heap copy can be left to GC
-                for (Packet<INetHandlerPlayClient> p : ret) releaseCustomPayloadData(p);
-            }
+            for (Packet<INetHandlerPlayClient> p : ret) releaseCustomPayloadData(p);
             throw t;
         }
     }

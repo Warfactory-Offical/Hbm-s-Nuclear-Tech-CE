@@ -1,8 +1,8 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.Tags;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.container.ContainerPASource;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.machine.albion.TileEntityPASource;
 import com.hbm.util.I18nUtil;
@@ -60,7 +60,7 @@ public class GUIPASource extends GuiInfoContainer {
             mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             NBTTagCompound data = new NBTTagCompound();
             data.setBoolean("cancel", true);
-            PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, source.getPos()));
+            PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(data, source.getPos()));
         }
     }
 

@@ -26,6 +26,13 @@ public abstract class ThreadedPacket implements IMessage {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @param buf must be <code>retain()</code>'d if used outside this method, and it
+     * must be <code>release()</code>'d after use.
+     */
+    public abstract void fromBytes(ByteBuf buf);
+
     public synchronized final void releaseBuffer() {
         if (compiledBuffer != null) {
             if (compiledBuffer.refCnt() > 0) {

@@ -2,8 +2,8 @@ package com.hbm.handler.threading;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.hbm.config.GeneralConfig;
-import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
+import com.hbm.main.NetworkHandler;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.threading.ThreadedPacket;
 import net.minecraft.entity.Entity;
@@ -30,19 +30,27 @@ import static com.hbm.lib.internal.UnsafeHolder.*;
  */
 public class PacketThreading {
     /**
-     * Global lock guarding the FML channel state for outbound server packets.
+     * Global lock guarding the FML channel state for outbound packets.
      */
     public static final ReentrantLock LOCK = new ReentrantLock();
     public static final String THREAD_PREFIX = "NTM-Packet-Thread-";
     private static final Object IN_FLIGHT_BASE = staticFieldBase(PacketThreading.class, "inFlightDispatch");
     private static final long IN_FILGHT_OFF = staticfieldOffset(PacketThreading.class, "inFlightDispatch");
+    private static final Object LAST_S_FLUSH_BASE = staticFieldBase(PacketThreading.class, "lastServerFlushNs");
+    private static final long LAST_S_FLUSH_OFF = staticfieldOffset(PacketThreading.class, "lastServerFlushNs");
+    private static final Object LAST_C_FLUSH_BASE = staticFieldBase(PacketThreading.class, "lastClientFlushNs");
+    private static final long LAST_C_FLUSH_OFF = staticfieldOffset(PacketThreading.class, "lastClientFlushNs");
     private static final int QUEUE_CAPACITY = 4096;
     private static final int BATCH_SIZE = 128;
+    // Coalesce flushes in multi-threaded mode to avoid flush storms.
+    private static final long MIN_FLUSH_NS = 1_000_000L; // 1ms
 
     private static final ThreadFactory packetThreadFactory = new ThreadFactoryBuilder().setNameFormat(THREAD_PREFIX + "%d").setDaemon(true).build();
 
     private static final LongAdder totalCnt = new LongAdder();
     private static final LongAdder nanosWaited = new LongAdder();
+    @SuppressWarnings("FieldMayBeFinal")
+    private static volatile long lastServerFlushNs = 0L, lastClientFlushNs = 0L;
     private static volatile boolean multiThreaded = false;
     private static volatile boolean running = true;
     private static volatile boolean enabled = false;
@@ -136,6 +144,22 @@ public class PacketThreading {
         }
     }
 
+    private static void maybeFlushServer() {
+        long now = System.nanoTime();
+        long prev = lastServerFlushNs;
+        if (now - prev >= MIN_FLUSH_NS && U.compareAndSetLong(LAST_S_FLUSH_BASE, LAST_S_FLUSH_OFF, prev, now)) {
+            NetworkHandler.flushServer();
+        }
+    }
+
+    private static void maybeFlushClient() {
+        long now = System.nanoTime();
+        long prev = lastClientFlushNs;
+        if (now - prev >= MIN_FLUSH_NS && U.compareAndSetLong(LAST_C_FLUSH_BASE, LAST_C_FLUSH_OFF, prev, now)) {
+            NetworkHandler.flushClient();
+        }
+    }
+
     private static void processBatch(MpscBlockingConsumerArrayQueue<PacketTask> q) {
         List<PacketTask> batchBuffer = new ArrayList<>(BATCH_SIZE);
 
@@ -148,6 +172,7 @@ public class PacketThreading {
                     if (next == null) break;
                     batchBuffer.add(next);
                 }
+
                 for (int i = 0; i < batchBuffer.size(); i++) {
                     PacketTask task = batchBuffer.get(i);
                     try {
@@ -161,14 +186,24 @@ public class PacketThreading {
 
                 LOCK.lock();
                 try {
+                    boolean doFlushServer = false;
+                    boolean doFlushClient = false;
+
                     for (PacketTask task : batchBuffer) {
                         if (task == null) continue;
                         try {
                             send(task);
+                            if (task.op == PacketOp.SERVER) doFlushClient = true;
+                            else doFlushServer = true;
                         } catch (Throwable t) {
                             MainRegistry.logger.error("Failed to write packet to channel", t);
                         }
                     }
+
+                    // Early flush to reduce latency (tick-end flush stays as a backstop).
+                    if (doFlushServer) NetworkHandler.flushServerDirect();
+                    if (doFlushClient) NetworkHandler.flushClientDirect();
+
                 } finally {
                     LOCK.unlock();
                 }
@@ -189,6 +224,7 @@ public class PacketThreading {
                 batchBuffer.clear();
             }
         }
+
         PacketTask task;
         while ((task = q.relaxedPoll()) != null) {
             task.packet.releaseBuffer();
@@ -200,6 +236,7 @@ public class PacketThreading {
     // stays alive until all downstream retains are released.
     private static void send(PacketTask task) {
         switch (task.op) {
+            case SERVER -> PacketDispatcher.wrapper.sendToServerDirect(task.packet);
             case PLAYER -> PacketDispatcher.wrapper.sendToDirect(task.packet, (EntityPlayerMP) task.target);
             case ALL -> PacketDispatcher.wrapper.sendToAllDirect(task.packet);
             case DIMENSION -> PacketDispatcher.wrapper.sendToDimensionDirect(task.packet, task.dimension);
@@ -300,6 +337,13 @@ public class PacketThreading {
         dispatch(message, PacketOp.ALL, null, Integer.MIN_VALUE);
     }
 
+    /**
+     * Mirrors {@link com.hbm.main.NetworkHandler#sendToServer(IMessage)}.
+     */
+    public static void createSendToServerThreadedPacket(@NotNull ThreadedPacket message) {
+        dispatch(message, PacketOp.SERVER, null, Integer.MIN_VALUE);
+    }
+
     // debugging
     public static int getPoolSize() {
         ThreadPoolExecutor tp = threadPool;
@@ -350,7 +394,7 @@ public class PacketThreading {
     }
 
     private enum PacketOp {
-        PLAYER, ALL, DIMENSION, ALL_AROUND, TRACKING_POINT, TRACKING_ENTITY
+        PLAYER, ALL, DIMENSION, ALL_AROUND, TRACKING_POINT, TRACKING_ENTITY, SERVER
     }
 
     @SuppressWarnings("ClassCanBeRecord") // dude
@@ -370,6 +414,11 @@ public class PacketThreading {
                     send(task);
                 } finally {
                     LOCK.unlock();
+                }
+                if (task.op == PacketOp.SERVER) {
+                    maybeFlushClient();
+                } else {
+                    maybeFlushServer();
                 }
             } catch (Throwable t) {
                 MainRegistry.logger.error("Error processing packet in thread pool", t);

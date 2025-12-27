@@ -1,13 +1,13 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.Tags;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.container.ContainerMachineAmmoPress;
 import com.hbm.inventory.recipes.AmmoPressRecipes;
 import com.hbm.inventory.recipes.AmmoPressRecipes.AmmoPressRecipe;
 import com.hbm.items.ModItems;
 import com.hbm.packet.toserver.NBTControlPacket;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.machine.TileEntityMachineAmmoPress;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -181,10 +181,9 @@ public class GUIMachineAmmoPress extends GuiInfoContainer {
 
         NBTTagCompound data = new NBTTagCompound();
         data.setInteger("selection", this.selection);
-        PacketDispatcher.wrapper.sendToServer(
-            new NBTControlPacket(
-                data, press.getPos().getX(), press.getPos().getY(), press.getPos().getZ()));
-        playPressSound();
+          PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(
+                  data, press.getPos().getX(), press.getPos().getY(), press.getPos().getZ()));
+          playPressSound();
         return;
       }
     }

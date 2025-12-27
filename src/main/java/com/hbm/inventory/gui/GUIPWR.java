@@ -1,32 +1,30 @@
 package com.hbm.inventory.gui;
 
-import java.io.IOException;
-import java.util.Locale;
-
 import com.hbm.Tags;
+import com.hbm.handler.threading.PacketThreading;
+import com.hbm.inventory.container.ContainerPWR;
+import com.hbm.items.ModItems;
+import com.hbm.packet.toserver.NBTControlPacket;
+import com.hbm.render.util.GaugeUtil;
+import com.hbm.tileentity.machine.TileEntityPWRController;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.lwjgl.input.Keyboard;
 
-import com.hbm.inventory.container.ContainerPWR;
-import com.hbm.items.ModItems;
-import com.hbm.packet.PacketDispatcher;
-import com.hbm.packet.toserver.NBTControlPacket;
-import com.hbm.render.util.GaugeUtil;
-import com.hbm.tileentity.machine.TileEntityPWRController;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
+import java.io.IOException;
+import java.util.Locale;
 
 public class GUIPWR extends GuiInfoContainer {
 
@@ -144,7 +142,7 @@ public class GUIPWR extends GuiInfoContainer {
 
                 NBTTagCompound control = new NBTTagCompound();
                 control.setInteger("control", 100 - level);
-                PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(control, controller.getPos()));
+                PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(control, controller.getPos()));
                 mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             }
         }

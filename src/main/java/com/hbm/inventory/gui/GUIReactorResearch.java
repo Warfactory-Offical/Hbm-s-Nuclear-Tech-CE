@@ -1,10 +1,10 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.Tags;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.container.ContainerReactorResearch;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.modules.NumberDisplay;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.machine.TileEntityReactorResearch;
 import net.minecraft.client.Minecraft;
@@ -113,7 +113,8 @@ public class GUIReactorResearch extends GuiInfoContainer {
             control.setDouble("level", level);
             timer = 15;
 
-            PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(control, reactor.getPos().getX(), reactor.getPos().getY(), reactor.getPos().getZ()));
+            PacketThreading.createSendToServerThreadedPacket(
+                    new NBTControlPacket(control, reactor.getPos().getX(), reactor.getPos().getY(), reactor.getPos().getZ()));
             mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(HBMSoundHandler.rbmk_az5_cover, 0.5F));
         }
     }

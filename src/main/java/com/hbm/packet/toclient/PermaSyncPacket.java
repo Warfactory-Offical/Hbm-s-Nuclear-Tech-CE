@@ -2,7 +2,7 @@ package com.hbm.packet.toclient;
 
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.PermaSyncHandler;
-
+import com.hbm.packet.threading.PrecompiledPacket;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,10 +13,9 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class PermaSyncPacket implements IMessage {
-
-    EntityPlayerMP player;	//server only, for writing
-    ByteBuf out;			//client only, for reading
+public class PermaSyncPacket extends PrecompiledPacket {
+    private EntityPlayerMP player;
+    private ByteBuf out;
 
     public PermaSyncPacket() { }
 
@@ -31,7 +30,7 @@ public class PermaSyncPacket implements IMessage {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        this.out = buf;
+        this.out = buf.retain();
     }
 
     public static class Handler implements IMessageHandler<PermaSyncPacket, IMessage> {

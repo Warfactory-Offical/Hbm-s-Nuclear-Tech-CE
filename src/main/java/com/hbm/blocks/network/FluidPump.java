@@ -5,6 +5,7 @@ import com.hbm.api.fluidmk2.IFluidStandardTransceiverMK2;
 import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.machine.BlockContainerBakeable;
 import com.hbm.handler.CompatHandler;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.fluid.FluidType;
@@ -13,7 +14,6 @@ import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.main.MainRegistry;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.render.block.BlockBakeFrame;
 import com.hbm.tileentity.IGUIProvider;
@@ -455,7 +455,8 @@ public class FluidPump extends BlockContainerBakeable implements INBTBlockTransf
             } catch (Exception ignored) {
             }
 
-            PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, this.pump.getPos().getX(), this.pump.getPos().getY(), this.pump.getPos().getZ()));
+            PacketThreading.createSendToServerThreadedPacket(
+                    new NBTControlPacket(data, this.pump.getPos().getX(), this.pump.getPos().getY(), this.pump.getPos().getZ()));
         }
 
         @Override

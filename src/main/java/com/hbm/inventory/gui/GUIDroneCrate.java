@@ -1,8 +1,8 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.Tags;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.container.ContainerDroneCrate;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.network.TileEntityDroneCrate;
 import net.minecraft.client.Minecraft;
@@ -52,7 +52,7 @@ public class GUIDroneCrate extends GuiInfoContainer {
             mc.getSoundHandler().playSound(PositionedSoundRecord.getRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F, 1.0F));
             NBTTagCompound data = new NBTTagCompound();
             data.setBoolean(op, true);
-            PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, crate.getPos()));
+            PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(data, crate.getPos()));
         }
     }
 

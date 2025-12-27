@@ -1,19 +1,19 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.Tags;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.container.ContainerRBMKBoiler;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.packet.toserver.NBTControlPacket;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKBoiler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.client.renderer.GlStateManager;
 
 import java.io.IOException;
 
@@ -47,8 +47,8 @@ public class GUIRBMKBoiler extends GuiInfoContainer {
 			mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 			NBTTagCompound data = new NBTTagCompound();
 			data.setBoolean("compression", true); //we only need to send on bit, so boolean it is
-			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, boiler.getPos()));
-		}
+            PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(data, boiler.getPos()));
+        }
 	}
 	
 	@Override

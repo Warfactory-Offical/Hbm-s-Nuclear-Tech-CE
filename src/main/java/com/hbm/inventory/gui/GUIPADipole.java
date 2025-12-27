@@ -1,9 +1,9 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.Tags;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.container.ContainerPADipole;
 import com.hbm.items.ModItems;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.machine.albion.TileEntityPADipole;
 import com.hbm.util.Vec3NT;
@@ -80,21 +80,21 @@ public class GUIPADipole extends GuiInfoContainer {
             mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             NBTTagCompound data = new NBTTagCompound();
             data.setBoolean("lower", true);
-            PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, dipole.getPos()));
+            PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(data, dipole.getPos()));
         }
 
         if (isPointInRegion(62, 43, 12, 12, mouseX, mouseY)) {
             mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             NBTTagCompound data = new NBTTagCompound();
             data.setBoolean("upper", true);
-            PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, dipole.getPos()));
+            PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(data, dipole.getPos()));
         }
 
         if (isPointInRegion(62, 57, 12, 12, mouseX, mouseY)) {
             mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             NBTTagCompound data = new NBTTagCompound();
             data.setBoolean("redstone", true);
-            PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, dipole.getPos()));
+            PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(data, dipole.getPos()));
         }
     }
 
@@ -185,7 +185,7 @@ public class GUIPADipole extends GuiInfoContainer {
                 int num = NumberUtils.toInt(this.threshold.getText());
                 NBTTagCompound data = new NBTTagCompound();
                 data.setInteger("threshold", num);
-                PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, dipole.getPos()));
+                PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(data, dipole.getPos()));
             }
             return;
         }

@@ -1,8 +1,8 @@
 package com.hbm.inventory.control_panel;
 
 import com.hbm.Tags;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.packet.toserver.NBTControlPacket;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.machine.TileEntityControlPanel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -67,8 +67,8 @@ public class GuiControlEdit extends GuiContainer {
 		NBTTagCompound tag = new NBTTagCompound();
 		control.panel.writeToNBT(tag);
 		tag.setString("full_set", "");
-		PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(tag, control.getPos()));
-		control.updateTransform();
+        PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(tag, control.getPos()));
+        control.updateTransform();
 		isEditMode = false;
 	}
 	

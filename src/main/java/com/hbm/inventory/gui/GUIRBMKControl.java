@@ -1,18 +1,18 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.Tags;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.container.ContainerRBMKControl;
 import com.hbm.packet.toserver.NBTControlPacket;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKControlManual;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.client.renderer.GlStateManager;
 
 import java.io.IOException;
 
@@ -49,8 +49,8 @@ public class GUIRBMKControl extends GuiInfoContainer {
 				mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 				NBTTagCompound data = new NBTTagCompound();
 				data.setDouble("level", 1.0D - (k * 0.25D));
-				PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, rod.getPos()));
-			}
+                PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(data, rod.getPos()));
+            }
 
 			//color groups
 			if(guiLeft + 28 <= x && guiLeft + 28 + 12 > x && guiTop + 26 + k * 11 < y && guiTop + 26 + 10 + k * 11 >= y) {
@@ -58,8 +58,8 @@ public class GUIRBMKControl extends GuiInfoContainer {
 				mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 				NBTTagCompound data = new NBTTagCompound();
 				data.setInteger("color", k);
-				PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, rod.getPos()));
-			}
+                PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(data, rod.getPos()));
+            }
 		}
 	}
 	

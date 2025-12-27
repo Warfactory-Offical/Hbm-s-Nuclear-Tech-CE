@@ -1,12 +1,14 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.Tags;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.container.ContainerHeaterHeatex;
 import com.hbm.packet.toserver.NBTControlPacket;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.machine.TileEntityHeaterHeatex;
+import com.hbm.util.I18nUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,8 +16,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.lwjgl.input.Keyboard;
-import net.minecraft.client.renderer.GlStateManager;
-import com.hbm.util.I18nUtil;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -109,14 +109,14 @@ public class GUIHeaterHeatex extends GuiInfoContainer {
             int cyc = Math.max(NumberUtils.toInt(this.fieldCycles.getText()), 1);
             NBTTagCompound data = new NBTTagCompound();
             data.setInteger("toCool", cyc);
-            PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, heaterPos.getX(), heaterPos.getY(), heaterPos.getZ()));
+            PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(data, heaterPos.getX(), heaterPos.getY(), heaterPos.getZ()));
             return;
         }
         if (this.fieldDelay.textboxKeyTyped(c, i)) {
             int delay = Math.max(NumberUtils.toInt(this.fieldDelay.getText()), 1);
             NBTTagCompound data = new NBTTagCompound();
             data.setInteger("delay", delay);
-            PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, heaterPos.getX(), heaterPos.getY(), heaterPos.getZ()));
+            PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(data, heaterPos.getX(), heaterPos.getY(), heaterPos.getZ()));
             return;
         }
 

@@ -53,8 +53,6 @@ import java.util.*;
 
 public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements ITickable, IControllable {
 
-	@Deprecated
-	public static int rbmkHeight = 4;
     private static final String title = "Dump of Ordered Data Diagnostic (DODD)";
     private static final List<String> exceptions;
 

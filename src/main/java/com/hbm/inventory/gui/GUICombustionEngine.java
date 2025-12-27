@@ -1,18 +1,15 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.Tags;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.container.ContainerCombustionEngine;
 import com.hbm.inventory.fluid.trait.FT_Combustible;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemPistons;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.machine.TileEntityMachineCombustionEngine;
 import com.hbm.util.EnumUtil;
 import com.mojang.realmsclient.gui.ChatFormatting;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Locale;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -21,6 +18,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Locale;
 
 public class GUICombustionEngine extends GuiInfoContainer {
 
@@ -116,9 +117,8 @@ public class GUICombustionEngine extends GuiInfoContainer {
         this.setting = setting;
         NBTTagCompound data = new NBTTagCompound();
         data.setInteger("setting", setting);
-        PacketDispatcher.wrapper.sendToServer(
-            new NBTControlPacket(
-                data, engine.getPos().getX(), engine.getPos().getY(), engine.getPos().getZ()));
+          PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(
+                  data, engine.getPos().getX(), engine.getPos().getY(), engine.getPos().getZ()));
       }
     }
 
@@ -136,8 +136,7 @@ public class GUICombustionEngine extends GuiInfoContainer {
       playPressSound();
       NBTTagCompound data = new NBTTagCompound();
       data.setBoolean("turnOn", true);
-      PacketDispatcher.wrapper.sendToServer(
-          new NBTControlPacket(
+        PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(
               data, engine.getPos().getX(), engine.getPos().getY(), engine.getPos().getZ()));
     }
 

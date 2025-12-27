@@ -2,10 +2,10 @@ package com.hbm.inventory.gui;
 
 import com.hbm.Tags;
 import com.hbm.handler.ability.*;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.items.tool.ItemToolAbility;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTItemControlPacket;
 import com.hbm.util.Tuple;
 import net.minecraft.client.Minecraft;
@@ -390,7 +390,7 @@ public class GUIScreenToolAbility extends GuiScreen {
     protected void doClose() {
         // A bit messy, but I suppose it works
         ((ItemToolAbility) this.toolStack.getItem()).setConfiguration(toolStack, config);
-        PacketDispatcher.wrapper.sendToServer(new NBTItemControlPacket(this.toolStack.getTagCompound()));
+        PacketThreading.createSendToServerThreadedPacket(new NBTItemControlPacket(this.toolStack.getTagCompound()));
 
         this.mc.player.closeScreen();
 

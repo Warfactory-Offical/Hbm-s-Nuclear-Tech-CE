@@ -1,19 +1,19 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.Tags;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.container.ContainerOilburner;
 import com.hbm.inventory.fluid.trait.FT_Flammable;
 import com.hbm.packet.toserver.NBTControlPacket;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.machine.TileEntityHeaterOilburner;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.client.renderer.GlStateManager;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -53,7 +53,7 @@ public class GUIOilburner extends GuiInfoContainer {
             mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             NBTTagCompound data = new NBTTagCompound();
             data.setBoolean("toggle", true);
-            PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, heater.getPos()));
+            PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(data, heater.getPos()));
         }
     }
 

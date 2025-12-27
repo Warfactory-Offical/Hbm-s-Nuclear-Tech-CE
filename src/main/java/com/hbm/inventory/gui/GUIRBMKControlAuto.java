@@ -1,13 +1,14 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.Tags;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.container.ContainerRBMKControlAuto;
 import com.hbm.packet.toserver.NBTControlPacket;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKControlAuto;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
@@ -16,7 +17,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.lwjgl.input.Keyboard;
-import net.minecraft.client.renderer.GlStateManager;
 
 import java.io.IOException;
 
@@ -120,8 +120,8 @@ public class GUIRBMKControlAuto extends GuiInfoContainer {
 			data.setDouble("heatUpper", vals[2]);
 			data.setDouble("heatLower", vals[3]);
 
-			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, rod.getPos()));
-		}
+            PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(data, rod.getPos()));
+        }
 		
 		for(int k = 0; k < 3; k++) {
 
@@ -131,8 +131,8 @@ public class GUIRBMKControlAuto extends GuiInfoContainer {
 				mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 				NBTTagCompound data = new NBTTagCompound();
 				data.setInteger("function", k);
-				PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, rod.getPos()));
-			}
+                PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(data, rod.getPos()));
+            }
 		}
 	}
 	

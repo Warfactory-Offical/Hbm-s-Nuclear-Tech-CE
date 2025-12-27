@@ -1,8 +1,8 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.Tags;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.container.ContainerMassStorage;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.machine.storage.TileEntityMassStorage;
 import net.minecraft.client.Minecraft;
@@ -68,16 +68,18 @@ public class GUIMassStorage extends GuiInfoContainer {
 			mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 			NBTTagCompound data = new NBTTagCompound();
 			data.setBoolean("provide", Keyboard.isKeyDown(Keyboard.KEY_LSHIFT));
-			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, storage.getPos().getX(), storage.getPos().getY(), storage.getPos().getZ()));
-		}
+            PacketThreading.createSendToServerThreadedPacket(
+                    new NBTControlPacket(data, storage.getPos().getX(), storage.getPos().getY(), storage.getPos().getZ()));
+        }
 
 		if(guiLeft + 80 <= x && guiLeft + 80 + 14 > x && guiTop + 72 < y && guiTop + 72 + 14 >= y) {
 
 			mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 			NBTTagCompound data = new NBTTagCompound();
 			data.setBoolean("toggle", false);
-			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, storage.getPos().getX(), storage.getPos().getY(), storage.getPos().getZ()));
-		}
+            PacketThreading.createSendToServerThreadedPacket(
+                    new NBTControlPacket(data, storage.getPos().getX(), storage.getPos().getY(), storage.getPos().getZ()));
+        }
 	}
 
 	@Override

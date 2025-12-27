@@ -1,10 +1,10 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.Tags;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.recipes.loader.GenericRecipe;
 import com.hbm.inventory.recipes.loader.GenericRecipes;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -305,7 +305,7 @@ public class GUIScreenRecipeSelector extends GuiScreen {
         data.setInteger("index", this.index);
         data.setString("selection", this.selection);
         TileEntity te = (TileEntity) tile;
-        PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, te.getPos().getX(), te.getPos().getY(), te.getPos().getZ()));
+        PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(data, te.getPos().getX(), te.getPos().getY(), te.getPos().getZ()));
     }
 
     @Override

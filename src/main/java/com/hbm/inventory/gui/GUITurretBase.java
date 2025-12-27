@@ -1,15 +1,17 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.Tags;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.container.ContainerTurretBase;
+import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.AuxButtonPacket;
 import com.hbm.packet.toserver.NBTControlPacket;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.tileentity.turret.TileEntityTurretBaseNT;
 import com.hbm.util.I18nUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
@@ -19,7 +21,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -201,9 +203,9 @@ public abstract class GUITurretBase extends GuiInfoContainer {
 			
 			NBTTagCompound data = new NBTTagCompound();
 			data.setString("name", this.field.getText());
-			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, turretPos));
-			
-			this.field.setText("");
+            PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(data, turretPos));
+
+            this.field.setText("");
 			return;
 		}
 
@@ -213,8 +215,8 @@ public abstract class GUITurretBase extends GuiInfoContainer {
 			
 			NBTTagCompound data = new NBTTagCompound();
 			data.setInteger("del", this.index);
-			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, turretPos));
-		}
+            PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(data, turretPos));
+        }
 	}
 
 	public int getTurretFontColor(){

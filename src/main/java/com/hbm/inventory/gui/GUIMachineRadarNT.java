@@ -2,8 +2,8 @@ package com.hbm.inventory.gui;
 
 import com.hbm.Tags;
 import com.hbm.api.entity.RadarEntry;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.packet.toserver.NBTControlPacket;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.render.amlfrom1710.Vec3;
 import com.hbm.tileentity.machine.TileEntityMachineRadarNT;
 import com.hbm.util.BobMathUtil;
@@ -66,7 +66,8 @@ public class GUIMachineRadarNT extends GuiScreen {
             mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             NBTTagCompound data = new NBTTagCompound();
             data.setBoolean(cmd, true);
-            PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, radar.getPos().getX(), radar.getPos().getY(), radar.getPos().getZ()));
+            PacketThreading.createSendToServerThreadedPacket(
+                    new NBTControlPacket(data, radar.getPos().getX(), radar.getPos().getY(), radar.getPos().getZ()));
         }
     }
 
@@ -239,7 +240,8 @@ public class GUIMachineRadarNT extends GuiScreen {
                         NBTTagCompound data = new NBTTagCompound();
                         data.setInteger("launchEntity", m.entityID);
                         data.setInteger("link", id);
-                        PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, radar.getPos().getX(), radar.getPos().getY(), radar.getPos().getZ()));
+                        PacketThreading.createSendToServerThreadedPacket(
+                                new NBTControlPacket(data, radar.getPos().getX(), radar.getPos().getY(), radar.getPos().getZ()));
                         return;
                     }
                 }
@@ -251,7 +253,8 @@ public class GUIMachineRadarNT extends GuiScreen {
             data.setInteger("launchPosX", tX);
             data.setInteger("launchPosZ", tZ);
             data.setInteger("link", id);
-            PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, radar.getPos().getX(), radar.getPos().getY(), radar.getPos().getZ()));
+            PacketThreading.createSendToServerThreadedPacket(
+                    new NBTControlPacket(data, radar.getPos().getX(), radar.getPos().getY(), radar.getPos().getZ()));
         }
     }
 

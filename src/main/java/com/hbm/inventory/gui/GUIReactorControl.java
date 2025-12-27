@@ -1,9 +1,9 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.Tags;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.container.ContainerReactorControl;
 import com.hbm.modules.NumberDisplay;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.machine.TileEntityReactorControl;
 import net.minecraft.client.Minecraft;
@@ -114,7 +114,8 @@ public class GUIReactorControl extends GuiInfoContainer {
             data.setDouble("heatUpper", vals[2]);
             data.setDouble("heatLower", vals[3]);
 
-            PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, control.getPos().getX(), control.getPos().getY(), control.getPos().getZ()));
+            PacketThreading.createSendToServerThreadedPacket(
+                    new NBTControlPacket(data, control.getPos().getX(), control.getPos().getY(), control.getPos().getZ()));
         }
 
         for(int k = 0; k < 3; k++) {
@@ -123,7 +124,8 @@ public class GUIReactorControl extends GuiInfoContainer {
                 mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                 NBTTagCompound data = new NBTTagCompound();
                 data.setInteger("function", k);
-                PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, control.getPos().getX(), control.getPos().getY(), control.getPos().getZ()));
+                PacketThreading.createSendToServerThreadedPacket(
+                        new NBTControlPacket(data, control.getPos().getX(), control.getPos().getY(), control.getPos().getZ()));
             }
         }
     }

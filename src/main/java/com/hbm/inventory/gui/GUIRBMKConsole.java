@@ -1,9 +1,9 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.Tags;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.lib.HBMSoundHandler;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKConsole;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKConsole.ColumnType;
@@ -180,8 +180,8 @@ public class GUIRBMKConsole extends GuiScreen {
 			int[] cols = new int[ints.size()];
 			for (int i = 0; i < cols.length; i++) cols[i] = ints.get(i);
 			control.setIntArray("cols", cols);
-			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(control, console.getPos()));
-			mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1F));
+            PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(control, console.getPos()));
+            mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1F));
 			return;
 		}
 
@@ -208,8 +208,8 @@ public class GUIRBMKConsole extends GuiScreen {
 					int[] cols = new int[ints.size()];
 					for (int i = 0; i < cols.length; i++) cols[i] = ints.get(i);
 					control.setIntArray("cols", cols);
-					PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(control, console.getPos()));
-				}
+                    PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(control, console.getPos()));
+                }
 
 				mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 0.8F + k * 0.1F));
 				return;
@@ -233,8 +233,8 @@ public class GUIRBMKConsole extends GuiScreen {
 						control.setInteger("sel_" + j, j);
 				}
 
-				PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(control, console.getPos()));
-				mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1F));
+                PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(control, console.getPos()));
+                mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1F));
 			}
 			return;
 		}
@@ -260,8 +260,8 @@ public class GUIRBMKConsole extends GuiScreen {
 					control.setInteger("sel_" + j, j);
 			}
 
-			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(control, console.getPos()));
-			mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1F));
+            PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(control, console.getPos()));
+            mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1F));
 			return;
 		}
 
@@ -275,8 +275,8 @@ public class GUIRBMKConsole extends GuiScreen {
 				if (guiLeft + 6 + 40 * k <= mouseX && guiLeft + 6 + 40 * k + 18 > mouseX && guiTop + 8 + 21 * j < mouseY && guiTop + 8 + 21 * j + 18 >= mouseY) {
 					NBTTagCompound control = new NBTTagCompound();
 					control.setByte("toggle", (byte) slot);
-					PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(control, console.getPos()));
-					mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 0.5F));
+                    PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(control, console.getPos()));
+                    mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 0.5F));
 					return;
 				}
 
@@ -292,8 +292,8 @@ public class GUIRBMKConsole extends GuiScreen {
 						}
 					}
 
-					PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(control, console.getPos()));
-					mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 0.75F));
+                    PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(control, console.getPos()));
+                    mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 0.75F));
 					return;
 				}
 			}

@@ -1,9 +1,9 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.Tags;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.container.ContainerPneumoTube;
 import com.hbm.modules.ModulePatternMatcher;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.render.util.GaugeUtil;
 import com.hbm.tileentity.network.TileEntityPneumoTube;
@@ -76,7 +76,7 @@ public class GUIPneumoTube extends GuiInfoContainer {
             mc.getSoundHandler().playSound(PositionedSoundRecord.getRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F, 1.0F));
             NBTTagCompound data = new NBTTagCompound();
             data.setBoolean(name, true);
-            PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, tube.getPos()));
+            PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(data, tube.getPos()));
         }
     }
 

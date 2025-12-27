@@ -1,8 +1,8 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.Tags;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.container.ContainerMachineSolderingStation;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.machine.TileEntityMachineSolderingStation;
 import com.mojang.realmsclient.gui.ChatFormatting;
@@ -83,7 +83,7 @@ public class GUIMachineSolderingStation extends GuiInfoContainer {
       playPressSound();
       NBTTagCompound data = new NBTTagCompound();
       data.setBoolean("collision", true);
-      PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, soldering_station.getPos()));
+        PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(data, soldering_station.getPos()));
     }
   }
 

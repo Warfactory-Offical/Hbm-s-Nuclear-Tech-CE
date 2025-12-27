@@ -104,21 +104,31 @@ public class NetworkHandler {
         @Override
         protected void decode(ChannelHandlerContext ctx, FMLProxyPacket msg, List<Object> out) throws Exception {
             ByteBuf inboundBuf = msg.payload();
-            byte discriminator = inboundBuf.readByte();
-            Class<?> originalMsgClass = discriminators.get(discriminator);
+            try {
+                byte discriminator = inboundBuf.readByte();
+                Class<?> originalMsgClass = discriminators.get(discriminator);
 
-            if(originalMsgClass == null)
-                throw new CodecException("Undefined message for discriminator " + discriminator + " in channel " + msg.channel());
+                if (originalMsgClass == null)
+                    throw new CodecException("Undefined message for discriminator " + discriminator + " in channel " + msg.channel());
 
-            Object newMsg = originalMsgClass.getDeclaredConstructor().newInstance();
-            ctx.channel().attr(INBOUNDPACKETTRACKER).get().set(new WeakReference<>(msg));
+                Object newMsg = originalMsgClass.getDeclaredConstructor().newInstance();
+                ctx.channel().attr(INBOUNDPACKETTRACKER).get().set(new WeakReference<>(msg));
 
-            if(newMsg instanceof IMessage message) // pretty much always the case
-                message.fromBytes(inboundBuf.slice());
-            else
-                throw new CodecException("Unknown packet codec requested during decoding, expected IMessage/PrecompiledPacket, got " + msg.getClass().getName());
+                if (newMsg instanceof IMessage message)
+                    // If 'message' is a BufPacket, it performs a retainedSlice() here.
+                    // This increments the count to 2.
+                    // The finally block below decrements to 1.
+                    // The BufPacket handler eventually decrements to 0. Safe.
+                    message.fromBytes(inboundBuf.slice());
+                else
+                    throw new CodecException("Unknown packet codec requested during decoding, expected IMessage/PrecompiledPacket, got " + msg.getClass().getName());
 
-            out.add(newMsg);
+                out.add(newMsg);
+            } finally {
+                if (inboundBuf != null) {
+                    inboundBuf.release();
+                }
+            }
         }
     }
 
@@ -164,7 +174,7 @@ public class NetworkHandler {
     public static void flushClient() {
         PacketThreading.LOCK.lock();
         try {
-            clientChannel.flush();
+            flushClientDirect();
         } finally {
             PacketThreading.LOCK.unlock();
         }
@@ -174,17 +184,36 @@ public class NetworkHandler {
     public static void flushServer() {
         PacketThreading.LOCK.lock();
         try {
-            serverChannel.flush();
+            flushServerDirect();
         } finally {
             PacketThreading.LOCK.unlock();
         }
     }
 
-    public void sendToServer(IMessage message) { // No thread protection needed here, since the client never threads packets to the server.
-        if (message instanceof ThreadedPacket) {
-            MainRegistry.logger.error("Threaded packet {} must not be used in C2S traffic. Skipping packet.", message.getClass());
+    public static void flushClientDirect() {
+        clientChannel.flush();
+    }
+
+    public static void flushServerDirect() {
+        serverChannel.flush();
+    }
+
+    public void sendToServer(IMessage message) {
+        if (message instanceof ThreadedPacket packet) {
+            MainRegistry.logger.warn("[NetworkHandler] Deprecated API usage: ThreadedPacket {} is sent through sendToServer. " +
+                    "Delegating to PacketThreading.createSendToServerThreadedPacket.", packet.getClass().getName());
+            PacketThreading.createSendToServerThreadedPacket(packet);
             return;
         }
+        PacketThreading.LOCK.lock();
+        try {
+            sendToServerDirect(message);
+        } finally {
+            PacketThreading.LOCK.unlock();
+        }
+    }
+
+    public void sendToServerDirect(IMessage message) {
         clientChannel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.TOSERVER);
         clientChannel.write(message);
     }

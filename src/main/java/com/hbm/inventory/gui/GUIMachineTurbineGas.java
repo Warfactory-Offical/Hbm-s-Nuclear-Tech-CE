@@ -1,12 +1,12 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.Tags;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.container.ContainerMachineTurbineGas;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.fluid.trait.FT_Combustible;
 import com.hbm.inventory.fluid.trait.FT_Combustible.FuelGrade;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.machine.TileEntityMachineTurbineGas;
 import com.hbm.util.I18nUtil;
@@ -61,7 +61,7 @@ public class GUIMachineTurbineGas extends GuiInfoContainer {
                 mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                 NBTTagCompound data = new NBTTagCompound();
                 data.setInteger("state", state);
-                PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, turbinegas.getPos()));
+                PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(data, turbinegas.getPos()));
             }
         }
         if (turbinegas.state == 1 && mouseX > guiLeft + 74 && mouseX <= guiLeft + 74 + 29 && mouseY >= guiTop + 86 && mouseY < guiTop + 86 + 13) {
@@ -70,14 +70,14 @@ public class GUIMachineTurbineGas extends GuiInfoContainer {
             mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             NBTTagCompound data = new NBTTagCompound();
             data.setBoolean("autoMode", automode);
-            PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, turbinegas.getPos()));
+            PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(data, turbinegas.getPos()));
         }
 
         if (turbinegas.state == 1 && (guiTop + 97 - slidStart) <= yStart && (guiTop + 103 - slidStart) > yStart && guiLeft + 36 < mouseX && guiLeft + 52 >= mouseX) { //power slider
 
             NBTTagCompound data = new NBTTagCompound();
             data.setBoolean("autoMode", false); //if you click the slider with automode on, turns off automode
-            PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, turbinegas.getPos()));
+            PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(data, turbinegas.getPos()));
             mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
         }
     }
@@ -100,7 +100,7 @@ public class GUIMachineTurbineGas extends GuiInfoContainer {
 
                 NBTTagCompound data = new NBTTagCompound();
                 data.setDouble("slidPos", slidPos);
-                PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, turbinegas.getPos()));
+                PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(data, turbinegas.getPos()));
             }
         }
     }

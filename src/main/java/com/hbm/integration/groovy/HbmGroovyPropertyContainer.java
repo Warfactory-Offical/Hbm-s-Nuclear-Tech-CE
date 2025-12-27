@@ -6,9 +6,10 @@ import com.cleanroommc.groovyscript.compat.mods.GroovyPropertyContainer;
 import com.cleanroommc.groovyscript.registry.NamedRegistry;
 import com.cleanroommc.groovyscript.registry.VirtualizedRegistry;
 import com.google.gson.JsonElement;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.integration.groovy.script.*;
 import com.hbm.inventory.recipes.loader.SerializableRecipe;
-import com.hbm.packet.PacketDispatcher;
+import com.hbm.packet.threading.ThreadedPacket;
 import com.hbm.packet.toclient.SerializableRecipePacket;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
@@ -258,7 +259,7 @@ public class HbmGroovyPropertyContainer extends GroovyPropertyContainer {
             if (!isServerSide()) return;
             SerializableRecipe.clearReceivedRecipes();
             if (overrides.isEmpty()) {
-                PacketDispatcher.wrapper.sendToAll(new SerializableRecipePacket(true));
+                PacketThreading.createSendToAllThreadedPacket(new SerializableRecipePacket(true));
                 return;
             }
             for (OverrideData data : overrides.values()) {
@@ -272,17 +273,19 @@ public class HbmGroovyPropertyContainer extends GroovyPropertyContainer {
             MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
             if (server == null) return;
             for (OverrideData data : entries) {
-                PacketDispatcher.wrapper.sendToAll(new SerializableRecipePacket(data.fileName, data.data));
+                PacketThreading.createSendToAllThreadedPacket(new SerializableRecipePacket(data.fileName, data.data));
             }
-            PacketDispatcher.wrapper.sendToAll(new SerializableRecipePacket(true));
+            PacketThreading.createSendToAllThreadedPacket(new SerializableRecipePacket(true));
         }
 
         void sendToPlayer(EntityPlayerMP player) {
             if (player == null || overrides.isEmpty()) return;
             for (OverrideData data : overrides.values()) {
-                PacketDispatcher.wrapper.sendTo(new SerializableRecipePacket(data.fileName, data.data), player);
+                ThreadedPacket message = new SerializableRecipePacket(data.fileName, data.data);
+                PacketThreading.createSendToThreadedPacket(message, player);
             }
-            PacketDispatcher.wrapper.sendTo(new SerializableRecipePacket(true), player);
+            ThreadedPacket message = new SerializableRecipePacket(true);
+            PacketThreading.createSendToThreadedPacket(message, player);
         }
 
         private boolean isServerSide() {

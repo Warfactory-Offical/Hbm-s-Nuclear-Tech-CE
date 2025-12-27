@@ -1,8 +1,8 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.Tags;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.container.ContainerFusionKlystron;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.render.util.GaugeUtil;
 import com.hbm.tileentity.machine.fusion.TileEntityFusionKlystron;
@@ -122,7 +122,7 @@ public class GUIFusionKlystron extends GuiInfoContainer {
                 long num = NumberUtils.toLong(this.field.getText());
                 NBTTagCompound data = new NBTTagCompound();
                 data.setLong("amount", num);
-                PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, klystron.getPos()));
+                PacketThreading.createSendToServerThreadedPacket(new NBTControlPacket(data, klystron.getPos()));
             }
 
             return;

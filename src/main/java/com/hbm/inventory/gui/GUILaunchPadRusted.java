@@ -1,10 +1,10 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.Tags;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.RecipesCommon;
 import com.hbm.inventory.container.ContainerLaunchPadRusted;
 import com.hbm.items.ModItems;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.render.item.ItemRenderMissileGeneric;
 import com.hbm.tileentity.bomb.TileEntityLaunchPadRusted;
@@ -55,7 +55,8 @@ public class GUILaunchPadRusted extends GuiInfoContainer {
             mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             NBTTagCompound data = new NBTTagCompound();
             data.setBoolean("release", true);
-            PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, launchpad.getPos().getX(), launchpad.getPos().getY(), launchpad.getPos().getZ()));
+            PacketThreading.createSendToServerThreadedPacket(
+                    new NBTControlPacket(data, launchpad.getPos().getX(), launchpad.getPos().getY(), launchpad.getPos().getZ()));
         }
     }
 

@@ -1,9 +1,9 @@
 package com.hbm.inventory.gui;
 
 import com.hbm.Tags;
+import com.hbm.handler.threading.PacketThreading;
 import com.hbm.inventory.container.ContainerElectrolyserMetal;
 import com.hbm.inventory.material.Mats;
-import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.machine.TileEntityElectrolyser;
 import com.hbm.util.I18nUtil;
@@ -64,7 +64,8 @@ public class GUIElectrolyserMetal extends GuiInfoContainer {
             mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             NBTTagCompound data = new NBTTagCompound();
             data.setBoolean("sgf", true);
-            PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, electrolyser.getPos().getX(), electrolyser.getPos().getY(), electrolyser.getPos().getZ()));
+            PacketThreading.createSendToServerThreadedPacket(
+                    new NBTControlPacket(data, electrolyser.getPos().getX(), electrolyser.getPos().getY(), electrolyser.getPos().getZ()));
         }
     }
 
