@@ -133,8 +133,8 @@ public class GUITurretMobFilter extends GuiScreen {
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         super.mouseClicked(mouseX, mouseY, mouseButton);
 
-        mobScrollList.mouseClicked(mouseX, mouseY, mouseButton);
-        filterScrollingList.mouseClicked(mouseX, mouseY, mouseButton);
+        boolean mobDoubleClick = mobScrollList.mouseClicked(mouseX, mouseY, mouseButton);
+        boolean filterDoubleClick = filterScrollingList.mouseClicked(mouseX, mouseY, mouseButton);
         mobSearchField.mouseClicked(mouseX, mouseY, mouseButton);
 
         final BlockPos turretPos = turret.getPos();
@@ -147,7 +147,7 @@ public class GUITurretMobFilter extends GuiScreen {
         }
 
         // add entity to filter
-        if (checkMouseBoundary(guiLeft, guiTop, mouseX, mouseY, 112, 31, 18, 18)) {
+        if (checkMouseBoundary(guiLeft, guiTop, mouseX, mouseY, 112, 31, 18, 18) || mobDoubleClick) {
             playClickSound();
 
             if (mobScrollList.selectedSlot == -1) {
@@ -160,7 +160,7 @@ public class GUITurretMobFilter extends GuiScreen {
         }
 
         // remove entity from filter
-        if (checkMouseBoundary(guiLeft, guiTop, mouseX, mouseY, 112, 52, 18, 18)) {
+        if (checkMouseBoundary(guiLeft, guiTop, mouseX, mouseY, 112, 52, 18, 18) || filterDoubleClick ) {
             playClickSound();
 
             if (filterScrollingList.selectedSlot == -1) {

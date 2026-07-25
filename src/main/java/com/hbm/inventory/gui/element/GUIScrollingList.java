@@ -15,6 +15,8 @@ import static com.hbm.render.NTMRenderHelper.bindTexture;
 import static com.hbm.util.GuiUtil.checkMouseBoundary;
 
 public class GUIScrollingList {
+    private static final long DOUBLE_CLICK_TIME = 250L;
+
     private final int left;
     private final int top;
     private final int x;
@@ -45,6 +47,8 @@ public class GUIScrollingList {
     private boolean isHovered;
     private boolean isHoveredViewBox;
     private boolean draggingScroller;
+    private int lastClickedSlot;
+    private long lastClickTime = 0L;
 
     public GUIScrollingList(FontRenderer fontRenderer, List<String> entries, Function<String, String> displayMapper, ResourceLocation texture, int left, int top, int x, int y, int offsetEntryX, int offsetEntryY, int width, int height, int length, int scrollerX, int scrollerY, int scrollerWidth, int scrollerHeight, int scrollBarHeight, int borderSize, int entryHeight, float entryScale) {
         this.fontRenderer = fontRenderer;
@@ -157,17 +161,37 @@ public class GUIScrollingList {
         targetScroll = progress * maxScroll;
     }
 
-    private void handleElementSelection(int mouseX, int mouseY) {
+    private boolean handleElementSelection(int mouseX, int mouseY) {
         if (!isHoveredViewBox) {
-            return;
+            return false;
         }
 
         int mouseListY = mouseY - top - y - offsetEntryY;
-        int slot = mouseListY / entryHeight;
 
-        if (mouseX >= left + x && mouseX <= left + x + width && slot >= 0 && mouseListY >= 0 && slot < length) {
-            selectedSlot = scrollDistance + slot;
+        if (mouseListY < 0) {
+            return false;
         }
+
+        int visibleSlot = mouseListY / entryHeight;
+
+        if (mouseX < left + x || mouseX >= left + x + width || visibleSlot < 0 || visibleSlot >= length) {
+            return false;
+        }
+
+        int clickedSlot = scrollDistance + visibleSlot;
+
+        if (clickedSlot < 0 || clickedSlot >= entries.size()) {
+            return false;
+        }
+
+        long currentTime = System.currentTimeMillis();
+        boolean doubleClick = clickedSlot == lastClickedSlot && currentTime - lastClickTime <= DOUBLE_CLICK_TIME;
+
+        selectedSlot = clickedSlot;
+        lastClickedSlot = clickedSlot;
+        lastClickTime = currentTime;
+
+        return doubleClick;
     }
 
     public void resetScroll() {
@@ -176,12 +200,12 @@ public class GUIScrollingList {
         targetScroll = 0;
     }
 
-    public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+    public boolean mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         if (mouseButton == 0 && checkMouseBoundary(left, top, mouseX, mouseY, scrollerX, calculatedScrollerY, scrollerWidth, scrollerHeight)) {
             draggingScroller = true;
         }
 
-        handleElementSelection(mouseX, mouseY);
+        return handleElementSelection(mouseX, mouseY);
     }
 
     public void mouseReleased() {
