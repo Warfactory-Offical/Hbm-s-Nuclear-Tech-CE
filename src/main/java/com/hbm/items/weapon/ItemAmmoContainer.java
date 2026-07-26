@@ -37,7 +37,7 @@ public class ItemAmmoContainer extends ItemEnumMulti<ItemAmmoContainer.EnumAmmoC
     @SideOnly(Side.CLIENT)
     public void getSubItems(@NotNull CreativeTabs tab, NonNullList<ItemStack> items) {
         if (isInCreativeTab(tab)) {
-            for(int i = 0; i < EnumAmmoContainerType.values().length; i++) {
+            for (int i = 0; i < EnumAmmoContainerType.values().length; i++) {
                 items.add(new ItemStack(this, 1, i));
             }
         }
