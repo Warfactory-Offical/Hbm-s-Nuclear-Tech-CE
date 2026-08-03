@@ -620,7 +620,7 @@ public class TileEntityPWRController extends TileEntityMachineBase implements IT
     @Callback(direct = true)
     @Optional.Method(modid = "opencomputers")
     public Object[] getHeat(Context context, Arguments args) {
-        return new Object[]{coreHeat, hullHeat};
+        return new Object[]{coreHeat, hullHeat, coreHeatCapacity};
     }
 
     @SuppressWarnings("unused")
