@@ -59,8 +59,6 @@ public class BlockStorageCrate extends BlockContainer implements ICustomBlockIte
 			return new TileEntityCrateTungsten();
 		if(this == ModBlocks.crate_desh)
 			return new TileEntityCrateDesh();
-		if(this == ModBlocks.crate_template)
-			return new TileEntityCrateTemplate();
 		if(this == ModBlocks.safe)
 			return new TileEntitySafe();
 		return null;
@@ -75,8 +73,6 @@ public class BlockStorageCrate extends BlockContainer implements ICustomBlockIte
 			return 27;
 		if(this == ModBlocks.crate_desh)
 			return 104;
-		if(this == ModBlocks.crate_template)
-			return 27;
 		if(this == ModBlocks.safe)
 			return 15;
 		return 0;

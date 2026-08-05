@@ -298,7 +298,6 @@ public class CraftingManager {
 		addShapelessAuto(new ItemStack(ModBlocks.machine_converter_he_rf),new ItemStack(Blocks.DIRT));
 		addShapelessAuto(new ItemStack(ModBlocks.machine_converter_rf_he),new ItemStack(ModBlocks.machine_converter_he_rf));
 		addShapelessAuto(new ItemStack(Blocks.DIRT),new ItemStack(ModBlocks.machine_converter_rf_he));
-		addRecipeAuto(new ItemStack(ModBlocks.crate_template, 1), "IPI", "P P", "IPI", 'I', IRON.ingot(), 'P', Items.PAPER );
 		addRecipeAuto(new ItemStack(ModBlocks.crate_iron, 1), "PPP", "I I", "III", 'P', IRON.plate(), 'I', IRON.ingot() );
 		addRecipeAuto(new ItemStack(ModBlocks.crate_steel, 1), "PPP", "I I", "III", 'P', STEEL.plate(), 'I', STEEL.ingot() );
 
@@ -649,7 +648,7 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModItems.sat_coord), "SII", "SCA", "SPP", 'I', STEEL.ingot(), 'S', STAR.ingot(), 'P', ModItems.plate_polymer, 'C', ModItems.sat_chip, 'A', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.ADVANCED) );
 		addRecipeAuto(new ItemStack(ModBlocks.machine_transformer), "SCS", "MDM", "SCS", 'S', IRON.ingot(), 'D', MINGRADE.ingot(), 'M',ModItems.coil_copper, 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.CAPACITOR) );
 		addRecipeAuto(new ItemStack(ModBlocks.machine_transformer_dnt), "SDS", "MCM", "MCM", 'S', STAR.ingot(), 'D', DESH.ingot(), 'M', MAGTUNG.wireDense(), 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.BISMOID) );
-		addRecipeAuto(new ItemStack(ModBlocks.radiobox), "PLP", "PSP", "PLP", 'P', STEEL.plate(), 'S', ModItems.ring_starmetal, 'L', getReflector() );
+		addRecipeAuto(new ItemStack(ModBlocks.radiobox), "PLP", "PSP", "PLP", 'P', STEEL.plate(), 'S', ModItems.ring_starmetal, 'L', DURA.plate() );
 		addRecipeAuto(new ItemStack(ModBlocks.radiorec), "  W", "PCP", "PIP", 'W', CU.wireFine(), 'P', STEEL.plate(), 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.VACUUM_TUBE), 'I', ANY_PLASTIC.ingot() );
 		addRecipeAuto(new ItemStack(ModItems.jackt), "S S", "LIL", "LIL", 'S', STEEL.plate(), 'L', Items.LEATHER, 'I', ANY_RUBBER.ingot() );
 		addRecipeAuto(new ItemStack(ModItems.jackt2), "S S", "LIL", "III", 'S', STEEL.plate(), 'L', Items.LEATHER, 'I', ANY_RUBBER.ingot() );

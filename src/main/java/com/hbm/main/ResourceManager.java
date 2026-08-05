@@ -357,7 +357,7 @@ public class ResourceManager {
     public static final WaveFrontObjectVAO mine_ap = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/bombs/ap_mine.obj")).asVBO();
     public static final WaveFrontObjectVAO mine_he = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/mine_he.obj")).asVBO();
     public static final WaveFrontObjectVAO mine_marelet = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/bombs/marelet.obj")).asVBO();
-    public static final WaveFrontObjectVAO mine_fat = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/mine_fat.obj")).asVBO();
+    public static final WaveFrontObjectVAO mine_fat = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/bombs/mine_fat.obj")).asVBO();
     public static final WaveFrontObjectVAO mine_naval = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/bombs/naval_mine.obj")).asVBO();
     //Missile Parts
     public static final WaveFrontObjectVAO missile_pad = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/weapons/launch_pad_silo.obj")).asVBO();
@@ -604,7 +604,7 @@ public class ResourceManager {
     public static final ResourceLocation mine_ap_stone_tex = new ResourceLocation(Tags.MODID, "textures/models/bombs/mine_ap_stone.png");
     public static final ResourceLocation mine_marelet_tex = new ResourceLocation(Tags.MODID, "textures/models/explosion/mine_marelet.png");
     public static final ResourceLocation mine_shrap_tex = new ResourceLocation(Tags.MODID, "textures/models/bombs/mine_shrapnel.png");
-    public static final ResourceLocation mine_fat_tex = new ResourceLocation(Tags.MODID, "textures/models/explosion/mine_fat.png");
+    public static final ResourceLocation mine_fat_tex = new ResourceLocation(Tags.MODID, "textures/models/bombs/mine_fat.png");
     public static final ResourceLocation mine_naval_tex = new ResourceLocation(Tags.MODID, "textures/models/bombs/nmine.png");
     //Pumpjack
     public static final ResourceLocation pumpjack_tex = new ResourceLocation(Tags.MODID, "textures/models/machines/pumpjack.png");

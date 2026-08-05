@@ -125,7 +125,7 @@ public class AssemblyMachineRecipes extends GenericRecipes<GenericRecipe> {
         this.register(new GenericRecipe("ass.centrifugetower").setup(100, 100).outputItems(new ItemStack(ModItems.centrifuge_element, 1))
                 .inputItems(new OreDictStack(DURA.plate(), 4), new OreDictStack(TI.plate(), 4), new ComparableStack(ModItems.motor, 1)));
         this.register(new GenericRecipe("ass.reactorcore").setup(100, 100).outputItems(new ItemStack(ModItems.reactor_core, 1))
-                .inputItems(new RecipesCommon.OreDictStack(PB.plateCast(), 4), new RecipesCommon.OreDictStack(BE.ingot(), 8), new RecipesCommon.OreDictStack(OreDictManager.getReflector(), 8), new RecipesCommon.OreDictStack(ASBESTOS.ingot(), 4)));
+                .inputItems(new OreDictStack(PB.plateCast(), 4), new OreDictStack(BE.ingot(), 8), new OreDictStack(DURA.plate(), 8), new OreDictStack(ASBESTOS.ingot(), 4)));
         this.register(new GenericRecipe("ass.thermoelement").setup(60, 100).outputItems(new ItemStack(ModItems.thermo_element, 1))
                 .inputItems(new RecipesCommon.OreDictStack(STEEL.plate(), 1), new RecipesCommon.OreDictStack(MINGRADE.wireFine(), 2), new RecipesCommon.OreDictStack(NETHERQUARTZ.dust(), 2)));
         this.register(new GenericRecipe("ass.thermoelementsilicon").setup(60, 100).outputItems(new ItemStack(ModItems.thermo_element, 1))

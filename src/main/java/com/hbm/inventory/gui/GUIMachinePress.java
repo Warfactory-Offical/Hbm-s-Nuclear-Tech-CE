@@ -12,14 +12,14 @@ import net.minecraft.util.ResourceLocation;
 import java.util.Collections;
 
 public class GUIMachinePress extends GuiInfoContainer {
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Tags.MODID + ":textures/gui/gui_press.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(Tags.MODID + ":textures/gui/processing/gui_press.png");
 	private final TileEntityMachinePress press;
 
 	public GUIMachinePress(InventoryPlayer invPlayer, TileEntityMachinePress te) {
 		super(new ContainerMachinePress(invPlayer, te));
 		this.press = te;
 		this.xSize = 176;
-		this.ySize = 202;
+		this.ySize = 214;
 	}
 
 	@Override
@@ -34,7 +34,7 @@ public class GUIMachinePress extends GuiInfoContainer {
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		String name = I18n.format(this.press.getDefaultName());
-		this.fontRenderer.drawString(name, this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2, 6, 4210752);
+		this.fontRenderer.drawString(name, this.xSize / 2 - this.fontRenderer.getStringWidth(name) / 2, 5, 0xffffff);
 		this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
 	}
 
@@ -44,10 +44,10 @@ public class GUIMachinePress extends GuiInfoContainer {
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 		if (this.press.burnTime > 0) {
-			this.drawTexturedModalRect(guiLeft + 27, guiTop + 36, 0, 202, 14, 14);
+			this.drawTexturedModalRect(guiLeft + 26, guiTop + 36, 0, 214, 14, 14);
 		}
 		int progress = this.press.getProgressScaled(16);
-		this.drawTexturedModalRect(guiLeft + 79, guiTop + 35, 14, 202, 18, progress);
+		this.drawTexturedModalRect(guiLeft + 79, guiTop + 35, 15, 214, 18, progress);
 		double speed = (double) this.press.speed / (double) TileEntityMachinePress.maxSpeed;
 		GUIElements.drawSmoothGauge(guiLeft + 34, guiTop + 25, this.zLevel, speed, 5, 2, 1, 0x7f0000);
 	}

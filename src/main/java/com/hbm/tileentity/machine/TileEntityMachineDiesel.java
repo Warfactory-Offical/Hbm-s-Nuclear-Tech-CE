@@ -5,8 +5,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import com.hbm.api.energymk2.IBatteryItem;
 import com.hbm.api.energymk2.IEnergyProviderMK2;
-import com.hbm.api.fluid.IFluidStandardTransceiver;
+import com.hbm.api.fluidmk2.IFluidStandardTransceiverMK2;
 import com.hbm.interfaces.AutoRegister;
+import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.FluidContainerRegistry;
 import com.hbm.inventory.container.ContainerMachineDiesel;
 import com.hbm.inventory.fluid.FluidType;
@@ -17,6 +18,7 @@ import com.hbm.inventory.fluid.trait.FluidTrait;
 import com.hbm.inventory.gui.GUIMachineDiesel;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ForgeDirection;
+import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.sound.AudioWrapper;
@@ -30,7 +32,6 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -40,20 +41,19 @@ import java.io.IOException;
 import java.util.HashMap;
 
 @AutoRegister
-public class TileEntityMachineDiesel extends TileEntityMachinePolluting implements ITickable, IEnergyProviderMK2, IFluidStandardTransceiver, IGUIProvider, IConfigurableMachine, IFluidCopiable {
+public class TileEntityMachineDiesel extends TileEntityMachinePolluting implements ITickable, IEnergyProviderMK2, IFluidStandardTransceiverMK2, IControlReceiver, IGUIProvider, IConfigurableMachine, IFluidCopiable {
 
+    public boolean isOn = false;
     public long power;
-
-    /* CONFIGURABLE CONSTANTS */
-    public static int fluidCap = 16000;
-    public static long maxPower = 50000;
-    public long powerCap = 50000;
-    public int age = 0;
-    private AxisAlignedBB bb;
+    public long powerCap = maxPower;
     public FluidTankNTM tank;
 
     public boolean wasOn = false;
     private AudioWrapper audio;
+
+    /* CONFIGURABLE CONSTANTS */
+    public static int fuelCap = 16_000;
+    public static long maxPower = 50_000;
 
     private static final int[] slots_top = new int[]{0};
     private static final int[] slots_bottom = new int[]{1, 2};
@@ -68,8 +68,8 @@ public class TileEntityMachineDiesel extends TileEntityMachinePolluting implemen
     }
 
     public TileEntityMachineDiesel() {
-        super(5, 100, true, true);
-        tank = new FluidTankNTM(Fluids.DIESEL, 4_000).withOwner(this);
+        super(4, 100, true, true);
+        tank = new FluidTankNTM(Fluids.DIESEL, fuelCap).withOwner(this);
     }
 
     @Override
@@ -79,6 +79,7 @@ public class TileEntityMachineDiesel extends TileEntityMachinePolluting implemen
 
     @Override
     public @NotNull NBTTagCompound writeToNBT(NBTTagCompound compound) {
+        compound.setBoolean("isOn", isOn);
         compound.setLong("powerTime", power);
         compound.setLong("powerCap", powerCap);
         tank.writeToNBT(compound, "tank");
@@ -87,6 +88,7 @@ public class TileEntityMachineDiesel extends TileEntityMachinePolluting implemen
 
     @Override
     public void readFromNBT(NBTTagCompound compound) {
+        this.isOn = compound.getBoolean("isOn");
         this.power = compound.getLong("powerTime");
         this.powerCap = compound.getLong("powerCap");
         tank.readFromNBT(compound, "tank");
@@ -115,25 +117,18 @@ public class TileEntityMachineDiesel extends TileEntityMachinePolluting implemen
     public void update() {
         if (!world.isRemote) {
             this.wasOn = false;
+            tank.setType(3, inventory);
+            tank.loadTank(0, 1, inventory);
+
             for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
                 this.tryProvide(world, pos.getX() + dir.offsetX, pos.getY() + dir.offsetY, pos.getZ() + dir.offsetZ, dir);
                 this.sendSmoke(pos.getX() + dir.offsetX, pos.getY() + dir.offsetY, pos.getZ() + dir.offsetZ, dir);
+                this.trySubscribe(tank.getTankType(), world, pos.getX() + dir.offsetX, pos.getY() + dir.offsetY, pos.getZ() + dir.offsetZ, dir);
             }
-
-            //Tank Management
-            FluidType last = tank.getTankType();
-            if (tank.setType(3, 4, inventory)) this.unsubscribeToAllAround(last, this);
-            tank.loadTank(0, 1, inventory);
-
-            this.subscribeToAllAround(tank.getTankType(), this);
-
-            FluidType type = tank.getTankType();
-            if (type == Fluids.NITAN) powerCap = maxPower * 10;
-            else powerCap = maxPower;
 
             // Battery Item
             power = Library.chargeItemsFromTE(inventory, 2, power, powerCap);
-            generate();
+            if(isOn) generate();
             this.networkPackNT(50);
         } else {
 
@@ -161,7 +156,7 @@ public class TileEntityMachineDiesel extends TileEntityMachinePolluting implemen
 
     @Override
     public AudioWrapper createAudioLoop() {
-        return MainRegistry.proxy.getLoopedSound(new SoundEvent(new ResourceLocation("hbm:block.engine")), SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 10F, 1.0F, 10);
+        return MainRegistry.proxy.getLoopedSound(HBMSoundHandler.engine, SoundCategory.BLOCKS, pos.getX(), pos.getY(), pos.getZ(), 1.0F, 10F, 1.0F, 10);
     }
 
     @Override
@@ -187,6 +182,7 @@ public class TileEntityMachineDiesel extends TileEntityMachinePolluting implemen
         super.serialize(buf);
         buf.writeLong(power);
         buf.writeLong(powerCap);
+        buf.writeBoolean(isOn);
         buf.writeBoolean(wasOn);
         tank.serialize(buf);
     }
@@ -194,8 +190,9 @@ public class TileEntityMachineDiesel extends TileEntityMachinePolluting implemen
     @Override
     public void deserialize(ByteBuf buf) {
         super.deserialize(buf);
-        power = buf.readLong();
-        powerCap = buf.readLong();
+        this.power = buf.readLong();
+        this.powerCap = buf.readLong();
+        this.isOn = buf.readBoolean();
         this.wasOn = buf.readBoolean();
         tank.deserialize(buf);
     }
@@ -223,25 +220,24 @@ public class TileEntityMachineDiesel extends TileEntityMachinePolluting implemen
     }
 
     public void generate() {
+        if (!this.isOn) return;
         if (world.isBlockPowered(pos)) return;
-        if (hasAcceptableFuel()) {
-            if (tank.getFill() > 0) {
+        if (!hasAcceptableFuel()) return;
+        if (tank.getFill() <= 0) return;
 
-                this.wasOn = true;
+        this.wasOn = true;
 
-                tank.setFill(tank.getFill() - 1);
-                if (tank.getFill() < 0) tank.setFill(0);
+        tank.setFill(tank.getFill() - 1);
+        if (tank.getFill() < 0) tank.setFill(0);
 
-                if (world.getTotalWorldTime() % 5 == 0) {
-                    super.pollute(tank.getTankType(), FluidTrait.FluidReleaseType.BURN, 5F);
-                }
+        if (world.getTotalWorldTime() % 5 == 0) {
+            super.pollute(tank.getTankType(), FluidTrait.FluidReleaseType.BURN, 5F);
+        }
 
-                if (power + getHEFromFuel() <= powerCap) {
-                    power += getHEFromFuel();
-                } else {
-                    power = powerCap;
-                }
-            }
+        if (power + getHEFromFuel() <= powerCap) {
+            power += getHEFromFuel();
+        } else {
+            power = powerCap;
         }
     }
 
@@ -290,7 +286,7 @@ public class TileEntityMachineDiesel extends TileEntityMachinePolluting implemen
     @Override
     public void readIfPresent(JsonObject obj) {
         maxPower = IConfigurableMachine.grab(obj, "L:powerCap", maxPower);
-        fluidCap = IConfigurableMachine.grab(obj, "I:fuelCap", fluidCap);
+        fuelCap = IConfigurableMachine.grab(obj, "I:fuelCap", fuelCap);
 
         if (obj.has("D[:efficiency")) {
             JsonArray array = obj.get("D[:efficiency").getAsJsonArray();
@@ -303,7 +299,7 @@ public class TileEntityMachineDiesel extends TileEntityMachinePolluting implemen
     @Override
     public void writeConfig(JsonWriter writer) throws IOException {
         writer.name("L:powerCap").value(maxPower);
-        writer.name("I:fuelCap").value(fluidCap);
+        writer.name("I:fuelCap").value(fuelCap);
 
         String info = "Fuel grades in order: ";
         for (FT_Combustible.FuelGrade grade : FT_Combustible.FuelGrade.VALUES) info += grade.name() + " ";
@@ -319,6 +315,17 @@ public class TileEntityMachineDiesel extends TileEntityMachinePolluting implemen
     }
 
     @Override
+    public boolean hasPermission(EntityPlayer player) {
+        return player.getDistance(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) < 25;
+    }
+
+    @Override
+    public void receiveControl(NBTTagCompound data) {
+        if(data.hasKey("turnOn")) this.isOn = !this.isOn;
+        this.markChanged();
+    }
+
+    @Override
     public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
         return new ContainerMachineDiesel(player.inventory, this);
     }
@@ -327,11 +334,5 @@ public class TileEntityMachineDiesel extends TileEntityMachinePolluting implemen
     @SideOnly(Side.CLIENT)
     public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
         return new GUIMachineDiesel(player.inventory, this);
-    }
-
-    @Override
-    public AxisAlignedBB getRenderBoundingBox() {
-        if (bb == null) bb = new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1);
-        return bb;
     }
 }

@@ -1,6 +1,6 @@
 package com.hbm.tileentity.machine;
 
-import com.hbm.api.fluid.IFluidStandardTransceiver;
+import com.hbm.api.fluidmk2.IFluidStandardTransceiverMK2;
 import com.hbm.api.redstoneoverradio.IRORInteractive;
 import com.hbm.api.redstoneoverradio.IRORValueProvider;
 import com.hbm.blocks.BlockDummyable;
@@ -65,7 +65,7 @@ import static com.hbm.items.machine.ItemZirnoxRodDepleted.EnumZirnoxTypeDepleted
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
 @AutoRegister
-public class TileEntityReactorZirnox extends TileEntityMachineBase implements ITickable, IControlReceiver, IFluidStandardTransceiver, SimpleComponent, IGUIProvider, CompatHandler.OCComponent, IRORValueProvider, IRORInteractive, IConnectionAnchors {
+public class TileEntityReactorZirnox extends TileEntityMachineBase implements ITickable, IControlReceiver, IFluidStandardTransceiverMK2, SimpleComponent, IGUIProvider, CompatHandler.OCComponent, IRORValueProvider, IRORInteractive, IConnectionAnchors {
 
     private AxisAlignedBB bb;
     public static final int maxHeat = 100000;
@@ -265,7 +265,7 @@ public class TileEntityReactorZirnox extends TileEntityMachineBase implements IT
             }
 
             if (!this.tilted) for (DirPos pos : getConPos()) {
-                this.sendFluid(steam, world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
+                this.tryProvide(steam, world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
             }
 
             checkIfMeltdown();

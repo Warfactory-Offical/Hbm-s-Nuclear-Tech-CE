@@ -14,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.items.SlotItemHandler;
 
-// see comments at ContainerCrateTemplate
 @Optional.Interface(iface = "com.cleanroommc.bogosorter.api.ISortableContainer", modid = "bogosorter")
 public class ContainerLeadBox extends Container implements ISortableContainer {
 
