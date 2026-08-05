@@ -52,7 +52,7 @@ dependencies {
     shadowImplementation 'org.jctools:jctools-core:4.0.5'
 
     api rfg.deobf("curse.maven:opencomputers-223008:6608365")
-    api 'mezz:jei:[4.29.14,)'
+    api 'mezz:jei:4.34.0'
     compileOnlyApi 'com.google.guava:guava:31.0.1-jre'
     devOnlyNonPublishable rfg.deobf("curse.maven:inventory-bogosorter-632327:7102721")
     devOnlyNonPublishable rfg.deobf("curse.maven:key-binding-patch-928895:5951859")//required for bogosorter to launch
