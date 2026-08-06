@@ -90,6 +90,7 @@ public class JEIConfig implements IModPlugin {
     public static final String RBMKOUTGASSER = "hbm.rbmk_outgasser";
     public static final String REFINERY = "hbm.refinery";
     public static final String REFORMING = "hbm.reforming";
+    public static final String ROCKMILL = "hbm.rockmill";
     public static final String ROTARY_FURNACE = "hbm.rotary_furnace";
     public static final String BLAST_FURNACE = "hbm.blast_furnace_nt";
     public static final String SAWMILL = "hbm.sawmill";
@@ -149,6 +150,7 @@ public class JEIConfig implements IModPlugin {
     private PyroHandler pyroHandler;
     private RBMKOutgasserRecipeHandler outgasserHandler;
     private ReformingHandler reformingHandler;
+    private RockMillRecipeHandler rockMillHandler;
     private RotaryFurnaceRecipeHandler rotaryFurnaceRecipeHandler;
     private BlastFurnaceHandler blastFurnaceHandler;
     private RTGRecipeHandler rtgRecipeHandler;
@@ -314,6 +316,7 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipes(sawmillHandler.getRecipes(), SAWMILL);
         registry.addRecipes(vacuumHandler.getRecipes(), VACUUM);
         registry.addRecipes(zirnoxHandler.getRecipes(), ZIRNOX);
+        registry.addRecipes(rockMillHandler.getRecipes(), ROCKMILL);
         registry.addRecipes(shredderHandler.getRecipes(), SHREDDER);
         registry.addRecipes(JeiRecipes.getFluidEquivalences(), FLUIDS);
         registry.addRecipes(JeiRecipes.getBookRecipes(), BOOK);
@@ -560,6 +563,7 @@ public class JEIConfig implements IModPlugin {
                 rtgRecipeHandler = new RTGRecipeHandler(help),
                 sawmillHandler = new SawmillHandler(help),
                 vacuumHandler = new VacuumRecipeHandler(help),
+                rockMillHandler = new RockMillRecipeHandler(help),
                 zirnoxHandler = new ZirnoxRecipeHandler(help),
                 purexHandler = new PUREXRecipeHandler(help),
                 new GasCentrifugeRecipeHandler(help),

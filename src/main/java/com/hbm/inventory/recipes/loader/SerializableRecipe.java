@@ -86,6 +86,7 @@ public abstract class SerializableRecipe {
         recipeHandlers.add(PrecAssRecipes.INSTANCE);
         recipeHandlers.add(PlasmaForgeRecipes.INSTANCE);
         recipeHandlers.add(BlastFurnaceRecipesNT.INSTANCE);
+        recipeHandlers.add(RockMillRecipes.INSTANCE);
 
         recipeHandlers.add(new MatDistribution());
         recipeHandlers.add(new CustomMachineRecipes());

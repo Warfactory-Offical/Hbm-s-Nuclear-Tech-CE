@@ -45,6 +45,9 @@ public class ResourceManager {
     //Annihilator
     public static final WaveFrontObjectVAO annihilator = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/machines/annihilator.obj")).asVBO();
 
+    //Rock Mill
+    public static final WaveFrontObjectVAO rock_mill = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/machines/rockmill.obj")).asVBO();
+
     public static final WaveFrontObjectVAO bm_box_lever = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/bm_box_lever.obj")).asVBO();
 
     public static final WaveFrontObjectVAO coin = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/trinkets/chip.obj")).asVBO();
@@ -691,6 +694,9 @@ public class ResourceManager {
     //Annihilator
     public static final ResourceLocation annihilator_tex = new ResourceLocation(Tags.MODID, "textures/models/machines/annihilator.png");
     public static final ResourceLocation annihilator_belt_tex = new ResourceLocation(Tags.MODID, "textures/models/machines/annihilator_belt.png");
+
+    //Rock Mill
+    public static final ResourceLocation rock_mill_tex = new ResourceLocation(Tags.MODID, "textures/models/machines/rockmill.png");
 
     public static final ResourceLocation coin_tex = new ResourceLocation(Tags.MODID, "textures/models/trinkets/chip_gold.png");
 
