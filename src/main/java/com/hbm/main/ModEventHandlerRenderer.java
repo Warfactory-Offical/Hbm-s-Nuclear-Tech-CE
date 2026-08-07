@@ -1,5 +1,6 @@
 package com.hbm.main;
 
+import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ICustomBlockHighlight;
 import com.hbm.config.RadiationConfig;
 import com.hbm.handler.pollution.PollutionHandler.PollutionType;
@@ -20,6 +21,7 @@ import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -58,6 +60,15 @@ public class ModEventHandlerRenderer {
 		}
 		EntityPlayer player = MainRegistry.proxy.me();
 		ItemStack held = player.getHeldItemMainhand();
+
+		/*if(!held.isEmpty() && held.getItem() instanceof ItemBlock) {
+			Block b = Block.getBlockFromItem(held.getItem());
+			if(b instanceof BlockDummyable) {
+				((BlockDummyable) b).drawPlacementHighlight(player, event.getPartialTicks());
+				event.setCanceled(true);
+				return;
+			}
+		}*/
 
 		if (!held.isEmpty() && held.getItem() == ModItems.gun_drill) {
 			XFactoryDrill.drawBlockHighlight(player, held, event.getPartialTicks());

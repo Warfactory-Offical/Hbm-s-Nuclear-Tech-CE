@@ -158,7 +158,6 @@ public class ClientProxy extends ServerProxy {
         MinecraftForge.EVENT_BUS.register(new ModEventHandlerClient());
         MinecraftForge.EVENT_BUS.register(new NTMClientRegistry());
         MinecraftForge.EVENT_BUS.register(new ModEventHandlerRenderer());
-        MinecraftForge.EVENT_BUS.register(new PlacementPreviewHandler());
         MinecraftForge.EVENT_BUS.register(new RenderInfoSystemLegacy());
         ClientCommandHandler.instance.registerCommand(new CommandRadVisClient());
 
