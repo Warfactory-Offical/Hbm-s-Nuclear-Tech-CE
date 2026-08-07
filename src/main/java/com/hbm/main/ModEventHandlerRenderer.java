@@ -61,14 +61,14 @@ public class ModEventHandlerRenderer {
 		EntityPlayer player = MainRegistry.proxy.me();
 		ItemStack held = player.getHeldItemMainhand();
 
-		/*if(!held.isEmpty() && held.getItem() instanceof ItemBlock) {
+		if(!held.isEmpty() && held.getItem() instanceof ItemBlock) {
 			Block b = Block.getBlockFromItem(held.getItem());
 			if(b instanceof BlockDummyable) {
 				((BlockDummyable) b).drawPlacementHighlight(player, event.getPartialTicks());
 				event.setCanceled(true);
 				return;
 			}
-		}*/
+		}
 
 		if (!held.isEmpty() && held.getItem() == ModItems.gun_drill) {
 			XFactoryDrill.drawBlockHighlight(player, held, event.getPartialTicks());
