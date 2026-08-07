@@ -265,61 +265,6 @@ public class CompatibilityConfig {
 		jungleStructure = CommonConfig.createConfigHashMap(config, CommonConfig.CATEGORY_DUNGEONS, "03.26_jungleDungeonSpawn", "Spawn jungle dungeon on every nTH chunk - <dimID:n> (Int:Int)", Integer.class, Integer.class, new String[]{ "0:2000" }, ":");
 		pyramidStructure = CommonConfig.createConfigHashMap(config, CommonConfig.CATEGORY_DUNGEONS, "03.27_pyramidSpawn", "Spawn pyramid on every nTH chunk - <dimID:n> (Int:Int)", Integer.class, Integer.class, new String[]{ "0:4000" }, ":");
 		
-		meteorStrikeChance = CommonConfig.createConfigHashMap(config, CommonConfig.CATEGORY_METEORS, "05.01_meteorStrikeChance", "The probability of a meteor spawning per tick (an average of once every nTH ticks) - <dimID:n> (Int:Int)", Integer.class, Integer.class, new String[]{ 
-			"0:"+20 * 10 * 60 * 5, //Earth
-			"-28:"+20 * 10 * 5, //Moon
-			"-29:"+20 * 10 * 13, //Mars
-			"-31:"+20 * 10 * 60 * 15,  //Venus
-			"-13:"+20 * 10 * 30, //Mercury
-			"-20:"+20 * 10 * 60 * 10, //Ceres
-			"-1500:"+20 * 10 * 3, //IO
-			"-1501:"+20 * 10 * 25, //Europa
-			"-1506:"+20 * 10 * 60, //Ganymede
-			"-1505:"+20 * 10 * 60 * 2, //Callisto
-			"-1507:"+20 * 10 * 6, //Rhea
-			"-1508:"+20 * 10 * 60 * 8, //Titan
-			"-1511:"+20 * 10 * 60 * 4, //Iapetus
-			"-1510:"+20 * 10 * 60 * 3, //Titania
-			"-1509:"+20 * 10 * 60 * 9, //Oberon
-			"-1504:"+20 * 10 * 60 * 20 //Triton
-		}, ":");
-		meteorShowerChance = CommonConfig.createConfigHashMap(config, CommonConfig.CATEGORY_METEORS, "05.02_meteorShowerChance", "The probability of a meteor spawning during meteor shower per tick (an average of once every nTH ticks) - <dimID:n> (Int:Int)", Integer.class, Integer.class, new String[]{ 
-			"0:"+20 * 60 * 60 * 5, //Earth
-			"-28:"+20 * 60 * 5, //Moon
-			"-29:"+20 * 60 * 13, //Mars
-			"-31:"+20 * 60 * 60 * 15,  //Venus
-			"-13:"+20 * 60 * 30, //Mercury
-			"-20:"+20 * 60 * 60 * 10, //Ceres
-			"-1500:"+20 * 60 * 3, //IO
-			"-1501:"+20 * 60 * 25, //Europa
-			"-1506:"+20 * 60 * 60, //Ganymede
-			"-1505:"+20 * 60 * 60 * 2, //Callisto
-			"-1507:"+20 * 60 * 6, //Rhea
-			"-1508:"+20 * 60 * 60 * 8, //Titan
-			"-1511:"+20 * 60 * 60 * 4, //Iapetus
-			"-1510:"+20 * 60 * 60 * 3, //Titania
-			"-1509:"+20 * 60 * 60 * 9, //Oberon
-			"-1504:"+20 * 60 * 60 * 20 //Triton
-		}, ":");
-		meteorShowerDuration = CommonConfig.createConfigHashMap(config, CommonConfig.CATEGORY_METEORS, "05.03_meteorShowerDuration", "Max duration of meteor shower in ticks - <dimID:n> (Int:Int)", Integer.class, Integer.class, new String[]{ 
-			"0:"+20 * 60 * 5, //Earth
-			"-28:"+20 * 5, //Moon
-			"-29:"+20 * 13, //Mars
-			"-31:"+20 * 60 * 15,  //Venus
-			"-13:"+20 * 30, //Mercury
-			"-20:"+20 * 60 * 10, //Ceres
-			"-1500:"+20 * 3, //IO
-			"-1501:"+20 * 25, //Europa
-			"-1506:"+20 * 60, //Ganymede
-			"-1505:"+20 * 60 * 2, //Callisto
-			"-1507:"+20 * 6, //Rhea
-			"-1508:"+20 * 60 * 8, //Titan
-			"-1511:"+20 * 60 * 4, //Iapetus
-			"-1510:"+20 * 60 * 3, //Titania
-			"-1509:"+20 * 60 * 9, //Oberon
-			"-1504:"+20 * 60 * 20 //Triton
-		}, ":");
-		
 
 		String mobModRadComment = "Amount of radiation resistance all the mobs of that mod get. Radresistance s is calculated as s=(1-0.1^r). So a resistance value of 3.0 means that 99.9%=(1-0.1^3.0) of the radiation gets blocked. - <mod=radresistance> (String:Float)";
 		mobModRadresistance = CommonConfig.createConfigHashMap(config, CommonConfig.CATEGORY_MOBS, "12.01_mob_Mod_Radresistance", mobModRadComment, String.class, Float.class, new String[]{ 

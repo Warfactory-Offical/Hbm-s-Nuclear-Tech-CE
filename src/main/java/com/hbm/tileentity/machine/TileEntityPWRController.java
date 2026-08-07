@@ -620,7 +620,7 @@ public class TileEntityPWRController extends TileEntityMachineBase implements IT
     @Callback(direct = true)
     @Optional.Method(modid = "opencomputers")
     public Object[] getHeat(Context context, Arguments args) {
-        return new Object[]{coreHeat, hullHeat};
+        return new Object[]{coreHeat, hullHeat, coreHeatCapacity, hullHeatCapacityBase};
     }
 
     @SuppressWarnings("unused")
@@ -655,7 +655,7 @@ public class TileEntityPWRController extends TileEntityMachineBase implements IT
     @Callback(direct = true)
     @Optional.Method(modid = "opencomputers")
     public Object[] getInfo(Context context, Arguments args) {
-        return new Object[]{coreHeat, hullHeat, flux, rodTarget, rodLevel, amountLoaded, progress, processTime, tanks[0].getFill(), tanks[0].getMaxFill(), tanks[1].getFill(), tanks[1].getMaxFill()};
+        return new Object[]{coreHeat, hullHeat, coreHeatCapacity, hullHeatCapacityBase, flux, rodTarget, rodLevel, amountLoaded, progress, processTime, tanks[0].getFill(), tanks[0].getMaxFill(), tanks[1].getFill(), tanks[1].getMaxFill()};
     }
 
     @SuppressWarnings("unused")

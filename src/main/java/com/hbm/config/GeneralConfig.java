@@ -37,10 +37,6 @@ public class GeneralConfig {
 	public static boolean enableRad = true;
 	public static boolean enableNITAN = true;
 	public static boolean enableAutoCleanup = false;
-	public static boolean enableMeteorStrikes = true;
-	public static boolean enableMeteorShowers = true;
-	public static boolean enableMeteorTails = true;
-	public static boolean enableSpecialMeteors = true;
 	public static boolean enableBomberShortMode = false;
 	public static boolean enableVaults = true;
 	public static boolean enableRads = true;
@@ -149,10 +145,6 @@ public class GeneralConfig {
 		enableRad = config.get(CommonConfig.CATEGORY_GENERAL, "1.06_enableRadHotspotSpawn", true, "Allows radiation hotspots to generate").getBoolean(true);
 		enableNITAN = config.get(CommonConfig.CATEGORY_GENERAL, "1.07_enableNITANChestSpawn", true, "Allows chests to spawn at specific coordinates full of powders").getBoolean(true);
 		enableAutoCleanup = config.get(CommonConfig.CATEGORY_GENERAL, "1.09_enableAutomaticRadCleanup", false, "Allows for waste earth blocks (dirt, grass, mycellium) to turn back into dirt immediately.").getBoolean(false);
-		enableMeteorStrikes = config.get(CommonConfig.CATEGORY_GENERAL, "1.10_enableMeteorStrikes", true, "Enables the singular meteor strikes. If set to false, meteorites will never spawn.").getBoolean(true);
-		enableMeteorShowers = config.get(CommonConfig.CATEGORY_GENERAL, "1.11_enableMeteorShowers", true, "Enables the meteor shower event. Separate from the previous option!").getBoolean(true);
-		enableMeteorTails = config.get(CommonConfig.CATEGORY_GENERAL, "1.12_enableMeteorTails", true, "Enables the meteor smoke trail effect behind it.").getBoolean(true);
-		enableSpecialMeteors = config.get(CommonConfig.CATEGORY_GENERAL, "1.13_enableSpecialMeteors", false, "Allows for special meteors to spawn. NOT RECOMMENDED FOR REGULAR SURVIVAL").getBoolean(false);
 		enableBomberShortMode = config.get(CommonConfig.CATEGORY_GENERAL, "1.14_enableBomberShortMode", false, "Has bomber planes spawn in closer to the target for use with smaller render distances").getBoolean(false);
 		enableVaults = config.get(CommonConfig.CATEGORY_GENERAL, "1.15_enableVaultSpawn", true, "Allows locked safes to spawn").getBoolean(true);
 		enableRads = CommonConfig.createConfigBool(config, CommonConfig.CATEGORY_GENERAL, "1.16_enableRadiation", "GENERAL SWITCH: Enables radiation system", true);
@@ -302,27 +294,6 @@ public class GeneralConfig {
 			enable528ExplosiveEnergistics = false;
 			enable528MachineGravity = false;
 		}
-		// Th3_Sl1ze: I'll temporarily move it here, if no one minds
-		// TODO: remove/rework Alc's parser to smth managable and bring these parameters back to WorldConfig
-
-		WorldConfig.newBedrockOres = CommonConfig.createConfigBool(config, CommonConfig.CATEGORY_ORES, "2.NB_newBedrockOres", "Enables the generation of bedrock ores", true);
-		WorldConfig.limestoneSpawn = CommonConfig.createConfigInt(config, CommonConfig.CATEGORY_ORES, "2.L02_limestoneSpawn", "Amount of limestone block veins per chunk", 1);
-
-		WorldConfig.enableHematite = CommonConfig.createConfigBool(config, CommonConfig.CATEGORY_ORES, "2.L00_enableHematite", "Toggles hematite deposits", true);
-		WorldConfig.enableMalachite = CommonConfig.createConfigBool(config, CommonConfig.CATEGORY_ORES, "2.L01_enableMalachite", "Toggles malachite deposits", true);
-		WorldConfig.enableBauxite = CommonConfig.createConfigBool(config, CommonConfig.CATEGORY_ORES, "2.L02_enableBauxite", "Toggles bauxite deposits", true);
-
-		WorldConfig.enableSulfurCave = CommonConfig.createConfigBool(config, CommonConfig.CATEGORY_ORES, "2.C00_enableSulfurCave", "Toggles sulfur caves", true);
-		WorldConfig.enableAsbestosCave = CommonConfig.createConfigBool(config, CommonConfig.CATEGORY_ORES, "2.C01_enableAsbestosCave", "Toggles asbestos caves", true);
-        
-		WorldConfig.enableCraterBiomes = CommonConfig.createConfigBool(config, CommonConfig.CATEGORY_BIOMES, "17.B_toggle", "Enables the biome change caused by nuclear explosions", true);
-		WorldConfig.craterBiomeId = CommonConfig.createConfigInt(config, CommonConfig.CATEGORY_BIOMES, "17.B00_craterBiomeId", "The numeric ID for the crater biome", 80);
-		WorldConfig.craterBiomeInnerId = CommonConfig.createConfigInt(config, CommonConfig.CATEGORY_BIOMES, "17.B01_craterBiomeInnerId", "The numeric ID for the inner crater biome", 81);
-		WorldConfig.craterBiomeOuterId = CommonConfig.createConfigInt(config, CommonConfig.CATEGORY_BIOMES, "17.B02_craterBiomeOuterId", "The numeric ID for the outer crater biome", 82);
-		WorldConfig.craterBiomeRad = (float) CommonConfig.createConfigDouble(config, CommonConfig.CATEGORY_BIOMES, "17.R00_craterBiomeRad", "RAD/s for the crater biome", 5D);
-		WorldConfig.craterBiomeInnerRad = (float) CommonConfig.createConfigDouble(config, CommonConfig.CATEGORY_BIOMES, "17.R01_craterBiomeInnerRad", "RAD/s for the inner crater biome", 25D);
-		WorldConfig.craterBiomeOuterRad = (float) CommonConfig.createConfigDouble(config, CommonConfig.CATEGORY_BIOMES, "17.R02_craterBiomeOuterRad", "RAD/s for the outer crater biome", 0.5D);
-		WorldConfig.craterBiomeWaterMult = (float) CommonConfig.createConfigDouble(config, CommonConfig.CATEGORY_BIOMES, "17.R03_craterBiomeWaterMult", "Multiplier for RAD/s in crater biomes when in water", 5D);
 	}
 
 	private static Set<String> loadLeadSafeForgeContainerWhitelist(Configuration config) {

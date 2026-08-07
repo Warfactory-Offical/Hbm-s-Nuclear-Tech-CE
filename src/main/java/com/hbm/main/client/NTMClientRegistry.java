@@ -540,8 +540,8 @@ public class NTMClientRegistry {
             for (int i = 0; i < TrappedBrick.Trap.VALUES.length; i++)
                 ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(item.getRegistryName(), "inventory"));
         } else if (item instanceof ItemGuideBook) {
-            for (int i = 0; i < ItemGuideBook.BookType.VALUES.length; i++)
-                ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(item.getRegistryName(), "inventory"));
+            for (ItemGuideBook.BookType type : ItemGuideBook.BookType.VALUES)
+                ModelLoader.setCustomModelResourceLocation(item, type.meta, new ModelResourceLocation(item.getRegistryName(), "inventory"));
         } else if (item instanceof ItemHot) {
             ModelResourceLocation hotModel = new ModelResourceLocation(new ResourceLocation(Tags.MODID, "items/" + item.getRegistryName().getPath()), "inventory");
             for (int i = 0; i < 16; i++)

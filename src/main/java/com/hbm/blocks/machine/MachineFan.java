@@ -47,6 +47,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -60,38 +61,38 @@ public class MachineFan extends BlockContainerBakeable implements IToolable, ITo
     }
 
     @Override
-    public TileEntity createNewTileEntity(World world, int meta) {
+    public TileEntity createNewTileEntity(@NotNull World world, int meta) {
         return new TileEntityFan();
     }
 
     @Override
-    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase player) {
+    public @NotNull IBlockState getStateForPlacement(@NotNull World world, @NotNull BlockPos pos, @NotNull EnumFacing facing, float hitX, float hitY, float hitZ, int meta, @NotNull EntityLivingBase player) {
         return this.getDefaultState().withProperty(FACING, EnumFacing.getDirectionFromEntityLiving(pos, player));
     }
 
     @Override
-    public EnumBlockRenderType getRenderType(IBlockState state){
+    public @NotNull EnumBlockRenderType getRenderType(IBlockState state){
         return EnumBlockRenderType.INVISIBLE;
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state) {
+    public boolean isOpaqueCube(@NotNull IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean isFullCube(IBlockState state) {
+    public boolean isFullCube(@NotNull IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
+    public boolean isSideSolid(IBlockState state, @NotNull IBlockAccess world, @NotNull BlockPos pos, EnumFacing side) {
         EnumFacing facing = state.getValue(FACING);
         return facing.getAxis() != side.getAxis();
     }
 
     @Override
-    public IBlockState getStateFromMeta(int meta) {
+    public @NotNull IBlockState getStateFromMeta(int meta) {
         return this.getDefaultState().withProperty(FACING, EnumFacing.byIndex(meta & 7));
     }
 
@@ -101,7 +102,7 @@ public class MachineFan extends BlockContainerBakeable implements IToolable, ITo
     }
 
     @Override
-    protected BlockStateContainer createBlockState() {
+    protected @NotNull BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, FACING);
     }
     @AutoRegister
@@ -111,7 +112,7 @@ public class MachineFan extends BlockContainerBakeable implements IToolable, ITo
         public float prevSpin;
         public boolean falloff = true;
         public boolean suck = false;
-        private boolean isIndirectlyPowered;
+        public boolean isIndirectlyPowered;
 
         @Override
         public void onLoad() {
@@ -210,6 +211,7 @@ public class MachineFan extends BlockContainerBakeable implements IToolable, ITo
             super.readFromNBT(nbt);
             this.falloff = nbt.getBoolean("falloff");
             this.suck = nbt.getBoolean("suck");
+            this.isIndirectlyPowered = nbt.getBoolean("powered");
         }
 
         @Override
@@ -217,6 +219,7 @@ public class MachineFan extends BlockContainerBakeable implements IToolable, ITo
             super.writeToNBT(nbt);
             nbt.setBoolean("falloff", falloff);
             nbt.setBoolean("suck", suck);
+            nbt.setBoolean("powered", isIndirectlyPowered);
             return nbt;
         }
 
@@ -224,19 +227,30 @@ public class MachineFan extends BlockContainerBakeable implements IToolable, ITo
         public void serialize(ByteBuf buf) {
             buf.writeBoolean(falloff);
             buf.writeBoolean(suck);
+            buf.writeBoolean(isIndirectlyPowered);
         }
 
         @Override
         public void deserialize(ByteBuf buf) {
             falloff = buf.readBoolean();
             suck = buf.readBoolean();
+            isIndirectlyPowered = buf.readBoolean();
         }
     }
 
     @Override
-    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
+    public void neighborChanged(@NotNull IBlockState state, World world, @NotNull BlockPos pos, @NotNull Block blockIn, @NotNull BlockPos fromPos) {
         TileEntityFan fan = (TileEntityFan) world.getTileEntity(pos);
-        fan.isIndirectlyPowered = world.isBlockPowered(pos);
+        boolean powered = world.isBlockPowered(pos);
+        if (fan.isIndirectlyPowered != powered) {
+            fan.isIndirectlyPowered = powered;
+            fan.markDirty();
+        }
+    }
+
+    @Override
+    public boolean canConnectRedstone(@NotNull IBlockState state, @NotNull IBlockAccess world, @NotNull BlockPos pos, EnumFacing side) {
+        return true;
     }
 
     @Override
@@ -304,7 +318,7 @@ public class MachineFan extends BlockContainerBakeable implements IToolable, ITo
     }
 
     @Override
-    public void addInformation(ItemStack stack, World worldIn, List<String> list, ITooltipFlag flagIn) {
+    public void addInformation(@NotNull ItemStack stack, World worldIn, @NotNull List<String> list, @NotNull ITooltipFlag flagIn) {
         this.addStandardInfo(list);
     }
 
@@ -359,7 +373,7 @@ public class MachineFan extends BlockContainerBakeable implements IToolable, ITo
     public StateMapperBase getStateMapper(ResourceLocation loc) {
         return new StateMapperBase() {
             @Override
-            protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+            protected @NotNull ModelResourceLocation getModelResourceLocation(@NotNull IBlockState state) {
                 return new ModelResourceLocation(loc, "normal");
             }
         };
