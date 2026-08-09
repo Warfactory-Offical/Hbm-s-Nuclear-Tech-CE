@@ -408,6 +408,11 @@ public class TileEntityMachineGasCent extends TileEntityMachineBase implements I
         return new FluidTankNTM[]{tank};
     }
 
+    @Override
+    public boolean canInsertItem(int slot, ItemStack itemStack) {
+        return slot > 3;
+    }
+
     public static class PseudoFluidTank {
         GasCentrifugeRecipes.PseudoFluidType type;
         int fluid;

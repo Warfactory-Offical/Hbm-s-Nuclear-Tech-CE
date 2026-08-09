@@ -14,12 +14,14 @@ import com.hbm.potion.HbmPotion;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -174,12 +176,28 @@ public class ItemPill extends ItemFood implements IDynamicModels, IClaimedModelL
 	public int getMaxItemUseDuration(@NotNull ItemStack stack) {
 		return 10;
 	}
-	
+
 	@Override
 	public @NotNull ActionResult<ItemStack> onItemRightClick(@NotNull World worldIn, @NotNull EntityPlayer playerIn, @NotNull EnumHand handIn) {
-		if(!VersatileConfig.hasPotionSickness(playerIn))
+		if(VersatileConfig.hasPotionSickness(playerIn)) return new ActionResult<>(EnumActionResult.FAIL, playerIn.getHeldItem(handIn));
+		if (playerIn.capabilities.isCreativeMode) {
 			playerIn.setActiveHand(handIn);
+			return new ActionResult<>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
+		}
+
 		return super.onItemRightClick(worldIn, playerIn, handIn);
+	}
+
+	@Override
+	public @NotNull ItemStack onItemUseFinish(@NotNull ItemStack stack, @NotNull World worldIn, @NotNull EntityLivingBase entityLiving) {
+		int count = stack.getCount();
+		ItemStack result = super.onItemUseFinish(stack, worldIn, entityLiving);
+
+		if (entityLiving instanceof EntityPlayer && ((EntityPlayer) entityLiving).capabilities.isCreativeMode) {
+			result.setCount(count);
+		}
+
+		return result;
 	}
 
 	@Override

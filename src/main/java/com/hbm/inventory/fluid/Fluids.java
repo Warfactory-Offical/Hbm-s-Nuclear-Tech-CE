@@ -1157,7 +1157,7 @@ public class Fluids {
 
     private static void registerForgeFluidCompat(FluidType fluid, ResourceLocation textureStill, ResourceLocation textureFlowing, int color) {
         Fluid compatFluid = new FluidNTM(fluid.getFFName(),
-                textureStill, textureFlowing, color)
+                textureStill, textureFlowing, color, fluid)
                 .setTemperature(fluid.temperature + 273) // Fluid#setTemperature accepts Kelvin, not Celsius
                 .setColor(color)
                 .setDensity(1000)

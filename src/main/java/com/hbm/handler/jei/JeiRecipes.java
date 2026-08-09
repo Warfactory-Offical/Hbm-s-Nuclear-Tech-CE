@@ -716,23 +716,24 @@ public class JeiRecipes {
 		blades.add(new ItemStack(ModItems.blades_desh));
 		return blades;
 	}
-	
+
 	public static List<FluidRecipe> getFluidEquivalences(){
 		if(fluidEquivalences != null)
 			return fluidEquivalences;
 		fluidEquivalences = new ArrayList<>();
-		
+
 		for(FluidContainerRegistry.FluidContainer container : FluidContainerRegistry.allContainers){
-			if (container.emptyContainer() == null || container.emptyContainer().isEmpty()) {
-				continue;
-			}
 			FluidType fluidType = container.type();
 			ItemStack fullContainerStack = container.fullContainer();
 			ItemStack fluidIconStack = ItemFluidIcon.make(fluidType, container.content());
-			fluidEquivalences.add(new FluidRecipe(fluidIconStack, fullContainerStack.copy()));
+
 			fluidEquivalences.add(new FluidRecipeInverse(fluidIconStack, fullContainerStack.copy()));
+
+			if (container.emptyContainer() != null && !container.emptyContainer().isEmpty()) {
+				fluidEquivalences.add(new FluidRecipe(fluidIconStack, fullContainerStack.copy()));
+			}
 		}
-		
+
 		return fluidEquivalences;
 	}
 

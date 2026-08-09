@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Deprecated
 public class MachineCapacitor extends BlockContainer implements ILookOverlay, IPersistentInfoProvider, ITooltipProvider {
     public static final PropertyDirection FACING = BlockDirectional.FACING;
 

@@ -246,7 +246,6 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModItems.memespoon, 1), "CGC", "PSP", "IAI", 'C', ModItems.powder_yellowcake, 'G', TH232.block(), 'P', ModItems.photo_panel, 'S', ModItems.steel_shovel, 'I', ModItems.plate_polymer, 'A', "ingotAustralium" );
 		addShapelessAuto(new ItemStack(ModItems.cbt_device, 1), STEEL.bolt(), ModItems.wrench );
 
-		addShapelessAuto(new ItemStack(ModItems.toothpicks, 3), KEY_STICK, KEY_STICK, KEY_STICK );
 		addRecipeAuto(new ItemStack(ModItems.ducttape, 4), "F", "P", "S", 'F', Items.STRING, 'S', KEY_SLIME, 'P', Items.PAPER );
 
 		addRecipeAuto(new ItemStack(ModBlocks.radio_torch_sender, 4), "G", "R", "I", 'G', "dustGlowstone", 'R', Blocks.REDSTONE_TORCH, 'I', NETHERQUARTZ.gem() );
@@ -279,20 +278,14 @@ public class CraftingManager {
 		// TODO: I don't know what the fuck red_cable_classic are btw
 		/*addShapelessAuto(new ItemStack(ModBlocks.red_cable_classic, 1), ModBlocks.red_cable );
 		addShapelessAuto(new ItemStack(ModBlocks.red_cable, 1), ModBlocks.red_cable_classic );*/
-		addRecipeAuto(new ItemStack(ModBlocks.red_connector, 4), "C", "I", "S", 'C', ModItems.coil_copper, 'I', ModItems.plate_polymer, 'S', STEEL.ingot() );
 		addShapelessAuto(new ItemStack(ModBlocks.red_cable_gauge), ModBlocks.red_wire_coated, STEEL.ingot(), DictFrame.fromOne(ModItems.circuit, EnumCircuitType.BASIC) );
+		addRecipeAuto(new ItemStack(ModBlocks.red_connector, 4), "C", "I", "S", 'C', ModItems.coil_copper, 'I', ModItems.plate_polymer, 'S', STEEL.ingot() );
+		addRecipeAuto(new ItemStack(ModBlocks.red_connector_super, 2), "CCC", "III", " S ", 'C', ModItems.coil_copper, 'I', ModItems.plate_polymer, 'S', ANY_RESISTANTALLOY.ingot() );
 		addRecipeAuto(new ItemStack(ModBlocks.red_pylon, 4), "CWC", "PWP", " T ", 'C', ModItems.coil_copper, 'W', KEY_PLANKS, 'P', ModItems.plate_polymer, 'T', ModBlocks.red_wire_coated );
 		addRecipeAuto(new ItemStack(ModBlocks.red_pylon_medium_wood, 2), "CCW", "IIW", "  S", 'C', ModItems.coil_copper, 'W', KEY_PLANKS, 'I', ModItems.plate_polymer, 'S', KEY_COBBLESTONE );
 		addShapelessAuto(new ItemStack(ModBlocks.red_pylon_medium_wood_transformer, 1), ModBlocks.red_pylon_medium_wood, ModItems.plate_polymer, ModItems.coil_copper );
 		addRecipeAuto(new ItemStack(ModBlocks.red_pylon_medium_steel, 2), "CCW", "IIW", "  S", 'C', ModItems.coil_copper, 'W', STEEL.pipe(), 'I', ModItems.plate_polymer, 'S', KEY_COBBLESTONE );
 		addShapelessAuto(new ItemStack(ModBlocks.red_pylon_medium_steel_transformer, 1), ModBlocks.red_pylon_medium_steel, ModItems.plate_polymer, ModItems.coil_copper );
-		addRecipeAuto(new ItemStack(ModBlocks.machine_battery_potato, 1), "PCP", "WRW", "PCP", 'P', ItemBattery.getEmptyBattery(ModItems.battery_potato), 'C', CU.ingot(), 'R', REDSTONE.block(), 'W', KEY_PLANKS );
-		addRecipeAuto(new ItemStack(ModBlocks.capacitor_bus, 1), "PIP", "PIP", "PIP", 'P', ModItems.plate_polymer, 'I', MINGRADE.ingot() );
-		addRecipeAuto(new ItemStack(ModBlocks.capacitor_copper, 1), "PPP", "PCP", "WWW", 'P', STEEL.plate(), 'C', CU.block(), 'W', KEY_PLANKS );
-		addRecipeAuto(new ItemStack(ModBlocks.capacitor_gold, 1), "PPP", "ICI", "WWW", 'P', STEEL.plate(), 'I', ANY_PLASTIC.ingot(), 'C', GOLD.block(), 'W', STEEL.ingot() );
-		addRecipeAuto(new ItemStack(ModBlocks.capacitor_niobium, 1), "PPP", "ICI", "WWW", 'P', STEEL.plate(), 'I', RUBBER.ingot(), 'C', NB.block(), 'W', STEEL.ingot() );
-		addRecipeAuto(new ItemStack(ModBlocks.capacitor_tantalium, 1), "PPP", "ICI", "WWW", 'P', STEEL.plate(), 'I', ANY_RESISTANTALLOY.ingot(), 'C', TA.block(), 'W', STEEL.ingot() );
-		addRecipeAuto(new ItemStack(ModBlocks.capacitor_schrabidate, 1), "PPP", "ICI", "WWW", 'P', STEEL.plate(), 'I', ANY_RESISTANTALLOY.ingot(), 'C', SBD.block(), 'W', STEEL.ingot() );
 		addRecipeAuto(new ItemStack(ModBlocks.machine_wood_burner, 1), "PPP", "CFC", "I I" , 'P', STEEL.plate528(), 'C', ModItems.coil_copper, 'I', IRON.ingot(), 'F', Blocks.FURNACE);
 		addRecipeAuto(new ItemStack(ModBlocks.machine_turbine, 1), "SMS", "PTP", "SMS", 'S', STEEL.ingot(), 'T', ModItems.turbine_titanium, 'M', ModItems.coil_copper, 'P', ANY_PLASTIC.ingot() );
 		addShapelessAuto(new ItemStack(ModBlocks.machine_converter_he_rf),new ItemStack(Blocks.DIRT));

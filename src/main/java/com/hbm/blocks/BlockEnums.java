@@ -169,9 +169,7 @@ public class BlockEnums {
 		RAD,
 		SPARKLE,
 		KORL,
-		FRITZ,
-		SUNSET,
-		STAR;
+		FRITZ;
 
 		public static final EnumBlockCapType[] VALUES = values();
 
@@ -183,8 +181,6 @@ public class BlockEnums {
                  case SPARKLE -> ModItems.cap_sparkle;
                  case KORL -> ModItems.cap_korl;
                  case FRITZ -> ModItems.cap_fritz;
-                 case SUNSET -> ModItems.cap_sunset;
-                 case STAR -> ModItems.cap_star;
 			};
 		}
 

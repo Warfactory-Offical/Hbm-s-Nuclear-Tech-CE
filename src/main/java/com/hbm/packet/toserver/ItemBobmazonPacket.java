@@ -115,15 +115,13 @@ public class ItemBobmazonPacket implements IMessage {
 				if(!stack.isEmpty()) {
 					
 					Item item = stack.getItem();
-					
+
 					if(item == ModItems.cap_fritz ||
 							item == ModItems.cap_korl ||
 							item == ModItems.cap_nuka ||
 							item == ModItems.cap_quantum ||
 							item == ModItems.cap_rad ||
-							item == ModItems.cap_sparkle ||
-							item == ModItems.cap_star ||
-							item == ModItems.cap_sunset)
+							item == ModItems.cap_sparkle)
 						count += stack.getCount();
 					
 				}
@@ -150,9 +148,7 @@ public class ItemBobmazonPacket implements IMessage {
 							item == ModItems.cap_nuka ||
 							item == ModItems.cap_quantum ||
 							item == ModItems.cap_rad ||
-							item == ModItems.cap_sparkle ||
-							item == ModItems.cap_star ||
-							item == ModItems.cap_sunset) {
+							item == ModItems.cap_sparkle) {
 						
 						int size = stack.getCount();
 						for(int j = 0; j < size; j++) {

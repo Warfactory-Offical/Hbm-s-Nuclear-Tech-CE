@@ -1283,7 +1283,6 @@ public class ModItems {
     public static final Item powder_ash = new ItemEnumMulti<>("powder_ash", EnumAshType.VALUES, true, true).setCreativeTab(MainRegistry.partsTab);
     public static final Item powder_cement = new ItemLemon(2, 0.5F, false, "powder_cement").setCreativeTab(MainRegistry.partsTab);
     //Misc/crafting items
-    public static final Item toothpicks = new ItemBase("toothpicks").setCreativeTab(MainRegistry.partsTab);
     public static final Item ducttape = new ItemBase("ducttape").setCreativeTab(MainRegistry.partsTab);
     public static final Item catalyst_clay = new ItemBase("catalyst_clay").setCreativeTab(MainRegistry.partsTab);
     public static final Item motor = new ItemBakedBase("motor").setCreativeTab(MainRegistry.partsTab);
@@ -1338,17 +1337,26 @@ public class ModItems {
     public static final Item fragment_coltan = new ItemBase("fragment_coltan").setCreativeTab(MainRegistry.partsTab);
     public static final Item demon_core_open = new ItemDemonCore("demon_core_open").setCreativeTab(MainRegistry.nukeTab);
     public static final Item demon_core_closed = new ItemCustomLore("demon_core_closed").setCreativeTab(MainRegistry.nukeTab);
+
+    public static final Item cap_nuka = new ItemBase("cap_nuka").setCreativeTab(MainRegistry.consumableTab);
+    public static final Item cap_quantum = new ItemBase("cap_quantum").setCreativeTab(MainRegistry.consumableTab);
+    public static final Item cap_sparkle = new ItemBase("cap_sparkle").setCreativeTab(MainRegistry.consumableTab);
+    public static final Item cap_rad = new ItemBase("cap_rad").setCreativeTab(MainRegistry.consumableTab);
+    public static final Item cap_korl = new ItemBase("cap_korl").setCreativeTab(MainRegistry.consumableTab);
+    public static final Item cap_fritz = new ItemBase("cap_fritz").setCreativeTab(MainRegistry.consumableTab);
+    public static final Item ring_pull = new ItemBase("ring_pull").setCreativeTab(MainRegistry.consumableTab);
+
     //Consume
     public static final Item bottle_opener = new WeaponSpecial(MaterialRegistry.enumToolMaterialBottleOpener, "bottle_opener").setCreativeTab(MainRegistry.consumableTab).setMaxStackSize(1);
     public static final Item bottle_empty = new ItemBase("bottle_empty").setCreativeTab(MainRegistry.consumableTab);
-    public static final Item bottle_nuka = new ItemEnergy("bottle_nuka").setContainerItem(bottle_empty).setCreativeTab(MainRegistry.consumableTab);
-    public static final Item bottle_cherry = new ItemEnergy("bottle_cherry").setContainerItem(ModItems.bottle_empty).setCreativeTab(MainRegistry.consumableTab);
-    public static final Item bottle_quantum = new ItemEnergy("bottle_quantum").setContainerItem(ModItems.bottle_empty).setCreativeTab(MainRegistry.consumableTab);
-    public static final Item bottle_sparkle = new ItemEnergy("bottle_sparkle").setContainerItem(ModItems.bottle_empty).setCreativeTab(MainRegistry.consumableTab);
-    public static final Item bottle_rad = new ItemEnergy("bottle_rad").setContainerItem(ModItems.bottle_empty).setCreativeTab(MainRegistry.consumableTab);
+    public static final Item bottle_nuka = new ItemEnergy("bottle_nuka").makeBottle(bottle_empty, cap_nuka).setContainerItem(bottle_empty).setCreativeTab(MainRegistry.consumableTab);
+    public static final Item bottle_cherry = new ItemEnergy("bottle_cherry").makeBottle(bottle_empty, cap_nuka).setContainerItem(ModItems.bottle_empty).setCreativeTab(MainRegistry.consumableTab);
+    public static final Item bottle_quantum = new ItemEnergy("bottle_quantum").makeBottle(bottle_empty, cap_quantum).setContainerItem(ModItems.bottle_empty).setCreativeTab(MainRegistry.consumableTab);
+    public static final Item bottle_sparkle = new ItemEnergy("bottle_sparkle").makeBottle(bottle_empty, cap_sparkle).setContainerItem(ModItems.bottle_empty).setCreativeTab(MainRegistry.consumableTab);
+    public static final Item bottle_rad = new ItemEnergy("bottle_rad").makeBottle(bottle_empty, cap_rad).setContainerItem(ModItems.bottle_empty).setCreativeTab(MainRegistry.consumableTab);
     public static final Item bottle2_empty = new ItemBase("bottle2_empty").setCreativeTab(MainRegistry.consumableTab);
-    public static final Item bottle2_korl = new ItemEnergy("bottle2_korl").setContainerItem(ModItems.bottle2_empty).setCreativeTab(MainRegistry.consumableTab);
-    public static final Item bottle2_fritz = new ItemEnergy("bottle2_fritz").setContainerItem(ModItems.bottle2_empty).setCreativeTab(MainRegistry.consumableTab);
+    public static final Item bottle2_korl = new ItemEnergy("bottle2_korl").makeBottle(bottle2_empty, cap_korl).setContainerItem(ModItems.bottle2_empty).setCreativeTab(MainRegistry.consumableTab);
+    public static final Item bottle2_fritz = new ItemEnergy("bottle2_fritz").makeBottle(bottle2_empty, cap_korl).setContainerItem(ModItems.bottle2_empty).setCreativeTab(MainRegistry.consumableTab);
     public static final Item bottle2_korl_special = new ItemEnergy("bottle2_korl_special").setContainerItem(ModItems.bottle2_empty).setCreativeTab(MainRegistry.consumableTab);
     public static final Item bottle2_fritz_special = new ItemEnergy("bottle2_fritz_special").setContainerItem(ModItems.bottle2_empty).setCreativeTab(MainRegistry.consumableTab);
     public static final Item bottle2_sunset = new ItemEnergy("bottle2_sunset").setContainerItem(ModItems.bottle2_empty).setCreativeTab(MainRegistry.consumableTab);
@@ -1357,15 +1365,6 @@ public class ModItems {
     public static final Item coffee = new ItemEnergy("coffee").setCreativeTab(MainRegistry.consumableTab);
     public static final Item coffee_radium = new ItemEnergy("coffee_radium").setCreativeTab(MainRegistry.consumableTab);
     public static final Item chocolate = new ItemPill(0, "chocolate").setCreativeTab(MainRegistry.consumableTab);
-    public static final Item cap_nuka = new ItemBase("cap_nuka").setCreativeTab(MainRegistry.consumableTab);
-    public static final Item cap_quantum = new ItemBase("cap_quantum").setCreativeTab(MainRegistry.consumableTab);
-    public static final Item cap_sparkle = new ItemBase("cap_sparkle").setCreativeTab(MainRegistry.consumableTab);
-    public static final Item cap_rad = new ItemBase("cap_rad").setCreativeTab(MainRegistry.consumableTab);
-    public static final Item cap_korl = new ItemBase("cap_korl").setCreativeTab(MainRegistry.consumableTab);
-    public static final Item cap_fritz = new ItemBase("cap_fritz").setCreativeTab(MainRegistry.consumableTab);
-    public static final Item cap_sunset = new ItemBase("cap_sunset").setCreativeTab(MainRegistry.consumableTab);
-    public static final Item cap_star = new ItemBase("cap_star").setCreativeTab(MainRegistry.consumableTab);
-    public static final Item ring_pull = new ItemBase("ring_pull").setCreativeTab(MainRegistry.consumableTab);
     public static final Item bomb_waffle = new ItemFoodBase(20, 0, true, "bomb_waffle").setCreativeTab(MainRegistry.consumableTab);
     public static final Item schnitzel_vegan = new ItemFoodBase(3, 6, true, "schnitzel_vegan").setCreativeTab(MainRegistry.consumableTab);
     public static final Item cotton_candy = new ItemFoodBase(5, 0, true, "cotton_candy").setCreativeTab(MainRegistry.consumableTab).setFull3D();
@@ -1412,14 +1411,14 @@ public class ModItems {
     public static final Item coin_token = new ItemBakedBase("coin_token").setCreativeTab(MainRegistry.consumableTab);
     public static final Item pudding = new ItemLemon(6, 15, false, "pudding").setCreativeTab(MainRegistry.consumableTab);
     public static final Item can_empty = new ItemBase("can_empty").setCreativeTab(MainRegistry.consumableTab);
-    public static final Item can_smart = new ItemEnergy("can_smart").setContainerItem(ModItems.can_empty).setCreativeTab(MainRegistry.consumableTab);
-    public static final Item can_creature = new ItemEnergy("can_creature").setContainerItem(ModItems.can_empty).setCreativeTab(MainRegistry.consumableTab);
-    public static final Item can_redbomb = new ItemEnergy("can_redbomb").setContainerItem(ModItems.can_empty).setCreativeTab(MainRegistry.consumableTab);
-    public static final Item can_mrsugar = new ItemEnergy("can_mrsugar").setContainerItem(ModItems.can_empty).setCreativeTab(MainRegistry.consumableTab);
-    public static final Item can_overcharge = new ItemEnergy("can_overcharge").setContainerItem(ModItems.can_empty).setCreativeTab(MainRegistry.consumableTab);
-    public static final Item can_luna = new ItemEnergy("can_luna").setContainerItem(ModItems.can_empty).setCreativeTab(MainRegistry.consumableTab);
-    public static final Item can_bepis = new ItemEnergy("can_bepis").setContainerItem(ModItems.can_empty).setCreativeTab(MainRegistry.consumableTab);
-    public static final Item can_breen = new ItemEnergy("can_breen").setContainerItem(ModItems.can_empty).setCreativeTab(MainRegistry.consumableTab);
+    public static final Item can_smart = new ItemEnergy("can_smart").makeCan().setCreativeTab(MainRegistry.consumableTab);
+    public static final Item can_creature = new ItemEnergy("can_creature").makeCan().setCreativeTab(MainRegistry.consumableTab);
+    public static final Item can_redbomb = new ItemEnergy("can_redbomb").makeCan().setCreativeTab(MainRegistry.consumableTab);
+    public static final Item can_mrsugar = new ItemEnergy("can_mrsugar").makeCan().setCreativeTab(MainRegistry.consumableTab);
+    public static final Item can_overcharge = new ItemEnergy("can_overcharge").makeCan().setCreativeTab(MainRegistry.consumableTab);
+    public static final Item can_luna = new ItemEnergy("can_luna").makeCan().setCreativeTab(MainRegistry.consumableTab);
+    public static final Item can_bepis = new ItemEnergy("can_bepis").makeCan().setCreativeTab(MainRegistry.consumableTab);
+    public static final Item can_breen = new ItemEnergy("can_breen").makeCan().setCreativeTab(MainRegistry.consumableTab);
     public static final Item can_mug = new ItemEnergy("can_mug").makeCan().setCreativeTab(MainRegistry.consumableTab);
     public static final Item drone = new ItemDrone("drone");
     //Tools
