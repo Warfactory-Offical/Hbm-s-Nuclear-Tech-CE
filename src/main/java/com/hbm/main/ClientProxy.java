@@ -42,6 +42,7 @@ import com.hbm.qmaw.QMAWLoader;
 import com.hbm.render.GLCompat;
 import com.hbm.render.entity.ElectricityRenderer;
 import com.hbm.render.entity.RenderMetaSensitiveItem;
+import com.hbm.render.entity.layers.LayerArmorMod;
 import com.hbm.render.item.ItemRenderMissile;
 import com.hbm.render.item.ItemRenderMissileGeneric;
 import com.hbm.render.item.ItemRenderMissileGeneric.RenderMissileType;
@@ -76,6 +77,7 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.client.resources.IReloadableResourceManager;
@@ -552,6 +554,7 @@ public class ClientProxy extends ServerProxy {
         ResourceManager.loadAnimatedModels();
         Minecraft.getMinecraft().getRenderManager().getSkinMap().forEach((p, r) -> {
             r.addLayer(new JetpackHandler.JetpackLayer());
+            r.addLayer(new LayerArmorMod(r));
             r.getMainModel().bipedBody.addChild(new EgonBackpackRenderer(r.getMainModel()));
         });
 

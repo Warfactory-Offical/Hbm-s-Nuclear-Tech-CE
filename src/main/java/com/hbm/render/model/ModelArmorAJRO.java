@@ -24,42 +24,6 @@ public class ModelArmorAJRO extends ModelArmorBase {
     }
 
     @Override
-    public void render(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor) {
-        super.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor, entity);
-
-        GlStateManager.pushMatrix();
-        GlStateManager.shadeModel(GL11.GL_SMOOTH);
-
-        switch (type) {
-            case 3 -> {
-                bindTexture(ResourceManager.ajro_helmet);
-                this.head.render(scaleFactor);
-            }
-            case 2 -> {
-                bindTexture(ResourceManager.ajro_chest);
-                this.body.render(scaleFactor);
-
-                bindTexture(ResourceManager.ajro_arm);
-                this.leftArm.render(scaleFactor);
-                this.rightArm.render(scaleFactor);
-            }
-            case 1 -> {
-                bindTexture(ResourceManager.ajro_leg);
-                this.leftLeg.render(scaleFactor);
-                this.rightLeg.render(scaleFactor);
-            }
-            case 0 -> {
-                bindTexture(ResourceManager.ajro_leg);
-                this.leftFoot.render(scaleFactor);
-                this.rightFoot.render(scaleFactor);
-            }
-        }
-
-        GlStateManager.shadeModel(GL11.GL_FLAT);
-        GlStateManager.popMatrix();
-    }
-
-    @Override
     public void renderArmor(Entity par1Entity, float par7) {
         switch (type) {
             case 3 -> {

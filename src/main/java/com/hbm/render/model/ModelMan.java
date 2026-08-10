@@ -34,7 +34,9 @@ public class ModelMan extends ModelArmorBase {
         this.swingProgress = 0.0F;
         this.isSneak = false;
         this.setRotationAngles(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, scale, entity);
-        this.rightArm.rotateAngleX = 0.0F;
+        this.rightArm.rotateAngleX = this.rightArm.rotateAngleY = this.rightArm.rotateAngleZ = 0.0F;
+        this.rightArm.partOffsetX = this.rightArm.partOffsetY = this.rightArm.partOffsetZ = 0.0F;
+        this.rightArm.setRotationPoint(-5.0F, 2.0F, 0.0F);
         bindTexture(ResourceManager.player_manly_tex);
         this.rightArm.render(scale);
     }
@@ -43,7 +45,9 @@ public class ModelMan extends ModelArmorBase {
         this.swingProgress = 0.0F;
         this.isSneak = false;
         this.setRotationAngles(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, scale, entity);
-        this.leftArm.rotateAngleX = 0.0F;
+        this.leftArm.rotateAngleX = this.leftArm.rotateAngleY = this.leftArm.rotateAngleZ = 0.0F;
+        this.leftArm.partOffsetX = this.leftArm.partOffsetY = this.leftArm.partOffsetZ = 0.0F;
+        this.leftArm.setRotationPoint(5.0F, 2.0F, 0.0F);
         bindTexture(ResourceManager.player_manly_tex);
         this.leftArm.render(scale);
     }
