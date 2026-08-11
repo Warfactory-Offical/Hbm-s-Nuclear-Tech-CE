@@ -201,9 +201,6 @@ public class TileMappings {
         put(TileEntityTrappedBrick.class, "tileentity_trapped_brick");
         put(TileEntityWatzStruct.class, "tileentity_watz_struct");
         put(TileEntityICFStruct.class, "tileentity_icf_struct");
-        put(TileEntityHadronDiode.class, "tileentity_hadron_diode");
-        put(TileEntityHadronPower.class, "tileentity_hadron_power");
-        put(TileEntityHadron.class, "tileentity_hadron");
         put(TileEntityPASource.class, "tileentity_pa_source");
         put(TileEntityPABeamline.class, "tileentity_pa_beamline");
         put(TileEntityPARFC.class, "tileentity_pa_rfc");

@@ -302,7 +302,6 @@ public class MainRegistry {
         DamageResistanceHandler.init();
         BlockCrate.setDrops();
         ExplosionNukeGeneric.loadSoliniumFromFile();
-        HadronRecipes.register();
         MagicRecipes.register();
         SILEXRecipes.register();
         GasCentrifugeRecipes.register();

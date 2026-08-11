@@ -2298,8 +2298,6 @@ public class ModItems {
     public static final Item particle_hydrogen = new ItemBase("particle_hydrogen").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.particle_empty);
     public static final Item particle_copper = new ItemBase("particle_copper").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.particle_empty);
     public static final Item particle_lead = new ItemBase("particle_lead").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.particle_empty);
-    public static final Item particle_aproton = new ItemBase("particle_aproton").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.particle_empty);
-    public static final Item particle_aelectron = new ItemBase("particle_aelectron").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.particle_empty);
     public static final Item particle_muon = new ItemBase("particle_muon").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.particle_empty);
     public static final Item particle_amat = new ItemBase("particle_amat").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.particle_empty);
     public static final Item particle_aschrab = new ItemBase("particle_aschrab").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.particle_empty);

@@ -79,7 +79,6 @@ public class JEIConfig implements IModPlugin {
     public static final String FUSION_BREEDER = "hbm.fusionbreeder";
     public static final String PLASMA_FORGE = "hbm.plasma_forge";
     public static final String GAS_CENT = "hbm.gas_centrifuge";
-    public static final String HADRON = "hbm.hadron";
     public static final String HYDROTREATING = "hbm.hydrotreating";
     public static final String LIQUEFACTION = "hbm.liquefaction";
     public static final String MIXER = "hbm.mixer";
@@ -242,7 +241,6 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.fusion_torus), FUSION_BYPRODUCT);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.fusion_breeder), FUSION_BREEDER);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.fusion_plasma_forge), PLASMA_FORGE);
-        registry.addRecipeCatalyst(new ItemStack(ModBlocks.hadron_core), HADRON);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_silex), SILEX);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_rtg_grey), RTG);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_difurnace_rtg_off), RTG);
@@ -321,7 +319,6 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipes(JeiRecipes.getFluidEquivalences(), FLUIDS);
         registry.addRecipes(JeiRecipes.getBookRecipes(), BOOK);
         registry.addRecipes(JeiRecipes.getBreederRecipes(), BREEDER);
-        registry.addRecipes(JeiRecipes.getHadronRecipes(), HADRON);
         registry.addRecipes(JeiRecipes.getSILEXRecipes(), SILEX);
         registry.addRecipes(JeiRecipes.getSILEXRecipes(EnumWavelengths.IR), SILEX_IR);
         registry.addRecipes(JeiRecipes.getSILEXRecipes(EnumWavelengths.VISIBLE), SILEX_VISIBLE);
@@ -387,7 +384,6 @@ public class JEIConfig implements IModPlugin {
 		registry.addRecipeClickArea(GUIMachineShredder.class, 43, 89, 53, 17, SHREDDER);
 		registry.addRecipeClickArea(GUICrystallizer.class, 79, 40, 29, 26, CRYSTALLIZER);
 		registry.addRecipeClickArea(GUIBook.class, 89, 34, 23, 16, BOOK);
-		registry.addRecipeClickArea(GUIHadron.class, 71, 28, 32, 32, HADRON);
 		registry.addRecipeClickArea(GUISILEX.class, 45, 82, 113-45, 125-82, SILEX);
 		registry.addRecipeClickArea(GUIAnvil.class, 34, 26, 52-34, 44-26, ANVIL_SMITH);
 		registry.addRecipeClickArea(GUIAnvil.class, 12, 50, 48-12, 66-50, ANVIL_CON);
@@ -430,7 +426,6 @@ public class JEIConfig implements IModPlugin {
         HbmTransferInfo.register(t, ContainerElectrolyserMetal.class,       ELECTROLYSIS_METAL, new int[]{3},                 range(10, 36));
         HbmTransferInfo.register(t, ContainerMachineExposureChamber.class,  EXPOSURE,           new int[]{0, 2},              range(7, 36));
         HbmTransferInfo.register(t, ContainerFusionBreeder.class,           FUSION_BREEDER,     new int[]{1},                 range(3, 36));
-        HbmTransferInfo.register(t, ContainerHadron.class,                  HADRON,             range(0, 2),  range(5, 36));
         HbmTransferInfo.register(t, ContainerLiquefactor.class,             LIQUEFACTION,       new int[]{0},                 range(4, 36));
         HbmTransferInfo.register(t, ContainerMixer.class,                   MIXER,              new int[]{1},                 range(5, 36));
         HbmTransferInfo.register(t, ContainerOreSlopper.class,              ORE_SLOPPER,        new int[]{2},                 range(11, 36));
@@ -579,7 +574,6 @@ public class JEIConfig implements IModPlugin {
                 new SILEXGammaRecipeHandler(help),
                 new SILEXDigammaRecipeHandler(help),
                 new RBMKFuelRecipeHandler(help),
-                new HadronRecipeHandler(help),
                 new DFCRecipeHandler(help),
                 new BookRecipeHandler(help));
 

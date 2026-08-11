@@ -162,8 +162,6 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModItems.particle_empty, 2), "STS", "G G", "STS", 'S', PB.plateCast(), 'T', ModItems.coil_gold, 'G', KEY_ANYPANE );
 		addShapelessAuto(new ItemStack(ModItems.particle_copper, 1), ModItems.particle_empty, CU.dust(), ModItems.pellet_charged );
 		addShapelessAuto(new ItemStack(ModItems.particle_lead, 1), ModItems.particle_empty, PB.dust(), ModItems.pellet_charged );
-		addShapelessAuto(new ItemStack(ModItems.cell, 1, Fluids.AMAT.getID()), ModItems.particle_aproton, ModItems.particle_aelectron, new ItemStack(ModItems.cell) );
-		addShapelessAuto(new ItemStack(ModItems.particle_amat, 1), ModItems.particle_aproton, ModItems.particle_aelectron, ModItems.particle_empty );
 
 		addRecipeAuto(new ItemStack(ModItems.canister_empty, 2), "S ", "AA", "AA", 'S', STEEL.plate(), 'A', AL.plate() );
 		addRecipeAuto(new ItemStack(ModItems.gas_empty, 2), "S ", "AA", "AA", 'A', STEEL.plate(), 'S', CU.plate() );
@@ -780,15 +778,6 @@ public class CraftingManager {
 		addShapelessAuto(new ItemStack(ModItems.wire_dense, 2, Mats.MAT_STAR.id), ModBlocks.hadron_coil_starmetal );
 		addShapelessAuto(new ItemStack(ModItems.powder_chlorophyte, 2), ModBlocks.hadron_coil_chlorophyte );
 		addShapelessAuto(new ItemStack(ModItems.wire_dense, 1, Mats.MAT_DNT.id), ModBlocks.hadron_coil_mese );
-		addShapelessAuto(new ItemStack(ModItems.plate_cast, 1, Mats.MAT_STEEL.id), ModBlocks.hadron_plating );
-		addShapelessAuto(new ItemStack(ModItems.plate_cast, 1, Mats.MAT_STEEL.id), ModBlocks.hadron_plating_blue );
-		addShapelessAuto(new ItemStack(ModItems.plate_cast, 1, Mats.MAT_STEEL.id), ModBlocks.hadron_plating_black );
-		addShapelessAuto(new ItemStack(ModItems.plate_cast, 1, Mats.MAT_STEEL.id), ModBlocks.hadron_plating_yellow );
-		addShapelessAuto(new ItemStack(ModItems.plate_cast, 1, Mats.MAT_STEEL.id), ModBlocks.hadron_plating_striped );
-		addShapelessAuto(new ItemStack(ModItems.plate_cast, 1, Mats.MAT_STEEL.id), ModBlocks.hadron_plating_glass );
-		addShapelessAuto(new ItemStack(ModItems.plate_cast, 1, Mats.MAT_STEEL.id), ModBlocks.hadron_plating_voltz );
-		addShapelessAuto(DictFrame.fromOne(ModItems.circuit, EnumCircuitType.ADVANCED), ModBlocks.hadron_analysis );
-		addShapelessAuto(DictFrame.fromOne(ModItems.circuit, EnumCircuitType.ADVANCED), ModBlocks.hadron_analysis_glass );
 
 		//addRecipeAuto(new ItemStack(ModBlocks.hadron_coil_gold, 1), "WG", "GW", 'W', ALLOY.wireDense(), 'G', GOLD.wireDense() );
 		//addRecipeAuto(new ItemStack(ModBlocks.hadron_coil_neodymium, 1), "WG", "GW", 'W', ND.wireDense(), 'G', GOLD.wireDense() );

@@ -17,6 +17,7 @@ import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
+import com.hbm.main.MainRegistry;
 import com.hbm.util.*;
 import io.netty.buffer.ByteBuf;
 import li.cil.oc.api.machine.Arguments;
