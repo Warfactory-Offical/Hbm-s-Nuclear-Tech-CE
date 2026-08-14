@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -29,140 +30,113 @@ import java.util.UUID;
 
 public class ArmorEnvsuit extends ArmorFSBPowered implements IItemRendererProvider {
 
-  @SideOnly(Side.CLIENT)
-  ModelArmorEnvsuit[] models;
+    private static final UUID speed = UUID.fromString("6ab858ba-d712-485c-bae9-e5e765fc555a");
+    @SideOnly(Side.CLIENT)
+    ModelArmorEnvsuit[] models;
 
-  public ArmorEnvsuit(
-      ArmorMaterial material,
-      int layer,
-      EntityEquipmentSlot slot,
-      String texture,
-      long maxPower,
-      long chargeRate,
-      long consumption,
-      long drain,
-      String s) {
-    super(material, layer, slot, texture, maxPower, chargeRate, consumption, drain, s);
-  }
-
-  @Override
-  @SideOnly(Side.CLIENT)
-  public ModelBiped getArmorModel(
-      @NotNull EntityLivingBase entityLiving,
-      @NotNull ItemStack itemStack,
-      @NotNull EntityEquipmentSlot armorSlot,
-      @NotNull ModelBiped _default) {
-
-    if (models == null) {
-      models = new ModelArmorEnvsuit[4];
-
-      for (int i = 0; i < 4; i++) models[i] = new ModelArmorEnvsuit(i);
+    public ArmorEnvsuit(ArmorMaterial material, int layer, EntityEquipmentSlot slot, String texture, long maxPower, long chargeRate, long consumption, long drain, String s) {
+        super(material, layer, slot, texture, maxPower, chargeRate, consumption, drain, s);
     }
 
-    return models[3 - armorSlot.getIndex()];
-  }
+    @Override
+    @SideOnly(Side.CLIENT)
+    public ModelBiped getArmorModel(@NotNull EntityLivingBase entityLiving, @NotNull ItemStack itemStack, @NotNull EntityEquipmentSlot armorSlot, @NotNull ModelBiped _default) {
 
-  private static final UUID speed = UUID.fromString("6ab858ba-d712-485c-bae9-e5e765fc555a");
+        if (models == null) {
+            models = new ModelArmorEnvsuit[4];
 
-  @Override
-  public void onArmorTick(@NotNull World world, @NotNull EntityPlayer player, @NotNull ItemStack stack) {
-
-    super.onArmorTick(world, player, stack);
-
-    if (this != ModItems.envsuit_plate) return;
-
-    /// SPEED ///
-    Multimap<String, AttributeModifier> multimap =
-        super.getAttributeModifiers(EntityEquipmentSlot.CHEST, stack);
-    multimap.put(
-        SharedMonsterAttributes.MOVEMENT_SPEED.getName(),
-        new AttributeModifier(speed, "SQUIRREL SPEED", 0.1, 0));
-    player.getAttributeMap().removeAttributeModifiers(multimap);
-
-    if (hasFSBArmor(player)) {
-
-      if (player.isSprinting()) player.getAttributeMap().applyAttributeModifiers(multimap);
-
-      if (player.isInWater()) {
-
-        if (!world.isRemote) {
-          player.setAir(300);
-          player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 15 * 20, 0));
+            for (int i = 0; i < 4; i++) models[i] = new ModelArmorEnvsuit(i);
         }
 
-        double mo = 0.1 * player.moveForward;
-        Vec3NT vec = new Vec3NT(player.getLookVec());
-        vec.setX(vec.x * mo);
-        vec.setY(vec.y * mo);
-        vec.setZ(vec.z * mo);
-
-        player.motionX += vec.x;
-        player.motionY += vec.y;
-        player.motionZ += vec.z;
-      } else {
-        boolean canRemoveNightVision = true;
-        ItemStack helmet = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
-        ItemStack helmetMod =
-            ArmorModHandler.pryMod(helmet, ArmorModHandler.helmet_only); // Get the modification!
-        if (!helmetMod.isEmpty() && helmetMod.getItem() instanceof ItemModNightVision) {
-          canRemoveNightVision = false;
-        }
-
-        if (!world.isRemote && canRemoveNightVision) {
-          player.removePotionEffect(MobEffects.NIGHT_VISION);
-        }
-      }
+        return models[3 - armorSlot.getIndex()];
     }
-  }
 
-  @Override
-  public Item getItemForRenderer() {
-    return this;
-  }
+    @Override
+    public void onArmorTick(@NotNull World world, @NotNull EntityPlayer player, @NotNull ItemStack stack) {
 
-  @Override
-  @SideOnly(Side.CLIENT)
-  public ItemRenderBase getRenderer(Item item) {
-    return new ItemRenderBase() {
-      public void renderInventory() {
-        setupRenderInv();
-      }
+        super.onArmorTick(world, player, stack);
 
-      public void renderNonInv() {
-        setupRenderNonInv();
-      }
+        if (this != ModItems.envsuit_plate) return;
 
-      public void renderCommon() {
-        if (armorType == EntityEquipmentSlot.HEAD) {
-          GlStateManager.scale(0.3125, 0.3125, 0.3125);
-          GlStateManager.translate(0, 1, 0);
-          Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.envsuit_helmet);
-          ResourceManager.armor_envsuit.renderPart("Helmet");
-          GlStateManager.disableLighting();
-          GlStateManager.disableTexture2D();
-          GlStateManager.color(1F, 1F, 0.8F);
-          ResourceManager.armor_envsuit.renderPart("Lamps");
-          GlStateManager.color(1F, 1F, 1F);
-          GlStateManager.enableTexture2D();
-          GlStateManager.enableLighting();
-        } else {
-          renderStandard(
-              ResourceManager.armor_envsuit,
-              armorType,
-              ResourceManager.envsuit_helmet,
-              ResourceManager.envsuit_chest,
-              ResourceManager.envsuit_arm,
-              ResourceManager.envsuit_leg,
-              "Helmet,Lamps",
-              "Chest",
-              "LeftArm",
-              "RightArm",
-              "LeftLeg",
-              "RightLeg",
-              "LeftFoot",
-              "RightFoot");
+        /// SPEED ///
+        IAttributeInstance speedAttr = player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+
+        if (hasFSBArmor(player) && player.isSprinting()) {
+            if (speedAttr.getModifier(speed) == null) {
+                speedAttr.applyModifier(new AttributeModifier(speed, "SQUIRREL SPEED", 0.1, 0));
+            }
+        } else if (speedAttr.getModifier(speed) != null) {
+            speedAttr.removeModifier(speed);
         }
-      }
-    };
-  }
+
+        if (hasFSBArmor(player)) {
+
+
+            if (player.isInWater()) {
+
+                if (!world.isRemote) {
+                    player.setAir(300);
+                    player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 15 * 20, 0));
+                }
+
+                double mo = 0.1 * player.moveForward;
+                Vec3NT vec = new Vec3NT(player.getLookVec());
+                vec.setX(vec.x * mo);
+                vec.setY(vec.y * mo);
+                vec.setZ(vec.z * mo);
+
+                player.motionX += vec.x;
+                player.motionY += vec.y;
+                player.motionZ += vec.z;
+            } else {
+                boolean canRemoveNightVision = true;
+                ItemStack helmet = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+                ItemStack helmetMod = ArmorModHandler.pryMod(helmet, ArmorModHandler.helmet_only); // Get the modification!
+                if (!helmetMod.isEmpty() && helmetMod.getItem() instanceof ItemModNightVision) {
+                    canRemoveNightVision = false;
+                }
+
+                if (!world.isRemote && canRemoveNightVision) {
+                    player.removePotionEffect(MobEffects.NIGHT_VISION);
+                }
+            }
+        }
+    }
+
+    @Override
+    public Item getItemForRenderer() {
+        return this;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public ItemRenderBase getRenderer(Item item) {
+        return new ItemRenderBase() {
+            public void renderInventory() {
+                setupRenderInv();
+            }
+
+            public void renderNonInv() {
+                setupRenderNonInv();
+            }
+
+            public void renderCommon() {
+                if (armorType == EntityEquipmentSlot.HEAD) {
+                    GlStateManager.scale(0.3125, 0.3125, 0.3125);
+                    GlStateManager.translate(0, 1, 0);
+                    Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.envsuit_helmet);
+                    ResourceManager.armor_envsuit.renderPart("Helmet");
+                    GlStateManager.disableLighting();
+                    GlStateManager.disableTexture2D();
+                    GlStateManager.color(1F, 1F, 0.8F);
+                    ResourceManager.armor_envsuit.renderPart("Lamps");
+                    GlStateManager.color(1F, 1F, 1F);
+                    GlStateManager.enableTexture2D();
+                    GlStateManager.enableLighting();
+                } else {
+                    renderStandard(ResourceManager.armor_envsuit, armorType, ResourceManager.envsuit_helmet, ResourceManager.envsuit_chest, ResourceManager.envsuit_arm, ResourceManager.envsuit_leg, "Helmet,Lamps", "Chest", "LeftArm", "RightArm", "LeftLeg", "RightLeg", "LeftFoot", "RightFoot");
+                }
+            }
+        };
+    }
 }
