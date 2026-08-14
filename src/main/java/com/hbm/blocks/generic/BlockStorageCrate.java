@@ -1,6 +1,7 @@
 package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ICustomBlockItem;
+import com.hbm.blocks.ILookOverlay;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.ServerConfig;
 import com.hbm.items.ModItems;
@@ -27,16 +28,21 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class BlockStorageCrate extends BlockContainer implements ICustomBlockItem {
+public class BlockStorageCrate extends BlockContainer implements ICustomBlockItem, ILookOverlay {
     public static final String CRATE_RAD_KEY = "cRads";
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 
@@ -184,33 +190,109 @@ public class BlockStorageCrate extends BlockContainer implements ICustomBlockIte
 	}
 
 	@Override
+	public boolean hasComparatorInputOverride(IBlockState state) {
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos) {
+		TileEntity te = worldIn.getTileEntity(pos);
+		if (te instanceof TileEntityCrate crate) {
+			return ItemHandlerHelper.calcRedstoneFromInventory(crate.inventory);
+		}
+		return 0;
+	}
+
+	@Override
 	public void addInformation(@NotNull ItemStack stack, World worldIn, @NotNull List<String> list, @NotNull ITooltipFlag flagIn) {
 		super.addInformation(stack, worldIn, list, flagIn);
 		int totalSlots = getSlots();
-		if(stack.hasTagCompound()){
+		if (stack.hasTagCompound()) {
 			NBTTagCompound nbt = stack.getTagCompound();
 			NBTTagCompound crateData = nbt.hasKey(IPersistentNBT.NBT_PERSISTENT_KEY) ? nbt.getCompoundTag(IPersistentNBT.NBT_PERSISTENT_KEY) : nbt;
 			int slotCount = 0;
-			for(int i=0; i<totalSlots; i++){
-				if(crateData.hasKey("slot"+i)){
+			for (int i = 0; i < totalSlots; i++) {
+				if (crateData.hasKey("slot" + i)) {
 					slotCount++;
 				}
 			}
-			float percent = Library.roundFloat(slotCount * 100F/totalSlots, 1);
+			float percent = Library.roundFloat(slotCount * 100F / totalSlots, 1);
 			String color = "§e";
 			String color2 = "§6";
-			if(percent >= 75){
+			if (percent >= 75) {
 				color = "§c";
 				color2 = "§4";
-			}else if(percent < 25){
+			} else if (percent < 25) {
 				color = "§a";
 				color2 = "§2";
 			}
-			list.add(color+slotCount+color2+"/"+totalSlots+" Slots used "+color+"("+percent+"%)§r");
+			list.add(color + slotCount + color2 + "/" + totalSlots + " Slots used " + color + "(" + percent + "%)§r");
 
-		}else{
+			if (crateData.getBoolean("spiders") || nbt.getBoolean("spiders")) {
+				if (crateData.hasKey("lock") || nbt.hasKey("lock")) {
+					list.add(TextFormatting.RED + "This container is locked.");
+				}
+				list.add(TextFormatting.GRAY + "" + TextFormatting.ITALIC + "Skittering emanates from within...");
+				return;
+			}
+
+			if (crateData.hasKey("lock") || nbt.hasKey("lock")) {
+				list.add(TextFormatting.RED + "This container is locked.");
+
+				for (int i = 0; i < totalSlots; i++) {
+					if (crateData.hasKey("slot" + i)) {
+						ItemStack content = new ItemStack(crateData.getCompoundTag("slot" + i));
+						if (!content.isEmpty()) {
+							list.add(TextFormatting.YELLOW + "It feels heavy...");
+							return;
+						}
+					}
+				}
+				list.add(TextFormatting.YELLOW + "It feels empty...");
+				return;
+			}
+
+			List<String> contents = new ArrayList<>();
+			int amount = 0;
+
+			for (int i = 0; i < totalSlots; i++) {
+				if (crateData.hasKey("slot" + i)) {
+					ItemStack content = new ItemStack(crateData.getCompoundTag("slot" + i));
+					if (!content.isEmpty()) {
+						amount++;
+						if (contents.size() < 10) {
+							contents.add(TextFormatting.AQUA + " - " + content.getDisplayName() + (content.getCount() > 1 ? (" x" + content.getCount()) : ""));
+						}
+					}
+				}
+			}
+
+			if (!contents.isEmpty()) {
+				list.add(TextFormatting.AQUA + "Contains:");
+				list.addAll(contents);
+				amount -= contents.size();
+
+				if (amount > 0) {
+					list.add(TextFormatting.AQUA + "...and " + amount + " more.");
+				}
+			}
+
+		} else {
 			list.add("§a0§2/" + totalSlots + " Slots used §a(0.0%)§r");
 		}
+	}
+
+	@Override
+	public void printHook(RenderGameOverlayEvent.Pre event, World world, BlockPos pos) {
+		TileEntity te = world.getTileEntity(pos);
+
+		if (!(te instanceof TileEntityCrate crate))
+			return;
+
+		if (!crate.hasCustomName())
+			return;
+
+		ILookOverlay.printGeneric(event, crate.getName(), 0xffff00, 0x404000, new ArrayList<>(0));
 	}
 
 	@Override
