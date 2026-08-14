@@ -29,6 +29,7 @@ import com.hbm.tileentity.TileEntityProxyDyn;
 import com.hbm.util.BobMathUtil;
 import com.hbm.util.I18nUtil;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -244,7 +245,7 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
             for(AssemfacArm animation : animations) animation.update(didProcess[0] ||didProcess[1] ||didProcess[2] ||didProcess[3]);
 
             if(world.getTotalWorldTime() % 20 == 0) {
-                frame = world.getBlockState(pos.up(3)).getBlock() != Blocks.AIR;
+                frame = world.getBlockState(pos.up(3)).getMaterial() != Material.AIR;
             }
         }
     }

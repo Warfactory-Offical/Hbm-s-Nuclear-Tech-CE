@@ -28,6 +28,7 @@ import com.hbm.util.BobMathUtil;
 import com.hbm.util.I18nUtil;
 import com.hbm.util.SoundUtil;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -160,7 +161,7 @@ public class TileEntityMachineChemicalPlant extends TileEntityMachineBase implem
             if(this.didProcess) this.anim++;
 
             if(world.getTotalWorldTime() % 20 == 0) {
-                frame = world.getBlockState(pos.up(3)).getBlock() != Blocks.AIR;
+                frame = world.getBlockState(pos.up(3)).getMaterial() != Material.AIR;
             }
 
             if(this.didProcess && MainRegistry.proxy.me().getDistance(pos.getX(), pos.getY(), pos.getZ()) < 30) {

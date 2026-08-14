@@ -19,6 +19,7 @@ import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.BobMathUtil;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -115,7 +116,7 @@ public class TileEntityMachineRockMill extends TileEntityMachineBase implements 
             }
 
             if (world.getTotalWorldTime() % 20 == 0) {
-                frame = !(world.getBlockState(pos.up(3)).getBlock() == Blocks.AIR);
+                frame = world.getBlockState(pos.up(3)).getMaterial() != Material.AIR;
             }
         }
     }
