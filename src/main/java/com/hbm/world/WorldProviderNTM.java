@@ -12,9 +12,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 
 public class WorldProviderNTM extends WorldProviderSurface {
-
-    public static final DimensionType IMPACT_TYPE =
-            DimensionType.register("hbm_ntm_overworld", "", 1337, WorldProviderNTM.class, true);
+    // idk why it was needed here tbh
+    // it'll remain like this unless some explanation provided
+    /*public static final DimensionType IMPACT_TYPE =
+            DimensionType.register("hbm_ntm_overworld", "", 1337, WorldProviderNTM.class, true);*/
 
     private final float[] colorsSunriseSunset = new float[4];
 

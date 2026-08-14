@@ -147,25 +147,21 @@ public class ModEventHandlerImpact {
 
 	private static void bindImpactWorldProvider(World world) {
 		int dimension = world.provider.getDimension();
-        if (world.provider instanceof WorldProviderNTM || world.provider.getClass() == WorldProviderSurface.class) {
-            if (DimensionManager.getProviderType(dimension) != WorldProviderNTM.IMPACT_TYPE) {
-                DimensionManager.unregisterDimension(dimension);
-                DimensionManager.registerDimension(dimension, WorldProviderNTM.IMPACT_TYPE);
-            }
-            if (world.provider instanceof WorldProviderNTM) return;
-            WorldProvider provider = new WorldProviderNTM();
-            provider.setDimension(dimension);
-            provider.setWorld(world);
-            world.provider = provider;
-            world.calculateInitialSkylight();
-        } else {
-            // OTG compat
-            MainRegistry.logger.warn(
-                    "Skipping impact overworld provider bind for custom provider {} in dimension {}. Leaving the existing provider and dimension registration untouched to avoid clobbering a modded overworld provider.",
-                    world.provider.getClass().getName(),
-                    dimension);
-        }
-    }
+		if (world.provider instanceof WorldProviderNTM || world.provider.getClass() == WorldProviderSurface.class) {
+			if (world.provider instanceof WorldProviderNTM) return;
+			WorldProvider provider = new WorldProviderNTM();
+			provider.setDimension(dimension);
+			provider.setWorld(world);
+			world.provider = provider;
+			world.calculateInitialSkylight();
+		} else {
+			// OTG compat
+			MainRegistry.logger.warn(
+					"Skipping impact overworld provider bind for custom provider {} in dimension {}. Leaving the existing provider and dimension registration untouched to avoid clobbering a modded overworld provider.",
+					world.provider.getClass().getName(),
+					dimension);
+		}
+	}
 
     @SubscribeEvent
 	public void modifyVillageGen(BiomeEvent.GetVillageBlockID event) {
