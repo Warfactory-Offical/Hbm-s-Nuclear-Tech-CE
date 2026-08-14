@@ -2,14 +2,11 @@ package com.hbm.tileentity.machine.storage;
 
 import com.hbm.api.redstoneoverradio.IRORInteractive;
 import com.hbm.api.redstoneoverradio.IRORValueProvider;
-import com.hbm.handler.threading.PacketThreading;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerMassStorage;
 import com.hbm.inventory.gui.GUIMassStorage;
 import com.hbm.items.ModItems;
 import com.hbm.lib.HBMSoundHandler;
-import com.hbm.packet.toclient.BufPacket;
-import com.hbm.tileentity.IBufPacketReceiver;
 import com.hbm.tileentity.IControlReceiverFilter;
 import com.hbm.tileentity.IGUIProvider;
 import io.netty.buffer.ByteBuf;
@@ -24,13 +21,12 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 @AutoRegister
-public class TileEntityMassStorage extends TileEntityCrateBase implements IBufPacketReceiver, ITickable, IControlReceiverFilter, IGUIProvider, IRORValueProvider, IRORInteractive {
+public class TileEntityMassStorage extends TileEntityCrateBase implements ITickable, IControlReceiverFilter, IGUIProvider, IRORValueProvider, IRORInteractive {
 
     private int stack = 0;
     public boolean output = false;
@@ -72,8 +68,7 @@ public class TileEntityMassStorage extends TileEntityCrateBase implements IBufPa
 
             if (this.getType() == null) this.stack = 0;
 
-            if (getType() != null && getStockpile() < getCapacity() && !inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(0).isItemEqual(getType()) && ItemStack.areItemStackTagsEqual(inventory.getStackInSlot(0), getType())) {
-
+            if(canInsert(inventory.getStackInSlot(0))) {
                 int remaining = getCapacity() - getStockpile();
                 int toRemove = Math.min(remaining, inventory.getStackInSlot(0).getCount());
                 this.inventory.getStackInSlot(0).shrink(toRemove);
@@ -102,8 +97,46 @@ public class TileEntityMassStorage extends TileEntityCrateBase implements IBufPa
                 }
             }
 
-            networkPackNT(15);
+            networkPackNT(32);
         }
+    }
+
+    public boolean canInsert(ItemStack stack) {
+        if (stack.isEmpty() || this.isLocked()) return false;
+        ItemStack type = getType();
+        if (type.isEmpty()) return false;
+        return type.isItemEqual(stack) && ItemStack.areItemStackTagsEqual(stack, type);
+    }
+
+    public boolean quickInsert(ItemStack stack) {
+        if (!canInsert(stack)) return false;
+
+        int remaining = getCapacity() - getStockpile();
+        if (remaining < stack.getCount()) return false;
+
+        this.stack += stack.getCount();
+        stack.setCount(0);
+        this.markDirty();
+
+        return true;
+    }
+
+    public ItemStack quickExtract() {
+        if (!output) return ItemStack.EMPTY;
+
+        ItemStack type = getType();
+        if (type.isEmpty()) return ItemStack.EMPTY;
+
+        int amount = type.getMaxStackSize();
+
+        if (getStockpile() < amount) return ItemStack.EMPTY;
+
+        ItemStack result = type.copy();
+        result.setCount(amount);
+        this.stack -= amount;
+        this.markDirty();
+
+        return result;
     }
 
     @Override
@@ -226,6 +259,11 @@ public class TileEntityMassStorage extends TileEntityCrateBase implements IBufPa
     @Override
     public int[] getAccessibleSlotsFromSide(EnumFacing e) {
         return new int[]{0, 2};
+    }
+
+    @SideOnly(Side.CLIENT)
+    public double getMaxRenderDistanceSquared() {
+        return 1024.0D; // only render mass storage info 32 blocks away, for performance
     }
 
     @Override

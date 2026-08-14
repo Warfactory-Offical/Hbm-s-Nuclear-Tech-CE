@@ -15,10 +15,9 @@ import net.minecraftforge.items.SlotItemHandler;
 public class ContainerMassStorage extends Container {
 
 	private TileEntityMassStorage storage;
-    private static final TransferStrategy TRANSFER_STRATEGY = TransferStrategy.builder(3)
-                                                                              .rule(0, 1, _ -> true)
-                                                                              .rule(1, 3, _ -> false)
-                                                                              .build();
+	private static final TransferStrategy TRANSFER_STRATEGY = TransferStrategy.builder(3)
+			.rule(0, 1, _ -> true)
+			.build();
 
 	public ContainerMassStorage(InventoryPlayer invPlayer, TileEntityMassStorage tile) {
 		this.storage = tile;
@@ -39,8 +38,28 @@ public class ContainerMassStorage extends Container {
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
-		return InventoryUtil.transferStack(this.inventorySlots, index, this.TRANSFER_STRATEGY, playerIn);
+	public ItemStack transferStackInSlot(EntityPlayer player, int index) {
+		Slot slot = this.inventorySlots.get(index);
+
+		// Refill instantly if needed, then do regular slot behavior
+		if(index == 2 && slot != null && !slot.getHasStack()) {
+			ItemStack extracted = storage.quickExtract();
+			if(!extracted.isEmpty()) {
+				slot.putStack(extracted);
+			}
+		}
+
+		if(index >= 3 && slot != null && slot.getHasStack()) {
+			ItemStack stack = slot.getStack();
+			if(storage.quickInsert(stack)) {
+				ItemStack result = stack.copy();
+				slot.putStack(ItemStack.EMPTY);
+				slot.onTake(player, stack);
+				return result;
+			}
+		}
+
+		return InventoryUtil.transferStack(this.inventorySlots, index, TRANSFER_STRATEGY, player);
 	}
 
 	@Override
