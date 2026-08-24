@@ -43,7 +43,7 @@ import static com.hbm.inventory.OreDictManager.*;
 public class CrystallizerRecipes extends SerializableRecipe {
 
 	//'Object' is either a ComparableStack or the key for the ore dict
-	private static final HashMap<Tuple.Pair<Object, FluidType>, CrystallizerRecipe> recipes = new HashMap<>();
+	public static final HashMap<Tuple.Pair<Object, FluidType>, CrystallizerRecipe> recipes = new HashMap<>();
 	private static final HashMap<Object, Integer> amounts = new HashMap<>(); // for use in the partitioner
 	private static final List<CrystallizerRecipe> jeiCrystalRecipes = null;
 	@Override
