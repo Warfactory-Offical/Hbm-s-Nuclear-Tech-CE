@@ -8,6 +8,7 @@ import com.hbm.tileentity.machine.HandHeldTileEntityCrate;
 import com.hbm.tileentity.machine.TileEntityCrate;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemBlock;
@@ -37,6 +38,18 @@ public class ItemBlockStorageCrate extends ItemBlock implements IGUIProvider {
     @Override
     public @NotNull EnumActionResult onItemUse(@NotNull EntityPlayer player, @NotNull World worldIn, @NotNull BlockPos pos, @NotNull EnumHand hand, @NotNull EnumFacing facing, float hitX, float hitY, float hitZ) {
         return super.onItemUse(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
+    }
+
+    // Self-heal legacy over-stacked crates (from any container) that persisted a count > 1 before crates became unstackable.
+    @Override
+    public void onUpdate(@NotNull ItemStack stack, @NotNull World world, @NotNull Entity entity, int slot, boolean isSelected) {
+        if (!world.isRemote && stack.getCount() > 1 && entity instanceof EntityPlayer player) {
+            int extra = stack.getCount() - 1;
+            stack.setCount(1);
+            for (int i = 0; i < extra; i++) {
+                player.dropItem(new ItemStack(this, 1, stack.getMetadata()), false);
+            }
+        }
     }
 
     @Override

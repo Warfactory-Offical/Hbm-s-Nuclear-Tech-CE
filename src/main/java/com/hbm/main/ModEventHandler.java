@@ -85,6 +85,7 @@ import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.InventoryEnderChest;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemFood;
@@ -1285,27 +1286,43 @@ public class ModEventHandler {
     }
 
     // Legacy dupe cleanup: split old multi-crate stacks into 1 crate with contents + rest as empty crates (never clone NBT).
+    // Covers main + offhand + ender chest; carried stacks elsewhere self-heal via ItemBlockStorageCrate.onUpdate.
     private static void migrateLegacyCrateStacks(EntityPlayerMP player) {
-        NonNullList<ItemStack> main = player.inventory.mainInventory;
+        normalizeCrateList(player, player.inventory.mainInventory);
+        normalizeCrateList(player, player.inventory.offHandInventory);
 
-        for (int i = 0; i < main.size(); i++) {
-            ItemStack stack = main.get(i);
+        InventoryEnderChest ender = player.getInventoryEnderChest();
+        for (int i = 0; i < ender.getSizeInventory(); i++) {
+            ItemStack stack = ender.getStackInSlot(i);
             if (stack.isEmpty() || !(stack.getItem() instanceof ItemBlockStorageCrate) || stack.getCount() <= 1) {
                 continue;
             }
-
             int extra = stack.getCount() - 1;
             stack.setCount(1);
-
-            for (int j = 0; j < extra; j++) {
-                ItemStack empty = new ItemStack(stack.getItem(), 1, stack.getMetadata());
-                if (!player.inventory.addItemStackToInventory(empty) && !empty.isEmpty()) {
-                    player.dropItem(empty, false);
-                }
-            }
+            giveOrDropEmptyCrates(player, stack.getItem(), stack.getMetadata(), extra);
         }
 
         player.inventoryContainer.detectAndSendChanges();
+    }
+
+    private static void normalizeCrateList(EntityPlayerMP player, NonNullList<ItemStack> list) {
+        for (ItemStack stack : list) {
+            if (stack.isEmpty() || !(stack.getItem() instanceof ItemBlockStorageCrate) || stack.getCount() <= 1) {
+                continue;
+            }
+            int extra = stack.getCount() - 1;
+            stack.setCount(1);
+            giveOrDropEmptyCrates(player, stack.getItem(), stack.getMetadata(), extra);
+        }
+    }
+
+    private static void giveOrDropEmptyCrates(EntityPlayerMP player, Item crate, int meta, int amount) {
+        for (int i = 0; i < amount; i++) {
+            ItemStack empty = new ItemStack(crate, 1, meta);
+            if (!player.inventory.addItemStackToInventory(empty) && !empty.isEmpty()) {
+                player.dropItem(empty, false);
+            }
+        }
     }
 
     @SubscribeEvent
