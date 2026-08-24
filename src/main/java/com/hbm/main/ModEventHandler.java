@@ -33,6 +33,7 @@ import com.hbm.interfaces.IBomb;
 import com.hbm.interfaces.IContainerOpenEventListener;
 import com.hbm.inventory.recipes.loader.SerializableRecipe;
 import com.hbm.items.IEquipReceiver;
+import com.hbm.items.block.ItemBlockStorageCrate;
 import com.hbm.items.ModItems;
 import com.hbm.items.armor.*;
 import com.hbm.items.food.ItemConserve;
@@ -1283,9 +1284,35 @@ public class ModEventHandler {
         }
     }
 
+    // Legacy dupe cleanup: split old multi-crate stacks into 1 crate with contents + rest as empty crates (never clone NBT).
+    private static void migrateLegacyCrateStacks(EntityPlayerMP player) {
+        NonNullList<ItemStack> main = player.inventory.mainInventory;
+
+        for (int i = 0; i < main.size(); i++) {
+            ItemStack stack = main.get(i);
+            if (stack.isEmpty() || !(stack.getItem() instanceof ItemBlockStorageCrate) || stack.getCount() <= 1) {
+                continue;
+            }
+
+            int extra = stack.getCount() - 1;
+            stack.setCount(1);
+
+            for (int j = 0; j < extra; j++) {
+                ItemStack empty = new ItemStack(stack.getItem(), 1, stack.getMetadata());
+                if (!player.inventory.addItemStackToInventory(empty) && !empty.isEmpty()) {
+                    player.dropItem(empty, false);
+                }
+            }
+        }
+
+        player.inventoryContainer.detectAndSendChanges();
+    }
+
     @SubscribeEvent
     public void onPlayerLogin(PlayerLoggedInEvent event) {
         if (event.player instanceof EntityPlayerMP player) {
+
+            migrateLegacyCrateStacks(player);
 
             if (GeneralConfig.enableMOTD) {
                 player.sendMessage(new TextComponentString("Loaded world with Hbm's Nuclear Tech Mod " + Tags.VERSION + " for Minecraft 1.12.2!"));

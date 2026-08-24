@@ -1,6 +1,7 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.config.MachineConfig;
+import com.hbm.items.block.ItemBlockStorageCrate;
 import com.hbm.lib.Library;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -90,7 +91,8 @@ public class HandHeldTileEntityCrate extends TileEntityCrate implements IHandHel
     }
 
     private void syncBoundItem() {
-        if (boundItem.isEmpty() || boundItem.getCount() != 1) {
+        // don't write contents onto a drifted slot (multi-count or non-crate) that could later be split
+        if (boundItem.isEmpty() || boundItem.getCount() != 1 || !(boundItem.getItem() instanceof ItemBlockStorageCrate)) {
             return;
         }
 

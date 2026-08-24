@@ -31,6 +31,7 @@ public class ItemBlockStorageCrate extends ItemBlock implements IGUIProvider {
     public ItemBlockStorageCrate(Block block, ResourceLocation s) {
         super(block);
         this.setRegistryName(s);
+        this.setMaxStackSize(1); // crate stores its inventory in NBT; stacking + split would dupe contents
     }
 
     @Override
