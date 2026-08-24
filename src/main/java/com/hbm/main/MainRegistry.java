@@ -251,6 +251,7 @@ public class MainRegistry {
 
         MaterialRegistry.initFixMaterials();
         AutoRegistry.registerTileEntities();
+        com.hbm.integration.ae2.NTMCraftingMachineAE2Registration.registerIfPresent();
         AutoRegistry.loadAuxiliaryData();
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
 
