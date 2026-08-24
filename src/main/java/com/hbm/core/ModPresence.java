@@ -11,6 +11,7 @@ public final class ModPresence {
     public static final boolean CELERITAS = Launch.classLoader.getResource("org/taumc/celeritas/CeleritasVintage.class") != null;
     public static final boolean BETTER_FOLIAGE = Launch.classLoader.getResource("mods/betterfoliage/client/Hooks.class") != null;
     public static final boolean POTIONCORE = Launch.classLoader.getResource("com/tmtravlr/potioncore/PotionCore.class") != null;
+    public static final boolean AE2 = Launch.classLoader.getResource("appeng/core/AppEng.class") != null;
 
     private ModPresence() {
     }

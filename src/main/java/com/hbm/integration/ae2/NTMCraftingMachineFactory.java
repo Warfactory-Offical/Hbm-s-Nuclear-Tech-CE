@@ -1,6 +1,5 @@
 package com.hbm.integration.ae2;
 
-import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.TileEntityProxyCombo;
 import net.minecraft.tileentity.TileEntity;
 
@@ -31,9 +30,7 @@ public final class NTMCraftingMachineFactory {
 
     public static TileEntity createAE2TileEntity(String className) {
         try {
-            TileEntity te = (TileEntity) Class.forName(className).getDeclaredConstructor().newInstance();
-            MainRegistry.logger.info("[AE2] Placed a fresh {} (AE2-aware variant)", className);
-            return te;
+            return (TileEntity) Class.forName(className).getDeclaredConstructor().newInstance();
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException("Failed to instantiate AE2-aware NTM tile entity: " + className, e);
         }

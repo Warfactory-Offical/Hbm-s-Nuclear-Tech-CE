@@ -25,6 +25,8 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.EnumMap;
+
 @Spaghetti("Not spaghetti in itself, but for the love of god please use this base class for all machines")
 public abstract class TileEntityMachineBase extends TileEntityLoadedBase implements IWorldRenameable {
     /**
@@ -34,6 +36,22 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase impleme
      */
     public ItemStackHandler inventory;
     private IItemHandlerModifiable checkedInventory;
+    // Capability wrappers handed out by getCapability(), cached per facing instead of allocated fresh every
+    // call: external capability consumers that key a cache off the handler object's identity (AE2's storage
+    // buses do exactly this, see PartFluidStorageBus/PartStorageBus#createHandlerHash) would otherwise see a
+    // "new" handler on every single query and tear down/rebuild their own cache in response, every time.
+    // accessorPos only depends on this.pos (see CapabilityContextProvider.getAccessor), not on which face is
+    // asking, so one external fluid wrapper instance is valid for all 6 faces; the item wrapper's accessible
+    // slots/validity DO depend on facing, so that one is cached per face.
+    // NOTE: this assumes getAccessibleSlotsFromSide(EnumFacing) is stable for a given facing over the TE's
+    // lifetime (every current override returns either a facing-independent constant or a value derived only
+    // from the facing argument itself - verified across all subclasses at the time this cache was added).
+    // If a subclass is ever changed to key accessible slots off other *mutable* per-instance state (a runtime
+    // I/O config toggle, etc.), that subclass must invalidate itemWrapperCache when that state changes, or
+    // external capability holders (AE2 buses, hoppers, ...) will keep using stale slot data until the chunk
+    // unloads and the TE is recreated.
+    private NTMFluidHandlerWrapper fluidWrapperExternal;
+    private final EnumMap<EnumFacing, IItemHandlerModifiable> itemWrapperCache = new EnumMap<>(EnumFacing.class);
     private boolean enablefluidWrapper = false;
     private boolean enableEnergyWrapper = false;
     private String customName;
@@ -237,18 +255,26 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase impleme
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
         // Contract: facing == null -> internal
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && enablefluidWrapper) {
-            BlockPos accessorPos = facing == null ? null : CapabilityContextProvider.getAccessor(this.pos);
-            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new NTMFluidHandlerWrapper(this, accessorPos));
+            if (facing == null) {
+                return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new NTMFluidHandlerWrapper(this, null));
+            }
+            if (fluidWrapperExternal == null) {
+                fluidWrapperExternal = new NTMFluidHandlerWrapper(this, CapabilityContextProvider.getAccessor(this.pos));
+            }
+            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(fluidWrapperExternal);
         } else if (capability == CapabilityEnergy.ENERGY && enableEnergyWrapper) {
             BlockPos accessorPos = facing == null ? null : CapabilityContextProvider.getAccessor(this.pos);
             return CapabilityEnergy.ENERGY.cast(new NTMEnergyCapabilityWrapper(this, accessorPos));
         } else if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && inventory != null) {
             if (facing == null)
                 return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(inventory);
+            IItemHandlerModifiable cached = itemWrapperCache.get(facing);
+            if (cached != null) return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(cached);
+
             final BlockPos accessorPos = CapabilityContextProvider.getAccessor(this.pos);
             final EnumFacing side = facing;
             int[] accessibleSlots = getAccessibleSlotsFromSide(side, accessorPos);
-            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(new ItemStackHandlerWrapper(inventory, accessibleSlots) {
+            IItemHandlerModifiable wrapper = new ItemStackHandlerWrapper(inventory, accessibleSlots) {
                 @Override
                 public boolean isItemValid(int slot, ItemStack stack) {
                     return isItemValidForSlot(slot, stack);
@@ -269,7 +295,9 @@ public abstract class TileEntityMachineBase extends TileEntityLoadedBase impleme
                     }
                     return stack;
                 }
-            });
+            };
+            itemWrapperCache.put(facing, wrapper);
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(wrapper);
         }
         return super.getCapability(capability, facing);
     }

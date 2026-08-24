@@ -2,16 +2,13 @@ package com.hbm.integration.ae2;
 
 import appeng.api.networking.crafting.ICraftingPatternDetails;
 import appeng.api.storage.data.IAEItemStack;
+import com.hbm.inventory.FluidContainerRegistry;
 import com.hbm.inventory.RecipesCommon.AStack;
+import com.hbm.inventory.fluid.tank.FluidTankNTM;
 import com.hbm.inventory.recipes.loader.GenericRecipe;
-import com.hbm.main.MainRegistry;
 import com.hbm.modules.machine.ModuleMachineBase;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,82 +28,57 @@ import java.util.List;
  * already operates at, bypassing the capability-level insertItem validation that only guards against
  * the *currently selected* recipe.
  *
- * Only the item side of a recipe can be driven this way. AE2's ICraftingPatternDetails format has no
- * concept of a fluid ingredient, so for Chemical Plant/Fusion Reactor/PUREX/Plasma Forge recipes that
- * also need fluid input, that fluid must already be arriving through a separate, permanent connection -
- * the CPU can supply the solids and select the recipe, but can't order or guarantee the fluid.
+ * AE2's ICraftingPatternDetails format has no concept of a fluid ingredient at all - confirmed against
+ * this AE2 fork's actual source: every class in the autocrafting subsystem (CraftingJob, CraftingCPUCluster,
+ * CraftingLink, PatternHelper, the Pattern Encoding Terminal itself) is IAEItemStack-only, end to end -
+ * this isn't a gap in NTM's integration, it's a real limitation of vanilla AE2 (the dedicated "AE2 Fluid
+ * Crafting" addon fills this gap upstream, but isn't present here). So for Chemical Plant/Fusion Reactor/
+ * PUREX/Plasma Forge recipes that also need fluid input, there are two independent ways the fluid can
+ * arrive, and this bridge supports both at once rather than requiring one:
+ *
+ * 1. The standard AE2 way, matching how GT-style packs actually do this: a keep-stocked ME Fluid
+ *    Interface sitting on the machine's fluid-connected face, kept topped off by the network completely
+ *    independently of any crafting job. The CPU only ever orders the item side; pushPattern() below never
+ *    even looks for the fluid, it just selects the recipe and places the items, trusting the tank to
+ *    already be full (or fill soon) via the machine's own normal receive/subscribe logic.
+ * 2. An NTM-specific convenience: represent the fluid as a real, storable FILLED FLUID CONTAINER item in
+ *    the pattern itself (NTM's own {@link FluidContainerRegistry} already auto-registers a "Fluid Tank
+ *    (Full)"/"Fluid Barrel (Full)" item for essentially every fluid in the game) - e.g. N "Fluid Tank
+ *    (Full): Water" items where N * 1000mB exactly equals the recipe's water requirement. If present in
+ *    the pattern, these get consumed and poured directly into the matching input tank at push time,
+ *    guaranteeing the fluid arrives atomically with the items instead of depending on a separately-topped
+ *    tank. The resulting empty containers are discarded rather than returned (ModuleMachineBase has no
+ *    TileEntity/World reference to drop or re-insert them safely - a real limitation, not an oversight).
+ *
+ * Option 2 is opportunistic, never required: if a pattern doesn't carry a matching container for some
+ * fluid input, that's not treated as a mismatch - the recipe still matches and pushes on the strength of
+ * its item ingredients alone, falling back to option 1's behavior for that fluid.
  */
 public class NTMCraftingMachineHelper {
 
     private NTMCraftingMachineHelper() { }
 
-    /**
-     * Debug hook: call from an AE2 subclass's getCapability override, passing along what super()
-     * returned. Logs any EXTERNAL (facing != null - internal GUI/container access always passes
-     * facing == null, see TileEntityMachineBase's own "Contract" comment) request for the item
-     * handler capability, which is the very first thing anything - AE2's Interface included - has
-     * to successfully do before it can even attempt to push a pattern or insert items. Silence here
-     * despite a live crafting CPU job means the Interface isn't even reaching this block at all.
-     */
-    public static <T> T debugCapability(TileEntity te, T result, Capability<T> capability, EnumFacing facing) {
-        if (facing != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            MainRegistry.logger.info("[AE2] getCapability(ITEM_HANDLER) on {} from facing={} -> {}",
-                    te.getClass().getSimpleName(), facing, result != null ? "provided" : "null");
-        }
-        return result;
-    }
-
-    /**
-     * Debug hook: call from an AE2 subclass's isItemValidForSlot override, passing along what
-     * super() returned. Only logs rejections - this is the exact gate that makes the generic
-     * fallback path (a plain Import Bus / hopper-style push) require the recipe to already be
-     * manually selected, so a burst of these for a nonempty stack right when a CPU job is ordered
-     * is the signature of AE2 falling back to that path instead of using pushPattern.
-     */
-    public static boolean debugItemValid(TileEntity te, int slot, ItemStack stack, boolean valid) {
-        if (!valid && !stack.isEmpty()) {
-            MainRegistry.logger.info("[AE2] isItemValidForSlot REJECTED on {}: slot={} stack={}",
-                    te.getClass().getSimpleName(), slot, stack);
-        }
-        return valid;
-    }
-
     /** Refuses new plans while the machine is mid-craft or its input slots are already occupied. */
     public static boolean acceptsPlans(ModuleMachineBase module) {
-        if (module.progress > 0D) {
-            MainRegistry.logger.info("[AE2] acceptsPlans({}) -> false, mid-craft (progress={})", module.getClass().getSimpleName(), module.progress);
-            return false;
-        }
+        if (module.progress > 0D) return false;
         for (int slot : module.inputSlots) {
-            if (!module.inventory.getStackInSlot(slot).isEmpty()) {
-                MainRegistry.logger.info("[AE2] acceptsPlans({}) -> false, input slot {} occupied by {}", module.getClass().getSimpleName(), slot, module.inventory.getStackInSlot(slot));
-                return false;
-            }
+            if (!module.inventory.getStackInSlot(slot).isEmpty()) return false;
         }
         return true;
     }
 
     public static boolean pushPattern(ModuleMachineBase module, ICraftingPatternDetails patternDetails, InventoryCrafting table) {
-        MainRegistry.logger.info("[AE2] pushPattern({}) called, pattern output={}, condensedInputs={}",
-                module.getClass().getSimpleName(), patternDetails.getPrimaryOutput(),
-                java.util.Arrays.toString(patternDetails.getCondensedInputs()));
-
         if (!acceptsPlans(module)) return false;
 
         GenericRecipe matched = findMatchingRecipe(module, patternDetails);
-        if (matched == null) {
-            MainRegistry.logger.info("[AE2] pushPattern({}) -> false, no recipe in {} matched this pattern", module.getClass().getSimpleName(), module.getRecipeSet().getClass().getSimpleName());
-            return false;
-        }
+        if (matched == null) return false;
         if (matched.inputItem == null || matched.inputItem.length == 0) return false;
         if (matched.inputItem.length > module.inputSlots.length) return false; // shouldn't happen, but don't risk voiding items
+        if (matched.inputFluid != null && matched.inputFluid.length > module.inputTanks.length) return false;
 
         if (module.outputSlots != null) {
             for (int slot : module.outputSlots) {
-                if (!module.inventory.getStackInSlot(slot).isEmpty()) {
-                    MainRegistry.logger.info("[AE2] pushPattern({}) -> false, output slot {} occupied", module.getClass().getSimpleName(), slot);
-                    return false;
-                }
+                if (!module.inventory.getStackInSlot(slot).isEmpty()) return false;
             }
         }
 
@@ -120,12 +92,20 @@ public class NTMCraftingMachineHelper {
         ItemStack[] placement = new ItemStack[matched.inputItem.length];
         for (int i = 0; i < matched.inputItem.length; i++) {
             ItemStack found = extractFromPool(pool, matched.inputItem[i]);
-            if (found == null) {
-                MainRegistry.logger.info("[AE2] pushPattern({}) -> false, matched recipe '{}' but table didn't actually contain slot {}'s ingredient (pool={})",
-                        module.getClass().getSimpleName(), matched.getInternalName(), i, pool);
-                return false; // network didn't actually supply what this recipe needs
-            }
+            if (found == null) return false; // network didn't actually supply what this recipe needs
             placement[i] = found;
+        }
+
+        // fluid requirements are OPPORTUNISTICALLY represented as filled fluid-container items in the
+        // same pool - see the class javadoc for why this is never a hard requirement. A container found
+        // for some fluid input gets poured in immediately; one not found just means that fluid is
+        // expected to already be arriving (or arrive soon) via a separately-topped tank instead.
+        ItemStack[] containers = null;
+        if (matched.inputFluid != null && matched.inputFluid.length > 0) {
+            containers = new ItemStack[matched.inputFluid.length];
+            for (int i = 0; i < matched.inputFluid.length; i++) {
+                containers[i] = extractContainerFromPool(pool, matched.inputFluid[i]);
+            }
         }
 
         // commit: select the recipe (same field the GUI's arrows write to), then place the items
@@ -133,8 +113,18 @@ public class NTMCraftingMachineHelper {
         for (int i = 0; i < placement.length; i++) {
             module.inventory.setStackInSlot(module.inputSlots[i], placement[i]);
         }
+        if (containers != null) {
+            for (int i = 0; i < containers.length; i++) {
+                if (containers[i] == null) continue; // no container for this one - relying on a separately-topped tank
+                com.hbm.inventory.fluid.FluidStack wantFluid = matched.inputFluid[i];
+                FluidTankNTM tank = module.inputTanks[i];
+                tank.conform(wantFluid); // no-op if already the right type/pressure, otherwise zeroes fill first
+                tank.setFill(tank.getFill() + wantFluid.fill);
+                // the emptied container (e.g. "Fluid Tank (Empty)") is intentionally discarded here - see
+                // the class javadoc for why it can't be handed back safely from this context.
+            }
+        }
         module.markDirty = true;
-        MainRegistry.logger.info("[AE2] pushPattern({}) -> true, selected recipe '{}'", module.getClass().getSimpleName(), matched.getInternalName());
         return true;
     }
 
@@ -173,6 +163,10 @@ public class NTMCraftingMachineHelper {
                 if (!satisfied) continue recipeLoop;
             }
 
+            // Fluid requirements are opportunistic, not a match condition (see class javadoc) - actually
+            // reserving/extracting a container happens later in pushPattern, against the real InventoryCrafting
+            // pool, not here. There's nothing left to check against `recipe.inputFluid` at this point.
+
             return recipe;
         }
         return null;
@@ -183,6 +177,24 @@ public class NTMCraftingMachineHelper {
             if (candidate.isEmpty()) continue;
             if (want.matchesRecipe(candidate, false)) {
                 return candidate.splitStack(want.stacksize);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Finds a filled fluid-container stack in the pool whose content exactly divides the requested
+     * fluid amount, and splits off the exact count needed. See the class javadoc for why an exact
+     * division is required rather than allowing overshoot.
+     */
+    private static ItemStack extractContainerFromPool(List<ItemStack> pool, com.hbm.inventory.fluid.FluidStack want) {
+        for (ItemStack candidate : pool) {
+            if (candidate.isEmpty()) continue;
+            int contentPerItem = FluidContainerRegistry.getFluidContent(candidate, want.type);
+            if (contentPerItem <= 0 || want.fill % contentPerItem != 0) continue;
+            int neededCount = want.fill / contentPerItem;
+            if (neededCount > 0 && candidate.getCount() >= neededCount) {
+                return candidate.splitStack(neededCount);
             }
         }
         return null;

@@ -5,9 +5,7 @@ import appeng.api.networking.crafting.ICraftingPatternDetails;
 import com.hbm.integration.ae2.NTMCraftingMachineHelper;
 import com.hbm.tileentity.machine.TileEntityMachinePUREX;
 import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.common.capabilities.Capability;
 
 /**
  * AE2-only variant, see TileEntityMachineAssemblyMachineAE2 for the general rationale.
@@ -24,16 +22,5 @@ public class TileEntityMachinePUREXAE2 extends TileEntityMachinePUREX implements
     @Override
     public boolean acceptsPlans() {
         return NTMCraftingMachineHelper.acceptsPlans(this.purexModule);
-    }
-
-    // --- debug instrumentation, see NTMCraftingMachineHelper#debugCapability/#debugItemValid ---
-    @Override
-    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-        return NTMCraftingMachineHelper.debugCapability(this, super.getCapability(capability, facing), capability, facing);
-    }
-
-    @Override
-    public boolean isItemValidForSlot(int slot, ItemStack stack) {
-        return NTMCraftingMachineHelper.debugItemValid(this, slot, stack, super.isItemValidForSlot(slot, stack));
     }
 }
