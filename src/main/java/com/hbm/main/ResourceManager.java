@@ -1157,8 +1157,6 @@ public class ResourceManager {
     public static final ResourceLocation missileDoomsday_tex = new ResourceLocation(Tags.MODID, "textures/models/missiles/missile_atlas_doomsday.png");
     public static final ResourceLocation missileDoomsdayRusted_tex = new ResourceLocation(Tags.MODID, "textures/models/missiles/missile_atlas_doomsday_weathered.png");
     public static final ResourceLocation missileN2_tex = new ResourceLocation(Tags.MODID, "textures/models/missiles/missileN2.png");
-    public static final ResourceLocation missileEndo_tex = new ResourceLocation(Tags.MODID, "textures/models/missiles/missileEndo.png");
-    public static final ResourceLocation missileExo_tex = new ResourceLocation(Tags.MODID, "textures/models/missiles/missileExo.png");
     public static final ResourceLocation missileShuttle_tex = new ResourceLocation(Tags.MODID, "textures/models/missiles/missile_shuttle.png");
     public static final ResourceLocation missileTaint_tex = new ResourceLocation(Tags.MODID, "textures/models/missiles/missile_micro_taint.png");
     public static final ResourceLocation missileMicro_tex = new ResourceLocation(Tags.MODID, "textures/models/missiles/missile_micro.png");

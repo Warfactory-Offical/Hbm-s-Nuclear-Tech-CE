@@ -32,10 +32,8 @@ public class ItemRenderMissileGeneric extends TEISRBase {
 		TYPE_STEALTH,
 		TYPE_ABM,
 		TYPE_NUCLEAR,
-		TYPE_THERMAL,
 		TYPE_ROBIN,
-		TYPE_DOOMSDAY,
-		TYPE_CARRIER
+		TYPE_DOOMSDAY
 	}
 	
 	public ItemRenderMissileGeneric(RenderMissileType category) {
@@ -75,10 +73,7 @@ public class ItemRenderMissileGeneric extends TEISRBase {
 			case TYPE_ABM: guiScale = 2.25D; guiOffset = 7D; break;
 			case TYPE_NUCLEAR: guiScale = 1.375D; guiOffset = 1.5D; break;
 			case TYPE_DOOMSDAY: guiScale = 1.375D; guiOffset = 1.5D; break;
-			// THERMAL/CARRIER are CE-only (n2/endo/exo/carrier are flat icons in 1.7 + NTM-Space); no 1.7 oracle.
-			case TYPE_THERMAL: guiScale = 1.75D; guiOffset = 1D; break;
 			case TYPE_ROBIN: guiScale = 1.25D; guiOffset = 2D; break;
-			case TYPE_CARRIER: guiScale = 0.625D; break;
 		}
 
 		GlStateManager.enableLighting();
@@ -181,28 +176,9 @@ public class ItemRenderMissileGeneric extends TEISRBase {
 		renderers.put(new ComparableStack(ModItems.missile_volcano), generateStandard(ResourceManager.missileVolcano_tex, ResourceManager.missileNuclear));
 		renderers.put(new ComparableStack(ModItems.missile_n2), generateLarge(ResourceManager.missileN2_tex, ResourceManager.missileN2));
 		
-		renderers.put(new ComparableStack(ModItems.missile_endo), generateLarge(ResourceManager.missileEndo_tex, ResourceManager.missileThermo));
-		renderers.put(new ComparableStack(ModItems.missile_exo), generateLarge(ResourceManager.missileExo_tex, ResourceManager.missileThermo));
 		renderers.put(new ComparableStack(ModItems.missile_shuttle), generateStandard(ResourceManager.missileShuttle_tex, ResourceManager.missileShuttle));
 
 		renderers.put(new ComparableStack(ModItems.missile_doomsday), generateStandard(ResourceManager.missileDoomsday_tex, ResourceManager.missileNuclear));
 		renderers.put(new ComparableStack(ModItems.missile_doomsday_rusted), generateStandard(ResourceManager.missileDoomsdayRusted_tex, ResourceManager.missileNuclear));
-		renderers.put(new ComparableStack(ModItems.missile_carrier), x -> {
-			GlStateManager.scale(2F, 2F, 2F);
-			x.bindTexture(ResourceManager.missileCarrier_tex);
-			ResourceManager.missileCarrier.renderAll();
-			GlStateManager.translate(0.0D, 0.5D, 0.0D);
-			GlStateManager.translate(1.25D, 0.0D, 0.0D);
-			x.bindTexture(ResourceManager.missileBooster_tex);
-			ResourceManager.missileBooster.renderAll();
-			GlStateManager.translate(-2.5D, 0.0D, 0.0D);
-			ResourceManager.missileBooster.renderAll();
-			GlStateManager.translate(1.25D, 0.0D, 0.0D);
-			GlStateManager.translate(0.0D, 0.0D, 1.25D);
-			ResourceManager.missileBooster.renderAll();
-			GlStateManager.translate(0.0D, 0.0D, -2.5D);
-			ResourceManager.missileBooster.renderAll();
-			GlStateManager.translate(0.0D, 0.0D, 1.25D);
-		});
 	}
 }

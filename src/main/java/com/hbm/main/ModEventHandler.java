@@ -1555,7 +1555,11 @@ public class ModEventHandler {
             "hbm:sat_precision_laser",
             "hbm:sat_ray_scanner",
             "hbm:sat_science",
-            "hbm:sat_science_sensor"
+            "hbm:sat_science_sensor",
+            // retired upstream
+            "hbm:missile_carrier",
+            "hbm:missile_endo",
+            "hbm:missile_exo"
     ));
 
     @SubscribeEvent
