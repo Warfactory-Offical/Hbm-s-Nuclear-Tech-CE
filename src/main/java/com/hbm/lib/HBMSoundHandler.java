@@ -499,7 +499,7 @@ public final class HBMSoundHandler {
         alarmGambit = register("alarm.gambit");
         revolverShoot = register("weapon.revolverShoot");
         heavyShoot = register("weapon.heavyShoot");
-        schrabidiumShoot = register("weapon.schrabidiumShoot");
+        schrabidiumShoot = register("weapon.schrabidiumshoot");
         revolverShootAlt = register("weapon.revolverShootAlt");
         hkShoot = register("weapon.hkShoot");
         shotgunShoot = register("weapon.shotgunShoot");
@@ -662,7 +662,7 @@ public final class HBMSoundHandler {
         groan = register("player.groan");
         ufoBeam = register("entity.ufoBeam");
         ufoBlast = register("entity.ufoBlast");
-        iGeneratorOperate = register("block.igeneratoroperate");
+        iGeneratorOperate = register("block.igeneratorOperate");
         transitionSealOpen = register("block.door.transitionseal");
         siloopen = register("block.door.siloopen");
         siloclose = register("block.door.siloclose");

@@ -17,6 +17,7 @@ import com.hbm.inventory.material.MaterialShapes;
 import com.hbm.items.ItemEnums.EnumDepletedRTGMaterial;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemBreedingRod;
+import com.hbm.items.special.ItemHolotapeImage.EnumHoloImage;
 import com.hbm.items.machine.ItemWatzPellet;
 import com.hbm.items.machine.ItemZirnoxRod;
 import com.hbm.items.machine.ItemPileRodMK2.EnumPileRod;
@@ -518,8 +519,8 @@ public class HazardRegistry {
 		HazardSystem.register(solinium_core, makeData().addEntry(RADIATION, sa327 * nugget * 8).addEntry(BLINDING, 45F));
 
 		HazardSystem.register(nuke_fstbmb, makeData(DIGAMMA, 0.01F));
-		//HazardSystem.register(DictFrame.fromOne(ModItems.holotape_image, EnumHoloImage.HOLO_RESTORED), makeData(DIGAMMA, 1F));
-		//HazardSystem.register(holotape_damaged, makeData(DIGAMMA, 1_000F));
+		HazardSystem.register(DictFrame.fromOne(ModItems.holotape_image, EnumHoloImage.HOLO_RESTORED), makeData(DIGAMMA, 1F));
+		HazardSystem.register(holotape_damaged, makeData(DIGAMMA, 1_000F));
 
 		/*
 		 * Blacklist

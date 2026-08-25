@@ -4,6 +4,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
 public class ModFluids {
+    public static Fluid liquid_concrete = new FluidNTM("liquid_concrete", "forgefluid/concrete_liquid", "forgefluid/concrete_liquid_flowing").setDensity(2400).setViscosity(4000);
     public static Fluid toxic_fluid = new FluidNTM("toxic_fluid", "forgefluid/toxic_still", "forgefluid/toxic_flowing").setDensity(2500).setViscosity(2000).setTemperature(70+273);
     public static Fluid mud_fluid = new FluidNTM("mud_fluid", "forgefluid/mud_still", "forgefluid/mud_flowing", java.awt.Color.WHITE).setDensity(2500).setViscosity(3000).setLuminosity(5).setTemperature(1773);
     public static Fluid acid_fluid = new FluidNTM("acid_fluid", "forgefluid/acid_still", "forgefluid/acid_flowing").setDensity(2500).setViscosity(1500).setLuminosity(5).setTemperature(2773);
@@ -22,6 +23,7 @@ public class ModFluids {
 		registerFluid(volcanic_lava_fluid);
 		registerFluid(rad_lava_fluid);
 		registerFluid(sulfuric_acid_fluid);
+		registerFluid(liquid_concrete);
     }
 
     private static void registerFluid(Fluid fluid) {
@@ -38,5 +40,6 @@ public class ModFluids {
         volcanic_lava_fluid = FluidRegistry.getFluid("volcanic_lava_fluid");
         rad_lava_fluid = FluidRegistry.getFluid("rad_lava_fluid");
 		sulfuric_acid_fluid = FluidRegistry.getFluid("sulfuric_acid");
+		liquid_concrete = FluidRegistry.getFluid("liquid_concrete");
 	}
 }

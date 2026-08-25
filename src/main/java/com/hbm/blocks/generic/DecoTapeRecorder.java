@@ -1,7 +1,9 @@
 package com.hbm.blocks.generic;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.tileentity.deco.TileEntityDecoTapeRecorder;
 import com.hbm.world.gen.nbt.INBTBlockTransformable;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.material.Material;
@@ -36,6 +38,16 @@ public class DecoTapeRecorder extends Block implements INBTBlockTransformable {
     @Override
     public @NotNull BlockFaceShape getBlockFaceShape(@NotNull IBlockAccess worldIn, @NotNull IBlockState state, @NotNull BlockPos pos, @NotNull EnumFacing face) {
         return BlockFaceShape.UNDEFINED;
+    }
+
+    @Override
+    public boolean hasTileEntity(@NotNull IBlockState state) {
+        return true;
+    }
+
+    @Override
+    public TileEntity createTileEntity(@NotNull World world, @NotNull IBlockState state) {
+        return new TileEntityDecoTapeRecorder();
     }
 
     @Override

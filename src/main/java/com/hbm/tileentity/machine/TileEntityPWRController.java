@@ -17,6 +17,7 @@ import com.hbm.inventory.fluid.trait.FT_Heatable.HeatingType;
 import com.hbm.inventory.fluid.trait.FT_PWRModerator;
 import com.hbm.inventory.gui.GUIPWR;
 import com.hbm.items.ModItems;
+import com.hbm.items.machine.ItemPWRPrinter;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
@@ -388,8 +389,17 @@ public class TileEntityPWRController extends TileEntityMachineBase implements IT
         return this.rodCount + (int) Math.ceil(this.heatsinkCount / 4D);
     }
 
+    public boolean isPrinting;
+
     @Override
     public void serialize(ByteBuf buf) {
+        buf.writeBoolean(this.isPrinting);
+        if(this.isPrinting) {
+            ItemPWRPrinter.serialize(world, buf);
+            this.isPrinting = false;
+            return;
+        }
+
         super.serialize(buf);
         buf.writeBoolean(this.assembled);
         buf.writeInt(this.rodCount);
@@ -409,6 +419,11 @@ public class TileEntityPWRController extends TileEntityMachineBase implements IT
 
     @Override
     public void deserialize(ByteBuf buf) {
+        if(buf.readBoolean()) {
+            ItemPWRPrinter.deserialize(world, buf);
+            return;
+        }
+
         super.deserialize(buf);
         this.assembled = buf.readBoolean();
         this.rodCount = buf.readInt();

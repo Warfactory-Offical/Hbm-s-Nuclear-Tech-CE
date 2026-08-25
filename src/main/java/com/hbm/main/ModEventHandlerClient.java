@@ -844,7 +844,11 @@ public class ModEventHandlerClient {
                 BlockPos pos = mop.getBlockPos();
                 IBlockState stateHit = world.getBlockState(pos);
                 Block blockHit = stateHit.getBlock();
-                if (blockHit instanceof ILookOverlay) {
+                ItemStack held = player.getHeldItemMainhand();
+
+                if (held.getItem() instanceof ILookOverlay) {
+                    ((ILookOverlay) held.getItem()).printHook(event, world, pos);
+                } else if (blockHit instanceof ILookOverlay) {
                     ((ILookOverlay) blockHit).printHook(event, world, pos);
                 }
 

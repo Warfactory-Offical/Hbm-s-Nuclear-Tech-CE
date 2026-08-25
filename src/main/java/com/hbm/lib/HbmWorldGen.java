@@ -390,6 +390,18 @@ public class HbmWorldGen implements IWorldGenerator {
             generateAStructure(world, rand, chunkMinX, chunkMinZ, Bunker.INSTANCE, parseInt(CompatibilityConfig.bunkerStructure.get(dimID)));
             generateAStructure(world, rand, chunkMinX, chunkMinZ, new Dud(), parseInt(CompatibilityConfig.dudStructure.get(dimID)));
 
+            int meteoriteFreq = parseInt(CompatibilityConfig.meteoriteSpawn.get(dimID));
+            if (meteoriteFreq > 0 && rand.nextInt(meteoriteFreq) == 0) {
+                int x = chunkMinX + rand.nextInt(16) + 8;
+                int z = chunkMinZ + rand.nextInt(16) + 8;
+                int y = world.getHeight(x, z) - rand.nextInt(10);
+                BlockPos ground = new BlockPos(x, y - 2, z);
+                IBlockState state = world.getBlockState(ground);
+                if (y > 1 && !state.getBlock().isAir(state, world, ground) && !state.getMaterial().isLiquid()) {
+                    new Meteorite().generate(world, rand, x, y, z, false, false, false);
+                }
+            }
+
             if (biome.getTempCategory() == Biome.TempCategory.WARM && biome.getTempCategory() != Biome.TempCategory.OCEAN) {
                 generateSellafieldPool(world, rand, chunkMinX, chunkMinZ, dimID);
             }

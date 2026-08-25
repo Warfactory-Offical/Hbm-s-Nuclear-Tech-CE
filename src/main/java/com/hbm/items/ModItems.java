@@ -1205,6 +1205,7 @@ public class ModItems {
     public static final Item pwr_fuel = new ItemPWRFuel().setCreativeTab(MainRegistry.controlTab);
     public static final Item pwr_fuel_hot = new ItemEnumMulti<>("pwr_fuel_hot", ItemPWRFuel.EnumPWRFuel.VALUES, true, "pwr_fuel_hot").setCreativeTab(MainRegistry.controlTab);
     public static final Item pwr_fuel_depleted = new ItemEnumMulti<>("pwr_fuel_depleted", ItemPWRFuel.EnumPWRFuel.VALUES, true, "pwr_fuel_depleted").setCreativeTab(MainRegistry.controlTab);
+    public static final Item pwr_printer = new ItemPWRPrinter("pwr_printer").setCreativeTab(MainRegistry.controlTab);
     public static final Item rod = new ItemBreedingRod("rod").setContainerItem(ModItems.rod_empty).setCreativeTab(MainRegistry.controlTab);
     public static final Item rod_dual = new ItemBreedingRod("rod_dual").setContainerItem(ModItems.rod_dual_empty).setCreativeTab(MainRegistry.controlTab);
     public static final Item rod_quad = new ItemBreedingRod("rod_quad").setContainerItem(ModItems.rod_quad_empty).setCreativeTab(MainRegistry.controlTab);
@@ -1980,6 +1981,8 @@ public class ModItems {
     public static final Item designator_arty_range = new ItemDesignatorArtyRange("designator_arty_range").setCreativeTab(MainRegistry.missileTab);
     public static final Item book_guide = new ItemGuideBook("book_guide_book").setCreativeTab(MainRegistry.consumableTab);
     public static final Item book_lore = new ItemBookLore("book_lore").setCreativeTab(null);
+    public static final Item holotape_image = new ItemHolotapeImage("holotape_image").setCreativeTab(null);
+    public static final Item holotape_damaged = new ItemBase("holotape_damaged").setCreativeTab(null);
     public static final Item rune_blank = new ItemCustomLore("rune_blank").setCreativeTab(MainRegistry.partsTab).setMaxStackSize(1);
     public static final Item rune_isa = new ItemCustomLore("rune_isa").setCreativeTab(MainRegistry.partsTab).setMaxStackSize(1);
     public static final Item rune_dagaz = new ItemCustomLore("rune_dagaz").setCreativeTab(MainRegistry.partsTab).setMaxStackSize(1);
@@ -2320,6 +2323,7 @@ public class ModItems {
     public static final Item particle_strange = new ItemBase("particle_strange").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.particle_empty);
     public static final Item particle_sparkticle = new ItemBase("particle_sparkticle").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.particle_empty);
     public static final Item particle_digamma = new ItemDigamma(60, "particle_digamma").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.particle_empty);
+    public static final Item particle_lutece = new ItemBase("particle_lutece").setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.particle_empty);
     public static final Item capsule_xen = new ItemDrop("capsule_xen").setCreativeTab(MainRegistry.controlTab);
     public static final Item singularity = new ItemDrop("singularity").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.nuclear_waste);
     public static final Item singularity_counter_resonant = new ItemDrop("singularity_counter_resonant").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setContainerItem(ModItems.nuclear_waste);
@@ -2559,6 +2563,7 @@ public class ModItems {
     public static final Item mp_stability_15_flat = new ItemMissile("mp_stability_15_flat").makeStability(0.5F, PartSize.SIZE_15).setHealth(10F);
     public static final Item mp_stability_15_thin = new ItemMissile("mp_stability_15_thin").makeStability(0.35F, PartSize.SIZE_15).setHealth(5F);
     public static final Item mp_stability_15_soyuz = new ItemMissile("mp_stability_15_soyuz").makeStability(0.25F, PartSize.SIZE_15).setHealth(15F).setRarity(Rarity.COMMON).setWittyText("Союз!");
+    public static final Item mp_stability_20_flat = new ItemMissile("mp_stability_20_flat").makeStability(0.5F, PartSize.SIZE_20);
     public static final Item mp_fuselage_10_kerosene = new ItemMissile("mp_fuselage_10_kerosene").makeFuselage(FuelType.KEROSENE, 2500F, 1000, PartSize.SIZE_10, PartSize.SIZE_10).setAuthor("Hoboy").setHealth(20F);
     public static final Item mp_fuselage_10_kerosene_camo = ((ItemMissile) mp_fuselage_10_kerosene).copy("mp_fuselage_10_kerosene_camo").setRarity(Rarity.COMMON).setTitle("Camo");
     public static final Item mp_fuselage_10_kerosene_desert = ((ItemMissile) mp_fuselage_10_kerosene).copy("mp_fuselage_10_kerosene_desert").setRarity(Rarity.COMMON).setTitle("Desert Camo");
@@ -2644,6 +2649,7 @@ public class ModItems {
     public static final Item mp_warhead_15_incendiary = new ItemMissile("mp_warhead_15_incendiary").makeWarhead(WarheadType.INC, 35F, 2.5F, PartSize.SIZE_15).setHealth(10F).setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
     public static final Item mp_warhead_15_nuclear = new ItemMissile("mp_warhead_15_nuclear").makeWarhead(WarheadType.NUCLEAR, 125F, 5F, PartSize.SIZE_15).setTitle("Auntie Bertha").setHealth(15F).setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
     public static final Item mp_warhead_15_nuclear_shark = ((ItemMissile) mp_warhead_15_nuclear).copy("mp_warhead_15_nuclear_shark").setRarity(Rarity.UNCOMMON).setTitle("Discount Bullet Bill").setWittyText("Nose art on a cannon bullet? Who does that?");
+    public static final Item mp_warhead_15_nuclear_mimi = ((ItemMissile) mp_warhead_15_nuclear).copy("mp_warhead_15_nuclear_mimi").setRarity(Rarity.RARE).setTitle("FASHIONABLE MISSILE");
     public static final Item mp_warhead_15_thermo = new ItemMissile("mp_warhead_15_thermo").makeWarhead(WarheadType.TX, 250F, 6.5F, PartSize.SIZE_15).setHealth(25F).setRarity(Rarity.RARE).setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
     public static final Item mp_warhead_15_mirv = new ItemMissile("mp_warhead_15_mirv").makeWarhead(WarheadType.MIRV, (float) BombConfig.mirvRadius, 7.0F, PartSize.SIZE_15).setRarity(Rarity.LEGENDARY).setAuthor("Seven").setHealth(20F).setWittyText("I wanna know, have you ever seen the rain?").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
     public static final Item mp_warhead_15_boxcar = new ItemMissile("mp_warhead_15_boxcar").makeWarhead(WarheadType.TX, 500F, 7.5F, PartSize.SIZE_15).setWittyText("?!?!").setHealth(35F).setRarity(Rarity.LEGENDARY).setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
@@ -2783,10 +2789,18 @@ public class ModItems {
     public static final Item mysteryshovel = new ItemMS("mysteryshovel").setFull3D().setMaxStackSize(1).setCreativeTab(CreativeTabs.TOOLS);
     public static final Item memory = new ItemBattery(Long.MAX_VALUE / 100L, 100000000000000L, 100000000000000L, "memory").setMaxStackSize(1).setCreativeTab(null);
     public static final Item conveyor_wand = new ItemConveyorWand("conveyor_wand").setFull3D().setCreativeTab(MainRegistry.machineTab);
+    public static final Item boat_rubber = new ItemBoatRubber("boat_rubber");
+    public static final Item structure_single = new ItemStructureSingle("structure_single").setMaxStackSize(1).setFull3D().setCreativeTab(null);
+    public static final Item structure_solid = new ItemStructureSolid("structure_solid").setMaxStackSize(1).setFull3D().setCreativeTab(null);
+    public static final Item structure_pattern = new ItemStructurePattern("structure_pattern").setMaxStackSize(1).setFull3D().setCreativeTab(null);
+    public static final Item structure_randomized = new ItemStructureRandomized("structure_randomized").setMaxStackSize(1).setFull3D().setCreativeTab(null);
+    public static final Item structure_randomly = new ItemStructureRandomly("structure_randomly").setMaxStackSize(1).setFull3D().setCreativeTab(null);
+    public static final Item structure_custommachine = new ItemCMStructure("structure_custommachine").setMaxStackSize(1).setFull3D().setCreativeTab(MainRegistry.consumableTab);
 
     public static final Item part_generic = new ItemEnumMulti<>("part_generic", EnumPartType.VALUES, true, true).setCreativeTab(MainRegistry.partsTab);
     public static final Item item_secret = new ItemEnumMulti<>("item_secret", EnumSecretType.VALUES, true, true).setCreativeTab(null);
     public static final Item item_expensive = new ItemEnumMulti<>("item_expensive", EnumExpensiveType.VALUES, true, true).setCreativeTab(MainRegistry.partsTab);
+    public static final Item ingot_metal = new ItemEnumMulti<>("ingot_metal", EnumIngotMetal.VALUES, true, true).setCreativeTab(null);
     public static final Item chemical_dye = new ItemChemicalDye("chemical_dye").setCreativeTab(MainRegistry.partsTab);
     public static final Item crayon = new ItemCrayon("crayon").setCreativeTab(MainRegistry.partsTab);
     public static ToolMaterial enumToolMaterialElecTerra = EnumHelper.addToolMaterial(Tags.MODID + ":ELECTERRA", 4, 0, 20.0F, 12.0F, 2);

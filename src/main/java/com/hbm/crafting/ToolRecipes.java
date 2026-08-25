@@ -127,6 +127,8 @@ public class ToolRecipes {
 
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.siphon, 1), " GR", " GR", " G ", 'G', KEY_CLEARGLASS, 'R', ANY_RUBBER.ingot());
 
+        CraftingManager.addRecipeAuto(new ItemStack(ModItems.boat_rubber), "L L", "LLL", 'L', ANY_RUBBER.ingot() );
+
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.mirror_tool), " A ", " IA", "I  ", 'A', AL.ingot(), 'I', IRON.ingot() );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.rbmk_tool), " A ", " IA", "I  ", 'A', PB.ingot(), 'I', IRON.ingot() );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.power_net_tool), "WRW", " I ", " B ", 'W', MINGRADE.wireFine(), 'R', REDSTONE.dust(), 'I', IRON.ingot(), 'B', ItemBatteryPack.EnumBatteryPack.BATTERY_LEAD.stack() );

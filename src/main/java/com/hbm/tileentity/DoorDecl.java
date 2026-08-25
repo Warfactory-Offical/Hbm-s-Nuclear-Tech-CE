@@ -54,6 +54,7 @@ public abstract class DoorDecl {
 		public static final ResourceLocation pheo_secure_door_yellow_tex = new ResourceLocation(Tags.MODID, "textures/models/pheodoors/secure_door_yellow.png");
 		public static final ResourceLocation pheo_secure_door_black_tex = new ResourceLocation(Tags.MODID, "textures/models/pheodoors/secure_door_black.png");
 		public static final ResourceLocation pheo_sliding_door_tex = new ResourceLocation(Tags.MODID, "textures/models/pheodoors/sliding_door.png");
+		public static final ResourceLocation pheo_cargo_door_tex = new ResourceLocation(Tags.MODID, "textures/models/pheodoors/cargo_door.png");
 		public static final ResourceLocation pheo_vehicle_door_tex = new ResourceLocation(Tags.MODID, "textures/models/pheodoors/vehicle_door.png");
 		public static final ResourceLocation pheo_water_door_tex = new ResourceLocation(Tags.MODID, "textures/models/pheodoors/water_door.png");
 		public static final ResourceLocation pheo_water_door_clean_tex = new ResourceLocation(Tags.MODID, "textures/models/pheodoors/water_door_clean.png");
@@ -935,6 +936,44 @@ public abstract class DoorDecl {
         @Override public int[][] getDoorOpenRanges() { return new int[][] { { 0, 0, 0, -4, 6, 2 }, { 0, 0, 0, 4, 6, 2 } }; }
 		@Override public int[] getDimensions() { return new int[] { 5, 0, 0, 0, 3, 3 }; }
     };
+	public static final DoorDecl CARGO_DOOR = new DoorDecl() {
+
+		@Override public SoundEvent getCloseSoundLoop() { return HBMSoundHandler.garage; }
+		@Override public SoundEvent getCloseSoundEnd() { return HBMSoundHandler.garage_stop; }
+		@Override public SoundEvent getOpenSoundEnd() { return HBMSoundHandler.garage_stop; }
+		@Override public SoundEvent getOpenSoundLoop() { return HBMSoundHandler.garage; }
+		@Override public float getSoundVolume() { return 2; }
+
+		@Override
+		public IRenderDoors getSEDNARenderer() {
+			return RenderCargoDoor.INSTANCE;
+		}
+
+		@Override
+		public BusAnimationSedna getBusAnimation(DoorState state, byte skinIndex) {
+			int half = this.timeToOpen() * 25;
+			if(state == DoorState.OPENING) return new BusAnimationSedna()
+				.addBus("BOT", new BusAnimationSequenceSedna().setPos(0, 0, 0).addPos(0, 1, 0, half * 2))
+				.addBus("TOP", new BusAnimationSequenceSedna().setPos(0, 0, 0).addPos(0, 0, 0, half).addPos(0, 1, 0, half));
+			if(state == DoorState.CLOSING) return new BusAnimationSedna()
+				.addBus("BOT", new BusAnimationSequenceSedna().setPos(0, 1, 0).addPos(0, 0, 0, half * 2))
+				.addBus("TOP", new BusAnimationSequenceSedna().setPos(0, 1, 0).addPos(0, 1, 0, half).addPos(0, 0, 0, half));
+			return null;
+		}
+
+		@Override public int timeToOpen() { return 60; }
+
+		@Override
+		public AxisAlignedBB getBlockBound(BlockPos relPos, boolean open) {
+			if(!open) return new AxisAlignedBB(0, 0, 0.375, 1, 1, 0.625);
+			if(relPos.getY() > 1) return new AxisAlignedBB(0, 0.25, 0.375, 1, 1, 0.625);
+			if(relPos.getY() == 0) return new AxisAlignedBB(0, 0, 0.375, 1, 0.125, 0.625);
+			return super.getBlockBound(relPos, open);
+		}
+
+		@Override public int[][] getDoorOpenRanges() { return new int[][] { { -1, -1, 0, 3, 3, 1 } }; }
+		@Override public int[] getDimensions() { return new int[] { 2, 0, 0, 0, 1, 1 }; }
+	};
     public static final DoorDecl SILO_HATCH = new DoorDecl() {
 
         @Override public SoundEvent getOpenSoundEnd() { return HBMSoundHandler.wgh_big_stop; }

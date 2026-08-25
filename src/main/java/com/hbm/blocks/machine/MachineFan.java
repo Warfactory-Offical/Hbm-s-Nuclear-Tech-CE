@@ -117,12 +117,20 @@ public class MachineFan extends BlockContainerBakeable implements IToolable, ITo
         @Override
         public void onLoad() {
             super.onLoad();
-            isIndirectlyPowered = world.isBlockPowered(pos);
+            if (!world.isRemote) isIndirectlyPowered = world.isBlockPowered(pos);
         }
 
         @Override
         public void update() {
             this.prevSpin = this.spin;
+
+            if (!world.isRemote && world.getTotalWorldTime() % 20 == 0) {
+                boolean powered = world.isBlockPowered(pos);
+                if (isIndirectlyPowered != powered) {
+                    isIndirectlyPowered = powered;
+                    markDirty();
+                }
+            }
 
             if (isIndirectlyPowered) {
                 EnumFacing dir = EnumFacing.byIndex(getBlockMetadata());
@@ -240,7 +248,9 @@ public class MachineFan extends BlockContainerBakeable implements IToolable, ITo
 
     @Override
     public void neighborChanged(@NotNull IBlockState state, World world, @NotNull BlockPos pos, @NotNull Block blockIn, @NotNull BlockPos fromPos) {
-        TileEntityFan fan = (TileEntityFan) world.getTileEntity(pos);
+        if (world.isRemote) return;
+        if (!(world.getTileEntity(pos) instanceof TileEntityFan fan)) return;
+
         boolean powered = world.isBlockPowered(pos);
         if (fan.isIndirectlyPowered != powered) {
             fan.isIndirectlyPowered = powered;

@@ -345,6 +345,8 @@ public class NTMClientRegistry {
         RegistrationUtils.registerInFolder(map,"textures/blocks/forgefluid");
 
 
+        map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/lava_gray"));
+
         map.registerSprite(new ResourceLocation(Tags.MODID, "items/fluid_identifier_overlay"));
         map.registerSprite(new ResourceLocation(Tags.MODID, "items/fluid_barrel_overlay"));
         map.registerSprite(new ResourceLocation(Tags.MODID, "items/fluid_tank_overlay"));
@@ -355,6 +357,8 @@ public class NTMClientRegistry {
 
     @SubscribeEvent
     public void textureStitchPost(TextureStitchEvent.Post evt) {
+        RenderFoundryTank.lava = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/lava_gray");
+
         RenderMultiblock.structLauncher = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/struct_launcher");
         RenderMultiblock.structScaffold = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/struct_scaffold");
 

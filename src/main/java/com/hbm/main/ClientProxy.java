@@ -13,6 +13,7 @@ import com.hbm.blocks.generic.WasteEarth;
 import com.hbm.blocks.machine.BlockSeal;
 import com.hbm.blocks.machine.BlockSiloHatch;
 import com.hbm.blocks.machine.Floodlight;
+import com.hbm.blocks.machine.PistonInserter;
 import com.hbm.blocks.machine.SpotlightBeam;
 import com.hbm.blocks.machine.rbmk.RBMKDebrisRadiating;
 import com.hbm.blocks.network.ConnectorRedWire;
@@ -203,6 +204,7 @@ public class ClientProxy extends ServerProxy {
         ModelLoader.setCustomStateMapper(ModBlocks.rad_lava_block, new StateMap.Builder().ignore(BlockFluidClassic.LEVEL).build());
         ModelLoader.setCustomStateMapper(ModBlocks.ore_volcano, new StateMap.Builder().ignore(BlockFissure.CRATER).build());
         ModelLoader.setCustomStateMapper(ModBlocks.sulfuric_acid_block, new StateMap.Builder().ignore(BlockFluidClassic.LEVEL).build());
+        ModelLoader.setCustomStateMapper(ModBlocks.concrete_liquid, new StateMap.Builder().ignore(BlockFluidClassic.LEVEL).build());
 
         ModelLoader.setCustomStateMapper(ModBlocks.seal_controller, new StateMap.Builder().ignore(BlockSeal.ACTIVATED).build());
         ModelLoader.setCustomStateMapper(ModBlocks.ntm_dirt, new StateMap.Builder().ignore(BlockDirt.SNOWY).ignore(BlockDirt.VARIANT).build());
@@ -217,6 +219,7 @@ public class ClientProxy extends ServerProxy {
         ModelLoader.setCustomStateMapper(ModBlocks.red_connector, new StateMap.Builder().ignore(ConnectorRedWire.FACING).build());
         ModelLoader.setCustomStateMapper(ModBlocks.silo_hatch_drillgon, new StateMap.Builder().ignore(BlockSiloHatch.FACING).build());
         ModelLoader.setCustomStateMapper(ModBlocks.machine_diesel, new StateMap.Builder().ignore(BlockHorizontal.FACING).build());
+        ModelLoader.setCustomStateMapper(ModBlocks.piston_inserter, new StateMap.Builder().ignore(PistonInserter.FACING).build());
         ModelLoader.setCustomStateMapper(ModBlocks.turret_sentry, fixedModelStateMapper(new ModelResourceLocation(ModBlocks.machine_autosaw.getRegistryName(), "normal")));
         ModelLoader.setCustomStateMapper(ModBlocks.turret_sentry_damaged, fixedModelStateMapper(new ModelResourceLocation(ModBlocks.machine_autosaw.getRegistryName(), "normal")));
         //Drillgon200: This can't be efficient, but eh.

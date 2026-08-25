@@ -228,21 +228,6 @@ public class BlockEmitter extends BlockContainer implements IToolable, ITooltipP
 		}
 
 		@Override
-		public SPacketUpdateTileEntity getUpdatePacket() {
-			return new SPacketUpdateTileEntity(pos, 0, this.writeToNBT(new NBTTagCompound()));
-		}
-
-		@Override
-		public NBTTagCompound getUpdateTag() {
-			return this.writeToNBT(new NBTTagCompound());
-		}
-
-		@Override
-		public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-			this.readFromNBT(pkt.getNbtCompound());
-		}
-
-		@Override
 		public void readFromNBT(NBTTagCompound nbt) {
 			super.readFromNBT(nbt);
 			this.color = nbt.getInteger("color");

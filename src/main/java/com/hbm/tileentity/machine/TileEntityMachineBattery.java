@@ -187,6 +187,10 @@ public class TileEntityMachineBattery extends TileEntityMachineBase implements I
     @Override
     public void update() {
         if (!world.isRemote) {
+            if (world.getTotalWorldTime() % 20 == 0) {
+                isIndirectlyPowered = world.isBlockPowered(pos);
+            }
+
             if (priority == null || priority.ordinal() == 0 || priority.ordinal() == 4) {
                 priority = ConnectionPriority.LOW;
             }
