@@ -45,7 +45,7 @@ public class TileEntityMachineLiquefactor extends TileEntityMachineBase implemen
 
     public static final long maxPower = 100000;
     public static final int usageBase = 250;
-    public static final int processTimeBase = 100;
+    public static final int processTimeBase = 60;
     private final UpgradeManagerNT upgradeManager = new UpgradeManagerNT(this);
     public long power;
     public int usage;

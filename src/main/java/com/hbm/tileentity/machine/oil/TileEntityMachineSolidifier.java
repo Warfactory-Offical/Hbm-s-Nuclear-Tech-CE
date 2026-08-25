@@ -45,7 +45,7 @@ public class TileEntityMachineSolidifier extends TileEntityMachineBase implement
 
     public static final long maxPower = 100000;
     public static final int usageBase = 250;
-    public static final int processTimeBase = 100;
+    public static final int processTimeBase = 60;
     public long power;
     public int usage;
     public int progress;
