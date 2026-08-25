@@ -148,11 +148,11 @@ public class TileEntityWatz extends TileEntityMachineBase implements ITickable, 
             }
 
             /* update reaction, top to bottom */
-            this.updateReaction(null, this.sharedTanks, turnedOn);
+            int mudOverflow = this.updateReaction(null, this.sharedTanks, turnedOn);
             for (int i = 1; i < segments.size(); i++) {
                 TileEntityWatz segment = segments.get(i);
                 TileEntityWatz above = segments.get(i - 1);
-                segment.updateReaction(above, this.sharedTanks, turnedOn);
+                mudOverflow += segment.updateReaction(above, this.sharedTanks, turnedOn);
             }
 
             /* send sync packets (order doesn't matter) */
@@ -181,7 +181,7 @@ public class TileEntityWatz extends TileEntityMachineBase implements ITickable, 
             segments.get(segments.size() - 1).sendOutBottom();
 
             /* explode on mud overflow */
-            if (sharedTanks[2].getFill() > 0) {
+            if (sharedTanks[2].getFill() > 0 || mudOverflow > 0) {
                 for (int x = -3; x <= 3; x++) {
                     for (int y = 3; y < 6; y++) {
                         for (int z = -3; z <= 3; z++) {
@@ -228,7 +228,9 @@ public class TileEntityWatz extends TileEntityMachineBase implements ITickable, 
 	}
 
 	/** enforces strict top to bottom update order (instead of semi-random based on placement) */
-    private void updateReaction(TileEntityWatz above, FluidTankNTM[] tanks, boolean turnedOn) {
+    private int updateReaction(TileEntityWatz above, FluidTankNTM[] tanks, boolean turnedOn) {
+
+		int overflow = 0;
 
 		if(turnedOn) {
 			List<ItemStack> pellets = new ArrayList<>();
@@ -263,7 +265,7 @@ public class TileEntityWatz extends TileEntityMachineBase implements ITickable, 
 					ItemWatzPellet.setYield(stack, ItemWatzPellet.getYield(stack) - burn);
 					addedFlux += burn;
 					addedHeat += type.heatEmission * burn;
-					tanks[2].setFill(tanks[2].getFill() + (int) Math.round(type.mudContent * burn));
+					overflow += addMud(tanks[2], (int) Math.round(type.mudContent * burn));
 				}
 			}
 
@@ -275,7 +277,7 @@ public class TileEntityWatz extends TileEntityMachineBase implements ITickable, 
 					double absorb = absorbFunc.effonix(baseFlux + fluxLastReaction);
 					addedHeat += absorb;
 					ItemWatzPellet.setYield(stack, ItemWatzPellet.getYield(stack) - absorb);
-					tanks[2].setFill(tanks[2].getFill() + (int) Math.round(type.mudContent * absorb));
+					overflow += addMud(tanks[2], (int) Math.round(type.mudContent * absorb));
 				}
 			}
 
@@ -318,6 +320,14 @@ public class TileEntityWatz extends TileEntityMachineBase implements ITickable, 
 				}
 			}
 		}
+
+		return overflow;
+	}
+
+	private static int addMud(FluidTankNTM tank, int amount) {
+		int space = tank.getMaxFill() - tank.getFill();
+		tank.setFill(tank.getFill() + amount);
+		return Math.max(0, amount - space);
 	}
 
 	@Override

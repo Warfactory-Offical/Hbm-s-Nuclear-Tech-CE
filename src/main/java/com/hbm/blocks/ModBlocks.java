@@ -771,6 +771,7 @@ public class ModBlocks {
     public static final Block red_connector_super = new ConnectorRedWireSuper(Material.IRON, "connector_red_super").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 
     public static final Block red_pylon = new PylonRedWire(Material.IRON, "red_pylon").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
+    public static final Block red_pylon_steel_small = new PylonRedWire(Material.IRON, "red_pylon_steel_small").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
     public static final Block red_pylon_large = new PylonLarge(Material.IRON, "red_pylon_large").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
 
     public static final Block red_pylon_medium_wood = new PylonMedium(Material.IRON, "red_pylon_medium_wood").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);

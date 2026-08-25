@@ -20,6 +20,7 @@ import com.hbm.entity.siege.SiegeTier;
 import com.hbm.explosion.ExplosionNukeGeneric;
 import com.hbm.handler.*;
 import com.hbm.handler.imc.IMCHandler;
+import com.hbm.handler.imc.IMCOutbound;
 import com.hbm.handler.pollution.PollutionHandler;
 import com.hbm.handler.radiation.RadiationSystemNT;
 import com.hbm.handler.threading.BombForkJoinPool;
@@ -291,6 +292,7 @@ public class MainRegistry {
         PacketDispatcher.registerPackets();
         PacketThreading.init();
         IMCHandler.init();
+        IMCOutbound.send();
     }
 
     @EventHandler

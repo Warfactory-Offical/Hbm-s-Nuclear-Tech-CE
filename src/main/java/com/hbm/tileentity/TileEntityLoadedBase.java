@@ -27,8 +27,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 public class TileEntityLoadedBase extends TileEntity implements ILoadedTile, IBufPacketReceiver {
-    private static final ByteBuf UPDATE_TAG_SCRATCH = Unpooled.buffer(64);
-
     public boolean isLoaded = true;
     public boolean muffled = false;
     public boolean tilted = false;
@@ -107,10 +105,10 @@ public class TileEntityLoadedBase extends TileEntity implements ILoadedTile, IBu
     @Override
     public final NBTTagCompound getUpdateTag() {
         NBTTagCompound tag = super.getUpdateTag();
-        UPDATE_TAG_SCRATCH.clear();
-        serializeInitial(UPDATE_TAG_SCRATCH);
-        byte[] bytes = new byte[UPDATE_TAG_SCRATCH.readableBytes()];
-        UPDATE_TAG_SCRATCH.readBytes(bytes);
+        ByteBuf scratch = Unpooled.buffer(64);
+        serializeInitial(scratch);
+        byte[] bytes = new byte[scratch.readableBytes()];
+        scratch.readBytes(bytes);
         tag.setByteArray("hbmSync", bytes);
         return tag;
     }

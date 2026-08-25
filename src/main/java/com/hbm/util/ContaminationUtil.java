@@ -30,8 +30,10 @@ import com.hbm.util.ArmorRegistry.HazardClass;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityHanging;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityArmorStand;
+import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.EntityMooshroom;
@@ -552,8 +554,10 @@ public class ContaminationUtil {
 							p.setHeldItem(EnumHand.OFF_HAND, new ItemStack(ModItems.marshmallow_roasted));
 						}
 					}
-					e.attackEntityFrom(DamageSource.IN_FIRE, fireDmg);
-					e.setFire(5);
+					if(!isFireExempt(e)) {
+						e.attackEntityFrom(DamageSource.IN_FIRE, fireDmg);
+						e.setFire(5);
+					}
 				}
 			}
 
@@ -571,6 +575,10 @@ public class ContaminationUtil {
 				e.motionZ += vec.zCoord * 0.005D * blastDmg;
 			}
 		}
+	}
+
+	private static boolean isFireExempt(Entity e) {
+		return e instanceof EntityArmorStand || e instanceof EntityBoat || e instanceof EntityHanging;
 	}
 
 	private static boolean isExplosionExempt(Entity e) {

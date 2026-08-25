@@ -245,6 +245,9 @@ public class ResourceManager {
     //Big Cables
     public static final WaveFrontObjectVAO connector = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/network/connector.obj")).asVBO();
     public static final WaveFrontObjectVAO connector_super = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/network/connector_super.obj")).asVBO();
+    public static final WaveFrontObjectVAO blockspider = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/mobs/blockspider.obj")).asVBO();
+    public static final WaveFrontObjectVAO plasticbag = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/mobs/plasticbag.obj")).asVBO();
+    public static final WaveFrontObjectVAO pylon = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/network/pylon.obj")).asVBO();
     public static final WaveFrontObjectVAO pylon_large = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/network/pylon_large.obj")).asVBO();
     public static final WaveFrontObjectVAO pylon_medium = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/network/pylon_medium.obj")).asVBO();
     public static final WaveFrontObjectVAO substation = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/network/substation.obj")).asVBO();
@@ -656,6 +659,9 @@ public class ResourceManager {
 
     public static final ResourceLocation pylon_medium_tex = new ResourceLocation(Tags.MODID, "textures/models/network/pylon_medium.png");
     public static final ResourceLocation pylon_medium_steel_tex = new ResourceLocation(Tags.MODID, "textures/models/network/pylon_medium_steel.png");
+    public static final ResourceLocation spider_tex = new ResourceLocation(Tags.MODID, "textures/entity/blockspider.png");
+    public static final ResourceLocation plasticbag_tex = new ResourceLocation(Tags.MODID, "textures/entity/plasticbag.png");
+    public static final ResourceLocation pylon_steel_tex = new ResourceLocation(Tags.MODID, "textures/models/network/pylon_steel.png");
     public static final ResourceLocation connector_tex = new ResourceLocation(Tags.MODID, "textures/models/network/connector.png");
     public static final ResourceLocation connector_super_tex = new ResourceLocation(Tags.MODID, "textures/models/network/connector_super.png");
     //Turbofan
