@@ -5,10 +5,12 @@ import com.hbm.api.ntl.StackCache.CacheSlot;
 import com.hbm.inventory.slot.SlotNonRetarded;
 import com.hbm.tileentity.network.TileEntityPneumoStorageAccess;
 import com.hbm.util.ItemStackUtil;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -19,22 +21,42 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 public class ContainerPneumoStorageAccess extends Container {
 
-    protected TileEntityPneumoStorageAccess access;
-    protected InventoryPneumoStorageAccess inventory;
+    public static final int DISPLAY_ROWS = 6;
+    public static final int DISPLAY_COLUMNS = 8;
+    public static final int DISPLAY_SLOTS = DISPLAY_ROWS * DISPLAY_COLUMNS;
+
+    public static final int SORT_STACK_SIZE = 0;
+    public static final int SORT_ID = 1;
+    public static final int SORT_LOCALIZED = 2;
+    public static final int SORT_INTERNAL = 3;
 
     public static final String STACK_SIZE_KEY = "PNEUMO_STACK_SIZE";
 
+    protected TileEntityPneumoStorageAccess access;
+    protected InventoryPneumoStorageAccess inventory;
+    protected EntityPlayer player;
+
+    protected int sorting = SORT_STACK_SIZE;
+    protected String searchString = "";
+    protected boolean detailedSearch = false;
+    protected int listingStart = 0;
+
+    private int stackCount = 0;
+    private int lastStackCount = -1;
+
     public ContainerPneumoStorageAccess(InventoryPlayer invPlayer, TileEntityPneumoStorageAccess access) {
         this.access = access;
+        this.player = invPlayer.player;
         this.inventory = new InventoryPneumoStorageAccess(access);
 
         InvWrapper displayWrapper = new InvWrapper(inventory);
-        for (int i = 0; i < 6; i++) {
-            for (int j = 0; j < 8; j++) {
-                this.addSlotToContainer(new SlotNonRetarded(displayWrapper, j + i * 8, 8 + j * 18, 17 + i * 18)); // TODO: add a new slot type that holds a long for the amount
+        for (int i = 0; i < DISPLAY_ROWS; i++) {
+            for (int j = 0; j < DISPLAY_COLUMNS; j++) {
+                this.addSlotToContainer(new SlotPneumo(displayWrapper, j + i * DISPLAY_COLUMNS, 8 + j * 18, 17 + i * 18));
             }
         }
 
@@ -48,8 +70,89 @@ public class ContainerPneumoStorageAccess extends Container {
             this.addSlotToContainer(new Slot(invPlayer, i, 8 + i * 18, 227));
         }
 
-        inventory.updateListing();
+        this.rebuildListing();
         this.detectAndSendChanges();
+    }
+
+    public TileEntityPneumoStorageAccess getAccess() {
+        return this.access;
+    }
+
+    public int getStackCount() {
+        return this.stackCount;
+    }
+
+    public int getListingStart() {
+        return this.listingStart;
+    }
+
+    public int getSorting() {
+        return this.sorting;
+    }
+
+    public boolean isDetailedSearch() {
+        return this.detailedSearch;
+    }
+
+    public void setSorting(int sorting) {
+        this.sorting = sorting < 0 || sorting > SORT_INTERNAL ? SORT_STACK_SIZE : sorting;
+        this.listingStart = 0;
+        this.rebuildListing();
+    }
+
+    public void setSearchString(String search) {
+        this.searchString = search.toLowerCase(Locale.US);
+        this.listingStart = 0;
+        this.rebuildListing();
+    }
+
+    public void setDetailedSearch(boolean detailed) {
+        this.detailedSearch = detailed;
+        this.listingStart = 0;
+        this.rebuildListing();
+    }
+
+    public void setListingStart(int start) {
+        this.listingStart = Math.max(0, start);
+        this.rebuildListing();
+    }
+
+    public void rebuildListing() {
+        this.stackCount = this.inventory.updateListing(this.getSorter(), this.searchString, this.detailedSearch, this.listingStart, this.player);
+    }
+
+    protected Comparator<CacheSlot> getSorter() {
+        switch (this.sorting) {
+            case SORT_ID: return SORT_BY_ID;
+            case SORT_LOCALIZED: return SORT_BY_LOCALIZED;
+            case SORT_INTERNAL: return SORT_BY_INTERNAL;
+            default: return SORT_BY_STACK_SIZE;
+        }
+    }
+
+    @Override
+    public void detectAndSendChanges() {
+        if (!this.access.getWorld().isRemote) this.rebuildListing();
+
+        super.detectAndSendChanges();
+
+        if (this.lastStackCount != this.stackCount) {
+            this.lastStackCount = this.stackCount;
+            for (IContainerListener listener : this.listeners) {
+                listener.sendWindowProperty(this, 0, this.stackCount);
+            }
+        }
+    }
+
+    @Override
+    public void addListener(IContainerListener listener) {
+        super.addListener(listener);
+        listener.sendWindowProperty(this, 0, this.stackCount);
+    }
+
+    @Override
+    public void updateProgressBar(int id, int value) {
+        if (id == 0) this.stackCount = value;
     }
 
     @Override
@@ -60,7 +163,7 @@ public class ContainerPneumoStorageAccess extends Container {
     @Override
     public ItemStack slotClick(int index, int button, ClickType mode, EntityPlayer player) {
 
-        if (index >= 0 && index < 6 * 8) {
+        if (index >= 0 && index < DISPLAY_SLOTS) {
             boolean client = player.world.isRemote;
             Slot slot = this.getSlot(index);
             ItemStack held = player.inventory.getItemStack();
@@ -77,7 +180,7 @@ public class ContainerPneumoStorageAccess extends Container {
                     } else {
                         if (this.access.cache == null || this.access.cache.hasExpired) return stack;
                         StackCache cache = this.access.cache;
-                        stack.setCount((int) cache.consumeItemsAndReturnQuantity(stack, toGrab)); // this can't work because the stack got altered with the description NBT.....
+                        stack.setCount((int) cache.consumeItemsAndReturnQuantity(stack, toGrab));
                         player.inventory.setItemStack(stack);
                     }
                 }
@@ -94,47 +197,115 @@ public class ContainerPneumoStorageAccess extends Container {
         return ItemStack.EMPTY;
     }
 
+    public static final Comparator<CacheSlot> SORT_BY_STACK_SIZE = (o1, o2) -> {
+        if (o1.stacksize > o2.stacksize)        return -1;  if (o1.stacksize < o2.stacksize)        return 1;
+        if (o1.itemId < o2.itemId)              return -1;  if (o1.itemId > o2.itemId)              return 1;
+        if (o1.meta < o2.meta)                  return -1;  if (o1.meta > o2.meta)                  return 1;
+        if (o1.nbt == null && o2.nbt != null)   return -1;  if (o1.nbt != null && o2.nbt == null)   return 1;
+        return 0;
+    };
+
+    public static final Comparator<CacheSlot> SORT_BY_ID = (o1, o2) -> {
+        if (o1.itemId < o2.itemId)              return -1;  if (o1.itemId > o2.itemId)              return 1;
+        if (o1.meta < o2.meta)                  return -1;  if (o1.meta > o2.meta)                  return 1;
+        if (o1.stacksize > o2.stacksize)        return -1;  if (o1.stacksize < o2.stacksize)        return 1;
+        if (o1.nbt == null && o2.nbt != null)   return -1;  if (o1.nbt != null && o2.nbt == null)   return 1;
+        return 0;
+    };
+
+    public static final Comparator<CacheSlot> SORT_BY_INTERNAL = (o1, o2) -> {
+        if (o1.displayStack == null || o2.displayStack == null) return SORT_BY_ID.compare(o1, o2);
+        String name1 = o1.displayStack.getItem().getTranslationKey(o1.displayStack);
+        String name2 = o2.displayStack.getItem().getTranslationKey(o2.displayStack);
+        int compare = name1.compareToIgnoreCase(name2);
+        if (compare != 0) return compare;
+        return SORT_BY_ID.compare(o1, o2);
+    };
+
+    public static final Comparator<CacheSlot> SORT_BY_LOCALIZED = (o1, o2) -> {
+        if (o1.displayStack == null || o2.displayStack == null) return SORT_BY_ID.compare(o1, o2);
+        String name1 = o1.displayStack.getDisplayName();
+        String name2 = o2.displayStack.getDisplayName();
+        int compare = name1.compareToIgnoreCase(name2);
+        if (compare != 0) return compare;
+        return SORT_BY_ID.compare(o1, o2);
+    };
+
+    public static class SlotPneumo extends SlotNonRetarded {
+
+        public long amount;
+
+        public SlotPneumo(net.minecraftforge.items.IItemHandler inventory, int id, int x, int y) {
+            super(inventory, id, x, y);
+        }
+
+        @Override
+        public boolean canTakeStack(EntityPlayer player) {
+            return true;
+        }
+    }
+
     /** This inventory instance only exists to prepare the contents of a StackCache in such a way that we can use it in a container. */
     public static class InventoryPneumoStorageAccess implements IInventory {
 
         public StackCache cache;
         public ItemStack[] slots;
 
+        private final TileEntityPneumoStorageAccess access;
+
         public InventoryPneumoStorageAccess(TileEntityPneumoStorageAccess access) {
             this.slots = new ItemStack[getSizeInventory()];
             for (int i = 0; i < slots.length; i++) slots[i] = ItemStack.EMPTY;
+            this.access = access;
             this.cache = access.cache;
         }
 
-        public void updateListing() { // DEMO
-            if (this.cache == null) return;
+        public int updateListing(Comparator<CacheSlot> sorter, String search, boolean detailed, int listingStart, EntityPlayer player) {
+
+            this.cache = access.cache;
+            this.clear();
+
+            if (this.cache == null) return 0;
+
             List<CacheSlot> cacheSlots = new ArrayList<>(cache.cacheSlots.size());
             cacheSlots.addAll(cache.cacheSlots.values());
-            cacheSlots.removeIf(x -> x.stacksize <= 0);
-            cacheSlots.sort(SORT_BY_STACK_SIZE);
+            cacheSlots.removeIf(x -> x.stacksize <= 0 || x.displayStack == null);
+            if (!search.isEmpty()) cacheSlots.removeIf(x -> !matches(x, search, detailed, player));
+            cacheSlots.sort(sorter);
+
             int size = cacheSlots.size();
+            int offset = listingStart * DISPLAY_COLUMNS;
 
             for (int i = 0; i < slots.length; i++) {
-                if (i < size) {
-                    CacheSlot cache = cacheSlots.get(i);
-                    if (cache.displayStack != null) {
-                        slots[i] = cache.displayStack.copy();
-                        ItemStackUtil.addTooltipToStack(slots[i], "x" + cache.stacksize, "in " + cache.monitors.size() + " stacks");
-                        slots[i].getTagCompound().setLong(STACK_SIZE_KEY, cache.stacksize); // TODO instead of altering the stacks so we can't resolve anything anymore, hijack the progress bar system
-                    }
-                }
+                int index = i + offset;
+                if (index >= size) break;
+
+                CacheSlot cacheSlot = cacheSlots.get(index);
+                slots[i] = cacheSlot.displayStack.copy();
+                ItemStackUtil.addTooltipToStack(slots[i], "x" + cacheSlot.stacksize, "in " + cacheSlot.monitors.size() + " stacks");
+                slots[i].getTagCompound().setLong(STACK_SIZE_KEY, cacheSlot.stacksize);
             }
+
+            return size;
         }
 
-        public static final Comparator<CacheSlot> SORT_BY_STACK_SIZE = (o1, o2) -> {
-            if (o1.stacksize > o2.stacksize)        return 1;   if (o1.stacksize < o2.stacksize)        return -1;
-            if (o1.itemId < o2.itemId)              return 1;   if (o1.itemId > o2.itemId)              return -1;
-            if (o1.meta < o2.meta)                  return 1;   if (o1.meta > o2.meta)                  return -1;
-            if (o1.nbt == null && o2.nbt != null)   return 1;   if (o1.nbt != null && o2.nbt == null)   return -1;
-            return 0;
-        };
+        private static boolean matches(CacheSlot slot, String search, boolean detailed, EntityPlayer player) {
 
-        @Override public int getSizeInventory() { return 6 * 9; }
+            if (slot.displayStack.getDisplayName().toLowerCase(Locale.US).contains(search)) return true;
+
+            if (detailed) {
+                try {
+                    List<String> tooltip = slot.displayStack.getTooltip(player, ITooltipFlag.TooltipFlags.NORMAL);
+                    for (String line : tooltip) {
+                        if (line.toLowerCase(Locale.US).contains(search)) return true;
+                    }
+                } catch (Exception ignored) { }
+            }
+
+            return false;
+        }
+
+        @Override public int getSizeInventory() { return DISPLAY_SLOTS; }
         @Override public ItemStack getStackInSlot(int slot) { return slots[slot]; }
         @Override public int getInventoryStackLimit() { return 64; }
 

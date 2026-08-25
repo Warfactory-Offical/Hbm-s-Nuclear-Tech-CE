@@ -55,6 +55,7 @@ import com.hbm.particle.helper.BlackPowderCreator;
 import com.hbm.particle.helper.HbmEffectNT;
 import com.hbm.potion.HbmDetox;
 import com.hbm.potion.HbmPotion;
+import com.hbm.saveddata.satellites.SatelliteDetector;
 import com.hbm.tileentity.machine.TileEntityMachineRadarNT;
 import com.hbm.tileentity.machine.rbmk.RBMKDials;
 import com.hbm.tileentity.network.RTTYSystem;
@@ -666,6 +667,7 @@ public class ModEventHandler {
             PacketThreading.createSendToDimensionThreadedPacket(new SurveyPacket(cur), dim);
         }
         BossSpawnHandler.rollTheDice(event.world);
+        SatelliteDetector.updateSystem(event.world);
     }
 
     //mlbv: concurrent workers are safe as long as they don't interfere

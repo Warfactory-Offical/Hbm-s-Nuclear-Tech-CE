@@ -10,6 +10,8 @@ import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.Library;
 import com.hbm.main.AdvancementManager;
+import com.hbm.saveddata.satellites.SatelliteDetector;
+import com.hbm.saveddata.satellites.SatelliteDetector.BurstIntensity;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.machine.albion.TileEntityPASource.PAState;
 import com.hbm.tileentity.machine.albion.TileEntityPASource.Particle;
@@ -167,6 +169,7 @@ public class TileEntityPADetector extends TileEntityCooledBase implements IGUIPr
                 List<EntityPlayerMP> players = world.getEntitiesWithinAABB(EntityPlayerMP.class, new AxisAlignedBB(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5).grow(100, 50, 100));
                 for(EntityPlayerMP player : players) AdvancementManager.grantAchievement(player, AdvancementManager.achOmega12);
             }
+            SatelliteDetector.reportEvent(world, SatelliteDetector.DURATION_MEDIUM, BurstIntensity.MEDIUM, pos.getX(), pos.getZ());
             particle.crash(PAState.SUCCESS);
             return;
         }

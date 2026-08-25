@@ -1034,6 +1034,13 @@ public class AssemblyMachineRecipes extends GenericRecipes<GenericRecipe> {
                         new ComparableStack(ModItems.thruster_small, 1),
                         new ComparableStack(ModItems.photo_panel, 12),
                         new ComparableStack(ModItems.battery_pack, 1, ItemBatteryPack.EnumBatteryPack.BATTERY_LITHIUM)));
+        this.register(new GenericRecipe("ass.detectorsat").setup(1_200, 25_000).outputItems(new ItemStack(ModItems.sat_detector, 1))
+                .inputItems(new OreDictStack(GOLD.plateCast(), 16),
+                        new ComparableStack(ModItems.photo_panel, 64),
+                        new OreDictStack(BSCCO.wireDense(), 16),
+                        new ComparableStack(ModItems.circuit, 24, EnumCircuitType.BISMOID),
+                        new ComparableStack(ModItems.part_generic, 16, EnumPartType.LDE),
+                        new ComparableStack(ModItems.circuit, 1, EnumCircuitType.CONTROLLER_ADVANCED)));
         this.register(new GenericRecipe("ass.emptypackage").setup(40, 100).outputItems(new ItemStack(ModItems.fluid_pack_empty, 1))
                 .inputItems(new OreDictStack(TI.plate(), 4), new OreDictStack(ANY_PLASTIC.ingot(), 2)));
         FluidType[] order = Fluids.getInNiceOrder();

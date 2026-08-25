@@ -1,8 +1,16 @@
 {
 	"name": "High Yield Mini Nuke",
-	"icon": ["hbm:ammo_standard", 1, 75],
+	"icon": [
+		"hbm:ammo_standard",
+		1,
+		75
+	],
 	"trigger": [
-		["hbm:ammo_standard", 1, 75]
+		[
+			"hbm:ammo_standard",
+			1,
+			75
+		]
 	],
 	"title": {
 		"en_us": "High Yield Mini Nuke",
@@ -10,6 +18,7 @@
 	},
 	"content": {
 		"en_us": "nuclear bobm<br>",
-		"zh_cn": "熊孩子福利（误）<br>"
+		"zh_cn": "熊孩子福利（误）<br>",
+		"ru_ru": "Ядерный бумб<br>"
 	}
 }

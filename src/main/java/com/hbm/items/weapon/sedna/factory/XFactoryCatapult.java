@@ -22,6 +22,8 @@ import com.hbm.render.anim.sedna.BusAnimationKeyframeSedna.IType;
 import com.hbm.render.anim.sedna.BusAnimationSedna;
 import com.hbm.render.anim.sedna.BusAnimationSequenceSedna;
 import com.hbm.render.misc.RenderScreenOverlay.Crosshair;
+import com.hbm.saveddata.satellites.SatelliteDetector;
+import com.hbm.saveddata.satellites.SatelliteDetector.BurstIntensity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundCategory;
@@ -94,6 +96,7 @@ public class XFactoryCatapult {
 
         incrementRad(bullet.world, mop.hitVec.x, mop.hitVec.y, mop.hitVec.z, 1.5F);
 
+        SatelliteDetector.reportEvent(bullet.world, SatelliteDetector.DURATION_LOW, BurstIntensity.LOW, bullet.posX, bullet.posZ);
         bullet.world.playSound(null, mop.hitVec.x, mop.hitVec.y + 0.5, mop.hitVec.z, HBMSoundHandler.mukeExplosion, SoundCategory.HOSTILE, 15.0F, 1.0F);
         NBTTagCompound data = new NBTTagCompound();
         data.setBoolean("balefire", true);
@@ -110,6 +113,7 @@ public class XFactoryCatapult {
     }
 
     public static void spawnMush(EntityBulletBaseMK4 bullet, RayTraceResult mop) {
+        SatelliteDetector.reportEvent(bullet.world, SatelliteDetector.DURATION_LOW, BurstIntensity.LOW, bullet.posX, bullet.posZ);
         // mlbv: Sound disabled because Torex will handle it
 //        bullet.world.playSound(null, mop.hitVec.x, mop.hitVec.y + 0.5, mop.hitVec.z, HBMSoundHandler.mukeExplosion, SoundCategory.HOSTILE, 15.0F, 1.0F);
         if(MainRegistry.polaroidID == 11 || bullet.world.rand.nextInt(100) == 0) EntityNukeTorex.statFacBale(bullet.world, mop.hitVec.x, mop.hitVec.y + 0.5, mop.hitVec.z, 0.3F);
@@ -127,6 +131,7 @@ public class XFactoryCatapult {
         vnt.explode();
 
         incrementRad(bullet.world, mop.hitVec.x, mop.hitVec.y, mop.hitVec.z, 0.25F);
+        SatelliteDetector.reportEvent(bullet.world, SatelliteDetector.DURATION_LOW, BurstIntensity.LOW, bullet.posX, bullet.posZ);
         // mlbv: Sound disabled because Torex will handle it
 //        bullet.world.playSound(null, mop.hitVec.x, mop.hitVec.y + 0.5, mop.hitVec.z, HBMSoundHandler.mukeExplosion, SoundCategory.HOSTILE, 15.0F, 1.0F);
         if(MainRegistry.polaroidID == 11 || bullet.world.rand.nextInt(100) == 0) EntityNukeTorex.statFacBale(bullet.world, mop.hitVec.x, mop.hitVec.y + 0.5, mop.hitVec.z, 0.25F);

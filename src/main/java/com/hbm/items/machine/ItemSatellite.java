@@ -22,6 +22,9 @@ public class ItemSatellite extends ItemBakedBase implements ISatChip {
 		super.addInformation(stack, worldIn, list, flagIn);
 		list.add(I18nUtil.resolveKey("desc.satellitefr", getFreq(stack)));
 
+		if(this == ModItems.sat_detector)
+			list.add(I18nUtil.resolveKey("satchip.detector"));
+
 		if(this == ModItems.sat_foeq)
 			list.add(I18nUtil.resolveKey("satchip.foeq"));
 
