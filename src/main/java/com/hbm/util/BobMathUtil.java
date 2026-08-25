@@ -156,6 +156,11 @@ public class BobMathUtil {
         return result;
     }
 
+    public static double angularDifference(double alpha, double beta) {
+        double delta = (beta - alpha + 180) % 360 - 180;
+        return delta < -180 ? delta + 360 : delta;
+    }
+
     public static double clampedLerp(double start, double end, double delta) {
         if (delta < 0.0D) {
             return start;

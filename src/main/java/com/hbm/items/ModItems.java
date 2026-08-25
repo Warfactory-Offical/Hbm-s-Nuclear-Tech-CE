@@ -312,6 +312,10 @@ public class ModItems {
     //Energy items
     public static final Item battery_pack = new ItemBatteryPack("battery_pack");
     public static final Item battery_creative = new ItemBatteryCreative("battery_creative").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
+
+    public static final Item cart = new ItemModMinecart("cart");
+    public static final Item train = new ItemTrain("train");
+    public static final Item coupling_tool = new ItemCouplingTool("coupling_tool").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
     public static final Item battery_generic = new ItemBattery(5000, 100, 100, "battery_generic").setMaxStackSize(1).setCreativeTab(null);
     public static final Item battery_red_cell = new ItemBattery(15000, 100, 100, "battery_red_cell").setMaxStackSize(1).setCreativeTab(null);
     public static final Item battery_red_cell_6 = new ItemBattery(15000 * 6, 100, 100, "battery_red_cell_6").setMaxStackSize(1).setCreativeTab(null);

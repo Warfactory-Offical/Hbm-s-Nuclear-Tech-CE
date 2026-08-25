@@ -1345,6 +1345,26 @@ public class ResourceManager {
     public static final WaveFrontObjectVAO railgun_base = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/railgun_base.obj")).asVBO();
     public static final WaveFrontObjectVAO railgun_rotor = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/railgun_rotor.obj")).asVBO();
     public static final WaveFrontObjectVAO railgun_main = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/railgun_main.obj")).asVBO();
+
+    public static final WaveFrontObjectVAO cart = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/vehicles/cart.obj")).asVBO();
+    public static final WaveFrontObjectVAO cart_destroyer = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/vehicles/cart_destroyer.obj")).asVBO();
+    public static final WaveFrontObjectVAO cart_powder = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/vehicles/cart_powder.obj")).asVBO();
+    public static final WaveFrontObjectVAO train_cargo_tram = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/vehicles/tram.obj")).asVBO();
+    public static final WaveFrontObjectVAO train_cargo_tram_trailer = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/vehicles/tram_trailer.obj")).asVBO();
+    public static final ResourceLocation cart_metal = new ResourceLocation(Tags.MODID, "textures/entity/cart_metal.png");
+    public static final ResourceLocation cart_blank = new ResourceLocation(Tags.MODID, "textures/entity/cart_metal_naked.png");
+    public static final ResourceLocation cart_wood = new ResourceLocation(Tags.MODID, "textures/entity/cart_wood.png");
+    public static final ResourceLocation cart_destroyer_tex = new ResourceLocation(Tags.MODID, "textures/entity/cart_destroyer.png");
+    public static final ResourceLocation cart_powder_tex = new ResourceLocation(Tags.MODID, "textures/blocks/block_gunpowder.png");
+    public static final ResourceLocation cart_semtex_side = new ResourceLocation(Tags.MODID, "textures/blocks/semtex_side.png");
+    public static final ResourceLocation cart_semtex_top = new ResourceLocation(Tags.MODID, "textures/blocks/semtex_bottom.png");
+    public static final WaveFrontObjectVAO rail_standard_switch = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/blocks/rail_standard_switch.obj")).asVBO();
+    public static final WaveFrontObjectVAO rail_standard_switch_flipped = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/blocks/rail_standard_switch_flipped.obj")).asVBO();
+    public static final ResourceLocation rail_standard_tex = new ResourceLocation(Tags.MODID, "textures/blocks/rail_standard_straight.png");
+    public static final ResourceLocation rail_switch_sign_tex = new ResourceLocation(Tags.MODID, "textures/blocks/rail_switch_sign.png");
+    public static final ResourceLocation rail_switch_sign_flipped_tex = new ResourceLocation(Tags.MODID, "textures/blocks/rail_switch_sign_flipped.png");
+    public static final ResourceLocation tram_tex = new ResourceLocation(Tags.MODID, "textures/models/trains/tram.png");
+    public static final ResourceLocation tram_trailer_tex = new ResourceLocation(Tags.MODID, "textures/models/trains/tram_trailer.png");
     // Dud
     public static final WaveFrontObjectVAO dud_balefire = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/bombs/dud_balefire.obj")).asVBO();
     public static final WaveFrontObjectVAO dud_conventional = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/bombs/dud_conventional.obj")).asVBO();

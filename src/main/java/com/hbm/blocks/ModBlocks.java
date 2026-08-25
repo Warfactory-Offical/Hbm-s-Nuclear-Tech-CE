@@ -13,6 +13,7 @@ import com.hbm.blocks.machine.pile.*;
 import com.hbm.blocks.machine.rbmk.*;
 import com.hbm.blocks.network.*;
 import com.hbm.blocks.network.energy.*;
+import com.hbm.blocks.rail.*;
 import com.hbm.blocks.test.KeypadTest;
 import com.hbm.blocks.test.TestObjTester;
 import com.hbm.blocks.test.TestRender;
@@ -809,6 +810,20 @@ public class ModBlocks {
     //Rails
     public static final Block rail_highspeed = new RailHighspeed("rail_highspeed").setHardness(5.0F).setResistance(10.0F).setCreativeTab(CreativeTabs.TRANSPORTATION);
     public static final Block rail_booster = new RailBooster("rail_booster").setHardness(5.0F).setResistance(10.0F).setCreativeTab(CreativeTabs.TRANSPORTATION);
+    public static final Block rail_wood = new RailGeneric("rail_wood", "axe", 0).setMaxSpeed(0.2F).setHardness(5.0F).setResistance(10.0F).setCreativeTab(CreativeTabs.TRANSPORTATION);
+    public static final Block rail_narrow = new RailGeneric("rail_narrow", "pickaxe", 0).setHardness(5.0F).setResistance(10.0F).setCreativeTab(CreativeTabs.TRANSPORTATION);
+
+    public static final Block rail_narrow_straight = new RailNarrowStraight("rail_narrow_straight").setHardness(5.0F).setResistance(10.0F).setCreativeTab(null);
+    public static final Block rail_narrow_curve = new RailNarrowCurve("rail_narrow_curve").setHardness(5.0F).setResistance(10.0F).setCreativeTab(null);
+    public static final Block rail_large_straight = new RailStandardStraight("rail_large_straight").setHardness(5.0F).setResistance(10.0F).setCreativeTab(null);
+    public static final Block rail_large_straight_short = new RailStandardStraightShort("rail_large_straight_short").setHardness(5.0F).setResistance(10.0F).setCreativeTab(null);
+    public static final Block rail_large_curve = new RailStandardCurveBase("rail_large_curve").setHardness(5.0F).setResistance(10.0F).setCreativeTab(null);
+    public static final Block rail_large_curve_7 = new RailStandardCurveWide7("rail_large_curve_7").setHardness(5.0F).setResistance(10.0F).setCreativeTab(null);
+    public static final Block rail_large_curve_9 = new RailStandardCurveWide9("rail_large_curve_9").setHardness(5.0F).setResistance(10.0F).setCreativeTab(null);
+    public static final Block rail_large_ramp = new RailStandardRamp("rail_large_ramp").setHardness(5.0F).setResistance(10.0F).setCreativeTab(null);
+    public static final Block rail_large_buffer = new RailStandardBuffer("rail_large_buffer").setHardness(5.0F).setResistance(10.0F).setCreativeTab(null);
+    public static final Block rail_large_switch = new RailStandardSwitch("rail_large_switch").setHardness(5.0F).setResistance(10.0F).setCreativeTab(null);
+    public static final Block rail_large_switch_flipped = new RailStandardSwitchFlipped("rail_large_switch_flipped").setHardness(5.0F).setResistance(10.0F).setCreativeTab(null);
 
     //Machines
     public static final Block machine_siren = new MachineSiren(Material.IRON, "machine_siren").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);

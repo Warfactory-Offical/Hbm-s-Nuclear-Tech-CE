@@ -319,7 +319,41 @@ public final class StaticTesrBakedModels {
             normalSpec(ModBlocks.zirnox_destroyed, "models/zirnox_destroyed.obj", "models/machines/zirnox_destroyed", yawMap().meta(12, 90).meta(13, 270).meta(14, 180).meta(15, 0).build())
                     .doubleSided()
                     .item(0.75F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F)
-                    .gui(0.0D, -2.0D, 0.0D, 2.8D)
+                    .gui(0.0D, -2.0D, 0.0D, 2.8D),
+            normalSpec(ModBlocks.rail_large_straight, "models/blocks/rail_standard.obj", "blocks/rail_standard_straight", yawMap().meta(12, 0).meta(13, 0).meta(14, 90).meta(15, 90).build())
+                    .translateByMeta(translateMap().meta(12, 0.5F, 0.0F, 0.0F).meta(13, -0.5F, 0.0F, 0.0F).meta(14, 0.0F, 0.0F, -0.5F).meta(15, 0.0F, 0.0F, 0.5F).build())
+                    .item(0.3F, RAD_90, 0.0F, -0.0625F, 0.0F, 0.0F, 0.0F)
+                    .gui(0.0D, 0.0D, 0.0D, 3.0D),
+            normalSpec(ModBlocks.rail_large_straight_short, "models/blocks/rail_standard_short.obj", "blocks/rail_standard_straight", yawMap().meta(12, 0).meta(13, 0).meta(14, 90).meta(15, 90).build())
+                    .translateByMeta(translateMap().meta(12, 0.5F, 0.0F, 0.0F).meta(13, -0.5F, 0.0F, 0.0F).meta(14, 0.0F, 0.0F, -0.5F).meta(15, 0.0F, 0.0F, 0.5F).build())
+                    .item(0.7F, RAD_90, 0.0F, -0.0625F, 0.0F, 0.0F, 0.0F)
+                    .gui(0.0D, 0.0D, 0.0D, 1.4D),
+            normalSpec(ModBlocks.rail_large_buffer, "models/blocks/rail_standard_buffer.obj", "blocks/rail_standard_buffer", yawMap().meta(12, 180).meta(13, 0).meta(14, 270).meta(15, 90).build())
+                    .translateByMeta(translateMap().meta(12, 0.5F, 0.0F, 0.0F).meta(13, -0.5F, 0.0F, 0.0F).meta(14, 0.0F, 0.0F, -0.5F).meta(15, 0.0F, 0.0F, 0.5F).build())
+                    .item(0.3F, RAD_90, 0.0F, -0.0625F, 0.0F, 0.0F, 0.0F)
+                    .gui(0.0D, 0.0D, 0.0D, 3.0D),
+            normalSpec(ModBlocks.rail_large_ramp, "models/blocks/rail_standard_ramp.obj", "blocks/rail_standard_straight", yawMap().meta(12, 180).meta(13, 0).meta(14, 270).meta(15, 90).build())
+                    .translateByMeta(translateMap().meta(12, 0.5F, 0.0F, 0.0F).meta(13, -0.5F, 0.0F, 0.0F).meta(14, 0.0F, 0.0F, -0.5F).meta(15, 0.0F, 0.0F, 0.5F).build())
+                    .item(0.3F, RAD_90, 0.0F, -0.0625F, 0.0F, 0.0F, 0.0F)
+                    .gui(0.0D, 0.0D, 0.0D, 3.0D),
+            normalSpec(ModBlocks.rail_large_curve, "models/blocks/rail_standard_bend.obj", "blocks/rail_standard_straight", yawMap().meta(12, 180).meta(13, 0).meta(14, 270).meta(15, 90).build())
+                    .item(0.3F, 0.0F, 2.0F, 0.0F, 2.0F, 0.0F, 0.0F)
+                    .itemAngles(60.0D, 0.0D)
+                    .gui(0.0D, 0.0D, 0.0D, 3.0D, 45.0D),
+            normalSpec(ModBlocks.rail_large_curve_7, "models/blocks/rail_standard_bend_wide.obj", "blocks/rail_standard_straight", yawMap().meta(12, 180).meta(13, 0).meta(14, 270).meta(15, 90).build())
+                    .item(0.225F, 0.0F, 3.0F, 0.0F, 3.0F, 0.0F, 0.0F)
+                    .itemAngles(60.0D, 0.0D)
+                    .gui(0.0D, 0.0D, 0.0D, 3.0D, 45.0D),
+            normalSpec(ModBlocks.rail_large_curve_9, "models/blocks/rail_standard_bend_wide9.obj", "blocks/rail_standard_straight", yawMap().meta(12, 180).meta(13, 0).meta(14, 270).meta(15, 90).build())
+                    .item(0.175F, 0.0F, 4.0F, 0.0F, 4.0F, 0.0F, 0.0F)
+                    .itemAngles(60.0D, 0.0D)
+                    .gui(0.0D, 0.0D, 0.0D, 3.0D, 45.0D),
+            normalSpec(ModBlocks.rail_narrow_straight, "models/blocks/rail_narrow.obj", "blocks/rail_narrow_neo", yawMap().meta(2, 90).meta(3, 90).meta(4, 0).meta(5, 0).meta(12, 90).meta(13, 90).meta(14, 0).meta(15, 0).build())
+                    .item(1.0F, 0.0F, 0.0F, -0.0625F, 0.0F, 0.0F, 0.0F)
+                    .gui(0.0D, 0.0D, 0.0D, 1.0D),
+            normalSpec(ModBlocks.rail_narrow_curve, "models/blocks/rail_narrow_bend.obj", "blocks/rail_narrow_neo", yawMap().meta(12, 90).meta(13, 270).meta(14, 180).meta(15, 0).build())
+                    .item(0.2F, 0.0F, 2.5F, -0.0625F, -1.5F, 0.0F, 0.0F)
+                    .gui(0.0D, 0.0D, 0.0D, 3.0D)
     );
     private static final Reference2ObjectOpenHashMap<Block, Spec> SPECS_BY_BLOCK = createSpecsByBlock();
 
@@ -367,7 +401,8 @@ public final class StaticTesrBakedModels {
                     spec.preTranslateZ,
                     spec.translateX,
                     spec.translateY,
-                    spec.translateZ
+                    spec.translateZ,
+                    spec.worldTranslateByMeta
             );
             int[][] autoRenderExtents = worldModel.captureRenderExtentsByMeta();
             List<IBakedModel> extraWorldModels = new ArrayList<>(spec.extraWorldLayers.size());
@@ -532,6 +567,10 @@ public final class StaticTesrBakedModels {
         return new YawMapBuilder();
     }
 
+    private static TranslateMapBuilder translateMap() {
+        return new TranslateMapBuilder();
+    }
+
     private static Reference2ObjectOpenHashMap<Block, Spec> createSpecsByBlock() {
         Reference2ObjectOpenHashMap<Block, Spec> specsByBlock = new Reference2ObjectOpenHashMap<>(SPECS.size());
         for (Spec spec : SPECS) {
@@ -643,6 +682,19 @@ public final class StaticTesrBakedModels {
         }
     }
 
+    private static final class TranslateMapBuilder {
+        private final float[][] translations = new float[16][];
+
+        private TranslateMapBuilder meta(int meta, float x, float y, float z) {
+            translations[meta] = new float[]{x, y, z};
+            return this;
+        }
+
+        private float[][] build() {
+            return translations;
+        }
+    }
+
     private static final class Spec {
         private final Block block;
         private final ResourceLocation modelLocation;
@@ -651,6 +703,7 @@ public final class StaticTesrBakedModels {
         private final ModelResourceLocation[] worldModelLocations;
         private String[] partNames;
         private String[] itemPartNames;
+        private float[][] worldTranslateByMeta;
         private final List<LayerSpec> extraWorldLayers = new ArrayList<>();
         private boolean bakeInventory = true;
         private boolean doubleSided;
@@ -745,6 +798,11 @@ public final class StaticTesrBakedModels {
             translateX = x;
             translateY = y;
             translateZ = z;
+            return this;
+        }
+
+        private Spec translateByMeta(float[][] translations) {
+            worldTranslateByMeta = translations;
             return this;
         }
 
