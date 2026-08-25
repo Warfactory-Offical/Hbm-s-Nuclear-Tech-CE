@@ -2150,7 +2150,7 @@ public class ModItems {
             .setStats(45)
             .setFunction(EnumBurnFunc.LINEAR)
             .setHeat(2D)
-            .setMeltingPoint(3386)
+            .setMeltingPoint(2386)
             .setTint(tintAmericium);
     public static final ItemRBMKRod rbmk_fuel_men = new ItemRBMKRod(rbmk_pellet_men, "rbmk_fuel_men")
             .setYield(100000000D)
@@ -2210,9 +2210,9 @@ public class ModItems {
     public static final ItemRBMKRod rbmk_fuel_heaus = new ItemRBMKRod(rbmk_pellet_heaus, "rbmk_fuel_heaus")
             .setYield(100000000D)
             .setStats(35)
-            .setFunction(EnumBurnFunc.SQUARE_ROOT)
+            .setFunction(EnumBurnFunc.LINEAR)
             .setXenon(0.05D, 50D)
-            .setHeat(2D)
+            .setHeat(1.5D)
             .setMeltingPoint(5211)
             .setTint(tintAustralium);
     public static final ItemRBMKRod rbmk_fuel_ra226be = new ItemRBMKRod(rbmk_pellet_ra226be, "rbmk_fuel_ra226be")
@@ -2291,7 +2291,7 @@ public class ModItems {
             .setMeltingPoint(3652)
             .setTint(tintBalefire);
     public static final ItemRBMKRod rbmk_fuel_drx = new ItemRBMKRod(rbmk_pellet_drx, "rbmk_fuel_drx")
-            .setYield(100000000D)
+            .setYield(10000000D)
             .setStats(1000, 10)
             .setFunction(EnumBurnFunc.QUADRATIC)
             .setHeat(0.1D)
