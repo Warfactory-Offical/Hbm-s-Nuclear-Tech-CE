@@ -4,6 +4,7 @@ import com.hbm.handler.CompatHandler;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.gui.GUIRBMKConsole;
+import com.hbm.items.machine.ItemRBMKRod;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.tileentity.machine.rbmk.RBMKColumn.ColumnType;
@@ -18,6 +19,7 @@ import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
@@ -487,6 +489,18 @@ public class TileEntityRBMKConsole extends TileEntityMachineBase implements ICon
             if (te instanceof TileEntityRBMKHeater heaterChannel) {
                 data_table.put("coolant", heaterChannel.feed.getFill());
                 data_table.put("hotcoolant", heaterChannel.steam.getFill());
+            }
+
+            if (te instanceof TileEntityRBMKStorage storageChannel) {
+                for (int k = 0; k < 12; k++) {
+                    ItemStack loadedItem = storageChannel.inventory.getStackInSlot(k);
+                    if (loadedItem.isEmpty() || !(loadedItem.getItem() instanceof ItemRBMKRod)) continue;
+                    data_table.put("slot" + k + "coreSkinTemp", ItemRBMKRod.getHullHeat(loadedItem));
+                    data_table.put("slot" + k + "coreTemp", ItemRBMKRod.getCoreHeat(loadedItem));
+                    data_table.put("slot" + k + "enrichment", ItemRBMKRod.getEnrichment(loadedItem));
+                    data_table.put("slot" + k + "xenon", ItemRBMKRod.getPoisonLevel(loadedItem));
+                    data_table.put("slot" + k + "rodName", loadedItem.getItem().getTranslationKey());
+                }
             }
 
             return new Object[]{data_table};

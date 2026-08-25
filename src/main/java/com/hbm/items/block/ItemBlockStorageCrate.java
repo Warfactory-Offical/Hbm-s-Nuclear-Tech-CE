@@ -35,6 +35,7 @@ public class ItemBlockStorageCrate extends ItemBlock implements IGUIProvider {
 
     @Override
     public @NotNull EnumActionResult onItemUse(@NotNull EntityPlayer player, @NotNull World worldIn, @NotNull BlockPos pos, @NotNull EnumHand hand, @NotNull EnumFacing facing, float hitX, float hitY, float hitZ) {
+        if (ServerConfig.CRATE_OPEN_HELD.get() && !player.isSneaking()) return EnumActionResult.FAIL;
         return super.onItemUse(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
     }
 

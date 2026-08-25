@@ -1194,11 +1194,11 @@ public class ModEventHandler {
         NonNullList<ItemStack> handInventory = event.getEntityLiving().handInventory;
         NonNullList<ItemStack> armorArray =event.getEntityLiving().armorArray;
 
-        if (event.getEntityLiving() instanceof EntityPlayer && event.getEntityLiving().getHeldItemMainhand().getItem() instanceof IEquipReceiver && !ItemStack.areItemsEqual(handInventory.get(0), event.getEntityLiving().getHeldItemMainhand())) {
+        if (event.getEntityLiving() instanceof EntityPlayerMP && event.getEntityLiving().getHeldItemMainhand().getItem() instanceof IEquipReceiver && !ItemStack.areItemsEqual(handInventory.get(0), event.getEntityLiving().getHeldItemMainhand())) {
             ((IEquipReceiver) event.getEntityLiving().getHeldItemMainhand().getItem()).onEquip((EntityPlayer) event.getEntityLiving(), EnumHand.MAIN_HAND);
             ((IEquipReceiver)event.getEntityLiving().getHeldItemMainhand().getItem()).onEquip((EntityPlayer) event.getEntityLiving(), event.getEntityLiving().getHeldItem(EnumHand.MAIN_HAND));
         }
-        if (event.getEntityLiving() instanceof EntityPlayer && event.getEntityLiving().getHeldItemOffhand().getItem() instanceof IEquipReceiver && !ItemStack.areItemsEqual(handInventory.get(1), event.getEntityLiving().getHeldItemOffhand())) {
+        if (event.getEntityLiving() instanceof EntityPlayerMP && event.getEntityLiving().getHeldItemOffhand().getItem() instanceof IEquipReceiver && !ItemStack.areItemsEqual(handInventory.get(1), event.getEntityLiving().getHeldItemOffhand())) {
             ((IEquipReceiver) event.getEntityLiving().getHeldItemOffhand().getItem()).onEquip((EntityPlayer) event.getEntityLiving(), EnumHand.OFF_HAND);
         }
 
@@ -1490,6 +1490,12 @@ public class ModEventHandler {
                     event.getEntityLiving().attackEntityFrom(rand.nextBoolean() ? ModDamageSource.euthanizedSelf : ModDamageSource.euthanizedSelf2, 1000);
                 }
             }
+
+            if (stack.hasTagCompound() && stack.getTagCompound().getBoolean("ntmRedPill")) {
+                for (int i = 0; i < 10; i++) {
+                    event.getEntityLiving().addPotionEffect(new PotionEffect(HbmPotion.death, 60 * 60 * 20, 0));
+                }
+            }
         }
     }
 
@@ -1541,6 +1547,22 @@ public class ModEventHandler {
     @SubscribeEvent
     public void onBlockRegister(RegistryEvent.Register<Block> evt) {
         ModBlocks.registerBlocks();
+    }
+
+    private static final Set<String> IGNORED_ITEM_MAPPINGS = new HashSet<>(Arrays.asList(
+            // superseded by the metadata variants of hbm:satellite
+            "hbm:sat_detector",
+            "hbm:sat_precision_laser",
+            "hbm:sat_ray_scanner",
+            "hbm:sat_science",
+            "hbm:sat_science_sensor"
+    ));
+
+    @SubscribeEvent
+    public void onMissingItemMappings(RegistryEvent.MissingMappings<Item> evt) {
+        for(RegistryEvent.MissingMappings.Mapping<Item> mapping : evt.getAllMappings()) {
+            if(IGNORED_ITEM_MAPPINGS.contains(mapping.key.toString())) mapping.ignore();
+        }
     }
 
     @SubscribeEvent

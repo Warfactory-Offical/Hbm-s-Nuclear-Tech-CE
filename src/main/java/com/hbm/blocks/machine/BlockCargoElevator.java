@@ -8,7 +8,9 @@ import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -21,6 +23,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -181,6 +184,24 @@ public class BlockCargoElevator extends BlockDummyable {
             RenderGlobal.drawSelectionBoundingBox(aabb.grow(exp).offset(-dx, -dy, -dz), 0.0F, 0.0F, 0.0F, 1.0F);
         }
         ICustomBlockHighlight.cleanup();
+    }
+
+    @Override
+    public void getDrops(@NotNull NonNullList<ItemStack> drops, @NotNull IBlockAccess world, @NotNull BlockPos pos, @NotNull IBlockState state, int fortune) {
+        int[] core = world instanceof World ? this.findCore((World) world, pos.getX(), pos.getY(), pos.getZ()) : null;
+        TileEntity tile = core != null ? world.getTileEntity(new BlockPos(core[0], core[1], core[2])) : null;
+
+        if (!(tile instanceof TileEntityCargoElevator elevator)) {
+            super.getDrops(drops, world, pos, state, fortune);
+            return;
+        }
+
+        int toDrop = elevator.height + 1;
+        while (toDrop > 0) {
+            int perStack = Math.min(toDrop, 64);
+            toDrop -= perStack;
+            drops.add(new ItemStack(this, perStack));
+        }
     }
 
     private AxisAlignedBB[] getAABBs(TileEntityCargoElevator elevator, BlockPos pos) {

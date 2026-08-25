@@ -14,6 +14,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
 
+import static com.hbm.inventory.OreDictManager.AU198;
+import static com.hbm.inventory.OreDictManager.PB209;
 import static com.hbm.inventory.OreDictManager.TH232;
 import static com.hbm.inventory.OreDictManager.ZR;
 
@@ -66,6 +68,18 @@ public class PUREXRecipes extends GenericRecipes<PUREXRecipe> {
                         new OreDictStack(ZR.billet(), 3))
                 .inputFluids(new FluidStack(Fluids.NITRIC_ACID, 1000), new FluidStack(Fluids.HYDROGEN, 4000))
                 .outputItems(new ItemStack(ModItems.billet_uzh, 4)));
+
+        this.register((PUREXRecipe) new PUREXRecipe("purex.flashgold").setup(600, 1_000)
+                .inputItems(new OreDictStack(AU198.billet()),
+                        new ComparableStack(ModItems.pellet_charged))
+                .inputFluids(new FluidStack(Fluids.AMAT, 1_000))
+                .outputItems(new ItemStack(ModItems.billet_balefire_gold, 2)));
+
+        this.register((PUREXRecipe) new PUREXRecipe("purex.flashlead").setup(600, 1_000)
+                .inputItems(new OreDictStack(PB209.billet()),
+                        new ComparableStack(ModItems.billet_balefire_gold))
+                .inputFluids(new FluidStack(Fluids.AMAT, 1_000))
+                .outputItems(new ItemStack(ModItems.billet_flashlead, 1)));
 
         //CP-1
         String autoPile = "autoswitch.pile";

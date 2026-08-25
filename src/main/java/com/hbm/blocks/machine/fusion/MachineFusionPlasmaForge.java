@@ -40,6 +40,21 @@ public class MachineFusionPlasmaForge extends BlockDummyable implements ITooltip
     @Override public int getOffset() { return 5; }
 
     @Override
+    public int[][] getAllDimensions() {
+        return new int[][] {
+                getDimensions(),
+                new int[] {2, 0, 3, -2, 4, 4},
+                new int[] {2, 0, -2, 3, 4, 4},
+                new int[] {2, 0, 4, -3, 3, 3},
+                new int[] {2, 0, -3, 4, 3, 3},
+                new int[] {2, 0, 5, -4, 2, 2},
+                new int[] {2, 0, -4, 5, 2, 2},
+                new int[] {3, -2, 1, 1, 5, 5},
+                new int[] {4, -3, 0, 0, 4, 4}
+        };
+    }
+
+    @Override
     public boolean checkRequirement(World world, int x, int y, int z, ForgeDirection dir, int o) {
         return super.checkRequirement(world, x, y, z, dir, o) &&
                 MultiblockHandlerXR.checkSpace(world, x + dir.offsetX * o, y + dir.offsetY * o, z + dir.offsetZ * o, new int[] {2, 0, 3, -2, 4, 4}, x, y, z, dir) &&

@@ -1,9 +1,16 @@
 {
 	"name": "RoR Relay Satellite",
 	"icon": [
-		"hbm:sat_foeq"
+		"hbm:satellite",
+		1,
+		8
 	],
 	"trigger": [
+		[
+			"hbm:satellite",
+			1,
+			8
+		],
 		[
 			"hbm:sat_foeq"
 		]

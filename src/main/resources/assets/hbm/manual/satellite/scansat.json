@@ -1,9 +1,16 @@
 {
 	"name": "Depth Scanning Satellite",
 	"icon": [
-		"hbm:sat_scanner"
+		"hbm:satellite",
+		1,
+		1
 	],
 	"trigger": [
+		[
+			"hbm:satellite",
+			1,
+			1
+		],
 		[
 			"hbm:sat_scanner"
 		]

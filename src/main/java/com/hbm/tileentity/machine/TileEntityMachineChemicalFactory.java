@@ -209,6 +209,7 @@ public class TileEntityMachineChemicalFactory extends TileEntityMachineBase impl
             for(FluidTankNTM in : inputTanks) if(in.getTankType() != Fluids.NONE) for(FluidTankNTM out : outputTanks) { // up to 144 iterations, but most of them are NOP anyway
                 if(out.getTankType() == Fluids.NONE) continue;
                 if(out.getTankType() != in.getTankType()) continue;
+                if(out.getPressure() != in.getPressure()) continue;
                 int toMove = BobMathUtil.min(in.getMaxFill() - in.getFill(), out.getFill(), 50);
                 if(toMove > 0) {
                     in.setFill(in.getFill() + toMove);

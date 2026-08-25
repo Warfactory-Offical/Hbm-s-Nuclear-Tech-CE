@@ -1,9 +1,16 @@
 {
 	"name": "Radar Satellite",
 	"icon": [
-		"hbm:sat_radar"
+		"hbm:satellite",
+		1,
+		2
 	],
 	"trigger": [
+		[
+			"hbm:satellite",
+			1,
+			2
+		],
 		[
 			"hbm:sat_radar"
 		]

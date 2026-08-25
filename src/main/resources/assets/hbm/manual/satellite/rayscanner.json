@@ -1,11 +1,15 @@
 {
 	"name": "Narrowband Emission Scanning Satellite",
 	"icon": [
-		"hbm:sat_ray_scanner"
+		"hbm:satellite",
+		1,
+		10
 	],
 	"trigger": [
 		[
-			"hbm:sat_ray_scanner"
+			"hbm:satellite",
+			1,
+			10
 		]
 	],
 	"title": {

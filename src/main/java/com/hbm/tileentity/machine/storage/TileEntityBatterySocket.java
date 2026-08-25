@@ -48,6 +48,8 @@ import java.util.function.BiConsumer;
 public class TileEntityBatterySocket extends TileEntityBatteryBase implements IRORValueProvider, IRORInteractive {
 
     public static BulletConfig discharge;
+
+    public boolean frame = false;
     public static BiConsumer<EntityBulletBeamBase, RayTraceResult> BEAM_DISCHARGE_HIT = (beam, mop) -> {
 
         if(mop.typeOfHit == mop.typeOfHit.BLOCK) {
@@ -113,6 +115,8 @@ public class TileEntityBatterySocket extends TileEntityBatteryBase implements IR
             }
 
             this.log[19] = avg;
+        } else {
+            if(world.getTotalWorldTime() % 20 == 0) this.frame = !world.isAirBlock(pos.up(2));
         }
     }
 

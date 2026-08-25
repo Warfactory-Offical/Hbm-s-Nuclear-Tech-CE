@@ -223,6 +223,12 @@ public class TileEntityPWRController extends TileEntityMachineBase implements IT
                     if (this.rodTarget > this.rodLevel) this.rodLevel++;
                     if (this.rodTarget < this.rodLevel) this.rodLevel--;
 
+                    double multiplier = 1D;
+
+                    if (tanks[0].getTankType().hasTrait(FT_PWRModerator.class)) {
+                        multiplier = tanks[0].getTankType().getTrait(FT_PWRModerator.class).getMultiplier();
+                    }
+
                     int newFlux = this.sourceCount * 20;
 
                     if (typeLoaded != -1 && amountLoaded > 0) {
@@ -232,6 +238,10 @@ public class TileEntityPWRController extends TileEntityMachineBase implements IT
                         double outputPerRod = fuel.function.effonix(fluxPerRod);
                         double totalOutput = outputPerRod * amountLoaded * usedRods;
                         double totalHeatOutput = totalOutput * fuel.heatEmission;
+
+                        if (tanks[0].getFill() > 0) {
+                            totalHeatOutput *= multiplier;
+                        }
 
                         this.coreHeat += totalHeatOutput;
                         newFlux += totalOutput;
@@ -275,8 +285,8 @@ public class TileEntityPWRController extends TileEntityMachineBase implements IT
 
                     this.flux = newFlux;
 
-                    if (tanks[0].getTankType().hasTrait(FT_PWRModerator.class) && tanks[0].getFill() > 0) {
-                        this.flux *= tanks[0].getTankType().getTrait(FT_PWRModerator.class).getMultiplier();
+                    if (tanks[0].getFill() > 0) {
+                        this.flux *= multiplier;
                     }
 
                     if (this.coreHeat > this.coreHeatCapacity) {

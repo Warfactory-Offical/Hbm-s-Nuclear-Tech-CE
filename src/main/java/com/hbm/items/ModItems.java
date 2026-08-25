@@ -2435,25 +2435,21 @@ public class ModItems {
     public static final Item loot_15 = new ItemLootCrate("loot_15").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
     public static final Item loot_misc = new ItemLootCrate("loot_misc").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
     //Satellites
-    public static final Item sat_mapper = new ItemSatellite("sat_mapper").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
-    public static final Item sat_scanner = new ItemSatellite("sat_scanner").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
-    public static final Item sat_radar = new ItemSatellite("sat_radar").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
-    public static final Item sat_laser = new ItemSatellite("sat_laser").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
-    public static final Item sat_foeq = new ItemSatellite("sat_foeq").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
-    public static final Item sat_resonator = new ItemSatellite("sat_resonator").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
-    public static final Item sat_miner = new ItemSatellite("sat_miner").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
-    public static final Item sat_lunar_miner = new ItemSatellite("sat_lunar_miner").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
-    public static final Item sat_gerald = new ItemSatellite("sat_gerald").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
-    public static final Item sat_detector = new ItemSatellite("sat_detector").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
-    public static final Item sat_precision_laser = new ItemSatellite("sat_precision_laser").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
-    public static final Item sat_ray_scanner = new ItemSatellite("sat_ray_scanner").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
-    public static final Item sat_science = new ItemSatellite("sat_science").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
-    public static final Item sat_science_sensor = new ItemSatellite("sat_science_sensor").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
-    public static final Item sat_chip = new ItemSatellite("sat_chip").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
+    public static final Item sat_mapper = new ItemSatChip("sat_mapper").setMaxStackSize(1);
+    public static final Item sat_scanner = new ItemSatChip("sat_scanner").setMaxStackSize(1);
+    public static final Item sat_radar = new ItemSatChip("sat_radar").setMaxStackSize(1);
+    public static final Item sat_laser = new ItemSatChip("sat_laser").setMaxStackSize(1);
+    public static final Item sat_foeq = new ItemSatChip("sat_foeq").setMaxStackSize(1);
+    public static final Item sat_resonator = new ItemSatChip("sat_resonator").setMaxStackSize(1);
+    public static final Item sat_miner = new ItemSatChip("sat_miner").setMaxStackSize(1);
+    public static final Item sat_lunar_miner = new ItemSatChip("sat_lunar_miner").setMaxStackSize(1);
+    public static final Item satellite = new ItemSatellite("satellite").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
+    public static final Item sat_gerald = new ItemSatChip("sat_gerald").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
+    public static final Item sat_chip = new ItemSatChip("sat_chip").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
     public static final Item sat_interface = new ItemSatInterface("sat_interface").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
     public static final Item sat_coord = new ItemSatInterface("sat_coord").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
     public static final Item sat_designator = new ItemSatDesignator("sat_designator").setFull3D().setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
-    public static final Item sat_relay = new ItemSatellite("sat_relay").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
+    public static final Item sat_relay = new ItemSatChip("sat_relay").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
     //Missiles
     public static final Item rangefinder = new ItemRangefinder("rangefinder").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
     public static final Item designator = new ItemDesignator("designator").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);

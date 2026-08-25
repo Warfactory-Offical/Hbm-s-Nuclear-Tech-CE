@@ -1,9 +1,16 @@
 {
 	"name": "Spy Satellite",
 	"icon": [
-		"hbm:sat_mapper"
+		"hbm:satellite",
+		1,
+		0
 	],
 	"trigger": [
+		[
+			"hbm:satellite",
+			1,
+			0
+		],
 		[
 			"hbm:sat_mapper"
 		]

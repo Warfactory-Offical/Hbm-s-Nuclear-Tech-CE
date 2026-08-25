@@ -3,6 +3,7 @@ package com.hbm.saveddata.satellites;
 import com.hbm.api.redstoneoverradio.IRORInteractive;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemDrive.EnumDriveType;
+import com.hbm.items.machine.ItemSatellite.EnumSatType;
 import com.hbm.tileentity.network.RTTYSystem;
 import com.hbm.util.EnumUtil;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -20,6 +21,7 @@ public abstract class Satellite {
 
 	public static List<Class<? extends Satellite>> satellites = new ArrayList<Class<? extends Satellite>>();
 	public static HashMap<Item, Class<? extends Satellite>> itemToClass = new HashMap<Item, Class<? extends Satellite>>();
+	public static HashMap<Integer, Class<? extends Satellite>> metaToClass = new HashMap<Integer, Class<? extends Satellite>>();
 
 	public static final String CHAN_SATLINK = "SAT_LINK";
 
@@ -57,25 +59,33 @@ public abstract class Satellite {
 	
 	public static void register() {
 
-		registerSatellite(SatelliteMapper.class, ModItems.sat_mapper);
-		registerSatellite(SatelliteScanner.class, ModItems.sat_scanner);
-		registerSatellite(SatelliteRadar.class, ModItems.sat_radar);
-		registerSatellite(SatelliteLaser.class, ModItems.sat_laser);
-		registerSatellite(SatelliteResonator.class, ModItems.sat_resonator);
-		registerSatellite(SatelliteRelay.class, ModItems.sat_foeq);
-		registerSatellite(SatelliteMiner.class, ModItems.sat_miner);
-		registerSatellite(SatelliteLunarMiner.class, ModItems.sat_lunar_miner);
-		registerSatellite(SatelliteHorizons.class, ModItems.sat_gerald);
-		registerSatellite(SatelliteDetector.class, ModItems.sat_detector);
-		registerSatellite(SatellitePrecisionLaser.class, ModItems.sat_precision_laser);
-		registerSatellite(SatelliteRayScan.class, ModItems.sat_ray_scanner);
-		registerSatellite(SatelliteScience.class, ModItems.sat_science);
+		// the list index is the persisted satellite id, so this order must never change
+		registerSatellite(SatelliteMapper.class, EnumSatType.SPY, ModItems.sat_mapper);
+		registerSatellite(SatelliteScanner.class, EnumSatType.SCANNER, ModItems.sat_scanner);
+		registerSatellite(SatelliteRadar.class, EnumSatType.RADAR, ModItems.sat_radar);
+		registerSatellite(SatelliteLaser.class, EnumSatType.DEATH_RAY, ModItems.sat_laser);
+		registerSatellite(SatelliteResonator.class, EnumSatType.XENIUM_RESONATOR, ModItems.sat_resonator);
+		registerSatellite(SatelliteRelay.class, EnumSatType.RELAY, ModItems.sat_foeq);
+		registerSatellite(SatelliteMiner.class, EnumSatType.MINER_ASTRO, ModItems.sat_miner);
+		registerSatellite(SatelliteLunarMiner.class, EnumSatType.MINER_LUNAR, ModItems.sat_lunar_miner);
+		registerSatellite(SatelliteHorizons.class, null, ModItems.sat_gerald);
+		registerSatellite(SatelliteDetector.class, EnumSatType.DETECTOR, null);
+		registerSatellite(SatellitePrecisionLaser.class, EnumSatType.PRECISION_LASER, null);
+		registerSatellite(SatelliteRayScan.class, EnumSatType.RAY_SCAN, null);
+		registerSatellite(SatelliteScience.class, EnumSatType.SCIENCE, null);
 	}
-	
-	private static void registerSatellite(Class<? extends Satellite> sat, Item item) {
+
+	private static void registerSatellite(Class<? extends Satellite> sat, EnumSatType type, Item legacy) {
 
 		satellites.add(sat);
-		itemToClass.put(item, sat);
+		if(type != null) metaToClass.put(type.ordinal(), sat);
+		if(legacy != null) itemToClass.put(legacy, sat);
+	}
+
+	public static Class<? extends Satellite> getClassFromStack(ItemStack stack) {
+		if(stack.isEmpty()) return null;
+		if(stack.getItem() == ModItems.satellite) return metaToClass.get(stack.getItemDamage());
+		return itemToClass.get(stack.getItem());
 	}
 	
 	public static void orbit(World world, int id, int freq, double x, double y, double z) {
@@ -118,12 +128,8 @@ public abstract class Satellite {
 		return sat;
 	}
 	
-	public static int getIDFromItem(Item item) {
-		
-		Class<? extends Satellite> sat = itemToClass.get(item);
-		int i = satellites.indexOf(sat);
-		
-		return i;
+	public static int getIDFromStack(ItemStack stack) {
+		return satellites.indexOf(getClassFromStack(stack));
 	}
 	
 	public int getID() {

@@ -1,11 +1,15 @@
 {
 	"name": "Wideband Radio Emission Detector Satellite",
 	"icon": [
-		"hbm:sat_detector"
+		"hbm:satellite",
+		1,
+		9
 	],
 	"trigger": [
 		[
-			"hbm:sat_detector"
+			"hbm:satellite",
+			1,
+			9
 		]
 	],
 	"title": {

@@ -1,9 +1,16 @@
 {
 	"name": "Asteroid Mining Ship",
 	"icon": [
-		"hbm:sat_miner"
+		"hbm:satellite",
+		1,
+		3
 	],
 	"trigger": [
+		[
+			"hbm:satellite",
+			1,
+			3
+		],
 		[
 			"hbm:sat_miner"
 		]

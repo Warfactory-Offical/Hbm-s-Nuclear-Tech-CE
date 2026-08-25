@@ -16,6 +16,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
+import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -144,7 +145,7 @@ public class GenericRecipe {
 
     public List<String> print() {
         List<String> list = new ArrayList<>();
-        list.add(TextFormatting.YELLOW + this.getLocalizedName());
+        header(list);
 
         autoSwitch(list);
         duration(list);
@@ -153,6 +154,11 @@ public class GenericRecipe {
         output(list);
 
         return list;
+    }
+
+    protected void header(List<String> list) {
+        list.add(TextFormatting.YELLOW + this.getLocalizedName());
+        if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) list.add(TextFormatting.DARK_GRAY + "Internal: " + this.getInternalName());
     }
 
     protected void autoSwitch(List<String> list) {

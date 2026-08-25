@@ -80,6 +80,8 @@ public class NBTStructure {
         put(Tags.MODID + ":ore_coal_oil", "minecraft:coal_ore");
         put(Tags.MODID + ":fluid_duct_neo", Tags.MODID + ":fluid_duct_mk2");
         put(Tags.MODID + ":rail_narrow", "minecraft:rail");
+        put(Tags.MODID + ":tile.hev_battery", Tags.MODID + ":hev_battery_block");
+        put(Tags.MODID + ":hev_battery", Tags.MODID + ":hev_battery_block");
     }};
     private static final String[] LEGACY_BRICK_SLABS = {
             Tags.MODID + ":reinforced_stone_slab",
@@ -832,6 +834,9 @@ public class NBTStructure {
                 return item.getRegistryName().toString();
             }
 
+            String legacy = remapLegacyItemName(idString);
+            if (legacy != null) return legacy;
+
             return idString.contains(":") ? idString : null;
         }
 
@@ -924,6 +929,15 @@ public class NBTStructure {
         }
 
         return new LegacyBlockDefinition(variants[variant], preserveHalf ? meta & 8 : 0);
+    }
+
+    private static @Nullable String remapLegacyItemName(String name) {
+        String prefix = Tags.MODID + ":item.";
+        if (!name.startsWith(prefix)) return null;
+
+        String stripped = Tags.MODID + ":" + name.substring(prefix.length());
+        Item item = Item.getByNameOrId(stripped);
+        return item != null && item.getRegistryName() != null ? item.getRegistryName().toString() : null;
     }
 
     private static @Nullable String remapLegacyBlockName(String name) {

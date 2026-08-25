@@ -2,6 +2,8 @@ package com.hbm.saveddata.satellites;
 
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemDrive.EnumDriveType;
+import com.hbm.items.machine.ItemSatellite;
+import com.hbm.items.machine.ItemSatellite.EnumSatType;
 import com.hbm.util.BobMathUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -41,7 +43,7 @@ public class SatelliteScience extends Satellite {
 	@Override
 	public void onPartDelivered(World world, ItemStack part) {
 
-		if(!part.isEmpty() && part.getItem() == ModItems.sat_science_sensor) {
+		if(!part.isEmpty() && part.getItem() == ModItems.satellite && part.getItemDamage() == EnumSatType.SCIENCE_SENSOR.ordinal()) {
 			this.sensorCount++;
 			this.markDirty();
 		}
@@ -66,7 +68,7 @@ public class SatelliteScience extends Satellite {
 		int seconds = cooldown / 20;
 
 		List<ITextComponent> info = new ArrayList<>();
-		info.add(new TextComponentTranslation(ModItems.sat_science.getTranslationKey() + ".name"));
+		info.add(new TextComponentTranslation(ItemSatellite.make(EnumSatType.SCIENCE).getTranslationKey() + ".name"));
 		info.add(cooldown <= 0 ? new TextComponentTranslation("satellite.ready") : new TextComponentTranslation("satellite.cooldown", (seconds / 60) + "m" + (seconds % 60) + "s"));
 		if(this.sensorCount > 0) {
 			info.add(new TextComponentTranslation("satellite.sensors", this.sensorCount));

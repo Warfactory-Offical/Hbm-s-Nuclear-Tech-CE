@@ -1,9 +1,16 @@
 {
 	"name": "Xenium Resonator Satellite",
 	"icon": [
-		"hbm:sat_resonator"
+		"hbm:satellite",
+		1,
+		7
 	],
 	"trigger": [
+		[
+			"hbm:satellite",
+			1,
+			7
+		],
 		[
 			"hbm:sat_resonator"
 		]

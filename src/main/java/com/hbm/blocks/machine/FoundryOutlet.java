@@ -213,7 +213,7 @@ public class FoundryOutlet extends BlockContainer implements ICrucibleAcceptor, 
 //			text.add("§a" + I18nUtil.resolveKey("foundry.status.open"));
 //		}
 		if(outlet.filter != null) {
-			text.add("§e" + I18nUtil.resolveKey("foundry.filter", outlet.filter.names[0]));
+			text.add("§e" + I18nUtil.resolveKey("foundry.filter", outlet.filter.getLocalizedName()));
 		}
 		if(outlet.invertFilter) {
 			text.add("§e" + I18nUtil.resolveKey("foundry.invertFilter"));

@@ -2,6 +2,8 @@ package com.hbm.saveddata.satellites;
 
 import com.hbm.api.redstoneoverradio.IRORInteractive;
 import com.hbm.items.ModItems;
+import com.hbm.items.machine.ItemSatellite;
+import com.hbm.items.machine.ItemSatellite.EnumSatType;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
@@ -36,7 +38,7 @@ public class SatelliteRayScan extends Satellite {
 	@Override
 	public ITextComponent[] getInfo(World world) {
 		return new ITextComponent[] {
-				new TextComponentTranslation(ModItems.sat_ray_scanner.getTranslationKey() + ".name")
+				new TextComponentTranslation(ItemSatellite.make(EnumSatType.RAY_SCAN).getTranslationKey() + ".name")
 		};
 	}
 

@@ -33,7 +33,7 @@ public class FusionRecipe extends GenericRecipe {
 
     public List<String> print() {
         List<String> list = new ArrayList();
-        list.add(TextFormatting.YELLOW + this.getLocalizedName());
+        header(list);
 
         duration(list);
         power(list);

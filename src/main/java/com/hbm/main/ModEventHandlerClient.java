@@ -1451,8 +1451,10 @@ public class ModEventHandlerClient {
         }
 
         try {
-            QuickManualAndWiki qmaw = QMAWLoader.triggers.get(comp);
-            if (qmaw == null) qmaw = QMAWLoader.triggers.get(new ComparableStack(comp.item, 1, OreDictionary.WILDCARD_VALUE));
+            // QMAW triggers are registered as plain ComparableStacks, so an NBT-sensitive key never matches
+            ComparableStack plain = new ComparableStack(stack).makeSingular();
+            QuickManualAndWiki qmaw = QMAWLoader.triggers.get(plain);
+            if (qmaw == null) qmaw = QMAWLoader.triggers.get(new ComparableStack(plain.item, 1, OreDictionary.WILDCARD_VALUE));
             if (qmaw != null) {
                 list.add(TextFormatting.GREEN + I18nUtil.resolveKey("qmaw.tab", Keyboard.getKeyName(HbmKeybinds.qmaw.getKeyCode())));
                 lastQMAW = qmaw;

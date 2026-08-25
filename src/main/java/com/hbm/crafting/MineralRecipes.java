@@ -199,9 +199,6 @@ public class MineralRecipes {
         CraftingManager.addRecipeAutoOreShapeless(new ItemStack(ModItems.billet_uranium, 2), ModItems.billet_u238, "nuggetUranium238", "nuggetUranium238", "nuggetUranium238", "nuggetUranium238", "nuggetUranium238", "nuggetUranium235" );
         CraftingManager.addRecipeAutoOreShapeless(new ItemStack(ModItems.billet_uranium, 2), ModItems.billet_u238, "tinyU238", "tinyU238", "tinyU238", "tinyU238", "tinyU238", "tinyU235" );
 
-        CraftingManager.addShapelessAuto(new ItemStack(ModItems.billet_balefire_gold, 1), ModItems.billet_au198, new ItemStack(ModItems.cell, 1, Fluids.AMAT.getID()), ModItems.pellet_charged );
-        CraftingManager.addShapelessAuto(new ItemStack(ModItems.billet_flashlead, 2), ModItems.billet_balefire_gold, ModItems.billet_pb209, new ItemStack(ModItems.cell, 1, Fluids.AMAT.getID()) );
-
         CraftingManager.addRecipeAutoOreShapeless(new ItemStack(ModItems.pellet_rtg), ModItems.billet_pu238, ModItems.billet_pu238, ModItems.billet_pu238, IRON.plate() );
         CraftingManager.addRecipeAutoOreShapeless(new ItemStack(ModItems.pellet_rtg_radium), ModItems.billet_ra226, ModItems.billet_ra226, ModItems.billet_ra226, IRON.plate() );
         CraftingManager.addRecipeAutoOreShapeless(new ItemStack(ModItems.pellet_rtg_weak), ModItems.billet_u238, ModItems.billet_u238, ModItems.billet_pu238, IRON.plate() );

@@ -262,7 +262,7 @@ public class TileEntityHeatBoiler extends TileEntityLoadedBase implements ITicka
                 this.heat -= heatReq * ops;
 
                 if(ops > 0 && world.rand.nextInt(400) == 0) {
-                    world.playSound(null, pos.getX() + 0.5, pos.getY() + 2, pos.getZ() + 0.5, new SoundEvent(new ResourceLocation("hbm:block.boilerGroan")), SoundCategory.BLOCKS, 0.5F, 1.0F);
+                    world.playSound(null, pos.getX() + 0.5, pos.getY() + 2, pos.getZ() + 0.5, HBMSoundHandler.boilerGroanSounds[world.rand.nextInt(3)], SoundCategory.BLOCKS, 0.5F, 1.0F);
                 }
 
                 if(ops > 0) {

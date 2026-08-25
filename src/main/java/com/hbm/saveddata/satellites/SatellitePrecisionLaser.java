@@ -3,6 +3,8 @@ package com.hbm.saveddata.satellites;
 import com.hbm.api.redstoneoverradio.IRORInteractive;
 import com.hbm.entity.logic.EntityOrbitalLaser;
 import com.hbm.items.ModItems;
+import com.hbm.items.machine.ItemSatellite;
+import com.hbm.items.machine.ItemSatellite.EnumSatType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -42,7 +44,7 @@ public class SatellitePrecisionLaser extends Satellite {
 		int cooldown = (int) ((lastShot + CHARGE_TIME) - world.getTotalWorldTime());
 
 		return new ITextComponent[] {
-				new TextComponentTranslation(ModItems.sat_precision_laser.getTranslationKey() + ".name"),
+				new TextComponentTranslation(ItemSatellite.make(EnumSatType.PRECISION_LASER).getTranslationKey() + ".name"),
 				canFire ? new TextComponentTranslation("satellite.ready") : new TextComponentTranslation("satellite.cooldown", cooldown / 20 + "s")
 		};
 	}

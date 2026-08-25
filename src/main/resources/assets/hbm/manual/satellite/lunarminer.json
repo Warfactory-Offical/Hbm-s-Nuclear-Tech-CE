@@ -1,9 +1,16 @@
 {
 	"name": "Lunar Mining Ship",
 	"icon": [
-		"hbm:sat_lunar_miner"
+		"hbm:satellite",
+		1,
+		4
 	],
 	"trigger": [
+		[
+			"hbm:satellite",
+			1,
+			4
+		],
 		[
 			"hbm:sat_lunar_miner"
 		]

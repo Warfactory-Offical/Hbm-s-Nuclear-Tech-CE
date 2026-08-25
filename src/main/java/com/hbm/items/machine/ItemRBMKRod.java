@@ -324,16 +324,18 @@ public class ItemRBMKRod extends Item {
 
 
         double enrichment = getEnrichment(stack);
+		String flux = selfRate > 0 ? "(x" + TextFormatting.RED + " + " + selfRate + TextFormatting.WHITE + ")" : "x";
 
 		if(enrichment < 1) {
 			enrichment = reactivityModByEnrichment(enrichment);
-			String reactivity = TextFormatting.YELLOW + "" + ((int)(this.reactivity * enrichment * 1000D) / 1000D) + TextFormatting.WHITE;
+			String enrichmentMod = TextFormatting.YELLOW + "" + ((int)(enrichment * 1000D) / 1000D) + TextFormatting.WHITE;
 			String enrichmentPer = TextFormatting.GOLD + " (" + ((int)(enrichment * 1000D) / 10D) + "%)";
 
-			return String.format(function, selfRate > 0 ? "(x" + TextFormatting.RED + " + " + selfRate + TextFormatting.WHITE + ")" : "x", reactivity).concat(enrichmentPer);
+			flux = "(" + flux + " * " + enrichmentMod + ")";
+			return String.format(function, flux, reactivity).concat(enrichmentPer);
 		}
 
-		return String.format(function, selfRate > 0 ? "(x" + TextFormatting.RED + " + " + selfRate + TextFormatting.WHITE + ")" : "x", reactivity);
+		return String.format(function, flux, reactivity);
 	}
 
 	public enum EnumDepleteFunc {

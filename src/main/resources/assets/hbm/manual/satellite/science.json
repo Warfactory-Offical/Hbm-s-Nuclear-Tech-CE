@@ -1,14 +1,20 @@
 {
 	"name": "Space Laboratory",
 	"icon": [
-		"hbm:sat_science"
+		"hbm:satellite",
+		1,
+		11
 	],
 	"trigger": [
 		[
-			"hbm:sat_science"
+			"hbm:satellite",
+			1,
+			11
 		],
 		[
-			"hbm:sat_science_sensor"
+			"hbm:satellite",
+			1,
+			13
 		]
 	],
 	"title": {

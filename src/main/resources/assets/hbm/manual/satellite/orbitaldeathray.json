@@ -1,9 +1,16 @@
 {
 	"name": "Orbital Death Ray",
 	"icon": [
-		"hbm:sat_laser"
+		"hbm:satellite",
+		1,
+		6
 	],
 	"trigger": [
+		[
+			"hbm:satellite",
+			1,
+			6
+		],
 		[
 			"hbm:sat_laser"
 		]

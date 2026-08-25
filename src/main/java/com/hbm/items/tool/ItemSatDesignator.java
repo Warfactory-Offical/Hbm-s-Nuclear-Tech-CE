@@ -1,6 +1,6 @@
 package com.hbm.items.tool;
 
-import com.hbm.items.machine.ItemSatellite;
+import com.hbm.items.machine.ItemSatChip;
 import com.hbm.lib.Library;
 import com.hbm.saveddata.satellites.Satellite;
 import com.hbm.saveddata.satellites.SatelliteSavedData;
@@ -16,7 +16,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-public class ItemSatDesignator extends ItemSatellite {
+public class ItemSatDesignator extends ItemSatChip {
 
     public ItemSatDesignator(String regName) {
         super(regName);
