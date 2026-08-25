@@ -42,6 +42,7 @@ public class HbmGroovyPropertyContainer extends GroovyPropertyContainer {
     public static final WasteDrum WASTEDRUM = createProperty(new WasteDrum());
 
     public static final AssemblyMachine ASSEMBLYMACHINE = createProperty(new AssemblyMachine());
+    public static final SuperComputer SUPERCOMPUTER = createProperty(new SuperComputer());
     public static final ChemicalPlant CHEMICALPLANT = createProperty(new ChemicalPlant());
     public static final ArcWelder ARCWELDER = createProperty(new ArcWelder());
     public static final Soldering SOLDERING = createProperty(new Soldering());
