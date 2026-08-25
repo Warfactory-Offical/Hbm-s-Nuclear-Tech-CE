@@ -168,6 +168,7 @@ public class ModItems {
         ItemSimpleConsumable.addPotionEffect(user, HbmPotion.radaway, 100, 99);
     }).setCreativeTab(MainRegistry.consumableTab);
     public static final Item euphemium_kit = new ItemStarterKit("euphemium_kit").setMaxStackSize(1).setCreativeTab(null);
+    public static final Item nuke_electric_kit = new ItemStarterKit("nuke_electric_kit").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
     public static final Item cbt_device = new ItemConsumable("cbt_device").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
     public static final Item radaway_flush = new ItemSimpleConsumable("radaway_flush").setUseActionServer((stack, user) -> {
         ItemSimpleConsumable.giveSoundAndDecrement(stack, user, HBMSoundHandler.radawayUse, new ItemStack(ModItems.iv_empty));
@@ -339,6 +340,7 @@ public class ModItems {
     public static final Item battery_spark_cell_100 = new ItemBattery(1000000000L * 10L, 1000000L * 5L, 1000000L * 5L, "battery_spark_cell_100").setMaxStackSize(1).setCreativeTab(null);
     public static final Item battery_spark_cell_1000 = new ItemBattery(1000000000L * 100L, 10000000L * 5L, 10000000L * 5L, "battery_spark_cell_1000").setMaxStackSize(1).setCreativeTab(null);
     public static final Item battery_spark_cell_2500 = new ItemBattery(1000000000L * 250L, 100000000L * 5L, 100000000L * 5L, "battery_spark_cell_2500").setMaxStackSize(1).setCreativeTab(null);
+    public static final Item cube_power = new ItemBattery(1000000000000000000L, 1000000000000000L, 1000000000000000L, "cube_power").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
     public static final Item battery_spark_cell_10000 = new ItemBattery(1000000000L * 1000L, 1000000000L * 5L, 1000000000L * 5L, "battery_spark_cell_10000").setMaxStackSize(1).setCreativeTab(null);
     public static final Item battery_spark_cell_power = new ItemBattery(1000000000L * 100000L, 1000000000L * 500L, 1000000000L * 500L, "battery_spark_cell_power").setMaxStackSize(1).setCreativeTab(null);
     public static final Item battery_potato = new ItemBattery(100, 0, 100, "battery_potato").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
@@ -389,6 +391,7 @@ public class ModItems {
     public static final Item upgrade_stack_3 = new ItemMachineUpgrade("upgrade_stack_3", UpgradeType.SPECIAL, 1).setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab);
     //Fluid handling items
     public static final Item fuel_additive = new ItemEnumMulti<>("fuel_additive", EnumFuelAdditive.VALUES, true, true).setCreativeTab(MainRegistry.controlTab);
+    public static final Item drive = new ItemEnumMulti<>("drive", ItemDrive.EnumDriveType.VALUES, true, true).setCreativeTab(MainRegistry.controlTab);
 
     public static final Item canister_empty = new ItemBakedBase("canister_empty").setCreativeTab(MainRegistry.controlTab);
     public static final Item canister_full = new ItemCanister("canister_fuel", 1000).setCreativeTab(MainRegistry.controlTab);
@@ -436,6 +439,7 @@ public class ModItems {
     public static final Item spawn_chopper = new ItemChopper("chopper").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
     public static final Item spawn_worm = new ItemChopper("spawn_worm").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
     public static final Item spawn_ufo = new ItemChopper("spawn_ufo").setMaxStackSize(1).setCreativeTab(MainRegistry.consumableTab);
+    public static final Item spawn_duck = new ItemChopper("spawn_duck").setMaxStackSize(16).setCreativeTab(MainRegistry.consumableTab);
     public static final Item bomb_caller = new ItemBombCaller("bomb_caller").setMaxStackSize(1).setFull3D().setCreativeTab(MainRegistry.consumableTab);
     public static final Item crate_caller = new ItemCrateCaller("crate_caller").setMaxStackSize(1).setFull3D().setCreativeTab(MainRegistry.consumableTab);
     public static final Item meteor_remote = new ItemMeteorRemote("meteor_remote").setMaxStackSize(1).setFull3D().setCreativeTab(MainRegistry.consumableTab);
@@ -1164,6 +1168,7 @@ public class ModItems {
     public static final Item pile_rod_boron = new ItemPileRod("pile_rod_boron").setCreativeTab(MainRegistry.controlTab);
     public static final Item pile_rod_lithium = new ItemPileRod("pile_rod_lithium").setCreativeTab(MainRegistry.controlTab);
     public static final Item pile_rod_detector = new ItemPileRod("pile_rod_detector").setCreativeTab(MainRegistry.controlTab);
+    public static final Item pile_rod = new ItemPileRodMK2("pile_rod").setCreativeTab(MainRegistry.controlTab);
     //That's a lot of rods
     public static final Item rod_empty = new ItemBase("rod_empty").setCreativeTab(MainRegistry.controlTab);
     public static final Item rod_dual_empty = new ItemBase("rod_dual_empty").setCreativeTab(MainRegistry.controlTab);
@@ -1317,6 +1322,10 @@ public class ModItems {
     public static final Item reactor_core = new ItemBase("reactor_core").setCreativeTab(MainRegistry.partsTab);
     //Fuels
     public static final Item oil_tar = new ItemEnumMulti<>("oil_tar", EnumTarType.VALUES, true, true).setCreativeTab(MainRegistry.partsTab);
+    public static final Item coal_eternal = new ItemBase("coal_eternal") {
+        @Override public boolean hasContainerItem(ItemStack stack) { return true; }
+        @Override public ItemStack getContainerItem(ItemStack stack) { return stack.copy(); }
+    }.setMaxStackSize(1).setCreativeTab(null);
     public static final Item solid_fuel = new ItemFuel("solid_fuel", 3200).setCreativeTab(MainRegistry.partsTab);
     public static final Item solid_fuel_presto = new ItemFuel("solid_fuel_presto", 6400).setCreativeTab(MainRegistry.partsTab);
     public static final Item solid_fuel_presto_triplet = new ItemFuel("solid_fuel_presto_triplet", 19200).setCreativeTab(MainRegistry.partsTab);

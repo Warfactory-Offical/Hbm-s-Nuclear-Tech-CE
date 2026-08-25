@@ -125,6 +125,8 @@ public class RecipesCommon {
 
         public abstract AStack copy();
 
+        public abstract AStack copy(int stacksize);
+
         public abstract ItemStack getStack();
 
         public abstract List<ItemStack> getStackList();
@@ -327,6 +329,12 @@ public class RecipesCommon {
         }
 
         @Override
+        @Contract("_ -> new")
+        public AStack copy(int stacksize) {
+            return new ComparableStack(item, stacksize, meta);
+        }
+
+        @Override
         @Contract(pure = true)
         public String toString() {
             return "ComparableStack: { " + stacksize + " x " + item.getRegistryName() + "@" + meta + " }";
@@ -394,6 +402,14 @@ public class RecipesCommon {
         @Contract("-> new")
         public AStack copy() {
             return new NbtComparableStack(stack);
+        }
+
+        @Override
+        @Contract("_ -> new")
+        public AStack copy(int stacksize) {
+            ItemStack st = stack.copy();
+            st.setCount(stacksize);
+            return new NbtComparableStack(st);
         }
 
         @Override
@@ -512,6 +528,12 @@ public class RecipesCommon {
         @Override
         @Contract("-> new")
         public AStack copy() {
+            return new OreDictStack(name, stacksize);
+        }
+
+        @Override
+        @Contract("_ -> new")
+        public AStack copy(int stacksize) {
             return new OreDictStack(name, stacksize);
         }
 

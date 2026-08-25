@@ -112,9 +112,7 @@ public class TileMappings {
         put(TileEntityLaunchPadRusted.class, "tileentity_launchpad_rusted");
         put(TileEntityLaunchPadLarge.class, "tileentity_launchpad_large");
         put(TileEntityDecoBlock.class, "tileentity_deco");
-//        put(TileEntityDecoBlockAltW.class, "tileentity_deco_w");
-//        put(TileEntityDecoBlockAltG.class, "tileentity_deco_g");
-        put(TileEntityDecoBlockAlt.class, "tileentity_deco_f");
+        put(TileEntityDecoBlockAlt.class, "tileentity_deco_f", "tileentity_deco_g", "tileentity_deco_w");
         put(TileEntityCrashedBomb.class, "tileentity_crashed_balefire");
 //        put(TileEntityConverterHeRf.class, "tileentity_converter_herf");
 //        put(TileEntityConverterRfHe.class, "tileentity_converter_rfhe");

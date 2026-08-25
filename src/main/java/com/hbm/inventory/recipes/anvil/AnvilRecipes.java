@@ -21,6 +21,7 @@ import com.hbm.items.food.ItemFlask;
 import com.hbm.items.machine.ItemBatterySC;
 import com.hbm.items.machine.ItemCassette;
 import com.hbm.util.Tuple;
+import com.hbm.items.machine.ItemPileRodMK2.EnumPileRod;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -224,6 +225,14 @@ public class AnvilRecipes extends SerializableRecipe {
 				new AnvilOutput(new ItemStack(ModBlocks.machine_blast_furnace))).setTier(1));
 
 		boolean exp = GeneralConfig.enableExpensiveMode;
+
+		constructionRecipes.add(new AnvilConstructionRecipe(
+				new AStack[] {
+						new OreDictStack(KEY_STONE, 16),
+						new OreDictStack(STEEL.plate(), 4),
+						new OreDictStack(CU.pipe(), 1),
+						new ComparableStack(ModItems.motor, 1)
+				}, new AnvilOutput(new ItemStack(ModBlocks.machine_rockmill))).setTier(2));
 
 		constructionRecipes.add(new AnvilConstructionRecipe(
 				new AStack[] {
@@ -713,8 +722,8 @@ public class AnvilRecipes extends SerializableRecipe {
 				new AnvilOutput[] {
 						new AnvilOutput(new ItemStack(ModItems.plate_steel, 16)),
 						new AnvilOutput(new ItemStack(ModItems.ingot_beryllium, 6)),
-						new AnvilOutput(new ItemStack(ModItems.ingot_copper, 8)),
-						new AnvilOutput(new ItemStack(ModItems.coil_gold, 16)),
+						new AnvilOutput(new ItemStack(ModItems.ingot_copper, 4)),
+						new AnvilOutput(new ItemStack(ModItems.coil_gold, 8)),
 
 				}
 		).setTier(2));
@@ -858,6 +867,23 @@ public class AnvilRecipes extends SerializableRecipe {
 				new ComparableStack(ModItems.pile_rod_lithium), new AnvilOutput[] {
 				new AnvilOutput(new ItemStack(ModItems.lithium, 1)),
 				new AnvilOutput(new ItemStack(ModItems.cell, 1))
+		}).setTier(2));
+
+		constructionRecipes.add(new AnvilConstructionRecipe(
+				new ComparableStack(ModItems.billet_ra226be, 3), new AnvilOutput[] {
+				new AnvilOutput(new ItemStack(ModItems.pile_rod, 1, EnumPileRod.RA226BE.ordinal()))
+		}).setTier(2));
+		constructionRecipes.add(new AnvilConstructionRecipe(
+				new ComparableStack(ModItems.billet_po210be, 3), new AnvilOutput[] {
+				new AnvilOutput(new ItemStack(ModItems.pile_rod, 1, EnumPileRod.PO210BE.ordinal()))
+		}).setTier(2));
+		constructionRecipes.add(new AnvilConstructionRecipe(
+				new OreDictStack(ZR.billet(), 3), new AnvilOutput[] {
+				new AnvilOutput(new ItemStack(ModItems.pile_rod, 1, EnumPileRod.ZR.ordinal()))
+		}).setTier(2));
+		constructionRecipes.add(new AnvilConstructionRecipe(
+				new OreDictStack(U.billet(), 3), new AnvilOutput[] {
+				new AnvilOutput(new ItemStack(ModItems.pile_rod, 1, EnumPileRod.NU.ordinal()))
 		}).setTier(2));
 
 		//RBMK

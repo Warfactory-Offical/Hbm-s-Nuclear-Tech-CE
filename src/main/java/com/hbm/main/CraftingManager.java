@@ -3,8 +3,10 @@ package com.hbm.main;
 import com.hbm.Tags;
 import com.hbm.blocks.BlockEnums;
 import com.hbm.blocks.BlockEnums.LightstoneType;
+import com.hbm.blocks.BlockEnums.PlatemetalType;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.PlantEnums;
+import com.hbm.blocks.generic.BlockPlushie.PlushieType;
 import com.hbm.blocks.generic.BlockAbsorber;
 import com.hbm.blocks.generic.BlockConcreteColoredExt.EnumConcreteType;
 import com.hbm.config.GeneralConfig;
@@ -120,6 +122,12 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModBlocks.lightstone_bricks_stairs, 8), "#  ", "## ", "###", '#', new ItemStack(ModBlocks.lightstone, 1, LightstoneType.BRICKS.ordinal()));
 		addShapelessAuto(new ItemStack(ModBlocks.lightstone, 3, LightstoneType.BRICKS.ordinal()),
 				ModBlocks.lightstone_bricks_stairs, ModBlocks.lightstone_bricks_stairs, ModBlocks.lightstone_bricks_stairs, ModBlocks.lightstone_bricks_stairs);
+		addRecipeAuto(new ItemStack(ModBlocks.lightstone_tile_slab, 6), "###", '#', new ItemStack(ModBlocks.lightstone, 1, LightstoneType.TILE.ordinal()));
+		addRecipeAuto(new ItemStack(ModBlocks.lightstone_tile_stairs, 4), "#  ", "## ", "###", '#', ModBlocks.lightstone_tile_slab);
+		addShapelessAuto(new ItemStack(ModBlocks.lightstone, 1, LightstoneType.TILE.ordinal()), ModBlocks.lightstone_tile_slab, ModBlocks.lightstone_tile_slab);
+		addRecipeAuto(new ItemStack(ModBlocks.lightstone_bricks_slab, 6), "###", '#', new ItemStack(ModBlocks.lightstone, 1, LightstoneType.BRICKS.ordinal()));
+		addRecipeAuto(new ItemStack(ModBlocks.lightstone_bricks_stairs, 4), "#  ", "## ", "###", '#', ModBlocks.lightstone_bricks_slab);
+		addShapelessAuto(new ItemStack(ModBlocks.lightstone, 1, LightstoneType.BRICKS.ordinal()), ModBlocks.lightstone_bricks_slab, ModBlocks.lightstone_bricks_slab);
 
 		addSlabStair(ModBlocks.pink_slab, ModBlocks.pink_stairs, ModBlocks.pink_planks);
 
@@ -424,6 +432,15 @@ public class CraftingManager {
 		}
 		addShapelessAuto(new ItemStack(ModBlocks.concrete_smooth, 1), "unknownConcrete");
 
+		String[] plateDyes = { "Black", "White", "Red", "Green", "LightGray", "Blue", "Purple", "Cyan", "Pink", "Lime", "Yellow", "LightBlue", "Magenta", "Orange" };
+		for(int i = 0; i < plateDyes.length; i++) {
+			String dyeName = "dye" + plateDyes[i];
+			addRecipeAuto(new ItemStack(ModBlocks.platemetal, 8, i + 1), "PPP", "PDP", "PPP", 'P', new ItemStack(ModBlocks.platemetal, 1, PlatemetalType.BASE.ordinal()), 'D', dyeName );
+		}
+		for(int i = 1; i < PlatemetalType.VALUES.length; i++) {
+			addShapelessAuto(new ItemStack(ModBlocks.platemetal, 1, PlatemetalType.BASE.ordinal()), new ItemStack(ModBlocks.platemetal, 1, i) );
+		}
+
 		addRecipeAuto(new ItemStack(ModBlocks.concrete_colored_ext, 6, EnumConcreteType.MACHINE.ordinal()), "CCC", "1 2", "CCC", 'C', ModBlocks.concrete_smooth, '1', KEY_BROWN, '2', KEY_GRAY );
 		addRecipeAuto(new ItemStack(ModBlocks.concrete_colored_ext, 6, EnumConcreteType.MACHINE_STRIPE.ordinal()), "CCC", "1 2", "CCC", 'C', ModBlocks.concrete_smooth, '1', KEY_BROWN, '2', KEY_BLACK );
 		addRecipeAuto(new ItemStack(ModBlocks.concrete_colored_ext, 6, EnumConcreteType.INDIGO.ordinal()), "CCC", "1 2", "CCC", 'C', ModBlocks.concrete_smooth, '1', KEY_BLUE, '2', KEY_PURPLE );
@@ -507,9 +524,8 @@ public class CraftingManager {
 
 		addRecipeAuto(new ItemStack(ModBlocks.sat_dock, 1), "SSS", "PCP", 'S', STEEL.ingot(), 'P', ANY_PLASTIC.ingot(), 'C', ModBlocks.crate_iron );
 		addRecipeAuto(new ItemStack(ModBlocks.book_guide, 1), "IBI", "LBL", "IBI", 'B', Items.BOOK, 'I', KEY_BLACK, 'L', KEY_BLUE );
-		// TODO: rails?..
-		/*addRecipeAuto(new ItemStack(ModBlocks.rail_wood, 16), "S S", "SRS", "S S", 'S', Items.STICK, 'R', DictFrame.fromOne(ModItems.plant_item, ItemEnums.EnumPlantType.ROPE) );
-		addRecipeAuto(new ItemStack(ModBlocks.rail_narrow, 64), "S S", "S S", "S S", 'S', ModBlocks.steel_beam );*/
+		addRecipeAuto(new ItemStack(ModBlocks.rail_wood, 16), "S S", "SRS", "S S", 'S', Items.STICK, 'R', DictFrame.fromOne(ModItems.plant_item, ItemEnums.EnumPlantType.ROPE) );
+		addRecipeAuto(new ItemStack(ModBlocks.rail_narrow, 64), "S S", "S S", "S S", 'S', ModBlocks.steel_beam );
 		addRecipeAuto(new ItemStack(ModBlocks.rail_highspeed, 16), "S S", "SIS", "S S", 'S', STEEL.ingot(), 'I', IRON.plate() );
 		addRecipeAuto(new ItemStack(ModBlocks.rail_booster, 6), "S S", "CIC", "SRS", 'S', STEEL.ingot(), 'I', IRON.plate(), 'R', MINGRADE.ingot(), 'C', ModItems.coil_copper );
 
@@ -811,6 +827,10 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModItems.rbmk_lid, 4), "PPP", "CCC", "PPP", 'P', STEEL.plate(), 'C', ModBlocks.concrete_asbestos );
 		addRecipeAuto(new ItemStack(ModItems.rbmk_lid_glass, 4), "LLL", "BBB", "P P", 'P', STEEL.plate(), 'L', ModBlocks.glass_lead, 'B', ModBlocks.glass_boron );
 		addRecipeAuto(new ItemStack(ModItems.rbmk_lid_glass, 4), "BBB", "LLL", "P P", 'P', STEEL.plate(), 'L', ModBlocks.glass_lead, 'B', ModBlocks.glass_boron );
+
+		addRecipeAuto(new ItemStack(ModBlocks.pile_device, 1, 0), " A ", "CBS", 'A', AL.plate(), 'C', STEEL.plateCast(), 'B', B.ingot(), 'S', STEEL.shell() );
+		addRecipeAuto(new ItemStack(ModBlocks.pile_device, 1, 1), " M ", "ACA", " S ", 'M', ModItems.motor, 'A', AL.plate(), 'C', CU.shell(), 'S', STEEL.plateCast() );
+		addRecipeAuto(new ItemStack(ModBlocks.pile_device, 1, 2), " B ", "SBS", "SBS", 'B', B.ingot(), 'S', STEEL.plate() );
 
 		addRecipeAuto(new ItemStack(ModBlocks.rbmk_moderator, 1), " G ", "GRG", " G ", 'G', GRAPHITE.block(), 'R', ModBlocks.rbmk_blank );
 		addRecipeAuto(new ItemStack(ModBlocks.rbmk_absorber, 1), "GGG", "GRG", "GGG", 'G', B.ingot(), 'R', ModBlocks.rbmk_blank );
@@ -1129,6 +1149,8 @@ public class CraftingManager {
 		addRecipeAuto(new ItemStack(ModBlocks.cm_flux, 1, 0), "NNN", "ZCZ", "NNN", 'Z', ZR.plateCast(), 'N', ModItems.neutron_reflector, 'C', ModItems.reactor_core);
 		addRecipeAuto(new ItemStack(ModBlocks.cm_heat, 1, 0), "PCP", "PCP", "PCP", 'P', ModItems.plate_polymer, 'C', CU.ingot());
 
+		addRecipeAuto(new ItemStack(ModBlocks.plushie, 1, PlushieType.YOMI.ordinal()), "LCR", 'L', "cropCarrot", 'C', ModItems.rag, 'R', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.VACUUM_TUBE));
+		addRecipeAuto(new ItemStack(ModBlocks.plushie, 1, PlushieType.NUMBERNINE.ordinal()), " C ", "LCR", " C ", 'L', ModItems.cigarette, 'C', ModItems.rag, 'R', COAL.gem());
 	}
 
 	public static void addUpgradeContainers(IForgeRegistry<IRecipe> registry){

@@ -79,11 +79,12 @@ public class RenderRailSwitch extends TileEntitySpecialRenderer<TileEntityRailSw
         return new ItemRenderBase() {
 
             public void renderInventory() {
-                GlStateManager.scale(0.1, 0.1, 0.1);
-                GlStateManager.translate(0.0, -0.625, 0.0);
+                GlStateManager.translate(0, -0.8, 0);
+                GlStateManager.scale(0.8, 0.8, 0.8);
             }
 
             public void renderCommon(ItemStack itemStack) {
+                GlStateManager.translate(2.0, 0, 0);
                 GlStateManager.rotate(90.0F, 0.0F, 1.0F, 0.0F);
                 bindTexture(ResourceManager.rail_standard_tex);
                 model.renderPart("Rail");

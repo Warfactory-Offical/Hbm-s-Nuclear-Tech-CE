@@ -17,6 +17,7 @@ import com.hbm.items.ModItems;
 import com.hbm.items.machine.*;
 import com.hbm.items.weapon.ItemAmmoHIMARS;
 import com.hbm.items.weapon.sedna.factory.GunFactory;
+import com.hbm.items.machine.ItemPileRodMK2.EnumPileRod;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -488,6 +489,20 @@ public class AssemblyMachineRecipes extends GenericRecipes<GenericRecipe> {
         this.register(new GenericRecipe("ass.cirnox").setup(600, 100).outputItems(new ItemStack(ModBlocks.reactor_zirnox, 1))
                 .inputItems(new OreDictStack(STEEL.shell(), 4), new OreDictStack(STEEL.pipe(), 8), new OreDictStack(B.ingot(), 8), new OreDictStack(GRAPHITE.ingot(), 16), new OreDictStack(RUBBER.ingot(), 16), new OreDictStack(ANY_CONCRETE.any(), 16), new ComparableStack(ModItems.circuit, 4, EnumCircuitType.BASIC))
                 .inputItemsEx(new ComparableStack(ModItems.item_expensive, 4, EnumExpensiveType.LEAD_PLATING), new OreDictStack(GRAPHITE.ingot(), 16), new OreDictStack(RUBBER.ingot(), 16), new OreDictStack(ANY_CONCRETE.any(), 16), new ComparableStack(ModItems.item_expensive, 2, EnumExpensiveType.CIRCUIT)));
+        String autoPileRod = "autoswitch.pilerod";
+        this.register(new GenericRecipe("ass.pilepabe").setup(40, 200).outputItems(new ItemStack(ModItems.pile_rod, 1, EnumPileRod.RA226BE.ordinal()))
+                .inputItems(new ComparableStack(ModItems.billet_ra226be, 3)).setGroup(autoPileRod, INSTANCE));
+        this.register(new GenericRecipe("ass.pilepobe").setup(40, 200).outputItems(new ItemStack(ModItems.pile_rod, 1, EnumPileRod.PO210BE.ordinal()))
+                .inputItems(new ComparableStack(ModItems.billet_po210be, 3)).setGroup(autoPileRod, INSTANCE));
+        this.register(new GenericRecipe("ass.pilezr").setup(40, 200).outputItems(new ItemStack(ModItems.pile_rod, 3, EnumPileRod.ZR.ordinal()))
+                .inputItems(new OreDictStack(ZR.billet(), 1)).setGroup(autoPileRod, INSTANCE));
+        this.register(new GenericRecipe("ass.pilenu").setup(40, 200).outputItems(new ItemStack(ModItems.pile_rod, 1, EnumPileRod.NU.ordinal()))
+                .inputItems(new OreDictStack(U.billet(), 3)).setGroup(autoPileRod, INSTANCE));
+        this.register(new GenericRecipe("ass.pilethorium").setup(40, 200).outputItems(new ItemStack(ModItems.pile_rod, 1, EnumPileRod.THORIUM.ordinal()))
+                .inputItems(new OreDictStack(TH232.billet(), 3)).setGroup(autoPileRod, INSTANCE));
+        this.register(new GenericRecipe("ass.pileblock").setup(20, 250).outputItems(new ItemStack(ModBlocks.pile_brick, 1))
+                .inputItems(new OreDictStack(KEY_PLANKS, 1), new OreDictStack(GRAPHITE.ingot(), 4), new OreDictStack(STEEL.bolt(), 2))
+                .inputItemsEx(new OreDictStack(KEY_PLANKS, 1), new OreDictStack(GRAPHITE.ingot(), 8), new OreDictStack(STEEL.plate(), 1)));
         this.register(new GenericRecipe("ass.rbmk").setup(100, 100).outputItems(new ItemStack(ModBlocks.rbmk_blank, 1))
                 .inputItems(new ComparableStack(ModBlocks.concrete_asbestos, 4), new OreDictStack(STEEL.plateCast(), 2), new OreDictStack(CU.plate(), 4), new OreDictStack(RUBBER.ingot(), 2))
                 .inputItemsEx(new ComparableStack(ModBlocks.concrete_asbestos, 4), new ComparableStack(ModItems.item_expensive, 1, EnumExpensiveType.FERRO_PLATING), new OreDictStack(CU.plate(), 16))
@@ -823,7 +838,7 @@ public class AssemblyMachineRecipes extends GenericRecipes<GenericRecipe> {
                 .inputItems(new ComparableStack(ModItems.seg_15, 1), new OreDictStack(DURA.pipe(), 3), new OreDictStack(W.ingot(), 8), new OreDictStack(DESH.ingot(), 4)));
         this.register(new GenericRecipe("ass.mpt15bfshort").setup(200, 100).outputItems(new ItemStack(ModItems.mp_thruster_15_balefire_short, 1))
                 .inputItems(new ComparableStack(ModItems.seg_15, 1), new OreDictStack(DURA.pipe(), 5), new OreDictStack(W.plateCast(), 8), new OreDictStack(BIGMT.plate(), 8)));
-        this.register(new GenericRecipe("ass.mpt15bf").setup(200, 100).outputItems(new ItemStack(ModItems.mp_thruster_15_balefire_short, 1))
+        this.register(new GenericRecipe("ass.mpt15bf").setup(200, 100).outputItems(new ItemStack(ModItems.mp_thruster_15_balefire, 1))
                 .inputItems(new ComparableStack(ModItems.seg_15, 1), new OreDictStack(DURA.pipe(), 5), new OreDictStack(W.plateCast(), 16), new OreDictStack(BIGMT.plate(), 16)));
         this.register(new GenericRecipe("ass.mpt15bflarge").setup(200, 100).outputItems(new ItemStack(ModItems.mp_thruster_15_balefire_large, 1))
                 .inputItems(new ComparableStack(ModItems.seg_15, 1), new OreDictStack(DURA.pipe(), 10), new OreDictStack(W.plateCast(), 16), new OreDictStack(BIGMT.plate(), 24)));
@@ -843,11 +858,11 @@ public class AssemblyMachineRecipes extends GenericRecipes<GenericRecipe> {
         // custom missile fuselages
         this.register(new GenericRecipe("ass.mpf10kero").setup(100, 100).outputItems(new ItemStack(ModItems.mp_fuselage_10_kerosene, 1))
                 .inputItems(new ComparableStack(ModItems.seg_10, 2), new OreDictStack(AL.plate(), 12), new OreDictStack(STEEL.plate(), 3)));
-        this.register(new GenericRecipe("ass.mpf10kerolong").setup(100, 100).outputItems(new ItemStack(ModItems.mp_fuselage_10_kerosene, 1))
+        this.register(new GenericRecipe("ass.mpf10kerolong").setup(100, 100).outputItems(new ItemStack(ModItems.mp_fuselage_10_long_kerosene, 1))
                 .inputItems(new ComparableStack(ModItems.seg_10, 2), new OreDictStack(AL.plate(), 16), new OreDictStack(STEEL.plate(), 6)));
         this.register(new GenericRecipe("ass.mpf10solid").setup(100, 100).outputItems(new ItemStack(ModItems.mp_fuselage_10_solid, 1))
                 .inputItems(new ComparableStack(ModItems.seg_10, 2), new OreDictStack(TI.plate(), 12), new OreDictStack(STEEL.plate(), 3)));
-        this.register(new GenericRecipe("ass.mpf10solidlong").setup(100, 100).outputItems(new ItemStack(ModItems.mp_fuselage_10_solid, 1))
+        this.register(new GenericRecipe("ass.mpf10solidlong").setup(100, 100).outputItems(new ItemStack(ModItems.mp_fuselage_10_long_solid, 1))
                 .inputItems(new ComparableStack(ModItems.seg_10, 2), new OreDictStack(TI.plate(), 16), new OreDictStack(STEEL.plate(), 6)));
         this.register(new GenericRecipe("ass.mpf10xenon").setup(100, 100).outputItems(new ItemStack(ModItems.mp_fuselage_10_xenon, 1))
                 .inputItems(new ComparableStack(ModItems.seg_10, 2), new OreDictStack(CU.plate(), 12), new OreDictStack(STEEL.plate(), 3)));

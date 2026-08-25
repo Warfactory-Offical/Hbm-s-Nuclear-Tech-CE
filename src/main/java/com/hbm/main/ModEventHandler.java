@@ -1537,7 +1537,8 @@ public class ModEventHandler {
         ItemStack fuel = event.getItemStack();
         int single = 200;
         boolean changed = true;
-        if (fuel.getItem().equals(ModItems.solid_fuel)) event.setBurnTime(single * 16);
+        if (fuel.getItem().equals(ModItems.coal_eternal)) event.setBurnTime(single * 16);
+        else if (fuel.getItem().equals(ModItems.solid_fuel)) event.setBurnTime(single * 16);
         else if (fuel.getItem().equals(ModItems.solid_fuel_presto)) event.setBurnTime(single * 40);
         else if (fuel.getItem().equals(ModItems.solid_fuel_presto_triplet)) event.setBurnTime(single * 200);
         else if(fuel.getItem().equals(ModItems.solid_fuel_bf))					event.setBurnTime(single * 160);

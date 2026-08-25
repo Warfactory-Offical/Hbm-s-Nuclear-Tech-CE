@@ -7,7 +7,11 @@ import com.hbm.items.ItemEnums.EnumCircuitType;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemBatteryPack;
 import com.hbm.items.tool.ItemBlowtorch;
+import com.hbm.items.tool.ItemModMinecart;
+import com.hbm.items.tool.ItemModMinecart.EnumCartBase;
+import com.hbm.items.tool.ItemModMinecart.EnumMinecart;
 import com.hbm.items.tool.ItemToolAbilityFueled;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.main.CraftingManager;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -145,11 +149,9 @@ public class ToolRecipes {
         CraftingManager.addShapelessAuto(new ItemStack(ModItems.bobmazon), Items.BOOK, Items.GOLD_NUGGET, Items.STRING, KEY_BLUE);
 
         //Carts
-        // TODO: ItemModMinecart
-        /*CraftingManager.addRecipeAuto(ItemModMinecart.createCartItem(EnumCartBase.WOOD, EnumMinecart.EMPTY), "P P", "WPW", 'P',KEY_SLAB, 'W', KEY_PLANKS );
+        CraftingManager.addRecipeAuto(ItemModMinecart.createCartItem(EnumCartBase.WOOD, EnumMinecart.EMPTY), "P P", "WPW", 'P',KEY_SLAB, 'W', KEY_PLANKS );
         CraftingManager.addRecipeAuto(ItemModMinecart.createCartItem(EnumCartBase.STEEL, EnumMinecart.EMPTY), "P P", "IPI", 'P', STEEL.plate(), 'I', STEEL.ingot() );
         CraftingManager.addShapelessAuto(ItemModMinecart.createCartItem(EnumCartBase.PAINTED, EnumMinecart.EMPTY), ItemModMinecart.createCartItem(EnumCartBase.STEEL, EnumMinecart.EMPTY), KEY_RED );
-        CraftingManager.addRecipeAuto(new ItemStack(ModItems.boat_rubber), "L L", "LLL", 'L', ANY_RUBBER.ingot() );
 
         for(EnumCartBase base : EnumCartBase.values()) {
 
@@ -157,7 +159,7 @@ public class ToolRecipes {
             if(EnumMinecart.POWDER.supportsBase(base))		CraftingManager.addRecipeAuto(ItemModMinecart.createCartItem(base, EnumMinecart.POWDER), "PPP", "PCP", "PPP", 'P', Items.GUNPOWDER, 'C', ItemModMinecart.createCartItem(base, EnumMinecart.EMPTY) );
             if(EnumMinecart.SEMTEX.supportsBase(base))		CraftingManager.addRecipeAuto(ItemModMinecart.createCartItem(base, EnumMinecart.SEMTEX), "S", "C", 'S', ModBlocks.semtex, 'C', ItemModMinecart.createCartItem(base, EnumMinecart.EMPTY) );
         }
-        net.minecraft.item.crafting.CraftingManager.getInstance().addRecipe(DictFrame.fromOne(ModItems.cart, EnumMinecart.CRATE), "C", "S", 'C', ModBlocks.crate_steel, 'S', Items.MINECART ).func_92100_c();*/
+        CraftingManager.addRecipeAuto(DictFrame.fromOne(ModItems.cart, EnumMinecart.CRATE), "C", "S", 'C', ModBlocks.crate_steel, 'S', Items.MINECART );
 
         //Configged
         if(GeneralConfig.enableLBSM && GeneralConfig.enableLBSMSimpleToolRecipes) {

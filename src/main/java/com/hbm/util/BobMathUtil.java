@@ -34,6 +34,10 @@ public class BobMathUtil {
         return smallest;
     }
 
+    public static double squirt(double x) {
+        return Math.sqrt(x + 1D / ((x + 2D) * (x + 2D))) - 1D / (x + 2D);
+    }
+
     public static int max(int... nums) {
         int largest = Integer.MIN_VALUE;
         for (int num : nums) if (num > largest) largest = num;

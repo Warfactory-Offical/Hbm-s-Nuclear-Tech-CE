@@ -210,7 +210,7 @@ public class MachinePWRController extends BlockContainerBakeable implements IToo
         errored = true;
     }
 
-    private void sendError(World world, BlockPos pos, String message, EntityPlayer player) {
+    public static void sendError(World world, BlockPos pos, String message, EntityPlayer player) {
         if (player instanceof EntityPlayerMP) {
             NBTTagCompound data = new NBTTagCompound();
             data.setInteger("color", 0xff0000);

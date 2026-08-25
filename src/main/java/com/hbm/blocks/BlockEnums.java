@@ -194,4 +194,31 @@ public class BlockEnums {
         FLUORESCENT,
         HALOGEN
     }
+
+    public enum EnumBiomeType {
+        DESERT,
+        WOODLAND;
+
+        public static final EnumBiomeType[] VALUES = values();
+    }
+
+    public enum PlatemetalType {
+        BASE,
+        BLACK,
+        WHITE,
+        RED,
+        GREEN,
+        LIGHT_GRAY,
+        BLUE,
+        PURPLE,
+        CYAN,
+        PINK,
+        LIME,
+        YELLOW,
+        LIGHT_BLUE,
+        MAGENTA,
+        ORANGE;
+
+        public static final PlatemetalType[] VALUES = values();
+    }
 }

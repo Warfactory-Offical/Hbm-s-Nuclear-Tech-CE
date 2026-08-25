@@ -4,6 +4,7 @@ import com.hbm.blocks.BlockEnums;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.material.MaterialShapes;
+import com.hbm.inventory.material.Mats;
 import com.hbm.items.ItemEnums;
 import com.hbm.items.ItemEnums.EnumDepletedRTGMaterial;
 import com.hbm.items.ModItems;
@@ -50,6 +51,8 @@ public class MineralRecipes {
         add1To9Pair(ModBlocks.block_tcalloy, ModItems.ingot_tcalloy);
         add1To9Pair(ModBlocks.block_cdalloy, ModItems.ingot_cdalloy);
         add1To9Pair(ModBlocks.block_saturnite, ModItems.ingot_saturnite);
+
+        add1To9Pair(new ItemStack(ModBlocks.block_slag), new ItemStack(ModItems.ingot_raw, 9, Mats.MAT_SLAG.id));
 
         for(int i = 0; i < ItemEnums.EnumCokeType.values().length; i++) {
             add1To9PairSameMeta(Item.getItemFromBlock(ModBlocks.block_coke), ModItems.coke, i);
@@ -395,6 +398,7 @@ public class MineralRecipes {
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.egg_balefire_shard, 9), "#", '#', ModItems.egg_balefire );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.nitra, 1), "##", "##", '#', ModItems.nitra_small );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.nitra_small, 4), "#", '#', ModItems.nitra );
+        CraftingManager.addRecipeAuto(new ItemStack(ModItems.ammo_container, 1, 1), "##", "##", '#', ModItems.nitra );
         CraftingManager.addRecipeAuto(new ItemStack(ModBlocks.glass_polarized, 4), "##", "##", '#', DictFrame.fromOne(ModItems.part_generic, ItemEnums.EnumPartType.GLASS_POLARIZED) );
         add1To9Pair(ModItems.powder_paleogenite, ModItems.powder_paleogenite_tiny);
         add1To9Pair(ModItems.ingot_osmiridium, ModItems.nugget_osmiridium);
@@ -427,6 +431,11 @@ public class MineralRecipes {
     public static void add1To9Pair(Block one, Item nine) {
         add1To9(new ItemStack(one), new ItemStack(nine, 9));
         add9To1(new ItemStack(nine), new ItemStack(one));
+    }
+
+    public static void add1To9Pair(ItemStack one, ItemStack nine) {
+        add1To9(one, nine);
+        add9To1(nine, one);
     }
 
     public static void add1To9PairSameMeta(Item one, Item nine, int meta) {

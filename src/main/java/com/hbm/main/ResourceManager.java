@@ -1365,6 +1365,13 @@ public class ResourceManager {
     public static final ResourceLocation rail_switch_sign_flipped_tex = new ResourceLocation(Tags.MODID, "textures/blocks/rail_switch_sign_flipped.png");
     public static final ResourceLocation tram_tex = new ResourceLocation(Tags.MODID, "textures/models/trains/tram.png");
     public static final ResourceLocation tram_trailer_tex = new ResourceLocation(Tags.MODID, "textures/models/trains/tram_trailer.png");
+    // Chicago Pile
+    public static final WaveFrontObjectVAO pile_loader = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/pile/pile_loader.obj")).asVBO();
+    public static final WaveFrontObjectVAO pile_vent = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/pile/pile_vent.obj")).asVBO();
+    public static final WaveFrontObjectVAO pile_control = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/pile/pile_control.obj")).asVBO();
+    public static final ResourceLocation pile_loader_tex = new ResourceLocation(Tags.MODID, "textures/models/pile/pile_loader.png");
+    public static final ResourceLocation pile_vent_tex = new ResourceLocation(Tags.MODID, "textures/models/pile/pile_vent.png");
+    public static final ResourceLocation pile_control_tex = new ResourceLocation(Tags.MODID, "textures/models/pile/pile_control.png");
     // Dud
     public static final WaveFrontObjectVAO dud_balefire = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/bombs/dud_balefire.obj")).asVBO();
     public static final WaveFrontObjectVAO dud_conventional = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/bombs/dud_conventional.obj")).asVBO();

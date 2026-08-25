@@ -76,10 +76,15 @@ public class BlockCable extends BlockContainer implements IDynamicModels, ICusto
 	private final IBlockState[] statesByMask = new IBlockState[64];
 
 	private final ResourceLocation objModelLocation = new ResourceLocation(Tags.MODID, "models/blocks/cable_neo.obj");
-	private final ResourceLocation textureLocation = new ResourceLocation(Tags.MODID, "blocks/cable_neo");
+	private final ResourceLocation textureLocation;
 
 	public BlockCable(Material material, String registryName) {
+		this(material, registryName, "cable_neo");
+	}
+
+	public BlockCable(Material material, String registryName, String texture) {
 		super(material);
+		this.textureLocation = new ResourceLocation(Tags.MODID, "blocks/" + texture);
 		this.setRegistryName(registryName);
 		this.setTranslationKey(registryName);
 		IBlockState base = this.blockState.getBaseState()

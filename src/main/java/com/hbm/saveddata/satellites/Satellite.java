@@ -1,9 +1,12 @@
 package com.hbm.saveddata.satellites;
 
 import com.hbm.items.ModItems;
+import com.hbm.items.machine.ItemDrive.EnumDriveType;
+import com.hbm.util.EnumUtil;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -92,9 +95,47 @@ public abstract class Satellite {
 		return satellites.indexOf(this.getClass());
 	}
 	
-	public void writeToNBT(NBTTagCompound nbt) { }
-	
-	public void readFromNBT(NBTTagCompound nbt) { }
+	/** Data currently loaded into the satellite, consumed by the tape drive over a sat link */
+	public EnumDriveType driveInput = null;
+	public EnumDriveType driveOutput = null;
+
+	public void writeToNBT(NBTTagCompound nbt) {
+		if(driveInput != null) nbt.setInteger("driveInput", driveInput.ordinal());
+		if(driveOutput != null) nbt.setInteger("driveOutput", driveOutput.ordinal());
+	}
+
+	public void readFromNBT(NBTTagCompound nbt) {
+		this.driveInput = nbt.hasKey("driveInput") ? EnumUtil.grabEnumSafely(EnumDriveType.VALUES, nbt.getInteger("driveInput")) : null;
+		this.driveOutput = nbt.hasKey("driveOutput") ? EnumUtil.grabEnumSafely(EnumDriveType.VALUES, nbt.getInteger("driveOutput")) : null;
+	}
+
+	public String getType() {
+		return this.getClass().getSimpleName();
+	}
+
+	public ITextComponent[] getInfo(World world) {
+		return new ITextComponent[0];
+	}
+
+	/** The check for if there's data available, may also call produceData if a cooldown has elapsed */
+	public boolean hasData(World world) {
+		return this.driveInput != null && this.driveOutput != null;
+	}
+
+	public EnumDriveType getOutputData(EnumDriveType input) {
+		if(input == this.driveInput) return this.driveOutput;
+		return null;
+	}
+
+	public void produceData(EnumDriveType input, EnumDriveType output) {
+		this.driveInput = input;
+		this.driveOutput = output;
+	}
+
+	public void consumeData() {
+		this.driveInput = null;
+		this.driveOutput = null;
+	}
 	
 	/**
 	 * Called when the satellite reaches space, used to trigger achievements and other funny stuff.
