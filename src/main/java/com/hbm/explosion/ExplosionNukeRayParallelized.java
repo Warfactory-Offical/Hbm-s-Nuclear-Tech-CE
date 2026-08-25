@@ -1033,7 +1033,7 @@ public class ExplosionNukeRayParallelized implements IExplosionRay, BombForkJoin
             } catch(Throwable e) {
                 MainRegistry.logger.error("breakBlock failed during explosion cleanup for {} at {}; the block is already carved out, continuing", state, p, e);
             }
-            if(CompatDynamicTrees.isBranch(state.getBlock())) {
+            if(CompatDynamicTrees.isTreePart(state.getBlock())) {
                 CompatDynamicTrees.destroyOrphanedNeighbors(world, p.toImmutable());
             }
         }

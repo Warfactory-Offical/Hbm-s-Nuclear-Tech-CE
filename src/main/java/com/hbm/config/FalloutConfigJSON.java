@@ -15,6 +15,7 @@ import com.hbm.inventory.RecipesCommon;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.ReferenceIntTuple;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+import com.hbm.util.CompatDynamicTrees;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRotatedPillar;
 import net.minecraft.block.BlockSand;
@@ -159,6 +160,17 @@ public class FalloutConfigJSON {
                 .max(woodEffectRange)
                 .solid(true)
                 .build());
+
+        // dynamic trees branches are Material.WOOD, so without this they would hit the catch-all below and vanish
+        // instead of petrifying the way vanilla logs do
+        for(Block branch : CompatDynamicTrees.getBranchBlocks()) {
+            entries.add(FalloutEntry.builder()
+                    .matchesBlock(branch)
+                    .addPrimary(ModBlocks.waste_log.getDefaultState().withProperty(BlockRotatedPillar.AXIS, EnumFacing.Axis.Y), 1)
+                    .max(woodEffectRange)
+                    .solid(true)
+                    .build());
+        }
 
         // if it can't be petrified, destroy it (wood/leaf/plant/vine)
         entries.add(FalloutEntry.builder()
