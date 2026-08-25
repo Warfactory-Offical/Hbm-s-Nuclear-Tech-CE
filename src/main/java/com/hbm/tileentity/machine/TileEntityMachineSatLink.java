@@ -2,23 +2,30 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.api.redstoneoverradio.IRORInteractive;
 import com.hbm.api.redstoneoverradio.IRORValueProvider;
+import com.hbm.handler.CompatHandler;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.saveddata.satellites.Satellite;
 import com.hbm.saveddata.satellites.SatelliteRayScan;
 import com.hbm.saveddata.satellites.SatelliteSavedData;
 import com.hbm.tileentity.TileEntityTickingBase;
 import io.netty.buffer.ByteBuf;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @AutoRegister(name = "tileentity_satlink")
-public class TileEntityMachineSatLink extends TileEntityTickingBase implements ITickable, IRORValueProvider, IRORInteractive {
+@Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
+public class TileEntityMachineSatLink extends TileEntityTickingBase implements ITickable, IRORValueProvider, IRORInteractive, SimpleComponent, CompatHandler.OCComponent {
 
 	public boolean connected;
 	public int freq;
@@ -190,4 +197,75 @@ public class TileEntityMachineSatLink extends TileEntityTickingBase implements I
 	public double getMaxRenderDistanceSquared() {
 		return 65536.0D;
 	}
+
+    @Override
+    @Optional.Method(modid = "opencomputers")
+    public String getComponentName() {
+        return "ntm_satlink";
+    }
+
+    @Callback(direct = true, doc = "function():boolean -- Returns connection state")
+    @Optional.Method(modid = "opencomputers")
+    public Object[] isConnected(Context context, Arguments args) {
+        return new Object[] { connected };
+    }
+
+    @Callback(direct = true, limit = 4, doc = "function(freq: number) -- Sets satellite frequency")
+    @Optional.Method(modid = "opencomputers")
+    public Object[] setFreq(Context context, Arguments args) {
+        freq = args.checkInteger(0);
+        return new Object[] {};
+    }
+
+    @Callback(direct = true, doc = "function():number -- Gets satellite frequency")
+    @Optional.Method(modid = "opencomputers")
+    public Object[] getFreq(Context context, Arguments args) {
+        return new Object[] { freq };
+    }
+
+    @Callback(direct = true, doc = "function():string -- Gets satellite type")
+    @Optional.Method(modid = "opencomputers")
+    public Object[] getType(Context context, Arguments args) {
+        return new Object[] { provideRORValue(PREFIX_VALUE + "type") };
+    }
+
+    @Callback(direct = true, limit = 4, doc = "function(command: string) -- Transmits a command to the satellite")
+    @Optional.Method(modid = "opencomputers")
+    public Object[] send(Context context, Arguments args) {
+        runRORFunction(PREFIX_FUNCTION + "tx", new String[]{args.checkString(0)});
+        return new Object[] {};
+    }
+
+    @Callback(direct = true, limit = 4, doc = "function():string -- Gets received command from the satellite")
+    @Optional.Method(modid = "opencomputers")
+    public Object[] read(Context context, Arguments args) {
+        return new Object[] { provideRORValue(PREFIX_VALUE + "rx") };
+    }
+
+    @Override
+    @Optional.Method(modid = "opencomputers")
+    public String[] methods() {
+        return new String[] {
+            "isConnected",
+            "setFreq",
+            "getFreq",
+            "getType",
+            "send",
+            "read"
+        };
+    }
+
+    @Override
+    @Optional.Method(modid = "opencomputers")
+    public Object[] invoke(String method, Context context, Arguments args) throws Exception {
+        switch (method) {
+            case "isConnected": return isConnected(context, args);
+            case "setFreq": return setFreq(context, args);
+            case "getFreq": return getFreq(context, args);
+            case "getType": return getType(context, args);
+            case "send": return send(context, args);
+            case "read": return read(context, args);
+        }
+        throw new NoSuchMethodException();
+    }
 }

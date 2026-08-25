@@ -1,6 +1,7 @@
 package com.hbm.tileentity.machine.fusion;
 
 import com.hbm.api.fluidmk2.IFluidStandardTransceiverMK2;
+import com.hbm.handler.CompatHandler;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerFusionBreeder;
 import com.hbm.inventory.fluid.FluidStack;
@@ -20,6 +21,10 @@ import com.hbm.uninos.UniNodespace;
 import com.hbm.uninos.networkproviders.PlasmaNetwork;
 import com.hbm.util.Tuple;
 import io.netty.buffer.ByteBuf;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -31,12 +36,14 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 @AutoRegister
-public class TileEntityFusionBreeder extends TileEntityMachineBase implements ITickable, IFluidStandardTransceiverMK2, IFusionPowerReceiver, IGUIProvider, IConnectionAnchors {
+@Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
+public class TileEntityFusionBreeder extends TileEntityMachineBase implements ITickable, IFluidStandardTransceiverMK2, IFusionPowerReceiver, IGUIProvider, IConnectionAnchors, SimpleComponent, CompatHandler.OCComponent {
 
     protected PlasmaNode plasmaNode;
 
@@ -310,5 +317,82 @@ public class TileEntityFusionBreeder extends TileEntityMachineBase implements IT
     @SideOnly(Side.CLIENT)
     public double getMaxRenderDistanceSquared() {
         return 65536.0D;
+    }
+
+    @Override
+    @Optional.Method(modid = "opencomputers")
+    public String getComponentName() {
+        return "ntm_fusion_breeder";
+    }
+
+    @Callback(direct = true)
+    @Optional.Method(modid = "opencomputers")
+    public Object[] getNeutronEnergy(Context context, Arguments args) {
+        return new Object[] {neutronEnergySync};
+    }
+
+    @Callback(direct = true)
+    @Optional.Method(modid = "opencomputers")
+    public Object[] getProgress(Context context, Arguments args) {
+        return new Object[] {progress / capacity};
+    }
+
+    @Callback(direct = true)
+    @Optional.Method(modid = "opencomputers")
+    public Object[] getFluid(Context context, Arguments args) {
+        return new Object[] {
+            tanks[0].getFill(), tanks[0].getMaxFill(), tanks[0].getTankType().getTranslationKey(),
+            tanks[1].getFill(), tanks[1].getMaxFill(), tanks[1].getTankType().getTranslationKey()
+        };
+    }
+
+    @Callback(direct = true)
+    @Optional.Method(modid = "opencomputers")
+    public Object[] getCrafting(Context context, Arguments args) {
+        ItemStack input = inventory.getStackInSlot(1);
+        ItemStack output = inventory.getStackInSlot(2);
+        return new Object[] {
+            input.isEmpty() ? "" : input.getTranslationKey(), input.isEmpty() ? 0 : input.getCount(),
+            output.isEmpty() ? "" : output.getTranslationKey(), output.isEmpty() ? 0 : output.getCount()
+        };
+    }
+
+    @Callback(direct = true)
+    @Optional.Method(modid = "opencomputers")
+    public Object[] getInfo(Context context, Arguments args) {
+        ItemStack input = inventory.getStackInSlot(1);
+        ItemStack output = inventory.getStackInSlot(2);
+        return new Object[] {
+            neutronEnergySync, progress / capacity,
+            tanks[0].getFill(), tanks[0].getMaxFill(), tanks[0].getTankType().getTranslationKey(),
+            tanks[1].getFill(), tanks[1].getMaxFill(), tanks[1].getTankType().getTranslationKey(),
+            input.isEmpty() ? "" : input.getTranslationKey(), input.isEmpty() ? 0 : input.getCount(),
+            output.isEmpty() ? "" : output.getTranslationKey(), output.isEmpty() ? 0 : output.getCount()
+        };
+    }
+
+    @Override
+    @Optional.Method(modid = "opencomputers")
+    public String[] methods() {
+        return new String[] {
+            "getNeutronEnergy",
+            "getProgress",
+            "getFluid",
+            "getCrafting",
+            "getInfo"
+        };
+    }
+
+    @Override
+    @Optional.Method(modid = "opencomputers")
+    public Object[] invoke(String method, Context context, Arguments args) throws Exception {
+        switch (method) {
+            case "getNeutronEnergy": return getNeutronEnergy(context, args);
+            case "getProgress": return getProgress(context, args);
+            case "getFluid": return getFluid(context, args);
+            case "getCrafting": return getCrafting(context, args);
+            case "getInfo": return getInfo(context, args);
+        }
+        throw new NoSuchMethodException();
     }
 }

@@ -2,6 +2,7 @@ package com.hbm.tileentity.machine.fusion;
 
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.api.fluidmk2.IFluidStandardReceiverMK2;
+import com.hbm.handler.CompatHandler;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.container.ContainerFusionKlystron;
@@ -20,6 +21,10 @@ import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.uninos.UniNodespace;
 import com.hbm.uninos.networkproviders.KlystronNetwork;
 import io.netty.buffer.ByteBuf;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -32,6 +37,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
@@ -39,7 +45,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 
 @AutoRegister
-public class TileEntityFusionKlystron extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IFluidStandardReceiverMK2, IControlReceiver, IGUIProvider, IConnectionAnchors {
+@Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
+public class TileEntityFusionKlystron extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IFluidStandardReceiverMK2, IControlReceiver, IGUIProvider, IConnectionAnchors, SimpleComponent, CompatHandler.OCComponent {
 
     protected KlystronNetwork.KlystronNode klystronNode;
     public static final long MAX_OUTPUT = 1_000_000;
@@ -327,5 +334,71 @@ public class TileEntityFusionKlystron extends TileEntityMachineBase implements I
             if(this.outputTarget < 0) this.outputTarget = 0;
             if(this.outputTarget > MAX_OUTPUT) this.outputTarget = MAX_OUTPUT;
         }
+    }
+
+    @Override
+    @Optional.Method(modid = "opencomputers")
+    public String getComponentName() {
+        return "ntm_fusion_klystron";
+    }
+
+    @Callback(direct = true)
+    @Optional.Method(modid = "opencomputers")
+    public Object[] getEnergyInfo(Context context, Arguments args) {
+        return new Object[] {getPower(), getMaxPower()};
+    }
+
+    @Callback(direct = true)
+    @Optional.Method(modid = "opencomputers")
+    public Object[] getAir(Context context, Arguments args) {
+        return new Object[] {compair.getFill(), compair.getMaxFill()};
+    }
+
+    @Callback(direct = true)
+    @Optional.Method(modid = "opencomputers")
+    public Object[] getOutput(Context context, Arguments args) {
+        return new Object[] {output, outputTarget};
+    }
+
+    @Callback(direct = true, limit = 4)
+    @Optional.Method(modid = "opencomputers")
+    public Object[] setOutput(Context context, Arguments args) {
+        outputTarget = (long) MathHelper.clamp(args.checkDouble(0), 0.0, (double) MAX_OUTPUT);
+        return new Object[] {};
+    }
+
+    @Callback(direct = true)
+    @Optional.Method(modid = "opencomputers")
+    public Object[] getInfo(Context context, Arguments args) {
+        return new Object[] {
+            getPower(), getMaxPower(),
+            compair.getFill(), compair.getMaxFill(),
+            output, outputTarget
+        };
+    }
+
+    @Override
+    @Optional.Method(modid = "opencomputers")
+    public String[] methods() {
+        return new String[] {
+            "getEnergyInfo",
+            "getAir",
+            "getOutput",
+            "setOutput",
+            "getInfo"
+        };
+    }
+
+    @Override
+    @Optional.Method(modid = "opencomputers")
+    public Object[] invoke(String method, Context context, Arguments args) throws Exception {
+        switch (method) {
+            case "getEnergyInfo": return getEnergyInfo(context, args);
+            case "getAir": return getAir(context, args);
+            case "getOutput": return getOutput(context, args);
+            case "setOutput": return setOutput(context, args);
+            case "getInfo": return getInfo(context, args);
+        }
+        throw new NoSuchMethodException();
     }
 }

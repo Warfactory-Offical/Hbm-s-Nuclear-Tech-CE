@@ -2,6 +2,7 @@ package com.hbm.tileentity.machine.storage;
 
 import com.hbm.api.redstoneoverradio.IRORInteractive;
 import com.hbm.api.redstoneoverradio.IRORValueProvider;
+import com.hbm.handler.CompatHandler;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerMassStorage;
 import com.hbm.inventory.gui.GUIMassStorage;
@@ -10,6 +11,10 @@ import com.hbm.lib.HBMSoundHandler;
 import com.hbm.tileentity.IControlReceiverFilter;
 import com.hbm.tileentity.IGUIProvider;
 import io.netty.buffer.ByteBuf;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -20,13 +25,15 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 @AutoRegister
-public class TileEntityMassStorage extends TileEntityCrateBase implements ITickable, IControlReceiverFilter, IGUIProvider, IRORValueProvider, IRORInteractive {
+@Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
+public class TileEntityMassStorage extends TileEntityCrateBase implements ITickable, IControlReceiverFilter, IGUIProvider, IRORValueProvider, IRORInteractive, SimpleComponent, CompatHandler.OCComponent {
 
     private int stack = 0;
     public boolean output = false;
@@ -307,5 +314,69 @@ public class TileEntityMassStorage extends TileEntityCrateBase implements ITicka
         }
 
         return null;
+    }
+
+    @Override
+    @Optional.Method(modid = "opencomputers")
+    public String getComponentName() {
+        return "ntm_mass_storage";
+    }
+
+    @Callback(direct = true, doc = "function():number -- Returns item amount")
+    @Optional.Method(modid = "opencomputers")
+    public Object[] getFill(Context context, Arguments args) {
+        return new Object[] {this.stack};
+    }
+
+    @Callback(direct = true, doc = "function():number -- Returns item capacity")
+    @Optional.Method(modid = "opencomputers")
+    public Object[] getCapacity(Context context, Arguments args) {
+        return new Object[] {this.capacity};
+    }
+
+    @Callback(direct = true, doc = "function():string -- Returns item type")
+    @Optional.Method(modid = "opencomputers")
+    public Object[] getType(Context context, Arguments args) {
+        ItemStack slot = inventory.getStackInSlot(1);
+        if(slot.isEmpty()) return new Object[] {"None"};
+        return new Object[] {slot.getDisplayName()};
+    }
+
+    @Callback(direct = true, doc = "function():boolean -- Returns output mode")
+    @Optional.Method(modid = "opencomputers")
+    public Object[] getOutputMode(Context context, Arguments args) {
+        return new Object[] {this.output};
+    }
+
+    @Callback(direct = true, limit = 4, doc = "function(mode: boolean) -- Sets output mode")
+    @Optional.Method(modid = "opencomputers")
+    public Object[] setOutputMode(Context context, Arguments args) {
+        this.output = args.checkBoolean(0);
+        return new Object[] {};
+    }
+
+    @Override
+    @Optional.Method(modid = "opencomputers")
+    public String[] methods() {
+        return new String[] {
+            "getFill",
+            "getCapacity",
+            "getType",
+            "getOutputMode",
+            "setOutputMode"
+        };
+    }
+
+    @Override
+    @Optional.Method(modid = "opencomputers")
+    public Object[] invoke(String method, Context context, Arguments args) throws Exception {
+        switch (method) {
+            case "getFill": return getFill(context, args);
+            case "getCapacity": return getCapacity(context, args);
+            case "getType": return getType(context, args);
+            case "getOutputMode": return getOutputMode(context, args);
+            case "setOutputMode": return setOutputMode(context, args);
+        }
+        throw new NoSuchMethodException();
     }
 }

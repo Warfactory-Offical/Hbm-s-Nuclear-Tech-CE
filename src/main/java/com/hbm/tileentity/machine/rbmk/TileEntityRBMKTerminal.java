@@ -5,6 +5,7 @@ import com.hbm.explosion.vanillant.ExplosionVNT;
 import com.hbm.explosion.vanillant.standard.EntityProcessorCrossSmooth;
 import com.hbm.explosion.vanillant.standard.ExplosionEffectWeapon;
 import com.hbm.explosion.vanillant.standard.PlayerProcessorStandard;
+import com.hbm.handler.CompatHandler;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.gui.GUIScreenRBMKTerminal;
@@ -13,24 +14,31 @@ import com.hbm.tileentity.TileEntityLoadedBase;
 import com.hbm.tileentity.network.RTTYSystem;
 import com.hbm.util.BufferUtil;
 import io.netty.buffer.ByteBuf;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Arrays;
 
 @AutoRegister
-public class TileEntityRBMKTerminal extends TileEntityLoadedBase implements ITickable, IGUIProvider, IControlReceiver, IRORInteractive {
+@Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
+public class TileEntityRBMKTerminal extends TileEntityLoadedBase implements ITickable, IGUIProvider, IControlReceiver, IRORInteractive, SimpleComponent, CompatHandler.OCComponent {
 
     public final String[] history = new String[17];
     public String channel = "";
     public String repeatCmd = "";
     public boolean doesRepeat;
+    public boolean ocMode = false;
 
     public TileEntityRBMKTerminal() {
         Arrays.fill(this.history, "");
@@ -39,6 +47,11 @@ public class TileEntityRBMKTerminal extends TileEntityLoadedBase implements ITic
     @Override
     public void update() {
         if (!world.isRemote) {
+            if (this.ocMode) {
+                this.networkPackNT(10);
+                return;
+            }
+
             if (!this.channel.isEmpty() && !this.repeatCmd.isEmpty()) {
                 RTTYSystem.broadcast(world, this.channel, this.repeatCmd);
             }
@@ -48,6 +61,12 @@ public class TileEntityRBMKTerminal extends TileEntityLoadedBase implements ITic
 
     public void eval(String cmd) {
         if (cmd == null) return;
+
+        if (this.ocMode) {
+            push(cmd);
+            this.markChanged();
+            return;
+        }
 
         push(cmd);
         if (cmd.isEmpty()) return;
@@ -146,6 +165,7 @@ public class TileEntityRBMKTerminal extends TileEntityLoadedBase implements ITic
         super.readFromNBT(nbt);
         this.channel = nbt.getString("channel");
         this.repeatCmd = nbt.getString("repeatCmd");
+        this.ocMode = nbt.getBoolean("ocMode");
         for (int i = 0; i < this.history.length; i++) {
             this.history[i] = nbt.getString("history" + i);
         }
@@ -155,6 +175,7 @@ public class TileEntityRBMKTerminal extends TileEntityLoadedBase implements ITic
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         nbt.setString("channel", this.channel);
         nbt.setString("repeatCmd", this.repeatCmd);
+        nbt.setBoolean("ocMode", this.ocMode);
         for (int i = 0; i < this.history.length; i++) {
             nbt.setString("history" + i, this.history[i]);
         }
@@ -225,5 +246,95 @@ public class TileEntityRBMKTerminal extends TileEntityLoadedBase implements ITic
         }
 
         return null;
+    }
+
+    @Override
+    @Optional.Method(modid = "opencomputers")
+    public String getComponentName() {
+        return "rbmk_terminal";
+    }
+
+    @Callback(direct = true, limit = 2)
+    @Optional.Method(modid = "opencomputers")
+    public Object[] enableOCMode(Context context, Arguments args) {
+        ocMode = args.checkBoolean(0);
+        if(ocMode) {
+            Arrays.fill(history, "");
+            push("OC MODE ENABLED");
+            push("Terminal ready.");
+        }
+        markDirty();
+        return new Object[] {true};
+    }
+
+    @Callback(direct = true)
+    @Optional.Method(modid = "opencomputers")
+    public Object[] isOCMode(Context context, Arguments args) {
+        return new Object[] {ocMode};
+    }
+
+    @Callback(direct = true, limit = 2)
+    @Optional.Method(modid = "opencomputers")
+    public Object[] write(Context context, Arguments args) {
+        if(!ocMode) return new Object[] {false, "OC mode not enabled"};
+        push(args.checkString(0));
+        return new Object[] {true};
+    }
+
+    @Callback(direct = true, limit = 3)
+    @Optional.Method(modid = "opencomputers")
+    public Object[] writeln(Context context, Arguments args) {
+        if(!ocMode) return new Object[] {false, "OC mode not enabled"};
+        push(args.checkString(0));
+        return new Object[] {true};
+    }
+
+    @Callback(direct = true)
+    @Optional.Method(modid = "opencomputers")
+    public Object[] readInput(Context context, Arguments args) {
+        if(!ocMode) return new Object[] {"", "OC mode not enabled"};
+        return new Object[] {history[0] != null ? history[0] : ""};
+    }
+
+    @Callback(direct = true)
+    @Optional.Method(modid = "opencomputers")
+    public Object[] getAllHistory(Context context, Arguments args) {
+        if(!ocMode) return new Object[] {null, "OC mode not enabled"};
+        String[] copy = new String[history.length];
+        for(int i = 0; i < history.length; i++) copy[i] = history[i] != null ? history[i] : "";
+        return new Object[] {copy};
+    }
+
+    @Callback(direct = true, limit = 2)
+    @Optional.Method(modid = "opencomputers")
+    public Object[] clearScreen(Context context, Arguments args) {
+        if(!ocMode) return new Object[] {false, "OC mode not enabled"};
+        for(int i = 0; i < history.length; i++) history[i] = "";
+        markDirty();
+        return new Object[] {true};
+    }
+
+    @Override
+    @Optional.Method(modid = "opencomputers")
+    public String[] methods() {
+        return new String[] {
+            "enableOCMode", "isOCMode", "write", "writeln",
+            "readInput", "getAllHistory", "clearScreen"
+        };
+    }
+
+    @Override
+    @Optional.Method(modid = "opencomputers")
+    public Object[] invoke(String method, Context context, Arguments args) throws Exception {
+        switch (method) {
+            case "enableOCMode": return enableOCMode(context, args);
+            case "isOCMode": return isOCMode(context, args);
+            case "write": return write(context, args);
+            case "writeln": return writeln(context, args);
+            case "readInput": return readInput(context, args);
+            case "getAllHistory": return getAllHistory(context, args);
+            case "clearScreen": return clearScreen(context, args);
+        }
+        throw new NoSuchMethodException();
     }
 }

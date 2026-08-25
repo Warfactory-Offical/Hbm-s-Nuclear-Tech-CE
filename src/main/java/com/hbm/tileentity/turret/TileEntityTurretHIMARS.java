@@ -11,6 +11,10 @@ import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.Vec3NT;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
+import net.minecraftforge.fml.common.Optional;
 import com.hbm.tileentity.IGUIProvider;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
@@ -373,5 +377,13 @@ public class TileEntityTurretHIMARS extends TileEntityTurretBaseArtillery implem
   @SideOnly(Side.CLIENT)
   public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
     return new GUITurretHIMARS(player.inventory, this);
+  }
+
+  @Callback
+  @Optional.Method(modid = "opencomputers")
+  public Object[] addCoords(Context context, Arguments args) {
+    this.mode = FiringMode.MANUAL;
+    this.targetQueue.add(new Vec3d(args.checkDouble(0), args.checkDouble(1), args.checkDouble(2)));
+    return new Object[] {};
   }
 }

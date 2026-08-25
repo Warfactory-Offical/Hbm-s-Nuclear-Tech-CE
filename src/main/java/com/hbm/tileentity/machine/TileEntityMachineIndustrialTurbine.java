@@ -3,6 +3,7 @@ package com.hbm.tileentity.machine;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import com.hbm.blocks.BlockDummyable;
+import com.hbm.handler.CompatHandler;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
@@ -16,16 +17,22 @@ import com.hbm.main.MainRegistry;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.IConfigurableMachine;
 import io.netty.buffer.ByteBuf;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.fml.common.Optional;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.Random;
 
 @AutoRegister
-public class TileEntityMachineIndustrialTurbine extends TileEntityTurbineBase implements IConfigurableMachine {
+@Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
+public class TileEntityMachineIndustrialTurbine extends TileEntityTurbineBase implements IConfigurableMachine, SimpleComponent, CompatHandler.OCComponent {
 
     public static int inputTankSize = 750_000;
     public static int outputTankSize = 3_000_000;
@@ -253,5 +260,79 @@ public class TileEntityMachineIndustrialTurbine extends TileEntityTurbineBase im
         if ((PREFIX_VALUE + "output").equals(name))   return "" + (int) this.powerBuffer;
         if ((PREFIX_VALUE + "flywheel").equals(name)) return "" + (int) (spin * 100);
         return null;
+    }
+
+    @Override
+    @Optional.Method(modid = "opencomputers")
+    public String getComponentName() {
+        return "ntm_turbine";
+    }
+
+    @Callback(direct = true)
+    @Optional.Method(modid = "opencomputers")
+    public Object[] getFluid(Context context, Arguments args) {
+        return new Object[] {
+            tanks[0].getFill(),
+            tanks[0].getMaxFill(),
+            tanks[1].getFill(),
+            tanks[1].getMaxFill()
+        };
+    }
+
+    @Callback(direct = true)
+    @Optional.Method(modid = "opencomputers")
+    public Object[] getType(Context context, Arguments args) {
+        return CompatHandler.steamTypeToInt(tanks[0].getTankType());
+    }
+
+    @Callback(direct = true)
+    @Optional.Method(modid = "opencomputers")
+    public Object[] getPower(Context context, Arguments args) {
+        return new Object[] { this.powerBuffer };
+    }
+
+    @Callback(direct = true)
+    @Optional.Method(modid = "opencomputers")
+    public Object[] getFlywheel(Context context, Arguments args) {
+        return new Object[] { (int) (this.spin * 100) };
+    }
+
+    @Callback(direct = true)
+    @Optional.Method(modid = "opencomputers")
+    public Object[] getInfo(Context context, Arguments args) {
+        return new Object[] {
+            tanks[0].getFill(),
+            tanks[0].getMaxFill(),
+            tanks[1].getFill(),
+            tanks[1].getMaxFill(),
+            CompatHandler.steamTypeToInt(tanks[0].getTankType())[0],
+            this.powerBuffer,
+            (int) (this.spin * 100)
+        };
+    }
+
+    @Override
+    @Optional.Method(modid = "opencomputers")
+    public String[] methods() {
+        return new String[] {
+            "getFluid",
+            "getType",
+            "getPower",
+            "getFlywheel",
+            "getInfo"
+        };
+    }
+
+    @Override
+    @Optional.Method(modid = "opencomputers")
+    public Object[] invoke(String method, Context context, Arguments args) throws Exception {
+        switch (method) {
+            case "getFluid": return getFluid(context, args);
+            case "getType": return getType(context, args);
+            case "getPower": return getPower(context, args);
+            case "getFlywheel": return getFlywheel(context, args);
+            case "getInfo": return getInfo(context, args);
+        }
+        throw new NoSuchMethodException();
     }
 }
