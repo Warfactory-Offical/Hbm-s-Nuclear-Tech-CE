@@ -39,6 +39,9 @@ public class WorldConfig {
 
 	public static void loadFromConfig(Configuration config) {
 		newBedrockOres = CommonConfig.createConfigBool(config, CommonConfig.CATEGORY_ORES, "2.NB_newBedrockOres", "Enables the generation of bedrock ores", true);
+		bedrockGlowstoneSpawn = CommonConfig.createConfigInt(config, CommonConfig.CATEGORY_ORES, "2.BN00_bedrockGlowstoneWeight", "Spawn weight for glowstone bedrock ore", 100);
+		bedrockPhosphorusSpawn = CommonConfig.createConfigInt(config, CommonConfig.CATEGORY_ORES, "2.BN01_bedrockPhosphorusWeight", "Spawn weight for phosphorus bedrock ore", 50);
+		bedrockQuartzSpawn = CommonConfig.createConfigInt(config, CommonConfig.CATEGORY_ORES, "2.BN02_bedrockQuartzWeight", "Spawn weight for quartz bedrock ore", 100);
 		limestoneSpawn = CommonConfig.createConfigInt(config, CommonConfig.CATEGORY_ORES, "2.L02_limestoneSpawn", "Amount of limestone block veins per chunk", 1);
 
 		enableHematite = CommonConfig.createConfigBool(config, CommonConfig.CATEGORY_ORES, "2.L00_enableHematite", "Toggles hematite deposits", true);

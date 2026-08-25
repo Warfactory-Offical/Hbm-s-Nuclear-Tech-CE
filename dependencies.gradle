@@ -79,4 +79,5 @@ dependencies {
 //    runtimeOnlyNonPublishable rfg.deobf("curse.maven:universal-tweaks-705000:6675988")
 //    runtimeOnlyNonPublishable rfg.deobf("curse.maven:fluidlogged-api-485654:3845703")
     runtimeOnlyNonPublishable rfg.deobf(files("libs/legacy_completion-0.1.5.jar"))
+//    runtimeOnlyNonPublishable rfg.deobf("curse.maven:dynamictrees-252818:3812473") // DynamicTrees 0.9.29, needs forge >= 14.23.5.2859 (dev env is on 2847)
 }

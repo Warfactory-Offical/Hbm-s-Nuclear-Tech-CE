@@ -6,7 +6,6 @@ import com.hbm.inventory.gui.GUIScreenBobmazon.Offer;
 import com.hbm.items.ModItems;
 import com.hbm.lib.ModDamageSource;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.advancements.Advancement;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
@@ -73,10 +72,8 @@ public class ItemBobmazonPacket implements IMessage {
 				}
 				
 				ItemStack stack = offer.offer;
-				
-				Advancement req = offer.requirement.getAchievement();
-				
-				if(req != null && p.getAdvancements().getProgress(req).isDone() || p.capabilities.isCreativeMode) {
+
+				if(offer.requirement.fullfills(p) || p.capabilities.isCreativeMode) {
 					
 					if(countCaps(p) >= offer.cost || p.capabilities.isCreativeMode) {
 						

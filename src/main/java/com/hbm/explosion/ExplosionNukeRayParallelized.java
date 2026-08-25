@@ -12,6 +12,7 @@ import com.hbm.lib.maps.NonBlockingHashMapLong;
 import com.hbm.lib.queues.MpscUnboundedXaddArrayLongQueue;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.ChunkUtil;
+import com.hbm.util.CompatDynamicTrees;
 import com.hbm.util.ConcurrentBitSet;
 import com.hbm.util.MpscIntArrayListCollector;
 import com.hbm.util.OffHeapBitSet;
@@ -1031,6 +1032,9 @@ public class ExplosionNukeRayParallelized implements IExplosionRay, BombForkJoin
                 state.getBlock().breakBlock(world, p, state); // this should handle te removals
             } catch(Throwable e) {
                 MainRegistry.logger.error("breakBlock failed during explosion cleanup for {} at {}; the block is already carved out, continuing", state, p, e);
+            }
+            if(CompatDynamicTrees.isBranch(state.getBlock())) {
+                CompatDynamicTrees.destroyOrphanedNeighbors(world, p.toImmutable());
             }
         }
         for (int i = 0, n = neighborNotifies.size(); i < n; i++) {

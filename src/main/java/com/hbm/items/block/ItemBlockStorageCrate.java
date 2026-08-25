@@ -4,6 +4,7 @@ import com.hbm.blocks.generic.BlockStorageCrate;
 import com.hbm.config.ServerConfig;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.IGUIProvider;
+import com.hbm.tileentity.IPersistentNBT;
 import com.hbm.tileentity.machine.HandHeldTileEntityCrate;
 import com.hbm.tileentity.machine.TileEntityCrate;
 import net.minecraft.block.Block;
@@ -12,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
@@ -31,6 +33,24 @@ public class ItemBlockStorageCrate extends ItemBlock implements IGUIProvider {
     public ItemBlockStorageCrate(Block block, ResourceLocation s) {
         super(block);
         this.setRegistryName(s);
+    }
+
+    @Override
+    public int getItemStackLimit(ItemStack stack) {
+        if (IPersistentNBT.carriesContents(stack)) return 1;
+        return super.getItemStackLimit(stack);
+    }
+
+    /** True if this crate already holds a crate, i.e. nesting it again would exceed one level. */
+    public static boolean containsCrate(ItemStack stack) {
+        if (!IPersistentNBT.carriesContents(stack) || !(stack.getItem() instanceof ItemBlockStorageCrate)) return false;
+
+        NBTTagCompound data = stack.getTagCompound().getCompoundTag(IPersistentNBT.NBT_PERSISTENT_KEY);
+        for (String key : data.getKeySet()) {
+            if (!key.startsWith("slot")) continue;
+            if (new ItemStack(data.getCompoundTag(key)).getItem() instanceof ItemBlockStorageCrate) return true;
+        }
+        return false;
     }
 
     @Override

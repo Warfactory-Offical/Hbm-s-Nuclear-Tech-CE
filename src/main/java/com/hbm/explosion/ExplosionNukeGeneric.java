@@ -6,6 +6,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.WasteLog;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.config.VersatileConfig;
+import com.hbm.util.CompatDynamicTrees;
 import com.hbm.entity.effect.EntityBlackHole;
 import com.hbm.entity.grenade.EntityGrenadeUniversal;
 import com.hbm.entity.projectile.EntityBulletBaseMK4;
@@ -198,6 +199,7 @@ public class ExplosionNukeGeneric {
     public static int destruction(World world, BlockPos pos) {
         int rand;
         if (!world.isRemote) {
+            if (CompatDynamicTrees.destroyTreeAt(world, pos)) return 0;
             IBlockState b = world.getBlockState(pos);
             if (b.getBlock().getExplosionResistance(null) >= 200f) {    //500 is the resistance of liquids
                 //blocks to be spared
@@ -239,6 +241,7 @@ public class ExplosionNukeGeneric {
     @SuppressWarnings("deprecation")
     public static int vaporDest(World world, BlockPos pos) {
         if (!world.isRemote) {
+            if (CompatDynamicTrees.destroyTreeAt(world, pos)) return 0;
             IBlockState b = world.getBlockState(pos);
             if (b.getBlock().getExplosionResistance(null) < 0.5f //most light things
                     || b.getBlock() == Blocks.WEB || b.getBlock() == ModBlocks.red_cable || b.getBlock() instanceof BlockLiquid) {
