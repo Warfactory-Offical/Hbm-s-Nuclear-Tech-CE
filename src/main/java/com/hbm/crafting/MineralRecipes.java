@@ -171,8 +171,8 @@ public class MineralRecipes {
         CraftingManager.addShapelessAuto(new ItemStack(ModItems.billet_neptunium_fuel, 3), ModItems.billet_u238, ModItems.billet_u238, ModItems.billet_neptunium );
         CraftingManager.addRecipeAutoOreShapeless(new ItemStack(ModItems.billet_neptunium_fuel, 1), "nuggetNeptunium237", "nuggetNeptunium237", "nuggetUranium238", "nuggetUranium238", "nuggetUranium238", "nuggetUranium238" );
         CraftingManager.addRecipeAutoOreShapeless(new ItemStack(ModItems.billet_neptunium_fuel, 1), "tinyNp237", "tinyNp237", "tinyU238", "tinyU238", "tinyU238", "tinyU238" );
-        CraftingManager.addShapelessAuto(new ItemStack(ModItems.billet_mox_fuel, 3), ModItems.billet_uranium_fuel, ModItems.billet_uranium_fuel, ModItems.billet_pu_mix );
-        CraftingManager.addRecipeAutoOreShapeless(new ItemStack(ModItems.billet_mox_fuel, 1), ModItems.nugget_pu_mix, ModItems.nugget_pu_mix, ModItems.nugget_uranium_fuel, ModItems.nugget_uranium_fuel, ModItems.nugget_uranium_fuel, ModItems.nugget_uranium_fuel );
+        CraftingManager.addRecipeAutoOreShapeless(new ItemStack(ModItems.billet_mox_fuel, 3), ModItems.billet_uranium_fuel, ModItems.billet_uranium_fuel, PU239.billet() );
+        CraftingManager.addRecipeAutoOreShapeless(new ItemStack(ModItems.billet_mox_fuel, 1), PU239.nugget(), PU239.nugget(), ModItems.nugget_uranium_fuel, ModItems.nugget_uranium_fuel, ModItems.nugget_uranium_fuel, ModItems.nugget_uranium_fuel );
         CraftingManager.addShapelessAuto(new ItemStack(ModItems.billet_schrabidium_fuel, 3), ModItems.billet_schrabidium, ModItems.billet_neptunium, ModItems.billet_beryllium );
         CraftingManager.addRecipeAutoOreShapeless(new ItemStack(ModItems.billet_schrabidium_fuel, 1), ModItems.nugget_schrabidium, ModItems.nugget_schrabidium, "nuggetNeptunium237", "nuggetNeptunium237", ModItems.nugget_beryllium, ModItems.nugget_beryllium );
         CraftingManager.addRecipeAutoOreShapeless(new ItemStack(ModItems.billet_schrabidium_fuel, 1), ModItems.nugget_schrabidium, ModItems.nugget_schrabidium, "tinyNp237", "tinyNp237", ModItems.nugget_beryllium, ModItems.nugget_beryllium );

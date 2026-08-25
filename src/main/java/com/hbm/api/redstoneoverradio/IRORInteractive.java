@@ -42,7 +42,11 @@ public interface IRORInteractive extends IRORInfo {
         try {
             result = Integer.parseInt(val);
         } catch (Exception x) {
-            throw new RORFunctionException(EX_FORMAT);
+            try {
+                result = (int) Math.round(Double.parseDouble(val));
+            } catch (Exception y) {
+                throw new RORFunctionException(EX_FORMAT);
+            }
         }
         if (result < min || result > max) throw new RORFunctionException(EX_FORMAT);
         return result;

@@ -8,6 +8,7 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.recipes.loader.GenericRecipes;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemPWRFuel.EnumPWRFuel;
+import com.hbm.items.machine.ItemPileRodMK2.EnumPileRod;
 import com.hbm.items.machine.ItemWatzPellet.EnumWatzType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
@@ -74,6 +75,13 @@ public class PUREXRecipes extends GenericRecipes<PUREXRecipe> {
                 .outputItems(new ItemStack(ModItems.billet_pu_mix, 2),
                         new ItemStack(ModItems.billet_uranium, 1),
                         new ItemStack(ModItems.plate_iron, 2))
+                .setIconToFirstIngredient());
+
+        this.register((PUREXRecipe) new PUREXRecipe("purex.pilethorium").setup(40, pilePower).setNameWrapper("purex.recycle").setGroup(autoPile, this)
+                .inputItems(new ComparableStack(ModItems.pile_rod, 1, EnumPileRod.THORIUM_FUEL))
+                .inputFluids(new FluidStack(Fluids.SULFURIC_ACID, 100))
+                .outputItems(new ItemStack(ModItems.billet_thorium_fuel, 2),
+                        new ItemStack(ModItems.billet_nuclear_waste, 1))
                 .setIconToFirstIngredient());
 
         this.register((PUREXRecipe) new PUREXRecipe("purex.pilepu239").setup(40, pilePower).setNameWrapper("purex.recycle").setGroup(autoPile, this)

@@ -170,7 +170,7 @@ public class PedestalRecipes extends SerializableRecipe {
             rec.recipeSet = obj.get("set").getAsInt();
         }
 
-        recipes.add(rec);
+        register(rec);
     }
 
     @Override

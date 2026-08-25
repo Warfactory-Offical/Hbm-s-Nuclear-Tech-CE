@@ -243,7 +243,7 @@ public class ShredderRecipes extends SerializableRecipe {
         ShredderRecipes.setRecipe(Blocks.TNT, new ItemStack(Items.GUNPOWDER, 5));
         ShredderRecipes.setRecipe(OreDictManager.DictFrame.fromOne(ModBlocks.stone_resource, BlockEnums.EnumStoneType.LIMESTONE), new ItemStack(ModItems.powder_limestone, 4));
         ShredderRecipes.setRecipe(ModBlocks.stone_gneiss, new ItemStack(ModItems.powder_lithium_tiny, 1));
-        ShredderRecipes.setRecipe(ModItems.powder_lapis, new ItemStack(ModItems.powder_cobalt_tiny, 1));
+        for(ItemStack dust : OreDictionary.getOres("dustLapis")) ShredderRecipes.setRecipe(dust, new ItemStack(ModItems.powder_cobalt_tiny, 1));
         ShredderRecipes.setRecipe(ModItems.fragment_neodymium, new ItemStack(ModItems.powder_neodymium_tiny, 1));
         ShredderRecipes.setRecipe(ModItems.fragment_cobalt, new ItemStack(ModItems.powder_cobalt_tiny, 1));
         ShredderRecipes.setRecipe(ModItems.fragment_niobium, new ItemStack(ModItems.powder_niobium_tiny, 1));

@@ -43,7 +43,7 @@ public class TileEntityMachineIndustrialTurbine extends TileEntityTurbineBase im
 
     @Override
     public String getConfigName() {
-        return "steamturbineIndustrial";
+        return "steamturbineIndustrialMk2";
     }
 
     @Override

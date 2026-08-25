@@ -14,6 +14,8 @@ import com.hbm.inventory.recipes.loader.GenericRecipe;
 import com.hbm.inventory.recipes.loader.GenericRecipes;
 import com.hbm.items.ItemEnums.*;
 import com.hbm.items.ModItems;
+import com.hbm.items.weapon.grenade.ItemGrenadeFuze;
+import com.hbm.items.weapon.grenade.ItemGrenadeShell;
 import com.hbm.items.machine.*;
 import com.hbm.items.weapon.ItemAmmoHIMARS;
 import com.hbm.items.weapon.sedna.factory.GunFactory;
@@ -229,7 +231,7 @@ public class AssemblyMachineRecipes extends GenericRecipes<GenericRecipe> {
                 .inputItems(new OreDictStack(STEEL.plate(), 8), new OreDictStack(CU.plate(), 4), new ComparableStack(ModItems.motor, 2))
                 .inputItemsEx(new ComparableStack(ModItems.item_expensive, 1, EnumExpensiveType.STEEL_PLATING), new OreDictStack(CU.plate(), 4), new ComparableStack(ModItems.motor, 2)));
         this.register(new GenericRecipe("ass.assembler").setup(200, 100).outputItems(new ItemStack(ModBlocks.machine_assembly_machine, 1))
-                .inputItems(new OreDictStack(STEEL.ingot(), 4), new OreDictStack(CU.plate(), 4), new ComparableStack(ModItems.motor, 2), new ComparableStack(ModItems.circuit, 1, EnumCircuitType.ANALOG)));
+                .inputItems(new OreDictStack(STEEL.ingot(), 4), new OreDictStack(CU.plate(), 4), new ComparableStack(ModItems.motor, 2), new ComparableStack(ModItems.circuit, 1, EnumCircuitType.BASIC)));
         this.register(new GenericRecipe("ass.chemplant").setup(200, 100).outputItems(new ItemStack(ModBlocks.machine_chemical_plant, 1))
                 .inputItems(new OreDictStack(STEEL.ingot(), 8), new OreDictStack(CU.pipe(), 2), new ComparableStack(ModItems.plate_polymer, 16), new ComparableStack(ModItems.motor, 2), new ComparableStack(ModItems.coil_tungsten, 2), new ComparableStack(ModItems.circuit, 1, EnumCircuitType.ANALOG))
                 .inputItemsEx(new ComparableStack(ModItems.item_expensive, 3, EnumExpensiveType.STEEL_PLATING), new OreDictStack(CU.pipe(), 2), new ComparableStack(ModItems.plate_polymer, 16), new ComparableStack(ModItems.motor, 2), new ComparableStack(ModItems.coil_tungsten, 2), new ComparableStack(ModItems.circuit, 3, EnumCircuitType.ANALOG)));
@@ -442,9 +444,6 @@ public class AssemblyMachineRecipes extends GenericRecipes<GenericRecipe> {
         this.register(new GenericRecipe("ass.tank").setup(200, 100).outputItems(new ItemStack(ModBlocks.machine_fluidtank, 1))
                 .inputItems(new OreDictStack(STEEL.plate(), 8), new OreDictStack(STEEL.shell(), 4))
                 .inputItemsEx(new ComparableStack(ModItems.item_expensive, 4, EnumExpensiveType.STEEL_PLATING), new OreDictStack(ANY_TAR.any(), 16)));
-        this.register(new GenericRecipe("ass.bat9k").setup(200, 100).outputItems(new ItemStack(ModBlocks.machine_bat9000, 1))
-                .inputItems(new OreDictStack(STEEL.plate(), 16), new OreDictStack(ANY_RESISTANTALLOY.plateWelded(), 2), new ComparableStack(ModBlocks.steel_scaffold, 16), new OreDictStack(ANY_TAR.any(), 16))
-                .inputItemsEx(new ComparableStack(ModItems.item_expensive, 4, EnumExpensiveType.FERRO_PLATING), new ComparableStack(ModBlocks.steel_scaffold, 16), new OreDictStack(ANY_TAR.any(), 16)));
         this.register(new GenericRecipe("ass.bigasstank").setup(200, 100).outputItems(new ItemStack(ModBlocks.machine_bigasstank, 1))
                 .inputItems(new OreDictStack(STEEL.plate(), 16), new OreDictStack(ANY_RESISTANTALLOY.plateWelded(), 4), new ComparableStack(ModBlocks.steel_scaffold, 16))
                 .inputItemsEx(new ComparableStack(ModItems.item_expensive, 6, EnumExpensiveType.FERRO_PLATING), new ComparableStack(ModBlocks.steel_scaffold, 16), new OreDictStack(ANY_TAR.any(), 16)));
@@ -519,7 +518,7 @@ public class AssemblyMachineRecipes extends GenericRecipes<GenericRecipe> {
                 .setPools528(GenericRecipes.POOL_PREFIX_528 + "ferrouranium"));
         this.register(new GenericRecipe("ass.rbmkautoloader").setup(100, 100).outputItems(new ItemStack(ModBlocks.rbmk_autoloader, 1))
                 .inputItems(new OreDictStack(STEEL.plateWelded(), 4), new OreDictStack(PB.plateCast(), 4), new OreDictStack(B.ingot(), 4), new ComparableStack(ModItems.motor, 3))
-                .inputItemsEx(new ComparableStack(ModItems.item_expensive, 4, EnumExpensiveType.FERRO_PLATING), new ComparableStack(ModItems.motor_desh, 3))
+                .inputItemsEx(new ComparableStack(ModItems.item_expensive, 1, EnumExpensiveType.FERRO_PLATING), new ComparableStack(ModItems.motor_desh, 3))
                 .setPools528(GenericRecipes.POOL_PREFIX_528 + "ferrouranium"));
 
         // PWR
@@ -1067,6 +1066,21 @@ public class AssemblyMachineRecipes extends GenericRecipes<GenericRecipe> {
                         new ComparableStack(ModItems.coil_gold, 4),
                         new ComparableStack(ModItems.circuit, 1, EnumCircuitType.QUANTUM),
                         new ComparableStack(ModItems.part_generic, 1, EnumPartType.LDE)));
+        this.register(new GenericRecipe("ass.nitra").setupNamed(200, 500)
+                .inputItems(new ComparableStack(ModItems.nitra))
+                .setIconToFirstIngredient()
+                .outputItems(new ChanceOutputMulti(
+                        new ChanceOutput(new ItemStack(ModItems.casing, 1, EnumCasingType.SHOTSHELL.ordinal()), 20),
+                        new ChanceOutput(new ItemStack(ModItems.casing, 1, EnumCasingType.BUCKSHOT.ordinal()), 10),
+                        new ChanceOutput(new ItemStack(ModItems.casing, 2, EnumCasingType.SMALL.ordinal()), 20),
+                        new ChanceOutput(new ItemStack(ModItems.casing, 1, EnumCasingType.LARGE.ordinal()), 10),
+                        new ChanceOutput(new ItemStack(Items.GUNPOWDER), 30),
+                        new ChanceOutput(new ItemStack(ModItems.cordite), 20),
+                        new ChanceOutput(new ItemStack(ModItems.ballistite), 20),
+                        new ChanceOutput(new ItemStack(ModItems.grenade_shell, 1, ItemGrenadeShell.EnumGrenadeShell.FRAG.ordinal()), 5),
+                        new ChanceOutput(new ItemStack(ModItems.grenade_shell, 1, ItemGrenadeShell.EnumGrenadeShell.STICK.ordinal()), 5),
+                        new ChanceOutput(new ItemStack(ModItems.grenade_fuze, 1, ItemGrenadeFuze.EnumGrenadeFuze.S3.ordinal()), 10)
+                )));
         this.register(new GenericRecipe("ass.emptypackage").setup(40, 100).outputItems(new ItemStack(ModItems.fluid_pack_empty, 1))
                 .inputItems(new OreDictStack(TI.plate(), 4), new OreDictStack(ANY_PLASTIC.ingot(), 2)));
         FluidType[] order = Fluids.getInNiceOrder();

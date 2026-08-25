@@ -83,6 +83,7 @@ public class ItemFluidIcon extends ItemBakedBase {
 	}
 
 	public static ItemStack addQuantity(ItemStack stack, int i) {
+		if(i <= 0) return stack;
 		if(!stack.hasTagCompound()) stack.setTagCompound(new NBTTagCompound());
 		stack.getTagCompound().setInteger("fill", i);
 		return stack;

@@ -103,6 +103,7 @@ public class JEIConfig implements IModPlugin {
     public static final String SOLDERING_STATION = "hbm.soldering_station";
     public static final String SOLIDIFICATION = "hbm.solidification";
     public static final String STORAGEDRUM = "hbm.storage_drum";
+    public static final String SUPERCOMPUTER = "hbm.supercomputer";
     public static final String TRANSMUTATION = "hbm.transmutation";
     public static final String WASTEDRUM = "hbm.waste_drum";
     static final String ORE_SLOPPER = "hbm.ore_slopper";
@@ -150,6 +151,7 @@ public class JEIConfig implements IModPlugin {
     private RBMKOutgasserRecipeHandler outgasserHandler;
     private ReformingHandler reformingHandler;
     private RockMillRecipeHandler rockMillHandler;
+    private SuperComputerRecipeHandler superComputerHandler;
     private RotaryFurnaceRecipeHandler rotaryFurnaceRecipeHandler;
     private BlastFurnaceHandler blastFurnaceHandler;
     private RTGRecipeHandler rtgRecipeHandler;
@@ -236,6 +238,8 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_blast_furnace), BLAST_FURNACE);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_precass), PREC_ASS);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_pyrooven), PYROLYSIS);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_supercomputer), SUPERCOMPUTER);
+        registry.addRecipeCatalyst(new ItemStack(ModBlocks.machine_rockmill), ROCKMILL);
         //This recipe catalyst doesn't work, since the book of is blacklisted.
         registry.addRecipeCatalyst(new ItemStack(ModItems.book_of_), BOOK);
         registry.addRecipeCatalyst(new ItemStack(ModBlocks.fusion_torus), FUSION_BYPRODUCT);
@@ -315,6 +319,7 @@ public class JEIConfig implements IModPlugin {
         registry.addRecipes(vacuumHandler.getRecipes(), VACUUM);
         registry.addRecipes(zirnoxHandler.getRecipes(), ZIRNOX);
         registry.addRecipes(rockMillHandler.getRecipes(), ROCKMILL);
+        registry.addRecipes(superComputerHandler.getRecipes(), SUPERCOMPUTER);
         registry.addRecipes(shredderHandler.getRecipes(), SHREDDER);
         registry.addRecipes(JeiRecipes.getFluidEquivalences(), FLUIDS);
         registry.addRecipes(JeiRecipes.getBookRecipes(), BOOK);
@@ -559,6 +564,7 @@ public class JEIConfig implements IModPlugin {
                 sawmillHandler = new SawmillHandler(help),
                 vacuumHandler = new VacuumRecipeHandler(help),
                 rockMillHandler = new RockMillRecipeHandler(help),
+                superComputerHandler = new SuperComputerRecipeHandler(help),
                 zirnoxHandler = new ZirnoxRecipeHandler(help),
                 purexHandler = new PUREXRecipeHandler(help),
                 new GasCentrifugeRecipeHandler(help),

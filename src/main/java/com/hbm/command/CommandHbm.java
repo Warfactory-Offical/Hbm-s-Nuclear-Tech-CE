@@ -9,6 +9,7 @@ import com.hbm.render.GLCompat;
 import com.hbm.saveddata.TomSaveData;
 import com.hbm.world.*;
 import com.hbm.world.dungeon.LibraryDungeon;
+import com.hbm.world.feature.LanternBehemoth;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.shader.Framebuffer;
@@ -275,7 +276,9 @@ public class CommandHbm extends CommandBase {
 
             switch (args[1]) {
                 case "antenna" -> Antenna.INSTANCE.generate(world, rand, genPos, force);
-                case "dud" -> new Dud().generate(world, rand, genPos);
+                case "dud" -> Dud.INSTANCE.generate(world, rand, genPos, force);
+                case "meteorite" -> MeteoriteStructure.INSTANCE.generate(world, rand, genPos, force);
+                case "lantern" -> LanternBehemoth.INSTANCE.generate(world, rand, genPos, force);
                 case "barrel" -> Barrel.INSTANCE.generate(world, rand, genPos, force);
                 case "satellite" -> Satellite.INSTANCE.generate(world, rand, genPos, force);
                 case "spaceship" -> Spaceship.INSTANCE.generate(world, rand, genPos, force);

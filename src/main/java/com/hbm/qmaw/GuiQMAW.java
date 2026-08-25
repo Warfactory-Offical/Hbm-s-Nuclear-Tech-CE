@@ -49,6 +49,34 @@ public class GuiQMAW extends GuiScreen {
         parseQMAW(qmaw);
     }
 
+    /** Preprocessor before actual parsing begins, imports contents from other QMAWs using curly bracket notation */
+    protected String compose(String contents) {
+        LanguageManager lang = Minecraft.getMinecraft().getLanguageManager();
+        String langCode = lang.getCurrentLanguage().getLanguageCode();
+        int recursionBrake = 100;
+
+        while(contents.contains("{{") && recursionBrake > 0) {
+
+            int begin = contents.indexOf("{{");
+            int end = contents.indexOf("}}");
+            if(end < begin) break;
+
+            String composeTag = contents.substring(begin + 2, end);
+            QuickManualAndWiki qmaw = QMAWLoader.qmaw.get(composeTag);
+            String substitute = composeTag;
+
+            if(qmaw != null) {
+                if(qmaw.contents.containsKey(langCode)) substitute = qmaw.contents.get(langCode);
+                else if(qmaw.contents.containsKey(EN_US)) substitute = qmaw.contents.get(EN_US);
+            }
+
+            contents = contents.replace("{{" + composeTag + "}}", substitute);
+            recursionBrake--;
+        }
+
+        return contents;
+    }
+
     protected void parseQMAW(QuickManualAndWiki qmaw) {
         LanguageManager lang = Minecraft.getMinecraft().getLanguageManager();
 
@@ -61,7 +89,7 @@ public class GuiQMAW extends GuiScreen {
         String toParse = qmaw.contents.get(lang.getCurrentLanguage().getLanguageCode());
         if(toParse == null) toParse = qmaw.contents.get(EN_US);
         if(toParse == null) toParse = "Missing Localization!";
-        toParse = "" + toParse; // strings are reference types, no?
+        toParse = compose(toParse);
 
         int maxLineLength = xSize - 29;
         String prevToParse = "" + toParse;

@@ -46,6 +46,11 @@ public class GuiScreenAUTOCAL extends GuiScreen {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float f) {
+        if (this.autocal == null || this.autocal.isInvalid()) {
+            Minecraft.getMinecraft().player.closeScreen();
+            return;
+        }
+
         this.drawDefaultBackground();
         this.drawGuiContainerBackgroundLayer(f, mouseX, mouseY);
         GlStateManager.disableLighting();

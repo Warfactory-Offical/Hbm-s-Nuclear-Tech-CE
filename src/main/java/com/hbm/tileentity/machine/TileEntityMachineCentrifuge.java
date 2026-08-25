@@ -9,6 +9,7 @@ import com.hbm.inventory.UpgradeManagerNT;
 import com.hbm.inventory.container.ContainerCentrifuge;
 import com.hbm.inventory.gui.GUIMachineCentrifuge;
 import com.hbm.inventory.recipes.CentrifugeRecipes;
+import com.hbm.api.energymk2.IBatteryItem;
 import com.hbm.items.machine.ItemMachineUpgrade.UpgradeType;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
@@ -111,7 +112,8 @@ public class TileEntityMachineCentrifuge extends TileEntityMachineBase implement
 
     @Override
     public boolean isItemValidForSlot(int i, ItemStack itemStack) {
-        return i == 0;
+        if (i == 0 && CentrifugeRecipes.getOutput(itemStack) != null) return true;
+        return i == 1 && itemStack.getItem() instanceof IBatteryItem;
     }
 
     @Override

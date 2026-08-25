@@ -92,6 +92,7 @@ public class EntityMovingItem extends EntityMovingConveyorObject implements ICon
 
 		this.setDead();
 		EntityItem item = new EntityItem(world, posX + motionX * 2, posY + motionY * 2, posZ + motionZ * 2, this.getItemStack());
+		item.lifespan = 60 * 20;
 		item.motionX = this.motionX * 2;
 		item.motionY = 0.1;
 		item.motionZ = this.motionZ * 2;

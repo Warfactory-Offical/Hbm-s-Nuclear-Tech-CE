@@ -52,7 +52,6 @@ public class LiquefactionRecipes extends SerializableRecipe {
         recipes.put(new RecipesCommon.ComparableStack(Blocks.ICE),				new FluidStack(1000, Fluids.WATER));
         recipes.put(new RecipesCommon.ComparableStack(Blocks.PACKED_ICE),			new FluidStack(1000, Fluids.WATER));
         recipes.put(new RecipesCommon.ComparableStack(Items.ENDER_PEARL),			new FluidStack(100, Fluids.ENDERJUICE));
-        recipes.put(new RecipesCommon.ComparableStack(ModItems.pellet_charged),	new FluidStack(4000, Fluids.HELIUM4));
         recipes.put(new RecipesCommon.ComparableStack(ModBlocks.ore_oil_sand),	new FluidStack(100, Fluids.BITUMEN));
 
         recipes.put(new RecipesCommon.ComparableStack(Items.SUGAR),				new FluidStack(100, Fluids.ETHANOL));

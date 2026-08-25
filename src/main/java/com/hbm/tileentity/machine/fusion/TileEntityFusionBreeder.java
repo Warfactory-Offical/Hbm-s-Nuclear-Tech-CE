@@ -23,6 +23,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import com.hbm.items.ModItems;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -102,6 +103,8 @@ public class TileEntityFusionBreeder extends TileEntityMachineBase implements IT
     public boolean canProcessSolid() {
         if(inventory.getStackInSlot(1).isEmpty()) return false;
 
+        if(inventory.getStackInSlot(1).getItem() == ModItems.meteorite_sword_irradiated && inventory.getStackInSlot(2).isEmpty()) return true;
+
         Tuple.Pair<ItemStack, FluidStack> output = OutgasserRecipes.getOutput(inventory.getStackInSlot(1));
         if(output == null) return false;
 
@@ -133,6 +136,15 @@ public class TileEntityFusionBreeder extends TileEntityMachineBase implements IT
     }
 
     private void processSolid() {
+
+        if(inventory.getStackInSlot(1).getItem() == ModItems.meteorite_sword_irradiated) {
+            ItemStack sword = this.inventory.getStackInSlot(1).copy();
+            sword.shrink(1);
+            this.inventory.setStackInSlot(1, sword);
+            this.inventory.setStackInSlot(2, new ItemStack(ModItems.meteorite_sword_fused));
+            this.progress = 0;
+            return;
+        }
 
         Tuple.Pair<ItemStack, FluidStack> output = OutgasserRecipes.getOutput(inventory.getStackInSlot(1));
         ItemStack stack = this.inventory.getStackInSlot(1);

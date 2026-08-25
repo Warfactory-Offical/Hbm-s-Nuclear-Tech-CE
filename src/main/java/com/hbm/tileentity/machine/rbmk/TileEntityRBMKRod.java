@@ -458,7 +458,7 @@ public class TileEntityRBMKRod extends TileEntityRBMKSlottedBase implements IRBM
 	@Callback(direct = true)
 	@Optional.Method(modid = "opencomputers")
 	public Object[] getFluxRatio(Context context, Arguments args) {
-		return new Object[] {fluxFastRatio};
+		return new Object[] {lastFluxRatio};
 	}
 
 	@Callback(direct = true)
@@ -571,9 +571,9 @@ public class TileEntityRBMKRod extends TileEntityRBMKSlottedBase implements IRBM
 			if((PREFIX_VALUE + "depletion").equals(name))	return "" + (int) (100 - ItemRBMKRod.getEnrichment(inventory.getStackInSlot(0)) * 100);
 			if((PREFIX_VALUE + "xenon").equals(name))		return "" + (int) (ItemRBMKRod.getPoison(inventory.getStackInSlot(0)));
 		}
-		if((PREFIX_VALUE + "fastflux").equals(name))	return "" + (int) Math.ceil(fluxFromType(NType.FAST));
-		if((PREFIX_VALUE + "slowflux").equals(name))	return "" + (int) Math.ceil(fluxFromType(NType.SLOW));
-		if((PREFIX_VALUE + "flux").equals(name))		return "" + (int) Math.ceil(fluxFromType(NType.ANY));
+		if((PREFIX_VALUE + "fastflux").equals(name))	return "" + (int) (lastFluxQuantity * lastFluxRatio);
+		if((PREFIX_VALUE + "slowflux").equals(name))	return "" + (int) (lastFluxQuantity * (1 - lastFluxRatio));
+		if((PREFIX_VALUE + "flux").equals(name))		return "" + (int) lastFluxQuantity;
 		return null;
 	}
 }

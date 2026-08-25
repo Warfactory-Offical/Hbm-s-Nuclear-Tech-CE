@@ -7,7 +7,7 @@ import com.hbm.inventory.gui.GuiScreenAUTOCAL;
 import com.hbm.main.MainRegistry;
 import com.hbm.modules.IParse;
 import com.hbm.modules.IParse.*;
-import com.hbm.modules.ParseMSES1;
+import com.hbm.modules.ParseMSES1Ext1;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityTickingBase;
 import io.netty.buffer.ByteBuf;
@@ -36,7 +36,7 @@ public class TileEntityRadioAUTOCAL extends TileEntityTickingBase implements ICo
     public String[] history = {"", "", "", "", "", ""};
 
     public String[] script = new String[0];
-    public IParse msesv1 = new ParseMSES1();
+    public IParse msesv1ext = new ParseMSES1Ext1();
     public ParseContext ctx;
 
     @Override
@@ -66,9 +66,9 @@ public class TileEntityRadioAUTOCAL extends TileEntityTickingBase implements ICo
                         int idx = this.ctx.current;
                         this.ctx.current++;
                         String line = this.script[idx];
-                        ReturnInfo ret = msesv1.eval(ctx, line, idx);
+                        ReturnInfo ret = msesv1ext.eval(ctx, line, idx);
                         if(ret.type() != EnumStatementReturn.SKIP) pushMsg((idx + 1) + ": " + line);
-                        this.history[0] = TextFormatting.WHITE + "Buffer: " + ctx.buffer;
+                        this.history[0] = TextFormatting.WHITE + "Buffer: " + ctx.readBuffer();
                         if (ret.type() == EnumStatementReturn.END_TICK) break;
                         if (ret.type() == EnumStatementReturn.SHUTDOWN) this.stop(TextFormatting.YELLOW + "Program requested shutdown");
 
@@ -77,6 +77,7 @@ public class TileEntityRadioAUTOCAL extends TileEntityTickingBase implements ICo
                             if (ret.type() == EnumStatementReturn.UNRECOGNIZED_COMMAND) this.stop(TextFormatting.RED + "Unrecognized command at line " + (ret.line() + 1) + extraInfo);
                             if (ret.type() == EnumStatementReturn.PARAMETER_ERROR) this.stop(TextFormatting.RED + "Parameter error at line " + (ret.line() + 1) + extraInfo);
                             if (ret.type() == EnumStatementReturn.UNDEFINED) this.stop(TextFormatting.RED + "Undefined behavior at line " + (ret.line() + 1) + extraInfo);
+                            if (ret.type() == EnumStatementReturn.STACK_EXCEEDED) this.stop(TextFormatting.RED + "Stack exceeded capacity at line " + (ret.line() + 1) + extraInfo);
                         }
 
                         if (ret.type() == EnumStatementReturn.SKIP) i--;
@@ -132,19 +133,14 @@ public class TileEntityRadioAUTOCAL extends TileEntityTickingBase implements ICo
         this.ignoreError = nbt.getBoolean("ignoreError");
         this.autoReboot = nbt.getBoolean("autoReboot");
 
-        this.ctx = new ParseContext(null);
-        this.ctx.current = nbt.getInteger("current");
-        this.ctx.clockSpeed = nbt.getInteger("clockSpeed");
-        this.ctx.buffer = nbt.getString("buffer");
-
         NBTTagList lineList = nbt.getTagList("script", 8);
         this.script = new String[lineList.tagCount()];
         for(int i = 0; i < script.length; i++) {
             this.script[i] = lineList.getStringTagAt(i);
-            this.msesv1.generateJumpPoints(ctx, script[i], i);
         }
 
-        this.ctx.variables = nbt.getCompoundTag("variables");
+        this.ctx = new ParseContext(null);
+        this.ctx.readFromNBT(nbt, script, msesv1ext);
     }
 
     @Override
@@ -155,16 +151,13 @@ public class TileEntityRadioAUTOCAL extends TileEntityTickingBase implements ICo
         nbt.setBoolean("ignoreError", ignoreError);
         nbt.setBoolean("autoReboot", autoReboot);
 
-        nbt.setInteger("current", ctx.current);
-        nbt.setInteger("clockSpeed", ctx.clockSpeed);
-        nbt.setString("buffer", ctx.buffer);
-
         NBTTagList lineList = new NBTTagList();
         for(String line : this.script) {
             lineList.appendTag(new NBTTagString(line));
         }
         nbt.setTag("script", lineList);
-        nbt.setTag("variables", this.ctx.variables);
+
+        this.ctx.writeToNBT(nbt);
 
         return nbt;
     }
@@ -199,7 +192,7 @@ public class TileEntityRadioAUTOCAL extends TileEntityTickingBase implements ICo
             this.script = data.getString("payload").split("\n");
             for(int i = 0; i < script.length; i++) {
                 script[i] = script[i].trim();
-                this.msesv1.generateJumpPoints(ctx, script[i], i);
+                this.msesv1ext.generateJumpPoints(ctx, script[i], i);
             }
             if(this.isOn) stop(TextFormatting.YELLOW + "Script has changed");
         }

@@ -1,13 +1,13 @@
 {
 	"name": "Blast Furnace",
 	"icon": [
-		"hbm:tile.machine_blast_furnace",
+		"hbm:machine_blast_furnace",
 		1,
 		0
 	],
 	"trigger": [
 		[
-			"hbm:tile.machine_blast_furnace"
+			"hbm:machine_blast_furnace"
 		]
 	],
 	"title": {

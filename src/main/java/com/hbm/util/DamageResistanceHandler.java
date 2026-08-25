@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import com.hbm.api.entity.IResistanceProvider;
 import com.hbm.items.ModItems;
+import com.hbm.entity.mob.EntityCreeperNuclear;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.Tuple.Quartet;
@@ -120,9 +121,10 @@ public class DamageResistanceHandler {
     private static void initDefaults() {
 
         entityStats.put(EntityCreeper.class, new ResistanceStats().addCategory(CATEGORY_EXPLOSION, 2F, 0.25F));
+        entityStats.put(EntityCreeperNuclear.class, new ResistanceStats().addCategory(CATEGORY_EXPLOSION, 5F, 0.35F));
 
-        itemStats.put(ModItems.jackt, new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 5F, 0.5F));
-        itemStats.put(ModItems.jackt2, new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 5F, 0.5F));
+        itemStats.put(ModItems.jackt, new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 1F, 0.20F));
+        itemStats.put(ModItems.jackt2, new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 2F, 0.25F));
 
         registerSet(ModItems.steel_helmet, ModItems.steel_plate, ModItems.steel_legs, ModItems.steel_boots,
                 new ResistanceStats().addCategory(CATEGORY_PHYSICAL, 2F, 0.1F));
@@ -424,11 +426,11 @@ public class DamageResistanceHandler {
         if (source.isExplosion()) return CATEGORY_EXPLOSION;
         if (source.isFireDamage()) return CATEGORY_FIRE;
         if (source.isProjectile()) return CATEGORY_PHYSICAL;
-        if (source.getDamageType().toLowerCase(Locale.US).equals(DamageClass.LASER.name())) return CATEGORY_ENERGY;
-        if (source.getDamageType().toLowerCase(Locale.US).equals(DamageClass.PLASMA.name())) return CATEGORY_ENERGY;
-        if (source.getDamageType().toLowerCase(Locale.US).equals(DamageClass.MICROWAVE.name())) return CATEGORY_ENERGY;
-        if (source.getDamageType().toLowerCase(Locale.US).equals(DamageClass.SUBATOMIC.name())) return CATEGORY_ENERGY;
-        if (source.getDamageType().toLowerCase(Locale.US).equals(DamageClass.ELECTRIC.name())) return CATEGORY_ENERGY;
+        if (source.getDamageType().toLowerCase(Locale.US).equals(DamageClass.LASER.name().toLowerCase(Locale.US))) return CATEGORY_ENERGY;
+        if (source.getDamageType().toLowerCase(Locale.US).equals(DamageClass.PLASMA.name().toLowerCase(Locale.US))) return CATEGORY_ENERGY;
+        if (source.getDamageType().toLowerCase(Locale.US).equals(DamageClass.MICROWAVE.name().toLowerCase(Locale.US))) return CATEGORY_ENERGY;
+        if (source.getDamageType().toLowerCase(Locale.US).equals(DamageClass.SUBATOMIC.name().toLowerCase(Locale.US))) return CATEGORY_ENERGY;
+        if (source.getDamageType().toLowerCase(Locale.US).equals(DamageClass.ELECTRIC.name().toLowerCase(Locale.US))) return CATEGORY_ENERGY;
         if (source == DamageSource.CACTUS) return CATEGORY_PHYSICAL;
         if (source == ModDamageSource.spikes) return CATEGORY_PHYSICAL;
         if (source == ModDamageSource.electricity) return CATEGORY_ENERGY;
@@ -544,7 +546,7 @@ public class DamageResistanceHandler {
         }
 
         Resistance getResistance(DamageSource source) {
-            Resistance exact = exactResistances.get(source.getDamageType());
+            Resistance exact = exactResistances.get(source.getDamageType().toLowerCase(Locale.US));
             if (exact != null) return exact;
             Resistance category = categoryResistances.get(typeToCategory(source));
             if (category != null) return category;

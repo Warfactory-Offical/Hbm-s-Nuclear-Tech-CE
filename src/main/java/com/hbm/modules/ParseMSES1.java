@@ -17,21 +17,21 @@ public class ParseMSES1 implements IParse {
         // runs the calculation from the buffer, allows string substitution, saves result to buffer
         switch (lower) {
             case "eval" -> {
-                if (ctx.buffer.isEmpty()) return new ReturnInfo(EnumStatementReturn.UNDEFINED, index, "Buffer is empty");
-                String statement = substitute(ctx, ctx.buffer, true);
+                if (ctx.readBuffer().isEmpty()) return new ReturnInfo(EnumStatementReturn.UNDEFINED, index, "Buffer is empty");
+                String statement = substitute(ctx, ctx.readBuffer(), true);
                 try {
                     double result = Calculator.evaluateExpression(statement);
-                    ctx.buffer = "" + result;
+                    ctx.writeBuffer("" + result);
                 } catch (Throwable _) { return new ReturnInfo(EnumStatementReturn.UNDEFINED, index, "Buffer does not have a valid expression"); }
                 return new ReturnInfo(EnumStatementReturn.OK, index);
             }
 
             case "evalr" -> {
-                if (ctx.buffer.isEmpty()) return new ReturnInfo(EnumStatementReturn.UNDEFINED, index, "Buffer is empty");
-                String statement = substitute(ctx, ctx.buffer, true);
+                if (ctx.readBuffer().isEmpty()) return new ReturnInfo(EnumStatementReturn.UNDEFINED, index, "Buffer is empty");
+                String statement = substitute(ctx, ctx.readBuffer(), true);
                 try {
                     double result = Calculator.evaluateExpression(statement);
-                    ctx.buffer = "" + (int) Math.round(result);
+                    ctx.writeBuffer("" + (int) Math.round(result));
                 } catch (Throwable _) { return new ReturnInfo(EnumStatementReturn.UNDEFINED, index, "Buffer does not have a valid expression"); }
                 return new ReturnInfo(EnumStatementReturn.OK, index);
             }
@@ -39,10 +39,10 @@ public class ParseMSES1 implements IParse {
 
             // rounds the buffer down to the nearest integer
             case "rounddown", "floor" -> {
-                if (ctx.buffer.isEmpty()) return new ReturnInfo(EnumStatementReturn.UNDEFINED, index, "Buffer is empty");
+                if (ctx.readBuffer().isEmpty()) return new ReturnInfo(EnumStatementReturn.UNDEFINED, index, "Buffer is empty");
                 try {
-                    double d = Double.parseDouble(ctx.buffer);
-                    ctx.buffer = "" + (int) Math.floor(d);
+                    double d = Double.parseDouble(ctx.readBuffer());
+                    ctx.writeBuffer("" + (int) Math.floor(d));
                 } catch (Exception _) { return new ReturnInfo(EnumStatementReturn.UNDEFINED, index, "Buffer does not have a valid number"); }
                 return new ReturnInfo(EnumStatementReturn.OK, index);
             }
@@ -50,10 +50,10 @@ public class ParseMSES1 implements IParse {
 
             // rounds the buffer up to the nearest integer
             case "roundup", "ceil" -> {
-                if (ctx.buffer.isEmpty()) return new ReturnInfo(EnumStatementReturn.UNDEFINED, index, "Buffer is empty");
+                if (ctx.readBuffer().isEmpty()) return new ReturnInfo(EnumStatementReturn.UNDEFINED, index, "Buffer is empty");
                 try {
-                    double d = Double.parseDouble(ctx.buffer);
-                    ctx.buffer = "" + (int) Math.ceil(d);
+                    double d = Double.parseDouble(ctx.readBuffer());
+                    ctx.writeBuffer("" + (int) Math.ceil(d));
                 } catch (Exception _) { return new ReturnInfo(EnumStatementReturn.UNDEFINED, index, "Buffer does not have a valid number"); }
                 return new ReturnInfo(EnumStatementReturn.OK, index);
             }
@@ -61,10 +61,10 @@ public class ParseMSES1 implements IParse {
 
             // rounds the buffer to the nearest integer (.5 cutoff rule)
             case "round", "nearest" -> {
-                if (ctx.buffer.isEmpty()) return new ReturnInfo(EnumStatementReturn.UNDEFINED, index, "Buffer is empty");
+                if (ctx.readBuffer().isEmpty()) return new ReturnInfo(EnumStatementReturn.UNDEFINED, index, "Buffer is empty");
                 try {
-                    double d = Double.parseDouble(ctx.buffer);
-                    ctx.buffer = "" + (int) Math.round(d);
+                    double d = Double.parseDouble(ctx.readBuffer());
+                    ctx.writeBuffer("" + (int) Math.round(d));
                 } catch (Exception _) { return new ReturnInfo(EnumStatementReturn.UNDEFINED, index, "Buffer does not have a valid number"); }
                 return new ReturnInfo(EnumStatementReturn.OK, index);
             }
@@ -124,7 +124,7 @@ public class ParseMSES1 implements IParse {
 
             // sets the script index to the jump point, if the buffer is the string 'true'
             case "jmpif" -> {
-                if (!ctx.buffer.equals("true")) return new ReturnInfo(EnumStatementReturn.OK, index);
+                if (!ctx.readBuffer().equals("true")) return new ReturnInfo(EnumStatementReturn.OK, index);
                 String jmpKey = substitute(ctx, args, false);
                 if (ctx.jmp.containsKey(jmpKey)) {
                     ctx.current = ctx.jmp.get(jmpKey);
@@ -136,7 +136,7 @@ public class ParseMSES1 implements IParse {
 
             // sets the script index to the jump point, if the buffer is the NOT 'true'
             case "jmpnot" -> {
-                if (ctx.buffer.equals("true")) return new ReturnInfo(EnumStatementReturn.OK, index);
+                if (ctx.readBuffer().equals("true")) return new ReturnInfo(EnumStatementReturn.OK, index);
                 String jmpKey = substitute(ctx, args, false);
                 if (ctx.jmp.containsKey(jmpKey)) {
                     ctx.current = ctx.jmp.get(jmpKey);
@@ -160,23 +160,23 @@ public class ParseMSES1 implements IParse {
 
             // loads the requested variable into the buffer
             case "load" -> {
-                ctx.buffer = ctx.variables.getString(args);
+                ctx.writeBuffer(ctx.variables.getString(args));
                 return new ReturnInfo(EnumStatementReturn.OK, index);
             }
 
 
             // saves the buffer with the specified name
             case "save" -> {
-                if (ctx.buffer.isEmpty())
+                if (ctx.readBuffer().isEmpty())
                     return new ReturnInfo(EnumStatementReturn.UNDEFINED, index, "Cannot save variable, buffer is empty");
-                ctx.variables.setString(args, ctx.buffer);
+                ctx.variables.setString(args, ctx.readBuffer());
                 return new ReturnInfo(EnumStatementReturn.OK, index);
             }
 
 
             // stores the specified value in the buffer
             case "buffer" -> {
-                ctx.buffer = args;
+                ctx.writeBuffer(args);
                 return new ReturnInfo(EnumStatementReturn.OK, index);
             }
 
@@ -186,7 +186,7 @@ public class ParseMSES1 implements IParse {
                 String statement = substitute(ctx, args, true);
                 try {
                     double result = Calculator.evaluateExpression(statement);
-                    ctx.buffer = "" + result;
+                    ctx.writeBuffer("" + result);
                 } catch (Throwable _) {
                     return new ReturnInfo(EnumStatementReturn.PARAMETER_ERROR, index, "Not a valid expression");
                 }
@@ -199,7 +199,7 @@ public class ParseMSES1 implements IParse {
                 String statement = substitute(ctx, args, true);
                 try {
                     double result = Calculator.evaluateExpression(statement);
-                    ctx.buffer = "" + (int) Math.round(result);
+                    ctx.writeBuffer("" + (int) Math.round(result));
                 } catch (Throwable _) {
                     return new ReturnInfo(EnumStatementReturn.PARAMETER_ERROR, index, "Not a valid expression");
                 }
@@ -209,30 +209,30 @@ public class ParseMSES1 implements IParse {
 
             // concatenate, same as buffer but evaluates $var$ substitutions
             case "concat" -> {
-                if (ctx.buffer.isEmpty())
+                if (ctx.readBuffer().isEmpty())
                     return new ReturnInfo(EnumStatementReturn.UNDEFINED, index, "Cannot concat, buffer is empty");
-                ctx.buffer = substitute(ctx, args, false);
+                ctx.writeBuffer(substitute(ctx, args, false));
                 return new ReturnInfo(EnumStatementReturn.OK, index);
             }
 
 
             // compares the buffer with a value, allows substitutions
             case "eq" -> {
-                if (ctx.buffer.isEmpty())
+                if (ctx.readBuffer().isEmpty())
                     return new ReturnInfo(EnumStatementReturn.UNDEFINED, index, "Buffer is empty");
-                ctx.buffer = ctx.buffer.equals(substitute(ctx, args, false)) ? "true" : "false";
+                ctx.writeBuffer(ctx.readBuffer().equals(substitute(ctx, args, false)) ? "true" : "false");
                 return new ReturnInfo(EnumStatementReturn.OK, index);
             }
 
 
             // greater than buffer
             case "gtb" -> {
-                if (ctx.buffer.isEmpty())
+                if (ctx.readBuffer().isEmpty())
                     return new ReturnInfo(EnumStatementReturn.UNDEFINED, index, "Buffer is empty");
                 try {
-                    double buffer = Double.parseDouble(ctx.buffer);
+                    double buffer = Double.parseDouble(ctx.readBuffer());
                     double val = Double.parseDouble(substitute(ctx, args, false));
-                    ctx.buffer = val > buffer ? "true" : "false";
+                    ctx.writeBuffer(val > buffer ? "true" : "false");
                 } catch (Exception _) {
                     return new ReturnInfo(EnumStatementReturn.PARAMETER_ERROR, index, "Not a valid number");
                 }
@@ -242,12 +242,12 @@ public class ParseMSES1 implements IParse {
 
             // lower than buffer
             case "ltb" -> {
-                if (ctx.buffer.isEmpty())
+                if (ctx.readBuffer().isEmpty())
                     return new ReturnInfo(EnumStatementReturn.UNDEFINED, index, "Buffer is empty");
                 try {
-                    double buffer = Double.parseDouble(ctx.buffer);
+                    double buffer = Double.parseDouble(ctx.readBuffer());
                     double val = Double.parseDouble(substitute(ctx, args, false));
-                    ctx.buffer = val < buffer ? "true" : "false";
+                    ctx.writeBuffer(val < buffer ? "true" : "false");
                 } catch (Exception _) {
                     return new ReturnInfo(EnumStatementReturn.PARAMETER_ERROR, index, "Not a valid number");
                 }
@@ -257,12 +257,12 @@ public class ParseMSES1 implements IParse {
 
             // greater than or equal buffer
             case "geb" -> {
-                if (ctx.buffer.isEmpty())
+                if (ctx.readBuffer().isEmpty())
                     return new ReturnInfo(EnumStatementReturn.UNDEFINED, index, "Buffer is empty");
                 try {
-                    double buffer = Double.parseDouble(ctx.buffer);
+                    double buffer = Double.parseDouble(ctx.readBuffer());
                     double val = Double.parseDouble(substitute(ctx, args, false));
-                    ctx.buffer = val >= buffer ? "true" : "false";
+                    ctx.writeBuffer(val >= buffer ? "true" : "false");
                 } catch (Exception _) {
                     return new ReturnInfo(EnumStatementReturn.PARAMETER_ERROR, index, "Not a valid number");
                 }
@@ -272,12 +272,12 @@ public class ParseMSES1 implements IParse {
 
             // lower than or equal buffer
             case "leb" -> {
-                if (ctx.buffer.isEmpty())
+                if (ctx.readBuffer().isEmpty())
                     return new ReturnInfo(EnumStatementReturn.UNDEFINED, index, "Buffer is empty");
                 try {
-                    double buffer = Double.parseDouble(ctx.buffer);
+                    double buffer = Double.parseDouble(ctx.readBuffer());
                     double val = Double.parseDouble(substitute(ctx, args, false));
-                    ctx.buffer = val <= buffer ? "true" : "false";
+                    ctx.writeBuffer(val <= buffer ? "true" : "false");
                 } catch (Exception _) {
                     return new ReturnInfo(EnumStatementReturn.PARAMETER_ERROR, index, "Not a valid number");
                 }
@@ -287,9 +287,9 @@ public class ParseMSES1 implements IParse {
 
             // sends an RoR signal using the buffer's contents as the message over the supplied channel
             case "send" -> {
-                if (ctx.buffer.isEmpty())
+                if (ctx.readBuffer().isEmpty())
                     return new ReturnInfo(EnumStatementReturn.UNDEFINED, index, "Cannot send, buffer is empty");
-                RTTYSystem.broadcast(ctx.world, substitute(ctx, args, false), ctx.buffer);
+                RTTYSystem.broadcast(ctx.world, substitute(ctx, args, false), ctx.readBuffer());
                 return new ReturnInfo(EnumStatementReturn.OK, index);
             }
 
@@ -297,7 +297,7 @@ public class ParseMSES1 implements IParse {
             // listens to an RoR signal using the supplied channel name and saves it to the buffer
             case "listen" -> {
                 RTTYSystem.RTTYChannel chan = RTTYSystem.listen(ctx.world, substitute(ctx, args, false));
-                if (chan != null) ctx.buffer = chan.signal + "";
+                if (chan != null) ctx.writeBuffer(chan.signal + "");
                 return new ReturnInfo(EnumStatementReturn.OK, index);
             }
         }
@@ -319,7 +319,7 @@ public class ParseMSES1 implements IParse {
         //         1       2       3     4       5       6       7
         for(int i = 1; i < frags.length; i += 2) {
             // special case, if we try to substitute $buffer$ then read the literal buffer
-            if (frags[i].equals("buffer")) frags[i] = ctx.buffer;
+            if (frags[i].equals("buffer")) frags[i] = ctx.readBuffer();
             else {
                 String variable = ctx.variables.getString(frags[i]);
                 // unset variables substitute as 0 in numeric contexts so expressions stay parseable

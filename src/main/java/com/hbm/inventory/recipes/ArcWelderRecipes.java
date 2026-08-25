@@ -62,15 +62,6 @@ public class ArcWelderRecipes extends SerializableRecipe {
             50_000L,
             new OreDictStack(WC.ingot(), 2),
             new OreDictStack(DURA.plate())));
-    recipes.add(
-        new ArcWelderRecipe(
-            DictFrame.fromOne(ModItems.part_generic, EnumPartType.HDE),
-            600,
-            25_000_000L,
-            new FluidStack(Fluids.STELLAR_FLUX, 4_000),
-            new OreDictStack(ANY_BISMOIDBRONZE.plateCast(), 2),
-            new OreDictStack(CMB.plateWelded(), 1),
-            new ComparableStack(ModItems.ingot_cft)));
 
     // Dense Wires
     recipes.add(

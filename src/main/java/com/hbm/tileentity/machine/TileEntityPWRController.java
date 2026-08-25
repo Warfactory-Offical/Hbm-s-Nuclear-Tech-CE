@@ -180,7 +180,7 @@ public class TileEntityPWRController extends TileEntityMachineBase implements IT
 
         if (!world.isRemote) {
 
-            this.tanks[0].setType(2, inventory);
+            if(this.amountLoaded <= 0) this.tanks[0].setType(2, inventory);
             setupTanks();
 
             if (unloadDelay > 0) unloadDelay--;

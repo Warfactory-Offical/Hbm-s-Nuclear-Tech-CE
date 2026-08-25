@@ -120,6 +120,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -1451,6 +1452,7 @@ public class ModEventHandlerClient {
 
         try {
             QuickManualAndWiki qmaw = QMAWLoader.triggers.get(comp);
+            if (qmaw == null) qmaw = QMAWLoader.triggers.get(new ComparableStack(comp.item, 1, OreDictionary.WILDCARD_VALUE));
             if (qmaw != null) {
                 list.add(TextFormatting.GREEN + I18nUtil.resolveKey("qmaw.tab", Keyboard.getKeyName(HbmKeybinds.qmaw.getKeyCode())));
                 lastQMAW = qmaw;

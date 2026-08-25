@@ -162,16 +162,6 @@ public class WeaponRecipes {
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.weapon_mod_special, 1, GunFactory.EnumModSpecial.SIFTER.ordinal()), "IGI", "IGI", 'I', DURA.ingot(), 'G', ModBlocks.steel_grate );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.weapon_mod_special, 1, GunFactory.EnumModSpecial.CANISTERS.ordinal()), " R ", "CCC", "SSS", 'R', RUBBER.pipe(), 'C', ModItems.canister_empty, 'S', STEEL.plate() );
 
-        //Nitra!
-        CraftingManager.addShapelessAuto(DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.M357_SP, 6), DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.M357_SP), ModItems.nitra );
-        CraftingManager.addShapelessAuto(DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.M44_SP, 6), DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.M44_SP), ModItems.nitra );
-        CraftingManager.addShapelessAuto(DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.P9_SP, 12), DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.P9_SP), ModItems.nitra );
-        CraftingManager.addShapelessAuto(DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.P22_SP, 32), DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.P22_SP), ModItems.nitra );
-        CraftingManager.addShapelessAuto(DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.R556_SP, 8), DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.R556_SP), ModItems.nitra );
-        CraftingManager.addShapelessAuto(DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.R762_SP, 6), DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.R762_SP), ModItems.nitra );
-        CraftingManager.addShapelessAuto(DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.BMG50_SP, 4), DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.BMG50_SP), ModItems.nitra );
-        CraftingManager.addShapelessAuto(DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.G40_HE, 3), DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.G40_HE), ModItems.nitra );
-        CraftingManager.addShapelessAuto(DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.ROCKET_HE, 2), DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.ROCKET_HE), ModItems.nitra );
 
         //secrets!
         CraftingManager.addShapelessAuto(DictFrame.fromOne(ModItems.ammo_secret, GunFactory.EnumAmmoSecret.M44_EQUESTRIAN, 6), DictFrame.fromOne(ModItems.ammo_standard, GunFactory.EnumAmmo.M44_JHP), DictFrame.fromOne(ModItems.item_secret, ItemEnums.EnumSecretType.SELENIUM_STEEL) );

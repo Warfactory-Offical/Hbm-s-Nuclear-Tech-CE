@@ -17,10 +17,12 @@ public class SatelliteLaser extends Satellite {
 	}
 	
 	public void writeToNBT(NBTTagCompound nbt) {
+		super.writeToNBT(nbt);
 		nbt.setLong("lastOp", lastOp);
 	}
 	
 	public void readFromNBT(NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
 		lastOp = nbt.getLong("lastOp");
 	}
 	

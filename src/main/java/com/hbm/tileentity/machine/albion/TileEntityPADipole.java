@@ -89,7 +89,7 @@ public class TileEntityPADipole extends TileEntityCooledBase implements IGUIProv
         if (!isCool()) particle.crash(PAState.CRASH_NOCOOL);
         if (this.power < usage * mult) particle.crash(PAState.CRASH_NOPOWER);
         if (type == null) particle.crash(PAState.CRASH_NOCOIL);
-        if (type != null && type.diMax < particle.momentum) particle.crash(PAState.CRASH_OVERSPEED);
+        if (type != null && type.diMax < particle.momentum && !isInline) particle.crash(PAState.CRASH_OVERSPEED);
 
         if (particle.invalid) return;
 

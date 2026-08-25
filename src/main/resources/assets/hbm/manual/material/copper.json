@@ -1,19 +1,19 @@
 {
 	"name": "Copper",
 	"icon": [
-		"hbm:item.ingot_copper",
+		"hbm:ingot_copper",
 		1,
 		0
 	],
 	"trigger": [
 		[
-			"hbm:item.ingot_copper"
+			"hbm:ingot_copper"
 		],
 		[
-			"hbm:item.plate_copper"
+			"hbm:plate_copper"
 		],
 		[
-			"hbm:item.powder_copper"
+			"hbm:powder_copper"
 		]
 	],
 	"title": {

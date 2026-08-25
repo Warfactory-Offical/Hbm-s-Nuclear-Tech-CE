@@ -54,7 +54,7 @@ public class TileEntityMachineBlastFurnace extends TileEntityMachineBase impleme
 	public int fuel;
 	public static final int FUEL_COAL = 200 * 8;
 	public static final int FUEL_RATE = 200 * 4; // half coal per operation
-	public static final int MAX_FUEL = FUEL_COAL * 16; // 16 pieces of coal
+	public static final int MAX_FUEL = FUEL_COAL * 24; // 24 pieces of coal
 	public static final int FLUE_GAS = 100; // per finished operation, not per tick
 
 	public ModuleBurnTime burnModule = new ModuleBurnTime()

@@ -224,6 +224,7 @@ public class QMAWLoader implements ISelectiveResourceReloadListener {
     public static void registerJson(String file, JsonObject json) {
 
         String name = json.get("name").getAsString();
+        if(QMAWLoader.qmaw.containsKey(name)) MainRegistry.logger.info("[QMAW] Overriding existing entry {} from {}", name, file);
         QuickManualAndWiki qmaw = new QuickManualAndWiki(name);
 
         if(json.has("icon")) {

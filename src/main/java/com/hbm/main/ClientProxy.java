@@ -147,6 +147,8 @@ public class ClientProxy extends ServerProxy {
 
     @Override
     public void init(FMLInitializationEvent evt) {
+        Jars.initJars();
+        ((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(new QMAWLoader());
         FluidFogHandler.init();
         // All previous color handler registrations here have been moved to ModEventHandlerClient#itemColorsEvent
         // and ModEventHandlerClient#blockColorsEvent
@@ -174,9 +176,7 @@ public class ClientProxy extends ServerProxy {
         ClientRegistry.registerKeyBinding(fsbFlashlight);
 
         HbmKeybinds.register();
-        Jars.initJars();
 
-        ((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(new QMAWLoader());
 //        ((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(new HFRModelReloader());
 
 //        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineAssembler.class, new RenderAssembler());
