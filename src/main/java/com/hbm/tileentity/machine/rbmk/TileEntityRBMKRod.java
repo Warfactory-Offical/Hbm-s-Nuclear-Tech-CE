@@ -573,7 +573,7 @@ public class TileEntityRBMKRod extends TileEntityRBMKSlottedBase implements IRBM
 		}
 		if((PREFIX_VALUE + "fastflux").equals(name))	return "" + (int) (lastFluxQuantity * lastFluxRatio);
 		if((PREFIX_VALUE + "slowflux").equals(name))	return "" + (int) (lastFluxQuantity * (1 - lastFluxRatio));
-		if((PREFIX_VALUE + "flux").equals(name))		return "" + (int) lastFluxQuantity;
+		if((PREFIX_VALUE + "flux").equals(name))		return "" + ((int) (lastFluxQuantity * lastFluxRatio) + (int) (lastFluxQuantity * (1 - lastFluxRatio)));
 		return null;
 	}
 }

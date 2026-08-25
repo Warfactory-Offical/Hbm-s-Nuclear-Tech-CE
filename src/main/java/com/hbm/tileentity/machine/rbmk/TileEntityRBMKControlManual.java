@@ -223,18 +223,27 @@ public class TileEntityRBMKControlManual extends TileEntityRBMKControl implement
     }
 
     @Override
+    public String[] getFunctionInfo() {
+        return new String[] {
+                PREFIX_VALUE + "extraction",
+                PREFIX_FUNCTION + "setrods" + NAME_SEPARATOR + "percent",
+                PREFIX_FUNCTION + "extendrods" + NAME_SEPARATOR + "percent"
+        };
+    }
+
+    @Override
     public String runRORFunction(String name, String[] params) {
 
         if((PREFIX_FUNCTION + "setrods").equals(name) && params.length > 0) {
             int percent = IRORInteractive.parseInt(params[0], 0, 100);
-            this.targetLevel = percent / 100D;
+            this.setTarget(percent / 100D);
             this.markDirty();
             return null;
         }
 
         if((PREFIX_FUNCTION + "extendrods").equals(name) && params.length > 0) {
             int percent = IRORInteractive.parseInt(params[0], -100, 100);
-            this.targetLevel = MathHelper.clamp(this.targetLevel + percent / 100D, 0D, 1D);
+            this.setTarget(MathHelper.clamp(this.targetLevel + percent / 100D, 0D, 1D));
             this.markDirty();
             return null;
         }

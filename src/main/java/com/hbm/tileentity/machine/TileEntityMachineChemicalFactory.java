@@ -43,10 +43,11 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.HashMap;
 import java.util.List;
+import com.hbm.api.redstoneoverradio.IRORValueProvider;
 
 @AutoRegister
 public class TileEntityMachineChemicalFactory extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IFluidStandardTransceiverMK2, IUpgradeInfoProvider, 
-        IControlReceiver, IGUIProvider, TileEntityProxyDyn.IProxyDelegateProvider, IConnectionAnchors {
+        IControlReceiver, IGUIProvider, TileEntityProxyDyn.IProxyDelegateProvider, IConnectionAnchors, IRORValueProvider {
 
     public FluidTankNTM[] allTanks;
     public FluidTankNTM[] inputTanks;
@@ -519,5 +520,26 @@ public class TileEntityMachineChemicalFactory extends TileEntityMachineBase impl
         @Override public FluidTankNTM[] getSendingTanks() { return new FluidTankNTM[] {TileEntityMachineChemicalFactory.this.lps}; }
 
         @Override public FluidTankNTM[] getAllTanks() { return TileEntityMachineChemicalFactory.this.getAllTanks(); }
+    }
+
+    @Override
+    public String[] getFunctionInfo() {
+        return new String[] {
+                PREFIX_VALUE + "progress1", PREFIX_VALUE + "progress2", PREFIX_VALUE + "progress3", PREFIX_VALUE + "progress4",
+                PREFIX_VALUE + "recipe1", PREFIX_VALUE + "recipe2", PREFIX_VALUE + "recipe3", PREFIX_VALUE + "recipe4",
+                PREFIX_VALUE + "anyactive",
+                PREFIX_VALUE + "active1", PREFIX_VALUE + "active2", PREFIX_VALUE + "active3", PREFIX_VALUE + "active4"
+        };
+    }
+
+    @Override
+    public String provideRORValue(String name) {
+        if((PREFIX_VALUE + "anyactive").equals(name)) return "" + ((this.didProcess[0] || this.didProcess[1] || this.didProcess[2] || this.didProcess[3]) ? 1 : 0);
+        for(int i = 0; i < 4; i++) {
+            if((PREFIX_VALUE + "progress" + (i + 1)).equals(name)) return "" + (int) Math.round(this.chemplantModule[i].progress * 100);
+            if((PREFIX_VALUE + "recipe" + (i + 1)).equals(name)) return this.chemplantModule[i].getRecipeName();
+            if((PREFIX_VALUE + "active" + (i + 1)).equals(name)) return "" + (this.didProcess[i] ? 1 : 0);
+        }
+        return null;
     }
 }

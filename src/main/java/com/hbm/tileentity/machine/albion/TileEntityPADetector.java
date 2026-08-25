@@ -30,9 +30,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
+import com.hbm.api.redstoneoverradio.IRORValueProvider;
 
 @AutoRegister
-public class TileEntityPADetector extends TileEntityCooledBase implements IGUIProvider, IParticleUser {
+public class TileEntityPADetector extends TileEntityCooledBase implements IGUIProvider, IParticleUser, IRORValueProvider {
 
     public static final long usage = 100_000;
     AxisAlignedBB bb = null;
@@ -204,6 +205,23 @@ public class TileEntityPADetector extends TileEntityCooledBase implements IGUIPr
 
     @Override
     public BlockPos getExitPos(Particle particle) {
+        return null;
+    }
+
+    @Override
+    public String[] getFunctionInfo() {
+        return new String[] {
+                PREFIX_VALUE + "temperature",
+                PREFIX_VALUE + "pfmcold",
+                PREFIX_VALUE + "pfm"
+        };
+    }
+
+    @Override
+    public String provideRORValue(String name) {
+        if((PREFIX_VALUE + "temperature").equals(name)) return "" + (int) this.temperature;
+        if((PREFIX_VALUE + "pfmcold").equals(name)) return "" + coolantTanks[0].getFill();
+        if((PREFIX_VALUE + "pfm").equals(name)) return "" + coolantTanks[1].getFill();
         return null;
     }
 }
