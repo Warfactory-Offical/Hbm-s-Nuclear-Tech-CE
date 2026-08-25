@@ -413,6 +413,8 @@ public class JEIConfig implements IModPlugin {
         HbmTransferInfo.init(registry.getJeiHelpers());
         HbmTransferInfo.register(t, ContainerMachineAmmoPress.class,        AMMO_PRESS,         range(0, 9),  range(10, 36));
         HbmTransferInfo.register(t, ContainerMachineAnnihilator.class,      ANNIHILATING,       new int[]{0},                 range(11, 36));
+        HbmTransferInfo.register(t, ContainerAnvil.class,                   ANVIL_CON,          range(0, 2),  range(3, 36));
+        HbmTransferInfo.register(t, ContainerAnvil.class,                   ANVIL_SMITH,        range(0, 2),  range(3, 36));
         HbmTransferInfo.register(t, ContainerMachineArcFurnaceLarge.class,  ARC_FURNACE_FLUID,  new int[]{5},                 range(30, 36));
         HbmTransferInfo.register(t, ContainerMachineArcFurnaceLarge.class,  ARC_FURNACE_SOLID,  new int[]{5},                 range(30, 36));
         HbmTransferInfo.register(t, ContainerMachineArcWelder.class,        ARC_WELDER,         range(0, 3),  range(8, 36));

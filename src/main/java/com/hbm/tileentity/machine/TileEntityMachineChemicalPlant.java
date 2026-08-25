@@ -303,7 +303,7 @@ public class TileEntityMachineChemicalPlant extends TileEntityMachineBase implem
             int index = data.getInteger("index");
             String selection = data.getString("selection");
             if(index == 0) {
-                this.chemplantModule.recipe = selection;
+                this.chemplantModule.setRecipe(selection, false);
                 this.markChanged();
             }
         }

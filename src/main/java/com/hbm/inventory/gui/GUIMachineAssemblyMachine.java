@@ -78,7 +78,7 @@ public class GUIMachineAssemblyMachine extends GuiInfoContainer {
 
         if(assembler.assemblerModule.progress > 0) {
             int j = (int) Math.ceil(70 * assembler.assemblerModule.progress);
-            drawTexturedModalRect(guiLeft + 62, guiTop + 126, 176, 61, j, 16);
+            drawTexturedModalRect(guiLeft + 62, guiTop + 126, 176, 61 + (assembler.assemblerModule.restrictedMode ? 16 : 0), j, 16);
         }
 
         GenericRecipe recipe = AssemblyMachineRecipes.INSTANCE.recipeNameMap.get(assembler.assemblerModule.recipe);

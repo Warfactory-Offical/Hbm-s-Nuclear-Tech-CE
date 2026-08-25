@@ -391,7 +391,7 @@ public class TileEntityMachineAssemblyFactory extends TileEntityMachineBase impl
             int index = data.getInteger("index");
             String selection = data.getString("selection");
             if(index >= 0 && index < 4) {
-                this.assemblerModule[index].recipe = selection;
+                this.assemblerModule[index].setRecipe(selection, false);
                 this.markChanged();
             }
         }

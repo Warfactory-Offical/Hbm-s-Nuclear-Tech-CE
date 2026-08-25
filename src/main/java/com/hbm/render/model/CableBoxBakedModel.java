@@ -102,12 +102,26 @@ public class CableBoxBakedModel extends AbstractBakedModel {
         if ((mask & 0b111100) == 0 && mask > 0) return (side == 2 || side == 3) ? PowerCableBox.iconEnd[m] : PowerCableBox.iconStraight;
         if ((mask & 0b110011) == 0 && mask > 0) return (side == 0 || side == 1) ? PowerCableBox.iconEnd[m] : PowerCableBox.iconStraight;
 
+        if (side == 0 && nY || side == 1 && pY || side == 2 && nZ || side == 3 && pZ || side == 4 && nX || side == 5 && pX)
+            return PowerCableBox.iconEnd[m];
+
         if (count == 2) {
-            if ((nY && pZ) || (pY && nZ)) return side == 4 ? PowerCableBox.iconCurveTR : PowerCableBox.iconCurveTL;
-            if ((nY && nZ) || (pY && pZ)) return side == 5 ? PowerCableBox.iconCurveTR : PowerCableBox.iconCurveTL;
-            if ((nY && pX) || (pY && nX)) return side == 3 ? PowerCableBox.iconCurveBR : PowerCableBox.iconCurveBL;
-            if ((nX && nZ) || (pX && pZ)) return side == 2 ? PowerCableBox.iconCurveBR : PowerCableBox.iconCurveBL;
-            return PowerCableBox.iconStraight;
+            if (side == 1 && nY || side == 0 && pY || side == 3 && nZ || side == 2 && pZ || side == 5 && nX || side == 4 && pX)
+                return PowerCableBox.iconStraight;
+
+            if (nY && pZ) return side == 4 ? PowerCableBox.iconCurveBR : PowerCableBox.iconCurveBL;
+            if (nY && nZ) return side == 5 ? PowerCableBox.iconCurveBR : PowerCableBox.iconCurveBL;
+            if (nY && pX) return side == 3 ? PowerCableBox.iconCurveBR : PowerCableBox.iconCurveBL;
+            if (nY && nX) return side == 2 ? PowerCableBox.iconCurveBR : PowerCableBox.iconCurveBL;
+            if (pY && pZ) return side == 4 ? PowerCableBox.iconCurveTR : PowerCableBox.iconCurveTL;
+            if (pY && nZ) return side == 5 ? PowerCableBox.iconCurveTR : PowerCableBox.iconCurveTL;
+            if (pY && pX) return side == 3 ? PowerCableBox.iconCurveTR : PowerCableBox.iconCurveTL;
+            if (pY && nX) return side == 2 ? PowerCableBox.iconCurveTR : PowerCableBox.iconCurveTL;
+
+            if (pX && nZ) return PowerCableBox.iconCurveTR;
+            if (pX && pZ) return PowerCableBox.iconCurveBR;
+            if (nX && nZ) return PowerCableBox.iconCurveTL;
+            if (nX && pZ) return PowerCableBox.iconCurveBL;
         }
 
         return PowerCableBox.iconJunction;

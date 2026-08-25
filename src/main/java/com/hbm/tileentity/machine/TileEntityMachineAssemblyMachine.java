@@ -2,6 +2,8 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.api.energymk2.IEnergyReceiverMK2;
 import com.hbm.api.fluidmk2.IFluidStandardTransceiverMK2;
+import com.hbm.api.redstoneoverradio.IRORInteractive;
+import com.hbm.api.redstoneoverradio.IRORValueProvider;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IControlReceiver;
@@ -49,7 +51,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 @AutoRegister
-public class TileEntityMachineAssemblyMachine extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IFluidStandardTransceiverMK2, IUpgradeInfoProvider, IControlReceiver, IGUIProvider, IConnectionAnchors {
+public class TileEntityMachineAssemblyMachine extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IFluidStandardTransceiverMK2, IUpgradeInfoProvider, IControlReceiver, IGUIProvider, IConnectionAnchors, IRORValueProvider, IRORInteractive {
 
     public FluidTankNTM inputTank;
     public FluidTankNTM outputTank;
@@ -334,7 +336,7 @@ public class TileEntityMachineAssemblyMachine extends TileEntityMachineBase impl
             int index = data.getInteger("index");
             String selection = data.getString("selection");
             if(index == 0) {
-                this.assemblerModule.recipe = selection;
+                this.assemblerModule.setRecipe(selection, false);
                 this.markChanged();
             }
         }
@@ -381,6 +383,34 @@ public class TileEntityMachineAssemblyMachine extends TileEntityMachineBase impl
         upgrades.put(ItemMachineUpgrade.UpgradeType.POWER, 3);
         upgrades.put(ItemMachineUpgrade.UpgradeType.OVERDRIVE, 3);
         return upgrades;
+    }
+
+    @Override
+    public String[] getFunctionInfo() {
+        return new String[]{
+                PREFIX_VALUE + "progress",
+                PREFIX_VALUE + "recipe",
+                PREFIX_VALUE + "active",
+                PREFIX_FUNCTION + "setrecipe" + NAME_SEPARATOR + "name"
+        };
+    }
+
+    @Override
+    public String provideRORValue(String name) {
+        if((PREFIX_VALUE + "progress").equals(name)) return "" + (int) Math.round(this.assemblerModule.progress * 100);
+        if((PREFIX_VALUE + "recipe").equals(name)) return this.assemblerModule.getRecipeName();
+        if((PREFIX_VALUE + "active").equals(name)) return "" + (this.didProcess ? 1 : 0);
+        return null;
+    }
+
+    @Override
+    public String runRORFunction(String name, String[] params) {
+        if((PREFIX_FUNCTION + "setrecipe").equals(name) && params.length == 1) {
+            this.assemblerModule.setRecipe(params[0], true);
+            this.markDirty();
+            return null;
+        }
+        return null;
     }
 
     public static class AssemblerArm {

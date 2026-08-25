@@ -2,7 +2,9 @@ package com.hbm.tileentity.network;
 
 import com.hbm.api.ntl.StackCache;
 import com.hbm.api.ntl.StackCache.CacheSlot;
+import com.hbm.api.redstoneoverradio.IRORInteractive;
 import com.hbm.interfaces.AutoRegister;
+import com.hbm.interfaces.IControlReceiver;
 import com.hbm.inventory.container.ContainerPneumoStorageExporter;
 import com.hbm.inventory.gui.GUIPneumoStorageExporter;
 import com.hbm.lib.ForgeDirection;
@@ -21,7 +23,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 @AutoRegister(name = "tileentity_pneumatic_storage_exporter")
-public class TileEntityPneumoStorageExporter extends TileEntityPneumaticMachineBase {
+public class TileEntityPneumoStorageExporter extends TileEntityPneumaticMachineBase implements IRORInteractive, IControlReceiver {
 
 	/** If requests should be pulled repeatedly every tick */
 	public boolean continuousRequest = false;
@@ -295,5 +297,81 @@ public class TileEntityPneumoStorageExporter extends TileEntityPneumaticMachineB
 	@SideOnly(Side.CLIENT)
 	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		return new GUIPneumoStorageExporter(player.inventory, this);
+	}
+
+	@Override
+	public boolean hasPermission(EntityPlayer player) {
+		return player.getDistance(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) < 16;
+	}
+
+	@Override
+	public void receiveControl(NBTTagCompound data) {
+		if(data.hasKey("continuous")) {
+			this.continuousRequest = !this.continuousRequest;
+		}
+		if(data.hasKey("request")) {
+			this.requestMode++;
+			if(this.requestMode >= 3) this.requestMode = 0;
+		}
+		if(data.hasKey("ror")) {
+			this.rorConfiguredMode = !this.rorConfiguredMode;
+		}
+		this.markDirty();
+	}
+
+	@Override
+	public String[] getFunctionInfo() {
+		return new String[] {
+				PREFIX_FUNCTION + "setfilter" + NAME_SEPARATOR + "slot" + PARAM_SEPARATOR + "itemid" + PARAM_SEPARATOR + "itemmeta" + PARAM_SEPARATOR + "amount",
+				PREFIX_FUNCTION + "setcontinuous" + NAME_SEPARATOR + "on/off",
+				PREFIX_FUNCTION + "request",
+				PREFIX_FUNCTION + "requestslot" + NAME_SEPARATOR + "slot",
+				PREFIX_FUNCTION + "checkavailability" + NAME_SEPARATOR + "itemid" + PARAM_SEPARATOR + "itemmeta" + PARAM_SEPARATOR + "returnchannel"
+		};
+	}
+
+	@Override
+	public String runRORFunction(String name, String[] params) {
+
+		if((PREFIX_FUNCTION + "setfilter").equals(name) && params.length == 4) {
+			int slot = IRORInteractive.parseInt(params[0], 1, 9) - 1;
+			int itemId = IRORInteractive.parseInt(params[1], 0, Short.MAX_VALUE);
+			int meta = IRORInteractive.parseInt(params[2], 0, Short.MAX_VALUE);
+			int amount = IRORInteractive.parseInt(params[3], 1, 64);
+
+			this.rorFilters[slot][0] = (short) itemId;
+			this.rorFilters[slot][1] = (short) meta;
+			this.rorFilters[slot][2] = (short) amount;
+			this.markDirty();
+			return null;
+		}
+
+		if((PREFIX_FUNCTION + "setcontinuous").equals(name) && params.length == 1) {
+			if("on".equals(params[0])) this.continuousRequest = true;
+			if("off".equals(params[0])) this.continuousRequest = false;
+			this.markDirty();
+			return null;
+		}
+
+		if((PREFIX_FUNCTION + "request").equals(name)) {
+			this.doRequest(true);
+			return null;
+		}
+
+		if((PREFIX_FUNCTION + "requestslot").equals(name) && params.length == 1) {
+			int slot = IRORInteractive.parseInt(params[0], 1, 9) - 1;
+			if(!this.requestSlot(slot, true)) this.slotDelay[slot] = SLOT_DELAY;
+			return null;
+		}
+
+		if((PREFIX_FUNCTION + "checkavailability").equals(name) && params.length == 3) {
+			int itemId = IRORInteractive.parseInt(params[0], 0, Short.MAX_VALUE);
+			int meta = IRORInteractive.parseInt(params[1], 0, Short.MAX_VALUE);
+			String ret = params[2];
+			RTTYSystem.broadcast(world, ret, this.getAvailability(itemId, meta) + "");
+			return null;
+		}
+
+		return null;
 	}
 }

@@ -109,7 +109,7 @@ public class NTMCraftingMachineHelper {
         }
 
         // commit: select the recipe (same field the GUI's arrows write to), then place the items
-        module.recipe = matched.getInternalName();
+        module.setRecipe(matched.getInternalName(), false);
         for (int i = 0; i < placement.length; i++) {
             module.inventory.setStackInSlot(module.inputSlots[i], placement[i]);
         }

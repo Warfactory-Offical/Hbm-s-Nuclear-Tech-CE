@@ -367,6 +367,7 @@ public class MainRegistry {
         evt.registerServerCommand(new CommandLocate());
         evt.registerServerCommand(new CommandPacketInfo());
         evt.registerServerCommand(new CommandReloadServer());
+        evt.registerServerCommand(new CommandReapNetworks());
         AdvancementManager.init(evt.getServer());
         //MUST be initialized AFTER achievements!!
         BobmazonOfferFactory.init();

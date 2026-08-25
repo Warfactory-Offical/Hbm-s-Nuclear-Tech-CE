@@ -357,7 +357,7 @@ public class TileEntityFusionPlasmaForge extends TileEntityMachineBase implement
             int index = data.getInteger("index");
             String selection = data.getString("selection");
             if(index == 0) {
-                this.plasmaModule.recipe = selection;
+                this.plasmaModule.setRecipe(selection, false);
                 this.markChanged();
             }
         }

@@ -479,7 +479,7 @@ public class TileEntityFusionTorus extends TileEntityCooledBase implements ITick
             int index = data.getInteger("index");
             String selection = data.getString("selection");
             if(index == 0) {
-                this.fusionModule.recipe = selection;
+                this.fusionModule.setRecipe(selection, false);
                 this.markChanged();
             }
         }

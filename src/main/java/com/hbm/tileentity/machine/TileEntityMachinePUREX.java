@@ -263,7 +263,7 @@ public class TileEntityMachinePUREX extends TileEntityMachineBase implements ITi
             int index = data.getInteger("index");
             String selection = data.getString("selection");
             if(index == 0) {
-                this.purexModule.recipe = selection;
+                this.purexModule.setRecipe(selection, false);
                 this.markChanged();
             }
         }

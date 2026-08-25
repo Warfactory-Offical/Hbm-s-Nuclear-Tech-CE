@@ -503,6 +503,8 @@ public class NBTStructure {
 					Block block = transformBlock(state.definition, null, world.rand);
 					int meta = transformMeta(state.definition, null, coordBaseMode);
 
+					if(ry < 1) continue;
+
 					BlockPos pos = new BlockPos(rx, ry, rz);
 					IBlockState place = block.getStateFromMeta(meta);
 					world.setBlockState(pos, place, 2);

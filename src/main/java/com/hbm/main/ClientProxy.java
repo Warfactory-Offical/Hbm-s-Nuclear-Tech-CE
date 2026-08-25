@@ -18,6 +18,7 @@ import com.hbm.blocks.machine.SpotlightBeam;
 import com.hbm.blocks.machine.rbmk.RBMKDebrisRadiating;
 import com.hbm.blocks.network.ConnectorRedWire;
 import com.hbm.command.CommandRadVisClient;
+import com.hbm.command.CommandWikiRender;
 import com.hbm.config.GeneralConfig;
 import com.hbm.entity.grenade.EntityDisperserCanister;
 import com.hbm.entity.grenade.EntityGrenadeBouncyGeneric;
@@ -165,6 +166,7 @@ public class ClientProxy extends ServerProxy {
         MinecraftForge.EVENT_BUS.register(new ModEventHandlerRenderer());
         MinecraftForge.EVENT_BUS.register(new RenderInfoSystemLegacy());
         ClientCommandHandler.instance.registerCommand(new CommandRadVisClient());
+        CommandWikiRender.register();
 
         jetpackActivate = new KeyBinding("key.jetpack_activate", KeyConflictContext.IN_GAME, Keyboard.KEY_J, "key.categories.hbm");
         ClientRegistry.registerKeyBinding(jetpackActivate);

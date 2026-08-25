@@ -6507,6 +6507,7 @@ satellite.data=DATA AVAILABLE
 satellite.pending=Measurements pending: %s
 satellite.ready=READY
 satellite.sensors=Sensor Relays installed: %s
+satellite.spent=SPENT
 shape.barrelHeavy=Heavy Barrel
 shape.barrelLight=Light Barrel
 shape.billet=Billet

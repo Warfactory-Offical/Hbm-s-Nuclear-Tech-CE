@@ -249,7 +249,7 @@ public class TileEntityMachineRockMill extends TileEntityMachineBase implements 
             int index = data.getInteger("index");
             String selection = data.getString("selection");
             if (index == 0) {
-                this.rockMillModule.recipe = selection;
+                this.rockMillModule.setRecipe(selection, false);
                 this.markChanged();
             }
         }

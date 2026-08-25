@@ -1,8 +1,13 @@
 package com.hbm.saveddata.satellites;
 
 import com.hbm.itempool.ItemPoolsSatellite;
+import com.hbm.items.machine.ItemSatellite;
+import com.hbm.items.machine.ItemSatellite.EnumSatType;
 import com.hbm.util.WeightedRandomObject;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.World;
 
 import java.util.HashMap;
 
@@ -17,6 +22,15 @@ public class SatelliteMiner extends Satellite {
 
 	public SatelliteMiner() {
 		this.satIface = Interfaces.NONE;
+	}
+
+	@Override public String getType() { return "ASTEROID_MINER"; }
+
+	@Override
+	public ITextComponent[] getInfo(World world) {
+		return new ITextComponent[] {
+				new TextComponentTranslation(ItemSatellite.make(EnumSatType.MINER_ASTRO).getTranslationKey() + ".name")
+		};
 	}
 
 	public void writeToNBT(NBTTagCompound nbt) {

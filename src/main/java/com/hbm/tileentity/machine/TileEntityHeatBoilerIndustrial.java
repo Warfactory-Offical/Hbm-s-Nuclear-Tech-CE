@@ -3,6 +3,7 @@ package com.hbm.tileentity.machine;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import com.hbm.api.fluid.IFluidStandardTransceiver;
+import com.hbm.api.redstoneoverradio.IRORValueProvider;
 import com.hbm.api.tile.IHeatSource;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.interfaces.AutoRegister;
@@ -42,7 +43,7 @@ import java.io.IOException;
 
 @AutoRegister
 public class TileEntityHeatBoilerIndustrial extends TileEntityLoadedBase implements IBufPacketReceiver, ITickable, IFluidStandardTransceiver,
-        IConfigurableMachine, IFluidCopiable, IConnectionAnchors {
+        IConfigurableMachine, IFluidCopiable, IConnectionAnchors, IRORValueProvider {
 
     /* CONFIGURABLE */
     public static int maxHeat = 12_800_000;
@@ -341,5 +342,20 @@ public class TileEntityHeatBoilerIndustrial extends TileEntityLoadedBase impleme
             return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new NTMFluidHandlerWrapper(this));
         }
         return super.getCapability(capability, facing);
+    }
+
+    @Override
+    public String[] getFunctionInfo() {
+        return new String[]{
+                PREFIX_VALUE + "input",
+                PREFIX_VALUE + "output"
+        };
+    }
+
+    @Override
+    public String provideRORValue(String name) {
+        if((PREFIX_VALUE + "input").equals(name)) return "" + tanks[0].getFill();
+        if((PREFIX_VALUE + "output").equals(name)) return "" + tanks[1].getFill();
+        return null;
     }
 }

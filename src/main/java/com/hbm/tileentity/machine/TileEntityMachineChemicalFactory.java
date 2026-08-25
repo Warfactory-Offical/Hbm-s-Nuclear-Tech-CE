@@ -429,7 +429,7 @@ public class TileEntityMachineChemicalFactory extends TileEntityMachineBase impl
             int index = data.getInteger("index");
             String selection = data.getString("selection");
             if(index >= 0 && index < 4) {
-                this.chemplantModule[index].recipe = selection;
+                this.chemplantModule[index].setRecipe(selection, false);
                 this.markChanged();
             }
         }

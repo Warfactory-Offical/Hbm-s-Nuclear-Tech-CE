@@ -188,7 +188,7 @@ public class TileEntityMachineSuperComputer extends TileEntityMachineBase implem
 			int index = data.getInteger("index");
 			String selection = data.getString("selection");
 			if(index == 0) {
-				this.computerModule.recipe = selection;
+				this.computerModule.setRecipe(selection, false);
 				this.markDirty();
 			}
 		}
