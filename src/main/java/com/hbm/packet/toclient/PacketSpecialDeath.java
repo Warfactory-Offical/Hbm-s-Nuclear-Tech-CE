@@ -10,7 +10,7 @@ import com.hbm.particle.bullet_hit.EntityHitDataHandler.BulletHit;
 import com.hbm.particle.bullet_hit.ParticleMobGib;
 import com.hbm.particle.helper.HbmEffectNT;
 import com.hbm.physics.RigidBody;
-import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.util.Vec3NT;
 import com.hbm.render.util.ModelRendererUtil;
 import com.hbm.render.util.Triangle;
 import io.netty.buffer.ByteBuf;
@@ -173,7 +173,7 @@ public class PacketSpecialDeath implements IMessage {
 								float dist = (float) b.pos.distanceTo(bodies[i].globalCentroid.toVec3d());
 								float falloff = pointLightFalloff(1, dist);
 								float regular = 1.5F*falloff;
-								bodies[i].impulseVelocityDirect(new Vec3(b.direction.scale(regular)), new Vec3(b.pos));
+								bodies[i].impulseVelocityDirect(new Vec3NT(b.direction.scale(regular)), new Vec3NT(b.pos));
 							}
 							bodies[i].angularVelocity = bodies[i].angularVelocity.min(10).max(-10);
 							Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleMobGib(ent.world, bodies[i], tex, displayLists[i]));

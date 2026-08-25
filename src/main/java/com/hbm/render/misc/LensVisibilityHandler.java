@@ -3,6 +3,7 @@ package com.hbm.render.misc;
 import com.hbm.Tags;
 import com.hbm.main.ClientProxy;
 import com.hbm.main.ResourceManager;
+import com.hbm.render.loader.GroupObject;
 import com.hbm.render.GLCompat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -23,7 +24,7 @@ public class LensVisibilityHandler {
 
 	static Map<Integer, LensSpikeInfo> lensSpikes = new HashMap<>();
 	static int currentId = 0;
-	public static int checkSphere = -1;
+	public static GroupObject checkSphere;
 	
 	public static int findId(){
 		while(lensSpikes.containsKey(currentId)){
@@ -104,12 +105,12 @@ public class LensVisibilityHandler {
 			GL11.glScaled(0.05, 0.05, 0.05);
 			GlStateManager.disableDepth();
 			GLCompat.beginQuery(GLCompat.GL_SAMPLES_PASSED, totalFragmentsQuery);
-			GL11.glCallList(checkSphere);
+			if(checkSphere != null) checkSphere.render();
 			GLCompat.endQuery(GLCompat.GL_SAMPLES_PASSED);
 			
 			GlStateManager.enableDepth();
 			GLCompat.beginQuery(GLCompat.GL_SAMPLES_PASSED, fragmentsPassedQuery);
-			GL11.glCallList(checkSphere);
+			if(checkSphere != null) checkSphere.render();
 			GLCompat.endQuery(GLCompat.GL_SAMPLES_PASSED);
 			GlStateManager.popMatrix();
 			
@@ -138,12 +139,12 @@ public class LensVisibilityHandler {
 				GL11.glScaled(0.1, 0.1, 0.1);
 				GlStateManager.disableDepth();
 				GLCompat.beginQuery(GLCompat.GL_SAMPLES_PASSED, totalFragmentsQuery);
-				GL11.glCallList(checkSphere);
+				if(checkSphere != null) checkSphere.render();
 				GLCompat.endQuery(GLCompat.GL_SAMPLES_PASSED);
 				
 				GlStateManager.enableDepth();
 				GLCompat.beginQuery(GLCompat.GL_SAMPLES_PASSED, fragmentsPassedQuery);
-				GL11.glCallList(checkSphere);
+				if(checkSphere != null) checkSphere.render();
 				GLCompat.endQuery(GLCompat.GL_SAMPLES_PASSED);
 				GlStateManager.popMatrix();
 				

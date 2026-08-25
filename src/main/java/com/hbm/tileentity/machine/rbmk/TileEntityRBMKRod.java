@@ -18,6 +18,8 @@ import com.hbm.inventory.gui.GUIRBMKRod;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemRBMKRod;
 import com.hbm.lib.ForgeDirection;
+import com.hbm.saveddata.satellites.SatelliteRayScan;
+import com.hbm.saveddata.satellites.SatelliteRayScan.RayEvent;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.machine.rbmk.RBMKColumn.ColumnType;
 import com.hbm.util.BufferUtil;
@@ -126,6 +128,10 @@ public class TileEntityRBMKRod extends TileEntityRBMKSlottedBase implements IRBM
 		if(!world.isRemote) {
 			ItemStack stack = inventory.getStackInSlot(0).copy();
 			if(stack.getItem() instanceof ItemRBMKRod rod) {
+
+				if(this.fluxQuantity > 0 && world.getTotalWorldTime() % 200 == 0)
+					SatelliteRayScan.reportEvent(world, pos.getX(), pos.getY(), pos.getZ(), RayEvent.INFO_NUCLEAR, 300);
+
 				this.rodColor = rod.colorTint;
 				double fluxRatioOut;
 				double fluxQuantityOut;

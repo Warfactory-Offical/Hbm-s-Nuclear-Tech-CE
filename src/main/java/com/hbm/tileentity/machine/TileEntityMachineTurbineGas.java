@@ -22,7 +22,7 @@ import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
-import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.util.Vec3NT;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.lib.DirPos;
 import com.hbm.tileentity.IConnectionAnchors;
@@ -491,7 +491,7 @@ public class TileEntityMachineTurbineGas extends TileEntityMachineBase implement
 
 	@Override
 	public boolean hasPermission(EntityPlayer player) {
-		return Vec3.createVectorHelper(pos.getX() - player.posX, pos.getY() - player.posY, pos.getZ() - player.posZ).length() < 25;
+		return Vec3NT.createVectorHelper(pos.getX() - player.posX, pos.getY() - player.posY, pos.getZ() - player.posZ).length() < 25;
 	}
 
 	@Override

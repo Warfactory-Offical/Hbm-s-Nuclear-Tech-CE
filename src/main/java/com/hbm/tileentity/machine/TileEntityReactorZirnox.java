@@ -29,6 +29,8 @@ import com.hbm.main.AdvancementManager;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.particle.helper.HbmEffectNT;
+import com.hbm.saveddata.satellites.SatelliteRayScan;
+import com.hbm.saveddata.satellites.SatelliteRayScan.RayEvent;
 import com.hbm.tileentity.IConnectionAnchors;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
@@ -262,6 +264,8 @@ public class TileEntityReactorZirnox extends TileEntityMachineBase implements IT
                     this.heat -= 10;
                 }
 
+                if (world.getTotalWorldTime() % 100 == 0)
+                    SatelliteRayScan.reportEvent(world, pos.getX(), pos.getY(), pos.getZ(), RayEvent.INFO_NUCLEAR, 200);
             }
 
             if (!this.tilted) for (DirPos pos : getConPos()) {

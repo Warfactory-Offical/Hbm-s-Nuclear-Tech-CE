@@ -22,6 +22,8 @@ import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
+import com.hbm.saveddata.satellites.SatelliteRayScan;
+import com.hbm.saveddata.satellites.SatelliteRayScan.RayEvent;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.IConnectionAnchors;
 import com.hbm.tileentity.IGUIProvider;
@@ -249,6 +251,9 @@ public class TileEntityPWRController extends TileEntityMachineBase implements IT
                             this.amountLoaded--;
                             this.markDirty();
                         }
+
+                        if (world.getTotalWorldTime() % 100 == 0)
+                            SatelliteRayScan.reportEvent(world, pos.getX(), pos.getY(), pos.getZ(), RayEvent.INFO_NUCLEAR, 200);
                     }
 
                     if (this.amountLoaded <= 0) {

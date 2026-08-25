@@ -5,7 +5,7 @@ import com.hbm.lib.HBMSoundHandler;
 import com.hbm.particle.ParticleDebris;
 import com.hbm.particle.ParticleMukeWave;
 import com.hbm.particle.ParticleRocketFlame;
-import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.util.Vec3NT;
 import com.hbm.wiaj.WorldInAJar;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -126,10 +126,10 @@ public class ExplosionCreator implements IParticleCreator {
             int cY = (int) Math.floor(y + oY + 0.5);
             int cZ = (int) Math.floor(z + oZ + 0.5);
 
-            Vec3 motion = Vec3.createVectorHelper(debrisVelocity, 0, 0);
-            motion.rotateAroundZ((float) -Math.toRadians(45 + rand.nextFloat() * 25));
-            motion.rotateAroundY((float) (rand.nextDouble() * Math.PI * 2));
-            ParticleDebris particle = new ParticleDebris(world, x, y, z, motion.xCoord, motion.yCoord, motion.zCoord);
+            Vec3NT motion = Vec3NT.createVectorHelper(debrisVelocity, 0, 0);
+            motion.rotateRollSelf((float) -Math.toRadians(45 + rand.nextFloat() * 25));
+            motion.rotateYawSelf((float) (rand.nextDouble() * Math.PI * 2));
+            ParticleDebris particle = new ParticleDebris(world, x, y, z, motion.x, motion.y, motion.z);
             WorldInAJar wiaj = new WorldInAJar(debrisSize, debrisSize, debrisSize);
             particle.worldInAJar = wiaj;
 

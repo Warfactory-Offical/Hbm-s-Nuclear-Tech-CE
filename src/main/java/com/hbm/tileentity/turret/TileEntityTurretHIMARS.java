@@ -10,7 +10,7 @@ import com.hbm.items.weapon.ItemAmmoHIMARS;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
-import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.util.Vec3NT;
 import com.hbm.tileentity.IGUIProvider;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.gui.GuiScreen;
@@ -299,14 +299,14 @@ public class TileEntityTurretHIMARS extends TileEntityTurretBaseArtillery implem
 
   public void spawnShell(int type) {
     Vec3d pos = this.getTurretPos();
-    Vec3 vec = Vec3.createVectorHelper(this.getBarrelLength(), 0, 0);
-    vec.rotateAroundZ((float) -this.rotationPitch);
-    vec.rotateAroundY((float) -(this.rotationYaw + Math.PI * 0.5));
+    Vec3NT vec = Vec3NT.createVectorHelper(this.getBarrelLength(), 0, 0);
+    vec.rotateRollSelf((float) -this.rotationPitch);
+    vec.rotateYawSelf((float) -(this.rotationYaw + Math.PI * 0.5));
 
     EntityArtilleryRocket proj = new EntityArtilleryRocket(world);
     proj.setPositionAndRotation(
-        pos.x + vec.xCoord, pos.y + vec.yCoord, pos.z + vec.zCoord, 0.0F, 0.0F);
-    proj.shoot(vec.xCoord, vec.yCoord, vec.zCoord, 25F, 0.0F);
+        pos.x + vec.x, pos.y + vec.y, pos.z + vec.z, 0.0F, 0.0F);
+    proj.shoot(vec.x, vec.y, vec.z, 25F, 0.0F);
 
     if (this.target != null) proj.setTarget(this.target);
     else proj.setTarget(tPos.x, tPos.y, tPos.z);

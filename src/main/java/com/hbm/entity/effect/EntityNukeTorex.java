@@ -4,7 +4,7 @@ import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IConstantRenderer;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
-import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.util.Vec3NT;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -154,10 +154,10 @@ public class EntityNukeTorex extends Entity implements IConstantRenderer {
 				int shockLife = Math.max(400 - this.ticksExisted * 20, 50);
 				
 				for(int i = 0; i < cloudCount; i++) {
-					Vec3 vec = Vec3.createVectorHelper((this.ticksExisted + rand.nextDouble() * 2) * 1.5, 0, 0);
+					Vec3NT vec = Vec3NT.createVectorHelper((this.ticksExisted + rand.nextDouble() * 2) * 1.5, 0, 0);
 					float rot = (float) (Math.PI * 2 * rand.nextDouble());
-					vec.rotateAroundY(rot);
-					this.cloudlets.add(new Cloudlet(vec.xCoord + posX, world.getHeight((int) (vec.xCoord + posX) + 1, (int) (vec.zCoord + posZ)), vec.zCoord + posZ, rot, 0, shockLife, TorexType.SHOCK)
+					vec.rotateYawSelf(rot);
+					this.cloudlets.add(new Cloudlet(vec.x + posX, world.getHeight((int) (vec.x + posX) + 1, (int) (vec.z + posZ)), vec.z + posZ, rot, 0, shockLife, TorexType.SHOCK)
 							.setScale((float)s * 5F, (float)s * 2F).setMotion(MathHelper.clamp(0.25 * this.ticksExisted - 5, 0, 1)));
 				}
 
@@ -216,10 +216,10 @@ public class EntityNukeTorex extends Entity implements IConstantRenderer {
 			for(int i = 0; i < (int)(5 * humidity * count/(double)spreadAngle); i++) {
 				for(int j = 1; j < spreadAngle; j++) {
 					float angle = (float) (Math.PI * 2 * rand.nextDouble());
-					Vec3 vec = Vec3.createVectorHelper(0, age, 0);
-					vec.rotateAroundZ((float)Math.acos((height-posY)/(age))+(float)Math.toRadians(humidity*humidity*90*j*(0.1*rand.nextDouble()-0.05)));
-					vec.rotateAroundY(angle);
-					Cloudlet cloud = new Cloudlet(posX + vec.xCoord, posY + vec.yCoord, posZ + vec.zCoord, angle, 0, (int) ((20 + age / 10) * (1 + rand.nextDouble() * 0.1)), TorexType.CONDENSATION);
+					Vec3NT vec = Vec3NT.createVectorHelper(0, age, 0);
+					vec.rotateRollSelf((float)Math.acos((height-posY)/(age))+(float)Math.toRadians(humidity*humidity*90*j*(0.1*rand.nextDouble()-0.05)));
+					vec.rotateYawSelf(angle);
+					Cloudlet cloud = new Cloudlet(posX + vec.x, posY + vec.y, posZ + vec.z, angle, 0, (int) ((20 + age / 10) * (1 + rand.nextDouble() * 0.1)), TorexType.CONDENSATION);
 					cloud.setScale(3F * (float) (cs * s), 4F * (float) (cs * s));
 					cloudlets.add(cloud);
 				}
@@ -280,14 +280,14 @@ public class EntityNukeTorex extends Entity implements IConstantRenderer {
 		return 1.0F;
 	}
 
-	public Vec3 getInterpColor(double interp, byte type) {
+	public Vec3NT getInterpColor(double interp, byte type) {
 		if(type == 0){
-			return Vec3.createVectorHelper(
+			return Vec3NT.createVectorHelper(
 				(nr2 + (nr1 - nr2) * interp),
 				(ng2 + (ng1 - ng2) * interp),
 				(nb2 + (nb1 - nb2) * interp));
 		}
-		return Vec3.createVectorHelper(
+		return Vec3NT.createVectorHelper(
 			(br2 + (br1 - br2) * interp),
 			(bg2 + (bg1 - bg2) * interp),
 			(bb2 + (bb1 - bb2) * interp));
@@ -541,17 +541,17 @@ public class EntityNukeTorex extends Entity implements IConstantRenderer {
 			this.colorB = bb2 + (bb1 - bb2) * col;
 		}
 		
-		public Vec3 getInterpPos(float interp) {
-			return Vec3.createVectorHelper(
+		public Vec3NT getInterpPos(float interp) {
+			return Vec3NT.createVectorHelper(
 					prevPosX + (posX - prevPosX) * interp,
 					prevPosY + (posY - prevPosY) * interp,
 					prevPosZ + (posZ - prevPosZ) * interp);
 		}
 		
-		public Vec3 getInterpColor(float interp) {
+		public Vec3NT getInterpColor(float interp) {
 			
 			if(this.type == TorexType.CONDENSATION) {
-				return Vec3.createVectorHelper(1F, 1F, 1F);
+				return Vec3NT.createVectorHelper(1F, 1F, 1F);
 			}
 			
 			double greying = 0;
@@ -560,7 +560,7 @@ public class EntityNukeTorex extends Entity implements IConstantRenderer {
 				greying += 0.05;
 			}
 			
-			return Vec3.createVectorHelper(
+			return Vec3NT.createVectorHelper(
 					(prevColorR + (colorR - prevColorR) * interp) + greying,
 					(prevColorG + (colorG - prevColorG) * interp) + greying,
 					(prevColorB + (colorB - prevColorB) * interp) + greying);

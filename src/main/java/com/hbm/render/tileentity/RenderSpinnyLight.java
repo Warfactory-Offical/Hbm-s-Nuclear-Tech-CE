@@ -4,7 +4,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.GLCompat;
-import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.util.Vec3NT;
 import com.hbm.render.item.ItemRenderBase;
 import com.hbm.render.item.ItemRenderBaseLegacy;
 import com.hbm.render.model.BakedModelTransforms;
@@ -39,12 +39,12 @@ public class RenderSpinnyLight extends TileEntitySpecialRenderer<TileEntitySpinn
         vertices[1] = oY;
         vertices[2] = oZ;
 
-        Vec3 vertex = new Vec3(0, radius, 0);
+        Vec3NT vertex = new Vec3NT(0, radius, 0);
         for (int i = 0; i < sides; i++) {
-            vertex.rotateAroundX((float) (2 * Math.PI * (1F / (float) sides)));
-            vertices[(i + 1) * 3] = (float) vertex.xCoord + oX + length;
-            vertices[(i + 1) * 3 + 1] = (float) vertex.yCoord + oY;
-            vertices[(i + 1) * 3 + 2] = (float) vertex.zCoord + oZ;
+            vertex.rotatePitchSelf((float) (2 * Math.PI * (1F / (float) sides)));
+            vertices[(i + 1) * 3] = (float) vertex.x + oX + length;
+            vertices[(i + 1) * 3 + 1] = (float) vertex.y + oY;
+            vertices[(i + 1) * 3 + 2] = (float) vertex.z + oZ;
         }
 
         int triangleCount = 2 * sides;

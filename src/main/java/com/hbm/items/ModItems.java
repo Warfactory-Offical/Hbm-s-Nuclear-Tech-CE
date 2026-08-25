@@ -2445,6 +2445,10 @@ public class ModItems {
     public static final Item sat_lunar_miner = new ItemSatellite("sat_lunar_miner").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
     public static final Item sat_gerald = new ItemSatellite("sat_gerald").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
     public static final Item sat_detector = new ItemSatellite("sat_detector").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
+    public static final Item sat_precision_laser = new ItemSatellite("sat_precision_laser").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
+    public static final Item sat_ray_scanner = new ItemSatellite("sat_ray_scanner").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
+    public static final Item sat_science = new ItemSatellite("sat_science").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
+    public static final Item sat_science_sensor = new ItemSatellite("sat_science_sensor").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
     public static final Item sat_chip = new ItemSatellite("sat_chip").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
     public static final Item sat_interface = new ItemSatInterface("sat_interface").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);
     public static final Item sat_coord = new ItemSatInterface("sat_coord").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab);

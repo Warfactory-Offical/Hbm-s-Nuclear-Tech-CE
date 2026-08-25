@@ -9,7 +9,7 @@ import com.hbm.physics.Collider;
 import com.hbm.physics.ConvexMeshCollider;
 import com.hbm.physics.GJK;
 import com.hbm.physics.RigidBody;
-import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.util.Vec3NT;
 import com.hbm.render.util.Triangle.TexVertex;
 import com.hbm.util.BobMathUtil;
 import net.minecraft.client.Minecraft;
@@ -532,7 +532,7 @@ public class ModelRendererUtil {
 				colliders[i++] = dat.collider;
 			}
 			body.addColliders(colliders);
-			body.impulseVelocityDirect(new Vec3(plane[0]*scale, plane[1]*scale, plane[2]*scale), body.globalCentroid.add(0, 0, 0));
+			body.impulseVelocityDirect(new Vec3NT(plane[0]*scale, plane[1]*scale, plane[2]*scale), body.globalCentroid.add(0, 0, 0));
 			
 			//Create rendering display lists
 			int bodyDL = GL11.glGenLists(1);

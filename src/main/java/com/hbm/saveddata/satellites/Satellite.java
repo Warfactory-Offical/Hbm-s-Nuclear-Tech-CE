@@ -7,6 +7,7 @@ import com.hbm.tileentity.network.RTTYSystem;
 import com.hbm.util.EnumUtil;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
@@ -66,6 +67,9 @@ public abstract class Satellite {
 		registerSatellite(SatelliteLunarMiner.class, ModItems.sat_lunar_miner);
 		registerSatellite(SatelliteHorizons.class, ModItems.sat_gerald);
 		registerSatellite(SatelliteDetector.class, ModItems.sat_detector);
+		registerSatellite(SatellitePrecisionLaser.class, ModItems.sat_precision_laser);
+		registerSatellite(SatelliteRayScan.class, ModItems.sat_ray_scanner);
+		registerSatellite(SatelliteScience.class, ModItems.sat_science);
 	}
 	
 	private static void registerSatellite(Class<? extends Satellite> sat, Item item) {
@@ -75,10 +79,24 @@ public abstract class Satellite {
 	}
 	
 	public static void orbit(World world, int id, int freq, double x, double y, double z) {
-		
+		orbit(world, id, ItemStack.EMPTY, freq, x, y, z);
+	}
+
+	public static void orbit(World world, int id, ItemStack part, int freq, double x, double y, double z) {
+
+		if(world.isRemote) return;
+
+		SatelliteSavedData data = SatelliteSavedData.getData(world);
+		Satellite existing = data.getSatFromFreq(freq);
+
+		if(existing != null) {
+			existing.onPartDelivered(world, part);
+			data.markDirty();
+			return;
+		}
+
 		Satellite sat = create(id);
-		if(sat != null && !world.isRemote) {
-			SatelliteSavedData data = SatelliteSavedData.getData(world);
+		if(sat != null) {
 			data.sats.put(freq, sat);
 			sat.setTarget((int) Math.floor(x), (int) Math.floor(z));
 			RTTYSystem.broadcast(world, CHAN_SATLINK, "Established connection to " + sat.getType() + " at " + sat.targetX + " / " + sat.targetZ);
@@ -175,6 +193,15 @@ public abstract class Satellite {
 	}
 
 	public void onUpdateTick(World world) { }
+
+	/** For subsequent items sent under the same frequency as an existing satellite */
+	public void onPartDelivered(World world, ItemStack part) { }
+
+	public boolean isDirty = false;
+
+	public void markDirty() {
+		this.isDirty = true;
+	}
 
 	public String getType() {
 		return this.getClass().getSimpleName();

@@ -4,6 +4,7 @@ import com.hbm.api.redstoneoverradio.IRORInteractive;
 import com.hbm.api.redstoneoverradio.IRORValueProvider;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.saveddata.satellites.Satellite;
+import com.hbm.saveddata.satellites.SatelliteRayScan;
 import com.hbm.saveddata.satellites.SatelliteSavedData;
 import com.hbm.tileentity.TileEntityTickingBase;
 import io.netty.buffer.ByteBuf;
@@ -172,6 +173,7 @@ public class TileEntityMachineSatLink extends TileEntityTickingBase implements I
 				sat.onCommand(world, cmd);
 				dat.markDirty();
 			}
+			SatelliteRayScan.reportEvent(world, pos.getX(), pos.getY(), pos.getZ(), SatelliteRayScan.RayEvent.INFO_RADIO, 300);
 			this.markChanged();
 		}
 

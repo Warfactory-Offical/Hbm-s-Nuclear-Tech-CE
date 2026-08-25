@@ -6,7 +6,7 @@ import com.hbm.render.loader.HFRWavefrontObject;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ClientProxy;
 import com.hbm.render.loader.IModelCustom;
-import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.util.Vec3NT;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -47,7 +47,7 @@ public class RenderDeathBlast extends Render<EntityDeathBlast> {
 	        
 	        GlStateManager.color(1, 0, 0);
 	        
-	        Vec3 vector = Vec3.createVectorHelper(0.5D, 0, 0);
+	        Vec3NT vector = Vec3NT.createVectorHelper(0.5D, 0, 0);
 	
 	        Tessellator tessellator = Tessellator.getInstance();
 	        BufferBuilder buf = tessellator.getBuffer();
@@ -55,19 +55,19 @@ public class RenderDeathBlast extends Render<EntityDeathBlast> {
 			
 			buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 	        for(int i = 0; i < 8; i++) {
-	            buf.pos(vector.xCoord, 250.0D, vector.zCoord).color(1F, 0, 0, 1).endVertex();
-	            buf.pos(vector.xCoord, 0.0D, vector.zCoord).color(1F, 0, 0, 1).endVertex();
-	        	vector.rotateAroundY(45);
-	        	buf.pos(vector.xCoord, 0.0D, vector.zCoord).color(1F, 0, 0, 1).endVertex();
-	            buf.pos(vector.xCoord, 250.0D, vector.zCoord).color(1F, 0, 0, 1).endVertex();
+	            buf.pos(vector.x, 250.0D, vector.z).color(1F, 0, 0, 1).endVertex();
+	            buf.pos(vector.x, 0.0D, vector.z).color(1F, 0, 0, 1).endVertex();
+	        	vector.rotateYawSelf(45);
+	        	buf.pos(vector.x, 0.0D, vector.z).color(1F, 0, 0, 1).endVertex();
+	            buf.pos(vector.x, 250.0D, vector.z).color(1F, 0, 0, 1).endVertex();
 	        }
 
 	        for(int i = 0; i < 8; i++) {
-	            buf.pos(vector.xCoord / 2, 250.0D, vector.zCoord / 2).color(1F, 0, 1, 1).endVertex();
-	            buf.pos(vector.xCoord / 2, 0.0D, vector.zCoord / 2).color(1F, 0, 1, 1).endVertex();
-	        	vector.rotateAroundY(45);
-	            buf.pos(vector.xCoord / 2, 0.0D, vector.zCoord / 2).color(1F, 0, 1, 1).endVertex();
-	            buf.pos(vector.xCoord / 2, 250.0D, vector.zCoord / 2).color(1F, 0, 1, 1).endVertex();
+	            buf.pos(vector.x / 2, 250.0D, vector.z / 2).color(1F, 0, 1, 1).endVertex();
+	            buf.pos(vector.x / 2, 0.0D, vector.z / 2).color(1F, 0, 1, 1).endVertex();
+	        	vector.rotateYawSelf(45);
+	            buf.pos(vector.x / 2, 0.0D, vector.z / 2).color(1F, 0, 1, 1).endVertex();
+	            buf.pos(vector.x / 2, 250.0D, vector.z / 2).color(1F, 0, 1, 1).endVertex();
 	        }
 	        
 	        tessellator.draw();

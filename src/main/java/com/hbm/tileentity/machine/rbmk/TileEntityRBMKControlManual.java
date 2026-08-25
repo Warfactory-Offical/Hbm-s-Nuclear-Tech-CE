@@ -10,7 +10,7 @@ import com.hbm.inventory.control_panel.ControlEvent;
 import com.hbm.inventory.control_panel.types.DataValue;
 import com.hbm.inventory.control_panel.types.DataValueFloat;
 import com.hbm.inventory.gui.GUIRBMKControl;
-import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.util.Vec3NT;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.machine.rbmk.RBMKColumn.ColumnType;
 import com.hbm.util.EnumUtil;
@@ -84,7 +84,7 @@ public class TileEntityRBMKControlManual extends TileEntityRBMKControl implement
 
     @Override
     public boolean hasPermission(EntityPlayer player) {
-        return Vec3.createVectorHelper(pos.getX() - player.posX, pos.getY() - player.posY, pos.getZ() - player.posZ).length() < 20;
+        return Vec3NT.createVectorHelper(pos.getX() - player.posX, pos.getY() - player.posY, pos.getZ() - player.posZ).length() < 20;
     }
 
     @Override

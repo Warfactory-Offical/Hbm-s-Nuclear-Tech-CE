@@ -186,6 +186,15 @@ public class HFRWavefrontObject implements IModelCustomNamed
         }
     }
 
+    public GroupObject getGroup(String name)
+    {
+        for (GroupObject groupObject : groupObjects)
+        {
+            if (groupObject.name.equalsIgnoreCase(name)) return groupObject;
+        }
+        return null;
+    }
+
     @Override
     @SideOnly(Side.CLIENT)
     public void renderAll()

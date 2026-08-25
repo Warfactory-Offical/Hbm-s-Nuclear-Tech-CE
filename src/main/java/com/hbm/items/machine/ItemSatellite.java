@@ -25,6 +25,18 @@ public class ItemSatellite extends ItemBakedBase implements ISatChip {
 		if(this == ModItems.sat_detector)
 			list.add(I18nUtil.resolveKey("satchip.detector"));
 
+		if(this == ModItems.sat_precision_laser)
+			list.add(I18nUtil.resolveKey("satchip.precision_laser"));
+
+		if(this == ModItems.sat_ray_scanner)
+			list.add(I18nUtil.resolveKey("satchip.ray_scanner"));
+
+		if(this == ModItems.sat_science)
+			list.add(I18nUtil.resolveKey("satchip.science"));
+
+		if(this == ModItems.sat_science_sensor)
+			list.add(I18nUtil.resolveKey("satchip.science_sensor"));
+
 		if(this == ModItems.sat_foeq)
 			list.add(I18nUtil.resolveKey("satchip.foeq"));
 

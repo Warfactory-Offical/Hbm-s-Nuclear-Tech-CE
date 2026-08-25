@@ -20,7 +20,7 @@ import com.hbm.lib.ModDamageSource;
 import com.hbm.main.ResourceManager;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.particle.helper.HbmEffectNT;
-import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.util.Vec3NT;
 import com.hbm.util.DamageResistanceHandler.DamageClass;
 import net.minecraft.block.Block;
 import net.minecraft.entity.*;
@@ -272,13 +272,13 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider {
                                 if (getScale() >= 1 && getCurrentTask() != TASK_DIG && obstacle != null) {
                                     digToWaypoint(obstacle);
                                 } else {
-                                    Vec3 vec = Vec3.createVectorHelper(posX, posY, posZ);
+                                    Vec3NT vec = Vec3NT.createVectorHelper(posX, posY, posZ);
                                     int maxDist = (int) (Math.sqrt(vec.squareDistanceTo(taskX, taskY, taskZ)) * 1.2);
                                     this.getNavigator().setPath(PathFinderUtils.getPathEntityToCoordPartial(world, this, taskX, taskY, taskZ, maxDist, true, false, true), 1.0);
                                 }
 
                             } else {
-                                Vec3 vec = Vec3.createVectorHelper(posX, posY, posZ);
+                                Vec3NT vec = Vec3NT.createVectorHelper(posX, posY, posZ);
                                 int maxDist = (int) (Math.sqrt(vec.squareDistanceTo(taskX, taskY, taskZ)) * 1.2);
                                 this.getNavigator().setPath(PathFinderUtils.getPathEntityToCoordPartial(world, this, taskX, taskY, taskZ, maxDist, true, false, true), 1.0);
                             }
@@ -303,10 +303,10 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider {
             if(ticksExisted % 20 == 0) {
                 for (int i = 0; i < 16; i++) {
                     float angle = (float) Math.toRadians(360D / 16 * i);
-                    Vec3 rot = Vec3.createVectorHelper(0, 0, 4);
-                    rot.rotateAroundY(angle);
-                    Vec3 pos = Vec3.createVectorHelper(this.posX, this.posY + 1, this.posZ);
-                    Vec3 nextPos = Vec3.createVectorHelper(this.posX + rot.xCoord, this.posY + 1, this.posZ + rot.zCoord);
+                    Vec3NT rot = Vec3NT.createVectorHelper(0, 0, 4);
+                    rot.rotateYawSelf(angle);
+                    Vec3NT pos = Vec3NT.createVectorHelper(this.posX, this.posY + 1, this.posZ);
+                    Vec3NT nextPos = Vec3NT.createVectorHelper(this.posX + rot.x, this.posY + 1, this.posZ + rot.z);
                     RayTraceResult result = this.world.rayTraceBlocks(pos.toVec3d(), nextPos.toVec3d());
 
                     if (result != null && result.typeOfHit == RayTraceResult.Type.BLOCK) {
@@ -592,8 +592,8 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider {
 
     /** Handles the special digging system, used in Rampant mode due to high potential for destroyed bases**/
     public RayTraceResult findWaypointObstruction(){
-        Vec3 bugVec = Vec3.createVectorHelper(posX, posY + getEyeHeight(), posZ);
-        Vec3 waypointVec =  Vec3.createVectorHelper(taskX, taskY, taskZ);
+        Vec3NT bugVec = Vec3NT.createVectorHelper(posX, posY + getEyeHeight(), posZ);
+        Vec3NT waypointVec =  Vec3NT.createVectorHelper(taskX, taskY, taskZ);
         //incomplete forge docs my beloved
         RayTraceResult obstruction = world.rayTraceBlocks(bugVec.toVec3d(), waypointVec.toVec3d(), false, true, false);
         if(obstruction != null){
@@ -617,7 +617,7 @@ public class EntityGlyphid extends EntityMob implements IResistanceProvider {
 
         setCurrentTask(TASK_DIG, target);
 
-        Vec3 vec = Vec3.createVectorHelper(posX, posY, posZ);
+        Vec3NT vec = Vec3NT.createVectorHelper(posX, posY, posZ);
         int maxDist = (int) (Math.sqrt(vec.squareDistanceTo(taskX, taskY, taskZ)) * 1.2);
         this.getNavigator().setPath(PathFinderUtils.getPathEntityToCoordPartial(world, this, taskX, taskY, taskZ, maxDist, true, false, true), 1.0);
 

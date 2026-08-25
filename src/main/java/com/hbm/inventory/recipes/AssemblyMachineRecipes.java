@@ -1041,6 +1041,32 @@ public class AssemblyMachineRecipes extends GenericRecipes<GenericRecipe> {
                         new ComparableStack(ModItems.circuit, 24, EnumCircuitType.BISMOID),
                         new ComparableStack(ModItems.part_generic, 16, EnumPartType.LDE),
                         new ComparableStack(ModItems.circuit, 1, EnumCircuitType.CONTROLLER_ADVANCED)));
+        this.register(new GenericRecipe("ass.orbitallaser").setup(1_200, 25_000).outputItems(new ItemStack(ModItems.sat_precision_laser, 1))
+                .inputItems(new OreDictStack(WEAPONSTEEL.shell(), 16),
+                        new ComparableStack(ModItems.photo_panel, 32),
+                        new ComparableStack(ModItems.battery_pack, 1, ItemBatteryPack.EnumBatteryPack.CAPACITOR_TANTALUM),
+                        new ComparableStack(ModItems.crystal_redstone, 16),
+                        new ComparableStack(ModItems.part_generic, 16, EnumPartType.LDE),
+                        new ComparableStack(ModItems.circuit, 3, EnumCircuitType.CONTROLLER_ADVANCED)));
+        this.register(new GenericRecipe("ass.rayscansat").setup(1_200, 25_000).outputItems(new ItemStack(ModItems.sat_ray_scanner, 1))
+                .inputItems(new OreDictStack(BIGMT.shell(), 16),
+                        new ComparableStack(ModItems.photo_panel, 32),
+                        new OreDictStack(SBD.wireDense(), 16),
+                        new ComparableStack(ModItems.circuit, 16, EnumCircuitType.QUANTUM),
+                        new ComparableStack(ModItems.part_generic, 16, EnumPartType.LDE),
+                        new ComparableStack(ModItems.circuit, 3, EnumCircuitType.CONTROLLER_ADVANCED)));
+        this.register(new GenericRecipe("ass.spacelab").setup(1_200, 25_000).outputItems(new ItemStack(ModItems.sat_science, 1))
+                .inputItems(new OreDictStack(AL.shell(), 16),
+                        new ComparableStack(ModItems.photo_panel, 32),
+                        new ComparableStack(ModItems.circuit, 16, EnumCircuitType.BASIC),
+                        new ComparableStack(ModItems.circuit, 4, EnumCircuitType.ATOMIC_CLOCK),
+                        new ComparableStack(ModItems.part_generic, 16, EnumPartType.LDE),
+                        new ComparableStack(ModItems.circuit, 1, EnumCircuitType.CONTROLLER)));
+        this.register(new GenericRecipe("ass.sensorrelay").setup(600, 25_000).outputItems(new ItemStack(ModItems.sat_science_sensor, 1))
+                .inputItems(new OreDictStack(AL.shell(), 1),
+                        new ComparableStack(ModItems.coil_gold, 4),
+                        new ComparableStack(ModItems.circuit, 1, EnumCircuitType.QUANTUM),
+                        new ComparableStack(ModItems.part_generic, 1, EnumPartType.LDE)));
         this.register(new GenericRecipe("ass.emptypackage").setup(40, 100).outputItems(new ItemStack(ModItems.fluid_pack_empty, 1))
                 .inputItems(new OreDictStack(TI.plate(), 4), new OreDictStack(ANY_PLASTIC.ingot(), 2)));
         FluidType[] order = Fluids.getInNiceOrder();

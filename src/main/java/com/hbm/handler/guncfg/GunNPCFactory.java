@@ -12,7 +12,7 @@ import com.hbm.lib.HBMSoundHandler;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.particle.helper.HbmEffectNT;
-import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.util.Vec3NT;
 import com.hbm.util.BobMathUtil;
 import com.hbm.util.ContaminationUtil;
 import net.minecraft.entity.Entity;
@@ -71,13 +71,13 @@ public class GunNPCFactory {
 
 				for(EntityPlayer player : players) {
 
-					Vec3 motion = Vec3.createVectorHelper(player.posX - bullet.posX, (player.posY + player.getEyeHeight()) - bullet.posY, player.posZ - bullet.posZ);
+					Vec3NT motion = Vec3NT.createVectorHelper(player.posX - bullet.posX, (player.posY + player.getEyeHeight()) - bullet.posY, player.posZ - bullet.posZ);
 					motion = motion.normalize();
 
 					EntityBulletBase bolt = new EntityBulletBase(bullet.world, BulletConfigSyncingUtil.MASKMAN_BOLT);
 					bolt.shooter = bullet.shooter;
 					bolt.setPosition(bullet.posX, bullet.posY, bullet.posZ);
-					bolt.shoot(motion.xCoord, motion.yCoord, motion.zCoord, 0.5F, 0.05F);
+					bolt.shoot(motion.x, motion.y, motion.z, 0.5F, 0.05F);
 					bullet.world.spawnEntity(bolt);
 				}
 			}
@@ -267,14 +267,14 @@ public class GunNPCFactory {
 						return;
 					}
 					
-					Vec3 delta = Vec3.createVectorHelper(target.posX - bullet.posX, target.posY + target.height / 2 - bullet.posY, target.posZ - bullet.posZ);
+					Vec3NT delta = Vec3NT.createVectorHelper(target.posX - bullet.posX, target.posY + target.height / 2 - bullet.posY, target.posZ - bullet.posZ);
 					delta = delta.normalize();
 					
-					double vel = Vec3.createVectorHelper(bullet.motionX, bullet.motionY, bullet.motionZ).length();
+					double vel = Vec3NT.createVectorHelper(bullet.motionX, bullet.motionY, bullet.motionZ).length();
 
-					bullet.motionX = delta.xCoord * vel;
-					bullet.motionY = delta.yCoord * vel;
-					bullet.motionZ = delta.zCoord * vel;
+					bullet.motionX = delta.x * vel;
+					bullet.motionY = delta.y * vel;
+					bullet.motionZ = delta.z * vel;
 				}
 			}
 			
@@ -293,7 +293,7 @@ public class GunNPCFactory {
 						continue;
 					
 					Vec3d delta = new Vec3d(e.posX - bullet.posX, e.posY + e.height / 2 - bullet.posY, e.posZ - bullet.posZ);
-					RayTraceResult r = bullet.world.rayTraceBlocks(new Vec3d(bullet.posX, bullet.posY, bullet.posZ), Vec3.createVectorHelper(e.posX, e.posY + e.height / 2, e.posZ).toVec3d(), false, true, false);
+					RayTraceResult r = bullet.world.rayTraceBlocks(new Vec3d(bullet.posX, bullet.posY, bullet.posZ), Vec3NT.createVectorHelper(e.posX, e.posY + e.height / 2, e.posZ).toVec3d(), false, true, false);
 					if(r != null && r.typeOfHit != Type.MISS)
 						continue;
 					

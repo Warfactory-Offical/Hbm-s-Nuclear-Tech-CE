@@ -12,7 +12,7 @@ import com.hbm.lib.DirPos;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
-import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.util.Vec3NT;
 import com.hbm.tileentity.IConnectionAnchors;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityLoadedBase;
@@ -225,7 +225,7 @@ public class TileEntityRailgun extends TileEntityLoadedBase implements ITickable
     		if(vec.length() < 1 || vec.length() > 9000)
     			return false;
     		
-    		double yawUpper = vec.x * unit.x/* + vec.zCoord * unit.zCoord*/; //second side falls away since unit.z is always 0
+    		double yawUpper = vec.x * unit.x/* + vec.z * unit.z*/; //second side falls away since unit.z is always 0
     		double yawLower = vec.length()/* * unit.length()*/; //second side falls away since unit always has length 1
     		float yaw = (float) Math.acos(yawUpper / yawLower);
     		float pitch = (float) (Math.asin((vec.length() * 9.81) / (300 * 300)) / 2D);
@@ -274,18 +274,18 @@ public class TileEntityRailgun extends TileEntityLoadedBase implements ITickable
 	
 	public void fire() {
 		
-		Vec3 vec = Vec3.createVectorHelper(6, 0, 0);
-		vec.rotateAroundZ((float) (pitch * Math.PI / 180D));
-		vec.rotateAroundY((float) (yaw * Math.PI / 180D));
+		Vec3NT vec = Vec3NT.createVectorHelper(6, 0, 0);
+		vec.rotateRollSelf((float) (pitch * Math.PI / 180D));
+		vec.rotateYawSelf((float) (yaw * Math.PI / 180D));
 
-		double fX = pos.getX() + 0.5 + vec.xCoord;
-		double fY = pos.getY() + 1 + vec.yCoord;
-		double fZ = pos.getZ() + 0.5 + vec.zCoord;
+		double fX = pos.getX() + 0.5 + vec.x;
+		double fY = pos.getY() + 1 + vec.y;
+		double fZ = pos.getZ() + 0.5 + vec.z;
 		
 		vec = vec.normalize();
-		double motionX = vec.xCoord * 15D;
-		double motionY = vec.yCoord * 15D;
-		double motionZ = vec.zCoord * 15D;
+		double motionX = vec.x * 15D;
+		double motionY = vec.y * 15D;
+		double motionZ = vec.z * 15D;
 		
 		EntityRailgunBlast fart = new EntityRailgunBlast(world);
 		fart.posX = fX;

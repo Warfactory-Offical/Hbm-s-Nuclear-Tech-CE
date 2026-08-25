@@ -114,7 +114,7 @@ public class EntitySoyuz extends Entity {
 				
 				if(load.getItem() instanceof ISatChip) {
 				    int freq = ISatChip.getFreqS(load);
-			    	Satellite.orbit(world, Satellite.getIDFromItem(load.getItem()), freq, posX, posY, posZ);
+			    	Satellite.orbit(world, Satellite.getIDFromItem(load.getItem()), load, freq, posX, posY, posZ);
 				}
 			}
 		}

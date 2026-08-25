@@ -3,7 +3,7 @@ package com.hbm.items.tool;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.items.ModItems;
-import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.util.Vec3NT;
 import com.hbm.tileentity.machine.TileEntitySolarMirror;
 import com.hbm.util.I18nUtil;
 import net.minecraft.block.Block;
@@ -68,7 +68,7 @@ public class ItemMirrorTool extends Item {
 				int y = pos1.getY();
 				int z = pos1.getZ();
 
-				boolean withinReach = Vec3.createVectorHelper(x - tx, y - ty, z - tz).length() <= 100;
+				boolean withinReach = Vec3NT.createVectorHelper(x - tx, y - ty, z - tz).length() <= 100;
 				boolean withinAngle = (x - tx) * (x - tx) + (z - tz) * (z - tz) <= (y - ty) * (y - ty);
 
 				if(!withinReach) player.sendMessage(new TextComponentTranslation(this.getTranslationKey() + ".reach").setStyle(new Style().setColor(TextFormatting.RED)));

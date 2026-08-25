@@ -9,7 +9,6 @@ import com.hbm.handler.HbmShaderManager2;
 import com.hbm.handler.HbmShaderManager2.Shader;
 import com.hbm.main.client.NTMClientRegistry;
 import com.hbm.render.GLCompat;
-import com.hbm.render.WavefrontObjDisplayList;
 import com.hbm.render.anim.sedna.AnimationLoader;
 import com.hbm.render.anim.sedna.BusAnimationSedna;
 import com.hbm.render.loader.HFRWavefrontObject;
@@ -1657,7 +1656,7 @@ public class ResourceManager {
 
     // this method is called at ModelBakeEvent, which is guaranteed to be posted on client main thread!
     public static void init() {
-        LensVisibilityHandler.checkSphere = new WavefrontObjDisplayList(new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/diffractionspikechecker.obj"))).getListForName("sphere");
+        LensVisibilityHandler.checkSphere = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/diffractionspikechecker.obj")).getGroup("sphere");
         Minecraft.getMinecraft().getTextureManager().bindTexture(fresnel_ms);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
         Minecraft.getMinecraft().getTextureManager().bindTexture(noise_1);

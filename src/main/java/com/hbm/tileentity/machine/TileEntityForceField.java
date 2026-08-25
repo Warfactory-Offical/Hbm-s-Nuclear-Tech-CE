@@ -10,7 +10,7 @@ import com.hbm.inventory.gui.GUIForceField;
 import com.hbm.items.ModItems;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
-import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.util.Vec3NT;
 import com.hbm.tileentity.IConfigurableMachine;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityLoadedBase;
@@ -290,20 +290,20 @@ public class TileEntityForceField extends TileEntityLoadedBase implements ITicka
 
                     //if the entity has crossed inwards
                     if (oLegacy.contains(entity) && !out) {
-                        Vec3 vec = Vec3.createVectorHelper(pos.getX() + 0.5 - entity.posX, pos.getY() + 0.5 - entity.posY, pos.getZ() + 0.5 - entity.posZ);
+                        Vec3NT vec = Vec3NT.createVectorHelper(pos.getX() + 0.5 - entity.posX, pos.getY() + 0.5 - entity.posY, pos.getZ() + 0.5 - entity.posZ);
                         vec = vec.normalize();
 
-                        double mx = -vec.xCoord * (rad + 1);
-                        double my = -vec.yCoord * (rad + 1);
-                        double mz = -vec.zCoord * (rad + 1);
+                        double mx = -vec.x * (rad + 1);
+                        double my = -vec.y * (rad + 1);
+                        double mz = -vec.z * (rad + 1);
 
                         entity.setLocationAndAngles(pos.getX() + 0.5 + mx, pos.getY() + 0.5 + my, pos.getZ() + 0.5 + mz, 0, 0);
 
                         double mo = Math.sqrt(Math.pow(entity.motionX, 2) + Math.pow(entity.motionY, 2) + Math.pow(entity.motionZ, 2));
 
-                        entity.motionX = vec.xCoord * -mo;
-                        entity.motionY = vec.yCoord * -mo;
-                        entity.motionZ = vec.zCoord * -mo;
+                        entity.motionX = vec.x * -mo;
+                        entity.motionY = vec.y * -mo;
+                        entity.motionZ = vec.z * -mo;
 
                         entity.posX -= entity.motionX;
                         entity.posY -= entity.motionY;
@@ -320,20 +320,20 @@ public class TileEntityForceField extends TileEntityLoadedBase implements ITicka
 
                         //if the entity has crossed outwards
                         if (iLegacy.contains(entity) && out) {
-                            Vec3 vec = Vec3.createVectorHelper(pos.getX() + 0.5 - entity.posX, pos.getY() + 0.5 - entity.posY, pos.getZ() + 0.5 - entity.posZ);
+                            Vec3NT vec = Vec3NT.createVectorHelper(pos.getX() + 0.5 - entity.posX, pos.getY() + 0.5 - entity.posY, pos.getZ() + 0.5 - entity.posZ);
                             vec = vec.normalize();
 
-                            double mx = -vec.xCoord * (rad - 1);
-                            double my = -vec.yCoord * (rad - 1);
-                            double mz = -vec.zCoord * (rad - 1);
+                            double mx = -vec.x * (rad - 1);
+                            double my = -vec.y * (rad - 1);
+                            double mz = -vec.z * (rad - 1);
 
                             entity.setLocationAndAngles(pos.getX() + 0.5 + mx, pos.getY() + 0.5 + my, pos.getZ() + 0.5 + mz, 0, 0);
 
                             double mo = Math.sqrt(Math.pow(entity.motionX, 2) + Math.pow(entity.motionY, 2) + Math.pow(entity.motionZ, 2));
 
-                            entity.motionX = vec.xCoord * mo;
-                            entity.motionY = vec.yCoord * mo;
-                            entity.motionZ = vec.zCoord * mo;
+                            entity.motionX = vec.x * mo;
+                            entity.motionY = vec.y * mo;
+                            entity.motionZ = vec.z * mo;
 
                             entity.posX -= entity.motionX;
                             entity.posY -= entity.motionY;
@@ -361,8 +361,8 @@ public class TileEntityForceField extends TileEntityLoadedBase implements ITicka
 
     private double getMotionWithFallback(Entity e) {
 
-        Vec3 v1 = Vec3.createVectorHelper(e.motionX, e.motionY, e.motionZ);
-        Vec3 v2 = Vec3.createVectorHelper(e.posX - e.prevPosY, e.posY - e.prevPosY, e.posZ - e.prevPosZ);
+        Vec3NT v1 = Vec3NT.createVectorHelper(e.motionX, e.motionY, e.motionZ);
+        Vec3NT v2 = Vec3NT.createVectorHelper(e.posX - e.prevPosY, e.posY - e.prevPosY, e.posZ - e.prevPosZ);
 
         double s1 = v1.length();
         double s2 = v2.length();

@@ -11,7 +11,7 @@ import com.hbm.entity.mob.EntityRADBeast;
 import com.hbm.entity.projectile.EntityMeteor;
 import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
-import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.util.Vec3NT;
 import com.hbm.util.ContaminationUtil;
 import com.hbm.util.MutableVec3d;
 import net.minecraft.entity.EntityLiving;
@@ -74,13 +74,13 @@ public class BossSpawnHandler {
 					EntityPlayer player = world.playerEntities.get(world.rand.nextInt(world.playerEntities.size()));
 					player.sendMessage(new TextComponentString("FBI, OPEN UP!").setStyle(new Style().setColor(TextFormatting.RED)));
 					
-					Vec3 vec = Vec3.createVectorHelper(MobConfig.raidAttackDistance, 0, 0);
-					vec.rotateAroundY((float)(Math.PI * 2) * world.rand.nextFloat());
+					Vec3NT vec = Vec3NT.createVectorHelper(MobConfig.raidAttackDistance, 0, 0);
+					vec.rotateYawSelf((float)(Math.PI * 2) * world.rand.nextFloat());
 
 					for(int i = 0; i < MobConfig.raidAmount; i++) {
 
-						double spawnX = player.posX + vec.xCoord + world.rand.nextGaussian() * 5;
-						double spawnZ = player.posZ + vec.zCoord + world.rand.nextGaussian() * 5;
+						double spawnX = player.posX + vec.x + world.rand.nextGaussian() * 5;
+						double spawnZ = player.posZ + vec.z + world.rand.nextGaussian() * 5;
 						double spawnY = world.getHeight((int)spawnX, (int)spawnZ);
 
 						trySpawn(world, (float)spawnX, (float)spawnY, (float)spawnZ, new EntityFBI(world));
@@ -88,8 +88,8 @@ public class BossSpawnHandler {
 
 					for(int i = 0; i < MobConfig.raidDrones; i++) {
 
-						double spawnX = player.posX + vec.xCoord + world.rand.nextGaussian() * 5;
-						double spawnZ = player.posZ + vec.zCoord + world.rand.nextGaussian() * 5;
+						double spawnX = player.posX + vec.x + world.rand.nextGaussian() * 5;
+						double spawnZ = player.posZ + vec.z + world.rand.nextGaussian() * 5;
 						double spawnY = world.getHeight((int)spawnX, (int)spawnZ);
 
 						trySpawn(world, (float)spawnX, (float)spawnY + 10, (float)spawnZ, new EntityFBIDrone(world));
@@ -109,13 +109,13 @@ public class BossSpawnHandler {
 					if(player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getLong("fbiMark") < world.getTotalWorldTime()) {
 						player.sendMessage(new TextComponentString("FBI, OPEN UP!").setStyle(new Style().setColor(TextFormatting.RED)));
 						
-						Vec3 vec = Vec3.createVectorHelper(MobConfig.raidAttackDistance, 0, 0);
-						vec.rotateAroundY((float)(Math.PI * 2) * world.rand.nextFloat());
+						Vec3NT vec = Vec3NT.createVectorHelper(MobConfig.raidAttackDistance, 0, 0);
+						vec.rotateYawSelf((float)(Math.PI * 2) * world.rand.nextFloat());
 						
 						for(int i = 0; i < MobConfig.raidAmount; i++) {
 	
-							double spawnX = player.posX + vec.xCoord + world.rand.nextGaussian() * 5;
-							double spawnZ = player.posZ + vec.zCoord + world.rand.nextGaussian() * 5;
+							double spawnX = player.posX + vec.x + world.rand.nextGaussian() * 5;
+							double spawnZ = player.posZ + vec.z + world.rand.nextGaussian() * 5;
 							double spawnY = world.getHeight((int)spawnX, (int)spawnZ);
 							
 							trySpawn(world, (float)spawnX, (float)spawnY, (float)spawnZ, new EntityFBI(world));
@@ -138,14 +138,14 @@ public class BossSpawnHandler {
 						player.sendMessage(new TextComponentString("You hear a faint clicking...").setStyle(new Style().setColor(TextFormatting.YELLOW)));
 						player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).setBoolean("radMark", false);
 
-						Vec3 vec = Vec3.createVectorHelper(MobConfig.raidAttackDistance, 0, 0);
+						Vec3NT vec = Vec3NT.createVectorHelper(MobConfig.raidAttackDistance, 0, 0);
 
 						for(int i = 0; i < MobConfig.elementalAmount; i++) {
 
-							vec.rotateAroundY((float)(Math.PI * 2) * world.rand.nextFloat());
+							vec.rotateYawSelf((float)(Math.PI * 2) * world.rand.nextFloat());
 
-							double spawnX = player.posX + vec.xCoord + world.rand.nextGaussian();
-							double spawnZ = player.posZ + vec.zCoord + world.rand.nextGaussian();
+							double spawnX = player.posX + vec.x + world.rand.nextGaussian();
+							double spawnZ = player.posZ + vec.z + world.rand.nextGaussian();
 							double spawnY = world.getHeight((int)spawnX, (int)spawnZ);
 
 							EntityRADBeast rad = new EntityRADBeast(world);

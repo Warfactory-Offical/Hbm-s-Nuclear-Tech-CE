@@ -17,7 +17,9 @@ import com.hbm.items.special.ItemAMSCore;
 import com.hbm.lib.Library;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.main.AdvancementManager;
-import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.util.Vec3NT;
+import com.hbm.saveddata.satellites.SatelliteRayScan;
+import com.hbm.saveddata.satellites.SatelliteRayScan.RayEvent;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.Vec3NT;
@@ -154,8 +156,11 @@ public class TileEntityCore extends TileEntityMachineBase implements ITickable, 
             else
                 color = 0;
 
-            if (heat > 0)
+            if (heat > 0) {
                 radiation();
+                if (world.getTotalWorldTime() % 100 == 0)
+                    SatelliteRayScan.reportEvent(world, pos.getX(), pos.getY(), pos.getZ(), RayEvent.INFO_PARTICLE, 200);
+            }
 
             prevHeat = heat;
             networkPackNT(250);

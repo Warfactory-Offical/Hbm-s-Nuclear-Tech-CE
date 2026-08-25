@@ -3,7 +3,7 @@ package com.hbm.render.tileentity;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ResourceManager;
-import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.util.Vec3NT;
 import com.hbm.render.item.ItemRenderBase;
 import com.hbm.render.misc.BeamPronter;
 import com.hbm.render.misc.BeamPronter.EnumBeamType;
@@ -50,7 +50,7 @@ public class RenderTurretTauon extends RenderTurretBase<TileEntityTurretTauon> i
             GlStateManager.pushMatrix();
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
             GlStateManager.translate(0, 1.5D, 0);
-            BeamPronter.prontBeam(new Vec3(new Vec3d(turret.lastDist, 0, 0)).toVec3d(), EnumWaveType.RANDOM, EnumBeamType.LINE, 0xffa200, 0xffd000, (int) turret.getWorld().getTotalWorldTime() / 5 % 360, (int) turret.lastDist + 1, 0.1F, 0, 0);
+            BeamPronter.prontBeam(new Vec3NT(new Vec3d(turret.lastDist, 0, 0)).toVec3d(), EnumWaveType.RANDOM, EnumBeamType.LINE, 0xffa200, 0xffd000, (int) turret.getWorld().getTotalWorldTime() / 5 % 360, (int) turret.lastDist + 1, 0.1F, 0, 0);
             GlStateManager.popMatrix();
         }
 

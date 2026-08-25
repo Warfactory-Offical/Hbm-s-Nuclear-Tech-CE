@@ -1,12 +1,12 @@
 package com.hbm.util;
 
 import com.hbm.Tags;
+import com.hbm.render.loader.GroupObject;
 import com.hbm.render.loader.HFRWavefrontObject;
 import com.hbm.main.MainRegistry;
 import com.hbm.main.ResourceManager;
 import com.hbm.packet.toserver.KeypadServerPacket;
 import com.hbm.packet.PacketDispatcher;
-import com.hbm.render.WavefrontObjDisplayList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GLAllocation;
@@ -32,10 +32,10 @@ public class KeypadClient extends Keypad {
 
 	public static final FloatBuffer AUX_GL_MATRIX = GLAllocation.createDirectFloatBuffer(16);
 
-	public static int fullModel;
-	public static int mainModel;
-	public static int displayModel;
-	public static int[] keyModels = new int[12];
+	public static HFRWavefrontObject fullModel;
+	public static GroupObject mainModel;
+	public static GroupObject displayModel;
+	public static GroupObject[] keyModels = new GroupObject[12];
 
 	public Matrix4f transform;
 	public AxisAlignedBB[] buttonBoxes = new AxisAlignedBB[12];
@@ -127,19 +127,16 @@ public class KeypadClient extends Keypad {
 	}
 	
 	public static void load(){
-		WavefrontObjDisplayList model = new WavefrontObjDisplayList(new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/keypad.obj")));
-		mainModel = model.getListForName("Keypad");
-		displayModel = model.getListForName("Display");
+		HFRWavefrontObject model = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/keypad.obj"));
+		mainModel = model.getGroup("Keypad");
+		displayModel = model.getGroup("Display");
 		for(int i = 0; i < 9; i++){
-			keyModels[i] = model.getListForName("K" + (i+1));
+			keyModels[i] = model.getGroup("K" + (i+1));
 		}
-		keyModels[9] = model.getListForName("KReset");
-		keyModels[10] = model.getListForName("K0");
-		keyModels[11] = model.getListForName("KReturn");
-		fullModel = GL11.glGenLists(1);
-		GL11.glNewList(fullModel, GL11.GL_COMPILE);
-		model.renderAll();
-		GL11.glEndList();
+		keyModels[9] = model.getGroup("KReset");
+		keyModels[10] = model.getGroup("K0");
+		keyModels[11] = model.getGroup("KReturn");
+		fullModel = model;
 	}
 
 	//Garbage render code, should have thought of a better system.
@@ -160,8 +157,8 @@ public class KeypadClient extends Keypad {
 			} else if(failColorTicks  > 0){
 				Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.keypad_error_tex);
 			}
-			GL11.glCallList(mainModel);
-			GL11.glCallList(displayModel);
+			mainModel.render();
+			displayModel.render();
 			for(int i = 0; i < buttons.length; i ++){
 				GlStateManager.pushMatrix();
 				if(buttons[i].cooldown > 0){
@@ -170,12 +167,12 @@ public class KeypadClient extends Keypad {
 				} else {
 					Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.keypad_tex);
 				}
-				GL11.glCallList(keyModels[i]);
+				keyModels[i].render();
 				GlStateManager.popMatrix();
 			}
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		} else {
-			GL11.glCallList(fullModel);
+			fullModel.renderAll();
 		}
 		
 		

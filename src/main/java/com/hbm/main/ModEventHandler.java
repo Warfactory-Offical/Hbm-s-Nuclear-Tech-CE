@@ -55,7 +55,10 @@ import com.hbm.particle.helper.BlackPowderCreator;
 import com.hbm.particle.helper.HbmEffectNT;
 import com.hbm.potion.HbmDetox;
 import com.hbm.potion.HbmPotion;
+import com.hbm.saveddata.satellites.Satellite;
 import com.hbm.saveddata.satellites.SatelliteDetector;
+import com.hbm.saveddata.satellites.SatelliteRayScan;
+import com.hbm.saveddata.satellites.SatelliteSavedData;
 import com.hbm.tileentity.machine.TileEntityMachineRadarNT;
 import com.hbm.tileentity.machine.rbmk.RBMKDials;
 import com.hbm.tileentity.network.RTTYSystem;
@@ -668,6 +671,25 @@ public class ModEventHandler {
         }
         BossSpawnHandler.rollTheDice(event.world);
         SatelliteDetector.updateSystem(event.world);
+
+        SatelliteSavedData dat = SatelliteSavedData.getData(event.world);
+
+        if (dat != null) {
+            boolean dirty = false;
+
+            for (Satellite sat : dat.sats.values()) {
+                sat.onUpdateTick(event.world);
+
+                if (sat.isDirty) {
+                    sat.isDirty = false;
+                    dirty = true;
+                }
+            }
+
+            if (dirty) dat.markDirty();
+        }
+
+        if (event.world.getTotalWorldTime() % 20 == 10) SatelliteRayScan.updateSystem(event.world);
     }
 
     //mlbv: concurrent workers are safe as long as they don't interfere
@@ -1461,7 +1483,7 @@ public class ModEventHandler {
 
         ItemStack stack = event.getItem();
 
-        if (stack != null && stack.getItem() instanceof ItemFood) {
+        if (!stack.isEmpty() && stack.getItem() instanceof ItemFood) {
 
             if (stack.hasTagCompound() && stack.getTagCompound().getBoolean("ntmCyanide")) {
                 for (int i = 0; i < 10; i++) {

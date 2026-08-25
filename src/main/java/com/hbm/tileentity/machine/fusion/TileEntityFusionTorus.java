@@ -15,6 +15,8 @@ import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.modules.machine.ModuleMachineFusion;
+import com.hbm.saveddata.satellites.SatelliteRayScan;
+import com.hbm.saveddata.satellites.SatelliteRayScan.RayEvent;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityLoadedBase;
@@ -180,6 +182,10 @@ public class TileEntityFusionTorus extends TileEntityCooledBase implements ITick
             if(didProcess && recipe != null) {
                 this.plasmaEnergy = (long) Math.ceil(recipe.outputTemp * factor);
                 this.fuelConsumption = factor;
+
+                if (world.getTotalWorldTime() % 20 == 15) {
+                    SatelliteRayScan.reportEvent(world, pos.getX(), pos.getY(), pos.getZ(), RayEvent.INFO_PARTICLE, 200);
+                }
             }
 
             double outputIntensity = getOuputIntensity(receiverCount);
