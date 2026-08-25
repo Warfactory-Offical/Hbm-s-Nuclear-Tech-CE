@@ -1,5 +1,6 @@
 package com.hbm.inventory.gui;
 
+import net.minecraft.client.renderer.GlStateManager;
 import com.hbm.Tags;
 import com.hbm.util.I18nUtil;
 import net.minecraft.util.text.TextFormatting;
@@ -72,7 +73,7 @@ public class GUIMachineRockMill extends GuiInfoContainer {
     @Override
     protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
         super.drawDefaultBackground();
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
@@ -110,16 +111,16 @@ public class GUIMachineRockMill extends GuiInfoContainer {
 
             Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
             OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-            GL11.glColor4f(1F, 1F, 1F, 0.5F);
-            GL11.glEnable(GL11.GL_BLEND);
+            GlStateManager.color(1F, 1F, 1F, 0.5F);
+            GlStateManager.enableBlend();
             this.zLevel = 300F;
             for(int i = 0; i < recipe.inputItem.length; i++) {
                 Slot slot = (Slot) this.inventorySlots.inventorySlots.get(rockMill.rockMillModule.inputSlots[i]);
                 if(!slot.getHasStack()) drawTexturedModalRect(guiLeft + slot.xPos, guiTop + slot.yPos, slot.xPos, slot.yPos, 16, 16);
             }
             this.zLevel = 0F;
-            GL11.glColor4f(1F, 1F, 1F, 1F);
-            GL11.glDisable(GL11.GL_BLEND);
+            GlStateManager.color(1F, 1F, 1F, 1F);
+            GlStateManager.disableBlend();
         }
 
         rockMill.inputTanks[0].renderTank(guiLeft + 8, guiTop + 79, this.zLevel, 52, 16, 1);

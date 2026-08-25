@@ -37,7 +37,7 @@ public class RenderBombletZeta extends Render<EntityBombletZeta> {
         GlStateManager.rotate(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks - 90.0F, 0.0F, 1.0F, 0.0F);
         GlStateManager.rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, 0.0F, 0.0F, 1.0F);
         
-        GL11.glScaled(0.5D, 0.5D, 0.5D);
+        GlStateManager.scale(0.5D, 0.5D, 0.5D);
         bindTexture(new ResourceLocation(Tags.MODID, "textures/models/projectiles/bombletZetaTexture.png"));
         
         boyModel.renderAll();

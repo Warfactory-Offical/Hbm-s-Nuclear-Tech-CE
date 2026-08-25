@@ -1,5 +1,6 @@
 package com.hbm.inventory.gui;
 
+import net.minecraft.client.renderer.GlStateManager;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKTerminal;
@@ -37,15 +38,15 @@ public class GUIScreenRBMKTerminal extends GuiScreen {
             return;
         }
 
-        GL11.glPushMatrix();
-        GL11.glScaled(0.5D, 0.5D, 1.0D);
+        GlStateManager.pushMatrix();
+        GlStateManager.scale(0.5D, 0.5D, 1.0D);
         this.fontRenderer.drawString("[Esc] - Quit", 2, 2, 0xffffff);
         this.fontRenderer.drawString("chan <channel> - Set selected channel", 2, 12, 0xffffff);
         this.fontRenderer.drawString("send <cmd> - Send single signal over selected channel", 2, 22, 0xffffff);
         this.fontRenderer.drawString("start <cmd> - Continuously send signal over selected channel", 2, 32, 0xffffff);
         this.fontRenderer.drawString("stop - Stop continuous sending", 2, 42, 0xffffff);
         this.fontRenderer.drawString("clear - Delete command history", 2, 52, 0xffffff);
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 
     @Override

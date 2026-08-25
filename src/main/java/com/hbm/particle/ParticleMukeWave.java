@@ -50,7 +50,7 @@ public class ParticleMukeWave extends Particle {
         RenderHelper.disableStandardItemLighting();
 
         boolean fog = GL11.glIsEnabled(GL11.GL_FOG);
-        if (fog) GL11.glDisable(GL11.GL_FOG);
+        if (fog) GlStateManager.disableFog();
 
         this.particleAlpha = 1.0F - (((float) this.particleAge + partialTicks) / (float) this.particleMaxAge);
         float growth = (1.0F - (float) Math.exp((this.particleAge + partialTicks) * -0.125F)) * waveScale;
@@ -78,7 +78,7 @@ public class ParticleMukeWave extends Particle {
         GlStateManager.enableCull();
         GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
         GlStateManager.enableLighting();
-        if (fog) GL11.glEnable(GL11.GL_FOG);
+        if (fog) GlStateManager.enableFog();
         GlStateManager.depthMask(true);
     }
 

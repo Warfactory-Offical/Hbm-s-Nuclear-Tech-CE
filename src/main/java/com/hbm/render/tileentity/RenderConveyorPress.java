@@ -75,7 +75,7 @@ public class RenderConveyorPress extends TileEntitySpecialRenderer<TileEntityCon
         return new ItemRenderBase( ) {
             public void renderInventory() {
                 GlStateManager.translate(0, -4, 0);
-                GL11.glScaled(4.5, 4.5, 4.5);
+                GlStateManager.scale(4.5, 4.5, 4.5);
             }
             public void renderCommon() {
                 bindTexture(ResourceManager.conveyor_press_tex);

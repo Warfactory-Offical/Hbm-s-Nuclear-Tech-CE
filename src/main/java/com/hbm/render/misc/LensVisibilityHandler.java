@@ -102,7 +102,7 @@ public class LensVisibilityHandler {
 			ClientProxy.AUX_GL_BUFFER.put(matrix);
 			ClientProxy.AUX_GL_BUFFER.rewind();
 			GL11.glLoadMatrix(ClientProxy.AUX_GL_BUFFER);
-			GL11.glScaled(0.05, 0.05, 0.05);
+			GlStateManager.scale(0.05, 0.05, 0.05);
 			GlStateManager.disableDepth();
 			GLCompat.beginQuery(GLCompat.GL_SAMPLES_PASSED, totalFragmentsQuery);
 			if(checkSphere != null) checkSphere.render();
@@ -136,7 +136,7 @@ public class LensVisibilityHandler {
 				ClientProxy.AUX_GL_BUFFER.put(modelviewMatrix);
 				ClientProxy.AUX_GL_BUFFER.rewind();
 				GL11.glLoadMatrix(ClientProxy.AUX_GL_BUFFER);
-				GL11.glScaled(0.1, 0.1, 0.1);
+				GlStateManager.scale(0.1, 0.1, 0.1);
 				GlStateManager.disableDepth();
 				GLCompat.beginQuery(GLCompat.GL_SAMPLES_PASSED, totalFragmentsQuery);
 				if(checkSphere != null) checkSphere.render();

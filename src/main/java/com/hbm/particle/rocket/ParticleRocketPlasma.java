@@ -63,7 +63,7 @@ public class ParticleRocketPlasma extends ParticleLayerBase {
         GlStateManager.translate(f5, f6, f7);
 		FloatBuffer view_mat = ActiveRenderInfo.MODELVIEW;
 		view_mat.rewind();
-		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER);
+		GlStateManager.getFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER);
 		for(int i = 0; i < 12; i ++){
 			ClientProxy.AUX_GL_BUFFER.put(i, view_mat.get(i));
 		}

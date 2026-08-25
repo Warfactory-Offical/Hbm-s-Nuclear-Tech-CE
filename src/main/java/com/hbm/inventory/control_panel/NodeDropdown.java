@@ -67,7 +67,7 @@ public class NodeDropdown extends NodeElement {
 		FontRenderer font = Minecraft.getMinecraft().fontRenderer;
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, 0);
-		GL11.glScaled(0.35, 0.35, 0.35);
+		GlStateManager.scale(0.35, 0.35, 0.35);
 		GlStateManager.translate(-x, -y, 0);
 		String s = nameGetter.get();
 		font.drawString(s, x+43-font.getStringWidth(s)/2, y+5, 0xFF5F5F5F, false);
@@ -78,9 +78,9 @@ public class NodeDropdown extends NodeElement {
 		x = x+27.5F;
 		y = y+2.5F;
 		GlStateManager.translate(x+width*0.4F, y+height*0.2F, 0);
-		GL11.glScaled(0.5, 0.5, 0.5);
+		GlStateManager.scale(0.5, 0.5, 0.5);
 		if(list.isClosed)
-			GL11.glRotated(180, 0, 0, 1);
+			GlStateManager.rotate(180, 0, 0, 1);
 		GlStateManager.translate(-x-width*0.4F, -y-height*0.2F, 0);
 		font.drawString("^", x, y, 0xFF5F5F5F, false);
 		GlStateManager.popMatrix();

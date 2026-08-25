@@ -35,10 +35,10 @@ public class RenderBatterySocket extends TileEntitySpecialRenderer<TileEntityBat
         GlStateManager.enableCull();
 
         switch(tile.getBlockMetadata() - 10) {
-            case 2: GL11.glRotatef(90, 0F, 1F, 0F); break;
-            case 4: GL11.glRotatef(180, 0F, 1F, 0F); break;
-            case 3: GL11.glRotatef(270, 0F, 1F, 0F); break;
-            case 5: GL11.glRotatef(0, 0F, 1F, 0F); break;
+            case 2: GlStateManager.rotate(90, 0F, 1F, 0F); break;
+            case 4: GlStateManager.rotate(180, 0F, 1F, 0F); break;
+            case 3: GlStateManager.rotate(270, 0F, 1F, 0F); break;
+            case 5: GlStateManager.rotate(0, 0F, 1F, 0F); break;
         }
 
         GlStateManager.translate(-0.5D, 0D, 0.5D);

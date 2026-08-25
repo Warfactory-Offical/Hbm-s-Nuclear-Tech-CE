@@ -1,5 +1,6 @@
 package com.hbm.inventory.control_panel;
 
+import net.minecraft.client.renderer.GlStateManager;
 import com.hbm.inventory.control_panel.nodes.Node;
 import com.hbm.inventory.control_panel.types.DataValue;
 import com.hbm.inventory.control_panel.types.DataValueString;
@@ -65,10 +66,10 @@ public class NodeTextBox extends NodeElement implements ITypableNode {
 		NTMImmediate.INSTANCE.draw();
 
 		FontRenderer font = Minecraft.getMinecraft().fontRenderer;
-		GL11.glPushMatrix();
-		GL11.glTranslated(x, y, 0);
-		GL11.glScaled(0.4, 0.4, 0.4);
-		GL11.glTranslated(-x, -y, 0);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x, y, 0);
+		GlStateManager.scale(0.4, 0.4, 0.4);
+		GlStateManager.translate(-x, -y, 0);
 		if(isTyping){
 			String s = builder.toString();
 			font.drawString(s + (Minecraft.getMinecraft().world.getTotalWorldTime()%20 > 10 ? "_" : ""), x+16, y+1F, 0xFFAFAFAF, false);
@@ -81,7 +82,7 @@ public class NodeTextBox extends NodeElement implements ITypableNode {
 			}
 			font.drawString(s, x+94-font.getStringWidth(s), y+1, 0xFFAFAFAF, false);
 		}
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 	
 	//minX, minY, maxX, maxY

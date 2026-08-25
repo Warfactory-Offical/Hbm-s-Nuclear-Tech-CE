@@ -1027,7 +1027,11 @@ public class ExplosionNukeRayParallelized implements IExplosionRay, BombForkJoin
             long lp = entry.getLongKey();
             IBlockState state = entry.getValue();
             Library.fromLong(p, lp);
-            state.getBlock().breakBlock(world, p, state); // this should handle te removals
+            try {
+                state.getBlock().breakBlock(world, p, state); // this should handle te removals
+            } catch(Throwable e) {
+                MainRegistry.logger.error("breakBlock failed during explosion cleanup for {} at {}; the block is already carved out, continuing", state, p, e);
+            }
         }
         for (int i = 0, n = neighborNotifies.size(); i < n; i++) {
             long lp = neighborNotifies.getLong(i);

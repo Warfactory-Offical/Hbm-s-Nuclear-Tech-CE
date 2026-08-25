@@ -1,5 +1,6 @@
 package com.hbm.render.entity.effect;
 
+import net.minecraft.client.renderer.GlStateManager;
 import com.hbm.Tags;
 import com.hbm.config.GeneralConfig;
 import com.hbm.entity.effect.EntityNukeTorex;
@@ -172,7 +173,7 @@ public class RenderTorex extends Render<EntityNukeTorex> {
 
 		boolean fog = GL11.glIsEnabled(GL11.GL_FOG);
 		if(fog)
-			GL11.glDisable(GL11.GL_FOG);
+			GlStateManager.disableFog();
 
 		if(useInstancedCloudlets) {
 			cloudletWrapperInstanced(cloud, partialTicks);
@@ -206,7 +207,7 @@ public class RenderTorex extends Render<EntityNukeTorex> {
 		}
 
 		if(fog)
-			GL11.glEnable(GL11.GL_FOG);
+			GlStateManager.enableFog();
 
 		GlStateManager.popMatrix();
 	}

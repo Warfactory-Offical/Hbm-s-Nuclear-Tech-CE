@@ -28,7 +28,7 @@ public class NodeButton extends NodeElement {
         FontRenderer font = Minecraft.getMinecraft().fontRenderer;
         GlStateManager.pushMatrix();
         GlStateManager.translate(x, y, 0);
-        GL11.glScaled(0.35, 0.35, 0.35);
+        GlStateManager.scale(0.35, 0.35, 0.35);
         GlStateManager.translate(-x, -y, 0);
         font.drawString(name, x+43-font.getStringWidth(name)/2F, y+5, 0xFF5F5F5F, false);
         GlStateManager.popMatrix();

@@ -1,5 +1,6 @@
 package com.hbm.render;
 
+import net.minecraft.client.renderer.GlStateManager;
 import com.hbm.entity.missile.EntityMissileAntiBallistic;
 import com.hbm.entity.missile.EntityMissileBaseNT;
 import com.hbm.entity.missile.EntityMissileCustom;
@@ -98,11 +99,11 @@ public class NTMRenderHelper {
 	 */
 	public static float[] getScreenAreaFromQuad(Vec3d lb, Vec3d rb, Vec3d rt, Vec3d lt){
 		FloatBuffer mmatrix = GLAllocation.createDirectFloatBuffer(16);
-		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, mmatrix);
+		GlStateManager.getFloat(GL11.GL_MODELVIEW_MATRIX, mmatrix);
 		FloatBuffer pmatrix = GLAllocation.createDirectFloatBuffer(16);
-		GL11.glGetFloat(GL11.GL_PROJECTION_MATRIX, pmatrix);
+		GlStateManager.getFloat(GL11.GL_PROJECTION_MATRIX, pmatrix);
 		IntBuffer vport = GLAllocation.createDirectIntBuffer(16);
-		GL11.glGetInteger(GL11.GL_VIEWPORT, vport);
+		GlStateManager.glGetInteger(GL11.GL_VIEWPORT, vport);
 		
 		FloatBuffer[] points = new FloatBuffer[4];
 		FloatBuffer buf0 = GLAllocation.createDirectFloatBuffer(3);
@@ -389,13 +390,13 @@ public class NTMRenderHelper {
 	@Deprecated
 	private static void initializeFL(){
 		shadowFbo = GL30.glGenFramebuffers();
-		shadowFboTex = GL11.glGenTextures();
+		shadowFboTex = GlStateManager.generateTexture();
 		GlStateManager.bindTexture(shadowFboTex);
 		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL14.GL_DEPTH_COMPONENT32, 1024, 1024, 0, GL11.GL_DEPTH_COMPONENT, GL11.GL_UNSIGNED_INT, (FloatBuffer)null);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
+		GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+		GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+		GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
+		GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, shadowFbo);
 		GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT, GL11.GL_TEXTURE_2D, shadowFboTex, 0);
 		clearFLShadowBuffer();
@@ -421,11 +422,11 @@ public class NTMRenderHelper {
 	
 	@Deprecated
 	private static void deleteDeferredFbo(){
-		GL11.glDeleteTextures(deferredColorTex);
-		GL11.glDeleteTextures(deferredPositionTex);
-		GL11.glDeleteTextures(deferredProjCoordTex);
-		GL11.glDeleteTextures(deferredNormalTex);
-		GL11.glDeleteTextures(deferredDepthTex);
+		GlStateManager.deleteTexture(deferredColorTex);
+		GlStateManager.deleteTexture(deferredPositionTex);
+		GlStateManager.deleteTexture(deferredProjCoordTex);
+		GlStateManager.deleteTexture(deferredNormalTex);
+		GlStateManager.deleteTexture(deferredDepthTex);
 		GL30.glDeleteFramebuffers(deferredFbo);
 		deferredColorTex = -1;
 		deferredPositionTex = -1;
@@ -437,48 +438,48 @@ public class NTMRenderHelper {
 	@Deprecated
 	private static void recreateDeferredFbo(){
 		deferredFbo = GL30.glGenFramebuffers();
-		deferredColorTex = GL11.glGenTextures();
+		deferredColorTex = GlStateManager.generateTexture();
 		if(!useFullPost){
-			deferredPositionTex = GL11.glGenTextures();
-			deferredProjCoordTex = GL11.glGenTextures();
-			deferredNormalTex = GL11.glGenTextures();
+			deferredPositionTex = GlStateManager.generateTexture();
+			deferredProjCoordTex = GlStateManager.generateTexture();
+			deferredNormalTex = GlStateManager.generateTexture();
 		} else {
-			deferredDepthTex = GL11.glGenTextures();
+			deferredDepthTex = GlStateManager.generateTexture();
 		}
 		
 		GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, deferredFbo);
 		
 		GlStateManager.bindTexture(deferredColorTex);
 		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, (FloatBuffer)null);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
+		GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+		GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+		GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
+		GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
 		GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, deferredColorTex, 0);
 		
 		if(!useFullPost){
 			GlStateManager.bindTexture(deferredPositionTex);
 			GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL30.GL_RGBA16F, width, height, 0, GL11.GL_RGBA, GL11.GL_FLOAT, (FloatBuffer)null);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
+			GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+			GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+			GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
+			GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
 			GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT1, GL11.GL_TEXTURE_2D, deferredPositionTex, 0);
 			
 			GlStateManager.bindTexture(deferredProjCoordTex);
 			GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL30.GL_RGBA16F, width, height, 0, GL11.GL_RGBA, GL11.GL_FLOAT, (FloatBuffer)null);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
+			GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+			GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+			GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
+			GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
 			GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT2, GL11.GL_TEXTURE_2D, deferredProjCoordTex, 0);
 			
 			GlStateManager.bindTexture(deferredNormalTex);
 			GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL30.GL_RGBA16F, width, height, 0, GL11.GL_RGBA, GL11.GL_FLOAT, (FloatBuffer)null);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
+			GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+			GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+			GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
+			GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
 			GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT3, GL11.GL_TEXTURE_2D, deferredNormalTex, 0);
 			
 			GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, Minecraft.getMinecraft().getFramebuffer().depthBuffer);
@@ -494,10 +495,10 @@ public class NTMRenderHelper {
 		} else {
 			GlStateManager.bindTexture(deferredDepthTex);
 			GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL14.GL_DEPTH_COMPONENT24, width, height, 0, GL11.GL_DEPTH_COMPONENT, GL11.GL_FLOAT, (FloatBuffer)null);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
+			GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+			GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+			GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
+			GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
 			GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT, GL11.GL_TEXTURE_2D, deferredDepthTex, 0);
 		}
 		
@@ -535,9 +536,9 @@ public class NTMRenderHelper {
 		
     	GlStateManager.pushMatrix();
     	//GlStateManager.translate(0, Minecraft.getMinecraft().getRenderViewEntity().getEyeHeight(), 0);
-    	GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER);
+    	GlStateManager.getFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER);
     	GlStateManager.popMatrix();
-		GL11.glGetFloat(GL11.GL_PROJECTION_MATRIX, ClientProxy.AUX_GL_BUFFER2);
+		GlStateManager.getFloat(GL11.GL_PROJECTION_MATRIX, ClientProxy.AUX_GL_BUFFER2);
 		Matrix4f view = new Matrix4f();
 		Matrix4f proj = new Matrix4f();
 		view.load(ClientProxy.AUX_GL_BUFFER);
@@ -629,10 +630,10 @@ public class NTMRenderHelper {
 		GlStateManager.glLineWidth(4);
         RenderGlobal.drawSelectionBoundingBox(box.offset(-entPosX, -entPosY, -entPosZ), 1, 1, 1, 1);
         //WHY WON'T THE TESSELLATOR WORK
-        GL11.glBegin(GL11.GL_LINES);
+        GlStateManager.glBegin(GL11.GL_LINES);
         GL11.glVertex3d(start.x - entPosX, start.y - entPosY, start.z - entPosZ);
         GL11.glVertex3d(end.x - entPosX, end.y - entPosY, end.z - entPosZ);
-        GL11.glEnd();
+        GlStateManager.glEnd();
         GlStateManager.enableTexture2D();
         GlStateManager.popMatrix();
         
@@ -661,12 +662,12 @@ public class NTMRenderHelper {
         GlStateManager.matrixMode(GL11.GL_MODELVIEW);
         Vec3d angles = BobMathUtil.getEulerAngles(startToEnd.normalize());
        // GL11.glRotated(180, 0, 1, 0);
-        GL11.glRotated(-angles.y+270, 1, 0, 0);
-        GL11.glRotated(-angles.x+180, 0, 1, 0);
+        GlStateManager.rotate((float) (-angles.y+270), 1, 0, 0);
+        GlStateManager.rotate((float) (-angles.x+180), 0, 1, 0);
        
         GlStateManager.translate(-(start.x-entPosX), -(start.y-entPosY), -(start.z-entPosZ));
-        GL11.glGetFloat(GL11.GL_PROJECTION_MATRIX, ClientProxy.AUX_GL_BUFFER);
-        GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER2);
+        GlStateManager.getFloat(GL11.GL_PROJECTION_MATRIX, ClientProxy.AUX_GL_BUFFER);
+        GlStateManager.getFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER2);
         float[] projecion = new float[16];
         float[] view = new float[16];
         ClientProxy.AUX_GL_BUFFER.get(projecion);
@@ -786,8 +787,8 @@ public class NTMRenderHelper {
 		GlStateManager.pushMatrix();
 		Vec3d angles = BobMathUtil.getEulerAngles(normal);
 		GlStateManager.translate(start.x, start.y, start.z);
-		GL11.glRotated(angles.x+180, 0, 1, 0);
-		GL11.glRotated(angles.y+180, 1, 0, 0);
+		GlStateManager.rotate((float) (angles.x+180), 0, 1, 0);
+		GlStateManager.rotate((float) (angles.y+180), 1, 0, 0);
         
 		
         Tessellator tes = Tessellator.getInstance();
@@ -982,18 +983,18 @@ public class NTMRenderHelper {
 	}
 	
 	public static float[] project(float x, float y, float z){
-		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, MODELVIEW);
-		GL11.glGetFloat(GL11.GL_PROJECTION_MATRIX, PROJECTION);
-		GL11.glGetInteger(GL11.GL_VIEWPORT, VIEWPORT);
+		GlStateManager.getFloat(GL11.GL_MODELVIEW_MATRIX, MODELVIEW);
+		GlStateManager.getFloat(GL11.GL_PROJECTION_MATRIX, PROJECTION);
+		GlStateManager.glGetInteger(GL11.GL_VIEWPORT, VIEWPORT);
 		
 		Project.gluProject(x, y, z, MODELVIEW, PROJECTION, VIEWPORT, POSITION);
 		return new float[]{POSITION.get(0), POSITION.get(1), POSITION.get(2)};
 	}
 	
 	public static float[] unproject(float x, float y, float z){
-		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, MODELVIEW);
-		GL11.glGetFloat(GL11.GL_PROJECTION_MATRIX, PROJECTION);
-		GL11.glGetInteger(GL11.GL_VIEWPORT, VIEWPORT);
+		GlStateManager.getFloat(GL11.GL_MODELVIEW_MATRIX, MODELVIEW);
+		GlStateManager.getFloat(GL11.GL_PROJECTION_MATRIX, PROJECTION);
+		GlStateManager.glGetInteger(GL11.GL_VIEWPORT, VIEWPORT);
 		
 		Project.gluUnProject(x, y, z, MODELVIEW, PROJECTION, VIEWPORT, POSITION);
 		return new float[]{POSITION.get(0), POSITION.get(1), POSITION.get(2)};

@@ -35,7 +35,7 @@ public class RenderGrenadeUniversal extends Render<EntityGrenadeUniversal> {
         GlStateManager.enableCull();
         GlStateManager.enableLighting();
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
-        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+        GlStateManager.enableRescaleNormal();
 
         double scale = 0.0625D;
         GlStateManager.scale(scale, scale, scale);
@@ -53,7 +53,7 @@ public class RenderGrenadeUniversal extends Render<EntityGrenadeUniversal> {
         ItemStack stack = grenade.getGrenadeItem();
         ItemRenderGrenade.renderGrenade(stack, null);
 
-        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+        GlStateManager.disableRescaleNormal();
         GlStateManager.shadeModel(prevShade);
         if (!prevLighting) GlStateManager.disableLighting();
         if (!prevCull)     GlStateManager.disableCull();

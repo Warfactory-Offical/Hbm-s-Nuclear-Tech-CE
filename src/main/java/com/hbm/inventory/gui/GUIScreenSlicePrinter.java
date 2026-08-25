@@ -173,10 +173,10 @@ public class GUIScreenSlicePrinter extends GuiScreen {
 				pixelValues = new int[bufferSize];
 			}
 
-			GL11.glPixelStorei(GL11.GL_PACK_ALIGNMENT, 1);
-			GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
+			GlStateManager.glPixelStorei(GL11.GL_PACK_ALIGNMENT, 1);
+			GlStateManager.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
 			pixelBuffer.clear();
-			GL11.glReadPixels(x, y, width, height, GL12.GL_BGRA, GL12.GL_UNSIGNED_INT_8_8_8_8_REV, pixelBuffer);
+			GlStateManager.glReadPixels(x, y, width, height, GL12.GL_BGRA, GL12.GL_UNSIGNED_INT_8_8_8_8_REV, pixelBuffer);
 
 			pixelBuffer.get(pixelValues);
 			TextureUtil.processPixelValues(pixelValues, width, height);

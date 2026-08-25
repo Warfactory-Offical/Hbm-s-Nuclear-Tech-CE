@@ -1,5 +1,6 @@
 package com.hbm.util;
 
+import net.minecraft.client.renderer.GlStateManager;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.main.ClientProxy;
 import com.hbm.main.MainRegistry;
@@ -299,7 +300,7 @@ public class BobMathUtil {
     public static Vec3d[] worldFromLocal(Vector4f... positions) {
         Entity renderView = Minecraft.getMinecraft().getRenderViewEntity();
         float partialTicks = MainRegistry.proxy.partialTicks();
-        GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER);
+        GlStateManager.getFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER);
         Matrix4f mv_mat = new Matrix4f();
         mv_mat.load(ClientProxy.AUX_GL_BUFFER);
         ClientProxy.AUX_GL_BUFFER.rewind();
@@ -325,7 +326,7 @@ public class BobMathUtil {
 
     @SideOnly(Side.CLIENT)
     public static Vec3d[] viewFromLocal(Vector4f... positions) {
-        GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER);
+        GlStateManager.getFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER);
         Matrix4f mv_mat = new Matrix4f();
         mv_mat.load(ClientProxy.AUX_GL_BUFFER);
         ClientProxy.AUX_GL_BUFFER.rewind();
@@ -341,7 +342,7 @@ public class BobMathUtil {
 
     @SideOnly(Side.CLIENT)
     public static Vec3d[] viewToLocal(Vector4f... positions) {
-        GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER);
+        GlStateManager.getFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER);
         Matrix4f mv_mat = new Matrix4f();
         mv_mat.load(ClientProxy.AUX_GL_BUFFER);
         mv_mat.invert();

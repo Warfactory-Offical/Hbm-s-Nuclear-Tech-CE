@@ -206,7 +206,7 @@ public class ItemGunVortex extends ItemGunBase {
 		float y = res.getScaledHeight()/2;
 		
 		Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.vortex_hud_reticle);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+		GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 		GlStateManager.color(0.4F, 0.9F, 0.9F, 1.0F);
 		GlStateManager.enableBlend();
 		GlStateManager.tryBlendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE, SourceFactor.ONE, DestFactor.ZERO);

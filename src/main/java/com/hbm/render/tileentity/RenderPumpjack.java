@@ -55,7 +55,7 @@ public class RenderPumpjack extends TileEntitySpecialRenderer<TileEntityMachineP
 
         GlStateManager.pushMatrix();
         GlStateManager.translate(0, 3.5, -3.5);
-        GL11.glRotated(Math.toDegrees(Math.sin(Math.toRadians(rotation))) * 0.25, 1, 0, 0);
+        GlStateManager.rotate((float) (Math.toDegrees(Math.sin(Math.toRadians(rotation))) * 0.25), 1, 0, 0);
         GlStateManager.translate(0, -3.5, 3.5);
         ResourceManager.pumpjack.renderPart("Head");
         GlStateManager.popMatrix();

@@ -1658,11 +1658,11 @@ public class ResourceManager {
     public static void init() {
         LensVisibilityHandler.checkSphere = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/diffractionspikechecker.obj")).getGroup("sphere");
         Minecraft.getMinecraft().getTextureManager().bindTexture(fresnel_ms);
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+        GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
         Minecraft.getMinecraft().getTextureManager().bindTexture(noise_1);
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+        GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
         Minecraft.getMinecraft().getTextureManager().bindTexture(noise_2);
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+        GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 
         if (!WaveFrontObjectVAO.uploaded) {
             //Drillgon discovered that it messes with GL context

@@ -262,10 +262,10 @@ public class SubElementNodeEditor extends SubElement {
 		float spX = gui.getGuiLeft();
 		float spY = gui.getGuiTop();
 		GlStateManager.translate(spX, spY, 0);
-		GL11.glScaled(1/gridScale, 1/gridScale, 1/gridScale);
+		GlStateManager.scale(1/gridScale, 1/gridScale, 1/gridScale);
 		GlStateManager.translate(-spX, -spY, 0);
 		GlStateManager.translate(-gridX, gridY, 0);
-		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER);
+		GlStateManager.getFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER);
 		Matrix4f mat = new Matrix4f();
 		mat.load(ClientProxy.AUX_GL_BUFFER);
 		//System.out.println(gui.getGuiLeft() + " " + gui.getGuiTop() + " " + mat.m30 + " " + mat.m31);

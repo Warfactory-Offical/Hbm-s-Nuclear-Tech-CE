@@ -28,13 +28,13 @@ public class RenderBMPowerBox extends TileEntitySpecialRenderer<TileEntityBMPowe
     GlStateManager.translate(x + 0.5, y, z + 0.5);
     switch (te.getBlockMetadata() >> 1) {
       case 2:
-        GL11.glRotated(90, 0, 1, 0);
+        GlStateManager.rotate(90, 0, 1, 0);
         break;
       case 3:
-        GL11.glRotated(270, 0, 1, 0);
+        GlStateManager.rotate(270, 0, 1, 0);
         break;
       case 4:
-        GL11.glRotated(180, 0, 1, 0);
+        GlStateManager.rotate(180, 0, 1, 0);
         break;
       case 5:
         break;
@@ -53,7 +53,7 @@ public class RenderBMPowerBox extends TileEntitySpecialRenderer<TileEntityBMPowe
                 (double) (te.getWorld().getTotalWorldTime() - te.ticksPlaced + partialTicks) * 0.1,
                 0,
                 1);
-    GL11.glRotated((te.getBlockMetadata() & 1) == 1 ? time * 180 : (1 - time) * 180, 0, 0, 1);
+    GlStateManager.rotate((float) ((te.getBlockMetadata() & 1) == 1 ? time * 180 : (1 - time) * 180), 0, 0, 1);
     GlStateManager.translate(-rx, -ry, -rz);
     ResourceManager.bm_box_lever.renderPart("lever");
     GlStateManager.shadeModel(GL11.GL_FLAT);

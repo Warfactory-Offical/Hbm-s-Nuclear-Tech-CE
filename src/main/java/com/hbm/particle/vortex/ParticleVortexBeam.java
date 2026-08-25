@@ -69,7 +69,7 @@ public class ParticleVortexBeam extends Particle {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.vortex_beam2);
 		//Technically I shouldn't be doing this every render tick.
 		//TODO move this to a one time thing in ResourceManager, along with all the other particles that do this.
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+		GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 		GlStateManager.disableAlpha();
 		GlStateManager.depthMask(false);
 		GlStateManager.enableBlend();

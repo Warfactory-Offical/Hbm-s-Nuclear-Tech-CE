@@ -101,17 +101,17 @@ public class RenderDeathBlast extends Render<EntityDeathBlast> {
         GlStateManager.color(1, 0, 1, alpha);
 
 		GlStateManager.enableBlend();
-        GL11.glScaled(scale, scale, scale);
+        GlStateManager.scale(scale, scale, scale);
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         sphere.renderAll();
 
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-        GL11.glScaled(1.25, 1.25, 1.25);
+        GlStateManager.scale(1.25, 1.25, 1.25);
         GlStateManager.color(1.0F, 0, 0, alpha * 0.125F);
         
         for(int i = 0; i < 8; i++) {
         	sphere.renderAll();
-            GL11.glScaled(1.05, 1.05, 1.05);
+            GlStateManager.scale(1.05, 1.05, 1.05);
         }
         
         GlStateManager.disableBlend();

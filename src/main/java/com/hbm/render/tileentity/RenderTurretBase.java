@@ -39,7 +39,7 @@ public abstract class RenderTurretBase<T extends TileEntityTurretBaseNT> extends
                 (fluid && Library.canConnectFluid(world, new BlockPos(x, y, z), dir, type))) {
 
             GlStateManager.pushMatrix();
-            GL11.glRotated(rot, 0, 1, 0);
+            GlStateManager.rotate((float) (rot), 0, 1, 0);
             GlStateManager.translate(ox, 0, oz);
             ResourceManager.turret_chekhov.renderPart("Connectors");
             GlStateManager.popMatrix();

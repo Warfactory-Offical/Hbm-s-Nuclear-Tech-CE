@@ -52,7 +52,7 @@ public class MachineThresher extends BlockContainer implements ILookOverlay, ITo
 		return new TileEntityMachineThresher();
 	}
 
-	@Override public @NotNull EnumBlockRenderType getRenderType(@NotNull IBlockState state) { return EnumBlockRenderType.MODEL; }
+	@Override public @NotNull EnumBlockRenderType getRenderType(@NotNull IBlockState state) { return EnumBlockRenderType.ENTITYBLOCK_ANIMATED; }
 	@Override public boolean isOpaqueCube(@NotNull IBlockState state) { return false; }
 	@Override public boolean isFullCube(@NotNull IBlockState state) { return false; }
 

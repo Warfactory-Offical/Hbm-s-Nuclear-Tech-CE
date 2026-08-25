@@ -101,14 +101,14 @@ public class RenderLN2 extends Render<EntityLN2> {
         {
             GlStateManager.pushMatrix();
             GlStateManager.translate(x, y, z);
-            GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+            GlStateManager.enableRescaleNormal();
             GlStateManager.scale(0.5F, 0.5F, 0.5F);
             GlStateManager.scale(7.5F, 7.5F, 7.5F);
             GlStateManager.translate(0.0F, -0.25F, 0.0F);
             this.bindEntityTexture(fx);
 
             this.func_77026_a(tex);
-            GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+            GlStateManager.disableRescaleNormal();
             GlStateManager.popMatrix();
         }
 	}

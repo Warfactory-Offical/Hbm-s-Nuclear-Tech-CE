@@ -82,7 +82,7 @@ public class ItemList {
 		
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(posX, posY, 0);
-		GL11.glScaled(0.4, 0.4, 1);
+		GlStateManager.scale(0.4, 0.4, 1);
 		GlStateManager.translate(-posX, -posY, 0);
 		float y = posY + 7;
 		FontRenderer font = Minecraft.getMinecraft().fontRenderer;

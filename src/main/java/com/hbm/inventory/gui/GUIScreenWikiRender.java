@@ -4,6 +4,7 @@ import com.hbm.main.MainRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureUtil;
@@ -53,9 +54,9 @@ public class GUIScreenWikiRender extends GuiScreen {
 			return;
 		}
 
-		GL11.glDisable(GL11.GL_LIGHTING);
+		GlStateManager.disableLighting();
 		this.drawGuiContainerForegroundLayer(preview[index]);
-		GL11.glEnable(GL11.GL_LIGHTING);
+		GlStateManager.enableLighting();
 
 		ScaledResolution res = new ScaledResolution(this.mc);
 		int zoom = scale * res.getScaleFactor();
@@ -75,31 +76,31 @@ public class GUIScreenWikiRender extends GuiScreen {
 	protected void drawGuiContainerForegroundLayer(ItemStack preview) {
 		if(preview == null || preview.isEmpty()) return;
 
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		RenderHelper.enableGUIStandardItemLighting();
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GlStateManager.enableRescaleNormal();
+		GlStateManager.enableLighting();
+		GlStateManager.enableDepth();
 
-		GL11.glScaled(scale, scale, scale);
+		GlStateManager.scale(scale, scale, scale);
 
 		ScaledResolution res = new ScaledResolution(this.mc);
-		GL11.glTranslated(9D, res.getScaledHeight_double() / scale - 9D, -200);
+		GlStateManager.translate(9D, res.getScaledHeight_double() / scale - 9D, -200D);
 
 		this.zLevel = 200.0F;
 		itemRender.zLevel = 200.0F;
 
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GlStateManager.enableDepth();
 		itemRender.renderItemAndEffectIntoGUI(preview, -8, -8);
 		itemRender.renderItemOverlayIntoGUI(this.fontRenderer, preview, -8, -8, null);
 
 		itemRender.zLevel = 0.0F;
 		this.zLevel = 0.0F;
 
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	private static IntBuffer pixelBuffer;
@@ -118,10 +119,10 @@ public class GUIScreenWikiRender extends GuiScreen {
 				pixelValues = new int[bufferSize];
 			}
 
-			GL11.glPixelStorei(GL11.GL_PACK_ALIGNMENT, 1);
-			GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
+			GlStateManager.glPixelStorei(GL11.GL_PACK_ALIGNMENT, 1);
+			GlStateManager.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
 			pixelBuffer.clear();
-			GL11.glReadPixels(x, y, width, height, GL12.GL_BGRA, GL12.GL_UNSIGNED_INT_8_8_8_8_REV, pixelBuffer);
+			GlStateManager.glReadPixels(x, y, width, height, GL12.GL_BGRA, GL12.GL_UNSIGNED_INT_8_8_8_8_REV, pixelBuffer);
 
 			pixelBuffer.get(pixelValues);
 			TextureUtil.processPixelValues(pixelValues, width, height);

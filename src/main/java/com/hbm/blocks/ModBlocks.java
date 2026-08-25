@@ -1592,6 +1592,18 @@ public class ModBlocks {
         BlockNTMFlower.initPlacables();
     }
 
+    // Is this block a special structure handling block, so we can ignore it for blacklist selection, etc.
+    public static boolean isStructureBlock(Block block, boolean includeAir) {
+        if (block == null) return false;
+        if (block == wand_air) return includeAir;
+        if (block == wand_structure) return true;
+        if (block == wand_jigsaw) return true;
+        if (block == wand_logic) return true;
+        if (block == wand_tandem) return true;
+        if (block == wand_loot) return true;
+        return false;
+    }
+
     private static void registerFluidBlocks() {
         ModFluids.toxic_fluid.setBlock(toxic_block);
         ModFluids.mud_fluid.setBlock(mud_block);

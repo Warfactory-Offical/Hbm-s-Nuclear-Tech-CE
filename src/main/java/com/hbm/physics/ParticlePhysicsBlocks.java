@@ -64,8 +64,8 @@ public class ParticlePhysicsBlocks extends Particle {
 		particleMaxAge = 1000;
 		
 		
-		callListId = GL11.glGenLists(1);
-		GL11.glNewList(callListId, GL11.GL_COMPILE);
+		callListId = GlStateManager.glGenLists(1);
+		GlStateManager.glNewList(callListId, GL11.GL_COMPILE);
 		BufferBuilder buf = NTMImmediate.INSTANCE.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
 		for(BlockPos pos : blocks){
 			IBlockState state = world.getBlockState(pos);
@@ -73,7 +73,7 @@ public class ParticlePhysicsBlocks extends Particle {
 			Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelRenderer().renderModelSmooth(world, model, state, pos.add(0, offsetY, 0), buf, true, MathHelper.getPositionRandom(pos));
 		}
 		NTMImmediate.INSTANCE.draw();
-		GL11.glEndList();
+		GlStateManager.glEndList();
 	}
 	
 	@Override
@@ -82,7 +82,7 @@ public class ParticlePhysicsBlocks extends Particle {
 		this.particleAge ++;
 		if(particleAge >= particleMaxAge){
 			setExpired();
-			GL11.glDeleteLists(callListId, 1);
+			GlStateManager.glDeleteLists(callListId, 1);
 		}
 	}
 	
@@ -144,7 +144,7 @@ public class ParticlePhysicsBlocks extends Particle {
 		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		GlStateManager.enableCull();
 		GlStateManager.shadeModel(GL11.GL_SMOOTH);
-		GL11.glCallList(callListId);
+		GlStateManager.callList(callListId);
 		GlStateManager.shadeModel(GL11.GL_FLAT);
 		
 		GlStateManager.popMatrix();

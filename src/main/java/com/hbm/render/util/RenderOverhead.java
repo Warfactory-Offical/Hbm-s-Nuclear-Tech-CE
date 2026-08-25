@@ -1,5 +1,6 @@
 package com.hbm.render.util;
 
+import net.minecraft.client.renderer.GlStateManager;
 import com.hbm.util.Vec3NT;
 import com.hbm.wiaj.WorldInAJar;
 import net.minecraft.block.state.IBlockState;
@@ -288,7 +289,7 @@ public class RenderOverhead {
 		double z =  player.prevPosZ + (player.posZ - player.prevPosZ) * partialTicks;
 
 		GlStateManager.pushMatrix();
-		GL11.glDisable(GL11.GL_COLOR_MATERIAL);
+		GlStateManager.disableColorMaterial();
 		GlStateManager.disableTexture2D();
 		GlStateManager.disableLighting();
 		GL11.glEnable(GL11.GL_POINT_SMOOTH);
@@ -367,7 +368,7 @@ public class RenderOverhead {
 
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-		GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+		GlStateManager.enableColorMaterial();
 		GlStateManager.enableTexture2D();
 		GL11.glDisable(GL11.GL_POINT_SMOOTH);
 		GlStateManager.disableBlend();

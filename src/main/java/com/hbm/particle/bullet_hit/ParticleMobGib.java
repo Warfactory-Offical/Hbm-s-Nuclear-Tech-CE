@@ -58,7 +58,7 @@ public class ParticleMobGib extends Particle {
 		this.particleAge ++;
 		if(particleAge >= particleMaxAge){
 			setExpired();
-			GL11.glDeleteLists(displayList, 1);
+			GlStateManager.glDeleteLists(displayList, 1);
 		}
 	}
 	
@@ -89,15 +89,15 @@ public class ParticleMobGib extends Particle {
 		NTMRenderHelper.resetColor();
 		body.doGlTransform(new Vec3NT(interpPosX, interpPosY, interpPosZ), partialTicks);
 		GlStateManager.color(0.9F, 0.6F, 0.6F, 1F);
-		GL11.glCallList(displayList);
+		GlStateManager.callList(displayList);
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 		GlStateManager.enablePolygonOffset();
 		GlStateManager.doPolygonOffset(-1, -1);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(blood);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+		GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 		GlStateManager.color(0.5F, 0, 0, 0.8F);
-		GL11.glCallList(displayList);
+		GlStateManager.callList(displayList);
 		GlStateManager.color(1, 1, 1, 1);
 		GlStateManager.disablePolygonOffset();
 		GlStateManager.disableBlend();

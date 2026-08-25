@@ -66,7 +66,7 @@ public class RenderCyclotron extends TileEntitySpecialRenderer<TileEntityMachine
 
             GlStateManager.pushMatrix();
             RenderHelper.enableStandardItemLighting();
-            GL11.glRotated(System.currentTimeMillis() * 0.025 % 360, 0, 1, 0);
+            GlStateManager.rotate((float) (System.currentTimeMillis() * 0.025 % 360), 0, 1, 0);
 
             GlStateManager.enableBlend();
             GlStateManager.disableLighting();
@@ -76,7 +76,7 @@ public class RenderCyclotron extends TileEntitySpecialRenderer<TileEntityMachine
             String msg = "plures necat crapula quam gladius";
 
             GlStateManager.translate(0, 2, 0);
-            GL11.glRotated(180, 1, 0, 0);
+            GlStateManager.rotate(180, 1, 0, 0);
 
             float rot = 0F;
 

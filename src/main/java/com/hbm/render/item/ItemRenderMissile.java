@@ -57,17 +57,17 @@ public class ItemRenderMissile extends TEISRBase {
                 height = 4D;
             double size = 20;
             double scale = size / height;
-            GL11.glTranslated(height / 2 * scale, 0, 0);
-            GL11.glRotated(135, 0, 0, 1);
-            GL11.glRotated(215, 1, 0, 0);
-            GL11.glTranslated(7, 14, 0);
-            GL11.glScaled(-scale, -scale, -scale);
-            GL11.glRotatef(System.currentTimeMillis() / 25 % 360, 0, -1, 0);
+            GlStateManager.translate(height / 2 * scale, 0, 0);
+            GlStateManager.rotate(135, 0, 0, 1);
+            GlStateManager.rotate(215, 1, 0, 0);
+            GlStateManager.translate(7, 14, 0);
+            GlStateManager.scale(-scale, -scale, -scale);
+            GlStateManager.rotate(System.currentTimeMillis() / 25 % 360, 0, -1, 0);
         } else {
             // 1.7 EQUIPPED / EQUIPPED_FIRST_PERSON / ENTITY (shared body)
             double s = 0.2;
-            GL11.glScaled(s, s, s);
-            GL11.glTranslated(2, 0, 0);
+            GlStateManager.scale(s, s, s);
+            GlStateManager.translate(2, 0, 0);
         }
         MissilePronter.prontMissile(missile, Minecraft.getMinecraft().renderEngine);
 

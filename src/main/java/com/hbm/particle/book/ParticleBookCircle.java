@@ -57,7 +57,7 @@ public class ParticleBookCircle extends Particle {
 		GlStateManager.doPolygonOffset(-1, -10);
 		GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.SRC_COLOR);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.circle_big);
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+		GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 		float lifeN = (float)(particleAge+partialTicks)/(float)particleMaxAge;
 		float fade = MathHelper.clamp(1F-lifeN*1.2F, 0, 1);
 		GlStateManager.color(1F, 0.1F, 0.1F, 1.2F*fade);

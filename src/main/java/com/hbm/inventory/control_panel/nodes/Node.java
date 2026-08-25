@@ -129,7 +129,7 @@ public abstract class Node {
 		FontRenderer font = Minecraft.getMinecraft().fontRenderer;
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(posX, posY, 0);
-		GL11.glScaled(0.5, 0.5, 0.5);
+		GlStateManager.scale(0.5, 0.5, 0.5);
 		GlStateManager.translate(-posX, -posY, 0);
 		font.drawString(getDisplayName(), posX+4, posY+3, 0xFF2F2F2F, false);
 		GlStateManager.popMatrix();

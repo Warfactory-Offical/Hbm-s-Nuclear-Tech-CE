@@ -93,7 +93,7 @@ public class ItemRenderChainsaw extends TEISRBase {
                 GlStateManager.scale(0.5, 0.5, 0.5);
                 break;
             case GUI:
-                GL11.glEnable(GL11.GL_ALPHA_TEST);
+                GlStateManager.enableAlpha();
                 GlStateManager.enableLighting();
                 GlStateManager.multMatrix(ItemRenderFrames17.GUI);
                 // 1.7 INVENTORY

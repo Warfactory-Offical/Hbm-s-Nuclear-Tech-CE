@@ -98,7 +98,7 @@ public class ArmorHEV extends ArmorFSBPowered implements IItemRendererProvider {
 
     double scale = 2D;
 
-    GL11.glScaled(scale, scale, scale);
+    GlStateManager.scale(scale, scale, scale);
 
     int hX = (int) (8 / scale);
     int hY = (int) ((res.getScaledHeight() - 18 - 2) / scale);
@@ -151,11 +151,11 @@ public class ArmorHEV extends ArmorFSBPowered implements IItemRendererProvider {
 
     Minecraft.getMinecraft().fontRenderer.drawString(rad, rX, rY, radColor);
 
-    GL11.glScaled(1 / scale, 1 / scale, 1 / scale);
+    GlStateManager.scale(1 / scale, 1 / scale, 1 / scale);
 
     scale = 1D;
 
-    GL11.glScaled(scale, scale, scale);
+    GlStateManager.scale(scale, scale, scale);
 
     if (radiation > 0) {
 

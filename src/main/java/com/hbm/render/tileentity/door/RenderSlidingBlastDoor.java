@@ -1,5 +1,6 @@
 package com.hbm.render.tileentity.door;
 
+import net.minecraft.client.renderer.GlStateManager;
 import com.hbm.interfaces.IDoor;
 import com.hbm.main.ResourceManager;
 import com.hbm.tileentity.DoorDecl;
@@ -33,7 +34,7 @@ public class RenderSlidingBlastDoor implements IRenderDoors {
             lock = IRenderDoors.getRelevantTransformation("LOCK", door.currentAnimation)[0] * 90;
         }
 
-        GL11.glDisable(GL11.GL_CULL_FACE);
+        GlStateManager.disableCull();
         ResourceManager.pheo_blast_door.renderPart("Frame");
 
         GL11.glEnable(GL11.GL_CLIP_PLANE0);
@@ -44,27 +45,27 @@ public class RenderSlidingBlastDoor implements IRenderDoors {
         buf.put(new double[] { 0.0, 0.0, -1, 2.5 }); buf.rewind();
         GL11.glClipPlane(GL11.GL_CLIP_PLANE1, buf);
 
-        GL11.glPushMatrix();
-        GL11.glTranslated(0, 0, MathHelper.clamp(open, 0, maxOpen));
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(0, 0, MathHelper.clamp(open, 0, maxOpen));
         ResourceManager.pheo_blast_door.renderPart("LeftDoor");
-        GL11.glPushMatrix();
-        GL11.glTranslated(0, 1.8125, 0);
-        GL11.glRotated(90 + lock, 1, 0, 0);
-        GL11.glTranslated(0, -1.8125, 0);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(0, 1.8125, 0);
+        GlStateManager.rotate((float) (90 + lock), 1, 0, 0);
+        GlStateManager.translate(0, -1.8125, 0);
         ResourceManager.pheo_blast_door.renderPart("RightLock");
-        GL11.glPopMatrix();
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
+        GlStateManager.popMatrix();
 
-        GL11.glPushMatrix();
-        GL11.glTranslated(0, 0, -MathHelper.clamp(open, 0, maxOpen));
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(0, 0, -MathHelper.clamp(open, 0, maxOpen));
         ResourceManager.pheo_blast_door.renderPart("RightDoor");
-        GL11.glPushMatrix();
-        GL11.glTranslated(0, 1.8125, 0);
-        GL11.glRotated(90 + lock, 1, 0, 0);
-        GL11.glTranslated(0, -1.8125, 0);
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(0, 1.8125, 0);
+        GlStateManager.rotate((float) (90 + lock), 1, 0, 0);
+        GlStateManager.translate(0, -1.8125, 0);
         ResourceManager.pheo_blast_door.renderPart("LeftLock");
-        GL11.glPopMatrix();
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
+        GlStateManager.popMatrix();
 
         GL11.glDisable(GL11.GL_CLIP_PLANE0);
         GL11.glDisable(GL11.GL_CLIP_PLANE1);

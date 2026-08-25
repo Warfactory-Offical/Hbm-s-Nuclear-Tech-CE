@@ -175,7 +175,7 @@ public class NodeConnection extends NodeElement implements ITypableNode {
 		FontRenderer font = Minecraft.getMinecraft().fontRenderer;
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, 0);
-		GL11.glScaled(0.4, 0.4, 0.4);
+		GlStateManager.scale(0.4, 0.4, 0.4);
 		GlStateManager.translate(-x, -y, 0);
 		if(isTyping){
 			String s = builder.toString();

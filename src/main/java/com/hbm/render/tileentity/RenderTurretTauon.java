@@ -36,12 +36,12 @@ public class RenderTurretTauon extends RenderTurretBase<TileEntityTurretTauon> i
         double yaw = -Math.toDegrees(turret.lastRotationYaw + (turret.rotationYaw - turret.lastRotationYaw) * partialTicks) - 90D;
         double pitch = Math.toDegrees(turret.lastRotationPitch + (turret.rotationPitch - turret.lastRotationPitch) * partialTicks);
 
-        GL11.glRotated(yaw, 0, 1, 0);
+        GlStateManager.rotate((float) (yaw), 0, 1, 0);
         bindTexture(ResourceManager.turret_carriage_tex);
         ResourceManager.turret_chekhov.renderPart("Carriage");
 
         GlStateManager.translate(0, 1.5, 0);
-        GL11.glRotated(pitch, 0, 0, 1);
+        GlStateManager.rotate((float) (pitch), 0, 0, 1);
         GlStateManager.translate(0, -1.5, 0);
         bindTexture(ResourceManager.turret_tauon_tex);
         ResourceManager.turret_tauon.renderPart("Cannon");
@@ -56,7 +56,7 @@ public class RenderTurretTauon extends RenderTurretBase<TileEntityTurretTauon> i
 
         float rot = turret.lastSpin + (turret.spin - turret.lastSpin) * partialTicks;
         GlStateManager.translate(0, 1.375, 0);
-        GL11.glRotated(rot, -1, 0, 0);
+        GlStateManager.rotate((float) (rot), -1, 0, 0);
         GlStateManager.translate(0, -1.375, 0);
         ResourceManager.turret_tauon.renderPart("Rotor");
 

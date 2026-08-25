@@ -1,5 +1,6 @@
 package com.hbm.inventory.gui;
 
+import net.minecraft.client.renderer.GlStateManager;
 import com.hbm.util.Calculator;
 import com.hbm.util.Tuple;
 import net.minecraft.client.gui.GuiScreen;
@@ -90,7 +91,7 @@ public class GUICalculator extends GuiScreen {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
 
-        GL11.glColor4f(1F, 1F, 1F, 1F);
+        GlStateManager.color(1F, 1F, 1F, 1F);
         int x = (width - SIZE_X) / 2;
         int y = (height - SIZE_Y) / 2;
         int histHeight = (fontRenderer.FONT_HEIGHT + 2) * maxHistory;

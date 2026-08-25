@@ -1,5 +1,6 @@
 package com.hbm.main;
 
+import net.minecraft.client.renderer.GlStateManager;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ICustomBlockHighlight;
 import com.hbm.config.RadiationConfig;
@@ -105,11 +106,11 @@ public class ModEventHandlerRenderer {
 			
 			float farPlaneDistance = (float) (Minecraft.getMinecraft().gameSettings.renderDistanceChunks * 16);
 			float fogDist = farPlaneDistance / (1 + soot * 5F / (float) RadiationConfig.sootFogDivisor);
-			GL11.glFogf(GL11.GL_FOG_START, 0);
-			GL11.glFogf(GL11.GL_FOG_END, fogDist);
+			GlStateManager.setFogStart( 0);
+			GlStateManager.setFogEnd( fogDist);
 
 			if(GLContext.getCapabilities().GL_NV_fog_distance) {
-				GL11.glFogi(34138, 34139);
+				GlStateManager.glFogi(34138, 34139);
 			}
 			
 			event.setCanceled(true);

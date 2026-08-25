@@ -1,5 +1,6 @@
 package com.hbm.render;
 
+import net.minecraft.client.renderer.GlStateManager;
 import com.hbm.main.MainRegistry;
 import com.hbm.render.util.AppleVAO;
 import net.minecraft.client.Minecraft;
@@ -304,7 +305,7 @@ public class GLCompat {
         if (arbImaging)
             ARBImaging.glBlendEquation(mode);
         else
-            GL14.glBlendEquation(mode);
+            GlStateManager.glBlendEquation(mode);
     }
 
     public static void drawArraysInstanced(int mode, int first, int count, int primcount) {

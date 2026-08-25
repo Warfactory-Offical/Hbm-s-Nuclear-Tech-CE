@@ -50,9 +50,9 @@ public class ItemRenderShim extends TEISRBase {
 			GlStateManager.multMatrix(type == TransformType.FIRST_PERSON_LEFT_HAND ? ItemRenderFrames17.FIRST_PERSON_LEFT : ItemRenderFrames17.FIRST_PERSON);
 			// 1.7 EQUIPPED_FIRST_PERSON adds a sign-only prefix before the shared body.
 			if(sign) {
-				GL11.glRotatef(180, 0, 1, 0);
-				GL11.glRotatef(-90, 0, 0, 1);
-				GL11.glTranslatef(-1, -1.5F, 0);
+				GlStateManager.rotate(180, 0, 1, 0);
+				GlStateManager.rotate(-90, 0, 0, 1);
+				GlStateManager.translate(-1, -1.5F, 0);
 			}
 			shimBody(stack, sign);
 			break;
@@ -96,16 +96,16 @@ public class ItemRenderShim extends TEISRBase {
 			Minecraft.getMinecraft().renderEngine.bindTexture(ResourceManager.chernobylsign_tex);
 
 		if(stack.getItem() == ModItems.shimmer_sledge || stack.getItem() == ModItems.shimmer_axe) {
-			GL11.glRotatef(-135, 0, 0, 1);
-			GL11.glRotatef(180, 0, 0, 1);
-			GL11.glScalef(1.5F, 1.5F, 1.5F);
-			GL11.glTranslatef(0.45F, -0.3F, 0);
+			GlStateManager.rotate(-135, 0, 0, 1);
+			GlStateManager.rotate(180, 0, 0, 1);
+			GlStateManager.scale(1.5F, 1.5F, 1.5F);
+			GlStateManager.translate(0.45F, -0.3F, 0);
 		}
 		if(sign) {
-			GL11.glRotatef(45, 0, 0, 1);
-			GL11.glScalef(0.35F, 0.35F, 0.35F);
-			GL11.glTranslatef(2, -2, 0);
-			GL11.glRotatef(90, 0, 1, 0);
+			GlStateManager.rotate(45, 0, 0, 1);
+			GlStateManager.scale(0.35F, 0.35F, 0.35F);
+			GlStateManager.translate(2, -2, 0);
+			GlStateManager.rotate(90, 0, 1, 0);
 		}
 
 		if(stack.getItem() == ModItems.shimmer_sledge)

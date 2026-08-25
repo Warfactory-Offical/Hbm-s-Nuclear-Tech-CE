@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -142,10 +143,10 @@ public class ParticleSmokeAnim extends ParticleLayerBase {
 		public void preRender() {
 			Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.smoke_anim0);
 			//Makes it not pixelated when looking at it up close by using linear interpolation as the magnification filter.
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+			GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 			GlStateManager.enableColorMaterial();
 			GlStateManager.enableRescaleNormal();
-			net.minecraft.client.renderer.RenderHelper.enableStandardItemLighting();
+			RenderHelper.enableStandardItemLighting();
 			GlStateManager.glNormal3f(0, 1, 0);
 			GlStateManager.enableBlend();
 			GlStateManager.enableLighting();

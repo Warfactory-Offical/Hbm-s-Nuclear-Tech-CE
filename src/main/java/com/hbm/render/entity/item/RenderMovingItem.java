@@ -36,7 +36,7 @@ public class RenderMovingItem extends Render<EntityMovingItem> {
 		GlStateManager.translate(x, y, z);
 
 		ItemStack stack = item.getItemStack();
-		GL11.glScaled(0.5, 0.5, 0.5);
+		GlStateManager.scale(0.5, 0.5, 0.5);
 		if(!(stack.getItem() instanceof ItemBlock)) {
 			GlStateManager.rotate(90F, 1.0F, 0.0F, 0.0F);
 			GlStateManager.translate(0.0, 0, -0.03);

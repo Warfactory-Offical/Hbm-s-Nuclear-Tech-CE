@@ -6140,6 +6140,7 @@ rbmk.screen.flux=通量: %s
 rbmk.screen.rod=控制：%s
 rbmk.screen.temp=温度：%s
 rbmk.screen.xenon=氙：%s
+satchip.frequency=卫星频率
 shape.barrelHeavy=重型枪管
 shape.barrelLight=轻型枪管
 shape.billet=坯料

@@ -132,7 +132,7 @@ public class RenderRBMKConsole extends TileEntitySpecialRenderer<TileEntityRBMKC
         FontRenderer font = Minecraft.getMinecraft().fontRenderer;
         GlStateManager.translate(-0.42F, 3.5F, 1.75F);
         GlStateManager.depthMask(false);
-        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+        GlStateManager.enableRescaleNormal();
         GlStateManager.color(1, 1, 1, 1);
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
 
@@ -169,7 +169,7 @@ public class RenderRBMKConsole extends TileEntitySpecialRenderer<TileEntityRBMKC
         }
 
         GlStateManager.depthMask(true);
-        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+        GlStateManager.disableRescaleNormal();
 
         GlStateManager.popMatrix();
     }

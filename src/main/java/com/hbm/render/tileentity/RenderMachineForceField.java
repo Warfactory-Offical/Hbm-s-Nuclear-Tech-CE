@@ -43,7 +43,7 @@ public class RenderMachineForceField extends TileEntitySpecialRenderer<TileEntit
       generateSphere(segments, segments * 2, ff.radius, ff.color);
 
       double rot = (System.currentTimeMillis() * 0.5D) % 360;
-      GL11.glRotated(-rot, 0F, 1F, 0F);
+      GlStateManager.rotate((float) (-rot), 0F, 1F, 0F);
     }
 
     GlStateManager.translate(0, 0.5, 0);

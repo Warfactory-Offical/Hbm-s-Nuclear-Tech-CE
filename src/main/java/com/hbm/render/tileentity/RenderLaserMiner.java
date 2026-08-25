@@ -63,15 +63,15 @@ public class RenderLaserMiner extends TileEntitySpecialRenderer<TileEntityMachin
 
     // GlStateManager.shadeModel(GL11.GL_SMOOTH);
     GlStateManager.pushMatrix();
-    GL11.glRotated(yaw, 0, 1, 0);
+    GlStateManager.rotate((float) (yaw), 0, 1, 0);
     bindTexture(ResourceManager.mining_laser_pivot_tex);
     ResourceManager.mining_laser.renderPart("Pivot");
     GlStateManager.popMatrix();
 
     GlStateManager.pushMatrix();
-    GL11.glRotated(yaw, 0, 1, 0);
+    GlStateManager.rotate((float) (yaw), 0, 1, 0);
     GlStateManager.translate(0, -1, 0);
-    GL11.glRotated(pitch + 90, -1, 0, 0);
+    GlStateManager.rotate((float) (pitch + 90), -1, 0, 0);
     GlStateManager.translate(0, 1, 0);
     bindTexture(ResourceManager.mining_laser_laser_tex);
     ResourceManager.mining_laser.renderPart("Laser");

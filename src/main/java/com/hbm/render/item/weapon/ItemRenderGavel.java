@@ -50,17 +50,17 @@ public class ItemRenderGavel extends TEISRBase {
 		case FIRST_PERSON_RIGHT_HAND:
 			// 1.7 EQUIPPED_FIRST_PERSON
 			GlStateManager.multMatrix(type == TransformType.FIRST_PERSON_LEFT_HAND ? ItemRenderFrames17.FIRST_PERSON_LEFT : ItemRenderFrames17.FIRST_PERSON);
-			GL11.glTranslated(1, 0.5, 0);
+			GlStateManager.translate(1, 0.5, 0);
 			if(player != null && player.isActiveItemStackBlocking()) {
 				TransformType mainHandType = player.getPrimaryHand() == EnumHandSide.RIGHT ? TransformType.FIRST_PERSON_RIGHT_HAND : TransformType.FIRST_PERSON_LEFT_HAND;
 				EnumHand renderedHand = type == mainHandType ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND;
 				if(player.getActiveHand() == renderedHand)
-					GL11.glTranslated(-0.5, 0, 0);
+					GlStateManager.translate(-0.5, 0, 0);
 			}
-			GL11.glRotated(45, 0, 0, 1);
-			GL11.glRotated(90, 0, 1, 0);
+			GlStateManager.rotate(45, 0, 0, 1);
+			GlStateManager.rotate(90, 0, 1, 0);
 			if(item.getItem() == ModItems.mese_gavel)
-				GL11.glScaled(2, 2, 2);
+				GlStateManager.scale(2, 2, 2);
 			break;
 		case THIRD_PERSON_LEFT_HAND:
 		case THIRD_PERSON_RIGHT_HAND:
@@ -76,12 +76,12 @@ public class ItemRenderGavel extends TEISRBase {
 		case GROUND:
 			// 1.7 ENTITY: extra translate(-0.5,0,0) then the EQUIPPED body
 			GlStateManager.multMatrix(ItemRenderFrames17.GROUND);
-			GL11.glTranslated(-0.5, 0, 0);
+			GlStateManager.translate(-0.5, 0, 0);
 			gavelEquippedBody(item);
 			break;
 		case FIXED:
 			GlStateManager.multMatrix(ItemRenderFrames17.FIXED);
-			GL11.glTranslated(-0.5, 0, 0);
+			GlStateManager.translate(-0.5, 0, 0);
 			gavelEquippedBody(item);
 			break;
 		default:
@@ -97,13 +97,13 @@ public class ItemRenderGavel extends TEISRBase {
 
 	// 1.7 EQUIPPED body (shared by third-person and, after its lead translate, ENTITY).
 	private static void gavelEquippedBody(ItemStack item) {
-		GL11.glScaled(0.5, 0.5, 0.5);
-		GL11.glRotated(45, 0, 0, 1);
-		GL11.glTranslated(1.375, 0, 0);
-		GL11.glRotated(90, 0, 1, 0);
+		GlStateManager.scale(0.5, 0.5, 0.5);
+		GlStateManager.rotate(45, 0, 0, 1);
+		GlStateManager.translate(1.375, 0, 0);
+		GlStateManager.rotate(90, 0, 1, 0);
 		if(item.getItem() == ModItems.mese_gavel) {
-			GL11.glScaled(2, 2, 2);
-			GL11.glTranslated(0, 0.25, 0);
+			GlStateManager.scale(2, 2, 2);
+			GlStateManager.translate(0, 0.25, 0);
 		}
 	}
 }

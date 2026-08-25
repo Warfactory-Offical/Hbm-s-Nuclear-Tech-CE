@@ -205,6 +205,8 @@ public class MainRegistry {
 
         if (!configHbmDir.exists()) configHbmDir.mkdir();
 
+        Identity.init(configDir);
+
         if (SharedMonsterAttributes.MAX_HEALTH.clampValue(Integer.MAX_VALUE) <= 2000) {
             ((RangedAttribute) SharedMonsterAttributes.MAX_HEALTH).maximumValue = Integer.MAX_VALUE;
         }

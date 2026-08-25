@@ -46,7 +46,7 @@ public class RenderControlPanel extends TileEntitySpecialRenderer<TileEntityCont
     GlStateManager.translate(-0.5, 0, -0.5);
     te.panel.transform.store(ClientProxy.AUX_GL_BUFFER);
     ClientProxy.AUX_GL_BUFFER.rewind();
-    GL11.glMultMatrix(ClientProxy.AUX_GL_BUFFER);
+    GlStateManager.multMatrix(ClientProxy.AUX_GL_BUFFER);
     te.updateTransform();
     te.panel.render();
     GlStateManager.popMatrix();

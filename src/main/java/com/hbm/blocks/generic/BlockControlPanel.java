@@ -211,7 +211,7 @@ public class BlockControlPanel extends BlockContainer implements ICustomSelectio
 			GlStateManager.translate(x, y, z);
 			control.panel.transform.store(ClientProxy.AUX_GL_BUFFER);
 			ClientProxy.AUX_GL_BUFFER.rewind();
-			GL11.glMultMatrix(ClientProxy.AUX_GL_BUFFER);
+			GlStateManager.multMatrix(ClientProxy.AUX_GL_BUFFER);
 			if (ctrl.getBoundingBox() != null)
 				// offset to bury bottom lines
 				RenderGlobal.drawSelectionBoundingBox(ctrl.getBoundingBox().offset(0, -.01F, 0), 0, 0, 0, 0.4F);

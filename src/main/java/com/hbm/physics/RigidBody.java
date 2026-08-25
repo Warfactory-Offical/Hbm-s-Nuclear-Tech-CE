@@ -385,7 +385,7 @@ public class RigidBody {
 		buf.put(14, (float)pos.z);
 		buf.put(15, 1);
 		
-		GL11.glMultMatrix(buf);
+		GlStateManager.multMatrix(buf);
 		
 		buf.rewind();
 	}

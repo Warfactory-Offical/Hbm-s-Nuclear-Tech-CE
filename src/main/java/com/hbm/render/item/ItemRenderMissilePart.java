@@ -43,8 +43,8 @@ public class ItemRenderMissilePart extends TEISRBase {
 		case FIRST_PERSON_LEFT_HAND:
 		case FIRST_PERSON_RIGHT_HAND:
 			GlStateManager.multMatrix(type == TransformType.FIRST_PERSON_LEFT_HAND ? ItemRenderFrames17.FIRST_PERSON_LEFT : ItemRenderFrames17.FIRST_PERSON);
-			GL11.glTranslated(0.5, 0, 0);
-			GL11.glScaled(0.4, 0.4, 0.4);
+			GlStateManager.translate(0.5, 0, 0);
+			GlStateManager.scale(0.4, 0.4, 0.4);
 			bindAndRender();
 			break;
 		case THIRD_PERSON_LEFT_HAND:
@@ -53,18 +53,18 @@ public class ItemRenderMissilePart extends TEISRBase {
 			GlStateManager.multMatrix(type == TransformType.HEAD ? ItemRenderFrames17.HEAD
 					: type == TransformType.THIRD_PERSON_LEFT_HAND ? ItemRenderFrames17.THIRD_PERSON_LEFT
 					: ItemRenderFrames17.THIRD_PERSON);
-			GL11.glTranslated(0.5, 0, 0);
-			GL11.glScaled(0.4, 0.4, 0.4);
+			GlStateManager.translate(0.5, 0, 0);
+			GlStateManager.scale(0.4, 0.4, 0.4);
 			bindAndRender();
 			break;
 		case GROUND:
 			GlStateManager.multMatrix(ItemRenderFrames17.GROUND);
-			GL11.glScaled(0.4, 0.4, 0.4);
+			GlStateManager.scale(0.4, 0.4, 0.4);
 			bindAndRender();
 			break;
 		case FIXED:
 			GlStateManager.multMatrix(ItemRenderFrames17.FIXED);
-			GL11.glScaled(0.4, 0.4, 0.4);
+			GlStateManager.scale(0.4, 0.4, 0.4);
 			bindAndRender();
 			break;
 		case GUI:
@@ -77,21 +77,21 @@ public class ItemRenderMissilePart extends TEISRBase {
 			double size = 10;
 			double scale = size / height;
 
-			GL11.glTranslated(height / 2 * scale, 0, 0);
-			GL11.glRotated(135, 0, 0, 1);
-			GL11.glRotated(145, 1, 0, 0);
+			GlStateManager.translate(height / 2 * scale, 0, 0);
+			GlStateManager.rotate(135, 0, 0, 1);
+			GlStateManager.rotate(145, 1, 0, 0);
 
 			if(part.type == PartType.WARHEAD) {
-				GL11.glTranslated(0, height / 8 * scale, 0);
+				GlStateManager.translate(0, height / 8 * scale, 0);
 			}
 			if(part.type == PartType.FUSELAGE) {
-				GL11.glTranslated(0, height / 4 * scale, 0);
+				GlStateManager.translate(0, height / 4 * scale, 0);
 			}
 
-			GL11.glTranslated(3.5, 14, 0);
-			GL11.glScaled(-scale, -scale, -scale);
+			GlStateManager.translate(3.5, 14, 0);
+			GlStateManager.scale(-scale, -scale, -scale);
 
-			GL11.glRotatef(System.currentTimeMillis() / 25 % 360, 0, -1, 0);
+			GlStateManager.rotate(System.currentTimeMillis() / 25 % 360, 0, -1, 0);
 			bindAndRender();
 			break;
 		default: break;
