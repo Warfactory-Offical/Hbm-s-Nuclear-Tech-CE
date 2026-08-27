@@ -36,7 +36,7 @@ public class ClientConfig extends RunningConfig {
     public static ConfigWrapper<Integer> TOOL_HUD_INDICATOR_Y = 			new ConfigWrapper<>(0);
     public static ConfigWrapper<Boolean> SHOW_BLOCK_META_OVERLAY = 			new ConfigWrapper<>(false);
     public static ConfigWrapper<Boolean> BADGES_HUD = 						new ConfigWrapper<>(true);
-    public static ConfigWrapper<Boolean> HEALTHBAR_HUD = 					new ConfigWrapper<>(false);
+    public static ConfigWrapper<Boolean> HEALTHBAR_HUD = 					new ConfigWrapper<>(true);
 
     private static void initDefaults() {
         configMap.put("GEIGER_OFFSET_HORIZONTAL", GEIGER_OFFSET_HORIZONTAL);
