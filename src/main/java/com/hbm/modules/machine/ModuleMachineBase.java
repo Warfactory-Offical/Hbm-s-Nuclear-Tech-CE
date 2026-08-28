@@ -92,15 +92,7 @@ public abstract class ModuleMachineBase {
 
         if(recipe.outputItem != null) {
             for(int i = 0; i < Math.min(recipe.outputItem.length, outputSlots.length); i++) {
-                ItemStack stack = inventory.getStackInSlot(outputSlots[i]);
-                if(stack.isEmpty()) continue; // always continue if output slot is free
-                GenericRecipes.IOutput output = recipe.outputItem[i];
-                if(output.possibleMultiOutput()) return false; // output slot needs to be empty to decide on multi outputs
-                ItemStack single = output.getSingle();
-                if(single == null || single.isEmpty()) return false; // shouldn't be possible but better safe than sorry
-                if(stack.getItem() != single.getItem()) return false;
-                if(stack.getItemDamage() != single.getItemDamage()) return false;
-                if(stack.getCount() + single.getCount() > stack.getMaxStackSize()) return false;
+                if(findOutputSlot(recipe, i) < 0) return false;
             }
         }
 
@@ -111,6 +103,33 @@ public abstract class ModuleMachineBase {
         }
 
         return true;
+    }
+
+    protected int findOutputSlot(GenericRecipe recipe, int outputIndex) {
+        return findOutputSlot(recipe, outputIndex, null);
+    }
+
+    protected int findOutputSlot(GenericRecipe recipe, int outputIndex, ItemStack resolved) {
+        GenericRecipes.IOutput output = recipe.outputItem[outputIndex];
+        boolean isLast = outputIndex == recipe.outputItem.length - 1;
+        int toSlot = isLast ? outputSlots.length - 1 : outputIndex;
+
+        ItemStack single = output.possibleMultiOutput() ? resolved : output.getSingle();
+
+        int firstEmpty = -1;
+        for(int s = outputIndex; s <= toSlot; s++) {
+            ItemStack stack = inventory.getStackInSlot(outputSlots[s]);
+            if(stack.isEmpty()) {
+                if(firstEmpty < 0) firstEmpty = s;
+                continue;
+            }
+            if(single == null || single.isEmpty()) continue; // can't verify a match without knowing the result yet
+            if(stack.getItem() != single.getItem()) continue;
+            if(stack.getItemDamage() != single.getItemDamage()) continue;
+            if(stack.getCount() + single.getCount() > stack.getMaxStackSize()) continue;
+            return s; // stack onto the existing matching output before touching a fresh slot
+        }
+        return firstEmpty;
     }
 
     public void process(GenericRecipe recipe, double speed, double power) {
@@ -160,7 +179,9 @@ public abstract class ModuleMachineBase {
         if(recipe.outputItem != null) {
             for(int i = 0; i < Math.min(recipe.outputItem.length, outputSlots.length); i++) {
                 ItemStack collapse = recipe.outputItem[i].collapse();
-                int idx = outputSlots[i];
+                int slot = findOutputSlot(recipe, i, collapse);
+                if(slot < 0) continue; // shouldn't happen, canFitOutput() already gated this - stay safe rather than throw
+                int idx = outputSlots[slot];
                 ItemStack out = inventory.getStackInSlot(idx);
                 if(out.isEmpty()) {
                     inventory.setStackInSlot(idx, collapse == null ? ItemStack.EMPTY : collapse);
