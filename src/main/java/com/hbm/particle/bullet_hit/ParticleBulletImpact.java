@@ -59,10 +59,10 @@ public class ParticleBulletImpact extends ParticleLayerBase {
 		} else {
 			GlStateManager.pushMatrix();
 			GlStateManager.loadIdentity();
-			GL11.glRotated(yaw, 0, 1, 0);
-		    GL11.glRotated(pitch, 1, 0, 0);
-		    GL11.glRotated(roll, 0, 1, 0);
-		    GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER);
+			GlStateManager.rotate((float) (yaw), 0, 1, 0);
+		    GlStateManager.rotate((float) (pitch), 1, 0, 0);
+		    GlStateManager.rotate((float) (roll), 0, 1, 0);
+		    GlStateManager.getFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER);
 		    Matrix4f mat = new Matrix4f();
 		    mat.load(ClientProxy.AUX_GL_BUFFER);
 		    ClientProxy.AUX_GL_BUFFER.rewind();
@@ -135,7 +135,7 @@ public class ParticleBulletImpact extends ParticleLayerBase {
         	GlStateManager.translate(f5, f6, f7);
         	GLCompat.bindBuffer(GLCompat.GL_ARRAY_BUFFER, vbo[0]);
         	BakedModelUtil.enableBlockShaderVBOs();
-        	GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, vbo[1]);
+        	GlStateManager.glDrawArrays(GL11.GL_TRIANGLES, 0, vbo[1]);
         	BakedModelUtil.disableBlockShaderVBOs();
         	//GL11.glCallList(vbo[0]);
         	GlStateManager.popMatrix();
@@ -172,7 +172,7 @@ public class ParticleBulletImpact extends ParticleLayerBase {
 			GlStateManager.doPolygonOffset(-4, -4);
 			GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 			Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.bullet_impact);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+			GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 			Minecraft.getMinecraft().entityRenderer.enableLightmap();
 			
 			if(GeneralConfig.bulletHoleNormalMapping){

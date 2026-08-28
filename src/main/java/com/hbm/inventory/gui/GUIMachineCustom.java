@@ -1,5 +1,6 @@
 package com.hbm.inventory.gui;
 
+import net.minecraft.client.renderer.GlStateManager;
 import com.hbm.Tags;
 import com.hbm.inventory.container.ContainerMachineCustom;
 import com.hbm.inventory.gui.element.GUIElements;
@@ -71,7 +72,7 @@ public class GUIMachineCustom extends GuiInfoContainer {
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float interp, int x, int y) {
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 		if(custom.config.fluxMode){

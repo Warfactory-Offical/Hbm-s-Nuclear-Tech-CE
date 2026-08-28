@@ -8,8 +8,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -23,9 +21,9 @@ public class TileEntityRadioTorchReceiver extends TileEntityRadioTorchBase imple
     public void update() {
         if (!world.isRemote) {
 
-            if (!this.channel.isEmpty()) {
+            if (!this.channel.isEmpty() || this.polling) {
 
-                RTTYChannel chan = RTTYSystem.listen(world, this.channel);
+                RTTYChannel chan = this.channel.isEmpty() ? null : RTTYSystem.listen(world, this.channel);
 
                 if (chan != null && (this.polling || (chan.timeStamp > this.lastUpdate - 1 && chan.timeStamp != -1))) { // if we're either polling or a new message has come in
                     String msg = "" + chan.signal;
@@ -48,34 +46,39 @@ public class TileEntityRadioTorchReceiver extends TileEntityRadioTorchBase imple
                         nextState = MathHelper.clamp(sig, 0, 15);
                     }
 
-                    if (chan.timeStamp < this.lastUpdate - 2 && this.polling) {
+                    if (chan.timeStamp < this.lastUpdate - 1 && this.polling) {
                         nextState = 0;
                     }
 
                     if (this.lastState != nextState) {
                         this.lastState = nextState;
-
-                        EnumFacing dir = getTorchFacing();
-                        BlockPos strongPos = new BlockPos(pos.getX() + dir.getXOffset(), pos.getY() + dir.getYOffset(), pos.getZ() + dir.getZOffset());
-                        IBlockState state = world.getBlockState(pos);
-
-                        boolean oldLit = state.getValue(LIT);
-                        boolean newLit = this.lastState > 0;
-
-                        if (oldLit != newLit) {
-                            world.setBlockState(pos, state.withProperty(LIT, newLit), 3);
-                        }
-
-                        world.notifyNeighborsOfStateChange(strongPos, getBlockType(), true);
-                        world.neighborChanged(strongPos, getBlockType(), pos);
-
-                        this.markDirty();
+                        applyState();
                     }
+
+                } else if (this.polling && this.lastState != 0) {
+                    this.lastState = 0;
+                    applyState();
                 }
             }
         }
 
         super.update();
+    }
+
+    private void applyState() {
+
+        IBlockState state = world.getBlockState(pos);
+
+        boolean oldLit = state.getValue(LIT);
+        boolean newLit = this.lastState > 0;
+
+        if (oldLit != newLit) {
+            world.setBlockState(pos, state.withProperty(LIT, newLit), 3);
+        }
+
+        world.notifyNeighborsOfStateChange(pos, getBlockType(), true);
+
+        this.markDirty();
     }
 
     @Override

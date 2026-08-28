@@ -10,6 +10,7 @@ import com.hbm.items.machine.ItemBlueprints;
 import com.hbm.items.machine.ItemFluidIcon;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawable;
+import mezz.jei.api.gui.IGuiFluidStackGroup;
 import mezz.jei.api.gui.IGuiItemStackGroup;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.ingredients.IIngredients;
@@ -106,6 +107,8 @@ public abstract class JEIGenericRecipeHandler implements IRecipeCategory<JEIGene
             }
 
             List<List<ItemStack>> inputs = new ArrayList<>();
+            List<net.minecraftforge.fluids.FluidStack> inputFluids = new ArrayList<>();
+            List<Integer> inputFluidAnchors = new ArrayList<>();
             if (recipe.inputItem != null) {
                 for (RecipesCommon.AStack a : recipe.inputItem) {
                     List<ItemStack> vars = a.extractForJEI();
@@ -116,12 +119,27 @@ public abstract class JEIGenericRecipeHandler implements IRecipeCategory<JEIGene
                 for (FluidStack f : recipe.inputFluid) {
                     ItemStack icon = ItemFluidIcon.make(f);
                     if (!icon.isEmpty()) {
+                        int anchor = inputs.size();
                         inputs.add(Collections.singletonList(icon));
+                        // NTM only ever displays fluid ingredients as this dummy icon item - fine for
+                        // our own GUI, but external JEI-driven tooling (e.g. AE2's fluid autocrafting
+                        // addons, which read a recipe's real VanillaTypes.FLUID ingredients to
+                        // auto-encode a crafting pattern) has no reason to understand a modded dummy
+                        // item and sees nothing to work with. Register the real forge FluidStack too,
+                        // anchored to this same icon's slot, purely so that ingredient exists for
+                        // anything reading the recipe layout - see setRecipe() below.
+                        net.minecraftforge.fluids.Fluid ff = f.type == null ? null : f.type.getFF();
+                        if (ff != null) {
+                            inputFluids.add(new net.minecraftforge.fluids.FluidStack(ff, Math.max(f.fill, 1)));
+                            inputFluidAnchors.add(anchor);
+                        }
                     }
                 }
             }
 
             List<List<ItemStack>> outputs = new ArrayList<>();
+            List<net.minecraftforge.fluids.FluidStack> outputFluids = new ArrayList<>();
+            List<Integer> outputFluidAnchors = new ArrayList<>();
             if (recipe.outputItem != null) {
                 for (GenericRecipes.IOutput out : recipe.outputItem) {
                     ItemStack[] vars = out.getAllPossibilities();
@@ -138,7 +156,13 @@ public abstract class JEIGenericRecipeHandler implements IRecipeCategory<JEIGene
                 for (FluidStack f : recipe.outputFluid) {
                     ItemStack icon = ItemFluidIcon.make(f);
                     if (!icon.isEmpty()) {
+                        int anchor = outputs.size();
                         outputs.add(Collections.singletonList(icon));
+                        net.minecraftforge.fluids.Fluid ff = f.type == null ? null : f.type.getFF();
+                        if (ff != null) {
+                            outputFluids.add(new net.minecraftforge.fluids.FluidStack(ff, Math.max(f.fill, 1)));
+                            outputFluidAnchors.add(anchor);
+                        }
                     }
                 }
             }
@@ -158,7 +182,8 @@ public abstract class JEIGenericRecipeHandler implements IRecipeCategory<JEIGene
 
             ItemStack[] machines = getMachines(recipe);
 
-            recipes.add(new JeiGenericRecipe(recipe, inputs, outputs, machines, templates, inputOffset, outputOffset, machineOffset));
+            recipes.add(new JeiGenericRecipe(recipe, inputs, outputs, machines, templates, inputOffset, outputOffset, machineOffset,
+                    inputFluids, inputFluidAnchors, outputFluids, outputFluidAnchors));
         }
     }
 
@@ -204,6 +229,28 @@ public abstract class JEIGenericRecipeHandler implements IRecipeCategory<JEIGene
         }
 
         stacks.set(ingredients);
+
+        if (!wrapper.inputFluids.isEmpty() || !wrapper.outputFluids.isEmpty()) {
+            IGuiFluidStackGroup fluids = recipeLayout.getFluidStacks();
+            for (int i = 0; i < wrapper.inputFluids.size(); i++) {
+                int anchor = wrapper.inputFluidAnchors.get(i);
+                int x = inPos[anchor][0] + wrapper.inputOffset - 1;
+                int y = inPos[anchor][1] - 1;
+                // tiny and tucked under the icon item at the same slot - this isn't meant to be seen,
+                // the fluid_icon item stays the actual on-screen representation. It exists purely so
+                // recipe-transfer tooling (see the buildRecipes() comment above) has a real FluidStack
+                // ingredient to read off this recipe layout.
+                fluids.init(i, true, x, y, 2, 2, Math.max(wrapper.inputFluids.get(i).amount, 1000), false, null);
+            }
+            int outBase = wrapper.inputFluids.size();
+            for (int i = 0; i < wrapper.outputFluids.size(); i++) {
+                int anchor = wrapper.outputFluidAnchors.get(i);
+                int x = outPos[anchor][0] + wrapper.outputOffset - 1;
+                int y = outPos[anchor][1] - 1;
+                fluids.init(outBase + i, false, x, y, 2, 2, Math.max(wrapper.outputFluids.get(i).amount, 1000), false, null);
+            }
+            fluids.set(ingredients);
+        }
 
         int slotIndex = inputList.size() + outputList.size();
         int mx = 74 + wrapper.machineOffset;
@@ -264,6 +311,10 @@ public abstract class JEIGenericRecipeHandler implements IRecipeCategory<JEIGene
         protected final int inputOffset;
         protected final int outputOffset;
         protected final int machineOffset;
+        protected final List<net.minecraftforge.fluids.FluidStack> inputFluids;
+        protected final List<Integer> inputFluidAnchors;
+        protected final List<net.minecraftforge.fluids.FluidStack> outputFluids;
+        protected final List<Integer> outputFluidAnchors;
 
         public JeiGenericRecipe(GenericRecipe recipe,
                                 List<List<ItemStack>> inputs,
@@ -272,7 +323,11 @@ public abstract class JEIGenericRecipeHandler implements IRecipeCategory<JEIGene
                                 List<ItemStack> templates,
                                 int inputOffset,
                                 int outputOffset,
-                                int machineOffset) {
+                                int machineOffset,
+                                List<net.minecraftforge.fluids.FluidStack> inputFluids,
+                                List<Integer> inputFluidAnchors,
+                                List<net.minecraftforge.fluids.FluidStack> outputFluids,
+                                List<Integer> outputFluidAnchors) {
             this.recipe = recipe;
             this.inputs = inputs;
             this.outputs = outputs;
@@ -281,12 +336,28 @@ public abstract class JEIGenericRecipeHandler implements IRecipeCategory<JEIGene
             this.inputOffset = inputOffset;
             this.outputOffset = outputOffset;
             this.machineOffset = machineOffset;
+            this.inputFluids = inputFluids;
+            this.inputFluidAnchors = inputFluidAnchors;
+            this.outputFluids = outputFluids;
+            this.outputFluidAnchors = outputFluidAnchors;
         }
 
         @Override
         public void getIngredients(IIngredients ingredients) {
             ingredients.setInputLists(VanillaTypes.ITEM, inputs);
             ingredients.setOutputLists(VanillaTypes.ITEM, outputs);
+
+            // See the buildRecipes() comment on inputFluids for why these exist alongside the icon items.
+            if (!inputFluids.isEmpty()) {
+                List<List<net.minecraftforge.fluids.FluidStack>> wrapped = new ArrayList<>(inputFluids.size());
+                for (net.minecraftforge.fluids.FluidStack fs : inputFluids) wrapped.add(Collections.singletonList(fs));
+                ingredients.setInputLists(VanillaTypes.FLUID, wrapped);
+            }
+            if (!outputFluids.isEmpty()) {
+                List<List<net.minecraftforge.fluids.FluidStack>> wrapped = new ArrayList<>(outputFluids.size());
+                for (net.minecraftforge.fluids.FluidStack fs : outputFluids) wrapped.add(Collections.singletonList(fs));
+                ingredients.setOutputLists(VanillaTypes.FLUID, wrapped);
+            }
         }
 
         public GenericRecipe getRecipe() {

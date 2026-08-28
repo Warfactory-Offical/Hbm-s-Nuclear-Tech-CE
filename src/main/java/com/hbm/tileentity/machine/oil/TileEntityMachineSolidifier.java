@@ -44,8 +44,8 @@ import java.util.List;
 public class TileEntityMachineSolidifier extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IUpgradeInfoProvider, IFluidStandardReceiver, IGUIProvider, IFluidCopiable, IConnectionAnchors {
 
     public static final long maxPower = 100000;
-    public static final int usageBase = 500;
-    public static final int processTimeBase = 100;
+    public static final int usageBase = 250;
+    public static final int processTimeBase = 60;
     public long power;
     public int usage;
     public int progress;
@@ -216,11 +216,15 @@ public class TileEntityMachineSolidifier extends TileEntityMachineBase implement
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         tank.readFromNBT(nbt, "tank");
+        this.power = nbt.getLong("power");
+        this.progress = nbt.getInteger("progress");
     }
 
     @Override
     public @NotNull NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         tank.writeToNBT(nbt, "tank");
+        nbt.setLong("power", power);
+        nbt.setInteger("progress", progress);
         return super.writeToNBT(nbt);
     }
 

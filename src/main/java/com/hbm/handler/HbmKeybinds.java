@@ -177,7 +177,7 @@ public class HbmKeybinds {
 
 				KeyModifier mod = key.getKeyModifier();
 				if (mod != KeyModifier.NONE && !mod.isActive()) continue;
-				if (HASH.lookupActive(key.getKeyCode()) == key) continue;
+				if (HASH.lookupActive(key.getKeyCode()) == key && !category.equals(key.getKeyCategory())) continue;
 
 				key.pressed = state;
 				if (state && key.pressTime == 0) {

@@ -3,6 +3,7 @@ package com.hbm.tileentity.machine;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import com.hbm.api.fluid.IFluidStandardTransceiver;
+import com.hbm.api.redstoneoverradio.IRORValueProvider;
 import com.hbm.api.tile.IHeatSource;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.capability.NTMFluidHandlerWrapper;
@@ -41,7 +42,7 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 
 @AutoRegister
-public class TileEntityHeatBoiler extends TileEntityLoadedBase implements ITickable, IFluidStandardTransceiver, IBufPacketReceiver, IConfigurableMachine, IFluidCopiable, IPersistentNBT, IConnectionAnchors {
+public class TileEntityHeatBoiler extends TileEntityLoadedBase implements ITickable, IFluidStandardTransceiver, IBufPacketReceiver, IConfigurableMachine, IFluidCopiable, IPersistentNBT, IConnectionAnchors, IRORValueProvider {
 
     public Fluid[] types = new Fluid[2];
     public FluidTankNTM[] tanks;
@@ -262,7 +263,7 @@ public class TileEntityHeatBoiler extends TileEntityLoadedBase implements ITicka
                 this.heat -= heatReq * ops;
 
                 if(ops > 0 && world.rand.nextInt(400) == 0) {
-                    world.playSound(null, pos.getX() + 0.5, pos.getY() + 2, pos.getZ() + 0.5, new SoundEvent(new ResourceLocation("hbm:block.boilerGroan")), SoundCategory.BLOCKS, 0.5F, 1.0F);
+                    world.playSound(null, pos.getX() + 0.5, pos.getY() + 2, pos.getZ() + 0.5, HBMSoundHandler.boilerGroanSounds[world.rand.nextInt(3)], SoundCategory.BLOCKS, 0.5F, 1.0F);
                 }
 
                 if(ops > 0) {
@@ -389,5 +390,25 @@ public class TileEntityHeatBoiler extends TileEntityLoadedBase implements ITicka
             );
         }
         return super.getCapability(capability, facing);
+    }
+
+    @Override
+    public String[] getFunctionInfo() {
+        return new String[]{
+                PREFIX_VALUE + "input",
+                PREFIX_VALUE + "output"
+        };
+    }
+
+    @Override
+    public String provideRORValue(String name) {
+        if(hasExploded) {
+            if((PREFIX_VALUE + "input").equals(name)) return "0";
+            if((PREFIX_VALUE + "output").equals(name)) return "0";
+            return null;
+        }
+        if((PREFIX_VALUE + "input").equals(name)) return "" + tanks[0].getFill();
+        if((PREFIX_VALUE + "output").equals(name)) return "" + tanks[1].getFill();
+        return null;
     }
 }

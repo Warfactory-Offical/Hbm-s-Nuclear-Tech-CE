@@ -28,6 +28,7 @@ import com.hbm.util.BobMathUtil;
 import com.hbm.util.I18nUtil;
 import com.hbm.util.SoundUtil;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -46,8 +47,10 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.HashMap;
 import java.util.List;
+import com.hbm.api.redstoneoverradio.IRORValueProvider;
+import com.hbm.api.redstoneoverradio.IRORInteractive;
 @AutoRegister
-public class TileEntityMachineChemicalPlant extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IFluidStandardTransceiverMK2, IUpgradeInfoProvider, IControlReceiver, IGUIProvider, IConnectionAnchors {
+public class TileEntityMachineChemicalPlant extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IFluidStandardTransceiverMK2, IUpgradeInfoProvider, IControlReceiver, IGUIProvider, IConnectionAnchors, IRORValueProvider, IRORInteractive {
 
     public FluidTankNTM[] inputTanks;
     public FluidTankNTM[] outputTanks;
@@ -160,7 +163,7 @@ public class TileEntityMachineChemicalPlant extends TileEntityMachineBase implem
             if(this.didProcess) this.anim++;
 
             if(world.getTotalWorldTime() % 20 == 0) {
-                frame = world.getBlockState(pos.up(3)).getBlock() != Blocks.AIR;
+                frame = world.getBlockState(pos.up(3)).getMaterial() != Material.AIR;
             }
 
             if(this.didProcess && MainRegistry.proxy.me().getDistance(pos.getX(), pos.getY(), pos.getZ()) < 30) {
@@ -302,7 +305,7 @@ public class TileEntityMachineChemicalPlant extends TileEntityMachineBase implem
             int index = data.getInteger("index");
             String selection = data.getString("selection");
             if(index == 0) {
-                this.chemplantModule.recipe = selection;
+                this.chemplantModule.setRecipe(selection, false);
                 this.markChanged();
             }
         }
@@ -349,5 +352,33 @@ public class TileEntityMachineChemicalPlant extends TileEntityMachineBase implem
         upgrades.put(ItemMachineUpgrade.UpgradeType.POWER, 3);
         upgrades.put(ItemMachineUpgrade.UpgradeType.OVERDRIVE, 3);
         return upgrades;
+    }
+
+    @Override
+    public String[] getFunctionInfo() {
+        return new String[] {
+                PREFIX_VALUE + "progress",
+                PREFIX_VALUE + "recipe",
+                PREFIX_VALUE + "active",
+                PREFIX_FUNCTION + "setrecipe" + NAME_SEPARATOR + "name"
+        };
+    }
+
+    @Override
+    public String provideRORValue(String name) {
+        if((PREFIX_VALUE + "progress").equals(name)) return "" + (int) Math.round(this.chemplantModule.progress * 100);
+        if((PREFIX_VALUE + "recipe").equals(name)) return this.chemplantModule.getRecipeName();
+        if((PREFIX_VALUE + "active").equals(name)) return "" + (this.didProcess ? 1 : 0);
+        return null;
+    }
+
+    @Override
+    public String runRORFunction(String name, String[] params) {
+        if((PREFIX_FUNCTION + "setrecipe").equals(name) && params.length == 1) {
+            this.chemplantModule.setRecipe(params[0], true);
+            this.markDirty();
+            return null;
+        }
+        return null;
     }
 }

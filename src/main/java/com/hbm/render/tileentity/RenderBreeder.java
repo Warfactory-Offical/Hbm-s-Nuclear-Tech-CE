@@ -62,7 +62,7 @@ public class RenderBreeder extends TileEntitySpecialRenderer<TileEntityMachineRe
         GlStateManager.popMatrix();
       }
 
-    GL11.glScaled(0.5, 0.5, 0.5);
+    GlStateManager.scale(0.5, 0.5, 0.5);
 
     bindTexture(ResourceManager.breeder_tex);
 

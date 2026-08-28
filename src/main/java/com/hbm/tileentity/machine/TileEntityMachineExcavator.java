@@ -627,7 +627,7 @@ public class TileEntityMachineExcavator extends TileEntityMachineBase implements
 
             ItemStack stack = ore.resource.copy();
             if (stack.getItem() == ModItems.bedrock_ore_base) {
-                ItemBedrockOreBase.setOreAmount(stack, pos.getX(), pos.getZ());
+                ItemBedrockOreBase.setOreAmount(stack, pos.getX(), pos.getZ(), 1D + this.getInstalledDrill().fortune * 0.25D);
             }
 
             List<ItemStack> stacksToSupply = Collections.singletonList(stack);

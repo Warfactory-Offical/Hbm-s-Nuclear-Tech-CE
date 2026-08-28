@@ -28,47 +28,6 @@ public class ModelArmorDigamma extends ModelArmorBase {
     }
 
     @Override
-    public void render(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor) {
-        super.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor, entity);
-
-        GlStateManager.pushMatrix();
-        GlStateManager.shadeModel(GL11.GL_SMOOTH);
-
-        this.body.copyTo(this.cassette);
-
-        switch (type) {
-            case 3 -> {
-                bindTexture(ResourceManager.fau_helmet);
-                this.head.render(scaleFactor);
-            }
-            case 2 -> {
-                bindTexture(ResourceManager.fau_chest);
-                this.body.render(scaleFactor);
-                GL11.glEnable(GL11.GL_BLEND);
-                OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
-                bindTexture(ResourceManager.fau_cassette);
-                this.cassette.render(scaleFactor);
-                bindTexture(ResourceManager.fau_arm);
-                this.leftArm.render(scaleFactor);
-                this.rightArm.render(scaleFactor);
-            }
-            case 1 -> {
-                bindTexture(ResourceManager.fau_leg);
-                this.leftLeg.render(scaleFactor);
-                this.rightLeg.render(scaleFactor);
-            }
-            case 0 -> {
-                bindTexture(ResourceManager.fau_leg);
-                this.leftFoot.render(scaleFactor);
-                this.rightFoot.render(scaleFactor);
-            }
-        }
-
-        GlStateManager.shadeModel(GL11.GL_FLAT);
-        GlStateManager.popMatrix();
-    }
-
-    @Override
     public void renderArmor(Entity par1Entity, float par7) {
 
         body.copyTo(cassette);

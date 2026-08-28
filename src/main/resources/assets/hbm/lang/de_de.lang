@@ -4031,6 +4031,7 @@ rbmk.screen.flux=Fluss: %s
 rbmk.screen.rod=Kontrolle: %s
 rbmk.screen.temp=Temperatur: %s
 rbmk.screen.xenon=Xenon: %s
+rock.crushing=Zerkleinern von %s
 splash_potion.effect.potion.hbm_bang=Spritztrank von ! ! !
 splash_potion.effect.potion.hbm_lead=Spritztrank der Bleivergiftung
 splash_potion.effect.potion.hbm_mutation=Spritztrank der Ghulifizierung

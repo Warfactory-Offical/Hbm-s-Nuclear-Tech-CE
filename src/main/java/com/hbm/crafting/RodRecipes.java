@@ -158,7 +158,7 @@ public class RodRecipes {
     // TODO ? ids are not correct, resulting in NPE
     public static void registerInit() {
         /* GT6 */
-        if(OreDictionary.doesOreNameExist("ingotNaquadah-Enriched"))	addPellet(new DictFrame("Naquadah-Enriched"),	ItemWatzPellet.EnumWatzType.NQD);
+        if(OreDictionary.doesOreNameExist("ingotNaquadahEnriched"))	addPellet(new DictFrame("NaquadahEnriched"),	ItemWatzPellet.EnumWatzType.NQD);
         if(OreDictionary.doesOreNameExist("ingotNaquadria"))			addPellet(new DictFrame("Naquadria"),			ItemWatzPellet.EnumWatzType.NQR);
     }
 

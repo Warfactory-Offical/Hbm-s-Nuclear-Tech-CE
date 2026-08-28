@@ -67,13 +67,13 @@ public class ItemRenderMultitool extends TEISRBase {
 				Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation(Tags.MODID +":textures/models/tools/ModelMultitool.png"));
 				GlStateManager.scale(0.5F, 0.5F, 0.5F);
 				if(type == TransformType.FIRST_PERSON_RIGHT_HAND){
-					GL11.glRotated(-39, 0, 0, 1);
+					GlStateManager.rotate(-39, 0, 0, 1);
 					GlStateManager.translate(0.5, 1.5, 1.5);
-					GL11.glRotated(180, 1, 0, 0);
+					GlStateManager.rotate(180, 1, 0, 0);
 				} else {
-					GL11.glRotated(39, 0, 0, 1);
+					GlStateManager.rotate(39, 0, 0, 1);
 					GlStateManager.translate(0.9, 0.4, 1.7);
-					GL11.glRotated(180, 0, 0, 1);
+					GlStateManager.rotate(180, 0, 0, 1);
 				}
 				
 				if(item != null && item.getItem() == ModItems.multitool_dig)
@@ -115,8 +115,8 @@ public class ItemRenderMultitool extends TEISRBase {
 				Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation(Tags.MODID +":textures/models/tools/ModelMultitool.png"));
 				GlStateManager.scale(0.75F, 0.75F, 0.75F);
 
-				GL11.glRotated(180, 1, 0, 0);
-				GL11.glRotated(90, 0, 1, 0);
+				GlStateManager.rotate(180, 1, 0, 0);
+				GlStateManager.rotate(90, 0, 1, 0);
 
 				//GlStateManager.translate(0, 0, 1);
 				GlStateManager.translate(8 * 0.0625F, 1 * 0.0625F, 10.5F * 0.0625F);

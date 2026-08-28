@@ -45,7 +45,7 @@ public class RenderChemical extends Render<EntityChemical> {
             renderGasFire(chem, f1);
         }
 
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 
     private void renderGasFire(EntityChemical chem, float interp) {
@@ -57,7 +57,7 @@ public class RenderChemical extends Render<EntityChemical> {
         GlStateManager.enableBlend();
         GlStateManager.alphaFunc(GL11.GL_GREATER, 0.0F);
         GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        GlStateManager.disableAlpha();
         GlStateManager.depthMask(false);
 
         GlStateManager.rotate(180.0F - this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);

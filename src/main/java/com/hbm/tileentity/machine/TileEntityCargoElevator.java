@@ -1,5 +1,6 @@
 package com.hbm.tileentity.machine;
 
+import com.hbm.api.redstoneoverradio.IRORInteractive;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.interfaces.AutoRegister;
@@ -19,18 +20,18 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.List;
 
 @AutoRegister
-public class TileEntityCargoElevator extends TileEntityLoadedBase implements ITickable {
+public class TileEntityCargoElevator extends TileEntityLoadedBase implements ITickable, IRORInteractive {
 
     public int height;
 
+    public int targetExtension;
     public double extension;
     public double prevExtension;
     public double syncExtension;
     private int sync;
 
-    public boolean isExtending;
     public static final double speed = 2D / 20D;
-    public boolean renderPlatform;
+    public boolean renderPlatform = true; // I'd tolerate 1 tick of cargo elevator rendering than sometimes not rendering at all
 
     private AxisAlignedBB bb;
 
@@ -59,12 +60,12 @@ public class TileEntityCargoElevator extends TileEntityLoadedBase implements ITi
                 }
             }
 
-            if (this.isExtending && this.extension < this.height) {
+            if (this.extension < this.targetExtension) {  // go up
                 this.extension += speed;
-            }
-
-            if (!this.isExtending && this.extension > 0) {
+                this.extension = MathHelper.clamp(this.extension, 0D, this.targetExtension);
+            } else if (this.extension > this.targetExtension) {  // go down
                 this.extension -= speed;
+                this.extension = MathHelper.clamp(this.extension, this.targetExtension, this.height);
             }
 
             this.extension = MathHelper.clamp(this.extension, 0D, this.height);
@@ -97,11 +98,10 @@ public class TileEntityCargoElevator extends TileEntityLoadedBase implements ITi
     }
 
     public void toggleElevator() {
-        if (this.extension >= this.height) {
-            this.isExtending = false;
-        }
-        if (this.extension <= 0) {
-            this.isExtending = true;
+        if (this.targetExtension == 0) {
+            this.targetExtension = this.height;
+        } else {
+            this.targetExtension = 0;
         }
         this.markDirty();
         this.markChanged();
@@ -130,7 +130,7 @@ public class TileEntityCargoElevator extends TileEntityLoadedBase implements ITi
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         this.extension = nbt.getDouble("extension");
-        this.isExtending = nbt.getBoolean("isExtending");
+        this.targetExtension = nbt.getInteger("targetExtension");
         this.height = nbt.getInteger("height");
         this.renderPlatform = nbt.getBoolean("renderPlatform");
     }
@@ -138,7 +138,7 @@ public class TileEntityCargoElevator extends TileEntityLoadedBase implements ITi
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         nbt.setDouble("extension", this.extension);
-        nbt.setBoolean("isExtending", this.isExtending);
+        nbt.setInteger("targetExtension", this.targetExtension);
         nbt.setInteger("height", this.height);
         nbt.setBoolean("renderPlatform", this.renderPlatform);
         return super.writeToNBT(nbt);
@@ -164,5 +164,23 @@ public class TileEntityCargoElevator extends TileEntityLoadedBase implements ITi
     @SideOnly(Side.CLIENT)
     public double getMaxRenderDistanceSquared() {
         return 65536.0D;
+    }
+
+    @Override
+    public String runRORFunction(String name, String[] params) {
+        if ((PREFIX_FUNCTION + "setextension").equals(name) && params.length > 0) {
+            targetExtension = IRORInteractive.parseInt(params[0], 0, height);
+            return null;
+        }
+
+        return null;
+    }
+
+    @Override
+    public String[] getFunctionInfo() {
+        return new String[]{
+                PREFIX_VALUE + "extension",
+                PREFIX_FUNCTION + "setextension"
+        };
     }
 }

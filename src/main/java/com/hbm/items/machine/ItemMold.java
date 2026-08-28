@@ -237,7 +237,9 @@ public class ItemMold extends Item implements IModelRegister, IClaimedModelLocat
                 if(!ores.isEmpty()) {
                     //prioritize NTM items
                     for(ItemStack ore : ores) {
-                        if(Item.REGISTRY.getNameForObject(ore.getItem()).toString().startsWith(Tags.MODID)) {
+                        String registry = Item.REGISTRY.getNameForObject(ore.getItem()).toString();
+                        if(registry.contains("fragment")) continue;
+                        if(registry.startsWith(Tags.MODID)) {
                             ItemStack copy = ore.copy();
                             copy.setCount(this.amount);
                             return copy;

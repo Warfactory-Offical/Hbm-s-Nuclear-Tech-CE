@@ -33,7 +33,7 @@ public class GUIScreenSnowglobe extends GuiScreen {
         this.drawDefaultBackground();
         GlStateManager.disableLighting();
         GlStateManager.enableBlend();
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        GlStateManager.disableAlpha();
         OpenGlHelper.glBlendFunc(770, 771, 1, 0);
         GlStateManager.disableTexture2D();
 
@@ -57,7 +57,7 @@ public class GUIScreenSnowglobe extends GuiScreen {
         tess.draw();
 
         GlStateManager.enableTexture2D();
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GlStateManager.enableAlpha();
         GlStateManager.enableBlend();
 
         int nextLevel = (int)top + 10;

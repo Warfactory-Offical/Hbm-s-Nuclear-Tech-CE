@@ -1,6 +1,7 @@
 package com.hbm.render.util;
 
-import com.hbm.render.amlfrom1710.Vec3;
+import net.minecraft.client.renderer.GlStateManager;
+import com.hbm.util.Vec3NT;
 import com.hbm.wiaj.WorldInAJar;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -288,7 +289,7 @@ public class RenderOverhead {
 		double z =  player.prevPosZ + (player.posZ - player.prevPosZ) * partialTicks;
 
 		GlStateManager.pushMatrix();
-		GL11.glDisable(GL11.GL_COLOR_MATERIAL);
+		GlStateManager.disableColorMaterial();
 		GlStateManager.disableTexture2D();
 		GlStateManager.disableLighting();
 		GL11.glEnable(GL11.GL_POINT_SMOOTH);
@@ -356,7 +357,7 @@ public class RenderOverhead {
 				double aX = pX + (maxX - minX) / 2D;
 				double aY = pY + (maxY - minY) / 2D;
 				double aZ = pZ + (maxZ - minZ) / 2D;
-				Vec3 vec = Vec3.createVectorHelper(x - aX, y - aY, z - aZ);
+				Vec3NT vec = Vec3NT.createVectorHelper(x - aX, y - aY, z - aZ);
 				if(vec.length() > marker.maxDist) {
 					it.remove();
 				}
@@ -367,7 +368,7 @@ public class RenderOverhead {
 
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-		GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+		GlStateManager.enableColorMaterial();
 		GlStateManager.enableTexture2D();
 		GL11.glDisable(GL11.GL_POINT_SMOOTH);
 		GlStateManager.disableBlend();
@@ -392,25 +393,25 @@ public class RenderOverhead {
 			double aX = pX + (maxX - minX) / 2D;
 			double aY = pY + (maxY - minY) / 2D;
 			double aZ = pZ + (maxZ - minZ) / 2D;
-			Vec3 vec = Vec3.createVectorHelper(aX - x, aY - y, aZ - z);
-			double len = vec.xCoord * vec.xCoord + vec.yCoord * vec.yCoord + vec.zCoord * vec.zCoord;
+			Vec3NT vec = Vec3NT.createVectorHelper(aX - x, aY - y, aZ - z);
+			double len = vec.x * vec.x + vec.y * vec.y + vec.z * vec.z;
 			double sqrt = Math.sqrt(len);
 			double mult = Math.min(sqrt, 16D);
-			vec.xCoord *= mult / sqrt;
-			vec.yCoord *= mult / sqrt;
-			vec.zCoord *= mult / sqrt;
+			vec.setX(vec.x * (mult / sqrt));
+			vec.setY(vec.y * (mult / sqrt));
+			vec.setZ(vec.z * (mult / sqrt));
 			Vec3d look = player.getLookVec();
-			Vec3 diff = vec.normalize();
+			Vec3NT diff = vec.normalize();
 			String label = marker.label;
 			if(label == null) {
 				label = "";
 			}
 
-			if(Math.abs(look.x - diff.xCoord) + Math.abs(look.y - diff.yCoord) + Math.abs(look.z - diff.zCoord) < 0.15) {
+			if(Math.abs(look.x - diff.x) + Math.abs(look.y - diff.y) + Math.abs(look.z - diff.z) < 0.15) {
 				label += (!label.isEmpty() ? " " : "") + ((int) sqrt) + "m";
 			}
 
-			if(!label.isEmpty()) drawTag(1F, len, label, vec.xCoord, vec.yCoord, vec.zCoord, 100, true, marker.color, marker.color);
+			if(!label.isEmpty()) drawTag(1F, len, label, vec.x, vec.y, vec.z, 100, true, marker.color, marker.color);
 		}
 		GlStateManager.popMatrix();
 	}

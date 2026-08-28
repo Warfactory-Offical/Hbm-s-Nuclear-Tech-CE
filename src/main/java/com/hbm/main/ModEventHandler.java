@@ -55,6 +55,10 @@ import com.hbm.particle.helper.BlackPowderCreator;
 import com.hbm.particle.helper.HbmEffectNT;
 import com.hbm.potion.HbmDetox;
 import com.hbm.potion.HbmPotion;
+import com.hbm.saveddata.satellites.Satellite;
+import com.hbm.saveddata.satellites.SatelliteDetector;
+import com.hbm.saveddata.satellites.SatelliteRayScan;
+import com.hbm.saveddata.satellites.SatelliteSavedData;
 import com.hbm.tileentity.machine.TileEntityMachineRadarNT;
 import com.hbm.tileentity.machine.rbmk.RBMKDials;
 import com.hbm.tileentity.network.RTTYSystem;
@@ -666,6 +670,26 @@ public class ModEventHandler {
             PacketThreading.createSendToDimensionThreadedPacket(new SurveyPacket(cur), dim);
         }
         BossSpawnHandler.rollTheDice(event.world);
+        SatelliteDetector.updateSystem(event.world);
+
+        SatelliteSavedData dat = SatelliteSavedData.getData(event.world);
+
+        if (dat != null) {
+            boolean dirty = false;
+
+            for (Satellite sat : dat.sats.values()) {
+                sat.onUpdateTick(event.world);
+
+                if (sat.isDirty) {
+                    sat.isDirty = false;
+                    dirty = true;
+                }
+            }
+
+            if (dirty) dat.markDirty();
+        }
+
+        if (event.world.getTotalWorldTime() % 20 == 10) SatelliteRayScan.updateSystem(event.world);
     }
 
     //mlbv: concurrent workers are safe as long as they don't interfere
@@ -1153,7 +1177,7 @@ public class ModEventHandler {
                                 MainRegistry.logger.log(Level.INFO, "[DET] Tried to detonate block at " + x + " / " + y + " / " + z + " by dead man's switch from " + player.getDisplayName() + "!");
                         }
 
-                        player.inventory.setInventorySlotContents(i, null);
+                        player.inventory.setInventorySlotContents(i, ItemStack.EMPTY);
                     }
                 }
             }
@@ -1170,11 +1194,11 @@ public class ModEventHandler {
         NonNullList<ItemStack> handInventory = event.getEntityLiving().handInventory;
         NonNullList<ItemStack> armorArray =event.getEntityLiving().armorArray;
 
-        if (event.getEntityLiving() instanceof EntityPlayer && event.getEntityLiving().getHeldItemMainhand().getItem() instanceof IEquipReceiver && !ItemStack.areItemsEqual(handInventory.get(0), event.getEntityLiving().getHeldItemMainhand())) {
+        if (event.getEntityLiving() instanceof EntityPlayerMP && event.getEntityLiving().getHeldItemMainhand().getItem() instanceof IEquipReceiver && !ItemStack.areItemsEqual(handInventory.get(0), event.getEntityLiving().getHeldItemMainhand())) {
             ((IEquipReceiver) event.getEntityLiving().getHeldItemMainhand().getItem()).onEquip((EntityPlayer) event.getEntityLiving(), EnumHand.MAIN_HAND);
             ((IEquipReceiver)event.getEntityLiving().getHeldItemMainhand().getItem()).onEquip((EntityPlayer) event.getEntityLiving(), event.getEntityLiving().getHeldItem(EnumHand.MAIN_HAND));
         }
-        if (event.getEntityLiving() instanceof EntityPlayer && event.getEntityLiving().getHeldItemOffhand().getItem() instanceof IEquipReceiver && !ItemStack.areItemsEqual(handInventory.get(1), event.getEntityLiving().getHeldItemOffhand())) {
+        if (event.getEntityLiving() instanceof EntityPlayerMP && event.getEntityLiving().getHeldItemOffhand().getItem() instanceof IEquipReceiver && !ItemStack.areItemsEqual(handInventory.get(1), event.getEntityLiving().getHeldItemOffhand())) {
             ((IEquipReceiver) event.getEntityLiving().getHeldItemOffhand().getItem()).onEquip((EntityPlayer) event.getEntityLiving(), EnumHand.OFF_HAND);
         }
 
@@ -1459,11 +1483,17 @@ public class ModEventHandler {
 
         ItemStack stack = event.getItem();
 
-        if (stack != null && stack.getItem() instanceof ItemFood) {
+        if (!stack.isEmpty() && stack.getItem() instanceof ItemFood) {
 
             if (stack.hasTagCompound() && stack.getTagCompound().getBoolean("ntmCyanide")) {
                 for (int i = 0; i < 10; i++) {
                     event.getEntityLiving().attackEntityFrom(rand.nextBoolean() ? ModDamageSource.euthanizedSelf : ModDamageSource.euthanizedSelf2, 1000);
+                }
+            }
+
+            if (stack.hasTagCompound() && stack.getTagCompound().getBoolean("ntmRedPill")) {
+                for (int i = 0; i < 10; i++) {
+                    event.getEntityLiving().addPotionEffect(new PotionEffect(HbmPotion.death, 60 * 60 * 20, 0));
                 }
             }
         }
@@ -1519,6 +1549,26 @@ public class ModEventHandler {
         ModBlocks.registerBlocks();
     }
 
+    private static final Set<String> IGNORED_ITEM_MAPPINGS = new HashSet<>(Arrays.asList(
+            // superseded by the metadata variants of hbm:satellite
+            "hbm:sat_detector",
+            "hbm:sat_precision_laser",
+            "hbm:sat_ray_scanner",
+            "hbm:sat_science",
+            "hbm:sat_science_sensor",
+            // retired upstream
+            "hbm:missile_carrier",
+            "hbm:missile_endo",
+            "hbm:missile_exo"
+    ));
+
+    @SubscribeEvent
+    public void onMissingItemMappings(RegistryEvent.MissingMappings<Item> evt) {
+        for(RegistryEvent.MissingMappings.Mapping<Item> mapping : evt.getAllMappings()) {
+            if(IGNORED_ITEM_MAPPINGS.contains(mapping.key.toString())) mapping.ignore();
+        }
+    }
+
     @SubscribeEvent
     public void onPotionRegister(RegistryEvent.Register<Potion> evt) {
         HbmPotion.registerPotions(evt.getRegistry());
@@ -1537,7 +1587,8 @@ public class ModEventHandler {
         ItemStack fuel = event.getItemStack();
         int single = 200;
         boolean changed = true;
-        if (fuel.getItem().equals(ModItems.solid_fuel)) event.setBurnTime(single * 16);
+        if (fuel.getItem().equals(ModItems.coal_eternal)) event.setBurnTime(single * 16);
+        else if (fuel.getItem().equals(ModItems.solid_fuel)) event.setBurnTime(single * 16);
         else if (fuel.getItem().equals(ModItems.solid_fuel_presto)) event.setBurnTime(single * 40);
         else if (fuel.getItem().equals(ModItems.solid_fuel_presto_triplet)) event.setBurnTime(single * 200);
         else if(fuel.getItem().equals(ModItems.solid_fuel_bf))					event.setBurnTime(single * 160);

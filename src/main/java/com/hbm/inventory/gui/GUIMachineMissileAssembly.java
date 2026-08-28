@@ -103,7 +103,7 @@ public class GUIMachineMissileAssembly extends GuiInfoContainer {
 		double scale = size / Math.max(missile.getHeight(), 6);
 		
 		GlStateManager.translate(missile.getHeight() / 2 * scale, 0, 0);
-		GL11.glScaled(scale, scale, scale);
+		GlStateManager.scale(scale, scale, scale);
 		
 		GlStateManager.rotate(90, 1, 0, 0);
 		GlStateManager.rotate(-90, 0, 0, 1);

@@ -23,7 +23,7 @@ import com.hbm.main.MainRegistry;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toclient.TEMissileMultipartPacket;
 import com.hbm.particle.helper.HbmEffectNT;
-import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.util.Vec3NT;
 import com.hbm.tileentity.IConnectionAnchors;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
@@ -210,13 +210,13 @@ public class TileEntityCompactLauncher extends TileEntityMachineBase implements 
 			f = (Float) fins.attributes[0];
 		}
 
-		Vec3 target = Vec3.createVectorHelper(pos.getX() - tX, 0, pos.getZ() - tZ);
-		target.xCoord *= c * f;
-		target.zCoord *= c * f;
+		Vec3NT target = Vec3NT.createVectorHelper(pos.getX() - tX, 0, pos.getZ() - tZ);
+		target.setX(target.x * (c * f));
+		target.setZ(target.z * (c * f));
 
-		target.rotateAroundY(world.rand.nextFloat() * 360);
+		target.rotateYawSelf(world.rand.nextFloat() * 360);
 
-		EntityMissileCustom missile = new EntityMissileCustom(world, pos.getX() + 0.5F, pos.getY() + 1.5F, pos.getZ() + 0.5F, tX + (int) target.xCoord, tZ + (int) target.zCoord, getStruct(inventory.getStackInSlot(0)));
+		EntityMissileCustom missile = new EntityMissileCustom(world, pos.getX() + 0.5F, pos.getY() + 1.5F, pos.getZ() + 0.5F, tX + (int) target.x, tZ + (int) target.z, getStruct(inventory.getStackInSlot(0)));
 		world.spawnEntity(missile);
 
 		subtractFuel();

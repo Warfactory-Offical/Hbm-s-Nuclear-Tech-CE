@@ -1,5 +1,6 @@
 package com.hbm.render.anim.sedna;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -118,12 +119,12 @@ public class HbmAnimationsSedna {
         double[] transform = getRelevantTransformation(bus, index);
         int[] rot = new int[] { (int)transform[12], (int)transform[13], (int)transform[14] };
 
-        GL11.glTranslated(transform[0], transform[1], transform[2]);
-        GL11.glRotated(transform[3 + rot[0]], rot[0] == 0 ? 1 : 0, rot[0] == 1 ? 1 : 0, rot[0] == 2 ? 1 : 0);
-        GL11.glRotated(transform[3 + rot[1]], rot[1] == 0 ? 1 : 0, rot[1] == 1 ? 1 : 0, rot[1] == 2 ? 1 : 0);
-        GL11.glRotated(transform[3 + rot[2]], rot[2] == 0 ? 1 : 0, rot[2] == 1 ? 1 : 0, rot[2] == 2 ? 1 : 0);
-        GL11.glTranslated(-transform[9], -transform[10], -transform[11]);
-        GL11.glScaled(transform[6], transform[7], transform[8]);
+        GlStateManager.translate(transform[0], transform[1], transform[2]);
+        GlStateManager.rotate((float) (transform[3 + rot[0]]), (float) (rot[0] == 0 ? 1 : 0), (float) (rot[0] == 1 ? 1 : 0), (float) (rot[0] == 2 ? 1 : 0));
+        GlStateManager.rotate((float) (transform[3 + rot[1]]), (float) (rot[1] == 0 ? 1 : 0), (float) (rot[1] == 1 ? 1 : 0), (float) (rot[1] == 2 ? 1 : 0));
+        GlStateManager.rotate((float) (transform[3 + rot[2]]), (float) (rot[2] == 0 ? 1 : 0), (float) (rot[2] == 1 ? 1 : 0), (float) (rot[2] == 2 ? 1 : 0));
+        GlStateManager.translate(-transform[9], -transform[10], -transform[11]);
+        GlStateManager.scale(transform[6], transform[7], transform[8]);
     }
 
 }

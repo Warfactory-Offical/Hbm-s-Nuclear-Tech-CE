@@ -41,8 +41,8 @@ public class RenderSolarMirror extends TileEntitySpecialRenderer<TileEntitySolar
         	double pitch = Math.toDegrees(-Math.asin((dy + 0.5) / dist)) + 90;
         	double yaw = Math.toDegrees(-Math.atan2(dz, dx)) + 180;
 
-        	GL11.glRotated(yaw, 0, 1, 0);
-        	GL11.glRotated(pitch, 0, 0, 1);
+        	GlStateManager.rotate((float) (yaw), 0, 1, 0);
+        	GlStateManager.rotate((float) (pitch), 0, 0, 1);
         }
 
         GlStateManager.translate(0, -1, 0);

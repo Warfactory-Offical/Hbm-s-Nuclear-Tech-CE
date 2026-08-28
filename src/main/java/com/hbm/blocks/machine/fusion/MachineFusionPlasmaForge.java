@@ -3,9 +3,11 @@ package com.hbm.blocks.machine.fusion;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ITooltipProvider;
 import com.hbm.handler.MultiblockHandlerXR;
+import com.hbm.integration.ae2.NTMCraftingMachineFactory;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.TileEntityProxyCombo;
 import com.hbm.tileentity.machine.fusion.TileEntityFusionPlasmaForge;
+import com.hbm.util.Compat;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.util.ITooltipFlag;
@@ -16,6 +18,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Loader;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -28,13 +31,28 @@ public class MachineFusionPlasmaForge extends BlockDummyable implements ITooltip
 
     @Override
     public TileEntity createNewTileEntity(@NotNull World world, int meta) {
-        if(meta >= 12) return new TileEntityFusionPlasmaForge();
-        if(meta >= 6) return new TileEntityProxyCombo().inventory().power().fluid();
+        if(meta >= 12) return Loader.isModLoaded(Compat.ModIds.AE2) ? NTMCraftingMachineFactory.createAE2TileEntity("com.hbm.integration.ae2.tileentity.TileEntityFusionPlasmaForgeAE2") : new TileEntityFusionPlasmaForge();
+        if(meta >= 6) return Loader.isModLoaded(Compat.ModIds.AE2) ? NTMCraftingMachineFactory.createAE2Proxy(true, true, true) : new TileEntityProxyCombo().inventory().power().fluid();
         return null;
     }
 
     @Override public int[] getDimensions() { return new int[] {2, 0, 2, 2, 5, 5}; }
     @Override public int getOffset() { return 5; }
+
+    @Override
+    public int[][] getAllDimensions() {
+        return new int[][] {
+                getDimensions(),
+                new int[] {2, 0, 3, -2, 4, 4},
+                new int[] {2, 0, -2, 3, 4, 4},
+                new int[] {2, 0, 4, -3, 3, 3},
+                new int[] {2, 0, -3, 4, 3, 3},
+                new int[] {2, 0, 5, -4, 2, 2},
+                new int[] {2, 0, -4, 5, 2, 2},
+                new int[] {3, -2, 1, 1, 5, 5},
+                new int[] {4, -3, 0, 0, 4, 4}
+        };
+    }
 
     @Override
     public boolean checkRequirement(World world, int x, int y, int z, ForgeDirection dir, int o) {

@@ -40,6 +40,8 @@ import net.minecraftforge.common.util.Constants.NBT;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.*;
@@ -80,6 +82,8 @@ public class NBTStructure {
         put(Tags.MODID + ":ore_coal_oil", "minecraft:coal_ore");
         put(Tags.MODID + ":fluid_duct_neo", Tags.MODID + ":fluid_duct_mk2");
         put(Tags.MODID + ":rail_narrow", "minecraft:rail");
+        put(Tags.MODID + ":tile.hev_battery", Tags.MODID + ":hev_battery_block");
+        put(Tags.MODID + ":hev_battery", Tags.MODID + ":hev_battery_block");
     }};
     private static final String[] LEGACY_BRICK_SLABS = {
             Tags.MODID + ":reinforced_stone_slab",
@@ -124,6 +128,29 @@ public class NBTStructure {
 		} else {
 			MainRegistry.logger.error("NBT Structure not found: " + resource.getPath());
 		}
+	}
+
+	public NBTStructure(File file) throws FileNotFoundException {
+		this.name = file.getName();
+		loadStructure(new FileInputStream(file));
+	}
+
+	public static File getStructureDirectory() {
+		File directory = new File(MainRegistry.configDir.getParentFile(), "structures");
+		directory.mkdir();
+		return directory;
+	}
+
+	public int getSizeX() {
+		return size.x;
+	}
+
+	public int getSizeY() {
+		return size.y;
+	}
+
+	public int getSizeZ() {
+		return size.z;
 	}
 
 	public static void register() {
@@ -180,7 +207,7 @@ public class NBTStructure {
 	}
 
 	// Saves a selected area into an NBT structure (+ some of our non-standard stuff to support 1.7.10)
-	public static void saveArea(String filename, World world, int x1, int y1, int z1, int x2, int y2, int z2, Set<Pair<Block, Integer>> exclude) {
+	public static File saveArea(String filename, World world, int x1, int y1, int z1, int x2, int y2, int z2, Set<Pair<Block, Integer>> exclude) {
 		NBTTagCompound structure = new NBTTagCompound();
 		NBTTagList nbtBlocks = new NBTTagList();
 		NBTTagList nbtPalette = new NBTTagList();
@@ -309,14 +336,15 @@ public class NBTStructure {
 		structure.setTag("entities", new NBTTagList());
 
 		try {
-			File structureDirectory = new File(Minecraft.getMinecraft().gameDir, "structures");
-			structureDirectory.mkdir();
-
-			File structureFile = new File(structureDirectory, filename);
+			File structureFile = new File(getStructureDirectory(), filename);
 
 			CompressedStreamTools.writeCompressed(structure, new FileOutputStream(structureFile));
+
+			return structureFile;
 		} catch (Exception ex) {
 			MainRegistry.logger.warn("Failed to save NBT structure", ex);
+
+			return null;
 		}
 	}
 
@@ -475,14 +503,20 @@ public class NBTStructure {
 	}
 
 	public void build(World world, int x, int y, int z, int coordBaseMode) {
+		build(world, x, y, z, coordBaseMode, true, false);
+	}
+
+	public void build(World world, int x, int y, int z, int coordBaseMode, boolean center, boolean wipeExisting) {
 		if(!isLoaded) {
 			MainRegistry.logger.info("NBTStructure is invalid");
 			return;
 		}
 
-		boolean swizzle = coordBaseMode == 1 || coordBaseMode == 3;
-		x -= (swizzle ? size.z : size.x) / 2;
-		z -= (swizzle ? size.x : size.z) / 2;
+		if(center) {
+			boolean swizzle = coordBaseMode == 1 || coordBaseMode == 3;
+			x -= (swizzle ? size.z : size.x) / 2;
+			z -= (swizzle ? size.x : size.z) / 2;
+		}
 
 		int maxX = size.x;
 		int maxZ = size.z;
@@ -494,12 +528,17 @@ public class NBTStructure {
 
 				for(int by = 0; by < size.y; by++) {
 					BlockState state = blockArray[bx][by][bz];
-					if(state == null) continue;
+					if(state == null) {
+						if(wipeExisting) world.setBlockState(new BlockPos(rx, by + y, rz), Blocks.AIR.getDefaultState(), 2);
+						continue;
+					}
 
 					int ry = by + y;
 
 					Block block = transformBlock(state.definition, null, world.rand);
 					int meta = transformMeta(state.definition, null, coordBaseMode);
+
+					if(ry < 1) continue;
 
 					BlockPos pos = new BlockPos(rx, ry, rz);
 					IBlockState place = block.getStateFromMeta(meta);
@@ -832,6 +871,9 @@ public class NBTStructure {
                 return item.getRegistryName().toString();
             }
 
+            String legacy = remapLegacyItemName(idString);
+            if (legacy != null) return legacy;
+
             return idString.contains(":") ? idString : null;
         }
 
@@ -924,6 +966,15 @@ public class NBTStructure {
         }
 
         return new LegacyBlockDefinition(variants[variant], preserveHalf ? meta & 8 : 0);
+    }
+
+    private static @Nullable String remapLegacyItemName(String name) {
+        String prefix = Tags.MODID + ":item.";
+        if (!name.startsWith(prefix)) return null;
+
+        String stripped = Tags.MODID + ":" + name.substring(prefix.length());
+        Item item = Item.getByNameOrId(stripped);
+        return item != null && item.getRegistryName() != null ? item.getRegistryName().toString() : null;
     }
 
     private static @Nullable String remapLegacyBlockName(String name) {

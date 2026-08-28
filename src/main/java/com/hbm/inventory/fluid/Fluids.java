@@ -430,7 +430,7 @@ public class Fluids {
         // 1.7 has 153, +1 due to HYDRAZINE
         DHC =					new FluidType(154, "DHC",			0xD2AFFF, 0, 0, 0, EnumSymbol.NONE).addTraits(GASEOUS);
         AIRBLAST =				new FluidType("AIRBLAST",			0xFFDADA, 0, 3, 0, EnumSymbol.NONE).setTemp(1_200).addTraits(GASEOUS);
-        FLUE =					new FluidType("FLUE",			0x131313, 1, 4, 1, EnumSymbol.NONE).addContainers(new CD_Gastank(0xFF4545, 0xFFE97F)).addTraits(new FT_Flammable(10_000), GASEOUS, new FT_Polluting().burn(PollutionType.SOOT, SOOT_GAS).release(PollutionType.SOOT, SOOT_GAS * 25));
+        FLUE =					new FluidType(156, "FLUE",			0x131313, 1, 4, 1, EnumSymbol.NONE).addContainers(new CD_Gastank(0xFF4545, 0xFFE97F)).addTraits(new FT_Flammable(25_000), GASEOUS, new FT_Polluting().burn(PollutionType.SOOT, SOOT_GAS).release(PollutionType.SOOT, SOOT_GAS * 5));
 
         // ^ ^ ^ ^ ^ ^ ^ ^
         //ADD NEW FLUIDS HERE
@@ -1106,11 +1106,28 @@ public class Fluids {
         ResourceLocation textureStill = new ResourceLocation(texturePath + "_still");
         ResourceLocation textureFlowing = new ResourceLocation(texturePath + "_flowing");
 
-        // Default texture if custom one is not found
-        ResourceLocation defaultTexture = fluid.hasTrait(FT_Gaseous.class) ? new ResourceLocation(Tags.MODID, "blocks/forgefluid/gas_default") :
-                new ResourceLocation(Tags.MODID, "blocks/forgefluid/fluid_default_still");
-        if (fluid.hasTrait(FT_Viscous.class))
-            defaultTexture = new ResourceLocation(Tags.MODID, "blocks/forgefluid/fluid_viscous_default_still");
+        // Default textures if a custom one is not found. Gaseous fluids share a single static (non-animated)
+        // fallback sprite for both roles - that's fine, it's not animated so there's no per-role frame state
+        // to conflict over. Liquid/viscous fallbacks are animated strips though, and MUST be two genuinely
+        // distinct ResourceLocations (still != flowing) even though they're visually identical copies of each
+        // other: registering a Fluid with the exact same sprite for both getStill()/getFlowing() was crashing
+        // LoliASM's dynamic-bucket icon baking (TextureAtlasSprite.getFrameTextureData -> FramesTextureData.get
+        // throwing IndexOutOfBoundsException, "Index 0 out of bounds for length 0") for every fluid that fell
+        // back to this path with no dedicated forgefluid texture of its own (oil being the one a player actually
+        // hit in practice, but any other viscous/liquid fluid without its own forgefluid<name>_still/_flowing
+        // pair would hit it identically the moment its bucket got rendered).
+        ResourceLocation defaultTextureStill;
+        ResourceLocation defaultTextureFlowing;
+        if (fluid.hasTrait(FT_Gaseous.class)) {
+            defaultTextureStill = new ResourceLocation(Tags.MODID, "blocks/forgefluid/gas_default");
+            defaultTextureFlowing = defaultTextureStill;
+        } else if (fluid.hasTrait(FT_Viscous.class)) {
+            defaultTextureStill = new ResourceLocation(Tags.MODID, "blocks/forgefluid/fluid_viscous_default_still");
+            defaultTextureFlowing = new ResourceLocation(Tags.MODID, "blocks/forgefluid/fluid_viscous_default_flowing");
+        } else {
+            defaultTextureStill = new ResourceLocation(Tags.MODID, "blocks/forgefluid/fluid_default_still");
+            defaultTextureFlowing = new ResourceLocation(Tags.MODID, "blocks/forgefluid/fluid_default_flowing");
+        }
 
         // Try loading the custom texture
         if(FMLCommonHandler.instance().getSide() == Side.CLIENT) {
@@ -1118,14 +1135,14 @@ public class Fluids {
             try (IResource _ = resourceManager.getResource(textureStill)) {
                 // noop
             } catch (IOException e) {
-                textureStill = defaultTexture;
+                textureStill = defaultTextureStill;
                 MainRegistry.logger.info("[NTM Fluid<=>ForgeFluid Compat] Forge Fluid texture not found for: {}. Using default tinted",
                         fluid.getName());
             }
             try (IResource _ = resourceManager.getResource(textureFlowing)) {
                 // noop
             } catch (IOException e) {
-                textureFlowing = defaultTexture;
+                textureFlowing = defaultTextureFlowing;
             }
         }
         registerForgeFluidCompat(fluid, textureStill, textureFlowing, fluid.getColor());
@@ -1157,7 +1174,7 @@ public class Fluids {
 
     private static void registerForgeFluidCompat(FluidType fluid, ResourceLocation textureStill, ResourceLocation textureFlowing, int color) {
         Fluid compatFluid = new FluidNTM(fluid.getFFName(),
-                textureStill, textureFlowing, color)
+                textureStill, textureFlowing, color, fluid)
                 .setTemperature(fluid.temperature + 273) // Fluid#setTemperature accepts Kelvin, not Celsius
                 .setColor(color)
                 .setDensity(1000)

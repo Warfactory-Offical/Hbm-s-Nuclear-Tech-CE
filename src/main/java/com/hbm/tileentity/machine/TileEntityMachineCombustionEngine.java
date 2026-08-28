@@ -2,6 +2,8 @@ package com.hbm.tileentity.machine;
 
 import com.hbm.api.energymk2.IEnergyProviderMK2;
 import com.hbm.api.fluid.IFluidStandardTransceiver;
+import com.hbm.api.redstoneoverradio.IRORInteractive;
+import com.hbm.api.redstoneoverradio.IRORValueProvider;
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.handler.CompatHandler;
 import com.hbm.interfaces.AutoRegister;
@@ -57,7 +59,9 @@ public class TileEntityMachineCombustionEngine extends TileEntityMachinePollutin
         IGUIProvider,
         SimpleComponent,
         CompatHandler.OCComponent,
-        IFluidCopiable, IConnectionAnchors {
+        IFluidCopiable, IConnectionAnchors,
+        IRORValueProvider,
+        IRORInteractive {
 
   public boolean isOn = false;
   public static long maxPower = 2_500_000;
@@ -528,5 +532,54 @@ public class TileEntityMachineCombustionEngine extends TileEntityMachinePollutin
       case ("getInfo") -> getInfo(context, args);
       default -> throw new NoSuchMethodException();
     };
+  }
+
+  @Override
+  public String[] getFunctionInfo() {
+    return new String[] {
+      PREFIX_VALUE + "state",
+      PREFIX_VALUE + "throttle",
+      PREFIX_VALUE + "power",
+      PREFIX_VALUE + "fuel",
+      PREFIX_VALUE + "efficiency",
+      PREFIX_FUNCTION + "setstate" + NAME_SEPARATOR + "state",
+      PREFIX_FUNCTION + "setthrottle" + NAME_SEPARATOR + "throttle"
+    };
+  }
+
+  @Override
+  public String provideRORValue(String name) {
+    if ((PREFIX_VALUE + "state").equals(name)) return "" + (isOn ? 1 : 0);
+    if ((PREFIX_VALUE + "throttle").equals(name)) return "" + setting;
+    if ((PREFIX_VALUE + "power").equals(name)) return "" + power;
+    if ((PREFIX_VALUE + "fuel").equals(name)) return "" + tank.getFill();
+    if ((PREFIX_VALUE + "efficiency").equals(name)) {
+      ItemStack stack = inventory.getStackInSlot(2);
+      if (!stack.isEmpty()
+          && stack.getItem() == ModItems.piston_set
+          && tank.getTankType().hasTrait(FT_Combustible.class)) {
+        ItemPistons.EnumPistonType piston =
+            EnumUtil.grabEnumSafely(ItemPistons.EnumPistonType.VALUES, stack.getItemDamage());
+        FT_Combustible trait = tank.getTankType().getTrait(FT_Combustible.class);
+        return "" + (int) Math.round(piston.eff[trait.getGrade().ordinal()] * 100);
+      }
+      return "0";
+    }
+    return null;
+  }
+
+  @Override
+  public String runRORFunction(String name, String[] params) {
+    if ((PREFIX_FUNCTION + "setstate").equals(name) && params.length > 0) {
+      this.isOn = IRORInteractive.parseInt(params[0], 0, 1) == 1;
+      this.markDirty();
+      return null;
+    }
+    if ((PREFIX_FUNCTION + "setthrottle").equals(name) && params.length > 0) {
+      this.setting = IRORInteractive.parseInt(params[0], 0, 30);
+      this.markDirty();
+      return null;
+    }
+    return null;
   }
 }

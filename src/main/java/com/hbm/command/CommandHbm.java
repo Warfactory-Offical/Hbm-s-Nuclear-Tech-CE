@@ -2,7 +2,6 @@ package com.hbm.command;
 
 import com.google.common.collect.Lists;
 import com.hbm.Tags;
-import com.hbm.blocks.ModBlocks;
 import com.hbm.handler.HbmShaderManager2;
 import com.hbm.main.ResourceManager;
 import com.hbm.main.client.NTMClientRegistry;
@@ -10,6 +9,7 @@ import com.hbm.render.GLCompat;
 import com.hbm.saveddata.TomSaveData;
 import com.hbm.world.*;
 import com.hbm.world.dungeon.LibraryDungeon;
+import com.hbm.world.feature.LanternBehemoth;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.shader.Framebuffer;
@@ -95,35 +95,6 @@ public class CommandHbm extends CommandBase {
 					Minecraft.getMinecraft().addScheduledTask(() -> {
 						ResourceManager.loadAnimatedModels();
 						ResourceManager.lit_particles = ResourceManager.loadLitParticlesShader();
-
-						ResourceManager.gluon_beam = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/gluon_beam"))
-								.withUniforms(shader -> {
-									GLCompat.activeTexture(GLCompat.GL_TEXTURE0 + 3);
-									Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.noise_1);
-									shader.uniform1i("noise_1", 3);
-									GLCompat.activeTexture(GLCompat.GL_TEXTURE0 + 4);
-									Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.noise_2);
-									shader.uniform1i("noise_1", 4);
-									GLCompat.activeTexture(GLCompat.GL_TEXTURE0);
-
-									float time = (System.currentTimeMillis() % 10000000) / 1000F;
-									shader.uniform1f("time", time);
-								});
-
-						ResourceManager.gluon_spiral = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/gluon_spiral"))
-								.withUniforms(shader -> {
-									//Well, I accidentally uniformed the same noise sampler twice. That explains why the second noise didn't work.
-									GLCompat.activeTexture(GLCompat.GL_TEXTURE0+3);
-									Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.noise_1);
-									shader.uniform1i("noise_1", 3);
-									GLCompat.activeTexture(GLCompat.GL_TEXTURE0+4);
-									Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.noise_2);
-									shader.uniform1i("noise_1", 4);
-									GLCompat.activeTexture(GLCompat.GL_TEXTURE0);
-
-									float time = (System.currentTimeMillis() % 10000000) / 1000F;
-									shader.uniform1f("time", time);
-								});
 
 						//Drillgon200: Did I need a shader for this? No, not really, but it's somewhat easier to create a sin wave pattern programmatically than to do it in paint.net.
 						ResourceManager.tau_ray = HbmShaderManager2.loadShader(new ResourceLocation(Tags.MODID, "shaders/tau_ray"));
@@ -305,7 +276,9 @@ public class CommandHbm extends CommandBase {
 
             switch (args[1]) {
                 case "antenna" -> Antenna.INSTANCE.generate(world, rand, genPos, force);
-                case "dud" -> new Dud().generate(world, rand, genPos);
+                case "dud" -> Dud.INSTANCE.generate(world, rand, genPos, force);
+                case "meteorite" -> MeteoriteStructure.INSTANCE.generate(world, rand, genPos, force);
+                case "lantern" -> LanternBehemoth.INSTANCE.generate(world, rand, genPos, force);
                 case "barrel" -> Barrel.INSTANCE.generate(world, rand, genPos, force);
                 case "satellite" -> Satellite.INSTANCE.generate(world, rand, genPos, force);
                 case "spaceship" -> Spaceship.INSTANCE.generate(world, rand, genPos, force);

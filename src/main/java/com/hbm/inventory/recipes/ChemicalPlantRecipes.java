@@ -243,6 +243,23 @@ public class ChemicalPlantRecipes extends GenericRecipes<GenericRecipe> {
                 .inputFluids(new FluidStack(Fluids.WATER, 1000))
                 .outputItems(new ItemStack(ModBlocks.deco_rusty_steel, 8)));
 
+        this.register(new GenericRecipe("chem.biosolidfuel").setupNamed(40, 100)
+                .inputItems(new RecipesCommon.ComparableStack(ModItems.biomass_compressed, 4))
+                .outputItems(new ItemStack(ModItems.solid_fuel, 1)).setPools(GenericRecipes.POOL_PREFIX_ALT + ".biosolidfuel"));
+
+        this.register(new GenericRecipe("chem.biooilsolidfuel").setupNamed(40, 100)
+                .inputItems(new RecipesCommon.ComparableStack(ModItems.biomass_compressed, 2))
+                .inputFluids(new FluidStack(Fluids.HEATINGOIL, 100))
+                .outputItems(new ItemStack(ModItems.solid_fuel, 1)).setPools(GenericRecipes.POOL_PREFIX_ALT + ".biosolidfuel"));
+
+        this.register(new GenericRecipe("chem.oilelectrodes").setupNamed(600, 100)
+                .inputFluids(new FluidStack(Fluids.HEATINGOIL, 4_000))
+                .outputItems(new ItemStack(ModItems.arc_electrode, 1)).setPools(GenericRecipes.POOL_PREFIX_ALT + ".electrodes"));
+
+        this.register(new GenericRecipe("chem.lubeelectrodes").setupNamed(600, 100)
+                .inputFluids(new FluidStack(Fluids.LUBRICANT, 8_000))
+                .outputItems(new ItemStack(ModItems.arc_electrode, 1)).setPools(GenericRecipes.POOL_PREFIX_ALT + ".electrodes"));
+
         /// ACIDS ///
         this.register(new GenericRecipe("chem.peroxide").setup(50, 100)
                 .inputFluids(new FluidStack(Fluids.WATER, 1_000))
@@ -262,10 +279,10 @@ public class ChemicalPlantRecipes extends GenericRecipes<GenericRecipe> {
                 .inputFluids(new FluidStack(Fluids.AIR, 8_000), new FluidStack(Fluids.WATER, 2_000))
                 .outputFluids(new FluidStack(Fluids.NITRIC_ACID, 1_000)).setPools(GenericRecipes.POOL_PREFIX_ALT + ".birkeland"));
 
-        this.register(new GenericRecipe("chem.schrabidic").setup(100, 5_000)
+        this.register(new GenericRecipe("chem.schrabidic").setup(60, 5_000)
                 .inputItems(new RecipesCommon.ComparableStack(ModItems.pellet_charged))
-                .inputFluids(new FluidStack(Fluids.SAS3, 8000), new FluidStack(Fluids.PEROXIDE, 6000))
-                .outputFluids(new FluidStack(Fluids.SCHRABIDIC, 16000)));
+                .inputFluids(new FluidStack(Fluids.SAS3, 2000), new FluidStack(Fluids.PEROXIDE, 2000))
+                .outputFluids(new FluidStack(Fluids.SCHRABIDIC, 2000)));
 
         this.register(new GenericRecipe("chem.schrabidate").setup(150, 5_000)
                 .inputItems(new RecipesCommon.OreDictStack(IRON.dust()))

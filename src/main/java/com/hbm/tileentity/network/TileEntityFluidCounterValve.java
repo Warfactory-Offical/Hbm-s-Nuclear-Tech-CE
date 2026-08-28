@@ -32,11 +32,14 @@ public class TileEntityFluidCounterValve extends TileEntityPipeBaseNT implements
         super.update();
 
         if (!world.isRemote) {
-            if (node != null && node.net != null && getType() != Fluids.NONE) {
-                counter += node.net.fluidTracker;
-            }
-
+            updateCounter();
             networkPackNT(25);
+        }
+    }
+
+    private void updateCounter() {
+        if (node != null && node.net != null && getType() != Fluids.NONE) {
+            counter += node.net.fluidTracker;
         }
     }
 
@@ -106,9 +109,10 @@ public class TileEntityFluidCounterValve extends TileEntityPipeBaseNT implements
     @Override
     public String runRORFunction(String name, String[] params) {
         if (name.equals(PREFIX_FUNCTION + "reset")) {
+            updateCounter();
             counter = 0;
             markDirty();
-        } else if (name.equals(PREFIX_FUNCTION + "setState")) {
+        } else if (name.equals(PREFIX_FUNCTION + "setState") && params.length > 0) {
             setState(IRORInteractive.parseInt(params[0], 0, 1));
         }
         return null;
@@ -134,6 +138,7 @@ public class TileEntityFluidCounterValve extends TileEntityPipeBaseNT implements
     @Callback(direct = true)
     @Optional.Method(modid = "opencomputers")
     public Object[] resetCounter(Context context, Arguments args) {
+        updateCounter();
         counter = 0;
         markDirty();
         return new Object[]{};

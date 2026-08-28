@@ -27,6 +27,8 @@ public final class HbmCoreTransformer implements IClassTransformer {
 //                    ResourceAccessTransformer.transform(name, transformedName, basicClass);
             case BlockDummyAirTransformer.TARGET ->
                     BlockDummyAirTransformer.transform(name,transformedName,basicClass);
+            case CodeChickenLibNetworkTransformer.TARGET ->
+                    CodeChickenLibNetworkTransformer.transform(name,transformedName,basicClass);
             default -> basicClass;
         };
     }

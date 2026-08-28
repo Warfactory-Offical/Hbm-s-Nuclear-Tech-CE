@@ -1,11 +1,8 @@
 package com.hbm.packet.toclient;
 
 import com.hbm.lib.internal.MethodHandleHelper;
-import com.hbm.lib.ModDamageSource;
 import com.hbm.main.MainRegistry;
-import com.hbm.main.ModEventHandlerClient;
 import com.hbm.main.ResourceManager;
-import com.hbm.particle.DisintegrationParticleHandler;
 import com.hbm.particle.ParticleBlood;
 import com.hbm.particle.ParticleSlicedMob;
 import com.hbm.particle.bullet_hit.EntityHitDataHandler;
@@ -13,7 +10,7 @@ import com.hbm.particle.bullet_hit.EntityHitDataHandler.BulletHit;
 import com.hbm.particle.bullet_hit.ParticleMobGib;
 import com.hbm.particle.helper.HbmEffectNT;
 import com.hbm.physics.RigidBody;
-import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.util.Vec3NT;
 import com.hbm.render.util.ModelRendererUtil;
 import com.hbm.render.util.Triangle;
 import io.netty.buffer.ByteBuf;
@@ -24,7 +21,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -97,26 +93,6 @@ public class PacketSpecialDeath implements IMessage {
 				Entity ent = Minecraft.getMinecraft().world.getEntityByID(m.entId);
 				if(ent instanceof EntityLivingBase livingBase){
 					switch(m.effectId){
-					case 0:
-						ent.setDead();
-						ModEventHandlerClient.specialDeathEffectEntities.add(livingBase);
-						DisintegrationParticleHandler.spawnGluonDisintegrateParticles(ent);
-						break;
-					case 1:
-						livingBase.hurtTime = 2;
-						try {
-							SoundEvent s = (SoundEvent) rGetHurtSound.invokeExact(livingBase, ModDamageSource.radiation);
-							Minecraft.getMinecraft().world.playSound(ent.posX, ent.posY, ent.posZ, s, SoundCategory.MASTER, 1, 1, false);
-						} catch(Throwable e) {
-                            MainRegistry.logger.catching(e);
-                            throw new RuntimeException(e);
-						}
-						break;
-					case 2:
-						ent.setDead();
-						ModEventHandlerClient.specialDeathEffectEntities.add(livingBase);
-						DisintegrationParticleHandler.spawnLightningDisintegrateParticles(ent, new Vec3(m.auxData[0], m.auxData[1], m.auxData[2]));
-						break;
 					case 3:
 						ent.setDead();
 						//ModEventHandlerClient.specialDeathEffectEntities.add((EntityLivingBase) ent);
@@ -197,7 +173,7 @@ public class PacketSpecialDeath implements IMessage {
 								float dist = (float) b.pos.distanceTo(bodies[i].globalCentroid.toVec3d());
 								float falloff = pointLightFalloff(1, dist);
 								float regular = 1.5F*falloff;
-								bodies[i].impulseVelocityDirect(new Vec3(b.direction.scale(regular)), new Vec3(b.pos));
+								bodies[i].impulseVelocityDirect(new Vec3NT(b.direction.scale(regular)), new Vec3NT(b.pos));
 							}
 							bodies[i].angularVelocity = bodies[i].angularVelocity.min(10).max(-10);
 							Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleMobGib(ent.world, bodies[i], tex, displayLists[i]));

@@ -34,7 +34,6 @@ import com.hbm.render.GuiCTMWarning;
 import com.hbm.render.entity.RenderBoat;
 import com.hbm.render.icon.RegistrationUtils;
 import com.hbm.render.item.BakedModelNoFPV;
-import com.hbm.render.item.FancyMissingModelPerspective;
 import com.hbm.render.item.TEISRBase;
 import com.hbm.render.item.WrappedTEISRModel;
 import com.hbm.render.item.weapon.B92BakedModel;
@@ -346,6 +345,8 @@ public class NTMClientRegistry {
         RegistrationUtils.registerInFolder(map,"textures/blocks/forgefluid");
 
 
+        map.registerSprite(new ResourceLocation(Tags.MODID, "blocks/lava_gray"));
+
         map.registerSprite(new ResourceLocation(Tags.MODID, "items/fluid_identifier_overlay"));
         map.registerSprite(new ResourceLocation(Tags.MODID, "items/fluid_barrel_overlay"));
         map.registerSprite(new ResourceLocation(Tags.MODID, "items/fluid_tank_overlay"));
@@ -356,6 +357,8 @@ public class NTMClientRegistry {
 
     @SubscribeEvent
     public void textureStitchPost(TextureStitchEvent.Post evt) {
+        RenderFoundryTank.lava = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/lava_gray");
+
         RenderMultiblock.structLauncher = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/struct_launcher");
         RenderMultiblock.structScaffold = evt.getMap().getAtlasSprite(Tags.MODID + ":blocks/struct_scaffold");
 
@@ -403,10 +406,6 @@ public class NTMClientRegistry {
         }
 
         teisr.itemModel = model;
-        if (teisr.useFMMPerspective(owned.item)) {
-            reg.putObject(targetLocation, new FancyMissingModelPerspective(teisr, model));
-            return;
-        }
         if (owned.useIdentityTransform) {
             reg.putObject(targetLocation, new BakedModelNoFPV(teisr, model));
             return;
@@ -545,8 +544,8 @@ public class NTMClientRegistry {
             for (int i = 0; i < TrappedBrick.Trap.VALUES.length; i++)
                 ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(item.getRegistryName(), "inventory"));
         } else if (item instanceof ItemGuideBook) {
-            for (int i = 0; i < ItemGuideBook.BookType.VALUES.length; i++)
-                ModelLoader.setCustomModelResourceLocation(item, i, new ModelResourceLocation(item.getRegistryName(), "inventory"));
+            for (ItemGuideBook.BookType type : ItemGuideBook.BookType.VALUES)
+                ModelLoader.setCustomModelResourceLocation(item, type.meta, new ModelResourceLocation(item.getRegistryName(), "inventory"));
         } else if (item instanceof ItemHot) {
             ModelResourceLocation hotModel = new ModelResourceLocation(new ResourceLocation(Tags.MODID, "items/" + item.getRegistryName().getPath()), "inventory");
             for (int i = 0; i < 16; i++)

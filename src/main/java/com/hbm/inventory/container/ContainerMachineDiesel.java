@@ -23,7 +23,7 @@ public class ContainerMachineDiesel extends Container {
                                                                               s -> Library.isStackDrainableForTank(s,
                                                                                       generator.tank))
                                                                       .rule(2, 3, Library::isChargeableBattery)
-                                                                      .rule(3, 5,
+                                                                      .rule(3, 4,
                                                                               s -> s.getItem() instanceof IItemFluidIdentifier)
                                                                       .ruleDispatchMode(
                                                                               TransferStrategy.RuleDispatchMode.FALLTHROUGH_ON_FAILURE)
@@ -35,23 +35,22 @@ public class ContainerMachineDiesel extends Container {
 
         generator = tedf;
 
-        this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 0, 44, 17));
-		this.addSlotToContainer(SlotFiltered.takeOnly(tedf.inventory, 1, 44, 53));
-		this.addSlotToContainer(new SlotBattery(tedf.inventory, 2, 116, 53));
-		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 3, 8, 17));
-		this.addSlotToContainer(SlotFiltered.takeOnly(tedf.inventory, 4, 8, 53));
+        this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 0, 17, 17));
+		this.addSlotToContainer(SlotFiltered.takeOnly(tedf.inventory, 1, 17, 53));
+		this.addSlotToContainer(new SlotBattery(tedf.inventory, 2, 141, 71));
+		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 3, 35, 71));
 
         for(int i = 0; i < 3; i++)
 		{
 			for(int j = 0; j < 9; j++)
 			{
-				this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+				this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 8 + j * 18, 121 + i * 18));
 			}
 		}
 
         for(int i = 0; i < 9; i++)
 		{
-			this.addSlotToContainer(new Slot(invPlayer, i, 8 + i * 18, 142));
+			this.addSlotToContainer(new Slot(invPlayer, i, 8 + i * 18, 179));
 		}
 	}
 

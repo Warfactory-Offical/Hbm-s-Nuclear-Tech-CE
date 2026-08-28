@@ -68,6 +68,36 @@ public class StackCache {
         return originalAmount - amount;
     }
 
+    /** Inserts items into the network, returns how many could not be placed */
+    public long addItemsAndReturnQuantity(ItemStack stack, long amount) {
+        CacheSlot cache = getSlotFromStack(stack);
+
+        if(cache != null) for(SlotMonitor monitor : cache.monitors) {
+            ItemStack original = monitor.parent.getSlotAt(monitor.index);
+            if(getStackIdentity(original.getItem(), original.getItemDamage(), original.getTagCompound()) != getStackIdentity(stack.getItem(), stack.getItemDamage(), stack.getTagCompound())) continue;
+            amount = monitor.parent.addItem(monitor.index, amount);
+            if(amount <= 0) break;
+        }
+
+        if(amount > 0) {
+            CacheSlot nullCache = this.cacheSlots.get(getNullIdentity());
+            if(nullCache != null) {
+                for(SlotMonitor monitor : nullCache.monitors) {
+                    if(!monitor.parent.allowTypeSetting()) continue;
+                    if(!monitor.parent.getSlotAt(monitor.index).isEmpty()) continue;
+                    amount = monitor.parent.setupType(monitor.index, stack, amount);
+                    if(amount <= 0) break;
+                }
+            }
+        }
+
+        return amount;
+    }
+
+    public static long getNullIdentity() {
+        return 0;
+    }
+
     public void dissolveCache() {
         for(Entry<Long, CacheSlot> cacheEntry : cacheSlots.entrySet()) {
             cacheEntry.getValue().destroy();

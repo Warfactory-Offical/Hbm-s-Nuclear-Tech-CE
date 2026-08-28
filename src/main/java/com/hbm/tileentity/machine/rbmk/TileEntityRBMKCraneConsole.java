@@ -15,6 +15,7 @@ import com.hbm.tileentity.TileEntityMachineBase;
 import io.netty.buffer.ByteBuf;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import li.cil.oc.api.machine.Arguments;
@@ -621,6 +622,21 @@ public class TileEntityRBMKCraneConsole extends TileEntityMachineBase implements
         if (setUpCrane)
             return new Object[] {-posLeft, posFront};
         return new Object[] {"No crane found"};
+    }
+
+    @Callback(direct = true, doc = "getRodInfo(); returns a table with the loaded rod's skin/core temperature, enrichment, xenon poison and name")
+    @Optional.Method(modid = "opencomputers")
+    public Object[] getRodInfo(Context context, Arguments args) {
+        ItemStack stack = inventory.getStackInSlot(0);
+        if(stack.isEmpty() || !(stack.getItem() instanceof ItemRBMKRod)) return new Object[] {false, "No rod loaded"};
+
+        LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+        map.put("coreSkinTemp", ItemRBMKRod.getHullHeat(stack));
+        map.put("coreTemp", ItemRBMKRod.getCoreHeat(stack));
+        map.put("enrichment", ItemRBMKRod.getEnrichment(stack));
+        map.put("xenon", ItemRBMKRod.getPoisonLevel(stack));
+        map.put("rodName", stack.getItem().getTranslationKey());
+        return new Object[] {map};
     }
 
     @Callback(direct = true, doc = "getDepletion(); returns enrichment of loaded rod")

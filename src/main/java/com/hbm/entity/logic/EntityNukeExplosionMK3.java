@@ -13,6 +13,8 @@ import com.hbm.main.AdvancementManager;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.particle.helper.HbmEffectNT;
+import com.hbm.saveddata.satellites.SatelliteDetector;
+import com.hbm.saveddata.satellites.SatelliteDetector.BurstIntensity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -182,10 +184,11 @@ public class EntityNukeExplosionMK3 extends EntityExplosionChunkloading {
 					dry.detonator = detonator;
 				}
 			}
-        	
+
+        	SatelliteDetector.reportEvent(world, SatelliteDetector.DURATION_HIGH, BurstIntensity.HIGH, posX, posZ);
         	this.did = true;
         }
-        
+
         speed += 1;	//increase speed to keep up with expansion
         
         boolean flag = false;

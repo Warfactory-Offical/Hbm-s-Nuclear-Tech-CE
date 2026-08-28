@@ -41,10 +41,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import com.hbm.api.redstoneoverradio.IRORInteractive;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
 @AutoRegister
-public class TileEntityCoreEmitter extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2,  ILaserable, IFluidStandardReceiver, IGUIProvider, SimpleComponent, CompatHandler.OCComponent {
+public class TileEntityCoreEmitter extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2,  ILaserable, IFluidStandardReceiver, IGUIProvider, SimpleComponent, CompatHandler.OCComponent, IRORInteractive {
 
 	public long power;
 	public static final long maxPower = 1000000000L;
@@ -355,4 +356,44 @@ public class TileEntityCoreEmitter extends TileEntityMachineBase implements ITic
 		return new GUICoreEmitter(player, this);
 	}
 
+
+	@Override
+	public String[] getFunctionInfo() {
+		return new String[] {
+				PREFIX_FUNCTION + "setpower" + NAME_SEPARATOR + "percent",
+				PREFIX_FUNCTION + "toggle",
+				PREFIX_FUNCTION + "switch" + NAME_SEPARATOR + "on/off"
+		};
+	}
+
+	@Override
+	public String runRORFunction(String name, String[] params) {
+
+		if((PREFIX_FUNCTION + "setpower").equals(name) && params.length > 0) {
+			this.watts = IRORInteractive.parseInt(params[0], 0, 100);
+			this.markDirty();
+			return null;
+		}
+
+		if((PREFIX_FUNCTION + "toggle").equals(name)) {
+			this.isOn = !this.isOn;
+			this.markDirty();
+			return null;
+		}
+
+		if((PREFIX_FUNCTION + "switch").equals(name) && params.length > 0) {
+			if("on".equals(params[0])) {
+				this.isOn = true;
+				this.markDirty();
+				return null;
+			}
+			if("off".equals(params[0])) {
+				this.isOn = false;
+				this.markDirty();
+				return null;
+			}
+		}
+
+		return null;
+	}
 }

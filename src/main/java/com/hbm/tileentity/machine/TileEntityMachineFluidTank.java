@@ -150,6 +150,16 @@ public class TileEntityMachineFluidTank extends TileEntityMachineBase implements
                     }
                     return null;
                 }
+
+                @Override
+                protected boolean canFillExternally() {
+                    return mode == 0 || mode == 1;
+                }
+
+                @Override
+                protected boolean canDrainExternally() {
+                    return mode == 2 || mode == 1;
+                }
             });
         }
         return super.getCapability(capability, facing);

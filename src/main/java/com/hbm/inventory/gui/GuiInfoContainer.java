@@ -334,7 +334,7 @@ public abstract class GuiInfoContainer extends GuiContainer {
 
   /** Draws item with label, excludes all the GL state setup */
   protected void drawItemStack(ItemStack stack, int x, int y, String label) {
-    GL11.glTranslatef(0.0F, 0.0F, 32.0F);
+    GlStateManager.translate(0.0F, 0.0F, 32.0F);
     this.zLevel = 200.0F;
     itemRender.zLevel = 200.0F;
     FontRenderer font;
@@ -356,15 +356,15 @@ public abstract class GuiInfoContainer extends GuiContainer {
   }
 
   public void renderItem(ItemStack stack, int x, int y, float layer) {
-    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+    GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
     RenderHelper.enableGUIStandardItemLighting();
     OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) 240, (float) 240);
-    GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+    GlStateManager.enableRescaleNormal();
     itemRender.zLevel = layer;
     itemRender.renderItemAndEffectIntoGUI(stack, guiLeft + x, guiTop + y);
     itemRender.zLevel = 0.0F;
-    GL11.glEnable(GL11.GL_ALPHA_TEST);
-    GL11.glDisable(GL11.GL_LIGHTING);
+    GlStateManager.enableAlpha();
+    GlStateManager.disableLighting();
   }
 
   protected boolean checkClick(int x, int y, int left, int top, int sizeX, int sizeY) {

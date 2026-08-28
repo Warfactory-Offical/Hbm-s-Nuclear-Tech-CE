@@ -3,6 +3,7 @@ package com.hbm.render.model;
 import com.hbm.render.loader.HFRWavefrontObject;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
@@ -26,6 +27,7 @@ public class StaticMetaWavefrontBakedModel extends AbstractWavefrontBakedModel {
     private final float uScale;
     private final float vScale;
     private final boolean doubleSided;
+    private final float[][] worldTranslateByMeta;
     @SuppressWarnings("unchecked")
     private final List<BakedQuad>[] cache;
 
@@ -34,8 +36,19 @@ public class StaticMetaWavefrontBakedModel extends AbstractWavefrontBakedModel {
                                          boolean doubleSided, float uScale, float vScale,
                                          float preTranslateX, float preTranslateY, float preTranslateZ,
                                          float translateX, float translateY, float translateZ) {
+        this(model, sprite, yawsByMeta, partNames, roll, pitch, doubleSided, uScale, vScale,
+                preTranslateX, preTranslateY, preTranslateZ, translateX, translateY, translateZ, null);
+    }
+
+    public StaticMetaWavefrontBakedModel(HFRWavefrontObject model, TextureAtlasSprite sprite, float[] yawsByMeta,
+                                         @Nullable String[] partNames, float roll, float pitch,
+                                         boolean doubleSided, float uScale, float vScale,
+                                         float preTranslateX, float preTranslateY, float preTranslateZ,
+                                         float translateX, float translateY, float translateZ,
+                                         float[] @Nullable [] worldTranslateByMeta) {
         super(model, DefaultVertexFormats.BLOCK, 1.0F, translateX, translateY, translateZ,
-                BakedModelTransforms.forDeco(BakedModelTransforms.standardBlock()));
+                ItemCameraTransforms.DEFAULT);
+        this.worldTranslateByMeta = worldTranslateByMeta;
         this.sprite = sprite;
         this.yawsByMeta = Arrays.copyOf(yawsByMeta, yawsByMeta.length);
         this.partNames = partNames == null || partNames.length == 0 ? null : new LinkedHashSet<>(
@@ -72,16 +85,31 @@ public class StaticMetaWavefrontBakedModel extends AbstractWavefrontBakedModel {
             return quads;
         }
 
-        quads = Collections.unmodifiableList(buildQuads(yaw));
+        quads = Collections.unmodifiableList(buildQuads(yaw, meta));
         cache[meta] = quads;
         return quads;
     }
 
-    private List<BakedQuad> buildQuads(float yaw) {
+    private float[] worldTranslate(int meta) {
+        if (worldTranslateByMeta == null || meta < 0 || meta >= worldTranslateByMeta.length
+                || worldTranslateByMeta[meta] == null) {
+            return null;
+        }
+        return worldTranslateByMeta[meta];
+    }
+
+    private List<BakedQuad> buildQuads(float yaw, int meta) {
         float[] rotatedPreTranslate = GeometryBakeUtil.rotateY(preTranslateX, preTranslateY, preTranslateZ, yaw);
         float extraTx = 0.5F + rotatedPreTranslate[0];
         float extraTy = rotatedPreTranslate[1];
         float extraTz = 0.5F + rotatedPreTranslate[2];
+
+        float[] world = worldTranslate(meta);
+        if (world != null) {
+            extraTx += world[0];
+            extraTy += world[1];
+            extraTz += world[2];
+        }
 
         List<FaceGeometry> geometry = buildGeometry(partNames, roll, pitch, yaw, true, false, extraTx, extraTy,
                 extraTz);
@@ -117,6 +145,14 @@ public class StaticMetaWavefrontBakedModel extends AbstractWavefrontBakedModel {
         float extraTx = 0.5F + rotatedPreTranslate[0];
         float extraTy = rotatedPreTranslate[1];
         float extraTz = 0.5F + rotatedPreTranslate[2];
+
+        float[] world = worldTranslate(meta);
+        if (world != null) {
+            extraTx += world[0];
+            extraTy += world[1];
+            extraTz += world[2];
+        }
+
         float[] bounds = computeGeometryBounds(partNames, roll, pitch, yaw, false, extraTx, extraTy, extraTz);
         if (bounds == null) {
             return null;

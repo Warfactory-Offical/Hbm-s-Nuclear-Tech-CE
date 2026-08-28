@@ -9,7 +9,7 @@ import com.hbm.interfaces.IConstantRenderer;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.particle.helper.HbmEffectNT;
-import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.util.Vec3NT;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -40,13 +40,13 @@ public class EntityDeathBlast extends Entity implements IConstantRenderer {
 				int count = 100;
 				for(int i = 0; i < count; i++) {
 					
-					Vec3 vec = Vec3.createVectorHelper(0.2, 0, 0);
-					vec.rotateAroundY((float)(2 * Math.PI * i / (float)count));
+					Vec3NT vec = Vec3NT.createVectorHelper(0.2, 0, 0);
+					vec.rotateYawSelf((float)(2 * Math.PI * i / (float)count));
 					
 					EntityBulletBase laser = new EntityBulletBase(world, BulletConfigSyncingUtil.MASKMAN_BOLT);
 					laser.setPosition(posX, posY + 2, posZ);
-					laser.motionX = vec.xCoord;
-					laser.motionZ = vec.zCoord;
+					laser.motionX = vec.x;
+					laser.motionZ = vec.z;
 					laser.motionY = -0.01;
 					laser.shooter = detonator;
 					world.spawnEntity(laser);

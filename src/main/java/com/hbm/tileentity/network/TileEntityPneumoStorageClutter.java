@@ -162,6 +162,37 @@ public class TileEntityPneumoStorageClutter extends TileEntityMachineBase implem
     }
 
     @Override
+    public boolean allowTypeSetting() {
+        return true;
+    }
+
+    @Override
+    public long addItem(int index, long amount) {
+        ItemStack stack = this.inventory.getStackInSlot(index);
+
+        if (!stack.isEmpty()) {
+            int capacity = Math.min(stack.getMaxStackSize(), this.inventory.getSlotLimit(index));
+            int toAdd = (int) Math.min(amount, capacity - stack.getCount());
+            stack.grow(toAdd);
+            this.markDirty();
+            return amount - toAdd;
+        }
+
+        return amount;
+    }
+
+    @Override
+    public long setupType(int index, ItemStack zeroStack, long amount) {
+        int capacity = Math.min(zeroStack.getMaxStackSize(), this.inventory.getSlotLimit(index));
+        int finalSize = (int) Math.min(amount, capacity);
+        ItemStack placed = zeroStack.copy();
+        placed.setCount(finalSize);
+        this.inventory.setStackInSlot(index, placed);
+        this.markDirty();
+        return amount - finalSize;
+    }
+
+    @Override
     public boolean isAvailableToCache(StackCache cache) {
         return this.isLoaded && !this.isInvalid();
     }

@@ -95,44 +95,16 @@ public abstract class JetpackBase extends ItemArmorMod {
 
         EntityPlayer player = event.getEntityPlayer();
 
-        RenderPlayer renderer = event.getRenderer();
-        ModelBiped model = renderer.getMainModel();
+        ModelBiped model = event.getRenderer().getMainModel();
         modelJetpack.isSneak = model.isSneak;
 
-        float interp = event.getPartialRenderTick();
-        float yaw = player.prevRenderYawOffset + (player.renderYawOffset - player.prevRenderYawOffset) * interp;
-        float yawWrapped = MathHelper.wrapDegrees(yaw + 180);
         float pitch = player.rotationPitch;
 
         Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation(this.getArmorTexture(armor, event.getEntity(), this.getEquipmentSlot(armor), null)));
 
-        EntityPlayer me = MainRegistry.proxy.me();
-        boolean isMe = player == me;
-        if (!isMe) {
-            GlStateManager.pushMatrix();
-            offset(player, me, interp);
-        }
-        if (player.isElytraFlying()) {
-            GlStateManager.pushMatrix();
-            float h = player.isSneaking() ? 1.1F : 1.4F;
-            GlStateManager.rotate(180, 0, 0, 1);
-            GlStateManager.translate(0, -h, 0);
-            float flyTicks = (float) player.getTicksElytraFlying() + interp;
-            float elytraMult = MathHelper.clamp(flyTicks * flyTicks / 100.0F, 0.0F, 1.0F);
-            GlStateManager.rotate(180.0F - yaw, 0, 1, 0);
-            GlStateManager.rotate(elytraMult * (-90.0F - pitch), 1, 0, 0);
-            GlStateManager.rotate(-(180.0F - yaw), 0, 1, 0);
-            // Redo onArmorRenderEvent transforms
-            GlStateManager.translate(0, h, 0);
-            GlStateManager.rotate(180, 0, 0, 1);
-        }
-        modelJetpack.render(event.getEntityPlayer(), 0.0F, 0.0F, 0, yawWrapped, pitch, 0.0625F);
-        if (player.isElytraFlying()) {
-            GlStateManager.popMatrix();
-        }
-        if (!isMe) {
-            GlStateManager.popMatrix();
-        }
+        GlStateManager.pushMatrix();
+        modelJetpack.render(player, 0.0F, 0.0F, 0.0F, 0.0F, pitch, 0.0625F);
+        GlStateManager.popMatrix();
     }
 
     @Override

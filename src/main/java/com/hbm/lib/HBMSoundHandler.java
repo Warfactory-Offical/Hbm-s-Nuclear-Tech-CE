@@ -220,10 +220,6 @@ public final class HBMSoundHandler {
     public static SoundEvent rocketEngine;
     public static SoundEvent ballsLaser;
     public static SoundEvent dartShoot;
-    public static SoundEvent gluonStart;
-    public static SoundEvent gluonLoop;
-    public static SoundEvent gluonEnd;
-    public static SoundEvent gluonHit;
     public static SoundEvent jetpack;
     public static SoundEvent switchmode1;
     public static SoundEvent switchmode2;
@@ -503,7 +499,7 @@ public final class HBMSoundHandler {
         alarmGambit = register("alarm.gambit");
         revolverShoot = register("weapon.revolverShoot");
         heavyShoot = register("weapon.heavyShoot");
-        schrabidiumShoot = register("weapon.schrabidiumShoot");
+        schrabidiumShoot = register("weapon.schrabidiumshoot");
         revolverShootAlt = register("weapon.revolverShootAlt");
         hkShoot = register("weapon.hkShoot");
         shotgunShoot = register("weapon.shotgunShoot");
@@ -623,10 +619,6 @@ public final class HBMSoundHandler {
         rocketEngine = register("entity.rocketEngine");
         ballsLaser = register("weapon.ballsLaser");
         dartShoot = register("weapon.dartShoot");
-        gluonStart = register("weapon.gluonstart");
-        gluonLoop = register("weapon.gluonloop");
-        gluonEnd = register("weapon.gluonend");
-        gluonHit = register("weapon.gluonhit");
         jetpack = register("weapon.jetpack");
         mukeExplosion = register("weapon.mukeExplosion");
         explosion_medium = register("weapon.explosion_medium");
@@ -670,7 +662,7 @@ public final class HBMSoundHandler {
         groan = register("player.groan");
         ufoBeam = register("entity.ufoBeam");
         ufoBlast = register("entity.ufoBlast");
-        iGeneratorOperate = register("block.igeneratoroperate");
+        iGeneratorOperate = register("block.igeneratorOperate");
         transitionSealOpen = register("block.door.transitionseal");
         siloopen = register("block.door.siloopen");
         siloclose = register("block.door.siloclose");

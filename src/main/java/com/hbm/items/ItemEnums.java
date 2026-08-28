@@ -120,6 +120,12 @@ public class ItemEnums {
         public static final EnumCasingType[] VALUES = values();
     }
 
+    public enum EnumIngotMetal {
+        SCRAP, INGOT, COUNTER, KEY, BEACON, CASING, CLOCKWORK, BAR, DETECTOR;
+
+        public static final EnumIngotMetal[] VALUES = values();
+    }
+
     public enum EnumCircuitType {
         VACUUM_TUBE,
         CAPACITOR,

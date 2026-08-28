@@ -4,6 +4,7 @@ import com.hbm.explosion.ExplosionLarge;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.items.ISatChip;
 import com.hbm.items.ModItems;
+import com.hbm.items.machine.ItemSatellite.EnumSatType;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.main.AdvancementManager;
@@ -107,14 +108,14 @@ public class EntitySoyuz extends Entity {
 						AdvancementManager.grantAchievement(p, AdvancementManager.achSpace);
 				}
 				
-				if(load.getItem() == ModItems.sat_foeq) {
+				if(load.getItem() == ModItems.sat_foeq || (load.getItem() == ModItems.satellite && load.getItemDamage() == EnumSatType.RELAY.ordinal())) {
 					for(EntityPlayer p : world.playerEntities)
 						AdvancementManager.grantAchievement(p, AdvancementManager.achFOEQ);
 				}
-				
+
 				if(load.getItem() instanceof ISatChip) {
 				    int freq = ISatChip.getFreqS(load);
-			    	Satellite.orbit(world, Satellite.getIDFromItem(load.getItem()), freq, posX, posY, posZ);
+			    	Satellite.orbit(world, Satellite.getIDFromStack(load), load, freq, posX, posY, posZ);
 				}
 			}
 		}

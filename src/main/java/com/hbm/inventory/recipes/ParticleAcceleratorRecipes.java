@@ -131,7 +131,7 @@ public class ParticleAcceleratorRecipes extends SerializableRecipe {
         @Nullable
         public ItemStack output2;
 
-        ParticleAcceleratorRecipe(RecipesCommon.@NotNull AStack in1, RecipesCommon.@NotNull AStack in2, int momentum, @NotNull ItemStack out1,
+        public ParticleAcceleratorRecipe(RecipesCommon.@NotNull AStack in1, RecipesCommon.@NotNull AStack in2, int momentum, @NotNull ItemStack out1,
                                   @Nullable ItemStack out2) {
             this.input1 = in1;
             this.input2 = in2;

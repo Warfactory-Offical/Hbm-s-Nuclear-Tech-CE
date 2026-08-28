@@ -1,11 +1,8 @@
 package com.hbm.tileentity;
 
 import com.hbm.blocks.BlockDummyable;
-import com.hbm.blocks.machine.BlockHadronAccess;
 import com.hbm.blocks.machine.MachineDiFurnaceExtension;
-import com.hbm.lib.ForgeDirection;
 import com.hbm.tileentity.machine.TileEntityDiFurnace;
-import com.hbm.tileentity.machine.TileEntityHadron;
 import com.hbm.util.Compat;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -25,11 +22,9 @@ public class TileEntityProxyBase extends TileEntityLoadedBase {
 			this.markDirty();
 		}
 
-		if(this.getBlockType() instanceof BlockDummyable) {
+		if(this.getBlockType() instanceof BlockDummyable dummy) {
 
-			BlockDummyable dummy = (BlockDummyable)this.getBlockType();
-
-			int[] pos = dummy.findCore(world, this.pos.getX(), this.pos.getY(), this.pos.getZ());
+            int[] pos = dummy.findCore(world, this.pos.getX(), this.pos.getY(), this.pos.getZ());
 
 			if(pos != null) {
 
@@ -42,19 +37,6 @@ public class TileEntityProxyBase extends TileEntityLoadedBase {
 
 		/// this spares me the hassle of registering a new child class TE that aims at the right target ///
 		//Drillgon200: Incidentally, it's also a gateway to some very messy code, the very thing this class is supposed to prevent.
-
-		if(this.getBlockType() instanceof BlockHadronAccess) {
-			ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata());
-
-
-			for(int i = 1; i < 3; i++) {
-				TileEntity te = world.getTileEntity(new BlockPos(pos.getX() + dir.offsetX * i, pos.getY() + dir.offsetY * i, pos.getZ() + dir.offsetZ * i));
-
-				if(te instanceof TileEntityHadron) {
-					return te;
-				}
-			}
-		}
 
 		if (this.getBlockType() instanceof MachineDiFurnaceExtension) {
 			TileEntity te = world.getTileEntity(pos.down());

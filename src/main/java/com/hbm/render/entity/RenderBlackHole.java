@@ -9,7 +9,7 @@ import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ClientProxy;
 import com.hbm.render.NTMRenderHelper;
 import com.hbm.render.loader.IModelCustom;
-import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.util.Vec3NT;
 import com.hbm.render.util.NTMBufferBuilder;
 import com.hbm.render.util.NTMImmediate;
 import net.minecraft.client.renderer.GlStateManager;
@@ -102,7 +102,7 @@ public class RenderBlackHole extends Render<EntityBlackHole> {
 
 		int count = 16;
 
-		Vec3 vec = Vec3.createVectorHelper(1, 0, 0);
+		Vec3NT vec = Vec3NT.createVectorHelper(1, 0, 0);
 
 		float[] color = {0, 0, 0, 0};
 		for(int k = 0; k < steps(); k++) {
@@ -126,8 +126,8 @@ public class RenderBlackHole extends Render<EntityBlackHole> {
 						color[3] = glow;
 					}
 					int innerColor = packCurrentColor(color);
-					float vx0 = (float) vec.xCoord;
-					float vz0 = (float) vec.zCoord;
+					float vx0 = (float) vec.x;
+					float vz0 = (float) vec.z;
 					float x0 = vx0 * s;
 					float z0 = vz0 * s;
 					float u0 = 0.5F + vx0 * 0.25F;
@@ -140,9 +140,9 @@ public class RenderBlackHole extends Render<EntityBlackHole> {
 					float u1 = 0.5F + vx0 * 0.5F;
 					float v1 = 0.5F + vz0 * 0.5F;
 
-					vec.rotateAroundY((float)(Math.PI * 2 / count));
-					float vx1 = (float) vec.xCoord;
-					float vz1 = (float) vec.zCoord;
+					vec.rotateYawSelf((float)(Math.PI * 2 / count));
+					float vx1 = (float) vec.x;
+					float vz1 = (float) vec.z;
 					buf.appendPositionTexColorQuadUnchecked(
 							x0, 0, z0, u0, v0, innerColor,
 							x1, 0, z1, u1, v1, outerColor,
@@ -220,7 +220,7 @@ public class RenderBlackHole extends Render<EntityBlackHole> {
 		GlStateManager.depthMask(false);
 		GlStateManager.alphaFunc(GL11.GL_GEQUAL, 0.0F);
 		GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
-		Vec3 vec = Vec3.createVectorHelper(1, 0, 0);
+		Vec3NT vec = Vec3NT.createVectorHelper(1, 0, 0);
 
 		float s = 3F;
 		int count = 16;
@@ -236,8 +236,8 @@ public class RenderBlackHole extends Render<EntityBlackHole> {
 				color[2] = 0;
 				color[3] = 1;
 				int innerCoreColor = packCurrentColor(color);
-				float vx0 = (float) vec.xCoord;
-				float vz0 = (float) vec.zCoord;
+				float vx0 = (float) vec.x;
+				float vz0 = (float) vec.z;
 				float x0 = vx0 * 0.9F;
 				float z0 = vz0 * 0.9F;
 				float u0 = 0.5F + vx0 * 0.25F / s * 0.9F;
@@ -257,9 +257,9 @@ public class RenderBlackHole extends Render<EntityBlackHole> {
 				float u1 = 0.5F + vx0 * 0.25F;
 				float v1 = 0.5F + vz0 * 0.25F;
 
-				vec.rotateAroundY((float)(Math.PI * 2 / count));
-				float vx1 = (float) vec.xCoord;
-				float vz1 = (float) vec.zCoord;
+				vec.rotateYawSelf((float)(Math.PI * 2 / count));
+				float vx1 = (float) vec.x;
+				float vz1 = (float) vec.z;
 				buf.appendPositionTexColorQuadUnchecked(
 						x0, 0, z0, u0, v0, innerCoreColor,
 						x1, 0, z1, u1, v1, ringColor,
@@ -290,8 +290,8 @@ public class RenderBlackHole extends Render<EntityBlackHole> {
 					color[3] = glow;
 				}
 				int innerRingColor = packCurrentColor(color);
-				float vx0 = (float) vec.xCoord;
-				float vz0 = (float) vec.zCoord;
+				float vx0 = (float) vec.x;
+				float vz0 = (float) vec.z;
 				float x0 = vx0 * s;
 				float z0 = vz0 * s;
 				float u0 = 0.5F + vx0 * 0.25F;
@@ -303,9 +303,9 @@ public class RenderBlackHole extends Render<EntityBlackHole> {
 				float u1 = 0.5F + vx0 * 0.5F;
 				float v1 = 0.5F + vz0 * 0.5F;
 
-				vec.rotateAroundY((float)(Math.PI * 2 / count));
-				float vx1 = (float) vec.xCoord;
-				float vz1 = (float) vec.zCoord;
+				vec.rotateYawSelf((float)(Math.PI * 2 / count));
+				float vx1 = (float) vec.x;
+				float vz1 = (float) vec.z;
 				buf.appendPositionTexColorQuadUnchecked(
 						x0, 0, z0, u0, v0, innerRingColor,
 						x1, 0, z1, u1, v1, outerFadeColor,
@@ -347,11 +347,11 @@ public class RenderBlackHole extends Render<EntityBlackHole> {
 			NTMBufferBuilder buf = NTMImmediate.INSTANCE.beginPositionColor(GL11.GL_TRIANGLE_FAN, 14);
 			buf.appendPositionColorUnchecked(0, 0, 0, centerColor);
 
-			Vec3 jet = Vec3.createVectorHelper(0.5, 0, 0);
+			Vec3NT jet = Vec3NT.createVectorHelper(0.5, 0, 0);
 
 			for(int i = 0; i <= 12; i++) {
-				buf.appendPositionColorUnchecked((float) jet.xCoord, 10 * j, (float) jet.zCoord, edgeColor);
-				jet.rotateAroundY((float)(Math.PI / 6 * -j));
+				buf.appendPositionColorUnchecked((float) jet.x, 10 * j, (float) jet.z, edgeColor);
+				jet.rotateYawSelf((float)(Math.PI / 6 * -j));
 			}
 
 			NTMImmediate.INSTANCE.draw();

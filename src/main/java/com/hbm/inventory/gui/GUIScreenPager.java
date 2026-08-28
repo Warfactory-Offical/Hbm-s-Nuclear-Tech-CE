@@ -1,5 +1,6 @@
 package com.hbm.inventory.gui;
 
+import net.minecraft.client.renderer.GlStateManager;
 import com.hbm.Tags;
 import com.hbm.items.tool.ItemRTTYPager;
 import com.hbm.packet.PacketDispatcher;
@@ -67,7 +68,7 @@ public class GUIScreenPager extends GuiScreen {
 
 	private void drawGuiContainerBackgroundLayer(float f, int mouseX, int mouseY) {
 		super.drawDefaultBackground();
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 		chan.drawTextBox();

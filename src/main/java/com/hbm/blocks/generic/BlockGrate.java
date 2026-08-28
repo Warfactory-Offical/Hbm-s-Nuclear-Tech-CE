@@ -153,7 +153,7 @@ public class BlockGrate extends Block implements ITooltipProvider {
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(I18n.translateToLocal(this.getTranslationKey() + ".desc"));
+        if(this == ModBlocks.steel_grate_wide) tooltip.add(I18n.translateToLocal(this.getTranslationKey() + ".desc"));
     }
 
     @Override

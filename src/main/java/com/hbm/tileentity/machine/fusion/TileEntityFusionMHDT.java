@@ -17,7 +17,12 @@ import com.hbm.tileentity.IConfigurableMachine;
 import com.hbm.tileentity.TileEntityLoadedBase;
 import com.hbm.uninos.UniNodespace;
 import com.hbm.uninos.networkproviders.PlasmaNetwork;
+import com.hbm.handler.CompatHandler;
 import io.netty.buffer.ByteBuf;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -29,6 +34,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -37,7 +43,8 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 
 @AutoRegister
-public class TileEntityFusionMHDT extends TileEntityLoadedBase implements ITickable, IEnergyProviderMK2, IFluidStandardTransceiverMK2, IFusionPowerReceiver, IConfigurableMachine, IConnectionAnchors {
+@Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
+public class TileEntityFusionMHDT extends TileEntityLoadedBase implements ITickable, IEnergyProviderMK2, IFluidStandardTransceiverMK2, IFusionPowerReceiver, IConfigurableMachine, IConnectionAnchors, SimpleComponent, CompatHandler.OCComponent {
 
     protected PlasmaNetwork.PlasmaNode plasmaNode;
 
@@ -271,5 +278,66 @@ public class TileEntityFusionMHDT extends TileEntityLoadedBase implements ITicka
             return CapabilityEnergy.ENERGY.cast(new NTMEnergyCapabilityWrapper(this, accessorPos));
         }
         return super.getCapability(capability, facing);
+    }
+
+    @Override
+    @Optional.Method(modid = "opencomputers")
+    public String getComponentName() {
+        return "ntm_fusion_mhdt";
+    }
+
+    @Callback(direct = true)
+    @Optional.Method(modid = "opencomputers")
+    public Object[] getEnergyInfo(Context context, Arguments args) {
+        return new Object[] {power};
+    }
+
+    @Callback(direct = true)
+    @Optional.Method(modid = "opencomputers")
+    public Object[] getPlasmaEnergy(Context context, Arguments args) {
+        return new Object[] {plasmaEnergySync};
+    }
+
+    @Callback(direct = true)
+    @Optional.Method(modid = "opencomputers")
+    public Object[] getCoolant(Context context, Arguments args) {
+        return new Object[] {
+            tanks[0].getFill(), tanks[0].getMaxFill(),
+            tanks[1].getFill(), tanks[1].getMaxFill()
+        };
+    }
+
+    @Callback(direct = true)
+    @Optional.Method(modid = "opencomputers")
+    public Object[] getInfo(Context context, Arguments args) {
+        return new Object[] {
+            power, plasmaEnergySync,
+
+            tanks[0].getFill(), tanks[0].getMaxFill(),
+            tanks[1].getFill(), tanks[1].getMaxFill(),
+        };
+    }
+
+    @Override
+    @Optional.Method(modid = "opencomputers")
+    public String[] methods() {
+        return new String[] {
+            "getEnergyInfo",
+            "getPlasmaEnergy",
+            "getCoolant",
+            "getInfo"
+        };
+    }
+
+    @Override
+    @Optional.Method(modid = "opencomputers")
+    public Object[] invoke(String method, Context context, Arguments args) throws Exception {
+        switch (method) {
+            case "getEnergyInfo": return getEnergyInfo(context, args);
+            case "getPlasmaEnergy": return getPlasmaEnergy(context, args);
+            case "getCoolant": return getCoolant(context, args);
+            case "getInfo": return getInfo(context, args);
+        }
+        throw new NoSuchMethodException();
     }
 }

@@ -17,7 +17,7 @@ import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.particle.helper.ExplosionCreator;
 import com.hbm.particle.helper.HbmEffectNT;
 import com.hbm.potion.HbmPotion;
-import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.util.Vec3NT;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -186,13 +186,13 @@ public class ItemAmmoHIMARS extends Item implements IMetaItemTesr {
       boolean breaksBlocks,
       Block slag,
       int slagMeta) {
-    Vec3 vec = Vec3.createVectorHelper(entity.motionX, entity.motionY, entity.motionZ).normalize();
+    Vec3NT vec = Vec3NT.createVectorHelper(entity.motionX, entity.motionY, entity.motionZ).normalize();
     ExplosionVNT explosionVnt =
         new ExplosionVNT(
             entity.world,
-            mop.hitVec.x - vec.xCoord,
-            mop.hitVec.y - vec.yCoord,
-            mop.hitVec.z - vec.zCoord,
+            mop.hitVec.x - vec.x,
+            mop.hitVec.y - vec.y,
+            mop.hitVec.z - vec.z,
             size);
     if (breaksBlocks) {
       explosionVnt.setBlockAllocator(new BlockAllocatorStandard(48));

@@ -1,5 +1,6 @@
 package com.hbm.explosion;
 
+import com.hbm.util.CompatDynamicTrees;
 import com.hbm.config.CompatibilityConfig;
 import com.hbm.entity.logic.EntityNukeExplosionMK5;
 import com.hbm.entity.projectile.EntityRubble;
@@ -133,6 +134,9 @@ public class ExplosionLarge {
 
                         if (block.getExplosionResistance(null) > 70)
                             continue;
+
+                        if (CompatDynamicTrees.destroyTreeAt(world, pos))
+                            break;
 
                         EntityRubble rubble = new EntityRubble(world);
                         rubble.posX = x0 + 0.5F;

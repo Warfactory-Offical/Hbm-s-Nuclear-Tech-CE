@@ -43,8 +43,8 @@ public class RenderSoyuzCapsule extends Render<EntitySoyuzCapsule>
     double sin3 = Math.sin(time * 0.05 + Math.PI * 0.5) * 5;
     int height = 7;
     GlStateManager.translate(0.0F, height, 0.0F);
-    GL11.glRotated(sine, 0, 0, 1);
-    GL11.glRotated(sin3, 1, 0, 0);
+    GlStateManager.rotate((float) (sine), 0, 0, 1);
+    GlStateManager.rotate((float) (sin3), 1, 0, 0);
     GlStateManager.translate(0.0F, -height, 0.0F);
 
     GlStateManager.enableCull();

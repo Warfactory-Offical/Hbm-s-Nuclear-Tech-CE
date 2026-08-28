@@ -44,9 +44,10 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.HashMap;
 import java.util.List;
+import com.hbm.api.redstoneoverradio.IRORValueProvider;
 
 @AutoRegister
-public class TileEntityMachinePUREX extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IFluidStandardTransceiverMK2, IUpgradeInfoProvider, IControlReceiver, IGUIProvider, IConnectionAnchors {
+public class TileEntityMachinePUREX extends TileEntityMachineBase implements ITickable, IEnergyReceiverMK2, IFluidStandardTransceiverMK2, IUpgradeInfoProvider, IControlReceiver, IGUIProvider, IConnectionAnchors, IRORValueProvider {
 
     public FluidTankNTM[] inputTanks;
     public FluidTankNTM[] outputTanks;
@@ -263,7 +264,7 @@ public class TileEntityMachinePUREX extends TileEntityMachineBase implements ITi
             int index = data.getInteger("index");
             String selection = data.getString("selection");
             if(index == 0) {
-                this.purexModule.recipe = selection;
+                this.purexModule.setRecipe(selection, false);
                 this.markChanged();
             }
         }
@@ -313,5 +314,22 @@ public class TileEntityMachinePUREX extends TileEntityMachineBase implements ITi
         upgrades.put(UpgradeType.POWER, 3);
         upgrades.put(UpgradeType.OVERDRIVE, 3);
         return upgrades;
+    }
+
+    @Override
+    public String[] getFunctionInfo() {
+        return new String[] {
+                PREFIX_VALUE + "progress",
+                PREFIX_VALUE + "recipe",
+                PREFIX_VALUE + "active"
+        };
+    }
+
+    @Override
+    public String provideRORValue(String name) {
+        if((PREFIX_VALUE + "progress").equals(name)) return "" + (int) Math.round(this.purexModule.progress * 100);
+        if((PREFIX_VALUE + "recipe").equals(name)) return this.purexModule.getRecipeName();
+        if((PREFIX_VALUE + "active").equals(name)) return "" + (this.didProcess ? 1 : 0);
+        return null;
     }
 }

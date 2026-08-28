@@ -110,7 +110,7 @@ public abstract class TileEntityOilDrillBase extends TileEntityMachineBase imple
             this.tanks[0].unloadTank(1, 2, inventory);
             this.tanks[1].unloadTank(3, 4, inventory);
 
-            upgradeManager.checkSlots(inventory, 5, 7);
+            upgradeManager.checkSlots(inventory, 5, 6);
             this.speedLevel = Math.min(upgradeManager.getLevel(ItemMachineUpgrade.UpgradeType.SPEED), 3);
             this.energyLevel = Math.min(upgradeManager.getLevel(ItemMachineUpgrade.UpgradeType.POWER), 3);
             this.overLevel = Math.min(upgradeManager.getLevel(ItemMachineUpgrade.UpgradeType.OVERDRIVE), 3) + 1;

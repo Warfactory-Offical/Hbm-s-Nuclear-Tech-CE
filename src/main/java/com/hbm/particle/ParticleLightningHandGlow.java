@@ -64,7 +64,7 @@ public class ParticleLightningHandGlow extends Particle {
 	    GlStateManager.translate(f5, f6, f7);
 	    
 	    
-		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER);
+		GlStateManager.getFloat(GL11.GL_MODELVIEW_MATRIX, ClientProxy.AUX_GL_BUFFER);
 		ClientProxy.AUX_GL_BUFFER.put(0, 1);
 		ClientProxy.AUX_GL_BUFFER.put(1, 0);
 		ClientProxy.AUX_GL_BUFFER.put(2, 0);

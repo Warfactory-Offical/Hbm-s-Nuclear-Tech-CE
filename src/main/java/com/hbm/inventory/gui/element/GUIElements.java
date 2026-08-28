@@ -22,11 +22,13 @@ import net.minecraft.util.math.MathHelper;
 
 public class GUIElements {
 
-	@Deprecated public static enum Gauge {
+	@Deprecated public enum Gauge {
 		ROUND_SMALL("small_round", 18, 18, 13);
-		ResourceLocation texture;
-		int width, height, count;
-		private Gauge(String texture, int width, int height, int count) {
+		final ResourceLocation texture;
+		final int width;
+        final int height;
+        final int count;
+		Gauge(String texture, int width, int height, int count) {
 			this.texture = new ResourceLocation(Tags.MODID + ":textures/gui/gauges/" + texture + ".png");
 			this.width = width;
 			this.height = height;
@@ -204,5 +206,142 @@ public class GUIElements {
 		GlStateManager.disableBlend();
 		GlStateManager.enableAlpha();
 		GlStateManager.enableTexture2D();
+	}
+
+	public static void drawSmoothLinearGauge(int x, int y, double z, double progress, double tipLength, double backLength, double backSide, double scale, float rotation, int color) {
+		drawSmoothLinearGauge(x, y, z, progress, tipLength, backLength, backSide, scale, rotation, color, 0x000000);
+	}
+
+	private static MutableVec3d Bleft = new MutableVec3d();
+	private static MutableVec3d Bright = new MutableVec3d();
+
+	public static void drawSmoothLinearGauge(int x, int y, double z, double progress, double tipLength, double backLength, double backSide, double scale, float rotation, int color, int colorOuter) {
+		GlStateManager.disableTexture2D();
+
+		scale = Math.max(scale, 1);
+		progress = MathHelper.clamp(progress, 0.0, 1.0) * scale;
+
+		tip.set(0, -tipLength, 0);
+		right.set(-backSide, 0, 0);
+		Bright.set(-backSide, backLength, 0);
+		Bleft.set(backSide, backLength, 0);
+		left.set(backSide, 0, 0);
+
+		float angle = (float) Math.toRadians(-rotation);
+
+		tip.rotateRollSelf(angle);
+		right.rotateRollSelf(angle);
+		Bright.rotateRollSelf(angle);
+		Bleft.rotateRollSelf(angle);
+		left.rotateRollSelf(angle);
+
+		double deltaX = progress * MathHelper.cos(angle);
+		double deltaY = progress * MathHelper.sin(angle);
+
+		int colorOuterPacked = NTMBufferBuilder.packColor((colorOuter >> 16) & 255, (colorOuter >> 8) & 255, colorOuter & 255, 255);
+		int colorPacked = NTMBufferBuilder.packColor((color >> 16) & 255, (color >> 8) & 255, color & 255, 255);
+
+		NTMBufferBuilder tess = NTMImmediate.INSTANCE.beginPositionColor(GL11.GL_POLYGON, 5);
+		double mult = 1.5;
+		tess.appendPositionColorUnchecked((float)(x + deltaX + tip.x * mult), (float)(y + deltaY + tip.y * mult), (float)z, colorOuterPacked);
+		tess.appendPositionColorUnchecked((float)(x + deltaX + right.x * mult), (float)(y + deltaY + right.y * mult), (float)z, colorOuterPacked);
+		tess.appendPositionColorUnchecked((float)(x + deltaX + Bright.x * mult), (float)(y + deltaY + Bright.y), (float)z, colorOuterPacked);
+		tess.appendPositionColorUnchecked((float)(x + deltaX + Bleft.x * mult), (float)(y + deltaY + Bleft.y), (float)z, colorOuterPacked);
+		tess.appendPositionColorUnchecked((float)(x + deltaX + left.x * mult), (float)(y + deltaY + left.y * mult), (float)z, colorOuterPacked);
+		NTMImmediate.INSTANCE.draw();
+
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+
+		tess = NTMImmediate.INSTANCE.beginPositionColor(GL11.GL_POLYGON, 5);
+		tess.appendPositionColorUnchecked((float)(x + deltaX + tip.x), (float)(y + deltaY + tip.y), (float)z, colorPacked);
+		tess.appendPositionColorUnchecked((float)(x + deltaX + right.x), (float)(y + deltaY + right.y), (float)z, colorPacked);
+		tess.appendPositionColorUnchecked((float)(x + deltaX + Bright.x), (float)(y + deltaY + Bright.y), (float)z, colorPacked);
+		tess.appendPositionColorUnchecked((float)(x + deltaX + Bleft.x), (float)(y + deltaY + Bleft.y), (float)z, colorPacked);
+		tess.appendPositionColorUnchecked((float)(x + deltaX + left.x), (float)(y + deltaY + left.y), (float)z, colorPacked);
+		NTMImmediate.INSTANCE.draw();
+
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.enableTexture2D();
+	}
+
+	public static void drawSmoothTextureModalCircle(int xDraw, int yDraw, float zDraw, int xStart, int yStart, int xDelta, int yDelta, double progress) {
+		float var7 = 0.00390625F;
+		float var8 = 0.00390625F;
+
+		progress = MathHelper.clamp(progress, 0, 1);
+		float angle = (float) (-progress * 270.0);
+		double theta = Math.toRadians(angle - 135);
+		int addons = 0;
+		double xTarget = 0;
+		double yTarget = 0;
+
+		// addons is just a numeric flag for how many fixed point to add, to generate the triangles
+		if (angle >= -180 && angle < -90) {
+			addons = 1;
+		} else if (angle >= -270 && angle < -180) {
+			addons = 2;
+		}
+
+		// the abysmal control under here is responsible for the positioning of the last point
+		// basically this whole function makes this shape:
+		// + - - - - - - - - - - - +
+		// | \ * * * * * * * * * / |
+		// | * \ * * * * * * * / * |
+		// | * * \ * * * * * / * * |
+		// | * * * \ * * * / * * * |
+		// | * * * * \ * / * * * * |
+		// | * * * * * + * * * * * |
+		// | * * * * /   \ * * * * |
+		// | * * * /       \ * * * |
+		// | * * /           \ * * |
+		// | * /               \ * |
+		// | /                   \ |
+		// + - - - - - - - - - - - +
+		// the "/, \" are the sides, "+" points and "*" rendered part (lower triangle isn't shown)
+		if (angle >= -90) {
+			xTarget = -1;
+			yTarget = -Math.tan(theta);
+		} else if (angle > -135) {
+			xTarget = Math.tan(Math.PI/2 - theta);
+			yTarget = 1;
+		} else if (angle > -180 && angle < -135) {
+			xTarget = Math.tan(Math.PI/2 - theta);
+			yTarget = 1;
+		} else if (angle <= -180) {
+			xTarget = 1;
+			yTarget = Math.tan(theta);
+		} else if (angle == -135) {
+			xTarget = 0;
+			yTarget = 1;
+		}
+
+		double xMid = (double) xDelta / 2;
+		double yMid = (double) yDelta / 2;
+
+		xTarget *= xMid;
+		yTarget *= yMid;
+
+		NTMBufferBuilder tess = NTMImmediate.INSTANCE.beginPositionTex(GL11.GL_TRIANGLES, 3);
+		tess.appendPositionTexUnchecked((float)xDraw, (float)(yDraw + yDelta), zDraw, (float)xStart * var7, (float)(yStart + yDelta) * var8);
+		tess.appendPositionTexUnchecked((float)(xDraw + xMid), (float)(yDraw + yMid), zDraw, (float)(xStart + xMid) * var7, (float)(yStart + yMid) * var8);
+
+		if (addons == 2 || addons == 1) {
+			tess.appendPositionTexUnchecked((float)xDraw, (float)yDraw, zDraw, (float)xStart * var7, (float)yStart * var8);
+			NTMImmediate.INSTANCE.draw();
+
+			tess = NTMImmediate.INSTANCE.beginPositionTex(GL11.GL_TRIANGLES, 3);
+			tess.appendPositionTexUnchecked((float)xDraw, (float)yDraw, zDraw, (float)xStart * var7, (float)yStart * var8);
+			tess.appendPositionTexUnchecked((float)(xDraw + xMid), (float)(yDraw + yMid), zDraw, (float)(xStart + xMid) * var7, (float)(yStart + yMid) * var8);
+		}
+		if (addons == 2) {
+			tess.appendPositionTexUnchecked((float)(xDraw + xDelta), (float)yDraw, zDraw, (float)(xStart + xDelta) * var7, (float)yStart * var8);
+			NTMImmediate.INSTANCE.draw();
+
+			tess = NTMImmediate.INSTANCE.beginPositionTex(GL11.GL_TRIANGLES, 3);
+			tess.appendPositionTexUnchecked((float)(xDraw + xDelta), (float)yDraw, zDraw, (float)(xStart + xDelta) * var7, (float)yStart * var8);
+			tess.appendPositionTexUnchecked((float)(xDraw + xMid), (float)(yDraw + yMid), zDraw, (float)(xStart + xMid) * var7, (float)(yStart + yMid) * var8);
+		}
+		tess.appendPositionTexUnchecked((float)(xDraw + xTarget + xMid), (float)(yDraw - yTarget + yMid), zDraw, (float)(xStart + xTarget + xMid) * var7, (float)(yStart - yTarget + yMid) * var8);
+		NTMImmediate.INSTANCE.draw();
 	}
 }

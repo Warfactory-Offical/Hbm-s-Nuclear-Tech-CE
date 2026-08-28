@@ -25,13 +25,15 @@ import com.hbm.items.ModItems;
 import com.hbm.lib.Library;
 import com.hbm.lib.ModDamageSource;
 import com.hbm.potion.HbmPotion;
-import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.util.Vec3NT;
 import com.hbm.util.ArmorRegistry.HazardClass;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityHanging;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityArmorStand;
+import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.EntityMooshroom;
@@ -505,7 +507,7 @@ public class ContaminationUtil {
 		for(Entity e : entities) {
 			if(isExplosionExempt(e)) continue;
 
-			Vec3 vec = Vec3.createVectorHelper(e.posX - x, (e.posY + e.getEyeHeight()) - y, e.posZ - z);
+			Vec3NT vec = Vec3NT.createVectorHelper(e.posX - x, (e.posY + e.getEyeHeight()) - y, e.posZ - z);
 			double len = vec.length();
 
 			if(len > range) continue;
@@ -516,9 +518,9 @@ public class ContaminationUtil {
 			
 			for(int i = 1; i < len; i++) {
 
-				int ix = (int)Math.floor(x + vec.xCoord * i);
-				int iy = (int)Math.floor(y + vec.yCoord * i);
-				int iz = (int)Math.floor(z + vec.zCoord * i);
+				int ix = (int)Math.floor(x + vec.x * i);
+				int iy = (int)Math.floor(y + vec.y * i);
+				int iz = (int)Math.floor(z + vec.z * i);
 				res += world.getBlockState(pos.setPos(ix, iy, iz)).getBlock().getExplosionResistance(null);
 			}
 			boolean isLiving = e instanceof EntityLivingBase;
@@ -552,8 +554,10 @@ public class ContaminationUtil {
 							p.setHeldItem(EnumHand.OFF_HAND, new ItemStack(ModItems.marshmallow_roasted));
 						}
 					}
-					e.attackEntityFrom(DamageSource.IN_FIRE, fireDmg);
-					e.setFire(5);
+					if(!isFireExempt(e)) {
+						e.attackEntityFrom(DamageSource.IN_FIRE, fireDmg);
+						e.setFire(5);
+					}
 				}
 			}
 
@@ -566,11 +570,15 @@ public class ContaminationUtil {
 					else
 						e.attackEntityFrom(ModDamageSource.blast, blastDmg);
 				}
-				e.motionX += vec.xCoord * 0.005D * blastDmg;
-				e.motionY += vec.yCoord * 0.005D * blastDmg;
-				e.motionZ += vec.zCoord * 0.005D * blastDmg;
+				e.motionX += vec.x * 0.005D * blastDmg;
+				e.motionY += vec.y * 0.005D * blastDmg;
+				e.motionZ += vec.z * 0.005D * blastDmg;
 			}
 		}
+	}
+
+	private static boolean isFireExempt(Entity e) {
+		return e instanceof EntityArmorStand || e instanceof EntityBoat || e instanceof EntityHanging;
 	}
 
 	private static boolean isExplosionExempt(Entity e) {

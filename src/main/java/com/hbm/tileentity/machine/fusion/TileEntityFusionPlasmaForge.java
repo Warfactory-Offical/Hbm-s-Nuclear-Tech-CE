@@ -47,9 +47,10 @@ import java.util.*;
 import java.util.function.Consumer;
 
 import static com.hbm.inventory.OreDictManager.*;
+import com.hbm.api.redstoneoverradio.IRORValueProvider;
 
 @AutoRegister
-public class TileEntityFusionPlasmaForge extends TileEntityMachineBase implements ITickable, IFusionPowerReceiver, IEnergyReceiverMK2, IFluidStandardReceiverMK2, IControlReceiver, IGUIProvider, IConnectionAnchors {
+public class TileEntityFusionPlasmaForge extends TileEntityMachineBase implements ITickable, IFusionPowerReceiver, IEnergyReceiverMK2, IFluidStandardReceiverMK2, IControlReceiver, IGUIProvider, IConnectionAnchors, IRORValueProvider {
 
     public FluidTankNTM inputTank;
 
@@ -357,7 +358,7 @@ public class TileEntityFusionPlasmaForge extends TileEntityMachineBase implement
             int index = data.getInteger("index");
             String selection = data.getString("selection");
             if(index == 0) {
-                this.plasmaModule.recipe = selection;
+                this.plasmaModule.setRecipe(selection, false);
                 this.markChanged();
             }
         }
@@ -583,5 +584,26 @@ public class TileEntityFusionPlasmaForge extends TileEntityMachineBase implement
     public static void choosePosition(ForgeArm arm, double[][] positions) {
         double[] newPos = positions[rand.nextInt(positions.length)];
         System.arraycopy(newPos, 0, arm.targetAngles, 0, newPos.length);
+    }
+
+    @Override
+    public String[] getFunctionInfo() {
+        return new String[] {
+                PREFIX_VALUE + "progress",
+                PREFIX_VALUE + "recipe",
+                PREFIX_VALUE + "active",
+                PREFIX_VALUE + "booster",
+                PREFIX_VALUE + "plasma"
+        };
+    }
+
+    @Override
+    public String provideRORValue(String name) {
+        if((PREFIX_VALUE + "progress").equals(name)) return "" + (int) Math.round(this.plasmaModule.progress * 100);
+        if((PREFIX_VALUE + "recipe").equals(name)) return this.plasmaModule.getRecipeName();
+        if((PREFIX_VALUE + "active").equals(name)) return "" + (this.didProcess ? 1 : 0);
+        if((PREFIX_VALUE + "booster").equals(name)) return "" + this.booster;
+        if((PREFIX_VALUE + "plasma").equals(name)) return "" + this.plasmaEnergy;
+        return null;
     }
 }

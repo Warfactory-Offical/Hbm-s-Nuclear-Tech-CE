@@ -138,7 +138,7 @@ public class ItemRenderStarFAkimbo extends ItemRenderWeaponBase {
     @Override
     public void setupInv(ItemStack stack) {
         GlStateManager.alphaFunc(GL11.GL_GREATER, 0F);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GlStateManager.enableAlpha();
         GlStateManager.scale(1, 1, -1);
         GlStateManager.translate(8, 8, 0);
         double scale = 1.5D;

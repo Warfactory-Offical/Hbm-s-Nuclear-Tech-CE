@@ -44,8 +44,8 @@ import java.util.List;
 public class TileEntityMachineLiquefactor extends TileEntityMachineBase implements IEnergyReceiverMK2, IFluidStandardSender, IGUIProvider, ITickable, IUpgradeInfoProvider, IFluidCopiable, IConnectionAnchors {
 
     public static final long maxPower = 100000;
-    public static final int usageBase = 500;
-    public static final int processTimeBase = 100;
+    public static final int usageBase = 250;
+    public static final int processTimeBase = 60;
     private final UpgradeManagerNT upgradeManager = new UpgradeManagerNT(this);
     public long power;
     public int usage;
@@ -204,12 +204,16 @@ public class TileEntityMachineLiquefactor extends TileEntityMachineBase implemen
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         tank.readFromNBT(nbt, "tank");
+        this.power = nbt.getLong("power");
+        this.progress = nbt.getInteger("progress");
     }
 
     @Override
     public @NotNull NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
         tank.writeToNBT(nbt, "tank");
+        nbt.setLong("power", power);
+        nbt.setInteger("progress", progress);
         return nbt;
     }
 

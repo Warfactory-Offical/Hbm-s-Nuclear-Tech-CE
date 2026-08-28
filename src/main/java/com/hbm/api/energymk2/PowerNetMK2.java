@@ -70,11 +70,23 @@ public class PowerNetMK2 extends NodeNet<IEnergyReceiverMK2, IEnergyProviderMK2,
         return size <= 0 ? 0 : Math.floorMod(cursor, size);
     }
 
+    private volatile boolean updating = false;
+
     @Override
     public void update() {
 
         if(providerEntries.isEmpty()) return;
         if(receiverEntries.isEmpty()) return;
+
+        this.updating = true;
+        try {
+            updateInternal();
+        } finally {
+            this.updating = false;
+        }
+    }
+
+    public void updateInternal() {
 
         long timestamp = System.currentTimeMillis();
 
@@ -199,6 +211,7 @@ public class PowerNetMK2 extends NodeNet<IEnergyReceiverMK2, IEnergyProviderMK2,
     }
 
     public long sendPowerDiode(long power, boolean simulate) {
+        if (this.updating) return power;
         if (receiverEntries.isEmpty()) return power;
 
         long timestamp = System.currentTimeMillis();
@@ -273,6 +286,7 @@ public class PowerNetMK2 extends NodeNet<IEnergyReceiverMK2, IEnergyProviderMK2,
     }
 
     public long extractPowerDiode(long power, boolean simulate) {
+        if (this.updating) return 0;
         if (providerEntries.isEmpty() || power <= 0) return 0;
 
         long timestamp = System.currentTimeMillis();

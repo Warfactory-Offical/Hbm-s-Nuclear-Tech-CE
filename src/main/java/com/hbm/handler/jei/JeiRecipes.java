@@ -50,7 +50,6 @@ public class JeiRecipes {
 	private static List<FluidRecipe> fluidEquivalences = null;
 	private static List<BookRecipe> bookRecipes = null;
 	private static List<BreederRecipe> breederRecipes = null;
-    private static List<HadronRecipe> hadronRecipes = null;
 	private static List<SILEXRecipe> silexRecipes = null;
 	private static final Map<EnumWavelengths, List<SILEXRecipe>> waveSilexRecipes = new HashMap<>();
     private static List<TransmutationRecipe> transmutationRecipes = null;
@@ -313,40 +312,6 @@ public class JeiRecipes {
 			ingredients.setInput(VanillaTypes.ITEM, input);
 			ingredients.setOutput(VanillaTypes.ITEM, output);
 		}
-	}
-	
-	public static class HadronRecipe implements IRecipeWrapper {
-
-		public ItemStack in1, in2, out1, out2;
-		public int momentum;
-		public boolean analysisOnly;
-		
-		public HadronRecipe(ItemStack in1, ItemStack in2, ItemStack out1, ItemStack out2, int momentum, boolean analysis) {
-			this.in1 = in1;
-			this.in2 = in2;
-			this.out1 = out1;
-			this.out2 = out2;
-			this.momentum = momentum;
-			this.analysisOnly = analysis;
-		}
-		
-		@Override
-		public void getIngredients(IIngredients ingredients) {
-			ingredients.setInputs(VanillaTypes.ITEM, Arrays.asList(in1, in2));
-			ingredients.setOutputs(VanillaTypes.ITEM, Arrays.asList(out1, out2));
-		}
-		
-		@Override
-		public void drawInfo(@NotNull Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-			if(analysisOnly)
-				HadronRecipeHandler.analysis.draw(minecraft, 117, 17);
-			FontRenderer fontRenderer = minecraft.fontRenderer;
-	    	
-	    	String mom = "" + momentum;
-	    	fontRenderer.drawString(mom, -fontRenderer.getStringWidth(mom) / 2 + 19, 36, 0x404040);
-	    	GlStateManager.color(1, 1, 1, 1);
-		}
-		
 	}
 	
 	public static class SILEXRecipe implements IRecipeWrapper {
@@ -716,34 +681,25 @@ public class JeiRecipes {
 		blades.add(new ItemStack(ModItems.blades_desh));
 		return blades;
 	}
-	
+
 	public static List<FluidRecipe> getFluidEquivalences(){
 		if(fluidEquivalences != null)
 			return fluidEquivalences;
 		fluidEquivalences = new ArrayList<>();
-		
+
 		for(FluidContainerRegistry.FluidContainer container : FluidContainerRegistry.allContainers){
-			if (container.emptyContainer() == null || container.emptyContainer().isEmpty()) {
-				continue;
-			}
 			FluidType fluidType = container.type();
 			ItemStack fullContainerStack = container.fullContainer();
 			ItemStack fluidIconStack = ItemFluidIcon.make(fluidType, container.content());
-			fluidEquivalences.add(new FluidRecipe(fluidIconStack, fullContainerStack.copy()));
-			fluidEquivalences.add(new FluidRecipeInverse(fluidIconStack, fullContainerStack.copy()));
-		}
-		
-		return fluidEquivalences;
-	}
 
-    public static List<HadronRecipe> getHadronRecipes(){
-		if(hadronRecipes != null)
-			return hadronRecipes;
-		hadronRecipes = new ArrayList<>();
-		for(HadronRecipes.HadronRecipe recipe : HadronRecipes.getRecipes()){
-			hadronRecipes.add(new HadronRecipe(recipe.in1.toStack(), recipe.in2.toStack(), recipe.out1, recipe.out2, recipe.momentum, recipe.analysisOnly));
+			fluidEquivalences.add(new FluidRecipeInverse(fluidIconStack, fullContainerStack.copy()));
+
+			if (container.emptyContainer() != null && !container.emptyContainer().isEmpty()) {
+				fluidEquivalences.add(new FluidRecipe(fluidIconStack, fullContainerStack.copy()));
+			}
 		}
-		return hadronRecipes;
+
+		return fluidEquivalences;
 	}
 	
 

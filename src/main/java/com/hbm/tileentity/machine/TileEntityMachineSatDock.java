@@ -90,22 +90,6 @@ public class TileEntityMachineSatDock extends TileEntityMachineBase implements I
 						data.markDirty();
 					}
 				}
-                // --- Start Alcater addition ---
-				if(sat instanceof SatelliteHorizons gerald) {
-
-                    if(gerald.lastOp + delay < System.currentTimeMillis()) {
-
-						EntityMinerRocket rocket = new EntityMinerRocket(world, (byte)1);
-						rocket.posX = pos.getX() + 0.5;
-						rocket.posY = 300;
-						rocket.posZ = pos.getZ() + 0.5;
-						rocket.setRocketType((byte)1);
-						world.spawnEntity(rocket);
-						gerald.lastOp = System.currentTimeMillis();
-						data.markDirty();
-					}
-				}
-                // --- End Alcater addition ---
 			}
 
 			List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(null, new AxisAlignedBB(pos.getX() - 0.25 + 0.5, pos.getY() + 0.75, pos.getZ() - 0.25 + 0.5, pos.getX() + 0.25 + 0.5, pos.getY() + 2, pos.getZ() + 0.25 + 0.5));

@@ -17,6 +17,7 @@ import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.lib.DirPos;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.lib.HBMSoundHandler;
+import com.hbm.main.MainRegistry;
 import com.hbm.util.*;
 import io.netty.buffer.ByteBuf;
 import li.cil.oc.api.machine.Arguments;
@@ -47,6 +48,8 @@ import java.util.function.BiConsumer;
 public class TileEntityBatterySocket extends TileEntityBatteryBase implements IRORValueProvider, IRORInteractive {
 
     public static BulletConfig discharge;
+
+    public boolean frame = false;
     public static BiConsumer<EntityBulletBeamBase, RayTraceResult> BEAM_DISCHARGE_HIT = (beam, mop) -> {
 
         if(mop.typeOfHit == mop.typeOfHit.BLOCK) {
@@ -112,6 +115,8 @@ public class TileEntityBatterySocket extends TileEntityBatteryBase implements IR
             }
 
             this.log[19] = avg;
+        } else {
+            if(world.getTotalWorldTime() % 20 == 0) this.frame = !world.isAirBlock(pos.up(2));
         }
     }
 
@@ -198,8 +203,9 @@ public class TileEntityBatterySocket extends TileEntityBatteryBase implements IR
     @Override
     public boolean canExtractItem(int i, ItemStack stack, int j) {
         if (stack.getItem() instanceof IBatteryItem) {
-            if (i == mode_input && ((IBatteryItem) stack.getItem()).getCharge(stack) == 0) return true;
-            return i == mode_output && ((IBatteryItem) stack.getItem()).getCharge(stack) == ((IBatteryItem) stack.getItem()).getMaxCharge(stack);
+            int mode = this.getRelevantMode(false);
+            if (mode == mode_output && ((IBatteryItem) stack.getItem()).getCharge(stack) == 0) return true;
+            return mode == mode_input && ((IBatteryItem) stack.getItem()).getCharge(stack) == ((IBatteryItem) stack.getItem()).getMaxCharge(stack);
         }
         return false;
     }

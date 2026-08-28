@@ -480,14 +480,14 @@ public class SkinBoxVoxelizer {
         GLCompat.bindVertexArray(vao);
 
         GL11.glVertexPointer(3, GL11.GL_FLOAT, STRIDE_BYTES, 0L);
-        GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
+        GlStateManager.glEnableClientState(GL11.GL_VERTEX_ARRAY);
 
         OpenGlHelper.setClientActiveTexture(OpenGlHelper.defaultTexUnit);
         GL11.glTexCoordPointer(2, GL11.GL_FLOAT, STRIDE_BYTES, 12L);
-        GL11.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
+        GlStateManager.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
 
         GL11.glNormalPointer(GL11.GL_BYTE, STRIDE_BYTES, 20L);
-        GL11.glEnableClientState(GL11.GL_NORMAL_ARRAY);
+        GlStateManager.glEnableClientState(GL11.GL_NORMAL_ARRAY);
 
         GLCompat.bindVertexArray(0);
         GLCompat.bindBuffer(GLCompat.GL_ARRAY_BUFFER, 0);

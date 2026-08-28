@@ -46,7 +46,9 @@ import org.lwjgl.input.Keyboard;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import com.hbm.api.redstoneoverradio.IRORValueProvider;
 
+@Deprecated
 public class MachineCapacitor extends BlockContainer implements ILookOverlay, IPersistentInfoProvider, ITooltipProvider {
     public static final PropertyDirection FACING = BlockDirectional.FACING;
 
@@ -187,7 +189,7 @@ public class MachineCapacitor extends BlockContainer implements ILookOverlay, IP
 
     @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
     @AutoRegister
-    public static class TileEntityCapacitor extends TileEntityLoadedBase implements IEnergyProviderMK2, IEnergyReceiverMK2, IPersistentNBT, ITickable, CompatHandler.OCComponent {
+    public static class TileEntityCapacitor extends TileEntityLoadedBase implements IEnergyProviderMK2, IEnergyReceiverMK2, IPersistentNBT, ITickable, CompatHandler.OCComponent, IRORValueProvider {
 
         public long power;
         protected long maxPower;
@@ -419,6 +421,21 @@ public class MachineCapacitor extends BlockContainer implements ILookOverlay, IP
                 case ("getInfo") -> getEnergyReceived(context, args);
                 default -> throw new NoSuchMethodException();
             };
+        }
+
+        @Override
+        public String[] getFunctionInfo() {
+            return new String[] {
+                    PREFIX_VALUE + "fill",
+                    PREFIX_VALUE + "fillpercent"
+            };
+        }
+
+        @Override
+        public String provideRORValue(String name) {
+            if((PREFIX_VALUE + "fill").equals(name)) return "" + this.power;
+            if((PREFIX_VALUE + "fillpercent").equals(name)) return "" + (this.maxPower > 0 ? this.power * 100 / this.maxPower : 0);
+            return null;
         }
     }
 

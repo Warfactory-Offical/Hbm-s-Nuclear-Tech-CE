@@ -7,7 +7,11 @@ import com.hbm.items.ItemEnums.EnumCircuitType;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemBatteryPack;
 import com.hbm.items.tool.ItemBlowtorch;
+import com.hbm.items.tool.ItemModMinecart;
+import com.hbm.items.tool.ItemModMinecart.EnumCartBase;
+import com.hbm.items.tool.ItemModMinecart.EnumMinecart;
 import com.hbm.items.tool.ItemToolAbilityFueled;
+import com.hbm.inventory.fluid.Fluids;
 import com.hbm.main.CraftingManager;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -61,14 +65,14 @@ public class ToolRecipes {
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.dwarven_pickaxe, 1), "CIC", " S ", " S ", 'C', CU.ingot(), 'I', IRON.ingot(), 'S', KEY_STICK );
 
         //Super pickaxes
-        CraftingManager.addRecipeAuto(new ItemStack(ModItems.bismuth_pickaxe, 1), " BM", "BPB", "TB ", 'B', ModItems.ingot_bismuth, 'M', ModItems.ingot_meteorite, 'P', ModItems.starmetal_pickaxe, 'T', W.bolt() );
+        CraftingManager.addRecipeAuto(new ItemStack(ModItems.bismuth_pickaxe, 1), " BM", "BPB", "TB ", 'B', BI.ingot(), 'M', ModItems.ingot_meteorite, 'P', ModItems.starmetal_pickaxe, 'T', W.bolt() );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.volcanic_pickaxe, 1), " BM", "BPB", "TB ", 'B', ModItems.gem_volcanic, 'M', ModItems.ingot_meteorite, 'P', ModItems.starmetal_pickaxe, 'T', W.bolt() );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.chlorophyte_pickaxe, 1), " SD", "APS", "FA ", 'S', ModItems.blades_steel, 'D', ModItems.powder_chlorophyte, 'A', FIBER.ingot(), 'P', ModItems.bismuth_pickaxe, 'F', DURA.bolt() );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.chlorophyte_pickaxe, 1), " SD", "APS", "FA ", 'S', ModItems.blades_steel, 'D', ModItems.powder_chlorophyte, 'A', FIBER.ingot(), 'P', ModItems.volcanic_pickaxe, 'F', DURA.bolt() );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.mese_pickaxe, 1), " SD", "APS", "FA ", 'S', ModItems.blades_desh, 'D', ModItems.powder_dineutronium, 'A', ModItems.plate_paa, 'P', ModItems.chlorophyte_pickaxe, 'F', ModItems.shimmer_handle );
 
         //Super Axes
-        CraftingManager.addRecipeAuto(new ItemStack(ModItems.bismuth_axe, 1), " BM", "BPB", "TB ", 'B', ModItems.ingot_bismuth, 'M', ModItems.ingot_meteorite, 'P', ModItems.starmetal_axe, 'T', W.bolt() );
+        CraftingManager.addRecipeAuto(new ItemStack(ModItems.bismuth_axe, 1), " BM", "BPB", "TB ", 'B', BI.ingot(), 'M', ModItems.ingot_meteorite, 'P', ModItems.starmetal_axe, 'T', W.bolt() );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.volcanic_axe, 1), " BM", "BPB", "TB ", 'B', ModItems.gem_volcanic, 'M', ModItems.ingot_meteorite, 'P', ModItems.starmetal_axe, 'T', W.bolt() );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.chlorophyte_axe, 1), " SD", "APS", "FA ", 'S', ModItems.blades_steel, 'D', ModItems.powder_chlorophyte, 'A', FIBER.ingot(), 'P', ModItems.bismuth_axe, 'F', DURA.bolt() );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.chlorophyte_axe, 1), " SD", "APS", "FA ", 'S', ModItems.blades_steel, 'D', ModItems.powder_chlorophyte, 'A', FIBER.ingot(), 'P', ModItems.volcanic_axe, 'F', DURA.bolt() );
@@ -104,7 +108,7 @@ public class ToolRecipes {
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.oil_detector, 1), "W I", "WCI", "PPP", 'W', GOLD.wireFine(), 'I', CU.ingot(), 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.ANALOG), 'P', STEEL.plate528() );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.turret_chip, 1), "WWW", "CPC", "WWW", 'W', GOLD.wireFine(), 'P', ANY_PLASTIC.ingot(), 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.ADVANCED));
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.survey_scanner, 1), "SWS", " G ", "PCP", 'W', GOLD.wireFine(), 'P', ANY_PLASTIC.ingot(), 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.ADVANCED), 'S', STEEL.plate528(), 'G', GOLD.ingot() );
-        CraftingManager.addRecipeAuto(new ItemStack(ModItems.geiger_counter, 1), "GPP", "WCS", "WBB", 'W', GOLD.wireFine(), 'P', ANY_RUBBER.ingot(), 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.BASIC), 'G', GOLD.ingot(), 'S', STEEL.plate528(), 'B', ModItems.ingot_beryllium );
+        CraftingManager.addRecipeAuto(new ItemStack(ModItems.geiger_counter, 1), "GPP", "WCS", "WBB", 'W', GOLD.wireFine(), 'P', ANY_RUBBER.ingot(), 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.BASIC), 'G', GOLD.ingot(), 'S', STEEL.plate528(), 'B', BE.ingot() );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.dosimeter, 1), "WGW", "WCW", "WBW", 'W', KEY_PLANKS, 'G', KEY_ANYPANE, 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.VACUUM_TUBE), 'B', BE.ingot() );
         CraftingManager.addShapelessAuto(new ItemStack(ModBlocks.geiger), ModItems.geiger_counter );
         CraftingManager.addShapelessAuto(new ItemStack(ModItems.digamma_diagnostic), ModItems.geiger_counter, PO210.billet(), ASBESTOS.ingot() );
@@ -122,6 +126,8 @@ public class ToolRecipes {
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.pipette_laboratory, 1), "  C", " R ", "P  ", 'C', DictFrame.fromOne(ModItems.circuit, EnumCircuitType.CHIP), 'R', RUBBER.ingot(), 'P', ModItems.pipette_boron );
 
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.siphon, 1), " GR", " GR", " G ", 'G', KEY_CLEARGLASS, 'R', ANY_RUBBER.ingot());
+
+        CraftingManager.addRecipeAuto(new ItemStack(ModItems.boat_rubber), "L L", "LLL", 'L', ANY_RUBBER.ingot() );
 
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.mirror_tool), " A ", " IA", "I  ", 'A', AL.ingot(), 'I', IRON.ingot() );
         CraftingManager.addRecipeAuto(new ItemStack(ModItems.rbmk_tool), " A ", " IA", "I  ", 'A', PB.ingot(), 'I', IRON.ingot() );
@@ -145,11 +151,9 @@ public class ToolRecipes {
         CraftingManager.addShapelessAuto(new ItemStack(ModItems.bobmazon), Items.BOOK, Items.GOLD_NUGGET, Items.STRING, KEY_BLUE);
 
         //Carts
-        // TODO: ItemModMinecart
-        /*CraftingManager.addRecipeAuto(ItemModMinecart.createCartItem(EnumCartBase.WOOD, EnumMinecart.EMPTY), "P P", "WPW", 'P',KEY_SLAB, 'W', KEY_PLANKS );
+        CraftingManager.addRecipeAuto(ItemModMinecart.createCartItem(EnumCartBase.WOOD, EnumMinecart.EMPTY), "P P", "WPW", 'P',KEY_SLAB, 'W', KEY_PLANKS );
         CraftingManager.addRecipeAuto(ItemModMinecart.createCartItem(EnumCartBase.STEEL, EnumMinecart.EMPTY), "P P", "IPI", 'P', STEEL.plate(), 'I', STEEL.ingot() );
         CraftingManager.addShapelessAuto(ItemModMinecart.createCartItem(EnumCartBase.PAINTED, EnumMinecart.EMPTY), ItemModMinecart.createCartItem(EnumCartBase.STEEL, EnumMinecart.EMPTY), KEY_RED );
-        CraftingManager.addRecipeAuto(new ItemStack(ModItems.boat_rubber), "L L", "LLL", 'L', ANY_RUBBER.ingot() );
 
         for(EnumCartBase base : EnumCartBase.values()) {
 
@@ -157,7 +161,7 @@ public class ToolRecipes {
             if(EnumMinecart.POWDER.supportsBase(base))		CraftingManager.addRecipeAuto(ItemModMinecart.createCartItem(base, EnumMinecart.POWDER), "PPP", "PCP", "PPP", 'P', Items.GUNPOWDER, 'C', ItemModMinecart.createCartItem(base, EnumMinecart.EMPTY) );
             if(EnumMinecart.SEMTEX.supportsBase(base))		CraftingManager.addRecipeAuto(ItemModMinecart.createCartItem(base, EnumMinecart.SEMTEX), "S", "C", 'S', ModBlocks.semtex, 'C', ItemModMinecart.createCartItem(base, EnumMinecart.EMPTY) );
         }
-        net.minecraft.item.crafting.CraftingManager.getInstance().addRecipe(DictFrame.fromOne(ModItems.cart, EnumMinecart.CRATE), "C", "S", 'C', ModBlocks.crate_steel, 'S', Items.MINECART ).func_92100_c();*/
+        CraftingManager.addRecipeAuto(DictFrame.fromOne(ModItems.cart, EnumMinecart.CRATE), "C", "S", 'C', ModBlocks.crate_steel, 'S', Items.MINECART );
 
         //Configged
         if(GeneralConfig.enableLBSM && GeneralConfig.enableLBSMSimpleToolRecipes) {

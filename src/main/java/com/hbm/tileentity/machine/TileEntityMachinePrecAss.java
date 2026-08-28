@@ -357,7 +357,7 @@ public class TileEntityMachinePrecAss extends TileEntityMachineBase implements I
             int index = data.getInteger("index");
             String selection = data.getString("selection");
             if(index == 0) {
-                this.assemblerModule.recipe = selection;
+                this.assemblerModule.setRecipe(selection, false);
                 this.markChanged();
             }
         }

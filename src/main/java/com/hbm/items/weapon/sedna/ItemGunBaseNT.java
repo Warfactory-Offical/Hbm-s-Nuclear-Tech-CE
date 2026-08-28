@@ -66,7 +66,7 @@ public class ItemGunBaseNT extends Item implements IKeybindReceiver, IEquipRecei
     public static final DecimalFormatSymbols SYMBOLS_US = new DecimalFormatSymbols(Locale.US);
     public static final DecimalFormat FORMAT_DMG = new DecimalFormat("#.##", SYMBOLS_US);
 
-    public ItemStack defaultAmmo;
+    public ItemStack defaultAmmo = ItemStack.EMPTY;
     public boolean isDefaultExpensive = false;
 
     public static float recoilVertical = 0;

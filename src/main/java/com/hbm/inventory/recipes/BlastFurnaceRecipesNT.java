@@ -78,7 +78,7 @@ public class BlastFurnaceRecipesNT extends GenericRecipes<BlastFurnaceRecipe> {
 				.inputItems(new OreDictStack(AL.dust()), new ComparableStack(Items.CLAY_BALL, 7))
 				.outputItems(new ItemStack(ModItems.ingot_firebrick, 8)));
 		this.register((BlastFurnaceRecipe) new BlastFurnaceRecipe("blast.firebrickLimestone").setDuration(800)
-				.inputItems(new OreDictStack(LIMESTONE.ore()), new ComparableStack(Items.CLAY_BALL, 6))
+				.inputItems(new OreDictStack(LIMESTONE.dust()), new ComparableStack(Items.CLAY_BALL, 6))
 				.outputItems(new ItemStack(ModItems.ingot_firebrick, 8)));
 	}
 

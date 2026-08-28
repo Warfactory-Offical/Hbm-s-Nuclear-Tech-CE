@@ -17,9 +17,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.RenderGlobal;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.model.ModelRotation;
@@ -38,6 +39,7 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
@@ -49,11 +51,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public abstract class BlockDummyable extends BlockContainer implements ICustomBlockHighlight, ICopiable, INBTBlockTransformable, IDynamicModels {
 
@@ -93,6 +93,10 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
         ModBlocks.ALL_BLOCKS.add(this);
     }
 
+    @Override
+    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
+        return BlockFaceShape.UNDEFINED;
+    }
 
     protected int getMaxCoreSearchSteps() {
         return 512;
@@ -674,4 +678,268 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
 		};
 	}
 
+    public int[][] getAllDimensions() {
+        return new int[][] { getDimensions() };
+    }
+
+    public double[][] getAABBExtras() {
+        return new double[0][0];
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void drawPlacementHighlight(EntityPlayer player, float interp) {
+        RayTraceResult mop = player.rayTrace(5.0D, interp);
+
+        if(mop != null && mop.typeOfHit == RayTraceResult.Type.BLOCK) {
+            double dX = player.lastTickPosX + (player.posX - player.lastTickPosX) * (double) interp;
+            double dY = player.lastTickPosY + (player.posY - player.lastTickPosY) * (double) interp;
+            double dZ = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * (double) interp;
+
+            int i = MathHelper.floor(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
+            int o = -getOffset();
+            int pY = mop.getBlockPos().getY() + getHeightOffset();
+
+            // Orientation
+            ForgeDirection facing = ForgeDirection.NORTH;
+            if(i == 0) facing = ForgeDirection.getOrientation(2);
+            if(i == 1) facing = ForgeDirection.getOrientation(5);
+            if(i == 2) facing = ForgeDirection.getOrientation(3);
+            if(i == 3) facing = ForgeDirection.getOrientation(4);
+
+            ForgeDirection sideHit = ForgeDirection.getOrientation(mop.sideHit.getIndex());
+            facing = getDirModified(facing);
+
+            double originX = mop.getBlockPos().getX() + facing.offsetX * o + sideHit.offsetX;
+            double originY = pY + sideHit.offsetY;
+            double originZ = mop.getBlockPos().getZ() + facing.offsetZ * o + sideHit.offsetZ;
+
+            boolean canPlace = checkRequirement(player.world, mop.getBlockPos().getX() + sideHit.offsetX, pY + sideHit.offsetY, mop.getBlockPos().getZ() + sideHit.offsetZ, facing, o);
+            Tessellator tess = Tessellator.getInstance();
+            BufferBuilder buffer = tess.getBuffer();
+
+            GlStateManager.pushMatrix();
+            GlStateManager.disableLighting();
+            GlStateManager.disableTexture2D();
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
+            GlStateManager.glLineWidth(2.0F);
+            GlStateManager.depthMask(false);
+
+            buffer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
+
+            double timer = (System.currentTimeMillis() % (1000D * Math.PI)) / 250D;
+            double sine = Math.sin(timer);
+            int color = (int) (255 * (sine * 0.25 + 0.75));
+
+            int r = canPlace ? 0 : color;
+            int g = canPlace ? color : 0;
+            int b = 0;
+            int a = 255;
+
+            List<BlockPos> blocks = new ArrayList<>();
+            Set<BlockPos> set = new HashSet<>();
+
+            for(int[] dims : getAllDimensions()) {
+                // Some of the multiblocks have offsets for the placements, so
+                // this allows for the ones that dont need it to have a bunch of
+                // 0s at the end.
+                int offFwd = dims.length > 6 ? dims[6] : 0;
+                int offUp = dims.length > 7 ? dims[7] : 0;
+                int offLat = dims.length > 8 ? dims[8] : 0;
+                int worldOffX;
+                int worldOffY;
+                int worldOffZ;
+
+                worldOffY = offUp;
+                worldOffX = facing.offsetX * offFwd + facing.getRotation(ForgeDirection.UP).offsetX * offLat;
+                worldOffZ = facing.offsetZ * offFwd + facing.getRotation(ForgeDirection.UP).offsetZ * offLat;
+
+                int[] rot = MultiblockHandlerXR.rotate(dims, facing.toEnumFacing());
+                for(int bx = -rot[4] + worldOffX; bx <= rot[5] + worldOffX; bx++) {
+                    for(int by = -rot[1] + worldOffY; by <= rot[0] + worldOffY; by++) {
+                        for(int bz = -rot[2] + worldOffZ; bz <= rot[3] + worldOffZ; bz++) {
+                            BlockPos bp = new BlockPos(MathHelper.floor(originX) + bx, MathHelper.floor(originY) + by, MathHelper.floor(originZ) + bz);
+                            blocks.add(bp);
+                            set.add(bp);
+                        }
+                    }
+                }
+            }
+            // This looks for the blocks nearby and draws lines between the
+            // vertexes to make different shaped boxes.
+            // Most of this was taken from Mellow (Thanks mellow) -Wolf
+            for(BlockPos pos : blocks) {
+                boolean px = set.contains(pos.add(1, 0, 0));
+                boolean nx = set.contains(pos.add(-1, 0, 0));
+                boolean ppy = set.contains(pos.add(0, 1, 0));
+                boolean ny = set.contains(pos.add(0, -1, 0));
+                boolean ppz = set.contains(pos.add(0, 0, 1));
+                boolean nz = set.contains(pos.add(0, 0, -1));
+
+                double minX = pos.getX() - dX;
+                double maxX = pos.getX() + 1 - dX;
+                double minY = pos.getY() - dY;
+                double maxY = pos.getY() + 1 - dY;
+                double minZ = pos.getZ() - dZ;
+                double maxZ = pos.getZ() + 1 - dZ;
+
+                if(!ppy) {
+                    if(!nx) {
+                        buffer.pos(minX, maxY, minZ).color(r, g, b, a).endVertex();
+                        buffer.pos(minX, maxY, maxZ).color(r, g, b, a).endVertex();
+                    }
+                    if(!ppz) {
+                        buffer.pos(minX, maxY, maxZ).color(r, g, b, a).endVertex();
+                        buffer.pos(maxX, maxY, maxZ).color(r, g, b, a).endVertex();
+                    }
+                    if(!px) {
+                        buffer.pos(maxX, maxY, maxZ).color(r, g, b, a).endVertex();
+                        buffer.pos(maxX, maxY, minZ).color(r, g, b, a).endVertex();
+                    }
+                    if(!nz) {
+                        buffer.pos(maxX, maxY, minZ).color(r, g, b, a).endVertex();
+                        buffer.pos(minX, maxY, minZ).color(r, g, b, a).endVertex();
+                    }
+                }
+                if(!ny) {
+                    if(!nx) {
+                        buffer.pos(minX, minY, minZ).color(r, g, b, a).endVertex();
+                        buffer.pos(minX, minY, maxZ).color(r, g, b, a).endVertex();
+                    }
+                    if(!ppz) {
+                        buffer.pos(minX, minY, maxZ).color(r, g, b, a).endVertex();
+                        buffer.pos(maxX, minY, maxZ).color(r, g, b, a).endVertex();
+                    }
+                    if(!px) {
+                        buffer.pos(maxX, minY, maxZ).color(r, g, b, a).endVertex();
+                        buffer.pos(maxX, minY, minZ).color(r, g, b, a).endVertex();
+                    }
+                    if(!nz) {
+                        buffer.pos(maxX, minY, minZ).color(r, g, b, a).endVertex();
+                        buffer.pos(minX, minY, minZ).color(r, g, b, a).endVertex();
+                    }
+                }
+                if(!nz) {
+                    if(!nx) {
+                        buffer.pos(minX, minY, minZ).color(r, g, b, a).endVertex();
+                        buffer.pos(minX, maxY, minZ).color(r, g, b, a).endVertex();
+                    }
+                    if(!ppy) {
+                        buffer.pos(minX, maxY, minZ).color(r, g, b, a).endVertex();
+                        buffer.pos(maxX, maxY, minZ).color(r, g, b, a).endVertex();
+                    }
+                    if(!px) {
+                        buffer.pos(maxX, maxY, minZ).color(r, g, b, a).endVertex();
+                        buffer.pos(maxX, minY, minZ).color(r, g, b, a).endVertex();
+                    }
+                    if(!ny) {
+                        buffer.pos(maxX, minY, minZ).color(r, g, b, a).endVertex();
+                        buffer.pos(minX, minY, minZ).color(r, g, b, a).endVertex();
+                    }
+                }
+                if(!ppz) {
+                    if(!nx) {
+                        buffer.pos(minX, minY, maxZ).color(r, g, b, a).endVertex();
+                        buffer.pos(minX, maxY, maxZ).color(r, g, b, a).endVertex();
+                    }
+                    if(!ppy) {
+                        buffer.pos(minX, maxY, maxZ).color(r, g, b, a).endVertex();
+                        buffer.pos(maxX, maxY, maxZ).color(r, g, b, a).endVertex();
+                    }
+                    if(!px) {
+                        buffer.pos(maxX, maxY, maxZ).color(r, g, b, a).endVertex();
+                        buffer.pos(maxX, minY, maxZ).color(r, g, b, a).endVertex();
+                    }
+                    if(!ny) {
+                        buffer.pos(maxX, minY, maxZ).color(r, g, b, a).endVertex();
+                        buffer.pos(minX, minY, maxZ).color(r, g, b, a).endVertex();
+                    }
+                }
+                if(!nx) {
+                    if(!nz) {
+                        buffer.pos(minX, minY, minZ).color(r, g, b, a).endVertex();
+                        buffer.pos(minX, maxY, minZ).color(r, g, b, a).endVertex();
+                    }
+                    if(!ppy) {
+                        buffer.pos(minX, maxY, minZ).color(r, g, b, a).endVertex();
+                        buffer.pos(minX, maxY, maxZ).color(r, g, b, a).endVertex();
+                    }
+                    if(!ppz) {
+                        buffer.pos(minX, maxY, maxZ).color(r, g, b, a).endVertex();
+                        buffer.pos(minX, minY, maxZ).color(r, g, b, a).endVertex();
+                    }
+                    if(!ny) {
+                        buffer.pos(minX, minY, maxZ).color(r, g, b, a).endVertex();
+                        buffer.pos(minX, minY, minZ).color(r, g, b, a).endVertex();
+                    }
+                }
+                if(!px) {
+                    if(!nz) {
+                        buffer.pos(maxX, minY, minZ).color(r, g, b, a).endVertex();
+                        buffer.pos(maxX, maxY, minZ).color(r, g, b, a).endVertex();
+                    }
+                    if(!ppy) {
+                        buffer.pos(maxX, maxY, minZ).color(r, g, b, a).endVertex();
+                        buffer.pos(maxX, maxY, maxZ).color(r, g, b, a).endVertex();
+                    }
+                    if(!ppz) {
+                        buffer.pos(maxX, maxY, maxZ).color(r, g, b, a).endVertex();
+                        buffer.pos(maxX, minY, maxZ).color(r, g, b, a).endVertex();
+                    }
+                    if(!ny) {
+                        buffer.pos(maxX, minY, maxZ).color(r, g, b, a).endVertex();
+                        buffer.pos(maxX, minY, minZ).color(r, g, b, a).endVertex();
+                    }
+                }
+            }
+
+            b = color;
+            r = 0;
+            g = 0;
+
+            // boo-yeah
+            for(double[] extra : this.getAABBExtras()) {
+                ForgeDirection rot = facing.getRotation(ForgeDirection.UP);
+                double cX = MathHelper.floor(originX) - dX + 0.5;
+                double cY = MathHelper.floor(originY) - dY;
+                double cZ = MathHelper.floor(originZ) - dZ + 0.5;
+
+                double upr = extra[0];
+                double lwr = extra[1];
+                double fwd = extra[2];
+                double bwd = extra[3];
+                double lft = extra[4];
+                double rgt = extra[5];
+
+                double x0 = cX + fwd * facing.offsetX + lft * rot.offsetX;
+                double x1 = cX + bwd * facing.offsetX + rgt * rot.offsetX;
+                double y0 = cY + lwr;
+                double y1 = cY + upr;
+                double z0 = cZ + fwd * facing.offsetZ + lft * rot.offsetZ;
+                double z1 = cZ + bwd * facing.offsetZ + rgt * rot.offsetZ;
+
+                buffer.pos(x0, y0, z0).color(r, g, b, a).endVertex(); buffer.pos(x0, y0, z1).color(r, g, b, a).endVertex();
+                buffer.pos(x1, y0, z0).color(r, g, b, a).endVertex(); buffer.pos(x1, y0, z1).color(r, g, b, a).endVertex();
+                buffer.pos(x0, y0, z0).color(r, g, b, a).endVertex(); buffer.pos(x1, y0, z0).color(r, g, b, a).endVertex();
+                buffer.pos(x0, y0, z1).color(r, g, b, a).endVertex(); buffer.pos(x1, y0, z1).color(r, g, b, a).endVertex();
+
+                buffer.pos(x0, y1, z0).color(r, g, b, a).endVertex(); buffer.pos(x0, y1, z1).color(r, g, b, a).endVertex();
+                buffer.pos(x1, y1, z0).color(r, g, b, a).endVertex(); buffer.pos(x1, y1, z1).color(r, g, b, a).endVertex();
+                buffer.pos(x0, y1, z0).color(r, g, b, a).endVertex(); buffer.pos(x1, y1, z0).color(r, g, b, a).endVertex();
+                buffer.pos(x0, y1, z1).color(r, g, b, a).endVertex(); buffer.pos(x1, y1, z1).color(r, g, b, a).endVertex();
+
+                buffer.pos(x0, y0, z0).color(r, g, b, a).endVertex(); buffer.pos(x0, y1, z0).color(r, g, b, a).endVertex();
+                buffer.pos(x1, y0, z0).color(r, g, b, a).endVertex(); buffer.pos(x1, y1, z0).color(r, g, b, a).endVertex();
+                buffer.pos(x0, y0, z1).color(r, g, b, a).endVertex(); buffer.pos(x0, y1, z1).color(r, g, b, a).endVertex();
+                buffer.pos(x1, y0, z1).color(r, g, b, a).endVertex(); buffer.pos(x1, y1, z1).color(r, g, b, a).endVertex();
+            }
+
+            tess.draw();
+
+            GlStateManager.depthMask(true);
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, OpenGlHelper.lastBrightnessX, OpenGlHelper.lastBrightnessY);
+            GlStateManager.enableTexture2D();
+            GlStateManager.enableLighting();
+            GlStateManager.popMatrix();
+        }
+    }
 }

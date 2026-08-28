@@ -436,7 +436,7 @@ public class GUIRBMKConsole extends GuiScreen {
 		GlStateManager.disableTexture2D();
 		GlStateManager.disableLighting();
 		GlStateManager.color(0f, 1f, 0f, 1f);
-		GL11.glLineWidth(2F);
+		GlStateManager.glLineWidth(2F);
 		GL11.glEnable(GL11.GL_LINE_SMOOTH);
 
 		Tessellator tess = Tessellator.getInstance();

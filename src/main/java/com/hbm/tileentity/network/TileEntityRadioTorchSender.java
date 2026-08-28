@@ -52,7 +52,8 @@ public class TileEntityRadioTorchSender extends TileEntityRadioTorchBase impleme
             }
 
             if (shouldSend && !this.channel.isEmpty()) {
-                RTTYSystem.broadcast(world, this.channel, this.customMap ? this.mapping[input] : (input + ""));
+                String toSend = this.customMap ? this.mapping[input] : (input + "");
+                if (toSend != null && !toSend.isEmpty()) RTTYSystem.broadcast(world, this.channel, toSend);
             }
         }
 

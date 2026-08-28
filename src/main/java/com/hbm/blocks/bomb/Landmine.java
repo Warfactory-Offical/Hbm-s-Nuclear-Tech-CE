@@ -11,6 +11,8 @@ import com.hbm.explosion.vanillant.standard.*;
 import com.hbm.interfaces.IBomb;
 import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
+import com.hbm.saveddata.satellites.SatelliteDetector;
+import com.hbm.saveddata.satellites.SatelliteDetector.BurstIntensity;
 import com.hbm.tileentity.bomb.TileEntityLandmine;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -236,6 +238,7 @@ public class Landmine extends BlockContainer implements IBomb {
                 ExplosionLarge.spawnShrapnels(world, x + 0.5, y + 0.5, z + 0.5, 5);
             }
             case "mine_fat" -> {
+                SatelliteDetector.reportEvent(world, SatelliteDetector.DURATION_LOW, BurstIntensity.LOW, x + 0.5, z + 0.5);
                 world.spawnEntity(EntityNukeExplosionMK5.statFac(world, BombConfig.fatmanRadius, x + 0.5, y + 0.5, z + 0.5).setDetonator(detonator));
                 if (rand.nextInt(100) == 0 || MainRegistry.polaroidID == 11) {
                     EntityNukeTorex.statFacBale(world, x + 0.5, y + 0.5, z + 0.5, BombConfig.fatmanRadius);

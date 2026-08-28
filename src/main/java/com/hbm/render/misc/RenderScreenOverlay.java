@@ -1,5 +1,6 @@
 package com.hbm.render.misc;
 
+import net.minecraft.client.renderer.GlStateManager;
 import com.hbm.Tags;
 import com.hbm.capability.HbmCapability;
 import com.hbm.config.ClientConfig;
@@ -453,7 +454,7 @@ public class RenderScreenOverlay {
 
 	public static void renderBadges(ScaledResolution res, Gui gui) {
 
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 
 		Minecraft.getMinecraft().entityRenderer.setupOverlayRendering();
 

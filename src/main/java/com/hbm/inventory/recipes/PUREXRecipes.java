@@ -8,11 +8,14 @@ import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.recipes.loader.GenericRecipes;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemPWRFuel.EnumPWRFuel;
+import com.hbm.items.machine.ItemPileRodMK2.EnumPileRod;
 import com.hbm.items.machine.ItemWatzPellet.EnumWatzType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
 
+import static com.hbm.inventory.OreDictManager.AU198;
+import static com.hbm.inventory.OreDictManager.PB209;
 import static com.hbm.inventory.OreDictManager.TH232;
 import static com.hbm.inventory.OreDictManager.ZR;
 
@@ -66,6 +69,18 @@ public class PUREXRecipes extends GenericRecipes<PUREXRecipe> {
                 .inputFluids(new FluidStack(Fluids.NITRIC_ACID, 1000), new FluidStack(Fluids.HYDROGEN, 4000))
                 .outputItems(new ItemStack(ModItems.billet_uzh, 4)));
 
+        this.register((PUREXRecipe) new PUREXRecipe("purex.flashgold").setup(600, 1_000)
+                .inputItems(new OreDictStack(AU198.billet()),
+                        new ComparableStack(ModItems.pellet_charged))
+                .inputFluids(new FluidStack(Fluids.AMAT, 1_000))
+                .outputItems(new ItemStack(ModItems.billet_balefire_gold, 2)));
+
+        this.register((PUREXRecipe) new PUREXRecipe("purex.flashlead").setup(600, 1_000)
+                .inputItems(new OreDictStack(PB209.billet()),
+                        new ComparableStack(ModItems.billet_balefire_gold))
+                .inputFluids(new FluidStack(Fluids.AMAT, 1_000))
+                .outputItems(new ItemStack(ModItems.billet_flashlead, 1)));
+
         //CP-1
         String autoPile = "autoswitch.pile";
         this.register((PUREXRecipe) new PUREXRecipe("purex.pilepu").setup(40, pilePower).setNameWrapper("purex.recycle").setGroup(autoPile, this)
@@ -74,6 +89,13 @@ public class PUREXRecipes extends GenericRecipes<PUREXRecipe> {
                 .outputItems(new ItemStack(ModItems.billet_pu_mix, 2),
                         new ItemStack(ModItems.billet_uranium, 1),
                         new ItemStack(ModItems.plate_iron, 2))
+                .setIconToFirstIngredient());
+
+        this.register((PUREXRecipe) new PUREXRecipe("purex.pilethorium").setup(40, pilePower).setNameWrapper("purex.recycle").setGroup(autoPile, this)
+                .inputItems(new ComparableStack(ModItems.pile_rod, 1, EnumPileRod.THORIUM_FUEL))
+                .inputFluids(new FluidStack(Fluids.SULFURIC_ACID, 100))
+                .outputItems(new ItemStack(ModItems.billet_thorium_fuel, 2),
+                        new ItemStack(ModItems.billet_nuclear_waste, 1))
                 .setIconToFirstIngredient());
 
         this.register((PUREXRecipe) new PUREXRecipe("purex.pilepu239").setup(40, pilePower).setNameWrapper("purex.recycle").setGroup(autoPile, this)

@@ -113,6 +113,7 @@ public class Compat {
         public static final String OPEN_COMPUTERS = "opencomputers";
         public static final String CTM = "ctm";
         public static final String AE2 = "appliedenergistics2";
+        public static final String DYNAMIC_TREES = "dynamictrees";
         public static final String HBM_NTM_STRUCTURE = "ntmdopolnenie"; //Yes, this is the modid. Idk what this means
         public static final String POTATOO_STRUCTURE = "potatooscustomstructureforhbm"; //Can we just block all mccreator mods?
         public static final String HBM_NTM_LUCKY_BLOCKS = "luckynuke"; //It's all fucking garbage;

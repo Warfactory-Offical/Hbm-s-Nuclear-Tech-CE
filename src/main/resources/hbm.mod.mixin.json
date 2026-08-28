@@ -24,7 +24,8 @@
     "optifine.MixinRenderItem"
   ],
   "mixins": [
-    "potioncore.MixinPotionCoreEventHandler"
+    "potioncore.MixinPotionCoreEventHandler",
+    "ae2.MixinPartFluidImportBus"
   ],
   "server": [],
   "setSourceFile": true,

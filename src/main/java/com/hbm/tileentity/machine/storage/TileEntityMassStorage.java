@@ -2,17 +2,19 @@ package com.hbm.tileentity.machine.storage;
 
 import com.hbm.api.redstoneoverradio.IRORInteractive;
 import com.hbm.api.redstoneoverradio.IRORValueProvider;
-import com.hbm.handler.threading.PacketThreading;
+import com.hbm.handler.CompatHandler;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.inventory.container.ContainerMassStorage;
 import com.hbm.inventory.gui.GUIMassStorage;
 import com.hbm.items.ModItems;
 import com.hbm.lib.HBMSoundHandler;
-import com.hbm.packet.toclient.BufPacket;
-import com.hbm.tileentity.IBufPacketReceiver;
 import com.hbm.tileentity.IControlReceiverFilter;
 import com.hbm.tileentity.IGUIProvider;
 import io.netty.buffer.ByteBuf;
+import li.cil.oc.api.machine.Arguments;
+import li.cil.oc.api.machine.Callback;
+import li.cil.oc.api.machine.Context;
+import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -23,14 +25,15 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 @AutoRegister
-public class TileEntityMassStorage extends TileEntityCrateBase implements IBufPacketReceiver, ITickable, IControlReceiverFilter, IGUIProvider, IRORValueProvider, IRORInteractive {
+@Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
+public class TileEntityMassStorage extends TileEntityCrateBase implements ITickable, IControlReceiverFilter, IGUIProvider, IRORValueProvider, IRORInteractive, SimpleComponent, CompatHandler.OCComponent {
 
     private int stack = 0;
     public boolean output = false;
@@ -72,8 +75,7 @@ public class TileEntityMassStorage extends TileEntityCrateBase implements IBufPa
 
             if (this.getType() == null) this.stack = 0;
 
-            if (getType() != null && getStockpile() < getCapacity() && !inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(0).isItemEqual(getType()) && ItemStack.areItemStackTagsEqual(inventory.getStackInSlot(0), getType())) {
-
+            if(canInsert(inventory.getStackInSlot(0))) {
                 int remaining = getCapacity() - getStockpile();
                 int toRemove = Math.min(remaining, inventory.getStackInSlot(0).getCount());
                 this.inventory.getStackInSlot(0).shrink(toRemove);
@@ -102,8 +104,46 @@ public class TileEntityMassStorage extends TileEntityCrateBase implements IBufPa
                 }
             }
 
-            networkPackNT(15);
+            networkPackNT(32);
         }
+    }
+
+    public boolean canInsert(ItemStack stack) {
+        if (stack.isEmpty() || this.isLocked()) return false;
+        ItemStack type = getType();
+        if (type.isEmpty()) return false;
+        return type.isItemEqual(stack) && ItemStack.areItemStackTagsEqual(stack, type);
+    }
+
+    public boolean quickInsert(ItemStack stack) {
+        if (!canInsert(stack)) return false;
+
+        int remaining = getCapacity() - getStockpile();
+        if (remaining < stack.getCount()) return false;
+
+        this.stack += stack.getCount();
+        stack.setCount(0);
+        this.markDirty();
+
+        return true;
+    }
+
+    public ItemStack quickExtract() {
+        if (!output) return ItemStack.EMPTY;
+
+        ItemStack type = getType();
+        if (type.isEmpty()) return ItemStack.EMPTY;
+
+        int amount = type.getMaxStackSize();
+
+        if (getStockpile() < amount) return ItemStack.EMPTY;
+
+        ItemStack result = type.copy();
+        result.setCount(amount);
+        this.stack -= amount;
+        this.markDirty();
+
+        return result;
     }
 
     @Override
@@ -228,6 +268,11 @@ public class TileEntityMassStorage extends TileEntityCrateBase implements IBufPa
         return new int[]{0, 2};
     }
 
+    @SideOnly(Side.CLIENT)
+    public double getMaxRenderDistanceSquared() {
+        return 1024.0D; // only render mass storage info 32 blocks away, for performance
+    }
+
     @Override
     public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
         return new ContainerMassStorage(player.inventory, this);
@@ -269,5 +314,69 @@ public class TileEntityMassStorage extends TileEntityCrateBase implements IBufPa
         }
 
         return null;
+    }
+
+    @Override
+    @Optional.Method(modid = "opencomputers")
+    public String getComponentName() {
+        return "ntm_mass_storage";
+    }
+
+    @Callback(direct = true, doc = "function():number -- Returns item amount")
+    @Optional.Method(modid = "opencomputers")
+    public Object[] getFill(Context context, Arguments args) {
+        return new Object[] {this.stack};
+    }
+
+    @Callback(direct = true, doc = "function():number -- Returns item capacity")
+    @Optional.Method(modid = "opencomputers")
+    public Object[] getCapacity(Context context, Arguments args) {
+        return new Object[] {this.capacity};
+    }
+
+    @Callback(direct = true, doc = "function():string -- Returns item type")
+    @Optional.Method(modid = "opencomputers")
+    public Object[] getType(Context context, Arguments args) {
+        ItemStack slot = inventory.getStackInSlot(1);
+        if(slot.isEmpty()) return new Object[] {"None"};
+        return new Object[] {slot.getDisplayName()};
+    }
+
+    @Callback(direct = true, doc = "function():boolean -- Returns output mode")
+    @Optional.Method(modid = "opencomputers")
+    public Object[] getOutputMode(Context context, Arguments args) {
+        return new Object[] {this.output};
+    }
+
+    @Callback(direct = true, limit = 4, doc = "function(mode: boolean) -- Sets output mode")
+    @Optional.Method(modid = "opencomputers")
+    public Object[] setOutputMode(Context context, Arguments args) {
+        this.output = args.checkBoolean(0);
+        return new Object[] {};
+    }
+
+    @Override
+    @Optional.Method(modid = "opencomputers")
+    public String[] methods() {
+        return new String[] {
+            "getFill",
+            "getCapacity",
+            "getType",
+            "getOutputMode",
+            "setOutputMode"
+        };
+    }
+
+    @Override
+    @Optional.Method(modid = "opencomputers")
+    public Object[] invoke(String method, Context context, Arguments args) throws Exception {
+        switch (method) {
+            case "getFill": return getFill(context, args);
+            case "getCapacity": return getCapacity(context, args);
+            case "getType": return getType(context, args);
+            case "getOutputMode": return getOutputMode(context, args);
+            case "setOutputMode": return setOutputMode(context, args);
+        }
+        throw new NoSuchMethodException();
     }
 }

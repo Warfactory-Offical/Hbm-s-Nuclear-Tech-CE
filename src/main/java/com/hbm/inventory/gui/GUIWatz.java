@@ -53,9 +53,9 @@ public class GUIWatz extends GuiInfoContainer {
 		
 		double scale = 1.25;
 		String flux = String.format(Locale.US, "%,.1f", watz.fluxDisplay);
-		GL11.glScaled(1 / scale, 1 / scale, 1);
+		GlStateManager.scale(1 / scale, 1 / scale, 1);
 		this.fontRenderer.drawString(flux, (int) (161 * scale - this.fontRenderer.getStringWidth(flux)), (int)(107 * scale), 0x00ff00);
-		GL11.glScaled(scale, scale, 1);
+		GlStateManager.scale(scale, scale, 1);
 	}
 
 	@Override

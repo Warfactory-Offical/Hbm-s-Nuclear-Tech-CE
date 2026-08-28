@@ -5,7 +5,7 @@ import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.particle.helper.HbmEffectNT;
-import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.util.Vec3NT;
 import com.hbm.util.ContaminationUtil;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
@@ -68,7 +68,7 @@ public class TileEntityZirnoxDestroyed extends TileEntity implements ITickable {
 
         for(EntityLivingBase e : entities) {
 
-            Vec3 vec = Vec3.createVectorHelper(e.posX - (x + 0.5), (e.posY + e.getEyeHeight()) - (y + 0.5), e.posZ - (z + 0.5));
+            Vec3NT vec = Vec3NT.createVectorHelper(e.posX - (x + 0.5), (e.posY + e.getEyeHeight()) - (y + 0.5), e.posZ - (z + 0.5));
             double len = vec.length();
             vec = vec.normalize();
 
@@ -76,9 +76,9 @@ public class TileEntityZirnoxDestroyed extends TileEntity implements ITickable {
 
             for(int i = 1; i < len; i++) {
 
-                int ix = (int)Math.floor(x + 0.5 + vec.xCoord * i);
-                int iy = (int)Math.floor(y + 0.5 + vec.yCoord * i);
-                int iz = (int)Math.floor(z + 0.5 + vec.zCoord * i);
+                int ix = (int)Math.floor(x + 0.5 + vec.x * i);
+                int iy = (int)Math.floor(y + 0.5 + vec.y * i);
+                int iz = (int)Math.floor(z + 0.5 + vec.z * i);
 
                 res += world.getBlockState(new BlockPos(ix, iy, iz)).getBlockHardness( world, pos); //Norwood: getPlayerRelativeBlockHardness crashes the game when player is null, why would you ever do that?
             }

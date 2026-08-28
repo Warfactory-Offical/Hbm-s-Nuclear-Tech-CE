@@ -1,6 +1,8 @@
 package com.hbm.tileentity.machine;
 
 import com.hbm.api.fluid.IFluidStandardTransceiver;
+import com.hbm.api.redstoneoverradio.IRORInteractive;
+import com.hbm.api.redstoneoverradio.IRORValueProvider;
 import com.hbm.api.tile.IHeatSource;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.interfaces.IControlReceiver;
@@ -29,7 +31,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 @AutoRegister
-public class TileEntityHeaterOilburner extends TileEntityMachinePolluting implements ITickable, IGUIProvider, IHeatSource, IControlReceiver, IFluidStandardTransceiver, IFFtoNTMF, IFluidCopiable, IConnectionAnchors {
+public class TileEntityHeaterOilburner extends TileEntityMachinePolluting implements ITickable, IGUIProvider, IHeatSource, IControlReceiver, IFluidStandardTransceiver, IFFtoNTMF, IFluidCopiable, IConnectionAnchors, IRORValueProvider, IRORInteractive {
 
     public static final int maxHeatEnergy = 100_000;
     public boolean isOn = false;
@@ -239,5 +241,41 @@ public class TileEntityHeaterOilburner extends TileEntityMachinePolluting implem
         tank.setTankType(Fluids.fromID(id));
         if(nbt.hasKey("isOn")) isOn = nbt.getBoolean("isOn");
         if(nbt.hasKey("burnRate")) setting = nbt.getInteger("burnRate");
+    }
+
+    @Override
+    public String[] getFunctionInfo() {
+        return new String[]{
+                PREFIX_VALUE + "heat",
+                PREFIX_VALUE + "fuel",
+                PREFIX_VALUE + "burnrate",
+                PREFIX_VALUE + "state",
+                PREFIX_FUNCTION + "setstate" + NAME_SEPARATOR + "active",
+                PREFIX_FUNCTION + "setburnrate" + NAME_SEPARATOR + "rate"
+        };
+    }
+
+    @Override
+    public String provideRORValue(String name) {
+        if((PREFIX_VALUE + "heat").equals(name)) return "" + heatEnergy;
+        if((PREFIX_VALUE + "fuel").equals(name)) return "" + tank.getFill();
+        if((PREFIX_VALUE + "burnrate").equals(name)) return "" + setting;
+        if((PREFIX_VALUE + "state").equals(name)) return isOn ? "1" : "0";
+        return null;
+    }
+
+    @Override
+    public String runRORFunction(String name, String[] params) {
+        if((PREFIX_FUNCTION + "setstate").equals(name) && params.length > 0) {
+            this.isOn = params[0].equals("1");
+            this.markDirty();
+            return null;
+        }
+        if((PREFIX_FUNCTION + "setburnrate").equals(name) && params.length > 0) {
+            this.setting = IRORInteractive.parseInt(params[0], 1, 10);
+            this.markDirty();
+            return null;
+        }
+        return null;
     }
 }

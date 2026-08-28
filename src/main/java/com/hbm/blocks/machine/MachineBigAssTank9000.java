@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+@Deprecated
 public class MachineBigAssTank9000 extends BlockDummyable implements IPersistentInfoProvider {
 
 	public MachineBigAssTank9000(Material mat, String s) {

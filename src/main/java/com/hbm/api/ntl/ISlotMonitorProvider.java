@@ -23,6 +23,21 @@ public interface ISlotMonitorProvider {
     /** Removes the given number of items from that slot, returns the amount left to remove if the stack was smaller than the supplied amount */
     long useUpItem(int index, long amount);
 
+    /** Adds the given number of items to that slot, returns the amount that couldn't be added due to stack limits */
+    default long addItem(int index, long amount) {
+        return amount;
+    }
+
+    /** Sets the slot contents, returns the number of items that couldn't be added */
+    default long setupType(int index, ItemStack zeroStack, long amount) {
+        return amount;
+    }
+
+    /** Whether this container allows types to be set via the access terminal */
+    default boolean allowTypeSetting() {
+        return false;
+    }
+
     /** Whether this storage unit is reachable by the access point */
     boolean isAvailableToCache(StackCache cache);
 

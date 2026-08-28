@@ -172,7 +172,7 @@ public class ParticleBloodParticle extends ParticleLayerBase {
 		public void preRender() {
 			Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.blood_particles);
 			//Makes it not pixelated when looking at it up close by using linear interpolation as the magnification filter.
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+			GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 			
 			GlStateManager.enableColorMaterial();
 			GlStateManager.enableRescaleNormal();

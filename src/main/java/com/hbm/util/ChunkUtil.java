@@ -827,7 +827,13 @@ public final class ChunkUtil {
         World world = chunk.getWorld();
         Block oldBlock = oldState.getBlock();
         Block newBlock = newState.getBlock();
-        if (oldBlock != newBlock) oldBlock.breakBlock(world, pos, oldState);
+        if (oldBlock != newBlock) {
+            try {
+                oldBlock.breakBlock(world, pos, oldState);
+            } catch (Throwable e) {
+                MainRegistry.logger.error("breakBlock failed during fallout cleanup for {} at {}; the transition is already applied, continuing", oldState, pos, e);
+            }
+        }
         TileEntity te = chunk.getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK);
         if (te != null && te.shouldRefresh(world, pos, oldState, newState)) world.removeTileEntity(pos);
         Block block = newState.getBlock();

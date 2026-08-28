@@ -1,10 +1,12 @@
 package com.hbm.blocks.network;
 
 import com.hbm.blocks.BlockContainerBakeableNormal;
+import com.hbm.lib.InventoryHelper;
 import com.hbm.main.MainRegistry;
 import com.hbm.render.block.BlockBakeFrame;
 import com.hbm.tileentity.network.TileEntityPneumoStorageClutter;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -22,6 +24,12 @@ public class PneumoStorageClutter extends BlockContainerBakeableNormal {
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {
         return new TileEntityPneumoStorageClutter();
+    }
+
+    @Override
+    public void breakBlock(World world, BlockPos pos, IBlockState state) {
+        InventoryHelper.dropInventoryItems(world, pos, world.getTileEntity(pos));
+        super.breakBlock(world, pos, state);
     }
 
     @Override

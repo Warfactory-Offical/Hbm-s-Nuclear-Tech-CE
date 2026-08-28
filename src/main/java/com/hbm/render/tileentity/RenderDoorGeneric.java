@@ -185,6 +185,8 @@ public class RenderDoorGeneric extends TileEntitySpecialRenderer<TileEntityDoorG
 				Item.getItemFromBlock(ModBlocks.sliding_gate_door),
 				Item.getItemFromBlock(ModBlocks.silo_hatch),
 				Item.getItemFromBlock(ModBlocks.silo_hatch_large),
+				Item.getItemFromBlock(ModBlocks.cargo_door),
+				Item.getItemFromBlock(ModBlocks.transition_seal),
 		};
 	}
 
@@ -204,14 +206,27 @@ public class RenderDoorGeneric extends TileEntitySpecialRenderer<TileEntityDoorG
 					ResourceLocation doorTex = DefaultSkins.pheo_vault_door_3;
 					ResourceLocation labelTex = DefaultSkins.pheo_label_101;
 
-					switch(index) {
-					case 1: labelTex = DefaultSkins.pheo_label_87; break;
-					case 2: labelTex = DefaultSkins.pheo_label_106; break;
-					case 3: doorTex = DefaultSkins.pheo_vault_door_4; labelTex = DefaultSkins.pheo_label_81; break;
-					case 4: doorTex = DefaultSkins.pheo_vault_door_4; labelTex = DefaultSkins.pheo_label_111; break;
-					case 5: doorTex = DefaultSkins.pheo_vault_door_s; labelTex = DefaultSkins.pheo_label_2; break;
-					case 6: doorTex = DefaultSkins.pheo_vault_door_s; labelTex = DefaultSkins.pheo_label_99; break;
-					}
+                    labelTex = switch (index) {
+                        case 1 -> DefaultSkins.pheo_label_87;
+                        case 2 -> DefaultSkins.pheo_label_106;
+                        case 3 -> {
+                            doorTex = DefaultSkins.pheo_vault_door_4;
+                            yield DefaultSkins.pheo_label_81;
+                        }
+                        case 4 -> {
+                            doorTex = DefaultSkins.pheo_vault_door_4;
+                            yield DefaultSkins.pheo_label_111;
+                        }
+                        case 5 -> {
+                            doorTex = DefaultSkins.pheo_vault_door_s;
+                            yield DefaultSkins.pheo_label_2;
+                        }
+                        case 6 -> {
+                            doorTex = DefaultSkins.pheo_vault_door_s;
+                            yield DefaultSkins.pheo_label_99;
+                        }
+                        default -> labelTex;
+                    };
 
 					bindTexture(doorTex);
 					GlStateManager.shadeModel(GL11.GL_SMOOTH);
@@ -230,7 +245,6 @@ public class RenderDoorGeneric extends TileEntitySpecialRenderer<TileEntityDoorG
 
 				public void renderCommon() {
 					GlStateManager.rotate(90, 0, 1, 0);
-					GlStateManager.translate(0, 0.5, 0);
 					if (DoorDecl.LARGE_VEHICLE_DOOR.hasSkins())
 						bindTexture(DoorDecl.LARGE_VEHICLE_DOOR.getCyclingSkins());
 					else
@@ -272,8 +286,8 @@ public class RenderDoorGeneric extends TileEntitySpecialRenderer<TileEntityDoorG
 		} else if (item == Item.getItemFromBlock(ModBlocks.qe_sliding_door)) {
 			return new ItemRenderBase() {
 				public void renderInventory() {
-					GlStateManager.translate(0, -3.5, 0);
-					GlStateManager.scale(6, 6, 6);
+					GlStateManager.translate(0, -3, 0);
+					GlStateManager.scale(5, 5, 5);
 				}
 
 				public void renderCommon() {
@@ -289,8 +303,8 @@ public class RenderDoorGeneric extends TileEntitySpecialRenderer<TileEntityDoorG
 		} else if (item == Item.getItemFromBlock(ModBlocks.fire_door)) {
 			return new ItemRenderBase() {
 				public void renderInventory() {
-					GlStateManager.translate(0, -3.5, 0);
-					GlStateManager.scale(3.6, 3.6, 3.6);
+					GlStateManager.translate(0, -3, 0);
+					GlStateManager.scale(3.5, 3.5, 3.5);
 				}
 
 				public void renderCommon() {
@@ -304,15 +318,15 @@ public class RenderDoorGeneric extends TileEntitySpecialRenderer<TileEntityDoorG
 		} else if (item == Item.getItemFromBlock(ModBlocks.sliding_blast_door)) {
             return new ItemRenderBase() {
                 public void renderInventory() {
-                    GL11.glTranslated(0, -2.75, 0);
-                    GL11.glScaled(2.5, 2.5, 2.5);
+                    GlStateManager.translate(0, -2.75, 0);
+                    GlStateManager.scale(2.5, 2.5, 2.5);
                 }
 
                 public void renderCommon() {
                     bindTexture(DefaultSkins.pheo_blast_door_tex);
-                    GL11.glShadeModel(GL11.GL_SMOOTH);
+                    GlStateManager.shadeModel(GL11.GL_SMOOTH);
                     ResourceManager.pheo_blast_door.renderAll();
-                    GL11.glShadeModel(GL11.GL_FLAT);
+                    GlStateManager.shadeModel(GL11.GL_FLAT);
                 }
             };
         } else if (item == Item.getItemFromBlock(ModBlocks.small_hatch)) {
@@ -333,7 +347,7 @@ public class RenderDoorGeneric extends TileEntitySpecialRenderer<TileEntityDoorG
 		} else if (item == Item.getItemFromBlock(ModBlocks.round_airlock_door)) {
 			return new ItemRenderBase() {
 				public void renderInventory() {
-					GlStateManager.translate(0, -4, 0);
+					GlStateManager.translate(0, -3.75, 0);
 					GlStateManager.scale(3, 3, 3);
 				}
 
@@ -347,14 +361,12 @@ public class RenderDoorGeneric extends TileEntitySpecialRenderer<TileEntityDoorG
 		} else if (item == Item.getItemFromBlock(ModBlocks.secure_access_door)) {
 			return new ItemRenderBase() {
 				public void renderInventory() {
-					GlStateManager.translate(0, -4, 0);
+					GlStateManager.translate(0, -3.75, 0);
 					GlStateManager.scale(2.4, 2.4, 2.4);
-					GlStateManager.rotate(90, 0, -1, 0);
 				}
 
 				public void renderCommon() {
 					GlStateManager.translate(0, 1, 0);
-					GlStateManager.rotate(90, 0, 1, 0);
 					bindTexture(DoorDecl.SECURE_ACCESS_DOOR.getCyclingSkins());
 					GlStateManager.shadeModel(GL11.GL_SMOOTH);
 					ResourceManager.pheo_secure_door.renderAll();

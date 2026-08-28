@@ -50,7 +50,7 @@ public class RenderRBMKGraph extends TileEntitySpecialRenderer<TileEntityRBMKGra
 
 			RenderArcFurnace.fullbright(true);
 			GlStateManager.disableTexture2D();
-			GL11.glLineWidth(2F);
+			GlStateManager.glLineWidth(2F);
 
 			FontRenderer font = Minecraft.getMinecraft().fontRenderer;
 			int height = font.FONT_HEIGHT;

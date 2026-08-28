@@ -167,6 +167,10 @@ public final class UniNodespace {
         for (PerTypeNodeManager<?, ?, ?, ?> manager : managers.values()) manager.reapLinksAndNets();
     }
 
+    public static void clearNodespace() {
+        for (PerTypeNodeManager<?, ?, ?, ?> manager : managers.values()) manager.clear();
+    }
+
     @SuppressWarnings("unchecked")
     private static <R, P, L extends GenNode<N>, N extends NodeNet<R, P, L, N>> PerTypeNodeManager<R, P, L, N> getManagerFor(
             INetworkProvider<N> provider) {
@@ -262,6 +266,18 @@ public final class UniNodespace {
             while (it.hasNext()) {
                 if (it.next().links.isEmpty()) it.remove();
             }
+        }
+
+        void clear() {
+            for (N net : activeNodeNets) {
+                for (L link : net.links) link.expired = true;
+                net.links.clear();
+                net.providerEntries.clear();
+                net.receiverEntries.clear();
+                net.valid = false;
+            }
+            activeNodeNets.clear();
+            worlds.clear();
         }
 
         void reapLinksAndNets() {

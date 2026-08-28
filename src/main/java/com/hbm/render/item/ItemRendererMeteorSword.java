@@ -75,7 +75,7 @@ public class ItemRendererMeteorSword extends TEISRBase {
 
             GlStateManager.matrixMode(GL11.GL_TEXTURE);
             GlStateManager.pushMatrix();
-            GL11.glScaled(8, 8, 8);
+            GlStateManager.scale(8, 8, 8);
             GlStateManager.translate(f2, 0, 0);
             GlStateManager.rotate(-50.0F, 0.0F, 0.0F, 1.0F);
             GlStateManager.matrixMode(GL11.GL_MODELVIEW);

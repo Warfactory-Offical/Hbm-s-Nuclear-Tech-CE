@@ -9,7 +9,7 @@ import com.hbm.explosion.vanillant.standard.*;
 import com.hbm.items.weapon.ItemMissileStandard;
 import com.hbm.main.MainRegistry;
 import com.hbm.particle.helper.HbmEffectNT;
-import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.util.Vec3NT;
 import com.hbm.util.TrackerUtil;
 import net.minecraft.entity.EntityTrackerEntry;
 import net.minecraft.item.ItemStack;
@@ -66,7 +66,7 @@ public abstract class EntityMissileBaseNT extends EntityThrowableInterp implemen
         targetZ = b;
         this.motionY = 2;
 
-        Vec3 vector = Vec3.createVectorHelper(targetX - startX, 0, targetZ - startZ);
+        Vec3NT vector = Vec3NT.createVectorHelper(targetX - startX, 0, targetZ - startZ);
         accelXZ = decelY = 1 / vector.length();
         decelY *= 2;
         velocity = 0;
@@ -134,19 +134,19 @@ public abstract class EntityMissileBaseNT extends EntityThrowableInterp implemen
             if (hasPropulsion()) {
                 this.motionY -= decelY * velocity;
 
-                Vec3 vector = Vec3.createVectorHelper(targetX - startX, 0, targetZ - startZ);
+                Vec3NT vector = Vec3NT.createVectorHelper(targetX - startX, 0, targetZ - startZ);
                 vector = vector.normalize();
-                vector.xCoord *= accelXZ;
-                vector.zCoord *= accelXZ;
+                vector.setX(vector.x * (accelXZ));
+                vector.setZ(vector.z * (accelXZ));
 
                 if (motionY > 0) {
-                    motionX += vector.xCoord * velocity;
-                    motionZ += vector.zCoord * velocity;
+                    motionX += vector.x * velocity;
+                    motionZ += vector.z * velocity;
                 }
 
                 if (motionY < 0) {
-                    motionX -= vector.xCoord * velocity;
-                    motionZ -= vector.zCoord * velocity;
+                    motionX -= vector.x * velocity;
+                    motionZ -= vector.z * velocity;
                 }
             } else {
                 motionX *= 0.99;
@@ -185,22 +185,22 @@ public abstract class EntityMissileBaseNT extends EntityThrowableInterp implemen
     }
 
     protected void spawnControlWithOffset(double offsetX, double offsetY, double offsetZ) {
-        Vec3 vec = Vec3.createVectorHelper(this.lastTickPosX - this.posX, this.lastTickPosY - this.posY, this.lastTickPosZ - this.posZ);
+        Vec3NT vec = Vec3NT.createVectorHelper(this.lastTickPosX - this.posX, this.lastTickPosY - this.posY, this.lastTickPosZ - this.posZ);
         double len = vec.length();
         vec = vec.normalize();
-        Vec3 thrust = Vec3.createVectorHelper(0, 1, 0);
-        thrust.rotateAroundZ(this.rotationPitch * (float) Math.PI / 180F);
-        thrust.rotateAroundY((this.rotationYaw + 90) * (float) Math.PI / 180F);
+        Vec3NT thrust = Vec3NT.createVectorHelper(0, 1, 0);
+        thrust.rotateRollSelf(this.rotationPitch * (float) Math.PI / 180F);
+        thrust.rotateYawSelf((this.rotationYaw + 90) * (float) Math.PI / 180F);
 
         for (int i = 0; i < Math.max(Math.min(len, 10), 1); i++) {
             double j = i - len;
             NBTTagCompound data = new NBTTagCompound();
             data.setFloat("scale", this.getContrailScale());
-            data.setDouble("moX", -thrust.xCoord);
-            data.setDouble("moY", -thrust.yCoord);
-            data.setDouble("moZ", -thrust.zCoord);
+            data.setDouble("moX", -thrust.x);
+            data.setDouble("moY", -thrust.y);
+            data.setDouble("moZ", -thrust.z);
             data.setInteger("maxAge", 60 + rand.nextInt(20));
-            MainRegistry.proxy.effectNT(HbmEffectNT.MissileContrail, posX - vec.xCoord * j + offsetX, posY - vec.yCoord * j + offsetY, posZ - vec.zCoord * j + offsetZ, data);
+            MainRegistry.proxy.effectNT(HbmEffectNT.MissileContrail, posX - vec.x * j + offsetX, posY - vec.y * j + offsetY, posZ - vec.z * j + offsetZ, data);
         }
     }
 

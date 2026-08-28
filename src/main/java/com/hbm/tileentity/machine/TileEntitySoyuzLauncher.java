@@ -17,7 +17,7 @@ import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.particle.helper.HbmEffectNT;
-import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.util.Vec3NT;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
@@ -282,7 +282,7 @@ public class TileEntitySoyuzLauncher extends TileEntityMachineBase implements IT
             int x = inventory.getStackInSlot(1).getTagCompound().getInteger("pos.getX()");
             int z = inventory.getStackInSlot(1).getTagCompound().getInteger("pos.getZ()");
 
-            return (int) Vec3.createVectorHelper(pos.getX() - x, 0, pos.getZ() - z).length();
+            return (int) Vec3NT.createVectorHelper(pos.getX() - x, 0, pos.getZ() - z).length();
         }
 
         return 0;

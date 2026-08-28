@@ -90,7 +90,7 @@ public class DialSquare extends Control {
         GlStateManager.translate(posX, 0.07F, posY);
         GlStateManager.scale(0.023F, 0.023F, 0.023F);
         GlStateManager.rotate(90F, 1F, 0F, 0F);
-        GL11.glNormal3f(0F, 0F, -1F);
+        GlStateManager.glNormal3f(0F, 0F, -1F);
 
         for (int i = 0; i < 11; i++) {
             double angle = (Math.PI / 1.8) / 11F * i;

@@ -9,6 +9,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @AutoRegister
+@Deprecated
 public class TileEntityMachineBAT9000 extends TileEntityBarrel {
 
 	public TileEntityMachineBAT9000() {

@@ -183,7 +183,9 @@ public class MachineBattery extends BlockContainer implements ILookOverlay {
 
 	@Override
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
-		TileEntityMachineBattery battery = (TileEntityMachineBattery) world.getTileEntity(pos);
+		if (world.isRemote) return;
+		if (!(world.getTileEntity(pos) instanceof TileEntityMachineBattery battery)) return;
+
 		battery.isIndirectlyPowered = world.isBlockPowered(pos);
 	}
 

@@ -22,6 +22,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import java.util.List;
+@Deprecated
 public class MachineCapacitorBus extends BlockBase implements IEnergyConnectorBlock, ITooltipProvider {
     public static final PropertyDirection FACING = BlockDirectional.FACING;
 

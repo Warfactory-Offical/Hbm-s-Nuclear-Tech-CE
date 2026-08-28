@@ -1,6 +1,6 @@
 package com.hbm.tileentity.machine;
 
-import com.hbm.api.fluid.IFluidStandardTransceiver;
+import com.hbm.api.fluidmk2.IFluidStandardTransceiverMK2;
 import com.hbm.api.redstoneoverradio.IRORInteractive;
 import com.hbm.api.redstoneoverradio.IRORValueProvider;
 import com.hbm.blocks.BlockDummyable;
@@ -29,6 +29,8 @@ import com.hbm.main.AdvancementManager;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.particle.helper.HbmEffectNT;
+import com.hbm.saveddata.satellites.SatelliteRayScan;
+import com.hbm.saveddata.satellites.SatelliteRayScan.RayEvent;
 import com.hbm.tileentity.IConnectionAnchors;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
@@ -65,7 +67,7 @@ import static com.hbm.items.machine.ItemZirnoxRodDepleted.EnumZirnoxTypeDepleted
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
 @AutoRegister
-public class TileEntityReactorZirnox extends TileEntityMachineBase implements ITickable, IControlReceiver, IFluidStandardTransceiver, SimpleComponent, IGUIProvider, CompatHandler.OCComponent, IRORValueProvider, IRORInteractive, IConnectionAnchors {
+public class TileEntityReactorZirnox extends TileEntityMachineBase implements ITickable, IControlReceiver, IFluidStandardTransceiverMK2, SimpleComponent, IGUIProvider, CompatHandler.OCComponent, IRORValueProvider, IRORInteractive, IConnectionAnchors {
 
     private AxisAlignedBB bb;
     public static final int maxHeat = 100000;
@@ -262,10 +264,12 @@ public class TileEntityReactorZirnox extends TileEntityMachineBase implements IT
                     this.heat -= 10;
                 }
 
+                if (world.getTotalWorldTime() % 100 == 0)
+                    SatelliteRayScan.reportEvent(world, pos.getX(), pos.getY(), pos.getZ(), RayEvent.INFO_NUCLEAR, 200);
             }
 
             if (!this.tilted) for (DirPos pos : getConPos()) {
-                this.sendFluid(steam, world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
+                this.tryProvide(steam, world, pos.getPos().getX(), pos.getPos().getY(), pos.getPos().getZ(), pos.getDir());
             }
 
             checkIfMeltdown();
@@ -279,7 +283,7 @@ public class TileEntityReactorZirnox extends TileEntityMachineBase implements IT
         // function of SHS produced per tick
         // (heat - 10256)/100000 * steamFill (max efficiency at 14b) * 25 * 5 (should get rid of any rounding errors)
         if (this.heat > 10256) {
-            int cycle = (int) ((((float) heat - 10256F) / (float) maxHeat) * Math.min(((float) carbonDioxide.getFill() / 14000F), 1F) * 25F * 5F);
+            int cycle = (int) ((((float) heat - 10256F) / (float) maxHeat) * Math.min(((float) carbonDioxide.getFill() / 14000F), 1F) * 25F * 7.5F);
             this.output = cycle;
 
             water.setFill(water.getFill() - cycle);

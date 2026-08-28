@@ -118,6 +118,16 @@ public class TileEntityBarrel extends TileEntityMachineBase implements ITickable
                     public FluidStack drain(int maxDrain, boolean doDrain) {
                         return null;
                     }
+
+                    @Override
+                    protected boolean canFillExternally() {
+                        return mode == 0 || mode == 1;
+                    }
+
+                    @Override
+                    protected boolean canDrainExternally() {
+                        return false; // the up face never drains, see drain() above
+                    }
                 });
 
             } else if (facing == EnumFacing.DOWN) {
@@ -139,6 +149,16 @@ public class TileEntityBarrel extends TileEntityMachineBase implements ITickable
                     public FluidStack drain(int maxDrain, boolean doDrain) {
                         if (mode == 2 || mode == 1) return super.drain(maxDrain, doDrain);
                         return null;
+                    }
+
+                    @Override
+                    protected boolean canFillExternally() {
+                        return false; // the down face never fills, see fill() above
+                    }
+
+                    @Override
+                    protected boolean canDrainExternally() {
+                        return mode == 2 || mode == 1;
                     }
                 });
 
@@ -162,6 +182,16 @@ public class TileEntityBarrel extends TileEntityMachineBase implements ITickable
                     public FluidStack drain(int maxDrain, boolean doDrain) {
                         if (mode == 2 || mode == 1) return super.drain(maxDrain, doDrain);
                         return null;
+                    }
+
+                    @Override
+                    protected boolean canFillExternally() {
+                        return mode == 0 || mode == 1;
+                    }
+
+                    @Override
+                    protected boolean canDrainExternally() {
+                        return mode == 2 || mode == 1;
                     }
                 });
 

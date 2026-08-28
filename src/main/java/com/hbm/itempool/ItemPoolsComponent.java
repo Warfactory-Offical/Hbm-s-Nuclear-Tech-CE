@@ -103,7 +103,9 @@ public class ItemPoolsComponent {
                     weighted(ModItems.can_mrsugar, 0, 1, 2, 2),
                     weighted(ModItems.cap_nuka, 0, 1, 16, 2),
                     weighted(ModItems.book_guide, 3, 1, 1, 1),
-                    weighted(ModItems.coin_token,0, 1, 1, 2),
+                    weighted(ModBlocks.deco_computer, 0, 1, 1, 1),
+                    weighted(ModItems.blueprint_folder, 0, 1, 1, 1),
+                    weighted(ModItems.coin_token, 0, 1, 1, 2)
             };
         }};
 
@@ -115,10 +117,10 @@ public class ItemPoolsComponent {
                     weighted(Items.MAP, 0, 1, 1, 50),
                     weighted(Items.WRITABLE_BOOK, 0, 1, 1, 30),
                     weighted(ModItems.cigarette, 0, 1, 16, 20),
-                    weighted(ModItems.toothpicks, 0, 1, 16, 10),
                     weighted(ModItems.dust, 0, 1, 1, 40),
                     weighted(ModItems.dust_tiny, 0, 1, 3, 75),
                     weighted(ModItems.ink, 0, 1, 1, 1),
+                    weighted(ModItems.screwdriver, 0, 1, 1, 1),
                     weighted(ModItems.blueprint_folder, 0, 1, 1, 5),
                     weighted(ModItems.coin_token, 0, 1, 1, 30)
             };
@@ -178,12 +180,14 @@ public class ItemPoolsComponent {
                     weighted(ModItems.armor_polish, 0, 1, 1, 3),
                     weighted(ModItems.gun_kit_1, 0, 1, 1, 3),
                     weighted(ModItems.rag, 0, 1, 3, 5),
-                    weighted(ModItems.ammo_container, 0, 1, 1, 1),
-                    weighted(ModItems.coin_token, 0, 1, 1, 5),
                     weighted(Items.PAPER, 0, 1, 6, 7),
                     weighted(Items.CLOCK, 0, 1, 1, 3),
                     weighted(Items.BOOK, 0, 1, 5, 10),
-                    weighted(Items.EXPERIENCE_BOTTLE, 0, 1, 3, 1)
+                    weighted(Items.EXPERIENCE_BOTTLE, 0, 1, 3, 1),
+                    weighted(ModItems.blueprint_folder, 0, 1, 1, 1),
+                    weighted(ModItems.blueprint_folder, 1, 1, 1, 1),
+                    weighted(ModItems.ammo_container, 0, 1, 1, 1),
+                    weighted(ModItems.coin_token, 0, 1, 1, 5)
             };
         }};
 

@@ -24,38 +24,37 @@ public class ContainerMachineOilWell extends Container {
                                                                               oilDrill.tanks[0]))
                                                                       .rule(3, 5, s -> Library.isStackFillableForTank(s,
                                                                               oilDrill.tanks[1]))
-                                                                      .rule(5, 8, Library::isMachineUpgrade)
+                                                                      .rule(5, 7, Library::isMachineUpgrade)
                                                                       .build();
 
     public ContainerMachineOilWell(InventoryPlayer invPlayer, TileEntityOilDrillBase tedf) {
 		oilDrill = tedf;
 
 		// Battery
-		this.addSlotToContainer(new SlotBattery(tedf.inventory, 0, 8, 53));
+		this.addSlotToContainer(new SlotBattery(tedf.inventory, 0, 8, 58));
 		// Canister Input
-		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 1, 80, 17));
+		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 1, 94, 22));
 		// Canister Output
-		this.addSlotToContainer(SlotFiltered.takeOnly(tedf.inventory, 2, 80, 53));
+		this.addSlotToContainer(SlotFiltered.takeOnly(tedf.inventory, 2, 94, 58));
 		// Gas Input
-		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 3, 125, 17));
+		this.addSlotToContainer(new SlotItemHandler(tedf.inventory, 3, 130, 22));
 		// Gas Output
-		this.addSlotToContainer(SlotFiltered.takeOnly(tedf.inventory, 4, 125, 53));
+		this.addSlotToContainer(SlotFiltered.takeOnly(tedf.inventory, 4, 130, 58));
 		//Upgrades
-		this.addSlotToContainer(new SlotUpgrade(tedf.inventory, 5, 152, 17));
-		this.addSlotToContainer(new SlotUpgrade(tedf.inventory, 6, 152, 35));
-		this.addSlotToContainer(new SlotUpgrade(tedf.inventory, 7, 152, 53));
+		this.addSlotToContainer(new SlotUpgrade(tedf.inventory, 5, 156, 36));
+		this.addSlotToContainer(new SlotUpgrade(tedf.inventory, 6, 156, 54));
 
 		for(int i = 0; i < 3; i++)
 		{
 			for(int j = 0; j < 9; j++)
 			{
-				this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+				this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 12 + j * 18, 108 + i * 18));
 			}
 		}
 
         for(int i = 0; i < 9; i++)
 		{
-			this.addSlotToContainer(new Slot(invPlayer, i, 8 + i * 18, 142));
+			this.addSlotToContainer(new Slot(invPlayer, i, 12 + i * 18, 166));
 		}
 	}
 

@@ -13,10 +13,12 @@ import com.hbm.blocks.generic.WasteEarth;
 import com.hbm.blocks.machine.BlockSeal;
 import com.hbm.blocks.machine.BlockSiloHatch;
 import com.hbm.blocks.machine.Floodlight;
+import com.hbm.blocks.machine.PistonInserter;
 import com.hbm.blocks.machine.SpotlightBeam;
 import com.hbm.blocks.machine.rbmk.RBMKDebrisRadiating;
 import com.hbm.blocks.network.ConnectorRedWire;
 import com.hbm.command.CommandRadVisClient;
+import com.hbm.command.CommandWikiRender;
 import com.hbm.config.GeneralConfig;
 import com.hbm.entity.grenade.EntityDisperserCanister;
 import com.hbm.entity.grenade.EntityGrenadeBouncyGeneric;
@@ -42,6 +44,7 @@ import com.hbm.qmaw.QMAWLoader;
 import com.hbm.render.GLCompat;
 import com.hbm.render.entity.ElectricityRenderer;
 import com.hbm.render.entity.RenderMetaSensitiveItem;
+import com.hbm.render.entity.layers.LayerArmorMod;
 import com.hbm.render.item.ItemRenderMissile;
 import com.hbm.render.item.ItemRenderMissileGeneric;
 import com.hbm.render.item.ItemRenderMissileGeneric.RenderMissileType;
@@ -76,6 +79,7 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.client.resources.IReloadableResourceManager;
@@ -144,6 +148,8 @@ public class ClientProxy extends ServerProxy {
 
     @Override
     public void init(FMLInitializationEvent evt) {
+        Jars.initJars();
+        ((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(new QMAWLoader());
         FluidFogHandler.init();
         // All previous color handler registrations here have been moved to ModEventHandlerClient#itemColorsEvent
         // and ModEventHandlerClient#blockColorsEvent
@@ -158,9 +164,9 @@ public class ClientProxy extends ServerProxy {
         MinecraftForge.EVENT_BUS.register(new ModEventHandlerClient());
         MinecraftForge.EVENT_BUS.register(new NTMClientRegistry());
         MinecraftForge.EVENT_BUS.register(new ModEventHandlerRenderer());
-        MinecraftForge.EVENT_BUS.register(new PlacementPreviewHandler());
         MinecraftForge.EVENT_BUS.register(new RenderInfoSystemLegacy());
         ClientCommandHandler.instance.registerCommand(new CommandRadVisClient());
+        CommandWikiRender.register();
 
         jetpackActivate = new KeyBinding("key.jetpack_activate", KeyConflictContext.IN_GAME, Keyboard.KEY_J, "key.categories.hbm");
         ClientRegistry.registerKeyBinding(jetpackActivate);
@@ -172,9 +178,7 @@ public class ClientProxy extends ServerProxy {
         ClientRegistry.registerKeyBinding(fsbFlashlight);
 
         HbmKeybinds.register();
-        Jars.initJars();
 
-        ((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(new QMAWLoader());
 //        ((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(new HFRModelReloader());
 
 //        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineAssembler.class, new RenderAssembler());
@@ -202,6 +206,7 @@ public class ClientProxy extends ServerProxy {
         ModelLoader.setCustomStateMapper(ModBlocks.rad_lava_block, new StateMap.Builder().ignore(BlockFluidClassic.LEVEL).build());
         ModelLoader.setCustomStateMapper(ModBlocks.ore_volcano, new StateMap.Builder().ignore(BlockFissure.CRATER).build());
         ModelLoader.setCustomStateMapper(ModBlocks.sulfuric_acid_block, new StateMap.Builder().ignore(BlockFluidClassic.LEVEL).build());
+        ModelLoader.setCustomStateMapper(ModBlocks.concrete_liquid, new StateMap.Builder().ignore(BlockFluidClassic.LEVEL).build());
 
         ModelLoader.setCustomStateMapper(ModBlocks.seal_controller, new StateMap.Builder().ignore(BlockSeal.ACTIVATED).build());
         ModelLoader.setCustomStateMapper(ModBlocks.ntm_dirt, new StateMap.Builder().ignore(BlockDirt.SNOWY).ignore(BlockDirt.VARIANT).build());
@@ -216,6 +221,7 @@ public class ClientProxy extends ServerProxy {
         ModelLoader.setCustomStateMapper(ModBlocks.red_connector, new StateMap.Builder().ignore(ConnectorRedWire.FACING).build());
         ModelLoader.setCustomStateMapper(ModBlocks.silo_hatch_drillgon, new StateMap.Builder().ignore(BlockSiloHatch.FACING).build());
         ModelLoader.setCustomStateMapper(ModBlocks.machine_diesel, new StateMap.Builder().ignore(BlockHorizontal.FACING).build());
+        ModelLoader.setCustomStateMapper(ModBlocks.piston_inserter, new StateMap.Builder().ignore(PistonInserter.FACING).build());
         ModelLoader.setCustomStateMapper(ModBlocks.turret_sentry, fixedModelStateMapper(new ModelResourceLocation(ModBlocks.machine_autosaw.getRegistryName(), "normal")));
         ModelLoader.setCustomStateMapper(ModBlocks.turret_sentry_damaged, fixedModelStateMapper(new ModelResourceLocation(ModBlocks.machine_autosaw.getRegistryName(), "normal")));
         //Drillgon200: This can't be efficient, but eh.
@@ -311,12 +317,9 @@ public class ClientProxy extends ServerProxy {
         registerItemRenderer(ModItems.missile_nuclear_cluster, new ItemRenderMissileGeneric(RenderMissileType.TYPE_NUCLEAR));
         registerItemRenderer(ModItems.missile_volcano, new ItemRenderMissileGeneric(RenderMissileType.TYPE_NUCLEAR));
         registerItemRenderer(ModItems.missile_n2, new ItemRenderMissileGeneric(RenderMissileType.TYPE_NUCLEAR));
-        registerItemRenderer(ModItems.missile_endo, new ItemRenderMissileGeneric(RenderMissileType.TYPE_THERMAL));
-        registerItemRenderer(ModItems.missile_exo, new ItemRenderMissileGeneric(RenderMissileType.TYPE_THERMAL));
         registerItemRenderer(ModItems.missile_shuttle, new ItemRenderMissileGeneric(RenderMissileType.TYPE_ROBIN));
         registerItemRenderer(ModItems.missile_doomsday, new ItemRenderMissileGeneric(RenderMissileType.TYPE_DOOMSDAY));
         registerItemRenderer(ModItems.missile_doomsday_rusted, new ItemRenderMissileGeneric(RenderMissileType.TYPE_DOOMSDAY));
-        registerItemRenderer(ModItems.missile_carrier, new ItemRenderMissileGeneric(RenderMissileType.TYPE_CARRIER));
         registerItemRenderer(ModItems.gun_b92, ItemRenderGunAnim.INSTANCE);
     }
 
@@ -553,6 +556,7 @@ public class ClientProxy extends ServerProxy {
         ResourceManager.loadAnimatedModels();
         Minecraft.getMinecraft().getRenderManager().getSkinMap().forEach((p, r) -> {
             r.addLayer(new JetpackHandler.JetpackLayer());
+            r.addLayer(new LayerArmorMod(r));
             r.getMainModel().bipedBody.addChild(new EgonBackpackRenderer(r.getMainModel()));
         });
 

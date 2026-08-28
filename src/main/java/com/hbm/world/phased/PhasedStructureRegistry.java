@@ -51,13 +51,16 @@ public final class PhasedStructureRegistry {
         register("hbm:bedrock_ore_nether_powder_fire", BedrockOre.NETHER_POWDER_FIRE);
         register("hbm:bunker", Bunker.INSTANCE);
         register("hbm:desert_atom_001", DesertAtom001.INSTANCE);
+        register("hbm:dud", Dud.INSTANCE);
         register("hbm:geyser", Geyser.INSTANCE);
         register("hbm:glyphid_hive_infected", GlyphidHive.INFECTED);
         register("hbm:glyphid_hive_infected_noloot", GlyphidHive.INFECTED_NOLOOT);
         register("hbm:glyphid_hive_normal", GlyphidHive.NORMAL);
         register("hbm:glyphid_hive_normal_noloot", GlyphidHive.NORMAL_NOLOOT);
         register("hbm:jungle_dungeon", JungleDungeonStructure.INSTANCE);
+        register("hbm:lantern_behemoth", LanternBehemoth.INSTANCE);
         register("hbm:library_dungeon", LibraryDungeon.INSTANCE);
+        register("hbm:meteorite", MeteoriteStructure.INSTANCE);
         register("hbm:flowers_foxglove", NTMFlowers.INSTANCE_FOXGLOVE);
         register("hbm:flowers_hemp", NTMFlowers.INSTANCE_HEMP);
         register("hbm:flowers_tobacco", NTMFlowers.INSTANCE_TOBACCO);

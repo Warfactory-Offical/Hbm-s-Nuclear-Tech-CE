@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.Optional;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.hbm.api.redstoneoverradio.IRORInteractive;
 
 public abstract class TileEntityTurretBaseArtillery extends TileEntityTurretBaseNT implements IRadarCommandReceiver {
 
@@ -117,9 +118,9 @@ public abstract class TileEntityTurretBaseArtillery extends TileEntityTurretBase
         super.runRORFunction(name, params);
 
         if((PREFIX_FUNCTION + "enqueue").equals(name) && params.length > 2) {
-            int x = Integer.parseInt(params[0]);
-            int y = Integer.parseInt(params[1]);
-            int z = Integer.parseInt(params[2]);
+            int x = IRORInteractive.parseInt(params[0], Integer.MIN_VALUE, Integer.MAX_VALUE);
+            int y = IRORInteractive.parseInt(params[1], Integer.MIN_VALUE, Integer.MAX_VALUE);
+            int z = IRORInteractive.parseInt(params[2], Integer.MIN_VALUE, Integer.MAX_VALUE);
             this.sendCommandPosition(x, y, z);
             this.markChanged();
         }

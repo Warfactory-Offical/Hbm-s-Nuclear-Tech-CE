@@ -72,6 +72,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
     public FluidTankNTM tankNew;
     public FluidTank tank;
     public boolean isOn;
+    public boolean redstonePowered;
     public int targetX;
     public int targetY;
     public int targetZ;
@@ -119,8 +120,8 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
 
             this.sendFluid(tankNew, world, pos.getX() + 2, pos.getY(), pos.getZ(), Library.POS_X);
             this.sendFluid(tankNew, world, pos.getX() - 2, pos.getY(), pos.getZ(), Library.NEG_X);
-            this.sendFluid(tankNew, world, pos.getX(), pos.getY() + 2, pos.getZ(), Library.POS_Z);
-            this.sendFluid(tankNew, world, pos.getX(), pos.getY() - 2, pos.getZ(), Library.NEG_Z);
+            this.sendFluid(tankNew, world, pos.getX(), pos.getY(), pos.getZ() + 2, Library.POS_Z);
+            this.sendFluid(tankNew, world, pos.getX(), pos.getY(), pos.getZ() - 2, Library.NEG_Z);
 
             power = Library.chargeTEFromItems(inventory, 0, power, maxPower);
 
@@ -135,7 +136,14 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
             lastTargetY = targetY;
             lastTargetZ = targetZ;
 
-            if (isOn) {
+            boolean prevRedstone = this.redstonePowered;
+            this.redstonePowered = this.isMultiblockRedstonePowered();
+
+            if (prevRedstone != this.redstonePowered) {
+                this.markDirty();
+            }
+
+            if (isOn && !redstonePowered) {
 
                 upgradeManager.checkSlots(inventory, 1, 8);
                 int cycles = 1 + upgradeManager.getLevel(ItemMachineUpgrade.UpgradeType.OVERDRIVE);
@@ -223,6 +231,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
         buf.writeInt(targetZ);
         buf.writeBoolean(beam);
         buf.writeBoolean(isOn);
+        buf.writeBoolean(redstonePowered);
         buf.writeDouble(clientBreakProgress);
         tankNew.serialize(buf);
     }
@@ -239,6 +248,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
         this.targetZ = buf.readInt();
         this.beam = buf.readBoolean();
         this.isOn = buf.readBoolean();
+        this.redstonePowered = buf.readBoolean();
         this.breakProgress = buf.readDouble();
         tankNew.deserialize(buf);
     }
@@ -564,6 +574,7 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
         if (compound.hasKey("tank")) compound.removeTag("tank");
         isOn = compound.getBoolean("isOn");
         power = compound.getLong("power");
+        redstonePowered = false;
     }
 
     @Override
@@ -648,8 +659,15 @@ public class TileEntityMachineMiningLaser extends TileEntityMachineBase implemen
                 new DirPos(pos.getX(), pos.getY() + 2, pos.getZ(), ForgeDirection.UP),
                 new DirPos(pos.getX() + 2, pos.getY(), pos.getZ(), Library.POS_X),
                 new DirPos(pos.getX() - 2, pos.getY(), pos.getZ(), Library.NEG_X),
-                new DirPos(pos.getX(), pos.getY() + 2, pos.getZ(), Library.POS_Z),
-                new DirPos(pos.getX(), pos.getY() - 2, pos.getZ(), Library.NEG_Z)
+                new DirPos(pos.getX(), pos.getY(), pos.getZ() + 2, Library.POS_Z),
+                new DirPos(pos.getX(), pos.getY(), pos.getZ() - 2, Library.NEG_Z)
         };
+    }
+
+    private boolean isMultiblockRedstonePowered() {
+        for (DirPos conPos : getConPos()) {
+            if (world.isBlockPowered(conPos.getPos().offset(conPos.getDir().getOpposite().toEnumFacing()))) return true;
+        }
+        return false;
     }
 }

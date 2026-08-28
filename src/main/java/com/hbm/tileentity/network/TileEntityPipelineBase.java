@@ -60,7 +60,45 @@ public abstract class TileEntityPipelineBase extends TileEntityPipeBaseNT {
         }
     }
 
+    @Override
+    public void update() {
+
+        if(!world.isRemote && (this.node == null || this.node.expired) && pruneStaleConnections()) {
+            this.bb = null;
+            this.markDirty();
+            IBlockState state = world.getBlockState(pos);
+            world.notifyBlockUpdate(pos, state, state, 3);
+            world.markBlockRangeForRenderUpdate(pos, pos);
+        }
+
+        super.update();
+    }
+
+    private boolean pruneStaleConnections() {
+
+        boolean changed = false;
+
+        for(int i = 0; i < connected.size(); i++) {
+            int[] con = connected.get(i);
+            BlockPos target = new BlockPos(con[0], con[1], con[2]);
+
+            if(target.equals(pos)) continue;
+            if(!world.isBlockLoaded(target)) continue;
+
+            IBlockState targetState = world.getBlockState(target);
+            if(targetState.getBlock().hasTileEntity(targetState)) continue;
+
+            connected.remove(i);
+            i--;
+            changed = true;
+        }
+
+        return changed;
+    }
+
     public void disconnectAll() {
+
+        if(world.isRemote) return;
 
         for(int[] pos : connected) {
             BlockPos idfkPos = new BlockPos(pos[0], pos[1], pos[2]);

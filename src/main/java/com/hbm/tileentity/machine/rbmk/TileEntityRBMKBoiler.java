@@ -24,7 +24,7 @@ import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
 import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.particle.helper.HbmEffectNT;
-import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.util.Vec3NT;
 import com.hbm.tileentity.IConnectionAnchors;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.machine.rbmk.RBMKColumn.ColumnType;
@@ -215,7 +215,7 @@ public class TileEntityRBMKBoiler extends TileEntityRBMKSlottedBase implements I
 
     @Override
     public boolean hasPermission(EntityPlayer player) {
-        return Vec3.createVectorHelper(pos.getX() - player.posX, pos.getY() - player.posY, pos.getZ() - player.posZ).length() < 20;
+        return Vec3NT.createVectorHelper(pos.getX() - player.posX, pos.getY() - player.posY, pos.getZ() - player.posZ).length() < 20;
     }
 
     @Override
@@ -228,6 +228,8 @@ public class TileEntityRBMKBoiler extends TileEntityRBMKSlottedBase implements I
 
     // mlbv: why is it named cyceCompressor?
     public void cyceCompressor() {
+
+        if(this.heat > 50 && this.feed.getFill() > 0) return;
 
         FluidType type = steam.getTankType();
         if(type == Fluids.STEAM) {			steam.setTankType(Fluids.HOTSTEAM);			steam.setFill(steam.getFill() / 10); }

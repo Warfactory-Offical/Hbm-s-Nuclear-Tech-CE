@@ -4,8 +4,9 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.GLCompat;
-import com.hbm.render.amlfrom1710.Vec3;
+import com.hbm.util.Vec3NT;
 import com.hbm.render.item.ItemRenderBase;
+import com.hbm.render.item.ItemRenderBaseLegacy;
 import com.hbm.render.model.BakedModelTransforms;
 import com.hbm.tileentity.deco.TileEntitySpinnyLight;
 import net.minecraft.client.renderer.GlStateManager;
@@ -38,12 +39,12 @@ public class RenderSpinnyLight extends TileEntitySpecialRenderer<TileEntitySpinn
         vertices[1] = oY;
         vertices[2] = oZ;
 
-        Vec3 vertex = new Vec3(0, radius, 0);
+        Vec3NT vertex = new Vec3NT(0, radius, 0);
         for (int i = 0; i < sides; i++) {
-            vertex.rotateAroundX((float) (2 * Math.PI * (1F / (float) sides)));
-            vertices[(i + 1) * 3] = (float) vertex.xCoord + oX + length;
-            vertices[(i + 1) * 3 + 1] = (float) vertex.yCoord + oY;
-            vertices[(i + 1) * 3 + 2] = (float) vertex.zCoord + oZ;
+            vertex.rotatePitchSelf((float) (2 * Math.PI * (1F / (float) sides)));
+            vertices[(i + 1) * 3] = (float) vertex.x + oX + length;
+            vertices[(i + 1) * 3 + 1] = (float) vertex.y + oY;
+            vertices[(i + 1) * 3 + 2] = (float) vertex.z + oZ;
         }
 
         int triangleCount = 2 * sides;
@@ -100,29 +101,29 @@ public class RenderSpinnyLight extends TileEntitySpecialRenderer<TileEntitySpinn
         GlStateManager.translate(x + 0.5, y + 0.5, z + 0.5);
         switch (te.getBlockMetadata() & 7) {
             case 0:
-                GL11.glRotated(180, 1, 0, 0);
+                GlStateManager.rotate(180, 1, 0, 0);
                 break;
             case 1:
                 break;
             case 2:
-                GL11.glRotated(180, 0, 1, 0);
-                GL11.glRotated(90, 1, 0, 0);
+                GlStateManager.rotate(180, 0, 1, 0);
+                GlStateManager.rotate(90, 1, 0, 0);
                 break;
             case 3:
-                GL11.glRotated(90, 1, 0, 0);
+                GlStateManager.rotate(90, 1, 0, 0);
                 break;
             case 4:
-                GL11.glRotated(270, 0, 1, 0);
-                GL11.glRotated(90, 1, 0, 0);
+                GlStateManager.rotate(270, 0, 1, 0);
+                GlStateManager.rotate(90, 1, 0, 0);
                 break;
             case 5:
-                GL11.glRotated(90, 0, 1, 0);
-                GL11.glRotated(90, 1, 0, 0);
+                GlStateManager.rotate(90, 0, 1, 0);
+                GlStateManager.rotate(90, 1, 0, 0);
                 break;
         }
         GlStateManager.translate(0, -0.5, 0);
         GlStateManager.pushMatrix();
-        GL11.glRotated((time * 7) % 360, 0, 1, 0);
+        GlStateManager.rotate((float) ((time * 7) % 360), 0, 1, 0);
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
         bindTexture(ResourceManager.spinny_light_tex);
         if (powered) OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
@@ -143,7 +144,7 @@ public class RenderSpinnyLight extends TileEntitySpecialRenderer<TileEntitySpinn
 
         if (powered) {
             GlStateManager.pushMatrix();
-            GL11.glRotated((time * 7) % 360, 0, 1, 0);
+            GlStateManager.rotate((float) ((time * 7) % 360), 0, 1, 0);
             GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE);
             GlStateManager.disableTexture2D();
             GlStateManager.disableLighting();
@@ -172,7 +173,7 @@ public class RenderSpinnyLight extends TileEntitySpecialRenderer<TileEntitySpinn
 
     @Override
     public ItemRenderBase getRenderer(Item item) {
-        return new ItemRenderBase() {
+        return new ItemRenderBaseLegacy() {
             @Override
             protected ItemCameraTransforms getBindingTransforms(Item item) {
                 return BakedModelTransforms.standardBlock();
@@ -213,16 +214,16 @@ public class RenderSpinnyLight extends TileEntitySpecialRenderer<TileEntitySpinn
             GLCompat.bindVertexArray(vaoHandle);
             GLCompat.bindBuffer(GLCompat.GL_ARRAY_BUFFER, vboHandle);
             GL11.glVertexPointer(3, GL11.GL_FLOAT, CONE_STRIDE, 0L);
-            GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
+            GlStateManager.glEnableClientState(GL11.GL_VERTEX_ARRAY);
             GL11.glColorPointer(4, GL11.GL_FLOAT, CONE_STRIDE, 3L * Float.BYTES);
-            GL11.glEnableClientState(GL11.GL_COLOR_ARRAY);
+            GlStateManager.glEnableClientState(GL11.GL_COLOR_ARRAY);
             GLCompat.bindVertexArray(0);
             GLCompat.bindBuffer(GLCompat.GL_ARRAY_BUFFER, 0);
         }
 
         private void render() {
             GLCompat.bindVertexArray(vaoHandle);
-            GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, vertexCount);
+            GlStateManager.glDrawArrays(GL11.GL_TRIANGLES, 0, vertexCount);
             GLCompat.bindVertexArray(0);
         }
     }

@@ -17,6 +17,7 @@ import com.hbm.lib.maps.NonBlockingLong2LongHashMap;
 import com.hbm.lib.queues.MpmcUnboundedXaddArrayLongQueue;
 import com.hbm.lib.queues.MpscUnboundedXaddArrayLongQueue;
 import com.hbm.util.ChunkUtil;
+import com.hbm.util.CompatDynamicTrees;
 import com.hbm.world.WorldUtil;
 import com.hbm.world.biome.BiomeGenCraterBase;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -551,6 +552,9 @@ public class EntityFalloutRain extends EntityExplosionChunkloading implements Bo
                 if (oldState != newState) world.notifyBlockUpdate(mutableBlockPos, oldState, newState, 3);
                 ChunkUtil.flushTileEntity(loadedChunk, mutableBlockPos, oldState, newState);
                 world.notifyNeighborsOfStateChange(mutableBlockPos, newState.getBlock(), true);
+                if (CompatDynamicTrees.isTreePart(oldState.getBlock())) {
+                    CompatDynamicTrees.destroyOrphanedNeighbors(world, mutableBlockPos.toImmutable());
+                }
             }
         }
 

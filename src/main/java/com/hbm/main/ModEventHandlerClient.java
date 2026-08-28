@@ -1,5 +1,6 @@
 package com.hbm.main;
 
+import net.minecraft.client.renderer.GlStateManager;
 import baubles.api.BaublesApi;
 import com.google.common.collect.Queues;
 import com.hbm.Tags;
@@ -36,7 +37,6 @@ import com.hbm.packet.toserver.GunButtonPacket;
 import com.hbm.packet.toserver.MeathookJumpPacket;
 import com.hbm.particle.ParticleBatchRenderer;
 import com.hbm.particle.ParticleFirstPerson;
-import com.hbm.particle.gluon.ParticleGluonBurnTrail;
 import com.hbm.physics.ParticlePhysicsBlocks;
 import com.hbm.qmaw.GuiQMAW;
 import com.hbm.qmaw.QMAWLoader;
@@ -47,13 +47,10 @@ import com.hbm.render.anim.HbmAnimations;
 import com.hbm.render.anim.HbmAnimations.Animation;
 import com.hbm.render.anim.HbmAnimations.BlenderAnimation;
 import com.hbm.render.anim.sedna.HbmAnimationsSedna;
-import com.hbm.render.item.weapon.ItemRenderGunEgon;
 import com.hbm.render.item.weapon.sedna.ItemRenderWeaponBase;
-import com.hbm.render.misc.BeamPronter;
 import com.hbm.render.misc.RenderAccessoryUtility;
 import com.hbm.render.misc.RenderScreenOverlay;
 import com.hbm.render.misc.SoyuzPronter;
-import com.hbm.render.modelrenderer.EgonBackpackRenderer;
 import com.hbm.render.util.RenderOverhead;
 import com.hbm.render.world.RenderNTMSkyboxChainloader;
 import com.hbm.render.world.RenderNTMSkyboxImpact;
@@ -87,7 +84,6 @@ import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -125,6 +121,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -363,27 +360,8 @@ public class ModEventHandlerClient {
                 }
             }
             RadVisOverlay.clientTick(mc);
-        } else {
-
-            if (Minecraft.getMinecraft().world != null) {
-                //Drillgon200: If I add more guns like this, I'll abstract it.
-                for (EntityPlayer player : Minecraft.getMinecraft().world.playerEntities) {
-                    if (player.getHeldItemMainhand().getItem() == ModItems.gun_egon && !ItemGunEgon.soundsByPlayer.containsKey(player)) {
-                        boolean firing = player == Minecraft.getMinecraft().player ? ItemGunEgon.m1 && Library.countInventoryItem(player.inventory, ItemGunEgon.getBeltType(player, player.getHeldItemMainhand(), true)) >= 2 : ItemGunEgon.getIsFiring(player.getHeldItemMainhand());
-                        if (firing) {
-                            ItemGunEgon.soundsByPlayer.put(player, new GunEgonSoundHandler(player));
-                        }
-                    }
-                }
-            }
-            Iterator<GunEgonSoundHandler> itr = ItemGunEgon.soundsByPlayer.values().iterator();
-            while (itr.hasNext()) {
-                GunEgonSoundHandler g = itr.next();
-                g.update();
-                if (g.ticks == -1)
-                    itr.remove();
-            }
         }
+
         if (Minecraft.getMinecraft().player != null) {
             JetpackHandler.clientTick(e);
         }
@@ -414,37 +392,6 @@ public class ModEventHandlerClient {
                 FMLCommonHandler.instance().showGuiScreen(new GuiQMAW(qmaw));
             }
         }
-    }
-
-    //Sus
-    @SubscribeEvent
-    public void onArmorRenderEvent(RenderPlayerEvent.Pre event) {
-        EntityPlayer player = event.getEntityPlayer();
-
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(0, player.isSneaking() ? 1.1 : 1.4, 0);
-        GL11.glRotated(180, 0, 0, 1);
-
-        for (int i = 0; i < 4; i++) {
-
-            ItemStack armor = player.inventory.armorItemInSlot(i);
-
-            if (!armor.isEmpty() && ArmorModHandler.hasMods(armor)) {
-
-                for (ItemStack mod : ArmorModHandler.pryMods(armor)) {
-
-                    if (mod != null && mod.getItem() instanceof ItemArmorMod) {
-                        ((ItemArmorMod) mod.getItem()).modRender(event, armor);
-                    }
-                }
-            }
-
-            //because armor that isn't ItemArmor doesn't render at all
-            if (!armor.isEmpty() && armor.getItem() instanceof JetpackBase) {
-                ((ItemArmorMod) armor.getItem()).modRender(event, armor);
-            }
-        }
-        GlStateManager.popMatrix();
     }
 
     private boolean isFSBArmor(ItemStack stack) {
@@ -500,9 +447,9 @@ public class ModEventHandlerClient {
 
         //SSG meathook icon projection
         if (ItemGunShotty.rayTrace != null) {
-            GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, MODELVIEW);
-            GL11.glGetFloat(GL11.GL_PROJECTION_MATRIX, PROJECTION);
-            GL11.glGetInteger(GL11.GL_VIEWPORT, VIEWPORT);
+            GlStateManager.getFloat(GL11.GL_MODELVIEW_MATRIX, MODELVIEW);
+            GlStateManager.getFloat(GL11.GL_PROJECTION_MATRIX, PROJECTION);
+            GlStateManager.glGetInteger(GL11.GL_VIEWPORT, VIEWPORT);
 
             Project.gluProject((float) (ItemGunShotty.rayTrace.x - d3), (float) (ItemGunShotty.rayTrace.y - d4), (float) (ItemGunShotty.rayTrace.z - d5), MODELVIEW, PROJECTION, VIEWPORT, POSITION);
 
@@ -534,9 +481,9 @@ public class ModEventHandlerClient {
 
             GlStateManager.pushMatrix();
             GlStateManager.translate(ssgChainPos.x, ssgChainPos.y, ssgChainPos.z);
-            GL11.glRotated(yaw + 90, 0, 1, 0);
-            GL11.glRotated(-pitch + 90, 0, 0, 1);
-            GL11.glScaled(0.125, 0.25, 0.125);
+            GlStateManager.rotate((float) (yaw + 90), 0, 1, 0);
+            GlStateManager.rotate((float) (-pitch + 90), 0, 0, 1);
+            GlStateManager.scale(0.125, 0.25, 0.125);
 
             double len = MathHelper.clamp(tester.length() * 2, 0, 40);
             Tessellator tessellator = Tessellator.getInstance();
@@ -580,25 +527,25 @@ public class ModEventHandlerClient {
 
 
             RenderHelper.enableStandardItemLighting();
-            GL11.glRotated(80, 0, 0, 1);
-            GL11.glRotated(30, 0, 1, 0);
+            GlStateManager.rotate(80, 0, 0, 1);
+            GlStateManager.rotate(30, 0, 1, 0);
 
             double sine = Math.sin(Clock.get_ms() * 0.0005) * 5;
             double sin3 = Math.sin(Clock.get_ms() * 0.0005 + Math.PI * 0.5) * 5;
-            GL11.glRotated(sine, 0, 0, 1);
-            GL11.glRotated(sin3, 1, 0, 0);
+            GlStateManager.rotate((float) (sine), 0, 0, 1);
+            GlStateManager.rotate((float) (sin3), 1, 0, 0);
 
             GlStateManager.translate(0, -3, 0);
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 6500F, 30F);
             SoyuzPronter.prontCapsule();
 
-            GL11.glRotated(Clock.get_ms() * 0.025 % 360, 0, -1, 0);
+            GlStateManager.rotate((float) (Clock.get_ms() * 0.025 % 360), 0, -1, 0);
 
             int rand = new Random(MainRegistry.startupTime).nextInt(HTTPHandler.capsule.size());
             String msg = HTTPHandler.capsule.get(rand);
 
             GlStateManager.translate(0, 3.75, 0);
-            GL11.glRotated(180, 1, 0, 0);
+            GlStateManager.rotate(180, 1, 0, 0);
 
             float rot = 0F;
 
@@ -665,8 +612,8 @@ public class ModEventHandlerClient {
                         GlStateManager.pushMatrix();
                         GlStateManager.loadIdentity();
 
-                        GL11.glRotated(player.rotationPitch, 1, 0, 0);
-                        GL11.glRotated(player.rotationYaw + 180, 0, 1, 0);
+                        GlStateManager.rotate((float) (player.rotationPitch), 1, 0, 0);
+                        GlStateManager.rotate((float) (player.rotationYaw + 180), 0, 1, 0);
 
                         buf.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
                         buf.pos(pos1.x, pos1.y, pos1.z).endVertex();
@@ -686,31 +633,6 @@ public class ModEventHandlerClient {
                     ItemSwordCutter.clicked = false;
                     ItemSwordCutter.planeNormal = null;
                 }
-            }
-
-            //GLUON GUN//
-            if (player.getHeldItemMainhand().getItem() == ModItems.gun_egon && ItemGunEgon.activeTicks > 0 && Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) {
-                GlStateManager.pushMatrix();
-                float[] angles = ItemGunEgon.getBeamDirectionOffset(player.world.getTotalWorldTime() + partialTicks);
-                Vec3d look = Library.changeByAngle(player.getLook(partialTicks), angles[0], angles[1]);
-                RayTraceResult r = Library.rayTraceIncludeEntitiesCustomDirection(player, look, 50, partialTicks);
-                Vec3d pos = player.getPositionEyes(partialTicks);
-                Vec3d hitPos = pos.add(look.scale(50));
-                if (r != null && r.typeOfHit != Type.MISS) {
-                    hitPos = r.hitVec.add(look.scale(-0.1));
-                }
-                float[] offset = ItemRenderGunEgon.getOffset(player.world.getTotalWorldTime() + partialTicks);
-                //I'll at least attempt to make it look consistent at different fovs
-                float fovDiff = (currentFOV - 70) * 0.0002F;
-                Vec3d start = new Vec3d(-0.18 + offset[0] * 0.075F - fovDiff, -0.2 + offset[1] * 0.1F, 0.35 - fovDiff * 30);
-                start = start.rotatePitch((float) Math.toRadians(-(player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * partialTicks)));
-                start = start.rotateYaw((float) Math.toRadians(-(player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * partialTicks)));
-
-                start = start.add(0, player.getEyeHeight(), 0);
-                GlStateManager.translate(start.x, start.y, start.z);
-                BeamPronter.gluonBeam(new Vec3d(0, 0, 0), new Vec3d(Vec3dUtil.convertToVec3i(hitPos.subtract(pos).subtract(start.subtract(0, player.getEyeHeight(), 0)))), 0.4F);
-                GlStateManager.popMatrix();
-
             }
         }
 
@@ -735,37 +657,6 @@ public class ModEventHandlerClient {
             }
             if (player.getHeldItemOffhand().getItem() instanceof ItemGunBase) {
                 ((ItemGunBase) player.getHeldItemOffhand().getItem()).playerWorldRender(player, evt, EnumHand.OFF_HAND);
-            }
-
-            //Gluon gun world rendering
-            if (player.getHeldItemMainhand().getItem() != ModItems.gun_egon) {
-                ItemGunEgon.activeTrailParticles.remove(player);
-                continue;
-            }
-            boolean firing = player == Minecraft.getMinecraft().player ? ItemGunEgon.m1 && Library.countInventoryItem(player.inventory, ItemGunEgon.getBeltType(player, player.getHeldItemMainhand(), true)) >= 2 : ItemGunEgon.getIsFiring(player.getHeldItemMainhand());
-            if (!firing) {
-                ItemGunEgon.activeTrailParticles.remove(player);
-                continue;
-            }
-            float[] angles = ItemGunEgon.getBeamDirectionOffset(player.world.getTotalWorldTime() + partialTicks);
-            Vec3d look = Library.changeByAngle(player.getLook(partialTicks), angles[0], angles[1]);
-            RayTraceResult r = Library.rayTraceIncludeEntitiesCustomDirection(player, look, 50, partialTicks);
-            if (r != null && r.hitVec != null && r.typeOfHit == Type.BLOCK) {
-                ParticleGluonBurnTrail currentTrailParticle;
-                if (!ItemGunEgon.activeTrailParticles.containsKey(player)) {
-                    currentTrailParticle = new ParticleGluonBurnTrail(player.world, 0.4F, player);
-                    Minecraft.getMinecraft().effectRenderer.addEffect(currentTrailParticle);
-                    ItemGunEgon.activeTrailParticles.put(player, currentTrailParticle);
-                } else {
-                    currentTrailParticle = ItemGunEgon.activeTrailParticles.get(player);
-                }
-                Vec3d normal = Library.normalFromRayTrace(r);
-                if (!currentTrailParticle.tryAddNewPosition(r.hitVec.add(normal.scale(0.02)), normal)) {
-                    currentTrailParticle = null;
-                    ItemGunEgon.activeTrailParticles.remove(player);
-                }
-            } else {
-                ItemGunEgon.activeTrailParticles.remove(player);
             }
         }
 
@@ -955,7 +846,11 @@ public class ModEventHandlerClient {
                 BlockPos pos = mop.getBlockPos();
                 IBlockState stateHit = world.getBlockState(pos);
                 Block blockHit = stateHit.getBlock();
-                if (blockHit instanceof ILookOverlay) {
+                ItemStack held = player.getHeldItemMainhand();
+
+                if (held.getItem() instanceof ILookOverlay) {
+                    ((ILookOverlay) held.getItem()).printHook(event, world, pos);
+                } else if (blockHit instanceof ILookOverlay) {
                     ((ILookOverlay) blockHit).printHook(event, world, pos);
                 }
 
@@ -1267,9 +1162,6 @@ public class ModEventHandlerClient {
             renderer.leftArmPose = ArmPose.BOW_AND_ARROW;
         }
         JetpackHandler.preRenderPlayer(player);
-        if (player.getHeldItemMainhand().getItem() == ModItems.gun_egon) {
-            EgonBackpackRenderer.showBackpack = true;
-        }
 
         ResourceLocation cloak = RenderAccessoryUtility.getCloakFromPlayer(player);
         // GL11.glRotated(180, 1, 0, 0);
@@ -1302,29 +1194,6 @@ public class ModEventHandlerClient {
     public void postRenderPlayer(RenderPlayerEvent.Post event) {
         JetpackHandler.postRenderPlayer(event.getEntityPlayer());
         EntityPlayer player = event.getEntityPlayer();
-        //GLUON GUN//
-        boolean firing = player == Minecraft.getMinecraft().player ? ItemGunEgon.m1 && Library.countInventoryItem(player.inventory, ItemGunEgon.getBeltType(player, player.getHeldItemMainhand(), true)) >= 2 : ItemGunEgon.getIsFiring(player.getHeldItemMainhand());
-        EgonBackpackRenderer.showBackpack = false;
-        if (player.getHeldItemMainhand().getItem() == ModItems.gun_egon && firing) {
-            GlStateManager.pushMatrix();
-            float partialTicks = event.getPartialRenderTick();
-            float[] angles = ItemGunEgon.getBeamDirectionOffset(player.world.getTotalWorldTime() + partialTicks);
-            Vec3d look = Library.changeByAngle(player.getLook(partialTicks), angles[0], angles[1]);
-            RayTraceResult r = Library.rayTraceIncludeEntitiesCustomDirection(player, look, 50, event.getPartialRenderTick());
-            Vec3d pos = player.getPositionEyes(event.getPartialRenderTick());
-            Vec3d hitPos = pos.add(look.scale(50));
-            if (r != null && r.typeOfHit != Type.MISS) {
-                hitPos = r.hitVec.add(look.scale(-0.1));
-            }
-            Vec3d start = new Vec3d(-0.18, -0.1, 0.35);
-            start = start.rotatePitch((float) Math.toRadians(-(player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * partialTicks)));
-            start = start.rotateYaw((float) Math.toRadians(-(player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * partialTicks)));
-
-            Vec3d diff = player.getPositionEyes(partialTicks).subtract(TileEntityRendererDispatcher.staticPlayerX, TileEntityRendererDispatcher.staticPlayerY, TileEntityRendererDispatcher.staticPlayerZ);
-            GlStateManager.translate(start.x + diff.x, start.y + diff.y, start.z + diff.z);
-            BeamPronter.gluonBeam(new Vec3d(0, 0, 0), new Vec3d(Vec3dUtil.convertToVec3i(hitPos.subtract(pos))), 0.4F);
-            GlStateManager.popMatrix();
-        }
     }
 
     @SubscribeEvent
@@ -1583,7 +1452,10 @@ public class ModEventHandlerClient {
         }
 
         try {
-            QuickManualAndWiki qmaw = QMAWLoader.triggers.get(comp);
+            // QMAW triggers are registered as plain ComparableStacks, so an NBT-sensitive key never matches
+            ComparableStack plain = new ComparableStack(stack).makeSingular();
+            QuickManualAndWiki qmaw = QMAWLoader.triggers.get(plain);
+            if (qmaw == null) qmaw = QMAWLoader.triggers.get(new ComparableStack(plain.item, 1, OreDictionary.WILDCARD_VALUE));
             if (qmaw != null) {
                 list.add(TextFormatting.GREEN + I18nUtil.resolveKey("qmaw.tab", Keyboard.getKeyName(HbmKeybinds.qmaw.getKeyCode())));
                 lastQMAW = qmaw;

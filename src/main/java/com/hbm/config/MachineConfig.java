@@ -12,8 +12,6 @@ public class MachineConfig {
     protected static boolean doRTGsDecay = true;
     protected static boolean disableMachines = false;
     public static boolean holdDoorRedstone = false;
-    //TODO: handle like on 1.7
-    //mlbv: 1.7 hardcodes it to 6kB
     public static int crateByteSize = 8192;
     public static int rbmkJumpTemp = 1250;
     public static HashMap<String, IDoor.Mode> doorConf = new HashMap<>();
@@ -26,6 +24,7 @@ public class MachineConfig {
         doRTGsDecay = CommonConfig.createConfigBool(config, CATEGORY_MACHINE, "9.02_doRTGsDecay", "Should RTG/Betavoltaic fuel decay at all?", true);
         disableMachines = CommonConfig.createConfigBool(config, CATEGORY_MACHINE, "9.00_disableMachines", "Prevent mod from registering any Machines? (WARNING: THIS WILL BREAK PREEXISTING WORLDS)", false);
         holdDoorRedstone = CommonConfig.createConfigBool(config, CATEGORY_MACHINE, "9.99_CE_03_holdDoorRedstone", "Whether the door requires a continuous redstone signal to stay open, or toggles on each activation.", false);
+        crateByteSize = CommonConfig.createConfigInt(config, CATEGORY_MACHINE, "9.99_CE_04_crateByteSize", "Maximum compressed NBT size, in bytes, that a crate or lead box may carry as an item. Contents exceeding this are dropped instead of stored, which keeps oversized crates from being sent over the network. 1.7 hardcodes this to 6144.", 8192);
 
         doorConf.clear();
         String[] doorConfStr = config.get(CATEGORY_MACHINE, "9.99_CE_02_doorConf", new String[]{},

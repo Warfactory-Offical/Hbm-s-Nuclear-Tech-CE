@@ -63,22 +63,10 @@ public class ItemModTesla extends ItemArmorMod {
 		EntityPlayer player = event.getEntityPlayer();
 
 		float interp = event.getPartialRenderTick();
-		float yaw = player.prevRenderYawOffset + (player.renderYawOffset - player.prevRenderYawOffset) * interp;
 		float pitch = player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * interp;
 
-		EntityPlayer me = MainRegistry.proxy.me();
-		boolean isMe = player == me;
-
 		GlStateManager.pushMatrix();
-
-		if(!isMe) {
-			offset(player, me, interp);
-		}
-
-		GlStateManager.rotate(yaw + 180.0F, 0.0F, 1.0F, 0.0F);
-
 		modelTesla.render(player, 0.0F, 0.0F, 0.0F, 0.0F, pitch, 0.0625F);
-
 		GlStateManager.popMatrix();
 	}
 

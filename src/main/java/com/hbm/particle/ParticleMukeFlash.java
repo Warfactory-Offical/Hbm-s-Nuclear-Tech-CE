@@ -83,7 +83,7 @@ public class ParticleMukeFlash extends Particle {
         Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
 
         boolean fog = GL11.glIsEnabled(GL11.GL_FOG);
-        if (fog) GL11.glDisable(GL11.GL_FOG);
+        if (fog) GlStateManager.disableFog();
 
         GlStateManager.color(1F, 1F, 1F, 1F);
         GlStateManager.disableLighting();
@@ -141,7 +141,7 @@ public class ParticleMukeFlash extends Particle {
 
         GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
         GlStateManager.enableLighting();
-        if (fog) GL11.glEnable(GL11.GL_FOG);
+        if (fog) GlStateManager.enableFog();
         GlStateManager.depthMask(true);
     }
 }

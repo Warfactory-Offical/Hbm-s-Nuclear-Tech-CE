@@ -630,8 +630,7 @@ public class LegoClient {
                     (deltaY * k / count) - sagK,
                     (deltaZ * k / count),
                     iX, iY, iZ, jX, jZ,
-                    lightU, lightV,
-                    bx, by, bz);
+                    lightU, lightV);
         }
 
         tess.draw();
@@ -639,15 +638,15 @@ public class LegoClient {
         GlStateManager.enableCull();
     }
 
-    public static void drawLineSegment(BufferBuilder buf, double x, double y, double z, double a, double b, double c, double iX, double iY, double iZ, double jX, double jZ, int lightU, int lightV, double baseX, double baseY, double baseZ) {
+    public static void drawLineSegment(BufferBuilder buf, double x, double y, double z, double a, double b, double c, double iX, double iY, double iZ, double jX, double jZ, int lightU, int lightV) {
 
-        double X = baseX + x;
-        double Y = baseY + y;
-        double Z = baseZ + z;
+        double X = x;
+        double Y = y;
+        double Z = z;
 
-        double A = baseX + a;
-        double B = baseY + b;
-        double C = baseZ + c;
+        double A = a;
+        double B = b;
+        double C = c;
 
         double deltaX = A - X;
         double deltaY = B - Y;

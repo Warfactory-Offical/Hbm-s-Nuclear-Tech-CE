@@ -1,5 +1,6 @@
 package com.hbm.items.armor;
 
+import net.minecraft.client.renderer.GlStateManager;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT.LambdaContext;
 import com.hbm.items.weapon.sedna.factory.ConfettiUtil;
@@ -84,9 +85,9 @@ public class ArmorNCRPAMelee implements IPAMelee {
     public void renderFirstPerson(ItemStack stack) {
         Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.ncrpa_arm);
 
-        GL11.glTranslated(0, -1.5, 0.5);
+        GlStateManager.translate(0, -1.5, 0.5);
         double scale = 0.125D;
-        GL11.glScaled(scale, scale, scale);
+        GlStateManager.scale(scale, scale, scale);
 
         double[] equip = HbmAnimationsSedna.getRelevantTransformation("EQUIP");
         double swingRight = HbmAnimationsSedna.getRelevantTransformation("SWINGRIGHT")[0];
@@ -98,30 +99,30 @@ public class ArmorNCRPAMelee implements IPAMelee {
         double offsetOutward = 3;
         double roll = 60;
 
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
 
-        GL11.glTranslated(-14 * swingLeft - 4 * sweepTurn, 6 * sweepCut, 2 * swingLeft + 8 * sweepCut);
-        GL11.glRotated(forwardTilt + swingRight * 40 - 60 * sweepCut, 1, 0, 0);
+        GlStateManager.translate(-14 * swingLeft - 4 * sweepTurn, 6 * sweepCut, 2 * swingLeft + 8 * sweepCut);
+        GlStateManager.rotate((float) (forwardTilt + swingRight * 40 - 60 * sweepCut), 1, 0, 0);
 
-        GL11.glTranslated(offsetOutward, 0, 0);
-        GL11.glTranslated(6, 8, 0);
-        GL11.glRotated(90 * swingLeft, 0, 0, 1);
-        GL11.glRotated(roll + 30 * swingLeft - 90 * sweepTurn, 0, 1, 0);
-        GL11.glTranslated(-6, -8, 0);
+        GlStateManager.translate(offsetOutward, 0, 0);
+        GlStateManager.translate(6, 8, 0);
+        GlStateManager.rotate((float) (90 * swingLeft), 0, 0, 1);
+        GlStateManager.rotate((float) (roll + 30 * swingLeft - 90 * sweepTurn), 0, 1, 0);
+        GlStateManager.translate(-6, -8, 0);
         ResourceManager.armor_ncr.renderPart("LeftArm");
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
 
-        GL11.glPushMatrix();
+        GlStateManager.pushMatrix();
 
-        GL11.glTranslated(14 * swingRight + 4 * sweepTurn, 6 * sweepCut, 2 * swingRight + 8 * sweepCut);
-        GL11.glRotated(forwardTilt + swingLeft * 40 - 60 * sweepCut, 1, 0, 0);
+        GlStateManager.translate(14 * swingRight + 4 * sweepTurn, 6 * sweepCut, 2 * swingRight + 8 * sweepCut);
+        GlStateManager.rotate((float) (forwardTilt + swingLeft * 40 - 60 * sweepCut), 1, 0, 0);
 
-        GL11.glTranslated(-offsetOutward, 0, 0);
-        GL11.glTranslated(-6, 8, 0);
-        GL11.glRotated(-90 * swingRight, 0, 0, 1);
-        GL11.glRotated(-roll - 30 * swingRight + 90 * sweepTurn, 0, 1, 0);
-        GL11.glTranslated(6, -8, 0);
+        GlStateManager.translate(-offsetOutward, 0, 0);
+        GlStateManager.translate(-6, 8, 0);
+        GlStateManager.rotate((float) (-90 * swingRight), 0, 0, 1);
+        GlStateManager.rotate((float) (-roll - 30 * swingRight + 90 * sweepTurn), 0, 1, 0);
+        GlStateManager.translate(6, -8, 0);
         ResourceManager.armor_ncr.renderPart("RightArm");
-        GL11.glPopMatrix();
+        GlStateManager.popMatrix();
     }
 }

@@ -53,11 +53,11 @@ public class RenderGunB93 extends TEISRBase {
 				//GL11.glRotated(-90, 0, 1, 0);
 				//GL11.glRotated(20, 0, 0, 1);
 				//GlStateManager.translate(-0.05, -0.0, 0.1);
-				GL11.glScaled(0.25D, 0.25D, 0.25D);
-				GL11.glRotated(180, 1, 0, 0);
+				GlStateManager.scale(0.25D, 0.25D, 0.25D);
+				GlStateManager.rotate(180, 1, 0, 0);
 				
 				//GL11.glRotated(90, 0, 1, 0);
-				GL11.glRotated(40, 0, 0, 1);
+				GlStateManager.rotate(40, 0, 0, 1);
 				GlStateManager.translate(0, -0.5, -0.7);
 				if(type == TransformType.FIRST_PERSON_RIGHT_HAND){
 					GlStateManager.translate(0, 0.5, 0);
@@ -65,8 +65,8 @@ public class RenderGunB93 extends TEISRBase {
 				
 				if(type == TransformType.FIRST_PERSON_LEFT_HAND){
 					GlStateManager.translate(0.0, 0.7, 0.5);
-					GL11.glRotated(180, 1, 0, 0);
-					GL11.glRotated(-90, 0, 0, 1);
+					GlStateManager.rotate(180, 1, 0, 0);
+					GlStateManager.rotate(-90, 0, 0, 1);
 				}
 				
 				if(item.getItem() == ModItems.gun_b93 && GunB93.getRotationFromAnim(item, Minecraft.getMinecraft().getRenderPartialTicks()) > 0) {
@@ -88,9 +88,9 @@ public class RenderGunB93 extends TEISRBase {
 		case GROUND:
 			GlStateManager.pushMatrix();
 			Minecraft.getMinecraft().renderEngine.bindTexture(b93_rl);
-				GL11.glScaled(0.5, 0.5, 0.5);
-				GL11.glRotated(180, 1, 0, 0);
-				GL11.glRotated(90, 0, 1, 0);
+				GlStateManager.scale(0.5, 0.5, 0.5);
+				GlStateManager.rotate(180, 1, 0, 0);
+				GlStateManager.rotate(90, 0, 1, 0);
 				GlStateManager.translate(-0.2, 0, 0);
 
 
