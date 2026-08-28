@@ -9,6 +9,8 @@ import com.hbm.inventory.recipes.loader.GenericRecipe;
 import com.hbm.modules.machine.ModuleMachineBase;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,11 +52,27 @@ import java.util.List;
  *    tank. The resulting empty containers are discarded rather than returned (ModuleMachineBase has no
  *    TileEntity/World reference to drop or re-insert them safely - a real limitation, not an oversight).
  *
- * Option 2 is opportunistic, never required: if a pattern doesn't carry a matching container for some
- * fluid input, that's not treated as a mismatch - the recipe still matches and pushes on the strength of
- * its item ingredients alone, falling back to option 1's behavior for that fluid.
+ * 3. Direct support for the "AE2 Fluid Crafting" addon's own workaround for the same AE2 limitation:
+ *    it represents a fluid ingredient as a single-item NBT "packet" (registry name
+ *    ae2fc:fluid_packet) wrapping a real {@code net.minecraftforge.fluids.FluidStack}, so it can
+ *    travel through a plain item-only Pattern Terminal/ME network. Normally you'd need the addon's
+ *    own physical "Fluid Packet Decoder" block in the loop to turn one back into real fluid before a
+ *    machine can use it. Requiring that extra block just to autocraft a Chemical Plant/PUREX/etc
+ *    recipe would be a needless piece of infrastructure, so {@link #tryDecodeAe2fcPacket} decodes a
+ *    packet directly instead. This has zero compile-time dependency on the addon - no imports of its
+ *    classes, just a registry-name string check plus Forge's own public
+ *    {@code FluidStack.loadFluidStackFromNBT} - so it's inert (never matches anything) if the addon
+ *    isn't installed, same spirit as the AE2-presence gating this whole package already relies on.
+ *
+ * Options 2 and 3 are both opportunistic, never required: if a pattern doesn't carry a matching
+ * container or packet for some fluid input, that's not treated as a mismatch - the recipe still
+ * matches and pushes on the strength of its item ingredients alone, falling back to option 1's
+ * behavior for that fluid.
  */
 public class NTMCraftingMachineHelper {
+
+    private static final String AE2FC_FLUID_PACKET_NAMESPACE = "ae2fc";
+    private static final String AE2FC_FLUID_PACKET_PATH = "fluid_packet";
 
     private NTMCraftingMachineHelper() { }
 
@@ -96,32 +114,45 @@ public class NTMCraftingMachineHelper {
             placement[i] = found;
         }
 
-        // fluid requirements are OPPORTUNISTICALLY represented as filled fluid-container items in the
-        // same pool - see the class javadoc for why this is never a hard requirement. A container found
-        // for some fluid input gets poured in immediately; one not found just means that fluid is
-        // expected to already be arriving (or arrive soon) via a separately-topped tank instead.
-        ItemStack[] containers = null;
+        // fluid requirements are OPPORTUNISTICALLY represented in the same pool, either as filled
+        // fluid-container items (option 2) or an ae2fc fluid packet (option 3) - see the class javadoc
+        // for why neither is ever a hard requirement. Whichever is found gets poured in immediately;
+        // finding neither just means that fluid is expected to already be arriving (or arrive soon) via
+        // a separately-topped tank instead (option 1). fluidToAdd holds the amount to add per input
+        // tank, 0 meaning "nothing opportunistic found for this one".
+        int[] fluidToAdd = null;
         if (matched.inputFluid != null && matched.inputFluid.length > 0) {
-            containers = new ItemStack[matched.inputFluid.length];
+            fluidToAdd = new int[matched.inputFluid.length];
             for (int i = 0; i < matched.inputFluid.length; i++) {
-                containers[i] = extractContainerFromPool(pool, matched.inputFluid[i]);
+                com.hbm.inventory.fluid.FluidStack want = matched.inputFluid[i];
+
+                ItemStack container = extractContainerFromPool(pool, want);
+                if (container != null) {
+                    fluidToAdd[i] = want.fill;
+                    continue;
+                }
+
+                net.minecraftforge.fluids.FluidStack packetFluid = extractAe2fcPacketFromPool(pool, want.type);
+                if (packetFluid != null) {
+                    fluidToAdd[i] = packetFluid.amount;
+                }
             }
         }
 
-        // commit: select the recipe (same field the GUI's arrows write to), then place the items
         module.setRecipe(matched.getInternalName(), false);
+        module.setupTanks(matched);
         for (int i = 0; i < placement.length; i++) {
             module.inventory.setStackInSlot(module.inputSlots[i], placement[i]);
         }
-        if (containers != null) {
-            for (int i = 0; i < containers.length; i++) {
-                if (containers[i] == null) continue; // no container for this one - relying on a separately-topped tank
+        if (fluidToAdd != null) {
+            for (int i = 0; i < fluidToAdd.length; i++) {
+                if (fluidToAdd[i] <= 0) continue; // nothing opportunistic found - relying on a separately-topped tank
                 com.hbm.inventory.fluid.FluidStack wantFluid = matched.inputFluid[i];
                 FluidTankNTM tank = module.inputTanks[i];
                 tank.conform(wantFluid); // no-op if already the right type/pressure, otherwise zeroes fill first
-                tank.setFill(tank.getFill() + wantFluid.fill);
-                // the emptied container (e.g. "Fluid Tank (Empty)") is intentionally discarded here - see
-                // the class javadoc for why it can't be handed back safely from this context.
+                tank.setFill(tank.getFill() + fluidToAdd[i]);
+                // the emptied container/packet (e.g. "Fluid Tank (Empty)") is intentionally discarded
+                // here - see the class javadoc for why it can't be handed back safely from this context.
             }
         }
         module.markDirty = true;
@@ -198,5 +229,46 @@ public class NTMCraftingMachineHelper {
             }
         }
         return null;
+    }
+
+    /**
+     * Finds and consumes a single ae2fc:fluid_packet item in the pool whose decoded fluid matches
+     * wantType, per {@link #tryDecodeAe2fcPacket}. Unlike NTM's own fluid containers, a packet isn't a
+     * uniform-content stack that can be split by count - the entire wrapped amount lives in one item's
+     * NBT - so exactly one matching packet is consumed whole, whatever amount it happens to carry
+     * (mirroring what the addon's own Fluid Packet Decoder block would do to it).
+     */
+    @Nullable
+    private static net.minecraftforge.fluids.FluidStack extractAe2fcPacketFromPool(List<ItemStack> pool, com.hbm.inventory.fluid.FluidType wantType) {
+        for (ItemStack candidate : pool) {
+            if (candidate.isEmpty()) continue;
+            net.minecraftforge.fluids.FluidStack decoded = tryDecodeAe2fcPacket(candidate);
+            if (decoded == null) continue;
+            if (com.hbm.capability.NTMFluidCapabilityHandler.getFluidType(decoded.getFluid()) != wantType) continue;
+            candidate.splitStack(candidate.getCount()); // consume the whole (always maxStackSize-1) packet
+            return decoded;
+        }
+        return null;
+    }
+
+    /**
+     * Decodes an ae2fc:fluid_packet item stack back into the real FluidStack it wraps, without any
+     * compile-time dependency on the "AE2 Fluid Crafting" addon - see the class javadoc's option 3.
+     * Matched by registry name alone; the NBT layout ({@code {"FluidStack": <forge FluidStack NBT>}})
+     * was confirmed directly against that addon's own {@code ItemFluidPacket}/{@code FakeFluids}
+     * classes. Returns null for anything that isn't a valid, non-empty packet - including when the
+     * addon isn't installed at all, in which case no item will ever carry this registry name.
+     */
+    @Nullable
+    private static net.minecraftforge.fluids.FluidStack tryDecodeAe2fcPacket(ItemStack candidate) {
+        if (candidate.isEmpty() || !candidate.hasTagCompound()) return null;
+        ResourceLocation name = candidate.getItem().getRegistryName();
+        if (name == null || !AE2FC_FLUID_PACKET_NAMESPACE.equals(name.getNamespace()) || !AE2FC_FLUID_PACKET_PATH.equals(name.getPath())) {
+            return null;
+        }
+        if (!candidate.getTagCompound().hasKey("FluidStack", 10)) return null; // 10 = NBT compound tag id
+        net.minecraftforge.fluids.FluidStack decoded =
+                net.minecraftforge.fluids.FluidStack.loadFluidStackFromNBT(candidate.getTagCompound().getCompoundTag("FluidStack"));
+        return (decoded != null && decoded.amount > 0) ? decoded : null;
     }
 }
