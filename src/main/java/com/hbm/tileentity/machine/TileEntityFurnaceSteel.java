@@ -68,7 +68,7 @@ public class TileEntityFurnaceSteel extends TileEntityMachineBase implements IGU
 			for(int i = 0; i < 3; i++) {
 				ItemStack input = inventory.getStackInSlot(i);
 				
-				if(input.isEmpty() || lastItems[i].isEmpty() || !input.isItemEqual(lastItems[i])) {
+				if(input.isEmpty() || lastItem == null || lastItems[i].isEmpty() || !input.isItemEqual(lastItems[i])) {
 					progress[i] = 0;
 					bonus[i] = 0;
 				}
