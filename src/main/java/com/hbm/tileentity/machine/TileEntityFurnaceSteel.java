@@ -42,7 +42,7 @@ public class TileEntityFurnaceSteel extends TileEntityMachineBase implements IGU
 	public int heat;
 	public static final int maxHeat = 100_000;
 	public static final double diffusion = 0.05D;
-	private ItemStack[] lastItems = new ItemStack[3];
+	private final ItemStack[] lastItems = new ItemStack[3];
 	
 	public boolean wasOn = false;
 	    
@@ -68,7 +68,7 @@ public class TileEntityFurnaceSteel extends TileEntityMachineBase implements IGU
 			for(int i = 0; i < 3; i++) {
 				ItemStack input = inventory.getStackInSlot(i);
 				
-				if(input.isEmpty() || lastItem == null || lastItems[i].isEmpty() || !input.isItemEqual(lastItems[i])) {
+				if(input.isEmpty() || lastItems == null || lastItems[i].isEmpty() || !input.isItemEqual(lastItems[i])) {
 					progress[i] = 0;
 					bonus[i] = 0;
 				}
