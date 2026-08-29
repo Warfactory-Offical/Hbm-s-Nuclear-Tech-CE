@@ -4,9 +4,11 @@ import com.hbm.interfaces.AutoRegister;
 import com.hbm.tileentity.TileEntityTickingBase;
 import com.hbm.util.Compat;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 @AutoRegister
 public class TileEntityPileBaseMK2 extends TileEntityTickingBase {
@@ -19,6 +21,12 @@ public class TileEntityPileBaseMK2 extends TileEntityTickingBase {
 	@Override
 	public String getInventoryName() {
 		return null;
+	}
+
+
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
+		return oldState.getBlock() != newState.getBlock();
 	}
 
 	public TileEntityPileBaseMK2 setCore(int x, int y, int z) {
