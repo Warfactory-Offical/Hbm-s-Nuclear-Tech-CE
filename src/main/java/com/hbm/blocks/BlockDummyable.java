@@ -520,7 +520,7 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
     }
 
 	@Override
-	public boolean isFullCube(IBlockState state) {
+	public boolean causesSuffocation(IBlockState state) {
 		return false;
 	}
 
