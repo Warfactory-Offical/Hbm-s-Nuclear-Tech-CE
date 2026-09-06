@@ -274,7 +274,7 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
     protected boolean standardOpenBehavior(World world, int x, int y, int z, EntityPlayer player, int id) {
 		
 		if(world.isRemote) {
-			return true;
+			return !player.isSneaking();
 		} else if(!player.isSneaking()) {
 			int[] pos = this.findCore(world, x, y, z);
 
@@ -284,7 +284,7 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
 			player.openGui(MainRegistry.instance, id, world, pos[0], pos[1], pos[2]);
 			return true;
 		} else {
-			return true;
+			return false;
 		}
 	}
 
@@ -520,7 +520,7 @@ public abstract class BlockDummyable extends BlockContainer implements ICustomBl
     }
 
 	@Override
-	public boolean isFullCube(IBlockState state) {
+	public boolean causesSuffocation(IBlockState state) {
 		return false;
 	}
 
