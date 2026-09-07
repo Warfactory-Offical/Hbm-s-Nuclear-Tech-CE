@@ -158,7 +158,7 @@ public class ModEventHandler {
     public static final ResourceLocation DATA_LOC = new ResourceLocation(Tags.MODID, "HBMDATA");
     public static final Int2IntOpenHashMap RBMK_COL_HEIGHT_MAP = new Int2IntOpenHashMap(); // server only, stores raw dialColumnHeight values to avoid redundant packets
     public static Random rand = new Random();
-    private static final ForkJoinPool THREAD_POOL = ForkJoinPool.commonPool();
+    private static final ForkJoinPool THREAD_POOL = HbmWorkerPool.POOL;
 
     static {
         RBMK_COL_HEIGHT_MAP.defaultReturnValue((int) RBMKDials.RBMKKeys.KEY_COLUMN_HEIGHT.defValue);
@@ -709,9 +709,14 @@ public class ModEventHandler {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void serverTickLast(ServerTickEvent e) {
         if (e.phase != Phase.END) return;
-        CompletableFuture<Void> f1 = CompletableFuture.runAsync(EntityHitDataHandler::updateSystem, THREAD_POOL);
-        CompletableFuture<Void> f2 = RadiationSystemNT.onServerTickLast(e);
-        CompletableFuture.allOf(f1, f2).join();
+        // Dispatch first so the radiation simulation overlaps with the hit data pass below. Its join is a
+        // deliberate barrier - see RadiationSystemNT#onServerTickLast - and has to stay.
+        CompletableFuture<Void> radiation = RadiationSystemNT.onServerTickLast(e);
+        // Runs on the server thread rather than on a worker: it kills entities, fires death events, drops
+        // loot and plays sounds, none of which is safe off-thread, and the server thread was going to spend
+        // this time parked in the join below anyway.
+        EntityHitDataHandler.updateSystem();
+        radiation.join();
         NetworkHandler.flushServer(); // Flush ALL network packets.
     }
 

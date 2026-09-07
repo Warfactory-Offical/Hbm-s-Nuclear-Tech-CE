@@ -22,7 +22,9 @@
     "optifine.MixinBufferBuilder",
     "optifine.MixinRenderGlobal"
   ],
-  "mixins": [],
+  "mixins": [
+    "MixinWorldServer"
+  ],
   "server": [],
   "setSourceFile": true,
   "minVersion": "0.8.7"

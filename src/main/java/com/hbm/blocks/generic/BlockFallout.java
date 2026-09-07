@@ -36,21 +36,30 @@ public class BlockFallout extends Block {
         setRegistryName(s);
         setSoundType(SoundType.GROUND);
         setHarvestLevel("shovel", 0);
+        // Fallout tops the chunk radiation up to a fixed cap; it does not need to be exact or prompt.
+        // Random ticks cost O(loaded chunks), scheduled ticks cost O(fallout blocks) and pile up in
+        // WorldServer's pending tick list forever, which makes every chunk save quadratic. See below.
+        setTickRandomly(true);
 
         ModBlocks.ALL_BLOCKS.add(this);
     }
 
     @Override
-    public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
-        super.onBlockAdded(worldIn, pos, state);
-        if (!worldIn.isRemote) worldIn.scheduleUpdate(pos, this, 10 + worldIn.rand.nextInt(30));
-    }
-
-    @Override
     public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
+        /*
+         * Deliberately does NOT reschedule itself. Every fallout block re-arming a scheduled tick every
+         * 10-40 ticks meant pendingTickListEntries held one entry per fallout block permanently, which
+         * (a) saturated the 65536 blocks-per-tick cap in WorldServer#tickUpdates and (b) made
+         * WorldServer#getPendingBlockUpdates - a full linear scan of that set, run once per chunk saved -
+         * eat over half the server thread.
+         *
+         * A random tick reaches a given block roughly every 1365 ticks, but incrementRad only tops the
+         * section up to a fixed cap and a fallout field has thousands of blocks per section, so the
+         * section still saturates within a few ticks. Cost now scales with loaded chunks, not with
+         * the number of fallout blocks.
+         */
         if (!worldIn.isRemote) {
             ChunkRadiationManager.proxy.incrementRad(worldIn, pos, 1, 100);
-            worldIn.scheduleUpdate(pos, this, 10 + worldIn.rand.nextInt(30));
         }
     }
 

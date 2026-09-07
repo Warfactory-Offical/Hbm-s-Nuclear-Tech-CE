@@ -15,6 +15,7 @@ import com.hbm.packet.toclient.AuxParticlePacketNT;
 import com.hbm.particle.helper.HbmEffectNT;
 import com.hbm.saveddata.AuxSavedData;
 import com.hbm.util.DecodeException;
+import com.hbm.util.HbmWorkerPool;
 import com.hbm.util.ObjectPool;
 import com.hbm.util.SectionKeyHash;
 import it.unimi.dsi.fastutil.HashCommon;
@@ -88,7 +89,7 @@ public final class RadiationSystemNT {
     static final String TAG_RAD = "hbmRadDataNT";
     static final byte MAGIC_0 = (byte) 'N', MAGIC_1 = (byte) 'T', MAGIC_2 = (byte) 'X', FMT_V6 = 6, FMT = 7;
     static final Object NOT_RES = new Object();
-    static final ForkJoinPool RAD_POOL = ForkJoinPool.commonPool();
+    static final ForkJoinPool RAD_POOL = HbmWorkerPool.POOL;
     static final int TARGET_TASK_CNT = RAD_POOL.getParallelism() << 2;
 
     /** Also used as the overlaps scratch in {@code remapPocketMass}: dead after flood-fill, before remap. */
